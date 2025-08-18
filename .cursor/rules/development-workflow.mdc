@@ -1,0 +1,51 @@
+# Development Workflow for Linguator Plugin
+
+## Build Commands
+From [package.json](mdc:package.json):
+- `npm run build` - Build all assets (settings and wizard)
+- `npm run build:css` - Build Tailwind CSS
+- `npm run start` - Development mode for wizard
+- `npm run dev` - Development build with CSS
+
+## Asset Building
+- Settings UI: `Settings/Views/src/settings.js` → `Admin/Assets/frontend/settings/`
+- Wizard UI: `modules/wizard/src/setup.js` → `Admin/Assets/frontend/setup/`
+- CSS: `Settings/Views/src/input.css` → `Admin/Assets/css/build/main.css`
+
+## Development Process
+1. **PHP Changes**: Direct file editing, no build step required
+2. **React/JS Changes**: Run build command after changes
+3. **CSS Changes**: Run `npm run build:css` for Tailwind
+4. **Testing**: Test in WordPress environment
+
+## File Structure for Development
+- **PHP**: Edit directly in respective directories
+- **React**: Edit in `src/` directories, build to `Assets/`
+- **CSS**: Edit in `src/input.css`, build to `build/main.css`
+- **Assets**: Flags and images in `flags/` directory
+
+## WordPress Integration
+- Plugin activation: [install/install.php](mdc:install/install.php)
+- Plugin deactivation: [uninstall.php](mdc:uninstall.php)
+
+## Testing Environment
+- Test in WordPress 6.2+ environment
+- Test with different PHP versions (7.2+)
+- Test multilingual functionality
+- Test with various themes and plugins
+
+## Debugging
+- Use WordPress debug mode
+- Check error logs
+- Use `error_log()` for debugging
+- Test REST API endpoints
+
+## Deployment
+- Build all assets before deployment
+- Test in staging environment
+- Update version numbers
+- Create changelog entries
+description:
+globs:
+alwaysApply: false
+---

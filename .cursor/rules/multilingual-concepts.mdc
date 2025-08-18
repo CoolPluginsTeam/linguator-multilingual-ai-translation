@@ -1,0 +1,56 @@
+# Multilingual Translation Concepts
+
+## Core Concepts
+- **Languages**: Defined in [Includes/Models/Languages.php](mdc:Includes/Models/Languages.php)
+- **Posts**: Translatable content in [Includes/Models/Translatable/](mdc:Includes/Models/Translatable/)
+- **Terms**: Translatable taxonomies in [Includes/Models/Translatable/](mdc:Includes/Models/Translatable/)
+- **Strings**: User-defined translatable strings
+
+## Language Management
+- Language objects created via [Includes/Factories/language-factory.php](mdc:Includes/Factories/language-factory.php)
+- Language settings in [Settings/Controllers/languages.php](mdc:Settings/Controllers/languages.php)
+- Language flags stored in [flags/](mdc:flags/) directory
+
+## Translation Process
+1. **Content Creation**: Posts/terms created in default language
+2. **Translation Linking**: Content linked across languages
+3. **Translation**: Manual or AI-powered translation
+4. **Synchronization**: Content sync across languages
+
+## URL Structure
+- **Domain-based**: Different domains per language
+- **Directory-based**: `/lang/` subdirectories
+- **URL-based**: Language codes in URLs
+- Handled by [Includes/Services/Links/](mdc:Includes/Services/Links/)
+
+## Content Types
+- **Posts**: Blog posts, pages, custom post types
+- **Terms**: Categories, tags, custom taxonomies
+- **Strings**: User-defined translatable text
+- **Options**: WordPress options (blog name, description)
+
+## Machine Translation
+- AI-powered translation in [modules/machine-translation/](mdc:modules/machine-translation/)
+- Integration with external translation services
+- Preview functionality for translations
+
+## Synchronization
+- Content sync across languages in [modules/sync/](mdc:modules/sync/)
+- Meta field synchronization
+- Content relationships maintained
+
+## Frontend Features
+- Language switcher widgets
+- URL translation
+- Content filtering by language
+- SEO-friendly URLs
+
+## Admin Interface
+- Translation management in [Admin/Controllers/](mdc:Admin/Controllers/)
+- Bulk translation operations
+- Translation status indicators
+- Content relationship management
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,56 @@
+# Linguator Multilingual AI Translation - Project Structure
+
+## Main Entry Points
+- [linguator-multilingual-ai-translation.php](mdc:linguator-multilingual-ai-translation.php) - Main plugin file with WordPress plugin headers
+- [Includes/Core/linguator.php](mdc:Includes/Core/linguator.php) - Core plugin class that initializes everything
+- [Includes/Base/base.php](mdc:Includes/Base/base.php) - Abstract base class for admin and frontend
+
+## Key Directories
+- **Includes/** - Core plugin functionality
+  - **Core/** - Main plugin logic and initialization
+  - **Base/** - Abstract classes and base functionality
+  - **Controllers/** - Request handling and business logic
+  - **Models/** - Data models and database interactions
+  - **Services/** - Business services and external integrations
+  - **Options/** - Plugin settings and configuration management
+  - **Helpers/** - Utility functions and helper classes
+  - **Filters/** - WordPress filter hooks and modifications
+  - **Widgets/** - Custom WordPress widgets
+
+- **Admin/** - WordPress admin interface
+  - **Controllers/** - Admin-specific controllers
+  - **Assets/** - CSS, JS, and frontend assets
+  - **Views/** - Admin view templates
+
+- **Frontend/** - Public-facing functionality
+  - **Controllers/** - Frontend controllers
+  - **Filters/** - Frontend-specific filters
+  - **Services/** - Frontend services
+
+- **Settings/** - Plugin settings interface
+  - **Controllers/** - Settings controllers
+  - **Views/** - Settings UI components (React-based)
+
+- **modules/** - Feature modules
+  - **wizard/** - Setup wizard
+  - **REST/** - REST API endpoints
+  - **machine-translation/** - AI translation features
+  - **sync/** - Content synchronization
+  - **sitemaps/** - Multilingual sitemaps
+
+## Build System
+- [package.json](mdc:package.json) - Node.js dependencies and build scripts
+- [tailwind.config.js](mdc:tailwind.config.js) - Tailwind CSS configuration
+- [postcss.config.js](mdc:postcss.config.js) - PostCSS configuration
+
+## Key Constants
+- `LINGUATOR_VERSION` - Plugin version
+- `LINGUATOR_FILE` - Main plugin file path
+- `LINGUATOR_DIR` - Plugin directory path
+- `LMAT_COOKIE` - Language cookie name
+- `LMAT_ADMIN` - Whether in admin context
+- `LMAT_AJAX_ON_FRONT` - Whether AJAX request on frontend
+description:
+globs:
+alwaysApply: false
+---

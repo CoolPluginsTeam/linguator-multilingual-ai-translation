@@ -1,0 +1,59 @@
+# JavaScript & React Standards for Linguator Plugin
+
+## Build System
+- Uses `@wordpress/scripts` for building
+- Tailwind CSS for styling
+- Webpack for bundling
+- Entry points defined in [package.json](mdc:package.json)
+
+## React Components
+- Use functional components with hooks
+- Follow WordPress component patterns
+- Use `@wordpress/components` for UI elements
+- Use `@wordpress/element` for React imports
+- Use `@wordpress/i18n` for internationalization
+
+## File Organization
+- Components in `src/components/`
+- Pages in `src/pages/`
+- Utilities in `src/utils/`
+- Build output goes to `Admin/Assets/frontend/`
+
+## WordPress Integration
+- Use `wp_localize_script()` to pass PHP data to JS
+- Use WordPress REST API for data fetching
+- Follow WordPress coding standards for JS
+- Use `wp_enqueue_script()` for script loading
+
+## State Management
+- Use React hooks for local state
+- Use WordPress REST API for server state
+- Consider context for shared state
+- Use `useState` and `useEffect` appropriately
+
+## Styling
+- Use Tailwind CSS classes
+- Follow WordPress admin design patterns
+- Use CSS modules when needed
+- Maintain responsive design
+
+## Internationalization
+- Use `__()` and `_e()` functions
+- Use `wp_set_script_translations()` for JS translations
+- Follow WordPress i18n standards
+
+## Error Handling
+- Use try-catch for async operations
+- Show user-friendly error messages
+- Log errors appropriately
+- Handle loading states
+
+## Performance
+- Lazy load components when possible
+- Use `React.memo()` for expensive components
+- Optimize bundle size
+- Use WordPress asset optimization
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,13 @@
+# Folders to ignore on export
+.cursor/ export-ignore
+.git/ export-ignore
+node_modules/ export-ignore
+
+# Files to ignore on export
+composer.json export-ignore
+composer.lock export-ignore
+package-lock.json export-ignore
+package.json export-ignore
+tailwind.config.json export-ignore
+postcss.config.json export-ignore
+webpack.config.json export-ignore

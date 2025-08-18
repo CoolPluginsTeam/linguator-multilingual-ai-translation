@@ -1,0 +1,54 @@
+# PHP Coding Standards for Linguator Plugin
+
+## WordPress Standards
+- Follow WordPress Coding Standards (WPCS)
+- Use WordPress naming conventions: `lmat_` prefix for functions, `LMAT_` for classes
+- Always check for `ABSPATH` constant before direct file access
+- Use WordPress sanitization functions: `sanitize_key()`, `sanitize_text_field()`, etc.
+- Use WordPress nonce verification for forms and AJAX requests
+
+## Namespace Structure
+- Use `Linguator\` namespace prefix
+- Follow PSR-4 autoloading structure
+- Example: `Linguator\Includes\Core\Linguator`
+
+## Class Naming
+- Abstract classes: `LMAT_Base`, `LMAT_Abstract_*`
+- Controllers: `LMAT_Admin_*`, `LMAT_Frontend_*`
+- Models: `LMAT_Model`, `LMAT_Languages`
+- Services: `LMAT_*_Service` or descriptive names
+
+## File Structure
+- One class per file
+- File name should match class name
+- Use proper PHPDoc blocks with `@since` tags
+- Include namespace declaration at top
+
+## Security Practices
+- Always escape output with `esc_html()`, `esc_attr()`, etc.
+- Use `wp_kses()` for HTML content
+- Validate and sanitize all user inputs
+- Use `wp_verify_nonce()` for form submissions
+- Check user capabilities with `current_user_can()`
+
+## Database Operations
+- Use WordPress database functions: `$wpdb`
+- Always use prepared statements
+- Use `get_option()`, `update_option()` for settings
+- Use `get_post_meta()`, `update_post_meta()` for post data
+
+## Hooks and Filters
+- Use descriptive hook names with `lmat_` prefix
+- Document all hooks with PHPDoc
+- Use `add_action()` and `add_filter()` consistently
+- Remove hooks in destructors or deactivation
+
+## Error Handling
+- Use `wp_die()` for fatal errors
+- Log errors with `error_log()` when appropriate
+- Return early on validation failures
+- Use try-catch for external API calls
+description:
+globs:
+alwaysApply: false
+---

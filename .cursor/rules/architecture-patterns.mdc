@@ -1,0 +1,55 @@
+# Linguator Plugin Architecture Patterns
+
+## MVC Pattern
+The plugin follows a modified MVC pattern:
+- **Models**: Data handling in [Includes/Models/](mdc:Includes/Models/)
+- **Views**: Templates in [Admin/Views/](mdc:Admin/Views/) and React components
+- **Controllers**: Business logic in [Includes/Controllers/](mdc:Includes/Controllers/)
+
+## Base Class Pattern
+- [Includes/Base/base.php](mdc:Includes/Base/base.php) provides common functionality
+- Admin and Frontend extend this base class
+- Shared properties: `$options`, `$model`, `$links_model`
+
+## Service Layer
+- Business logic separated into [Includes/Services/](mdc:Includes/Services/)
+- CRUD operations in [Includes/Services/Crud/](mdc:Includes/Services/Crud/)
+- Link handling in [Includes/Services/Links/](mdc:Includes/Services/Links/)
+
+## Options Management
+- Centralized settings in [Includes/Options/](mdc:Includes/Options/)
+- Registry pattern for option registration
+- Abstract classes for different option types
+
+## Module System
+- Feature modules in [modules/](mdc:modules/)
+- Each module has its own `load.php` file
+- Modules can be enabled/disabled independently
+
+## Hook System
+- WordPress hooks and filters throughout
+- Custom hooks with `lmat_` prefix
+- Action and filter registration in constructors
+
+## Factory Pattern
+- [Includes/Factories/language-factory.php](mdc:Includes/Factories/language-factory.php) for language objects
+- Creates language instances based on configuration
+
+## Widget System
+- Custom widgets in [Includes/Widgets/](mdc:Includes/Widgets/)
+- Extends WordPress widget system
+- Language-aware widgets
+
+## REST API
+- REST endpoints in [modules/REST/](mdc:modules/REST/)
+- Abstract controller base class
+- Versioned API structure
+
+## Integration System
+- Third-party integrations in [integrations/](mdc:integrations/)
+- Each integration has its own directory
+- Load files handle integration initialization
+description:
+globs:
+alwaysApply: false
+---

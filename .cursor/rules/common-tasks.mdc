@@ -1,0 +1,64 @@
+# Common Development Tasks
+
+## Adding New Language
+1. Add flag image to [flags/](mdc:flags/) directory
+2. Update language settings in [Settings/Controllers/languages.php](mdc:Settings/Controllers/languages.php)
+3. Test language switching functionality
+
+## Creating New Admin Page
+1. Create controller in [Admin/Controllers/](mdc:Admin/Controllers/)
+2. Extend base admin class
+3. Add menu registration
+4. Create view template in [Admin/Views/](mdc:Admin/Views/)
+
+## Adding REST API Endpoint
+1. Create controller in [modules/REST/V1/](mdc:modules/REST/V1/)
+2. Extend `Abstract_Controller`
+3. Register route in [modules/REST/API.php](mdc:modules/REST/API.php)
+4. Test endpoint functionality
+
+## Creating New Widget
+1. Create widget class in [Includes/Widgets/](mdc:Includes/Widgets/)
+2. Extend `WP_Widget`
+3. Register in [Includes/Base/base.php](mdc:Includes/Base/base.php)
+4. Add frontend display logic
+
+## Adding New Integration
+1. Create directory in [integrations/](mdc:integrations/)
+2. Create `load.php` file
+3. Add integration class
+4. Test compatibility
+
+## Modifying Settings
+1. Update options in [Includes/Options/](mdc:Includes/Options/)
+2. Modify settings UI in [Settings/Views/src/](mdc:Settings/Views/src/)
+3. Update settings controller
+4. Test settings persistence
+
+## Adding New Filter
+1. Create filter class in [Includes/Filters/](mdc:Includes/Filters/)
+2. Register hooks in constructor
+3. Add filter logic
+4. Test filter functionality
+
+## Creating New Module
+1. Create directory in [modules/](mdc:modules/)
+2. Create `load.php` file
+3. Add module classes
+4. Register module in main plugin
+
+## Debugging Issues
+1. Check WordPress debug log
+2. Use `error_log()` for debugging
+3. Test in clean WordPress environment
+4. Check plugin compatibility
+
+## Performance Optimization
+1. Use WordPress caching
+2. Optimize database queries
+3. Minimize asset loading
+4. Use lazy loading where appropriate
+description:
+globs:
+alwaysApply: false
+---
