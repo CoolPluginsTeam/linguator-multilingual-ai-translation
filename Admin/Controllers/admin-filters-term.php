@@ -148,7 +148,37 @@ class LMAT_Admin_Filters_Term {
 				<p>%s</p>
 			</div>',
 			esc_html__( 'Language', 'linguator-multilingual-ai-translation' ),
-			$dropdown_html, // phpcs:ignore
+			wp_kses(
+				$dropdown_html,
+				array(
+					'span'   => array( 'class' => true ),
+					'img'    => array(
+						'src'      => true,
+						'alt'      => true,
+						'width'    => true,
+						'height'   => true,
+						'class'    => true,
+						'style'    => true,
+						'loading'  => true,
+						'decoding' => true,
+					),
+					'select' => array(
+						'name'     => true,
+						'id'       => true,
+						'class'    => true,
+						'lang'     => true,
+						'disabled' => true,
+					),
+					'option' => array(
+						'value'     => true,
+						'lang'      => true,
+						'aria-label'=> true,
+						'selected'  => true,
+						'data-lang' => true,
+					),
+				),
+				array_merge( wp_allowed_protocols(), array( 'data' ) )
+			),
 			esc_html__( 'Sets the language', 'linguator-multilingual-ai-translation' )
 		);
 
@@ -221,7 +251,37 @@ class LMAT_Admin_Filters_Term {
 				</td>
 			</tr>',
 			esc_html__( 'Language', 'linguator-multilingual-ai-translation' ),
-			$dropdown_html, // phpcs:ignore
+			wp_kses(
+				$dropdown_html,
+				array(
+					'span'   => array( 'class' => true ),
+					'img'    => array(
+						'src'      => true,
+						'alt'      => true,
+						'width'    => true,
+						'height'   => true,
+						'class'    => true,
+						'style'    => true,
+						'loading'  => true,
+						'decoding' => true,
+					),
+					'select' => array(
+						'name'     => true,
+						'id'       => true,
+						'class'    => true,
+						'lang'     => true,
+						'disabled' => true,
+					),
+					'option' => array(
+						'value'     => true,
+						'lang'      => true,
+						'aria-label'=> true,
+						'selected'  => true,
+						'data-lang' => true,
+					),
+				),
+				array_merge( wp_allowed_protocols(), array( 'data' ) )
+			),
 			esc_html__( 'Sets the language', 'linguator-multilingual-ai-translation' )
 		);
 

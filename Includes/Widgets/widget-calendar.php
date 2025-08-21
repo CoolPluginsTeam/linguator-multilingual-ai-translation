@@ -82,6 +82,38 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 	static function get_calendar( $args = array() ) {
 		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 
+		// Allowed HTML tags for calendar output
+		$calendar_allowed_html = array(
+			'table'   => array(
+				'id'    => true,
+				'class' => true,
+			),
+			'caption' => array(),
+			'thead'   => array(),
+			'tbody'   => array(),
+			'tr'      => array(),
+			'th'      => array(
+				'scope'      => true,
+				'aria-label' => true,
+			),
+			'td'      => array(
+				'id'       => true,
+				'class'    => true,
+				'colspan'  => true,
+			),
+			'nav'     => array(
+				'aria-label' => true,
+				'class'      => true,
+			),
+			'span'    => array(
+				'class' => true,
+			),
+			'a'       => array(
+				'href'       => true,
+				'aria-label' => true,
+			),
+		);
+
 		$defaults = array(
 			'initial'   => true,
 			'display'   => true,
@@ -150,8 +182,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 			$output = apply_filters( 'get_calendar', $cache[ $key ], $args );
 
 			if ( $args['display'] ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is trusted as per widget API usage.
-				echo $output;
+				echo wp_kses( $output, $calendar_allowed_html );
 				return;
 			}
 
@@ -375,8 +406,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		$calendar_output = apply_filters( 'get_calendar', $calendar_output, $args );
 
 		if ( $args['display'] ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is trusted as per widget API usage.
-			echo $calendar_output;
+			echo wp_kses( $calendar_output, $calendar_allowed_html );
 			return;
 		}
 

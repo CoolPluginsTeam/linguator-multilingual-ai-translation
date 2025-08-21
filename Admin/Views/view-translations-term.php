@@ -62,7 +62,7 @@ else {
 		?>
 		<tr>
 			<th class = "lmat-language-column">
-				<span class = "lmat-translation-flag"><?php echo $language->flag ?: esc_html( $language->slug ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+				<span class = "lmat-translation-flag"><?php echo $language->flag ? wp_kses( $language->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ), 'span' => array( 'class' => true ), 'abbr' => array() ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) : esc_html( $language->slug ); ?></span>
 				<?php
 				printf(
 					'<span class="lmat-language-name%1$s">%2$s</span>',
@@ -74,8 +74,8 @@ else {
 			<?php
 			if ( isset( $term_id ) ) {
 				?>
-				<td class = "hidden"><?php echo $add_link; // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
-				<td class = "lmat-edit-column"><?php echo $link; // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
+				<td class = "hidden"><?php echo wp_kses_post( $add_link ); ?></td>
+				<td class = "lmat-edit-column"><?php echo wp_kses_post( $link ); ?></td>
 				<?php
 			}
 			?>

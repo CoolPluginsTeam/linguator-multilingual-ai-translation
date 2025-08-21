@@ -137,7 +137,37 @@ class LMAT_Admin_Classic_Editor {
 			esc_html__( 'Language', 'linguator-multilingual-ai-translation' ),
 			esc_attr( $id ),
 			( 'attachment' === $post_type ? 'media' : 'post' ),
-			$dropdown_html // phpcs:ignore WordPress.Security.EscapeOutput
+			wp_kses(
+				$dropdown_html,
+				array(
+					'span'   => array( 'class' => true ),
+					'img'    => array(
+						'src'      => true,
+						'alt'      => true,
+						'width'    => true,
+						'height'   => true,
+						'class'    => true,
+						'style'    => true,
+						'loading'  => true,
+						'decoding' => true,
+					),
+					'select' => array(
+						'name'     => true,
+						'id'       => true,
+						'class'    => true,
+						'lang'     => true,
+						'disabled' => true,
+					),
+					'option' => array(
+						'value'     => true,
+						'lang'      => true,
+						'aria-label'=> true,
+						'selected'  => true,
+						'data-lang' => true,
+					),
+				),
+				array_merge( wp_allowed_protocols(), array( 'data' ) )
+			)
 		);
 
 		/**

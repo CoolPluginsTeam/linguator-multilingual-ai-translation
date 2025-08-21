@@ -60,7 +60,7 @@ class LMAT_Install extends LMAT_Install_Base {
 				/* translators: 1: Plugin name 2: Current PHP version 3: Required PHP version */
 				esc_html__( '%1$s has deactivated itself because you are using an old version of PHP. You are using using PHP %2$s. %1$s requires PHP %3$s.', 'linguator-multilingual-ai-translation' ),
 				esc_html( LINGUATOR ),
-				PHP_VERSION,
+				esc_html( PHP_VERSION ),
 				esc_html( LMAT_MIN_PHP_VERSION )
 			)
 		);

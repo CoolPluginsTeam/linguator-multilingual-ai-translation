@@ -42,9 +42,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 		?>
 		<tr>
-			<th class = "lmat-language-column"><?php echo $language->flag ?: esc_html( $language->slug ); // phpcs:ignore WordPress.Security.EscapeOutput ?></th>
-			<td class = "hidden"><?php echo $add_link; // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
-			<td class = "lmat-edit-column lmat-column-icon"><?php echo $link; // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
+			<th class = "lmat-language-column"><?php echo $language->flag ? wp_kses( $language->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ), 'span' => array( 'class' => true ), 'abbr' => array() ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) : esc_html( $language->slug ); ?></th>
+			<td class = "hidden"><?php echo wp_kses_post( $add_link ); ?></td>
+			<td class = "lmat-edit-column lmat-column-icon"><?php echo wp_kses_post( $link ); ?></td>
 			<?php
 
 			/**

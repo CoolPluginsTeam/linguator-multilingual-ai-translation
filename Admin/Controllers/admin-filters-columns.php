@@ -240,7 +240,10 @@ class LMAT_Admin_Filters_Columns {
 					</div>
 				</fieldset>',
 				esc_html__( 'Language', 'linguator-multilingual-ai-translation' ),
-				$dropdown->walk( $elements, -1, array( 'name' => 'inline_lang_choice', 'id' => '' ) ) // phpcs:ignore WordPress.Security.EscapeOutput
+				wp_kses( $dropdown->walk( $elements, -1, array( 'name' => 'inline_lang_choice', 'id' => '' ) ), array(
+					'select' => array( 'name' => true, 'id' => true, 'class' => true ),
+					'option' => array( 'value' => true, 'selected' => true )
+				) )
 			);
 		}
 		return $column;
