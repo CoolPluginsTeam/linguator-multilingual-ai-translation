@@ -45,9 +45,6 @@ if ( is_rtl() ) {
 		);
 		?>
 		</title>
-		<script>
-			var ajaxurl = '<?php echo esc_url( admin_url( 'admin-ajax.php', 'relative' ) ); ?>';
-		</script>
 		<?php wp_print_scripts( 'lmat_setup' ); ?>
 		<?php wp_print_styles( 'lmat_setup' ); ?>
 		<?php do_action( 'admin_head' ); ?>
