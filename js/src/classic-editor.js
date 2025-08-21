@@ -124,7 +124,7 @@ jQuery(
 				dialogResult.then(
 					() => {
 						var data = {
-							action:     'post_lang_choice',
+							action:     'lmat_post_lang_choice',
 							lang:       selectedOption.value,
 							post_type:  $( '#post_type' ).val(),
 							taxonomies: taxonomies,

@@ -917,7 +917,7 @@ class Languages {
 				 * @param string           $new_slug The new language slug.
 				 * @param WP_Term          $term     The term containing the post or term translation group.
 				 */
-				$tr = apply_filters( 'update_translation_group', $tr, $old_slug, $new_slug, $term );
+				$tr = apply_filters( 'lmat_update_translation_group', $tr, $old_slug, $new_slug, $term );
 
 				if ( ! empty( $tr[ $old_slug ] ) ) {
 					if ( $new_slug ) {

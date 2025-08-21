@@ -91,7 +91,7 @@ class LMAT_Admin_Filters_Term {
 		add_filter( 'lmat_inserted_term_parent', array( $this, 'get_inserted_term_parent' ), 10, 2 );
 
 		// Ajax response for edit term form
-		add_action( 'wp_ajax_term_lang_choice', array( $this, 'term_lang_choice' ) );
+		add_action( 'wp_ajax_lmat_term_lang_choice', array( $this, 'term_lang_choice' ) );
 		add_action( 'wp_ajax_lmat_terms_not_translated', array( $this, 'ajax_terms_not_translated' ) );
 
 		// Updates the translations term ids when splitting a shared term

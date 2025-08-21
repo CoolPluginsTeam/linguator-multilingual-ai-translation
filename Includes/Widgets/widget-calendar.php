@@ -105,7 +105,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		}
 
 		/** This filter is documented in wp-includes/general-template.php */
-		$args = apply_filters( 'get_calendar_args', wp_parse_args( $args, $defaults ) );
+		$args = apply_filters( 'lmat_get_calendar_args', wp_parse_args( $args, $defaults ) );
 
 		$args['lang'] = LMAT()->curlang->slug; #added#
 

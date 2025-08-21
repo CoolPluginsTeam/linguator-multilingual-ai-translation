@@ -60,7 +60,7 @@ class LMAT_Admin_Classic_Editor {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		// Ajax response for changing the language in the post metabox
-		add_action( 'wp_ajax_post_lang_choice', array( $this, 'post_lang_choice' ) );
+		add_action( 'wp_ajax_lmat_post_lang_choice', array( $this, 'post_lang_choice' ) );
 		add_action( 'wp_ajax_lmat_posts_not_translated', array( $this, 'ajax_posts_not_translated' ) );
 
 		// Filters the pages by language in the parent dropdown list in the page attributes metabox

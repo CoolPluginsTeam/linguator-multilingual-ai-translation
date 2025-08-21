@@ -568,7 +568,7 @@ class LMAT_Model {
 		 * @param string[] $types Types to handle (@see LMAT_Translatable_Object::get_type()). An empty array means all
 		 *                        types.
 		 */
-		$limit   = apply_filters( 'get_objects_with_no_lang_limit', $limit, $types );
+		$limit   = apply_filters( 'lmat_get_objects_with_no_lang_limit', $limit, $types );
 		$limit   = $limit < 1 ? -1 : max( (int) $limit, 1 );
 		$objects = array();
 
@@ -653,7 +653,7 @@ class LMAT_Model {
 			}
 		}
 
-		// 1000 is an arbitrary value that will be filtered by `get_objects_with_no_lang_limit`.
+		// 1000 is an arbitrary value that will be filtered by `lmat_get_objects_with_no_lang_limit`.
 		$nolang = $this->get_objects_with_no_lang( 1000, $types );
 
 		if ( empty( $nolang ) ) {
