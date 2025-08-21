@@ -71,24 +71,24 @@ class LMAT_Language_Factory {
 	 * @since 1.0.0
 	 *
 	 * @param WP_Term[] $terms List of language terms, with the language taxonomy names as array keys.
-	 *                         `language` is a mandatory key for the object to be created,
-	 *                         `term_language` should be too in a fully operational environment.
+	 *                         `lmat_language` is a mandatory key for the object to be created,
+	 *                         `lmat_term_language` should be too in a fully operational environment.
 	 * @return LMAT_Language|null Language object on success, `null` on failure.
 	 *
-	 * @phpstan-param array{language?:WP_Term}&array<string, WP_Term> $terms
+	 * @phpstan-param array{lmat_language?:WP_Term}&array<string, WP_Term> $terms
 	 */
 	public function get_from_terms( array $terms ) {
-		if ( ! isset( $terms['language'] ) ) {
+		if ( ! isset( $terms['lmat_language'] ) ) {
 			return null;
 		}
 
 		$languages = $this->get_languages();
 		$data      = array(
-			'name'       => $terms['language']->name,
-			'slug'       => $terms['language']->slug,
-			'term_group' => $terms['language']->term_group,
+			'name'       => $terms['lmat_language']->name,
+			'slug'       => $terms['lmat_language']->slug,
+			'term_group' => $terms['lmat_language']->term_group,
 			'term_props' => array(),
-			'is_default' => $this->options['default_lang'] === $terms['language']->slug,
+			'is_default' => $this->options['default_lang'] === $terms['lmat_language']->slug,
 		);
 
 		foreach ( $terms as $term ) {
@@ -100,7 +100,7 @@ class LMAT_Language_Factory {
 		}
 
 		// The description fields can contain any property.
-		$description = maybe_unserialize( $terms['language']->description );
+		$description = maybe_unserialize( $terms['lmat_language']->description );
 
 		if ( is_array( $description ) ) {
 			$description = array_intersect_key(

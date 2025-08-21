@@ -30,10 +30,10 @@ class LMAT_WP_Import extends WP_Import {
 
 		// Store this for future usage as parent function unsets $this->terms.
 		foreach ( $this->terms as $term ) {
-			if ( 'post_translations' == $term['term_taxonomy'] ) {
+			if ( 'lmat_post_translations' == $term['term_taxonomy'] ) {
 				$this->post_translations[] = $term;
 			}
-			if ( 'term_translations' == $term['term_taxonomy'] ) {
+			if ( 'lmat_term_translations' == $term['term_taxonomy'] ) {
 				$term_translations[] = $term;
 			}
 		}
@@ -45,7 +45,7 @@ class LMAT_WP_Import extends WP_Import {
 
 		// Assign the default language in case the importer created the first language.
 		if ( empty( LMAT()->options['default_lang'] ) ) {
-			$languages = get_terms( array( 'taxonomy' => 'language', 'hide_empty' => false, 'orderby' => 'term_id' ) );
+			$languages = get_terms( array( 'taxonomy' => 'lmat_language', 'hide_empty' => false, 'orderby' => 'term_id' ) );
 			$default_lang = reset( $languages );
 			LMAT()->options['default_lang'] = $default_lang->slug;
 		}
@@ -121,7 +121,7 @@ class LMAT_WP_Import extends WP_Import {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $terms array of terms in 'term_translations' taxonomy
+	 * @param array $terms array of terms in 'lmat_term_translations' taxonomy
 	 */
 	protected function remap_terms_relations( &$terms ) {
 		$term_relationships = array();
@@ -133,15 +133,15 @@ class LMAT_WP_Import extends WP_Import {
 					$object_id = $this->processed_terms[ $old_id ];
 					
 					// Language relationship.
-					$lang_term = $lang->get_tax_prop( 'term_language', 'term_id' );
+					$lang_term = $lang->get_tax_prop( 'lmat_term_language', 'term_id' );
 					if ( $lang_term ) {
-						$term_relationships[ $object_id ]['term_language'][] = $lang_term;
+						$term_relationships[ $object_id ]['lmat_term_language'][] = $lang_term;
 					}
 
 					// Translation relationship.
 					$translation_term_id = $this->processed_terms[ $term['term_id'] ];
 					if ( $translation_term_id ) {
-						$term_relationships[ $object_id ]['term_translations'][] = $translation_term_id;
+						$term_relationships[ $object_id ]['lmat_term_translations'][] = $translation_term_id;
 					}
 				}
 			}
@@ -171,7 +171,7 @@ class LMAT_WP_Import extends WP_Import {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $terms array of terms in 'post_translations' or 'term_translations' taxonomies
+	 * @param array $terms array of terms in 'lmat_post_translations' or 'lmat_term_translations' taxonomies
 	 * @param array $processed_objects array of posts or terms processed by WordPress Importer
 	 */
 	protected function remap_translations( &$terms, &$processed_objects ) {

@@ -82,7 +82,7 @@ class Default_Lang extends Abstract_String {
 		}
 
 		/** @var string $value */
-		if ( ! get_term_by( 'slug', $value, 'language' ) ) {
+		if ( ! get_term_by( 'slug', $value, 'lmat_language' ) ) {
 			return new WP_Error( 'lmat_invalid_language', sprintf( 'The language slug \'%s\' is not a valid language.', $value ) );
 		}
 

@@ -20,6 +20,6 @@ class LMAT_Yarpp {
 	 * @since 1.0.0
 	 */
 	public function init() {
-		$GLOBALS['wp_taxonomies']['language']->yarpp_support = 1;
+		$GLOBALS['wp_taxonomies']['lmat_language']->yarpp_support = 1;
 	}
 }

@@ -37,7 +37,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 * @phpstan-var non-empty-string
 	 */
-	protected $tax_language = 'language';
+	protected $tax_language = 'lmat_language';
 
 	/**
 	 * Identifier that must be unique for each type of content.
@@ -65,7 +65,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 * @phpstan-var non-empty-string
 	 */
-	protected $tax_translations = 'post_translations';
+	protected $tax_translations = 'lmat_post_translations';
 
 	/**
 	 * Constructor.
@@ -97,7 +97,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 				'show_ui'            => false, // Hide the taxonomy on admin side, needed for WP 4.4.x.
 				'show_in_nav_menus'  => false, // No metabox for nav menus, needed for WP 4.4.x.
 				'publicly_queryable' => true, // Since WP 4.5.
-				'query_var'          => 'lang', // See `add_language_taxonomy_query_var()`.
+				'query_var'          => 'lmat_lang', // See `add_language_taxonomy_query_var()`.
 				'rewrite'            => false, // Rewrite rules are added through filters when needed.
 				'_lmat'               => true, // Linguator taxonomy.
 			)
@@ -115,7 +115,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 * @return void
 	 */
 	public function add_language_taxonomy_query_var(): void {
-		$GLOBALS['wp']->add_query_var( 'lang' );
+		$GLOBALS['wp']->add_query_var( 'lmat_lang' );
 	}
 
 	/**
@@ -356,7 +356,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 		if ( ! empty( $post['post_parent'] ) ) {
 			$post['post_parent'] = (int) $this->get_translation( $post['post_parent'], $lang->slug );
 		}
-		$post['tax_input'] = array( 'language' => array( $lang->slug ) ); // Assigns the language.
+		$post['tax_input'] = array( 'lmat_language' => array( $lang->slug ) ); // Assigns the language.
 
 		// Loads the strings translations with the attachment's target language.
 		LMAT()->load_strings_translations( $lang->slug );
@@ -463,7 +463,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 		$posts = array();
 		foreach ( $all_posts as $post ) {
 			// Check if this post already has translations
-			$translation_terms = wp_get_object_terms( $post->ID, 'post_translations', array( 'fields' => 'all' ) );
+			$translation_terms = wp_get_object_terms( $post->ID, 'lmat_post_translations', array( 'fields' => 'all' ) );
 			$has_translations = false;
 			
 			if ( ! is_wp_error( $translation_terms ) && ! empty( $translation_terms ) ) {

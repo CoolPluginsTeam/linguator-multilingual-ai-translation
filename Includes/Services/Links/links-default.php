@@ -16,7 +16,7 @@ use Linguator\Includes\Other\LMAT_Language;
 
 /**
  * Links model for the default permalinks
- * for example mysite.com/?somevar=something&lang=en.
+ * for example mysite.com/?somevar=something&lmat_lang=en.
  *
  * @since 1.0.0
  */
@@ -43,7 +43,7 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 			$language = $language->slug;
 		}
 
-		return empty( $language ) || ( $this->options['hide_default'] && $this->options['default_lang'] === $language ) ? $url : add_query_arg( 'lang', $language, $url );
+		return empty( $language ) || ( $this->options['hide_default'] && $this->options['default_lang'] === $language ) ? $url : add_query_arg( 'lmat_lang', $language, $url );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	 * @return string The modified url.
 	 */
 	public function remove_language_from_link( $url ) {
-		return remove_query_arg( 'lang', $url );
+		return remove_query_arg( 'lmat_lang', $url );
 	}
 
 	/**
@@ -98,10 +98,10 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 		}
 
 		$pattern = sprintf(
-			'#[?&]lang=(?<lang>%s)(?:$|&)#',
+			'#[?&]lmat_lang=(?<lang>%s)(?:$|&)#',
 			implode( '|', $this->model->get_languages_list( array( 'fields' => 'slug' ) ) )
 		);
-		return preg_match( $pattern, $url, $matches ) ? $matches['lang'] : ''; // $matches['lang'] is the slug of the requested language.
+		return preg_match( $pattern, $url, $matches ) ? $matches['lang'] : '';
 	}
 
 	/**

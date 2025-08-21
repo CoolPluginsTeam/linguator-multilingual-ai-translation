@@ -166,8 +166,8 @@ class LMAT_Filters_Links {
 			return apply_filters( 'lmat_term_link', $link, $lang, $term );
 		}
 
-		// In case someone calls get_term_link for the 'language' taxonomy.
-		if ( 'language' === $tax ) {
+		// In case someone calls get_term_link for the 'lmat_language' taxonomy.
+		if ( 'lmat_language' === $tax ) {
 			$lang = $this->model->get_language( $term->term_id );
 			if ( $lang ) {
 				return $this->links_model->home_url( $lang );

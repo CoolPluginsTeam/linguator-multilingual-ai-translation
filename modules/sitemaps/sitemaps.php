@@ -69,7 +69,7 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	 * @return string|bool
 	 */
 	public function set_language_from_query( $lang, $query ) {
-		if ( isset( $query->query['sitemap'] ) && empty( $query->query['lang'] ) ) {
+		if ( isset( $query->query['sitemap'] ) && empty( $query->query['lmat_lang'] ) ) {
 			$lang = $this->options['default_lang'];
 		}
 		return $lang;
@@ -105,9 +105,9 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 			if ( false !== strpos( $rule, 'sitemap=$matches[1]' ) ) {
 				$newrules[ str_replace( '^wp-sitemap', $slug . 'wp-sitemap', $key ) ] = str_replace(
 					array( '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?' ),
-					array( '[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&' ),
+					array( '[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lmat_lang=$matches[1]&' ),
 					$rule
-				); // Should be enough!
+					); // Should be enough!
 			}
 
 			$newrules[ $key ] = $rule;

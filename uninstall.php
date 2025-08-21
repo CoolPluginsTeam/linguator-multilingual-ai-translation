@@ -56,10 +56,10 @@ class LMAT_Uninstall {
 
 		// We need to register the taxonomies.
 		$lmat_taxonomies = array(
-			'language',
-			'term_language',
-			'post_translations',
-			'term_translations',
+			'lmat_language',
+			'lmat_term_language',
+			'lmat_post_translations',
+			'lmat_term_translations',
 		);
 
 		foreach ( $lmat_taxonomies as $taxonomy ) {
@@ -77,7 +77,7 @@ class LMAT_Uninstall {
 
 		$languages = get_terms(
 			array(
-				'taxonomy'   => 'language',
+				'taxonomy'   => 'lmat_language',
 				'hide_empty' => false,
 			)
 		);

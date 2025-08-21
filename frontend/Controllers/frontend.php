@@ -232,8 +232,8 @@ class LMAT_Frontend extends LMAT_Base {
 		$lmat_query = new LMAT_Query( $query, $this->model );
 		$queried_taxonomies = $lmat_query->get_queried_taxonomies();
 
-		if ( ! empty( $queried_taxonomies ) && 'language' == reset( $queried_taxonomies ) ) {
-			$query->tax_query->queried_terms['language'] = array_shift( $query->tax_query->queried_terms );
+		if ( ! empty( $queried_taxonomies ) && 'lmat_language' == reset( $queried_taxonomies ) ) {
+			$query->tax_query->queried_terms['lmat_language'] = array_shift( $query->tax_query->queried_terms );
 		}
 	}
 
@@ -256,9 +256,9 @@ class LMAT_Frontend extends LMAT_Base {
 		}
 
 		// Modifies query vars when the language is queried
-		if ( ! empty( $qv['lang'] ) || ( ! empty( $taxonomies ) && array( 'language' ) == array_values( $taxonomies ) ) ) {
+		if ( ! empty( $qv['lmat_lang'] ) || ( ! empty( $taxonomies ) && array( 'lmat_language' ) == array_values( $taxonomies ) ) ) {
 			// Do we query a custom taxonomy?
-			$taxonomies = array_diff( $taxonomies, array( 'language', 'category', 'post_tag' ) );
+			$taxonomies = array_diff( $taxonomies, array( 'lmat_language', 'category', 'post_tag' ) );
 
 			// Remove pages query when the language is set unless we do a search
 			// Take care not to break the single page, attachment and taxonomies queries!

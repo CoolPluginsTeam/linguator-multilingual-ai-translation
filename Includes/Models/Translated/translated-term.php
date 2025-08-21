@@ -37,7 +37,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 * @phpstan-var non-empty-string
 	 */
-	protected $tax_language = 'term_language';
+	protected $tax_language = 'lmat_term_language';
 
 	/**
 	 * Object type to use when registering the taxonomy.
@@ -75,7 +75,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 * @phpstan-var non-empty-string
 	 */
-	protected $tax_translations = 'term_translations';
+	protected $tax_translations = 'lmat_term_translations';
 
 	/**
 	 * Constructor.
@@ -132,8 +132,6 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 
 		return true;
 	}
-
-	
 
 	/**
 	 * Deletes a translation of a term.

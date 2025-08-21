@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * A language object is made of two terms in 'language' and 'term_language' taxonomies.
+ * A language object is made of two terms in 'lmat_language' and 'lmat_term_language' taxonomies.
  * Manipulating only one object per language instead of two terms should make things easier.
  *
  * @since 1.0.0
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * }
  * @phpstan-type LanguageData array{
  *     term_props: array{
- *         language: LanguagePropData,
+ *         lmat_language: LanguagePropData,
  *     }&array<non-empty-string, LanguagePropData>,
  *     name: non-empty-string,
  *     slug: non-empty-string,
@@ -74,8 +74,8 @@ class LMAT_Language {
 	public $term_group;
 
 	/**
-	 * ID of the term in 'language' taxonomy.
-	 * Duplicated from `$this->term_props['language']['term_id'],
+	 * ID of the term in 'lmat_language' taxonomy.
+	 * Duplicated from `$this->term_props['lmat_language']['term_id'],
 	 * but kept to facilitate the use of it.
 	 *
 	 * @var int
@@ -228,34 +228,13 @@ class LMAT_Language {
 	public $is_default;
 
 	/**
-	 * Stores language term properties (like term IDs and counts) for each language taxonomy (`language`,
-	 * `term_language`, etc).
-	 * This stores the values of the properties `$term_id` + `$term_taxonomy_id` + `$count` (`language`), `$tl_term_id`
-	 * + `$tl_term_taxonomy_id` + `$tl_count` (`term_language`), and the `term_id` + `term_taxonomy_id` + `count` for
-	 * other language taxonomies.
+	 * Stores language term properties for each language taxonomy (`lmat_language`,
+	 * `lmat_term_language`, etc).
 	 *
 	 * @var array[] Array keys are language term names.
 	 *
-	 * @example array(
-	 *     'language'       => array(
-	 *         'term_id'          => 7,
-	 *         'term_taxonomy_id' => 8,
-	 *         'count'            => 11,
-	 *     ),
-	 *     'term_language' => array(
-	 *         'term_id'          => 11,
-	 *         'term_taxonomy_id' => 12,
-	 *         'count'            => 6,
-	 *     ),
-	 *     'foo_language'  => array(
-	 *         'term_id'          => 33,
-	 *         'term_taxonomy_id' => 34,
-	 *         'count'            => 0,
-	 *     ),
-	 * )
-	 *
 	 * @phpstan-var array{
-	 *         language: LanguagePropData,
+	 *         lmat_language: LanguagePropData,
 	 *     }
 	 *     &array<non-empty-string, LanguagePropData>
 	 */
@@ -271,7 +250,7 @@ class LMAT_Language {
 	 *     Language object properties stored as an array.
 	 *
 	 *     @type array[]  $term_props      An array of language term properties. Array keys are language taxonomy names
-	 *                                     (`language` and `term_language` are mandatory), array values are arrays of
+	 *                                     (`lmat_language` and `lmat_term_language` are mandatory), array values are arrays of
 	 *                                     language term properties (`term_id`, `term_taxonomy_id`, and `count`).
 	 *     @type string   $name            Language name. Ex: English.
 	 *     @type string   $slug            Language code used in URL. Ex: en.
@@ -302,7 +281,7 @@ class LMAT_Language {
 			$this->$prop = $value;
 		}
 
-		$this->term_id = $this->term_props['language']['term_id'];
+		$this->term_id = $this->term_props['lmat_language']['term_id'];
 	}
 
 	/**
@@ -648,7 +627,7 @@ class LMAT_Language {
 	 *
 	 * @param string $property A property name. A composite value can be used for language term property values, in the
 	 *                         form of `{language_taxonomy_name}:{property_name}` (see {@see LMAT_Language::get_tax_prop()}
-	 *                         for the possible values). Ex: `term_language:term_taxonomy_id`.
+	 *                         for the possible values). Ex: `lmat_term_language:term_taxonomy_id`.
 	 * @return string|int|bool|string[] The requested property for the language, `false` if the property doesn't exist.
 	 *
 	 * @phpstan-return (
@@ -656,7 +635,7 @@ class LMAT_Language {
 	 * )
 	 */
 	public function get_prop( $property ) {
-		// Composite property like 'term_language:term_taxonomy_id'.
+		// Composite property like 'lmat_term_language:term_taxonomy_id'.
 		if ( preg_match( '/^(?<tax>.{1,32}):(?<field>term_id|term_taxonomy_id|count)$/', $property, $matches ) ) {
 			/** @var array{tax:non-empty-string, field:'term_id'|'term_taxonomy_id'|'count'} $matches */
 			return $this->get_tax_prop( $matches['tax'], $matches['field'] );
