@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "ESNext",
+    "strict": true,
+    "removeComments": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "moduleResolution": "Node",
+    "declaration": false,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+
+    "jsx": "react-jsx",                // ✅ automatic JSX runtime
+    // remove jsxFactory / jsxFragmentFactory when using react-jsx
+
+    "sourceMap": true,
+    "noLib": false,
+    "suppressImplicitAnyIndexErrors": false,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+
+    "typeRoots": ["node_modules/@types"],
+    "types": ["react", "react-dom", "node"]   // ✅ ensure React types are in scope
+  },
+  "include": ["./**/*.tsx", "./**/*.ts", "./**/*.d.ts", "./**/*.css"]
+}

@@ -1,18 +1,22 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DependencyExtractionWebpackPlugin from '@wordpress/dependency-extraction-webpack-plugin';
+import defaultConfig from "@wordpress/scripts/config/webpack.config.js";
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generateAssets = false) {
+function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generateAssets = false, ext = '.js', styleLoader = false) {
+
     const entry = {};
     sourceFiles.forEach(filename => {
         const entryName = minimize ? `${filename}.min` : filename;
-        entry[entryName] = `./${srcDir}/${filename}.js`;
+        entry[entryName] = `./${srcDir}/${filename}${ext}`;
     });
 
-    const plugins = [];
+    const plugins = [...defaultConfig.plugins];
     if (generateAssets) {
         plugins.push(
             new DependencyExtractionWebpackPlugin({
@@ -22,7 +26,36 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
         );
     }
 
+    let conditionalRules = [];
+
+    if (styleLoader) {
+        const styleLoaderRule = {
+            test: /\.css$/i,
+            use: [
+                "style-loader",
+                {
+                    loader: "css-loader",
+                    options: {
+                        modules: true,
+                        importLoaders: 1,
+                    },
+                },
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        postcssOptions: {
+                            plugins: [autoprefixer],
+                        },
+                    },
+                },
+            ],
+        };
+
+        conditionalRules.push(styleLoaderRule);
+    }
+
     return {
+        ...defaultConfig,
         mode: minimize ? 'production' : 'development',
         entry,
         output: {
@@ -31,7 +64,14 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
             clean: false,
         },
         module: {
+            ...defaultConfig.module,
             rules: [
+                ...conditionalRules,
+                {
+                    test: /\.tsx?$/,
+                    use: "ts-loader",
+                    exclude: /node_modules/,
+                },
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
@@ -48,7 +88,7 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
                             ]
                         }
                     }
-                }
+                },
             ]
         },
         externals: {
@@ -60,7 +100,7 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
             minimize: minimize,
         },
         resolve: {
-            extensions: ['.js', '.jsx'],
+            extensions: ['.js', '.jsx', '.ts', '.tsx'],
             modules: [
                 path.resolve(__dirname, srcDir),
                 'node_modules'
@@ -105,10 +145,41 @@ const configs = [
         sourceFiles: [
             'setup'
         ]
+    },
+];
+
+const machineTranslationConfigs = [
+    {
+        srcDir: 'modules/inline-translation/src/elementor',
+        outDir: 'Admin/Assets/element-inline-translate',
+        sourceFiles: [
+            'index'
+        ],
+        styleLoader: true,
+        generateAssets: false
+    },
+    {
+        srcDir: 'modules/inline-translation/src/gutenberg/editorAssets',
+        outDir: 'Admin/Assets/gutenberg-inline-translate',
+        sourceFiles: [
+            'index'
+        ],
+        styleLoader: true,
+        generateAssets: false,
+        ext: '.ts'
     }
 ];
 
 export default (env, options) => {
+
+    if(env && env.configType === 'default'){
+        return defaultConfig;
+    }
+
+    if (env && env.type === 'inlineTranslate') {
+        return machineTranslationConfigs.map(cfg => createConfig(cfg, false, cfg.generateAssets, cfg.ext, cfg.styleLoader));
+    }
+
     // Only first config (output1) gets both regular and minified (no assets)
     const mainBuilds = [
         createConfig(configs[0], false, false), // regular .js, no assets
