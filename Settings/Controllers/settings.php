@@ -215,12 +215,12 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			case 'add':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
 				$sanitized_data = array(
-					'name' => sanitize_text_field( $_POST['name'] ?? '' ),
-					'slug' => sanitize_key( $_POST['slug'] ?? '' ),
-					'locale' => sanitize_locale_name( $_POST['locale'] ?? '' ),
+					'name' => sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) ),
+					'slug' => sanitize_key( wp_unslash( $_POST['slug'] ?? '' ) ),
+					'locale' => sanitize_locale_name( wp_unslash( $_POST['locale'] ?? '' ) ),
 					'rtl' => isset( $_POST['rtl'] ) ? (bool) $_POST['rtl'] : false,
 					'term_group' => isset( $_POST['term_group'] ) ? (int) $_POST['term_group'] : 0,
-					'flag' => sanitize_text_field( $_POST['flag'] ?? '' ),
+					'flag' => sanitize_text_field( wp_unslash( $_POST['flag'] ?? '' ) ),
 				);
 				$errors = $this->model->add_language( $sanitized_data );
 
@@ -258,13 +258,13 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			case 'update':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
 				$sanitized_data = array(
-					'lang_id' => (int) ( $_POST['lang_id'] ?? 0 ),
-					'name' => sanitize_text_field( $_POST['name'] ?? '' ),
-					'slug' => sanitize_key( $_POST['slug'] ?? '' ),
-					'locale' => sanitize_locale_name( $_POST['locale'] ?? '' ),
+					'lang_id' => absint( wp_unslash( $_POST['lang_id'] ?? 0 ) ),
+					'name' => sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) ),
+					'slug' => sanitize_key( wp_unslash( $_POST['slug'] ?? '' ) ),
+					'locale' => sanitize_locale_name( wp_unslash( $_POST['locale'] ?? '' ) ),
 					'rtl' => isset( $_POST['rtl'] ) ? (bool) $_POST['rtl'] : false,
 					'term_group' => isset( $_POST['term_group'] ) ? (int) $_POST['term_group'] : 0,
-					'flag' => sanitize_text_field( $_POST['flag'] ?? '' ),
+					'flag' => sanitize_text_field( wp_unslash( $_POST['flag'] ?? '' ) ),
 				);
 				$errors = $this->model->update_language( $sanitized_data );
 
