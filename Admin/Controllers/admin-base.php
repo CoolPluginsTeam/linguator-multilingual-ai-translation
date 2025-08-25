@@ -113,6 +113,9 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		$this->links = new LMAT_Admin_Links( $this );
 		$this->filters_links = new LMAT_Filters_Links( $this );
 
+		// Add view language links
+		new LMAT_Admin_View_Language_Links();
+
 		// Filter admin language for users
 		// We must not call user info before WordPress defines user roles in wp-settings.php
 		add_action( 'setup_theme', array( $this, 'init_user' ) );
