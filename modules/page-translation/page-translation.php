@@ -236,6 +236,13 @@ class LMAT_Page_Translation {
 
 		$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/page-translation/index.asset.php';
 
+		if(!is_array($editor_script_asset)) {
+			$editor_script_asset = array(
+				'dependencies' => array(),
+				'version' => LINGUATOR_VERSION,
+			);
+		}
+
 		wp_register_script( 'lmat-page-machine-translate', plugins_url( 'Admin/Assets/page-translation/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
 		wp_register_style( 'lmat-page-machine-translate', plugins_url( 'Admin/Assets/page-translation/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
 
@@ -343,7 +350,7 @@ class LMAT_Page_Translation {
 		}
 
 		$data = $this->page_translate_helper->block_parsing_rules();
-		wp_send_json_success( array( 'blockRules' => $data ) );
+		wp_send_json_success( array( 'blockRules' => json_encode($data) ) );
 		exit;
 	}
 
