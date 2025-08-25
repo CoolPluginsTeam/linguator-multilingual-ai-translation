@@ -7,7 +7,7 @@ import UpdateGutenbergPage from './createTranslatedPost/Gutenberg/index.js';
 import Notice from './component/Notice/index.js';
 import { select } from '@wordpress/data';
 import { sprintf, __ } from '@wordpress/i18n';
-import './index.scss';
+import './index.css';
 
 // Elementor post fetch and update page
 import ElementorPostFetch from './FetchPost/Elementor/index.js';
