@@ -192,3 +192,101 @@ function lmat_add_notice( WP_Error $error ) {
 		add_settings_error( 'linguator-multilingual-ai-translation', $error_code, $message, $type );
 	}
 }
+
+/**
+ * Replaces links with their translated versions.
+ *
+ * @param string $content The content to replace links in.
+ * @param string $locale The locale to replace links for.
+ * @return string The content with links replaced.
+ */
+function lmat_replace_links_with_translations($content, $locale, $current_locale){
+	// Get all URLs in the content that start with the current home page URL (current domain), regardless of attribute or tag.
+	$home_url = preg_quote(get_home_url(), '/');
+	$pattern = '/(' . $home_url . '[^\s"\'<>]*)/i';
+	
+	$taxonomies=get_taxonomies([],'objects');
+ 
+	 $terms_data=array();
+
+	 foreach($taxonomies as $key=>$taxonomy){
+		 if(isset($taxonomy->rewrite['slug'])){
+			 $terms_data[$taxonomy->rewrite['slug']]=$key;
+		 }else{
+			 $terms_data[$key]=$key;
+		 }
+	 }
+ 
+	 function lmat_extract_taxonomy_name($path, $terms_data){
+		 // Remove the language prefix if using Polylang
+		 $languages = lmat_languages_list(); // e.g., ['en', 'fr']
+		 $segments = explode('/', $path);
+		 if (in_array($segments[0], $languages)) {
+			 array_shift($segments); // remove 'en', 'fr', etc.
+		 }
+		 
+		 if (empty($segments)) {
+			 return null;
+		 }
+ 
+		 // First segment after language is usually the taxonomy slug
+		 $possible_tax = $segments[0];
+ 
+		 if (taxonomy_exists($possible_tax) || (isset($terms_data[$possible_tax]) && taxonomy_exists($terms_data[$possible_tax]))) {
+				return isset($terms_data[$possible_tax]) ? $terms_data[$possible_tax] : $possible_tax;
+		 }
+ 
+		 return false;
+	 }
+ 
+ 
+	if (preg_match_all($pattern, $content, $matches)) {
+		foreach ($matches[1] as $href) {
+			$postID = url_to_postid($href);
+ 
+			if ($postID > 0) {
+				$translatedPost = lmat_get_post($postID, $locale);
+				if ($translatedPost) {
+					$link = get_permalink($translatedPost);
+					
+					if ($link) {
+						$link=esc_url(urldecode_deep($link));
+						$content = str_replace($href, $link, $content);
+					}
+				}
+			} else {
+				 $path = trim(str_replace(pll_home_url($current_locale), '', $href), '/');
+				 $category_slug = end(array_filter(explode('/', $path)));
+				 $taxonomy_name=lmat_extract_taxonomy_name($path, $terms_data);
+				 $taxonomy_name=$taxonomy_name ? $taxonomy_name : 'category';
+ 
+				$category = get_term_by('slug', $category_slug, $taxonomy_name);
+ 
+				if(!$category){
+						// Remove the language prefix if using Polylang
+					$languages = lmat_languages_list(); // e.g., ['en', 'fr']
+					$segments = explode('/', $path);
+					if (in_array($segments[0], $languages)) {
+						$lang_code=$segments[0];
+						$category_id=Lmat()->model->term_exists_by_slug($category_slug, $lang_code, $taxonomy_name);
+ 
+						if($category_id){
+							$category=get_term($category_id, $taxonomy_name);
+						}
+					}
+				}
+ 
+				
+				if ($category) {
+					$term_id = lmat_get_term($category->term_id, $locale);
+					if ($term_id > 0) {
+						$link = get_category_link($term_id);
+						$content = str_replace($href, esc_url($link), $content);
+					}
+				}
+			}
+		}
+	}
+	
+	return $content;
+ }
