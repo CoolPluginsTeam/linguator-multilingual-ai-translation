@@ -76,6 +76,13 @@ class LMAT_Inline_Translation {
 
 		$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/' . sanitize_file_name( $type ) . '-inline-translate/index.asset.php';
 
+		if(!is_array($editor_script_asset)) {
+			$editor_script_asset = array(
+				'dependencies' => array(),
+				'version' => LINGUATOR_VERSION,
+			);
+		}
+
 		wp_register_script( 'lmat-inline-google-api', 'https://translate.google.com/translate_a/element.js', '', LINGUATOR_VERSION, true );
 		
 		$extra_dependencies[] = 'lmat-inline-google-api';

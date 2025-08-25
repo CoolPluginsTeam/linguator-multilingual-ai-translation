@@ -103,6 +103,14 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 
 			$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/bulk-translate/index.asset.php';
 
+			if(!is_array($editor_script_asset)) {
+				$editor_script_asset = array(
+					'dependencies' => array(),
+					'version' => LINGUATOR_VERSION,
+				);
+			}
+
+
 			$rtl      = function_exists( 'is_rtl' ) ? is_rtl() : false;
 			$css_file = $rtl ? 'index-rtl.css' : 'index.css';
 
