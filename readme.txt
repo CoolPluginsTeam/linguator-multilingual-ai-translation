@@ -4,7 +4,7 @@ Tags: translation, multilingual, language, localization
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,10 @@ Yes. Linguator includes an option to automatically detect the visitor's browser 
 There is no limit. You can add as many languages as you want to your website using Linguator.
 
 == Changelog ==
+
+= 1.0.2 =
+* Fixed escaping and sanitization issues.
+* Minor bug fixes.
 
 = 1.0.1 =
 * Fixed issue with translated strings.
