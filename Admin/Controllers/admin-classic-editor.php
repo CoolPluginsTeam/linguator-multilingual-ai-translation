@@ -325,7 +325,7 @@ class LMAT_Admin_Classic_Editor {
 			wp_die( 0 );
 		}
 
-		$term = wp_unslash( $_GET['term'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$term = sanitize_text_field( wp_unslash( $_GET['term'] ) );
 
 		$post_language = $this->model->get_language( sanitize_key( $_GET['post_language'] ) );
 		$translation_language = $this->model->get_language( sanitize_key( $_GET['translation_language'] ) );

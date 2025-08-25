@@ -583,7 +583,7 @@ class LMAT_Admin_Filters_Term {
 		}
 
 		/** @var string */
-		$s = wp_unslash( $_GET['term'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$s = sanitize_text_field( wp_unslash( $_GET['term'] ) );
 		$post_type = sanitize_key( $_GET['post_type'] );
 		$taxonomy  = sanitize_key( $_GET['taxonomy'] );
 

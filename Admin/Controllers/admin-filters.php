@@ -56,7 +56,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 		// Biography translations
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			$meta        = $lang->is_default ? 'description' : 'description_' . $lang->slug;
-			$description = empty( $_POST[ 'description_' . $lang->slug ] ) ? '' : trim( $_POST[ 'description_' . $lang->slug ] );  // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput
+			$description = empty( $_POST[ 'description_' . $lang->slug ] ) ? '' : sanitize_textarea_field( trim( $_POST[ 'description_' . $lang->slug ] ) );
 
 			/** This filter is documented in wp-includes/user.php */
 			$description = apply_filters( 'pre_user_description', $description ); // Applies WP default filter wp_filter_kses

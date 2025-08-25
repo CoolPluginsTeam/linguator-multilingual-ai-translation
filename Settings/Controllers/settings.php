@@ -214,13 +214,21 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		switch ( $action ) {
 			case 'add':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
-				$errors = $this->model->add_language( $_POST );
+				$sanitized_data = array(
+					'name' => sanitize_text_field( $_POST['name'] ?? '' ),
+					'slug' => sanitize_key( $_POST['slug'] ?? '' ),
+					'locale' => sanitize_locale_name( $_POST['locale'] ?? '' ),
+					'rtl' => isset( $_POST['rtl'] ) ? (bool) $_POST['rtl'] : false,
+					'term_group' => isset( $_POST['term_group'] ) ? (int) $_POST['term_group'] : 0,
+					'flag' => sanitize_text_field( $_POST['flag'] ?? '' ),
+				);
+				$errors = $this->model->add_language( $sanitized_data );
 
 				if ( is_wp_error( $errors ) ) {
 						lmat_add_notice( $errors );
 				} else {
 					lmat_add_notice( new WP_Error( 'lmat_languages_created', __( 'Language added.', 'linguator-multilingual-ai-translation' ), 'success' ) );
-					$locale = sanitize_locale_name( $_POST['locale'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+					$locale = $sanitized_data['locale'];
 
 					if ( 'en_US' !== $locale && current_user_can( 'install_languages' ) ) {
 						// Attempts to install the language pack
@@ -249,7 +257,16 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			case 'update':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
-				$errors = $this->model->update_language( $_POST );
+				$sanitized_data = array(
+					'lang_id' => (int) ( $_POST['lang_id'] ?? 0 ),
+					'name' => sanitize_text_field( $_POST['name'] ?? '' ),
+					'slug' => sanitize_key( $_POST['slug'] ?? '' ),
+					'locale' => sanitize_locale_name( $_POST['locale'] ?? '' ),
+					'rtl' => isset( $_POST['rtl'] ) ? (bool) $_POST['rtl'] : false,
+					'term_group' => isset( $_POST['term_group'] ) ? (int) $_POST['term_group'] : 0,
+					'flag' => sanitize_text_field( $_POST['flag'] ?? '' ),
+				);
+				$errors = $this->model->update_language( $sanitized_data );
 
 				if ( is_wp_error( $errors ) ) {
 					lmat_add_notice( $errors );
@@ -504,7 +521,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public static function redirect( $args = array() ) {
 		$errors = get_settings_errors( 'linguator-multilingual-ai-translation' );
 		if ( ! empty( $errors ) ) {
-			set_transient( 'settings_errors', $errors, 30 );
+			set_transient( 'lmat_settings_errors', $errors, 30 );
 			$args['settings-updated'] = 1;
 		}
 		// Remove possible 'lmat_action' and 'lang' query args from the referer before redirecting

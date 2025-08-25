@@ -275,7 +275,7 @@ class LMAT_Settings_Module {
 
 		if ( isset( $_POST['module'] ) && $this->module === $_POST['module'] ) {
 			// It's up to the child class to decide which options are saved, whether there are errors or not
-			$posted_options   = array_diff_key( $_POST, array_flip( array( 'action', 'module', 'lmat_ajax_backend', 'lmat_ajax_settings', '_lmat_nonce' ) ) );
+			$posted_options   = array_diff_key( map_deep( $_POST, 'sanitize_text_field' ), array_flip( array( 'action', 'module', 'lmat_ajax_backend', 'lmat_ajax_settings', '_lmat_nonce' ) ) );
 			$errors           = $this->options->merge( $this->prepare_raw_data( $posted_options ) );
 
 			// Refresh language cache in case home urls have been modified
