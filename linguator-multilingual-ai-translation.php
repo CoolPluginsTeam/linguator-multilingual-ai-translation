@@ -7,7 +7,7 @@
  * Requires at least: 6.2
  * Requires PHP:      7.2
  * Author:            Cool Plugins
- * Author URI:        https://coolplugins.net/
+ * Author URI:        https://profiles.wordpress.org/coolplugins/
  * Text Domain:       linguator-multilingual-ai-translation
  * License:           GPL2
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
