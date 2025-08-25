@@ -308,31 +308,47 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 			}
 		}
 
-		private function get_block_parse_rules() {
-			$response = wp_remote_get(
-				plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE ),
-				array(
-					'timeout'   => 15,
-					'sslverify' => false, // Disable SSL verification to avoid cURL error 60
-				)
-			);
+		public function get_block_parse_rules()
+		{
+			$path_url=plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
+			$response = wp_remote_get( esc_url_raw( $path_url ), array(
+				'timeout' => 15,
+			) );
 
-			if ( is_wp_error( $response ) ) {
-				$block_rules = '';
+			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+				global $wp_filesystem;
+
+				// Initialize the WordPress filesystem
+				if ( ! function_exists( 'WP_Filesystem' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/file.php';
+				}
+
+				WP_Filesystem();
+
+				$local_path = $path_url;
+				if($wp_filesystem->exists($local_path) && $wp_filesystem->is_readable( $local_path )){
+					$block_rules = $wp_filesystem->get_contents( $local_path );
+				}else{
+					$block_rules = array();
+				}
 			} else {
 				$block_rules = wp_remote_retrieve_body( $response );
 			}
 
-			$block_translation_rules = json_decode( $block_rules, true );
+			if(empty($block_rules)){
+				return array();
+			}
 
-			$this->custom_block_data_array = isset( $block_translation_rules['LmatBlockParseRules'] ) ? $block_translation_rules['LmatBlockParseRules'] : null;
+			$block_translation_rules = json_decode($block_rules, true);
 
-			$custom_block_translation = get_option( 'lmat_custom_block_translation', false );
+			$this->custom_block_data_array = isset($block_translation_rules['LmatBlockParseRules']) ? $block_translation_rules['LmatBlockParseRules'] : null;
 
-			if ( ! empty( $custom_block_translation ) && is_array( $custom_block_translation ) ) {
-				foreach ( $custom_block_translation as $key => $block_data ) {
-					$block_rules = isset( $block_translation_rules['LmatBlockParseRules'][ $key ] ) ? $block_translation_rules['LmatBlockParseRules'][ $key ] : null;
-					$this->filter_custom_block_rules( array( $key ), $block_data, $block_rules );
+			$custom_block_translation = get_option('lmat_custom_block_translation', false);
+
+			if (! empty($custom_block_translation) && is_array($custom_block_translation)) {
+				foreach ($custom_block_translation as $key => $block_data) {
+					$block_rules = isset($block_translation_rules['LmatBlockParseRules'][$key]) ? $block_translation_rules['LmatBlockParseRules'][$key] : null;
+					$this->filter_custom_block_rules(array($key), $block_data, $block_rules);
 				}
 			}
 
