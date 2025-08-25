@@ -207,6 +207,11 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => __DIR__ . '/../..' . '/Settings/Controllers/settings-module.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => __DIR__ . '/../..' . '/Settings/Tables/table-languages.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_String' => __DIR__ . '/../..' . '/Settings/Tables/table-string.php',
+        'Linguator\\modules\\Bulk_Translation\\LMAT_Bulk_Translate_Rest_Routes' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translate-rest-routes.php',
+        'Linguator\\modules\\Bulk_Translation\\LMAT_Bulk_Translation' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translation.php',
+        'Linguator\\modules\\Inline_Translation\\LMAT_Inline_Translation' => __DIR__ . '/../..' . '/modules/inline-translation/inline-translation.php',
+        'Linguator\\modules\\Page_Translation\\LMAT_Page_Translation' => __DIR__ . '/../..' . '/modules/page-translation/page-translation.php',
+        'Linguator\\modules\\Page_Translation\\LMAT_Page_Translation_Helper' => __DIR__ . '/../..' . '/modules/page-translation/page-translation-helper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
