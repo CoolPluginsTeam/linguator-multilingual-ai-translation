@@ -1,7 +1,7 @@
 import App from './App.js';
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
+import './index.css';
 import { store } from './ReduxStore/store.js';
 import { Provider } from 'react-redux';
 
