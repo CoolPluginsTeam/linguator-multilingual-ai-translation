@@ -15232,6 +15232,112 @@ var General = function General(_ref) {
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation'))))));
 };
 /* harmony default export */ const components_General = (General);
+;// ./Settings/Views/src/components/Sidebar.jsx
+function Sidebar_extends() { return Sidebar_extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, Sidebar_extends.apply(null, arguments); }
+
+
+var Sidebar = function Sidebar() {
+  var _window$lmat_settings;
+  // Get LocoAI plugin status from localized script data
+  var locoaiStatus = ((_window$lmat_settings = window.lmat_settings) === null || _window$lmat_settings === void 0 ? void 0 : _window$lmat_settings.locoai_plugin_status) || {
+    status: 'not_installed'
+  };
+
+  // Determine button text and behavior based on plugin status
+  var getButtonConfig = function getButtonConfig() {
+    var _window$lmat_settings2;
+    switch (locoaiStatus.status) {
+      case 'active':
+        return {
+          text: (0,external_wp_i18n_namespaceObject.__)('ACTIVATED', 'linguator-multilingual-ai-translation'),
+          href: 'plugins.php',
+          className: 'button button-secondary',
+          disabled: false,
+          target: '_self'
+        };
+      case 'installed':
+        return {
+          text: (0,external_wp_i18n_namespaceObject.__)('ACTIVATE', 'linguator-multilingual-ai-translation'),
+          href: "plugins.php?_wpnonce=".concat(((_window$lmat_settings2 = window.lmat_settings) === null || _window$lmat_settings2 === void 0 ? void 0 : _window$lmat_settings2.activate_nonce) || '', "&action=activate&plugin=automatic-translator-addon-for-loco-translate/automatic-translator-addon-for-loco-translate.php"),
+          className: 'button button-primary',
+          disabled: false,
+          target: '_self'
+        };
+      default:
+        return {
+          text: (0,external_wp_i18n_namespaceObject.__)('INSTALL', 'linguator-multilingual-ai-translation'),
+          href: 'plugin-install.php?s=locoai&tab=search&type=term',
+          className: 'button button-primary',
+          disabled: false,
+          target: '_blank'
+        };
+    }
+  };
+  var buttonConfig = getButtonConfig();
+  return /*#__PURE__*/React.createElement("div", {
+    className: "w-full"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-full rounded-lg"
+  }, /*#__PURE__*/React.createElement(S, {
+    className: "flex flex-col p-6  bg-white border border-gray-200 rounded-lg shadow-sm"
+  }, /*#__PURE__*/React.createElement(S.Item, null, /*#__PURE__*/React.createElement("h2", {
+    className: "text-lg font-semibold text-gray-900 mb-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Auto Translation Status', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement(S.Item, {
+    className: ""
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "text-3xl font-bold text-gray-900 m-0"
+  }, "0"), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm text-gray-600 m-0"
+  }, (0,external_wp_i18n_namespaceObject.__)('Total Characters Translated!', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
+  }), /*#__PURE__*/React.createElement(S.Item, {
+    className: "w-full"
+  }, /*#__PURE__*/React.createElement(S.Item, {
+    className: "flex flex-col gap-1"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-between items-center"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-sm text-gray-700 m-0"
+  }, (0,external_wp_i18n_namespaceObject.__)('Total Strings', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm font-medium text-gray-900 m-0"
+  }, "0")), /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-between items-center"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-sm text-gray-700 m-0"
+  }, (0,external_wp_i18n_namespaceObject.__)('Total Pages / Posts', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm font-medium text-gray-900 m-0"
+  }, "0")), /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-between items-center"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-sm text-gray-700 m-0"
+  }, (0,external_wp_i18n_namespaceObject.__)('Time Taken', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm font-medium text-gray-900 m-0"
+  }, "0"))))), /*#__PURE__*/React.createElement("div", {
+    className: " p-6"
+  }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
+  }), /*#__PURE__*/React.createElement(S.Item, {
+    className: "flex"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-[70%]"
+  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Loco Addon to translate plugins and themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", Sidebar_extends({
+    href: buttonConfig.href,
+    target: buttonConfig.target,
+    className: buttonConfig.className
+  }, buttonConfig.disabled && {
+    disabled: true
+  }), buttonConfig.text)), /*#__PURE__*/React.createElement("div", {
+    className: "w-[30%] flex items-center object-contain p-2"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "plugin-install.php?s=locoai&tab=search&type=term",
+    target: "_blank"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "w-full h-auto  ",
+    src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
+    alt: "Loco translate logo"
+  }))), /*#__PURE__*/React.createElement("div", null)))));
+};
+/* harmony default export */ const components_Sidebar = (Sidebar);
 ;// ./node_modules/lucide-react/dist/esm/icons/loader-pinwheel.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -15321,6 +15427,7 @@ function MainComponent_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
+
 //Component mapper for settings page
 var ComponentSelector = function ComponentSelector(_ref) {
   var currentPage = _ref.currentPage,
@@ -15373,7 +15480,11 @@ var MainComponent = function MainComponent(_ref2) {
     }
     serverCall();
   }, []);
-  return /*#__PURE__*/external_React_default().createElement("div", null, loading ? /*#__PURE__*/external_React_default().createElement("div", {
+  return /*#__PURE__*/external_React_default().createElement("div", {
+    className: "md:flex gap-8"
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "md:w-[75%]"
+  }, loading ? /*#__PURE__*/external_React_default().createElement("div", {
     className: "flex justify-center gap-4 items-center min-h-[100vh]"
   }, /*#__PURE__*/external_React_default().createElement("h1", null, /*#__PURE__*/external_React_default().createElement(loader_es_d, {
     className: "",
@@ -15388,7 +15499,9 @@ var MainComponent = function MainComponent(_ref2) {
     currentPage: currentPage,
     data: data,
     setData: setData
-  })));
+  }))), /*#__PURE__*/external_React_default().createElement("div", {
+    className: "md:w-[25%] mt-4 w-full "
+  }, /*#__PURE__*/external_React_default().createElement(components_Sidebar, null)));
 };
 /* harmony default export */ const components_MainComponent = (MainComponent);
 ;// ./Settings/Views/src/pages/SettingPage.jsx
