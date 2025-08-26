@@ -174,7 +174,6 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	public function add_filters() {
 		$this->filters_sanitization = new LMAT_Filters_Sanitization( $this->get_locale_for_sanitization() );
 		$this->filters_widgets_options = new LMAT_Admin_Filters_Widgets_Options( $this );
-
 		// Initialize feedback functionality
 		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
 
