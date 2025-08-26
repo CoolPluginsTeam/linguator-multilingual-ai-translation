@@ -17,3 +17,4 @@ vendor/**/LICENSE
 vendor/**/README.md
 vendor/*/installed.php
 node_modules
+*.js*LICENSE.txt 
