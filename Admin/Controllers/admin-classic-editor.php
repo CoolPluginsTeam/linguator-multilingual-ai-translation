@@ -60,7 +60,7 @@ class LMAT_Admin_Classic_Editor {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		// Ajax response for changing the language in the post metabox
-		add_action( 'wp_ajax_post_lang_choice', array( $this, 'post_lang_choice' ) );
+		add_action( 'wp_ajax_lmat_post_lang_choice', array( $this, 'post_lang_choice' ) );
 		add_action( 'wp_ajax_lmat_posts_not_translated', array( $this, 'ajax_posts_not_translated' ) );
 
 		// Filters the pages by language in the parent dropdown list in the page attributes metabox
@@ -137,7 +137,37 @@ class LMAT_Admin_Classic_Editor {
 			esc_html__( 'Language', 'linguator-multilingual-ai-translation' ),
 			esc_attr( $id ),
 			( 'attachment' === $post_type ? 'media' : 'post' ),
-			$dropdown_html // phpcs:ignore WordPress.Security.EscapeOutput
+			wp_kses(
+				$dropdown_html,
+				array(
+					'span'   => array( 'class' => true ),
+					'img'    => array(
+						'src'      => true,
+						'alt'      => true,
+						'width'    => true,
+						'height'   => true,
+						'class'    => true,
+						'style'    => true,
+						'loading'  => true,
+						'decoding' => true,
+					),
+					'select' => array(
+						'name'     => true,
+						'id'       => true,
+						'class'    => true,
+						'lang'     => true,
+						'disabled' => true,
+					),
+					'option' => array(
+						'value'     => true,
+						'lang'      => true,
+						'aria-label'=> true,
+						'selected'  => true,
+						'data-lang' => true,
+					),
+				),
+				array_merge( wp_allowed_protocols(), array( 'data' ) )
+			)
 		);
 
 		/**
@@ -295,7 +325,7 @@ class LMAT_Admin_Classic_Editor {
 			wp_die( 0 );
 		}
 
-		$term = wp_unslash( $_GET['term'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$term = sanitize_text_field( wp_unslash( $_GET['term'] ) );
 
 		$post_language = $this->model->get_language( sanitize_key( $_GET['post_language'] ) );
 		$translation_language = $this->model->get_language( sanitize_key( $_GET['translation_language'] ) );

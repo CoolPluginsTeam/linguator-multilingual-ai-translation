@@ -65,7 +65,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 			return $this->get_preferred_language();
 		}
 
-		if ( $var = get_query_var( 'lang' ) ) {
+		if ( $var = get_query_var( 'lmat_lang' ) ) {
 			$lang = explode( ',', $var );
 			$lang = $this->model->get_language( reset( $lang ) ); // Choose the first queried language
 		}
@@ -141,7 +141,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 		// Sets the language in case we hide the default language
 		// Use $query->query['s'] as is_search is not set when search is empty
 		// http://wordpress.org/support/topic/search-for-empty-string-in-default-language
-		if ( $this->options['hide_default'] && ! isset( $qv['lang'] ) && ( $is_archive || isset( $query->query['s'] ) || ( count( $query->query ) == 1 && ! empty( $qv['feed'] ) ) ) ) {
+		if ( $this->options['hide_default'] && ! isset( $qv['lmat_lang'] ) && ( $is_archive || isset( $query->query['s'] ) || ( count( $query->query ) == 1 && ! empty( $qv['feed'] ) ) ) ) {
 			$this->set_language( $this->model->get_default_language() );
 			$this->set_curlang_in_query( $query );
 		}

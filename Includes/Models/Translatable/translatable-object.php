@@ -348,7 +348,7 @@ abstract class LMAT_Translatable_Object {
 
 		/*
 		 * $lang is an array of objects, an array of slugs, or a comma separated list of slugs.
-		 * The comma separated list of slugs can happen if the query is coming from outside with a 'lang' parameter.
+		 * The comma separated list of slugs can happen if the query is coming from outside with a 'lmat_lang' parameter.
 		 */
 		$languages        = is_array( $lang ) ? $lang : explode( ',', $lang );
 		$languages_tt_ids = array();

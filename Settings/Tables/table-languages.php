@@ -80,7 +80,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 				return (int) $item->$column_name;
 
 			case 'count':
-				return $item->get_tax_prop( 'language', $column_name );
+				return $item->get_tax_prop( 'lmat_language', $column_name );
 
 			default:
 				return $item->$column_name; // Flag.

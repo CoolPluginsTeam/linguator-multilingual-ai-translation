@@ -186,7 +186,7 @@ class LMAT_Canonical {
 		}
 		$field = $queried_terms[ $taxonomy ]['field'];
 		$term  = reset( $queried_terms[ $taxonomy ]['terms'] );
-		$lang  = isset( $queried_terms['language']['terms'] ) ? reset( $queried_terms['language']['terms'] ) : '';
+		$lang  = isset( $queried_terms['lmat_language']['terms'] ) ? reset( $queried_terms['lmat_language']['terms'] ) : '';
 
 		// We can get a term_id when requesting a plain permalink, eg /?cat=1.
 		if ( 'term_id' === $field ) {
@@ -195,7 +195,7 @@ class LMAT_Canonical {
 
 		// We get a slug when requesting a pretty permalink. Let's query all corresponding terms.
 		$args = array(
-			'lang'       => '',
+			'lmat_lang'       => '',
 			'taxonomy'   => $taxonomy,
 			$field       => $term,
 			'hide_empty' => false,
@@ -239,7 +239,7 @@ class LMAT_Canonical {
 	 */
 	protected function get_queried_taxonomy( $tax_query ) {
 		$queried_terms = $tax_query->queried_terms;
-		unset( $queried_terms['language'] );
+		unset( $queried_terms['lmat_language'] );
 
 		return (string) key( $queried_terms );
 	}
@@ -266,8 +266,8 @@ class LMAT_Canonical {
 		$backup_wp_query = $wp_query;
 
 		if ( isset( $wp_query->tax_query ) ) {
-			unset( $wp_query->tax_query->queried_terms['language'] );
-			unset( $wp_query->query['lang'] );
+			unset( $wp_query->tax_query->queried_terms['lmat_language'] );
+			unset( $wp_query->query['lmat_lang'] );
 		}
 
 		$redirect_url = redirect_canonical( $url, false );

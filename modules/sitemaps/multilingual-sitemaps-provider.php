@@ -102,7 +102,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	 */
 	public static function query_args( $args ) {
 		if ( ! empty( self::$filter_lang ) ) {
-			$args['lang'] = self::$filter_lang;
+			$args['lmat_lang'] = self::$filter_lang;
 		}
 		return $args;
 	}
@@ -200,8 +200,8 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 		}
 
 		// If no language is present in $name, we may attempt to get the current sitemap url (e.g. in redirect_canonical() ).
-		if ( get_query_var( 'lang' ) ) {
-			$lang = $this->model->get_language( get_query_var( 'lang' ) );
+		if ( get_query_var( 'lmat_lang' ) ) {
+			$lang = $this->model->get_language( get_query_var( 'lmat_lang' ) );
 			$url = $this->provider->get_sitemap_url( $name, $page );
 			return $this->links_model->add_language_to_link( $url, $lang );
 		}

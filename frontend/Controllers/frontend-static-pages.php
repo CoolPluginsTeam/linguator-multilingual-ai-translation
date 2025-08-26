@@ -162,7 +162,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 */
 	protected function is_front_page( $query ) {
 		$query = array_diff( array_keys( $query->query ), array( 'preview', 'page', 'paged', 'cpage', 'orderby' ) );
-		return 1 === count( $query ) && in_array( 'lang', $query );
+		return 1 === count( $query ) && in_array( 'lmat_lang', $query );
 	}
 
 	/**
@@ -180,12 +180,12 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 		}
 
 		// Redirect the language page to the homepage when using a static front page
-		if ( ( $this->options['redirect_lang'] || $this->options['hide_default'] ) && $this->is_front_page( $query ) && $lang = $this->model->get_language( get_query_var( 'lang' ) ) ) {
+		if ( ( $this->options['redirect_lang'] || $this->options['hide_default'] ) && $this->is_front_page( $query ) && $lang = $this->model->get_language( get_query_var( 'lmat_lang' ) ) ) {
 			$query->is_archive = $query->is_tax = false;
 			if ( 'page' === get_option( 'show_on_front' ) && ! empty( $lang->page_on_front ) ) {
 				$query->set( 'page_id', $lang->page_on_front );
 				$query->is_singular = $query->is_page = true;
-				unset( $query->query_vars['lang'], $query->queried_object ); // Reset queried object
+				unset( $query->query_vars['lmat_lang'], $query->queried_object ); // Reset queried object
 			} else {
 				// Handle case where the static front page hasn't be translated to avoid a possible infinite redirect loop.
 				$query->is_home = true;
@@ -201,7 +201,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 			$query->set( 'page_id', $lang->page_on_front );
 			$query->is_singular = $query->is_page = true;
 			$query->is_archive = $query->is_tax = false;
-			unset( $query->query_vars['lang'], $query->queried_object ); // Reset queried object
+			unset( $query->query_vars['lmat_lang'], $query->queried_object ); // Reset queried object
 		}
 
 		// Set the language when requesting a static front page

@@ -75,7 +75,37 @@ class LMAT_Filters_Widgets_Options {
 			'<p><label for="%1$s">%2$s %3$s</label></p>',
 			esc_attr( $widget->get_field_id( 'lmat_lang' ) ),
 			esc_html__( 'The widget is displayed for:', 'linguator-multilingual-ai-translation' ),
-			$dropdown_html // phpcs:ignore WordPress.Security.EscapeOutput
+			wp_kses(
+				$dropdown_html,
+				array(
+					'span'   => array( 'class' => true ),
+					'img'    => array(
+						'src'      => true,
+						'alt'      => true,
+						'width'    => true,
+						'height'   => true,
+						'class'    => true,
+						'style'    => true,
+						'loading'  => true,
+						'decoding' => true,
+					),
+					'select' => array(
+						'name'     => true,
+						'id'       => true,
+						'class'    => true,
+						'lang'     => true,
+						'disabled' => true,
+					),
+					'option' => array(
+						'value'     => true,
+						'lang'      => true,
+						'aria-label'=> true,
+						'selected'  => true,
+						'data-lang' => true,
+					),
+				),
+				array_merge( wp_allowed_protocols(), array( 'data' ) )
+			)
 		);
 	}
 

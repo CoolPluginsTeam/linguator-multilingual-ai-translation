@@ -275,7 +275,7 @@ class LMAT_Settings_Module {
 
 		if ( isset( $_POST['module'] ) && $this->module === $_POST['module'] ) {
 			// It's up to the child class to decide which options are saved, whether there are errors or not
-			$posted_options   = array_diff_key( $_POST, array_flip( array( 'action', 'module', 'lmat_ajax_backend', 'lmat_ajax_settings', '_lmat_nonce' ) ) );
+			$posted_options   = array_diff_key( map_deep( $_POST, 'sanitize_text_field' ), array_flip( array( 'action', 'module', 'lmat_ajax_backend', 'lmat_ajax_settings', '_lmat_nonce' ) ) );
 			$errors           = $this->options->merge( $this->prepare_raw_data( $posted_options ) );
 
 			// Refresh language cache in case home urls have been modified
@@ -285,22 +285,51 @@ class LMAT_Settings_Module {
 			// Don't use flush_rewrite_rules as we don't have the right links model and permastruct
 			delete_option( 'rewrite_rules' );
 
-			ob_start();
+			$notice_html = '';
 
 			if ( ! $errors->has_errors() ) {
 				// Send update message
 				lmat_add_notice( new WP_Error( 'settings_updated', __( 'Settings saved.', 'linguator-multilingual-ai-translation' ), 'success' ) );
-				settings_errors( 'linguator' );
-				$x = new WP_Ajax_Response( array( 'what' => 'success', 'data' => ob_get_clean() ) );
+				$notice_html = $this->render_settings_errors_html( 'linguator' );
+				$x = new WP_Ajax_Response( array( 'what' => 'success', 'data' => $notice_html ) );
 				$x->send();
 			} else {
 				// Send error messages
 				lmat_add_notice( $errors );
-				settings_errors( 'linguator' );
-				$x = new WP_Ajax_Response( array( 'what' => 'error', 'data' => ob_get_clean() ) );
+				$notice_html = $this->render_settings_errors_html( 'linguator' );
+				$x = new WP_Ajax_Response( array( 'what' => 'error', 'data' => $notice_html ) );
 				$x->send();
 			}
 		}
+	}
+
+	/**
+	 * Renders settings errors HTML without relying on output buffering.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $setting Settings group name used with add_settings_error/get_settings_errors.
+	 * @return string HTML markup for admin notices.
+	 */
+	protected function render_settings_errors_html( $setting ) {
+		$errors = \get_settings_errors( $setting );
+		if ( empty( $errors ) ) {
+			return '';
+		}
+
+		$html = '';
+		foreach ( $errors as $error ) {
+			$type  = isset( $error['type'] ) && is_string( $error['type'] ) ? $error['type'] : 'error';
+			$class = 'notice notice-' . $type;
+			if ( ! empty( $error['dismissible'] ) ) {
+				$class .= ' is-dismissible';
+			}
+
+			$message = isset( $error['message'] ) && is_string( $error['message'] ) ? $error['message'] : '';
+			$html   .= '<div class="' . \esc_attr( $class ) . '"><p>' . \wp_kses_post( $message ) . '</p></div>';
+		}
+
+		return $html;
 	}
 
 	/**

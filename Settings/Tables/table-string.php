@@ -275,8 +275,7 @@ class LMAT_Table_String extends WP_List_Table {
 		}
 
 		// Filter by searched string
-		$s = empty( $_GET['s'] ) ? '' : wp_unslash( $_GET['s'] ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput
-
+		$s = empty( $_GET['s'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $s ) ) {
 			// Search in translations
 			$in_translations = $this->search_in_translations( $languages, $s );
@@ -388,8 +387,8 @@ class LMAT_Table_String extends WP_List_Table {
 				if ( empty( $_POST['translation'][ $language->slug ] ) || ! is_array( $_POST['translation'][ $language->slug ] ) ) { // In case the language filter is active
 					continue;
 				}
-
-				$translations = array_map( 'trim', (array) wp_unslash( $_POST['translation'][ $language->slug ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below with sanitize_textarea_field
+				$translations = array_map( 'sanitize_textarea_field', array_map( 'trim', (array) wp_unslash( $_POST['translation'][ $language->slug ] ) ) );
 
 				$mo = new LMAT_MO();
 				$mo->import_from_db( $language );
@@ -448,7 +447,7 @@ class LMAT_Table_String extends WP_List_Table {
 
 		// To refresh the page 
 		$args = array_intersect_key( $_REQUEST, array_flip( array( 's', 'paged', 'group' ) ) );
-		if ( ! empty( $_GET['paged'] ) && ! empty( $_POST['submit'] ) ) {
+		if ( ! empty( $_GET['paged'] ) && ! empty( $_POST['submit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$args['paged'] = (int) $_GET['paged']; // Don't rely on $_REQUEST['paged'] or $_POST['paged']. 
 		}
 		if ( ! empty( $args['s'] ) ) {

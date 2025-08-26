@@ -107,7 +107,7 @@ class LMAT_Featured_Content {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		set_transient( 'featured_content_ids', $ids );
+		set_transient( 'lmat_featured_content_ids', $ids );
 
 		return $ids;
 	}

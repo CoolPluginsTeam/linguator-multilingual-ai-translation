@@ -175,7 +175,7 @@ class Languages {
 
 		$r = wp_insert_term(
 			$args['name'],
-			'language',
+			'lmat_language',
 			array(
 				'slug'        => $final_slug,
 				'description' => $description,
@@ -186,7 +186,7 @@ class Languages {
 			return new WP_Error( 'lmat_add_language', __( 'Impossible to add the language. Please check if the locale is unique.', 'linguator-multilingual-ai-translation' ) );
 		}
 
-		wp_update_term( (int) $r['term_id'], 'language', array( 'term_group' => (int) $args['term_group'] ) );
+		wp_update_term( (int) $r['term_id'], 'lmat_language', array( 'term_group' => (int) $args['term_group'] ) );
 
 		// The other language taxonomies
 		$this->update_secondary_language_terms( $final_slug, $args['name'] );
@@ -267,8 +267,8 @@ class Languages {
 		$this->update_secondary_language_terms( $args['slug'], $args['name'], $lang );
 
 		wp_update_term(
-			$lang->get_tax_prop( 'language', 'term_id' ),
-			'language',
+			$lang->get_tax_prop( 'lmat_language', 'term_id' ),
+			'lmat_language',
 			array(
 				'slug'        => $slug,
 				'name'        => $args['name'],
@@ -435,9 +435,9 @@ class Languages {
 		/*
 		 * Delete the language itself.
 		 *
-		 * Reverses the language taxonomies order is required to make sure 'language' is deleted in last.
+		 * Reverses the language taxonomies order is required to make sure 'lmat_language' is deleted in last.
 		 *
-		 * The initial order with the 'language' taxonomy at the beginning of 'LMAT_Language::term_props' property
+		 * The initial order with the 'lmat_language' taxonomy at the beginning of 'LMAT_Language::term_props' property
 		 * is done by {@see LMAT_Model::filter_terms_orderby()}
 		 */
 		foreach ( array_reverse( $lang->get_tax_props( 'term_id' ) ) as $taxonomy_name => $term_id ) {
@@ -539,7 +539,7 @@ class Languages {
 		$languages = array_filter(
 			$languages,
 			function ( $lang ) use ( $args ) {
-				$keep_empty   = empty( $args['hide_empty'] ) || $lang->get_tax_prop( 'language', 'count' );
+				$keep_empty   = empty( $args['hide_empty'] ) || $lang->get_tax_prop( 'lmat_language', 'count' );
 				$keep_default = empty( $args['hide_default'] ) || ! $lang->is_default;
 				return $keep_empty && $keep_default;
 			}
@@ -917,7 +917,7 @@ class Languages {
 				 * @param string           $new_slug The new language slug.
 				 * @param WP_Term          $term     The term containing the post or term translation group.
 				 */
-				$tr = apply_filters( 'update_translation_group', $tr, $old_slug, $new_slug, $term );
+				$tr = apply_filters( 'lmat_update_translation_group', $tr, $old_slug, $new_slug, $term );
 
 				if ( ! empty( $tr[ $old_slug ] ) ) {
 					if ( $new_slug ) {
@@ -1039,8 +1039,8 @@ class Languages {
 		$terms_by_slug = array();
 
 		foreach ( $this->get_terms() as $term ) {
-			// Except for language taxonomy term slugs, remove 'lmat_' prefix from the other language taxonomy term slugs.
-			$key = 'language' === $term->taxonomy ? $term->slug : substr( $term->slug, 5 );
+			// Except for main language taxonomy term slugs, remove 'lmat_' prefix from the other language taxonomy term slugs.
+			$key = 'lmat_language' === $term->taxonomy ? $term->slug : substr( $term->slug, 5 );
 			$terms_by_slug[ $key ][ $term->taxonomy ] = $term;
 		}
 
@@ -1048,7 +1048,7 @@ class Languages {
 		 * @var (
 		 *     array{
 		 *         string: array{
-		 *             language: WP_Term,
+		 *             lmat_language: WP_Term,
 		 *         }&array<non-empty-string, WP_Term>
 		 *     }
 		 * ) $terms_by_slug
@@ -1113,7 +1113,7 @@ class Languages {
 	 *
 	 * This allows to order languages terms by `taxonomy` first then by `term_group` and `term_id`.
 	 * Ordering terms by taxonomy allows not to mix terms between all language taxomonomies.
-	 * Having the "language' taxonomy first is important for {@see LMAT_Admin_Model:delete_language()}.
+	 * Having the "lmat_language' taxonomy first is important for {@see LMAT_Admin_Model:delete_language()}.
 	 *
 	 * @since 1.0.0
 	 *
@@ -1137,6 +1137,6 @@ class Languages {
 			return $orderby;
 		}
 
-		return sprintf( 'tt.taxonomy = \'language\' DESC, %1$s.term_group, %1$s.term_id', $matches['alias'] );
+		return sprintf( "tt.taxonomy = 'lmat_language' DESC, %1\$s.term_group, %1\$s.term_id", $matches['alias'] );
 	}
 }

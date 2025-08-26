@@ -126,9 +126,9 @@ class LMAT_Filters {
 			return array();
 		}
 
-		// If comments are queried with a 'lang' parameter, keeps only language codes.
-		if ( isset( $query->query_vars['lang'] ) ) {
-			$languages = is_string( $query->query_vars['lang'] ) ? explode( ',', $query->query_vars['lang'] ) : $query->query_vars['lang'];
+		// If comments are queried with a 'lmat_lang' parameter, keeps only language codes.
+		if ( isset( $query->query_vars['lmat_lang'] ) ) {
+			$languages = is_string( $query->query_vars['lmat_lang'] ) ? explode( ',', $query->query_vars['lmat_lang'] ) : $query->query_vars['lmat_lang'];
 			if ( is_array( $languages ) ) {
 				$languages = array_map( array( $this->model, 'get_language' ), $languages );
 				return array_filter( $languages );
@@ -144,7 +144,7 @@ class LMAT_Filters {
 
 	/**
 	 * Adds a language dependent cache domain when querying comments.
-	 * Useful as the 'lang' parameter is not included in cache key by WordPress.
+	 * Useful as the 'lmat_lang' parameter is not included in cache key by WordPress.
 	 * Needed since WP 4.6 as comments have been added to persistent cache. 
 	 *
 	 * @since 1.0.0
@@ -200,11 +200,11 @@ class LMAT_Filters {
 	 * @return WP_Post[] Modified list of pages.
 	 */
 	public function get_pages( $pages, $args ) {
-		if ( isset( $args['lang'] ) && empty( $args['lang'] ) ) {
+		if ( isset( $args['lmat_lang'] ) && empty( $args['lmat_lang'] ) ) {
 			return $pages;
 		}
 
-		$language = empty( $args['lang'] ) ? $this->curlang : $this->model->get_language( $args['lang'] );
+		$language = empty( $args['lmat_lang'] ) ? $this->curlang : $this->model->get_language( $args['lmat_lang'] );
 
 		if ( empty( $language ) || empty( $pages ) || ! $this->model->is_translated_post_type( $args['post_type'] ) ) {
 			return $pages;
@@ -254,8 +254,8 @@ class LMAT_Filters {
 	 * @return array Array of arguments passed to WP_Query with the language.
 	 */
 	public function get_pages_query_args( $query_args, $parsed_args ) {
-		if ( isset( $parsed_args['lang'] ) ) {
-			$query_args['lang'] = $parsed_args['lang'];
+		if ( isset( $parsed_args['lmat_lang'] ) ) {
+			$query_args['lmat_lang'] = $parsed_args['lmat_lang'];
 		}
 
 		return $query_args;
@@ -273,7 +273,7 @@ class LMAT_Filters {
 	 */
 	protected function get_related_page_ids( $language, $relation, $args ) {
 		$r = array(
-			'lang'        => '', // Ensure this query is not filtered.
+			'lmat_lang'        => '', // Ensure this query is not filtered.
 			'numberposts' => -1,
 			'nopaging'    => true,
 			'post_type'   => $args['post_type'],
@@ -282,9 +282,9 @@ class LMAT_Filters {
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Using tax_query here is required to accurately filter pages by language for multilingual functionality. This ensures correct admin menu item handling and is essential for the plugin’s logic.
 			'tax_query'   => array(
 				array(
-					'taxonomy' => 'language',
+					'taxonomy' => 'lmat_language',
 					'field'    => 'term_taxonomy_id', // Since WP 3.5.
-					'terms'    => $language->get_tax_prop( 'language', 'term_taxonomy_id' ),
+					'terms'    => $language->get_tax_prop( 'lmat_language', 'term_taxonomy_id' ),
 					'operator' => $relation,
 				),
 			),
@@ -467,8 +467,8 @@ class LMAT_Filters {
 			$defaults = array();
 		}
 
-		if ( ! isset( $defaults['lang'] ) ) {
-			$defaults['lang'] = '';
+		if ( ! isset( $defaults['lmat_lang'] ) ) {
+			$defaults['lmat_lang'] = '';
 		}
 
 		return $defaults;

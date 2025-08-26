@@ -311,7 +311,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 */
 	private function add_inline_scripts() {
 		if ( wp_script_is( 'lmat_block-editor', 'enqueued' ) ) {
-			$default_lang_script = 'const lmatDefaultLanguage = "' . $this->options['default_lang'] . '";';
+			$default_lang_script = 'const lmatDefaultLanguage = ' . wp_json_encode( (string) $this->options['default_lang'] ) . ';';
 			wp_add_inline_script(
 				'lmat_block-editor',
 				$default_lang_script,
@@ -506,7 +506,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		$menu = array(
 			'id'    => 'languages',
-			'title' => $selected->flag . $title,
+			'title' => wp_kses( $selected->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ) ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) . $title,
 			'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
 			'meta'  => array(
 				'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
@@ -530,7 +530,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 				array(
 					'parent' => 'languages',
 					'id'     => $lang->slug,
-					'title'  => $lang->flag . esc_html( $lang->name ),
+					'title'  => wp_kses( $lang->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ) ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) . esc_html( $lang->name ),
 					'href'   => esc_url( add_query_arg( 'lang', $lang->slug, remove_query_arg( 'paged' ) ) ),
 					'meta'   => 'all' === $lang->slug ? array() : array( 'lang' => esc_attr( $lang->get_locale( 'display' ) ) ),
 				)

@@ -224,7 +224,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 				if ( isset( $slug ) && apply_filters( 'lmat_modify_rewrite_rule', true, array( $key => $rule ), $filter, false ) ) {
 					$newrules[ $slug . str_replace( $wp_rewrite->root, '', ltrim( $key, '^' ) ) ] = str_replace(
 						array( '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?' ),
-						array( '[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&' ),
+						array( '[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lmat_lang=$matches[1]&' ),
 						$rule
 					); // Should be enough!
 				}
@@ -240,13 +240,13 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 					if ( isset( $slug ) ) {
 						$newrules[ $slug . str_replace( $wp_rewrite->root, '', ltrim( $key, '^' ) ) ] = str_replace(
 							array( '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '[1]', '?' ),
-							array( '[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lang=$matches[1]&' ),
+							array( '[9]', '[8]', '[7]', '[6]', '[5]', '[4]', '[3]', '[2]', '?lmat_lang=$matches[1]&' ),
 							$rule
 						); // Should be enough!
 					}
 
 					if ( $this->options['hide_default'] ) {
-						$newrules[ $key ] = str_replace( '?', '?lang=' . $this->options['default_lang'] . '&', $rule );
+						$newrules[ $key ] = str_replace( '?', '?lmat_lang=' . $this->options['default_lang'] . '&', $rule );
 					}
 				} else {
 					$newrules[ $key ] = $rule;
@@ -261,7 +261,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 
 		// The home rewrite rule.
 		if ( 'root' == $filter && isset( $slug ) ) {
-			$newrules[ $slug . '?$' ] = $wp_rewrite->index . '?lang=$matches[1]';
+			$newrules[ $slug . '?$' ] = $wp_rewrite->index . '?lmat_lang=$matches[1]';
 		}
 
 		return $newrules;

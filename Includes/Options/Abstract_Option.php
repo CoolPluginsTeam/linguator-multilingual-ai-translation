@@ -244,7 +244,7 @@ abstract class Abstract_Option {
 	protected function get_language_terms(): array {
 		$language_terms = get_terms(
 			array(
-				'taxonomy'   => 'language',
+				'taxonomy'   => 'lmat_language',
 				'hide_empty' => false,
 			)
 		);

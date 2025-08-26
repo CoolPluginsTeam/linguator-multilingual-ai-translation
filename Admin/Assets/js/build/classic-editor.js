@@ -219,7 +219,7 @@ jQuery(function ($) {
     }
     dialogResult.then(function () {
       var data = {
-        action: 'post_lang_choice',
+        action: 'lmat_post_lang_choice',
         lang: selectedOption.value,
         post_type: $('#post_type').val(),
         taxonomies: taxonomies,

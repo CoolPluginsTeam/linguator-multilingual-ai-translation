@@ -74,7 +74,7 @@ abstract class LMAT_Choose_Lang {
 	 */
 	public function init() {
 		if ( Linguator::is_ajax_on_front() || ! wp_using_themes() ) {
-			$this->set_language( empty( $_REQUEST['lang'] ) ? $this->get_preferred_language() : $this->model->get_language( sanitize_key( $_REQUEST['lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$this->set_language( empty( $_REQUEST['lmat_lang'] ) ? $this->get_preferred_language() : $this->model->get_language( sanitize_key( $_REQUEST['lmat_lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		add_action( 'pre_comment_on_post', array( $this, 'pre_comment_on_post' ) ); // sets the language of comment
@@ -321,7 +321,7 @@ abstract class LMAT_Choose_Lang {
 		if ( $lang = apply_filters( 'lmat_set_language_from_query', false, $query ) ) {
 			$this->set_language( $lang );
 			$this->set_curlang_in_query( $query );
-		} elseif ( ( count( $query->query ) == 1 || ( is_paged() && count( $query->query ) == 2 ) ) && $lang = get_query_var( 'lang' ) ) {
+		} elseif ( ( count( $query->query ) == 1 || ( is_paged() && count( $query->query ) == 2 ) ) && $lang = get_query_var( 'lmat_lang' ) ) {
 			$lang = $this->model->get_language( $lang );
 			$this->set_language( $lang ); // Set the language now otherwise it will be too late to filter sticky posts!
 

@@ -207,7 +207,7 @@ class LMAT_Model {
 	 * @return void
 	 */
 	public function clean_languages_cache( $term = 0, $taxonomy = null ): void {
-		if ( empty( $taxonomy ) || 'language' === $taxonomy ) {
+		if ( empty( $taxonomy ) || 'lmat_language' === $taxonomy ) {
 			$this->languages->clean_cache();
 		}
 	}
@@ -292,7 +292,7 @@ class LMAT_Model {
 
 		// Filter terms by language using WordPress functions
 		foreach ( $terms as $term_id ) {
-			$term_languages = wp_get_object_terms( $term_id, 'language', array( 'fields' => 'slugs' ) );
+			$term_languages = wp_get_object_terms( $term_id, 'lmat_language', array( 'fields' => 'slugs' ) );
 			
 			if ( ! is_wp_error( $term_languages ) && in_array( $language->slug, $term_languages, true ) ) {
 				return (int) $term_id;
@@ -344,7 +344,7 @@ class LMAT_Model {
 
 		// Filter terms by language using WordPress functions
 		foreach ( $terms as $term_id ) {
-			$term_languages = wp_get_object_terms( $term_id, 'language', array( 'fields' => 'slugs' ) );
+			$term_languages = wp_get_object_terms( $term_id, 'lmat_language', array( 'fields' => 'slugs' ) );
 			
 			if ( ! is_wp_error( $term_languages ) && in_array( $language->slug, $term_languages, true ) ) {
 				return (int) $term_id;
@@ -480,19 +480,19 @@ class LMAT_Model {
 				$args = $base_args;
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Required for language-specific post counting in multilingual plugin
 				$args['tax_query'][] = array(
-					'taxonomy' => 'language',
+					'taxonomy' => 'lmat_language',
 					'field'    => 'term_id',
-					'terms'    => $language->get_tax_prop( 'language', 'term_id' ),
+					'terms'    => $language->get_tax_prop( 'lmat_language', 'term_id' ),
 				);
 
 				$query = new \WP_Query( $args );
-				$counts[ $language->get_tax_prop( 'language', 'term_taxonomy_id' ) ] = $query->found_posts;
+				$counts[ $language->get_tax_prop( 'lmat_language', 'term_taxonomy_id' ) ] = $query->found_posts;
 			}
 
 			wp_cache_set( $cache_key, $counts, 'counts' );
 		}
-
-		$term_taxonomy_id = $lang->get_tax_prop( 'language', 'term_taxonomy_id' );
+		
+		$term_taxonomy_id = $lang->get_tax_prop( 'lmat_language', 'term_taxonomy_id' );
 		return empty( $counts[ $term_taxonomy_id ] ) ? 0 : $counts[ $term_taxonomy_id ];
 	}
 
@@ -568,7 +568,7 @@ class LMAT_Model {
 		 * @param string[] $types Types to handle (@see LMAT_Translatable_Object::get_type()). An empty array means all
 		 *                        types.
 		 */
-		$limit   = apply_filters( 'get_objects_with_no_lang_limit', $limit, $types );
+		$limit   = apply_filters( 'lmat_get_objects_with_no_lang_limit', $limit, $types );
 		$limit   = $limit < 1 ? -1 : max( (int) $limit, 1 );
 		$objects = array();
 
@@ -653,7 +653,7 @@ class LMAT_Model {
 			}
 		}
 
-		// 1000 is an arbitrary value that will be filtered by `get_objects_with_no_lang_limit`.
+		// 1000 is an arbitrary value that will be filtered by `lmat_get_objects_with_no_lang_limit`.
 		$nolang = $this->get_objects_with_no_lang( 1000, $types );
 
 		if ( empty( $nolang ) ) {

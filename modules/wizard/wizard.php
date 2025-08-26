@@ -306,6 +306,13 @@ class LMAT_Wizard
 				true
 			);
 
+			// Provide ajaxurl previously added inline in the view
+			wp_add_inline_script(
+				'lmat_setup',
+				'var ajaxurl = ' . wp_json_encode( esc_url( admin_url( 'admin-ajax.php', 'relative' ) ) ) . ';',
+				'before' // Add the script before the main script
+			);
+
 			// Localize script with settings data
 			wp_localize_script(
 				'lmat_setup',

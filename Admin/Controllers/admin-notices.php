@@ -165,13 +165,7 @@ class LMAT_Admin_Notices {
 		if ( isset( $_GET['lmat-hide-notice'], $_GET['_lmat_notice_nonce'] ) ) {
 			$notice = sanitize_key( $_GET['lmat-hide-notice'] );
 			check_admin_referer( $notice, '_lmat_notice_nonce' );
-			// Handle all review related notices
-			if (in_array($notice, array('review', 'already-rated'))) {
-				self::dismiss('review'); 
-			} else {
-				self::dismiss( $notice );
-			}
-			
+			self::dismiss( $notice );
 			wp_safe_redirect( remove_query_arg( array( 'lmat-hide-notice', '_lmat_notice_nonce' ), wp_get_referer() ) );
 			exit;
 		}
@@ -186,11 +180,6 @@ class LMAT_Admin_Notices {
 	 */
 	public function display_notices() {
 		if ( current_user_can( 'manage_options' ) ) {
-
-			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
-				$this->review_notice();
-			}
-
 			// Custom notices
 			foreach ( static::get_notices() as $notice => $html ) {
 				if ( $this->can_display_notice( $notice ) && ! static::is_dismissed( $notice ) ) {
@@ -224,35 +213,4 @@ class LMAT_Admin_Notices {
 		);
 	}
 
-	/**
-	 * Displays a notice asking for a review
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	private function review_notice() {
-		?>
-		<div class="lmat-notice notice notice-info">
-		<?php $this->dismiss_button( 'review' );
-				$already_rated_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'already-rated' ), 'already-rated', '_lmat_notice_nonce' ) );
-				echo wp_kses_post(
-					sprintf(
-						/* translators: %1$s: Already rated URL, %2$s: Dismiss URL */
-						__('<p>Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href=\'https://coolplugins.net\' target=\'_blank\'><strong>Cool Plugins</strong></a>!<br/></p>
-						<div class="callto_action">
-							<ul>
-								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">Rate it 5 stars</a></li>
-								<li class="already_rated"><a href="%1$s" class="already_rated_btn button" title="Already rated">Already rated</a></li>    
-							</ul>
-						</div>', 'linguator-multilingual-ai-translation' ),
-						$already_rated_url
-					)
-				);
-			?>
-		</div>
-		<?php
-	}
-
-	
 }

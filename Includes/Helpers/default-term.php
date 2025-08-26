@@ -230,7 +230,8 @@ class LMAT_Default_Term {
 			if ( 'category' === $taxonomy ) {
 				$default_cats = $this->model->term->get_translations( get_option( 'default_' . $taxonomy ) );
 				if ( isset( $default_cats[ $slug ] ) ) {
-					update_option( 'default_' . $taxonomy, $default_cats[ $slug ] );
+					update_option( 'default_' . $taxonomy, $default_cats[ $slug ] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 				}
 			}
 		}

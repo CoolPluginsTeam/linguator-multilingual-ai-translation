@@ -159,7 +159,7 @@ jQuery(function ($) {
     // The selected option in the dropdown list.
     var selectedOption = event.target;
     var data = {
-      action: 'term_lang_choice',
+      action: 'lmat_term_lang_choice',
       lang: value,
       from_tag: $("input[name='from_tag']").val(),
       term_id: $("input[name='tag_ID']").val(),

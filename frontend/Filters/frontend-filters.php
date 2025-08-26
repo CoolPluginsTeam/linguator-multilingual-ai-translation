@@ -90,7 +90,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 		}
 
 		$_posts = wp_cache_get( 'sticky_posts', 'options' ); // This option is usually cached in 'all_options' by WP.
-		$tt_id  = $this->curlang->get_tax_prop( 'language', 'term_taxonomy_id' );
+		$tt_id  = $this->curlang->get_tax_prop( 'lmat_language', 'term_taxonomy_id' );
 
 		if ( ! empty( $_posts ) && is_array( $_posts ) && ! empty( $_posts[ $tt_id ] ) && is_array( $_posts[ $tt_id ] ) ) {
 			return $_posts[ $tt_id ];
@@ -98,12 +98,12 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 
 		$languages = array();
 		foreach ( $this->model->get_languages_list() as $language ) {
-			$languages[] = $language->get_tax_prop( 'language', 'term_taxonomy_id' );
+			$languages[] = $language->get_tax_prop( 'lmat_language', 'term_taxonomy_id' );
 		}
 
 		$relations = array();
 		foreach ( $posts as $post_id ) {
-			$post_languages = wp_get_object_terms( $post_id, 'language', array( 'fields' => 'tt_ids' ) );
+			$post_languages = wp_get_object_terms( $post_id, 'lmat_language', array( 'fields' => 'tt_ids' ) );
 			if ( ! is_wp_error( $post_languages ) ) {
 				foreach ( $post_languages as $tt_id ) {
 					if ( in_array( $tt_id, $languages, true ) ) {
