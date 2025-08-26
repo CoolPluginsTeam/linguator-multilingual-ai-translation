@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Linguator\\Tests\\' => array($baseDir . '/tests'),
     'Linguator\\Settings\\' => array($baseDir . '/Settings'),
     'Linguator\\Modules\\' => array($baseDir . '/modules'),
@@ -15,7 +14,4 @@ return array(
     'Linguator\\Includes\\' => array($baseDir . '/Includes'),
     'Linguator\\Frontend\\' => array($baseDir . '/frontend'),
     'Linguator\\Admin\\' => array($baseDir . '/Admin'),
-    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
-    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
-    'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
 );
