@@ -110,7 +110,7 @@ class LMAT_Sync_Post_Model {
 		global $wpdb;
 
 		$tr_id     = $this->model->post->get( $post_id, $this->model->get_language( $target_language ) );
-		$tr_post   = $post = get_post( $post_id );
+		$tr_post   = get_post( $post_id );
 		$languages = array_keys( $this->get( $post_id ) );
 
 		if ( ! $tr_post instanceof WP_Post ) {
@@ -172,18 +172,24 @@ class LMAT_Sync_Post_Model {
 			 */
 			do_action( 'lmat_created_sync_post', $post_id, $tr_id, $target_language );
 
+			$post=get_post($post_id);
 			do_action( 'lmat_save_post', $post_id, $post, $translations ); // Fire again as we just updated $translations.
-
+			
 			unset( $this->temp_synchronized[ $post_id ][ $tr_id ] );
 		}
-
+		
 		if ( $save_group ) {
 			$this->save_group( $post_id, $languages );
 		}
-
+		
 		$tr_post->ID = $tr_id;
+		$post=get_post($post_id);
 
 		$tr_post->post_parent = (int) $this->model->post->get( $post->post_parent, $target_language ); // Translates post parent.
+
+		$post = clone $tr_post;
+		$post->ID=$post_id;
+
 		$tr_post = $this->sync_content->copy_content( $post, $tr_post, $target_language );
 
 		// The columns to copy in DB.

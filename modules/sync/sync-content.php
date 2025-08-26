@@ -3,6 +3,8 @@
  * @package Linguator
  */
 
+use Linguator\Includes\Other\LMAT_Language;
+
 /**
  * Smart copy of post content
  *
@@ -64,7 +66,6 @@ class LMAT_Sync_Post {
 	public function __construct( &$linguator ) {
 		$this->options = &$linguator->options;
 		$this->model   = &$linguator->model;
-		$this->posts   = &$linguator->posts;
 	}
 
 	/**
@@ -78,7 +79,6 @@ class LMAT_Sync_Post {
 	 * @return WP_Post|void
 	 */
 	public function copy_content( $from_post, $target_post, $target_language ) {
-
 		$from_language   = $this->model->post->get_language( $from_post->ID );
 		$target_language = $this->model->get_language( $target_language );
 		if ( ! $from_language || ! $target_language ) {
@@ -169,7 +169,7 @@ class LMAT_Sync_Post {
 	 */
 	public function duplicate_thumbnail( $id, $key, $lang ) {
 		if ( '_thumbnail_id' === $key && ! $tr_id = $this->model->post->get( $id, $lang ) ) {
-			$tr_id = $this->posts->create_media_translation( $id, $lang );
+			$tr_id = $this->model->post->create_media_translation( $id, $lang );
 		}
 		return empty( $tr_id ) ? $id : $tr_id;
 	}
@@ -255,7 +255,7 @@ class LMAT_Sync_Post {
 		global $wpdb;
 
 		if ( ! $tr_id = $this->model->post->get( $id, $this->target_language ) ) {
-			$tr_id = $this->posts->create_media_translation( $id, $this->target_language );
+			$tr_id = $this->model->post->create_media_translation( $id, $this->target_language );
 		}
 
 		// If we don't have a translation and did not success to create one, return current media
