@@ -40,7 +40,7 @@ const updateElementorContent = async ({source, lang, translatedContent, serviceP
      */
     const updateContent = (source, translation) => {
         Object.keys(translation).forEach(key=>{
-            const keys=key.split('_atfpp_');
+            const keys=key.split('_lmat_bulk_content__');
             if(keys[0] === 'title'){
                 updateTitle(source, translation[keys[0]]);
             }else if(keys[0] === 'content'){

@@ -1,8 +1,9 @@
 import CopyClipboard from "../CopyClipboard/index.js";
 import { useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
+import DOMPurify from 'dompurify';
 
-const ErrorModalBox = ({ message, onClose, onDestroy, Title, prefix, children }) => {
+const ErrorModalBox = ({ message, onClose, Title, prefix, children }) => {
 
     let dummyElement = jQuery('<div>').append(message);
     const stringifiedMessage = dummyElement.html();
@@ -52,15 +53,15 @@ const ErrorModalBox = ({ message, onClose, onDestroy, Title, prefix, children })
         <div className={`${prefix}-error-modal-box-container`}>
             <div className={`${prefix}-error-modal-box`}>
                 <div className={`${prefix}-error-modal-box-header`}>
-                    <span className={`${prefix}-error-modal-box-close`} onClick={onDestroy}>×</span>
+                    <span className={`${prefix}-error-modal-box-close`} onClick={onClose}>×</span>
                     {Title && <h3>{Title}</h3>}
                 </div>
                 <div className={`${prefix}-error-modal-box-body`}>
-                    <p dangerouslySetInnerHTML={{ __html: stringifiedMessage }} />
+                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(stringifiedMessage) }} />
                     {children}
                 </div>
                 <div className={`${prefix}-error-modal-box-footer`}>
-                    <button className={`${prefix}-error-modal-box-close button button-primary`} onClick={onClose}>{__('Back', 'linguator-multilingual-ai-translation')}</button>
+                    <button className={`${prefix}-error-modal-box-close button button-primary`} onClick={onClose}>{__('Back', 'autopoly-ai-translation-for-polylang-pro')}</button>
                 </div>
             </div>
         </div>

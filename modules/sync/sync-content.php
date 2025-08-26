@@ -3,8 +3,6 @@
  * @package Linguator
  */
 
-use Linguator\Includes\Other\LMAT_Language;
-
 /**
  * Smart copy of post content
  *
@@ -80,9 +78,9 @@ class LMAT_Sync_Post {
 	 * @return WP_Post|void
 	 */
 	public function copy_content( $from_post, $target_post, $target_language ) {
+
 		$from_language   = $this->model->post->get_language( $from_post->ID );
 		$target_language = $this->model->get_language( $target_language );
-
 		if ( ! $from_language || ! $target_language ) {
 			return;
 		}

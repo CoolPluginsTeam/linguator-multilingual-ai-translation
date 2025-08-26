@@ -18,7 +18,7 @@ export default (props) => {
             title: "Google Translate",
             SettingBtnText: "Translate",
             serviceLabel: "Google Translate",
-            Docs: "https://docs.coolplugins.net/doc/google-translate-for-polylang/?utm_source=atfpp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=popup_google",
+            Docs: "https://docs.coolplugins.net/doc/google-translate-for-polylang/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=popup_google",
             heading: __("Choose Language", 'linguator-multilingual-ai-translation'),
             BetaEnabled: false,
             ButtonDisabled: props.googleButtonDisabled,

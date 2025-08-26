@@ -9,6 +9,7 @@ import { useState, useEffect } from "@wordpress/element";
 import styles from "./ParagraphTranslator.module.css";
 import TranslatorModal from "../../../inline-translate-modal/modal";
 
+
 const ParagraphRewriter = ({ value, onChange }) => {
   const activePageLanguage = (window as any).lmatGutenbergInlineTranslation?.pageLanguage || 'en';
 
@@ -83,11 +84,12 @@ const ParagraphRewriter = ({ value, onChange }) => {
   );
 };
 
-registerFormatType("atfp/paragraph-rewriter", {
+registerFormatType("lmat/paragraph-rewriter", {
+  object: false,
   title: "AI Paragraph Rewriter",
-  name: "atfp/paragraph-rewriter",
+  name: "lmat/paragraph-rewriter",
   interactive: true,
-  tagName: "atfp-paragraph-rewriter",
+  tagName: "lmat-paragraph-rewriter",
   className: null,
   edit: ParagraphRewriter,
 });

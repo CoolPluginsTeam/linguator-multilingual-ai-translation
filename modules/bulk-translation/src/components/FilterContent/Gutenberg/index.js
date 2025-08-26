@@ -153,7 +153,7 @@ const FilterGutenbergContent = async ({content, service, blockParseRules, postId
         }else if(Object.getPrototypeOf(blockRule) === Array.prototype){
             const runLoopAsyncInner=async(item, index)=>{
                 if(typeof blockRule[0] === 'boolean' && true === blockRule[0]){
-                    const uniqueKey=[...keys, index].join('_atfpp_');
+                    const uniqueKey=[...keys, index].join('_lmat_bulk_content__');
 
                     const stringContent=await getStringContent(item, uniqueKey);
 
@@ -192,7 +192,7 @@ const FilterGutenbergContent = async ({content, service, blockParseRules, postId
 
             if(true === activeBlockRule){
                 currentKey.push(key);
-                const uniqueKey=currentKey.join('_atfpp_');
+                const uniqueKey=currentKey.join('_lmat_bulk_content__');
                 if(currentBlock[key] && '' !== currentBlock[key]){
                     const stringContent=await getStringContent(currentBlock[key], uniqueKey);
 

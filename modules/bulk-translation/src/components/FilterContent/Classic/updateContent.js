@@ -40,7 +40,7 @@ const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
             // Escape line break and wrap with marker
             const escapedBreak = match[0];
 
-            result.push(`atfpp_skip_${escapedBreak}_atfpp`);
+            result.push(`lmat_bulk_content__skip_${escapedBreak}_lmat_bulk_content_`);
 
             lastIndex = regex.lastIndex;
         }
@@ -79,13 +79,13 @@ const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
 
             const plainText=!entity && !htmlTag && !isEmptyHtmlTag && !blockCommentTag; 
 
-            if(text !== '' && !text.includes('atfpp_skip_') && plainText){
+            if(text !== '' && !text.includes('lmat_bulk_content__skip_') && plainText){
                 const uniqueKey = 'content_classic_index_' + index;
                 const stateValue=selectTranslatedContent(store.getState(), postId, uniqueKey, lang, serviceProvider);
 
                 strings.push(stateValue);
-            } else if (text.includes('atfpp_skip_')) {
-                const escapedBreak = text.replace('atfpp_skip_', '').replace('_atfpp', '');
+            } else if (text.includes('lmat_bulk_content__skip_')) {
+                const escapedBreak = text.replace('lmat_bulk_content__skip_', '').replace('_lmat_bulk_content_', '');
                 strings.push(escapedBreak);
             } else {
                 strings.push(text);

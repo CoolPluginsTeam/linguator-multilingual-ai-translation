@@ -34,7 +34,7 @@ const GoogleTranslater = (data) => {
         
         if(translateElement.length <= 0){
             Object.values(google?.translate?.TranslateElement()).map(item=>{
-                if(item instanceof HTMLElement && item.id === 'atfp_google_translate_element'){
+                if(item instanceof HTMLElement && item.id === 'lmat_google_translate_element'){
                     element.replaceWith(item);
                 }
             });

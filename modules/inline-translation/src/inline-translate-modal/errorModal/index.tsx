@@ -55,15 +55,15 @@ const ErrorModalBox: FC<ErrorModalBoxProps> = ({ message, onClose, Title, childr
                 element.addEventListener('click', clickHandler);
 
                 // Store handler for cleanup
-                (element as any).__atfpClickHandler = clickHandler;
+                (element as any).__lmatClickHandler = clickHandler;
             });
 
             return () => {
                 clipboardElements.forEach(element => {
-                    const handler = (element as any).__atfpClickHandler;
+                    const handler = (element as any).__lmatClickHandler;
                     if (handler) {
                         element.removeEventListener('click', handler);
-                        delete (element as any).__atfpClickHandler;
+                        delete (element as any).__lmatClickHandler;
                     }
                 });
             };

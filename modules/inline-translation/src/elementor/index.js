@@ -1,7 +1,7 @@
 import ControlBase from './control-base.js';
 
 const App = () => {
-    const prefix = 'atfpElementorInlineTranslation';
+    const prefix = 'lmatElementorInlineTranslation';
     return new ControlBase(prefix);
 }
 

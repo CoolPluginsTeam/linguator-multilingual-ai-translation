@@ -18,7 +18,7 @@ const FilterElementorContent = async({content, service, postId, storeDispatch, f
 
     const translateContent=async (ids,value)=>{
         if(typeof value === 'string' && value.trim() !== '' && ids.length > 0){
-            const uniqueKey = ids.join('_atfpp_');
+            const uniqueKey = ids.join('_lmat_bulk_content__');
             let stringContent=value;
 
             if(filterHtmlContent){
