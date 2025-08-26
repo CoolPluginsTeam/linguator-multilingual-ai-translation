@@ -114,7 +114,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
-
+		
 		// Adds a 'settings' link in the plugins table
 		add_filter( 'plugin_action_links_' . LINGUATOR_BASENAME, array( $this, 'plugin_action_links' ) );
 		add_action( 'in_plugin_update_message-' . LINGUATOR_BASENAME, array( $this, 'plugin_update_message' ), 10, 2 );
@@ -128,6 +128,8 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function init() {
 		parent::init();
+		// Initialize feedback functionality
+		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
 
 		// Setup filters for admin pages
 		// Priority 5 to make sure filters are there before customize_register is fired
@@ -174,8 +176,6 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	public function add_filters() {
 		$this->filters_sanitization = new LMAT_Filters_Sanitization( $this->get_locale_for_sanitization() );
 		$this->filters_widgets_options = new LMAT_Admin_Filters_Widgets_Options( $this );
-		// Initialize feedback functionality
-		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
 
 		// All these are separated just for convenience and maintainability
 		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Nav_Menu', 'Classic_Editor', 'Block_Editor' );
