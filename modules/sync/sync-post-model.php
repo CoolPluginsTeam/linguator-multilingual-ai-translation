@@ -120,7 +120,7 @@ class LMAT_Sync_Post_Model {
 
 		foreach($tr_post as $key => $value){
 			if(isset($post_data[$key]) && $key !== 'meta_fields'){
-				$tr_post->$key = is_array($post_data[$key]) ? array_map('wp_kses_post', $post_data[$key]) : wp_kses_post($post_data[$key]);
+				$tr_post->$key = $post_data[$key];
 			}
 		}
 
@@ -135,6 +135,8 @@ class LMAT_Sync_Post_Model {
 		// If it does not exist, create it.
 		if ( ! $tr_id ) {
 			$tr_post->ID = 0;
+			$tr_post->post_status = get_option('lmat_bulk_post_status', 'draft');
+		
 			$tr_id       = wp_insert_post( wp_slash( $tr_post->to_array() ) );
 			$this->model->post->set_language( $tr_id, $target_language ); // Necessary to do it now to share slug.
 
@@ -170,7 +172,6 @@ class LMAT_Sync_Post_Model {
 			 */
 			do_action( 'lmat_created_sync_post', $post_id, $tr_id, $target_language );
 
-			/** This action is documented in include/crud-posts.php */
 			do_action( 'lmat_save_post', $post_id, $post, $translations ); // Fire again as we just updated $translations.
 
 			unset( $this->temp_synchronized[ $post_id ][ $tr_id ] );
@@ -181,6 +182,7 @@ class LMAT_Sync_Post_Model {
 		}
 
 		$tr_post->ID = $tr_id;
+
 		$tr_post->post_parent = (int) $this->model->post->get( $post->post_parent, $target_language ); // Translates post parent.
 		$tr_post = $this->sync_content->copy_content( $post, $tr_post, $target_language );
 
@@ -220,7 +222,7 @@ class LMAT_Sync_Post_Model {
 		
 		$tr_post = array_intersect_key( (array) $tr_post, $columns );
 
-		$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
+		$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => (int) $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
 		clean_post_cache( $tr_id );
 
 		/**
@@ -231,11 +233,12 @@ class LMAT_Sync_Post_Model {
 		 * @param int    $post_id Id of the source post.
 		 * @param int    $tr_id   Id of the target post.
 		 * @param string $lang    Language of the target post.
+		 * @param string $strategy `copy`.
 		 */
-		do_action( 'lmat_post_synchronized', $post_id, $tr_id, $target_language );
+		do_action( 'lmat_post_synchronized', $post_id, $tr_id, $target_language, 'copy' );
 
 		// Update Elementor Translations
-		$this->update_elementor_data($tr_id, $post_data);
+		$this->update_elementor_data($tr_id, $post_data, $post_id);
 
 		return $tr_id;
 	}
