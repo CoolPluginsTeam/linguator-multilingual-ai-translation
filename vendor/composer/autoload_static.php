@@ -6,32 +6,156 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
 {
-    public static $files = array (
-        '698c9435c8e399c304ac85b7b13ca1f8' => __DIR__ . '/../..' . '/Includes/Helpers/functions.php',
-        'b7dc02ffab76eedc262f5b3b21d0572e' => __DIR__ . '/../..' . '/Includes/API/LanguageAPI.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
         'L' => 
         array (
+            'Linguator\\Settings\\Views\\' => 25,
+            'Linguator\\Settings\\Tables\\' => 26,
+            'Linguator\\Settings\\Controllers\\' => 31,
             'Linguator\\Settings\\' => 19,
+            'Linguator\\Modules\\sync\\' => 23,
+            'Linguator\\Modules\\Wizard\\' => 25,
+            'Linguator\\Modules\\REST\\V1\\' => 26,
+            'Linguator\\Modules\\REST\\' => 23,
             'Linguator\\Modules\\' => 18,
+            'Linguator\\Integrations\\yarpp\\' => 29,
+            'Linguator\\Integrations\\wpseo\\' => 29,
+            'Linguator\\Integrations\\wp_sweep\\' => 32,
+            'Linguator\\Integrations\\wp_offload_media\\' => 40,
+            'Linguator\\Integrations\\wp_importer\\' => 35,
+            'Linguator\\Integrations\\twenty_seventeen\\' => 40,
+            'Linguator\\Integrations\\no_category_base\\' => 40,
+            'Linguator\\Integrations\\jetpack\\' => 31,
+            'Linguator\\Integrations\\elementor\\' => 33,
+            'Linguator\\Integrations\\duplicate_post\\' => 38,
+            'Linguator\\Integrations\\domain_mapping\\' => 38,
+            'Linguator\\Integrations\\custom_field_template\\' => 45,
+            'Linguator\\Integrations\\cache\\' => 29,
+            'Linguator\\Integrations\\aqua_resizer\\' => 36,
             'Linguator\\Integrations\\' => 23,
             'Linguator\\Install\\' => 18,
+            'Linguator\\Includes\\Widgets\\' => 27,
+            'Linguator\\Includes\\Walkers\\' => 27,
+            'Linguator\\Includes\\Services\\Links\\' => 34,
+            'Linguator\\Includes\\Services\\Crud\\' => 33,
+            'Linguator\\Includes\\Services\\' => 28,
+            'Linguator\\Includes\\Other\\' => 25,
+            'Linguator\\Includes\\Options\\Primitive\\' => 37,
+            'Linguator\\Includes\\Options\\Business\\' => 36,
+            'Linguator\\Includes\\Options\\' => 27,
+            'Linguator\\Includes\\Models\\Translated\\' => 37,
+            'Linguator\\Includes\\Models\\Translatable\\' => 39,
+            'Linguator\\Includes\\Models\\' => 26,
+            'Linguator\\Includes\\Helpers\\' => 27,
+            'Linguator\\Includes\\Filters\\' => 27,
+            'Linguator\\Includes\\Factories\\' => 29,
+            'Linguator\\Includes\\Core\\' => 24,
+            'Linguator\\Includes\\Controllers\\' => 31,
+            'Linguator\\Includes\\Base\\' => 24,
             'Linguator\\Includes\\' => 19,
+            'Linguator\\Frontend\\Services\\' => 28,
+            'Linguator\\Frontend\\Filters\\' => 27,
+            'Linguator\\Frontend\\Controllers\\' => 31,
             'Linguator\\Frontend\\' => 19,
+            'Linguator\\Admin\\Feedback\\' => 25,
+            'Linguator\\Admin\\Controllers\\' => 28,
             'Linguator\\Admin\\' => 16,
+            'Linguator\\' => 10,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Linguator\\Settings\\Views\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Settings/Views',
+        ),
+        'Linguator\\Settings\\Tables\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Settings/Tables',
+        ),
+        'Linguator\\Settings\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Settings/Controllers',
+        ),
         'Linguator\\Settings\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Settings',
         ),
+        'Linguator\\Modules\\sync\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/sync',
+        ),
+        'Linguator\\Modules\\Wizard\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/wizard',
+        ),
+        'Linguator\\Modules\\REST\\V1\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/REST/V1',
+        ),
+        'Linguator\\Modules\\REST\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/modules/REST',
+        ),
         'Linguator\\Modules\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules',
+        ),
+        'Linguator\\Integrations\\yarpp\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/yarpp',
+        ),
+        'Linguator\\Integrations\\wpseo\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/wpseo',
+        ),
+        'Linguator\\Integrations\\wp_sweep\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/wp-sweep',
+        ),
+        'Linguator\\Integrations\\wp_offload_media\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/wp-offload-media',
+        ),
+        'Linguator\\Integrations\\wp_importer\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/wp-importer',
+        ),
+        'Linguator\\Integrations\\twenty_seventeen\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/twenty-seventeen',
+        ),
+        'Linguator\\Integrations\\no_category_base\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/no-category-base',
+        ),
+        'Linguator\\Integrations\\jetpack\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/jetpack',
+        ),
+        'Linguator\\Integrations\\elementor\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/elementor',
+        ),
+        'Linguator\\Integrations\\duplicate_post\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/duplicate-post',
+        ),
+        'Linguator\\Integrations\\domain_mapping\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/domain-mapping',
+        ),
+        'Linguator\\Integrations\\custom_field_template\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/custom-field-template',
+        ),
+        'Linguator\\Integrations\\cache\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/cache',
+        ),
+        'Linguator\\Integrations\\aqua_resizer\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/integrations/aqua-resizer',
         ),
         'Linguator\\Integrations\\' => 
         array (
@@ -41,17 +165,113 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         array (
             0 => __DIR__ . '/../..' . '/install',
         ),
+        'Linguator\\Includes\\Widgets\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Widgets',
+        ),
+        'Linguator\\Includes\\Walkers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Walkers',
+        ),
+        'Linguator\\Includes\\Services\\Links\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Services/Links',
+        ),
+        'Linguator\\Includes\\Services\\Crud\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Services/Crud',
+        ),
+        'Linguator\\Includes\\Services\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Services',
+        ),
+        'Linguator\\Includes\\Other\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/other',
+        ),
+        'Linguator\\Includes\\Options\\Primitive\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Options/Primitive',
+        ),
+        'Linguator\\Includes\\Options\\Business\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Options/Business',
+        ),
+        'Linguator\\Includes\\Options\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Options',
+        ),
+        'Linguator\\Includes\\Models\\Translated\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Models/Translated',
+        ),
+        'Linguator\\Includes\\Models\\Translatable\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Models/Translatable',
+        ),
+        'Linguator\\Includes\\Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Models',
+        ),
+        'Linguator\\Includes\\Helpers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Helpers',
+        ),
+        'Linguator\\Includes\\Filters\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Filters',
+        ),
+        'Linguator\\Includes\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Factories',
+        ),
+        'Linguator\\Includes\\Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Core',
+        ),
+        'Linguator\\Includes\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Controllers',
+        ),
+        'Linguator\\Includes\\Base\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Includes/Base',
+        ),
         'Linguator\\Includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Includes',
+        ),
+        'Linguator\\Frontend\\Services\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/frontend/Services',
+        ),
+        'Linguator\\Frontend\\Filters\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/frontend/Filters',
+        ),
+        'Linguator\\Frontend\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/frontend/Controllers',
         ),
         'Linguator\\Frontend\\' => 
         array (
             0 => __DIR__ . '/../..' . '/frontend',
         ),
+        'Linguator\\Admin\\Feedback\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Admin/Feedback',
+        ),
+        'Linguator\\Admin\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Admin/Controllers',
+        ),
         'Linguator\\Admin\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Admin',
+        ),
+        'Linguator\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/',
         ),
     );
 
@@ -90,6 +310,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Notices' => __DIR__ . '/../..' . '/Admin/Controllers/admin-notices.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Static_Pages' => __DIR__ . '/../..' . '/Admin/Controllers/admin-static-pages.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Strings' => __DIR__ . '/../..' . '/Admin/Controllers/admin-strings.php',
+        'Linguator\\Admin\\Feedback\\LMAT_Admin_Feedback' => __DIR__ . '/../..' . '/Admin/Feedback/admin-feedback.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang' => __DIR__ . '/../..' . '/frontend/Controllers/choose-lang.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Content' => __DIR__ . '/../..' . '/frontend/Controllers/choose-lang-content.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Domain' => __DIR__ . '/../..' . '/frontend/Controllers/choose-lang-domain.php',
@@ -111,7 +332,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Controllers\\LMAT_REST_Request' => __DIR__ . '/../..' . '/Includes/Controllers/rest-request.php',
         'Linguator\\Includes\\Controllers\\LMAT_Static_Pages' => __DIR__ . '/../..' . '/Includes/Controllers/static-pages.php',
         'Linguator\\Includes\\Controllers\\LMAT_Switcher' => __DIR__ . '/../..' . '/Includes/Controllers/switcher.php',
-        'Linguator\\Includes\\Core\\Linguator' => __DIR__ . '/../..' . '/Includes/Core/linguator.php',
         'Linguator\\Includes\\Factories\\LMAT_Language_Factory' => __DIR__ . '/../..' . '/Includes/Factories/language-factory.php',
         'Linguator\\Includes\\Filters\\LMAT_Filter_REST_Routes' => __DIR__ . '/../..' . '/Includes/Filters/filter-rest-routes.php',
         'Linguator\\Includes\\Filters\\LMAT_Filters' => __DIR__ . '/../..' . '/Includes/Filters/filters.php',
@@ -181,27 +401,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Install\\LMAT_Install' => __DIR__ . '/../..' . '/install/install.php',
         'Linguator\\Install\\LMAT_Install_Base' => __DIR__ . '/../..' . '/install/install-base.php',
         'Linguator\\Integrations\\LMAT_Integrations' => __DIR__ . '/../..' . '/integrations/integrations.php',
-        'Linguator\\Integrations\\aqua_resizer\\LMAT_Aqua_Resizer' => __DIR__ . '/../..' . '/integrations/aqua-resizer/aqua-resizer.php',
-        'Linguator\\Integrations\\cache\\LMAT_Cache_Compat' => __DIR__ . '/../..' . '/integrations/cache/cache-compat.php',
-        'Linguator\\Integrations\\custom_field_template\\LMAT_Cft' => __DIR__ . '/../..' . '/integrations/custom-field-template/cft.php',
-        'Linguator\\Integrations\\domain_mapping\\LMAT_Domain_Mapping' => __DIR__ . '/../..' . '/integrations/domain-mapping/domain-mapping.php',
-        'Linguator\\Integrations\\duplicate_post\\LMAT_Duplicate_Post' => __DIR__ . '/../..' . '/integrations/duplicate-post/duplicate-post.php',
-        'Linguator\\Integrations\\elementor\\LMAT_Elementor' => __DIR__ . '/../..' . '/integrations/elementor/elementor.php',
-        'Linguator\\Integrations\\jetpack\\LMAT_Featured_Content' => __DIR__ . '/../..' . '/integrations/jetpack/featured-content.php',
-        'Linguator\\Integrations\\jetpack\\LMAT_Jetpack' => __DIR__ . '/../..' . '/integrations/jetpack/jetpack.php',
-        'Linguator\\Integrations\\no_category_base\\LMAT_No_Category_Base' => __DIR__ . '/../..' . '/integrations/no-category-base/no-category-base.php',
-        'Linguator\\Integrations\\twenty_seventeen\\LMAT_Twenty_Seventeen' => __DIR__ . '/../..' . '/integrations/twenty-seventeen/twenty-seven-teen.php',
-        'Linguator\\Integrations\\wp_importer\\LMAT_WordPress_Importer' => __DIR__ . '/../..' . '/integrations/wp-importer/wordpress-importer.php',
-        'Linguator\\Integrations\\wp_offload_media\\LMAT_AS3CF' => __DIR__ . '/../..' . '/integrations/wp-offload-media/as3cf.php',
-        'Linguator\\Integrations\\wp_sweep\\LMAT_WP_Sweep' => __DIR__ . '/../..' . '/integrations/wp-sweep/wp-sweep.php',
-        'Linguator\\Integrations\\wpseo\\LMAT_WPSEO' => __DIR__ . '/../..' . '/integrations/wpseo/wpseo.php',
-        'Linguator\\Integrations\\wpseo\\LMAT_WPSEO_OGP' => __DIR__ . '/../..' . '/integrations/wpseo/wpseo-ogp.php',
-        'Linguator\\Integrations\\yarpp\\LMAT_Yarpp' => __DIR__ . '/../..' . '/integrations/yarpp/yarpp.php',
         'Linguator\\Modules\\REST\\API' => __DIR__ . '/../..' . '/modules/REST/API.php',
         'Linguator\\Modules\\REST\\Abstract_Controller' => __DIR__ . '/../..' . '/modules/REST/Abstract_Controller.php',
         'Linguator\\Modules\\REST\\V1\\Languages' => __DIR__ . '/../..' . '/modules/REST/V1/Languages.php',
         'Linguator\\Modules\\REST\\V1\\Settings' => __DIR__ . '/../..' . '/modules/REST/V1/Settings.php',
-        'Linguator\\Modules\\Wizard\\LMAT_Wizard' => __DIR__ . '/../..' . '/modules/wizard/wizard.php',
         'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => __DIR__ . '/../..' . '/modules/sync/settings-sync.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings' => __DIR__ . '/../..' . '/Settings/Controllers/settings.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => __DIR__ . '/../..' . '/Settings/Controllers/settings-module.php',

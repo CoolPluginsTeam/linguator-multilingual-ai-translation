@@ -26,6 +26,8 @@ define( 'LMAT_MIN_WP_VERSION', '6.2' );
 define( 'LMAT_MIN_PHP_VERSION', '7.2' );
 define( 'LINGUATOR_FILE', __FILE__ ); 
 define( 'LINGUATOR_DIR', __DIR__ );
+define('LINGUATOR_URL', plugin_dir_url(LINGUATOR_FILE));
+define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
 
 if ( defined( 'POLYLANG_VERSION' ) ) {
 	// Show notice to deactivate Polylang before using Linguator
