@@ -113,13 +113,6 @@ class LMAT_Page_Translation {
 			?>
 			<input type="button" class="button button-primary" name="lmat_page_translation_meta_box_translate" id="lmat-page-translation-button" value="<?php echo esc_attr__( 'Translate Page', 'linguator' ); ?>" readonly/><br><br>
 			<p style="margin-bottom: .5rem;"><?php echo esc_html( sprintf( __( 'Translate or duplicate content from %1$s to %2$s', 'linguator' ), $parent_post_language, $target_language ) ); ?></p>
-			<hr>
-			<div class="lmat-review-meta-box">
-			<p><?php echo esc_html__( 'We hope you find our plugin helpful for your translation needs. Your feedback is valuable to us!', 'linguator' ); ?>
-			<br>
-				<a href="<?php echo esc_url( 'https://wordpress.org/plugins/automatic-translations-for-polylang/reviews/#new-post' ); ?>" class="components-button is-primary is-small" target="_blank"><?php echo esc_html__( 'Rate Us', 'linguator' ); ?><span> ★★★★★</span></a>
-				</p>
-			</div>
 			<?php
 		}
 	}
