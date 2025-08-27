@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'; // importing toaster and toast for notification purpose
 import { synchronizations } from '../utils'
 import { getNonce } from '../utils'
-import { Link, Globe, Focus, Milestone, RefreshCcw } from 'lucide-react';
+import { Link, Globe, Focus, Milestone, RefreshCcw, Share2 } from 'lucide-react';
 import { __, sprintf } from '@wordpress/i18n';
 
 const General = ({ data, setData }) => {
@@ -26,7 +26,8 @@ const General = ({ data, setData }) => {
     const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
     const [selectAllSync,setSelectAllSync] = useState(false);
     const previousDomains = React.useRef([])
-
+    const [lmatFeedbackData, setLmatFeedbackData] = useState(data.lmat_feedback_data !== undefined ? data.lmat_feedback_data : false); // For Usage Data Sharing
+    const [showTerms, setShowTerms] = useState(false); // For showing/hiding terms box
 
 
     //make the Domains in a suitable way to view
@@ -54,6 +55,11 @@ const General = ({ data, setData }) => {
             selectedPostTypes: true,
             selectedTaxonomies: true
         }
+        
+        // Only include lmatFeedbackData in the checker if the setting is available
+        if (data.lmat_feedback_data !== undefined) {
+            sameChecker.lmatFeedbackData = true;
+        }
         if (forceLang !== data.force_lang) {
             sameChecker.forceLang = false
 
@@ -66,6 +72,10 @@ const General = ({ data, setData }) => {
         if (browser !== data.browser) {
             sameChecker.browser = false
 
+        }
+
+        if (data.lmat_feedback_data !== undefined && lmatFeedbackData !== data.lmat_feedback_data) {
+            sameChecker.lmatFeedbackData = false
         }
 
         if (rewrite !== data.rewrite) {
@@ -128,7 +138,7 @@ const General = ({ data, setData }) => {
         if (flag) {
             setHandleButtonDisabled(true)
         }
-    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies])
+    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData])
 
     //Make the post types and taxonomies from  posttype->posttype_name   to {value: postype ,label:posttype_name (posttype)}
     useEffect(() => {
@@ -206,6 +216,12 @@ const General = ({ data, setData }) => {
         setSelectAllSync(allSelected && selectedSynchronization.length > 0);
     }, [selectedSynchronization]);
 
+    // Handle terms box visibility
+    const handleTermsToggle = (e) => {
+        e.preventDefault();
+        setShowTerms(!showTerms);
+    };
+
     //Save Setting Function 
     async function SaveSettings() {
         try {
@@ -240,6 +256,11 @@ const General = ({ data, setData }) => {
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies
                 }
+                
+                // Only include lmat_feedback_data if the setting is available
+                if (data.lmat_feedback_data !== undefined) {
+                    apiBody.lmat_feedback_data = lmatFeedbackData;
+                }
             } else {
                 apiBody = {
                     hide_default: hideDefault,
@@ -250,6 +271,11 @@ const General = ({ data, setData }) => {
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies
+                }
+                
+                // Only include lmat_feedback_data if the setting is available
+                if (data.lmat_feedback_data !== undefined) {
+                    apiBody.lmat_feedback_data = lmatFeedbackData;
                 }
             }
             setData(prev => ({
@@ -649,6 +675,42 @@ const General = ({ data, setData }) => {
                         }
                     </Container.Item>
                 </Container>
+                {data.lmat_feedback_data !== undefined && (
+                    <>
+                        <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                        <div className='switcher'>
+                            <Container.Item>
+                                <h3 className='flex items-center gap-2'>
+                                    <Share2 className="flex-shrink-0 size-5 text-icon-secondary" />
+                                    {__('Usage Data Sharing', 'linguator-multilingual-ai-translation')}
+                                </h3>
+                                <p>
+                                    {__('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation')}
+                                    <a href="#" className="lmat-see-terms" onClick={handleTermsToggle}>[{showTerms ? 'Hide terms' : 'See terms'}]</a>
+                                    <div id="termsBox" className="lmat-terms-box" style={{display: showTerms ? 'block' : 'none', paddingLeft: '20px', marginTop: '10px', fontSize: '12px', color: '#999'}}>
+                                        <p>{__("Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We'll collect:", 'linguator-multilingual-ai-translation')} <a href='https://my.coolplugins.net/terms/usage-tracking/' target='_blank' rel="noopener noreferrer">Click Here</a></p>
+                                        <ul style={{listStyleType: 'auto', paddingLeft: '20px'}}>
+                                            <li>{__("Your website home URL and WordPress admin email.", 'linguator-multilingual-ai-translation')}</li>
+                                            <li>{__("To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.", 'linguator-multilingual-ai-translation')}</li>
+                                        </ul>
+                                    </div>
+                                </p>
+                            </Container.Item>
+                            <Container.Item className='flex items-center justify-end' style={{paddingRight: '30%'}}>
+                                <Switch
+                                    aria-label="Switch Element"
+                                    id="lmat_feedback_data"
+                                    onChange={() => {
+                                        
+                                        setLmatFeedbackData(!lmatFeedbackData)
+                                    }}
+                                    size="sm"
+                                    value={lmatFeedbackData}
+                                />
+                            </Container.Item>
+                        </div>
+                    </>
+                )}
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
                 <Container className='flex items-center justify-end'>
                     <Container.Item className='flex gap-6'>

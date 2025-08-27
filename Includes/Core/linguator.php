@@ -47,6 +47,25 @@ if ( is_readable( LMAT_LOCAL_DIR . '/lmat-config.php' ) ) {
 class Linguator {
 
 	/**
+	 * @var LMAT_Admin_Feedback|null
+	 */
+	public $feedback;
+	/**
+	 * @var CPFM_Feedback_Notice|null
+	 */
+	public $cpfm_feedback_notice;
+
+	/**
+	 * @var LMAT_cronjob|null
+	 */
+	public $lmat_cronjob;
+
+	/**
+	 * @var Options|null
+	 */
+	public $options;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -73,6 +92,37 @@ class Linguator {
 		if ( ! defined( 'LMAT_OLT' ) || LMAT_OLT ) {
 			LMAT_OLT_Manager::instance();
 		}
+
+		// Initialize feedback functionality
+		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
+		$this->cpfm_feedback_notice = new \Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice();
+		$this->lmat_cronjob = new \Linguator\Admin\cpfm_feedback\cron\LMAT_cronjob();
+		add_action('cpfm_register_notice', function () {
+
+			if (!class_exists('Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice') || !current_user_can('manage_options')) {
+				return;
+			}
+			$notice = [
+				'title' => __('Linguator – Multilingual AI Translation', 'linguator-multilingual-ai-translation'),
+				'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation'),
+				'pages' => ['lmat_settings'],
+				'always_show_on' => ['lmat_settings'], // This enables auto-show
+				'plugin_name'=>'lmat',
+				
+			];
+			\Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice::cpfm_register_notice('lmat', $notice);
+				if (!isset($GLOBALS['cool_plugins_feedback'])) {
+					$GLOBALS['cool_plugins_feedback'] = [];
+				}
+				$GLOBALS['cool_plugins_feedback']['lmat'][] = $notice;
+	   
+		});
+		add_action('cpfm_after_opt_in_lmat', function($category) {
+			if ($category === 'lmat') {
+				\Linguator\Admin\cpfm_feedback\cron\LMAT_cronjob::lmat_send_data();
+			}
+		});
+
 
 		/*
 		 * Loads the compatibility with some plugins and themes.
@@ -281,6 +331,9 @@ class Linguator {
 
 		$links_model = $model->get_links_model();
 		$linguator    = new $class( $links_model );
+		
+		// Set the options property for backward compatibility
+		$linguator->options = $model->options;
 
 		/**
 		 * Fires after Linguator's model init.

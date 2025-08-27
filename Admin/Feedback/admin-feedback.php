@@ -41,7 +41,7 @@ class LMAT_Admin_Feedback {
 	function enqueue_feedback_scripts() {
 		$screen = get_current_screen();
 		if ( isset( $screen ) && $screen->id == 'plugins' ) {
-			wp_enqueue_script( __NAMESPACE__ . 'feedback-script', $this->plugin_url . 'Admin/Feedback/js/admin-feedback.js', array( 'jquery' ), $this->plugin_version );
+			wp_enqueue_script( __NAMESPACE__ . 'feedback-script', $this->plugin_url . 'Admin/Feedback/js/admin-feedback.js', array( 'jquery' ), $this->plugin_version, true );
 			wp_enqueue_style( 'cool-plugins-feedback-css', $this->plugin_url . 'Admin/Feedback/css/admin-feedback.css', null, $this->plugin_version );
 		}
 	}
@@ -197,24 +197,24 @@ class LMAT_Admin_Feedback {
 			$reason             = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
 			$deactivate_reasons = array(
 				'didnt_work_as_expected'         => array(
-					'title'             => __( 'The plugin didn\'t work as expected', 'cool-plugins' ),
+					'title'             => __( 'The plugin didn\'t work as expected', 'linguator-multilingual-ai-translation' ),
 					'input_placeholder' => 'What did you expect?',
 				),
 				'found_a_better_plugin'          => array(
-					'title'             => __( 'I found a better plugin', 'cool-plugins' ),
-					'input_placeholder' => __( 'Please share which plugin.', 'cool-plugins' ),
+					'title'             => __( 'I found a better plugin', 'linguator-multilingual-ai-translation' ),
+					'input_placeholder' => __( 'Please share which plugin.', 'linguator-multilingual-ai-translation' ),
 				),
 				'couldnt_get_the_plugin_to_work' => array(
-					'title'             => __( 'The plugin is not working', 'cool-plugins' ),
+					'title'             => __( 'The plugin is not working', 'linguator-multilingual-ai-translation' ),
 					'input_placeholder' => 'Please share your issue. So we can fix that for other users.',
 				),
 				'temporary_deactivation'         => array(
-					'title'             => __( 'It\'s a temporary deactivation.', 'cool-plugins' ),
+					'title'             => __( 'It\'s a temporary deactivation.', 'linguator-multilingual-ai-translation' ),
 					'input_placeholder' => '',
 				),
 				'other'                          => array(
-					'title'             => __( 'Other', 'cool-plugins' ),
-					'input_placeholder' => __( 'Please share the reason.', 'cool-plugins' ),
+					'title'             => __( 'Other', 'linguator-multilingual-ai-translation' ),
+					'input_placeholder' => __( 'Please share the reason.', 'linguator-multilingual-ai-translation' ),
 				),
 			);
 

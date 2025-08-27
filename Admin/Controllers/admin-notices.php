@@ -187,7 +187,7 @@ class LMAT_Admin_Notices {
 		if ( current_user_can( 'manage_options' ) ) {
 			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
 				$html = $this->review_notice();
-				printf('<div class="lmat-notice notice notice-info is-dismissible">%s</div>', $html );
+				printf('<div class="lmat-notice notice notice-info is-dismissible">%s</div>', wp_kses_post( $html ) );
 				
 			}
 			// Custom notices

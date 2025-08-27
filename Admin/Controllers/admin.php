@@ -100,10 +100,6 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public $site_health;
 
-	/**
-	 * @var LMAT_Admin_Feedback|null
-	 */
-	public $feedback;
 
 	/**
 	 * Setups filters and action needed on all admin pages and on plugins page.
@@ -128,8 +124,6 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function init() {
 		parent::init();
-		// Initialize feedback functionality
-		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
 
 		// Setup filters for admin pages
 		// Priority 5 to make sure filters are there before customize_register is fired
