@@ -26,8 +26,8 @@ class LMAT_Admin_Feedback {
 	|   Use this constructor to fire all actions and filters          |
 	|-----------------------------------------------------------------|
 	*/
-    public function __construct( $linguator ) {
-        $this->options = &$linguator->options;
+    public function __construct() {
+        $this->options = get_option('linguator');
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_feedback_scripts' ) );
 		add_action( 'admin_head', array( $this, 'show_deactivate_feedback_popup' ) );
 		add_action( 'wp_ajax_' . $this->plugin_slug . '_submit_deactivation_response', array( $this, 'submit_deactivation_response' ) );
@@ -137,7 +137,7 @@ class LMAT_Admin_Feedback {
 	
 		// Server and WP environment details
 		$server_info = [
-			'server_software'        => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field($_SERVER['SERVER_SOFTWARE']) : 'N/A',
+			'server_software'        => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : 'N/A',
 			'mysql_version'          => $wpdb ? sanitize_text_field($wpdb->get_var("SELECT VERSION()")) : 'N/A',
 			'php_version'            => sanitize_text_field(phpversion() ?: 'N/A'),
 			'wp_version'             => sanitize_text_field(get_bloginfo('version') ?: 'N/A'),
@@ -191,10 +191,10 @@ class LMAT_Admin_Feedback {
 	}
 
     function submit_deactivation_response() {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['_wpnonce'] ), '_cool-plugins_deactivate_feedback_nonce' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), '_cool-plugins_deactivate_feedback_nonce' ) ) {
 			wp_send_json_error();
 		} else {
-			$reason             = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
+			$reason             = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '';
 			$deactivate_reasons = array(
 				'didnt_work_as_expected'         => array(
 					'title'             => __( 'The plugin didn\'t work as expected', 'linguator-multilingual-ai-translation' ),
@@ -220,7 +220,7 @@ class LMAT_Admin_Feedback {
 
 			$plugin_initial =  $this->options['first_activation'];
 			$deativation_reason = array_key_exists( $reason, $deactivate_reasons ) ? $reason : 'other';
-			$sanitized_message = empty( $_POST['message'] ) || sanitize_text_field( $_POST['message'] ) == '' ? 'N/A' : sanitize_text_field( $_POST['message'] );
+			$sanitized_message = empty( $_POST['message'] ) || sanitize_text_field( wp_unslash( $_POST['message'] ) ) == '' ? 'N/A' : sanitize_text_field( wp_unslash( $_POST['message'] ) );
 			$admin_email       = sanitize_email( get_option( 'admin_email' ) );
 			$site_url          = esc_url( site_url() );
 			$install_date 		= get_option('lmat_install_date');
