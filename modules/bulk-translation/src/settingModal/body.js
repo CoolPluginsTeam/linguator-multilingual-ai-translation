@@ -4,9 +4,6 @@ import TranslateService from "../components/translateProvider/index.js";
 const SettingModalBody = (props) => {
     const { prefix, localAiModalError } = props;
     const ServiceProviders = TranslateService();
-    const openai_aiDisabled = !lmatBulkTranslationGlobal?.AIServices?.includes('openai');
-    const google_aiDisabled = !lmatBulkTranslationGlobal?.AIServices?.includes('google');
-    const openrouter_aiDisabled = !lmatBulkTranslationGlobal?.AIServices?.includes('openrouter');
     return (
         <div className={`${prefix}-setting-modal-body`}>
             <table>
@@ -22,9 +19,6 @@ const SettingModalBody = (props) => {
                         <Providers
                             key={provider}
                             {...props}
-                            openai_aiDisabled={openai_aiDisabled}
-                            google_aiDisabled={google_aiDisabled}
-                            openrouter_aiDisabled={openrouter_aiDisabled}
                             localAiTranslatorDisabled={localAiModalError}
                             localAiModalError={localAiModalError}
                             openErrorModalHandler={props.errorModalHandler}

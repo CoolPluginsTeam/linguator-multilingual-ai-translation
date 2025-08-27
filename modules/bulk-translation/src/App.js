@@ -4,6 +4,7 @@ import StatusModal from './statusModal/index.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetStore, updateServiceProvider } from './ReduxStore/features/actions.js';
 import { selectCountInfo } from './ReduxStore/features/selectors.js';
+import ChromeAiTranslator from './components/translateProvider/localAi/local-ai-translate.js';
 import ErrorModalBox from './components/ErrorModalBox/index.js';
 import SettingModal from './settingModal/index.js';
 import DOMPurify from 'dompurify';
@@ -17,7 +18,7 @@ const App = ({ onDestory, prefix, postIds }) => {
     const [settingModalVisibility, setSettingModalVisibility] = useState(false);
     const [statusModalVisibility, setStatusModalVisibility] = useState(false);
     const translatePostsCount = useSelector(selectCountInfo).totalPosts;
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorModal, setErrorModal] = useState(false);
     const [localAiModalError, setLocalAiModalError] = useState(false);
 
@@ -26,6 +27,20 @@ const App = ({ onDestory, prefix, postIds }) => {
         setSettingModalVisibility(false);
         onDestory(e);
     }
+
+
+    useEffect(() => {
+        const checkStatus = async () => {
+            const status = await ChromeAiTranslator.languageSupportedStatus('en', 'hi', 'English', 'Hindi');
+            if (status.type === 'browser-not-supported' || status.type === 'translation-api-not-available' || status.type === 'browser-not-supported') {
+                setLocalAiModalError(__(status.html[0].outerHTML, 'linguator-multilingual-ai-translation'));
+            }
+
+            setIsLoading(false);
+        }
+
+        checkStatus();
+    }, [statusModalVisibility]);
 
     useEffect(() => {
         if (!statusModalVisibility && !settingModalVisibility) {
@@ -70,6 +85,7 @@ const App = ({ onDestory, prefix, postIds }) => {
         dispatch(updateServiceProvider(services));
         setSettingModalVisibility(false);
         setStatusModalVisibility(true);
+        setIsLoading(true);
     }
 
     const containerCls=()=>{
