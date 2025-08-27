@@ -272,7 +272,6 @@ class LMAT_Page_Translation {
 				'post_type'                => $post_type,
 				'editor_type'              => $editor_type,
 				'current_post_id'          => $post_id,
-				'pro_version_url'          => esc_url( 'https://coolplugins.net/product/autopoly-ai-translation-for-polylang/' ),
 			),
 			$extra_data
 		);

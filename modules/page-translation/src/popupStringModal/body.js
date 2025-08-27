@@ -8,7 +8,7 @@ import TranslateService from "../component/TranslateProvider/index.js";
 const StringPopUpBody = (props) => {
 
     const { service: service } = props;
-    const translateContent = select("block-lmatMachineTranslate/translate").getTranslationEntry();
+    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntry();
     const StringModalBodyNotice = props.stringModalBodyNotice;
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const StringPopUpBody = (props) => {
         const service = props.service;
         const id = `lmat_page_translation_${service}_translate_element`;
 
-        const translateContent = wp.data.select('block-lmatMachineTranslate/translate').getTranslationEntry();
+        const translateContent = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
 
         if (translateContent.length > 0 && props.postDataFetchStatus) {
             const ServiceSetting = TranslateService({ Service: service });

@@ -4,7 +4,7 @@ import FormatNumberCount from "../FormateNumberCount/index.js";
 const ShowStringCount = (provider, status='none', characterCount=false) => {
 
     if(false ===characterCount){
-        characterCount = select('block-lmatMachineTranslate/translate').getTranslationInfo().sourceCharacterCount;
+        characterCount = select('block-lmatPageTranslation/translate').getTranslationInfo().sourceCharacterCount;
     }
 
     const stringCount = document.querySelector(`.${provider}-translator-strings-count`);

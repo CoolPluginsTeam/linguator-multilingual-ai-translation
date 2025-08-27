@@ -73,7 +73,7 @@ const filterTranslateAttr = (block, blockParseRules, service) => {
                 if (!/[\p{L}\p{N}]/gu.test(blockAttrContent)) {
                     translateContent = blockAttrContent;
                 } else {
-                    translateContent = select('block-lmatMachineTranslate/translate').getTranslatedString('content', blockAttrContent, filterKey, service);
+                    translateContent = select('block-lmatPageTranslation/translate').getTranslatedString('content', blockAttrContent, filterKey, service);
                 }
 
                 block.attributes = updateNestedAttribute(block.attributes, newIdArr, translateContent);
@@ -154,7 +154,7 @@ const cretaeChildBlock = (block, blockRules, service) => {
  */
 const createBlocks = (block, service) => {
     const { select } = wp.data;
-    const blockRules = select('block-lmatMachineTranslate/translate').getBlockRules();
+    const blockRules = select('block-lmatPageTranslation/translate').getBlockRules();
 
     const { dispatch } = wp.data;
     const { name: blockName } = block;

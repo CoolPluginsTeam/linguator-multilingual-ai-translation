@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import { useEffect, useState } from "@wordpress/element";
 import PopStringModal from "../popupStringModal/index.js";
 import googleLanguage from "../component/TranslateProvider/google/google-language.js";
+import ChromeLocalAiTranslator from "../component/TranslateProvider/local-ai-translator/local-ai-translator.js";
 import SettingModalHeader from "./header.js";
 import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
@@ -20,6 +21,7 @@ const SettingModal = (props) => {
     const googleSupport = googleLanguage().includes(targetLang === 'zh' ? lmatPageTranslationGlobal.languageObject['zh']?.locale.replace('_', '-') : targetLang);
     const [serviceModalErrors, setServiceModalErrors] = useState({});
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
+    const [chromeAiBtnDisabled, setChromeAiBtnDisabled] = useState(false);
 
     const openModalOnLoadHandler = (e) => {
         e.preventDefault();
@@ -68,6 +70,16 @@ const SettingModal = (props) => {
      * useEffect hook to check if the local AI translator is supported.
      */
     useEffect(() => {
+        const languageSupportedStatus = async () => {
+            const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
+            const translateBtn = document.querySelector('.lmat-page-translation-service-btn#lmat-page-translation-localAiTranslator-btn');
+
+            if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object' && translateBtn) {
+                setChromeAiBtnDisabled(true);
+    
+                setServiceModalErrors(prev => ({ ...prev, localAiTranslator: {message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation')} }));
+            }
+        };
         if(settingVisibility){
             if(!googleSupport){
                 setServiceModalErrors(prev => ({
@@ -81,6 +93,8 @@ const SettingModal = (props) => {
                     }
                 }));
             }
+
+            languageSupportedStatus();
         }
     }, [settingVisibility]);
 
@@ -134,7 +148,15 @@ const SettingModal = (props) => {
             return;
         }
 
+        const dataService = targetElement.dataset && targetElement.dataset.service;
         setSettingVisibility(false);
+
+        if (dataService === 'localAiTranslator') {
+            const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName);
+            if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object') {
+                return;
+            }
+        }
         
         setModalRender(prev => prev + 1);
         setTargetBtn(targetElement);
@@ -165,6 +187,7 @@ const SettingModal = (props) => {
                             targetLangName={targetLangName}
                             postType={props.postType}
                             sourceLangName={sourceLangName}
+                            localAiTranslatorDisabled={chromeAiBtnDisabled}
                             openErrorModalHandler={openErrorModalHandler}
                         />
                         <SettingModalFooter

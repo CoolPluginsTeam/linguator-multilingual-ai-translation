@@ -4,7 +4,7 @@ import ElementorSaveSource from "../../storeSourceString/Elementor/index.js";
 
 // Update allowed meta fields
 const updateAllowedMetaFields = (data) => {
-    dispatch('block-lmatMachineTranslate/translate').allowedMetaFields(data);
+    dispatch('block-lmatPageTranslation/translate').allowedMetaFields(data);
 }
 
 const fetchPostContent = async (props) => {

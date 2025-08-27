@@ -61,7 +61,7 @@ class LMAT_Sync_Post {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request $linguator Polylang object.
+	 * @param LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request $linguator Linguator object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->options = &$linguator->options;

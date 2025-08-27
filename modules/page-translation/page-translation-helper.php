@@ -111,7 +111,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 
 				return wp_send_json_success( $data );
 			} else {
-				wp_send_json_error( __( 'Invalid Post ID.', 'autopoly-ai-translation-for-polylang' ) );
+				wp_send_json_error( __( 'Invalid Post ID.', 'linguator-multilingual-ai-translation' ) );
 				wp_die( '0', 400 );
 			}
 
@@ -120,7 +120,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 
 		// public function get_custom_blocks_content() {
 		// if ( ! check_ajax_referer( 'lmat_block_update_nonce', 'lmat_nonce', false ) ) {
-		// wp_send_json_error( __( 'Invalid security token sent.', 'autopoly-ai-translation-for-polylang' ) );
+		// wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
 		// wp_die( '0', 400 );
 		// exit();
 		// }
@@ -130,14 +130,14 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		// if ( $custom_content && is_string( $custom_content ) && ! empty( trim( $custom_content ) ) ) {
 		// return wp_send_json_success( array( 'block_data' => $custom_content ) );
 		// } else {
-		// return wp_send_json_success( array( 'message' => __( 'No custom blocks found.', 'autopoly-ai-translation-for-polylang' ) ) );
+		// return wp_send_json_success( array( 'message' => __( 'No custom blocks found.', 'linguator-multilingual-ai-translation' ) ) );
 		// }
 		// exit();
 		// }
 
 		// public function update_custom_blocks_content() {
 		// if ( ! check_ajax_referer( 'lmat_block_update_nonce', 'lmat_nonce', false ) ) {
-		// wp_send_json_error( __( 'Invalid security token sent.', 'autopoly-ai-translation-for-polylang' ) );
+		// wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
 		// wp_die( '0', 400 );
 		// exit();
 		// }
@@ -166,7 +166,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		// }
 		// }
 
-		// return wp_send_json_success( array( 'message' => __( 'Automatic Translation for Polylang: Custom Blocks data updated successfully', 'autopoly-ai-translation-for-polylang' ) ) );
+		// return wp_send_json_success( array( 'message' => __( 'Linguator Multilingual AI Translation: Custom Blocks data updated successfully', 'linguator-multilingual-ai-translation' ) ) );
 		// }
 
 		// private function verify_block_data( $id_keys, $value, $block_rules ) {
@@ -207,7 +207,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 
 		public function lmat_update_translate_data() {
 			if ( ! check_ajax_referer( 'lmat_update_translate_data_nonce', 'update_translation_key', false ) ) {
-				wp_send_json_error( __( 'Invalid security token sent.', 'autopoly-ai-translation-for-polylang' ) );
+				wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
 				wp_die( '0', 400 );
 				exit();
 			}
@@ -253,13 +253,13 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 
 				wp_send_json_success(
 					array(
-						'message' => __( 'Translation data updated successfully', 'autopoly-ai-translation-for-polylang' ),
+						'message' => __( 'Translation data updated successfully', 'linguator-multilingual-ai-translation' ),
 					)
 				);
 			} else {
 				wp_send_json_error(
 					array(
-						'message' => __( 'Lmat_Dashboard class not found', 'autopoly-ai-translation-for-polylang' ),
+						'message' => __( 'Lmat_Dashboard class not found', 'linguator-multilingual-ai-translation' ),
 					)
 				);
 			}

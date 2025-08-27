@@ -23,7 +23,7 @@ const translatePost = (props) => {
         editPostData.forEach(key => {
             const sourceData = postContent[key];
             if (sourceData.trim() !== '') {
-                const translateContent = select('block-lmatMachineTranslate/translate').getTranslatedString(key, sourceData, null, service);
+                const translateContent = select('block-lmatPageTranslation/translate').getTranslatedString(key, sourceData, null, service);
 
                 data[key] = translateContent;
             }
@@ -37,12 +37,12 @@ const translatePost = (props) => {
      */
     const postMetaFieldsUpdate = () => {
         const metaFieldsData = postContent.metaFields;
-        const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
+        const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
         Object.keys(metaFieldsData).forEach(key => {
             // Update yoast seo meta fields
             if (Object.keys(AllowedMetaFields).includes(key)) {
-                const translatedMetaFields = select('block-lmatMachineTranslate/translate').getTranslatedString('metaFields', metaFieldsData[key][0], key, service);
+                const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', metaFieldsData[key][0], key, service);
                 if (key.startsWith('_yoast_wpseo_') && AllowedMetaFields[key].inputType === 'string') {
                     YoastSeoFields({ key: key, value: translatedMetaFields });
                 } else if (key.startsWith('rank_math_') && AllowedMetaFields[key].inputType === 'string') {
@@ -60,7 +60,7 @@ const translatePost = (props) => {
      * Updates the post ACF fields based on translation.
      */
     const postAcfFieldsUpdate = () => {
-        const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
+        const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
         const metaFieldsData = postContent.metaFields;
 
         
@@ -92,7 +92,7 @@ const translatePost = (props) => {
 
                    const sourceValue = metaFieldsData[fieldName]? metaFieldsData[fieldName][0] : field?.val();
 
-                    const translatedMetaFields = select('block-lmatMachineTranslate/translate').getTranslatedString('metaFields', sourceValue, fieldKey, service);
+                    const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', sourceValue, fieldKey, service);
 
                     if('wysiwyg' === inputType && tinymce){
                         const editorId = field.data.id;

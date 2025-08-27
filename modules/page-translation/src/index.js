@@ -42,18 +42,18 @@ const StringModalBodyNotice = () => {
         className: 'lmat-page-translation-notice lmat-page-translation-notice-warning', message: <p>
           {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'linguator-multilingual-ai-translation')}
           <a
-            href={`${lmatPageTranslationGlobal.admin_url}admin.php?page=mlang_settings`}
+            href={`${lmatPageTranslationGlobal.admin_url}admin.php?page=lmat_settings`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {__('Polylang settings', 'linguator-multilingual-ai-translation')}
+            {__('Linguator settings', 'linguator-multilingual-ai-translation')}
           </a>
           {__('. This may affect linked posts or pages.', 'linguator-multilingual-ai-translation')}
         </p>
       });
     }
 
-    const blockRules = select('block-lmatMachineTranslate/translate').getBlockRules();
+    const blockRules = select('block-lmatPageTranslation/translate').getBlockRules();
 
     if (!blockRules.LmatBlockParseRules || Object.keys(blockRules.LmatBlockParseRules).length === 0) {
       notices.push({ className: 'lmat-page-translation-notice lmat-page-translation-notice-error', message: <p>{__('No block rules were found. It appears that the block-rules.JSON file could not be fetched, possibly because it is blocked by your server settings. Please check your server configuration to resolve this issue.', 'linguator-multilingual-ai-translation')}</p> });
@@ -97,7 +97,7 @@ const App = () => {
   const fetchPostData = async (data) => {
     await fetchPost(data);
 
-    const allEntries = wp.data.select('block-lmatMachineTranslate/translate').getTranslationEntry();
+    const allEntries = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
 
     let totalStringCount = 0;
     let totalCharacterCount = 0;
@@ -114,7 +114,7 @@ const App = () => {
       totalWordCount += wordCount;
     });
 
-    wp.data.dispatch('block-lmatMachineTranslate/translate').translationInfo({ sourceStringCount: totalStringCount, sourceWordCount: totalWordCount, sourceCharacterCount: totalCharacterCount });
+    wp.data.dispatch('block-lmatPageTranslation/translate').translationInfo({ sourceStringCount: totalStringCount, sourceWordCount: totalWordCount, sourceCharacterCount: totalCharacterCount });
   }
 
   const updatePostDataFetch = (status) => {

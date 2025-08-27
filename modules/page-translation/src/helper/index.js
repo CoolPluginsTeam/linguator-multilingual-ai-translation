@@ -1,7 +1,7 @@
 import { select } from '@wordpress/data';
 
 export const updateTranslateData = ({ provider, sourceLang, targetLang, postId }) => {
-    const translateData = select('block-lmatMachineTranslate/translate').getTranslationInfo();
+    const translateData = select('block-lmatPageTranslation/translate').getTranslationInfo();
     const totalStringCount = translateData.translateData?.[provider]?.targetStringCount || 0;
     const totalWordCount = translateData.translateData?.[provider]?.targetWordCount || 0;
     const totalCharacterCount = translateData.translateData?.[provider]?.targetCharacterCount || 0;

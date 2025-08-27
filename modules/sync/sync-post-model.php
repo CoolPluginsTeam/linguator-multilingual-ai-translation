@@ -43,7 +43,7 @@ class LMAT_Sync_Post_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param object $linguator Polylang object.
+	 * @param object $linguator Linguator object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->options      = &$linguator->options;

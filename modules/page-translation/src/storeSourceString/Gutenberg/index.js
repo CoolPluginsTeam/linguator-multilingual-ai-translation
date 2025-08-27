@@ -47,7 +47,7 @@ const filterTranslateAttr = (blockId, blockAttr, filterAttr) => {
                     return false;
                 }
 
-                dispatch('block-lmatMachineTranslate/translate').contentSaveSource(filterKey, blockAttrContent);
+                dispatch('block-lmatPageTranslation/translate').contentSaveSource(filterKey, blockAttrContent);
             }
 
             return;
@@ -117,7 +117,7 @@ const blockAttributeContent = (parseBlock, blockRules) => {
  */
 const GutenbergBlockSaveSource = (block, blockRules) => {
 
-    const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
+    const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
     Object.keys(block).forEach(key => {
         if (key === 'content') {
@@ -127,7 +127,7 @@ const GutenbergBlockSaveSource = (block, blockRules) => {
                 // Store meta fields
                 if(Object.keys(AllowedMetaFields).includes(metaKey) && AllowedMetaFields[metaKey].inputType === 'string'){
                     if('' !== block[key][metaKey][0] && undefined !== block[key][metaKey][0]){
-                        dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(metaKey, block[key][metaKey][0]);
+                        dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(metaKey, block[key][metaKey][0]);
                     }
                 }
             });
@@ -158,10 +158,10 @@ const GutenbergBlockSaveSource = (block, blockRules) => {
 
                         if(block[key] && block[key][name]){
                             if('' !== block[key][name] && undefined !== block[key][name]){
-                                dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(fieldData.key, block[key][name][0]);
+                                dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(fieldData.key, block[key][name][0]);
                             }
                         }else if(currentValue && '' !== currentValue && undefined !== currentValue){
-                            dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(fieldData.key, currentValue);
+                            dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(fieldData.key, currentValue);
                         }
                     }
                 });
@@ -169,7 +169,7 @@ const GutenbergBlockSaveSource = (block, blockRules) => {
         } else if(['title', 'excerpt'].includes(key)){
             if(block[key] && block[key].trim() !== ''){
                 const action = `${key}SaveSource`;
-                dispatch('block-lmatMachineTranslate/translate')[action](block[key]);
+                dispatch('block-lmatPageTranslation/translate')[action](block[key]);
             }
         }
     });

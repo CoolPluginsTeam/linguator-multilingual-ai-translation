@@ -255,9 +255,9 @@ const FilterTargetContent = (props) => {
 
     /**
      * The content to be filtered based on the service type.
-     * If the service is 'yandex', the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
+     * If the service is 'localAiTranslator' or 'google', the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
      */
-    const content = ['yandex', 'localAiTranslator', 'google'].includes(props.service) ? filterSourceData(props.content) : props.content;
+    const content = ['localAiTranslator', 'google'].includes(props.service) ? filterSourceData(props.content) : props.content;
 
     /**
      * Regular expression pattern to match the span elements that should not be translated.
@@ -276,7 +276,7 @@ const FilterTargetContent = (props) => {
 
     return (
         <>
-            {['yandex', 'localAiTranslator', 'google'].includes(props.service) ?
+            {['localAiTranslator', 'google'].includes(props.service) ?
                 content.map((data, index) => {
                     const notTranslate = notTranslatePattern.test(data);
                     if (notTranslate) {

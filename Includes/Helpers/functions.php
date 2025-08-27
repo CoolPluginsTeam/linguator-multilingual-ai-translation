@@ -218,7 +218,7 @@ function lmat_replace_links_with_translations($content, $locale, $current_locale
 	 }
  
 	 function lmat_extract_taxonomy_name($path, $terms_data){
-		 // Remove the language prefix if using Polylang
+		 // Remove the language prefix if using Linguator
 		 $languages = lmat_languages_list(); // e.g., ['en', 'fr']
 		 $segments = explode('/', $path);
 		 if (in_array($segments[0], $languages)) {
@@ -263,7 +263,7 @@ function lmat_replace_links_with_translations($content, $locale, $current_locale
 				$category = get_term_by('slug', $category_slug, $taxonomy_name);
  
 				if(!$category){
-						// Remove the language prefix if using Polylang
+						// Remove the language prefix if using Linguator
 					$languages = lmat_languages_list(); // e.g., ['en', 'fr']
 					$segments = explode('/', $path);
 					if (in_array($segments[0], $languages)) {

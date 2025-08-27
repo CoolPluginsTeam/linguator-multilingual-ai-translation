@@ -16,8 +16,8 @@ import * as selectors from './selectors.js';
 // Destructure the createReduxStore and register functions from the wp.data object provided by WordPress.
 const { createReduxStore, register } = wp.data;
 
-// Create a Redux store named 'block-lmatMachineTranslate/translate' with the specified reducer, actions, and selectors.
-const store = createReduxStore('block-lmatMachineTranslate/translate', {
+// Create a Redux store named 'block-lmatPageTranslation/translate' with the specified reducer, actions, and selectors.
+const store = createReduxStore('block-lmatPageTranslation/translate', {
     reducer,   // The reducer function to manage state updates.
     actions,   // The action creators for dispatching actions to the store.
     selectors   // The selectors for accessing specific state values.

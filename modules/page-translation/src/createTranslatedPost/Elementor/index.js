@@ -38,12 +38,12 @@ const lmatUpdateWidgetContent = (translations) => {
 }
 
 const lmatUpdateMetaFields = (metaFields, service) => {
-    const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
+    const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
         Object.keys(metaFields).forEach(key => {
             // Update yoast seo meta fields
             if (Object.keys(AllowedMetaFields).includes(key)) {
-                const translatedMetaFields = select('block-lmatMachineTranslate/translate').getTranslatedString('metaFields', metaFields[key][0], key, service);
+                const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', metaFields[key][0], key, service);
                 if (key.startsWith('_yoast_wpseo_') && AllowedMetaFields[key].inputType === 'string') {
                     YoastSeoFields({ key: key, value: translatedMetaFields });
                 } else if (key.startsWith('rank_math_') && AllowedMetaFields[key].inputType === 'string') {
@@ -105,7 +105,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                     typeof settings[key] === 'string' && settings[key].trim() !== '') {
                     const uniqueKey = ids.join('_lmat_page_translation_') + '_lmat_page_translation_settings_lmat_page_translation_' + key;
 
-                    const translatedData = select('block-lmatMachineTranslate/translate').getTranslatedString('content', settings[key], uniqueKey, service);
+                    const translatedData = select('block-lmatPageTranslation/translate').getTranslatedString('content', settings[key], uniqueKey, service);
 
                     translations.push({
                         ID: widgetId,
@@ -131,7 +131,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                                     const fieldKey = `${key}[${index}].${repeaterKey}`
                                     const uniqueKey = ids.join('_lmat_page_translation_') + '_lmat_page_translation_settings_lmat_page_translation_' + key + '_lmat_page_translation_' + index + '_lmat_page_translation_' + repeaterKey;
 
-                                    const translatedData = select('block-lmatMachineTranslate/translate').getTranslatedString('content', item[repeaterKey], uniqueKey, service);
+                                    const translatedData = select('block-lmatPageTranslation/translate').getTranslatedString('content', item[repeaterKey], uniqueKey, service);
 
                                     translations.push({
                                         ID: widgetId,
@@ -164,7 +164,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
 
     const replaceSourceString=()=>{
         const elementorData = lmatPageTranslationGlobal.elementorData;
-        const translateStrings=wp.data.select('block-lmatMachineTranslate/translate').getTranslationEntry();
+        const translateStrings=wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
 
         translateStrings.forEach(translation => {
             const sourceString = translation.source;

@@ -68,7 +68,7 @@ const updateTranslatedContent = ({provider, startTime, endTime}) => {
     const stringContainer = container.querySelector('.lmat_page_translation_string_container');
     const translatedData = stringContainer.querySelectorAll('td.translate[data-string-type]:not([data-translate-status="translated"])');
     const totalTranslatedData = translatedData.length;
-    const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
+    const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
     translatedData.forEach((ele, index) => {
         const translatedText = ele.innerText;
@@ -78,13 +78,13 @@ const updateTranslatedContent = ({provider, startTime, endTime}) => {
 
         SaveTranslation({ type: type, key: key, translateContent: translatedText, source: sourceText, provider: provider, AllowedMetaFields });
 
-        const translationEntry = select('block-lmatMachineTranslate/translate').getTranslationInfo().translateData[provider];
+        const translationEntry = select('block-lmatPageTranslation/translate').getTranslationInfo().translateData[provider];
         const previousTargetStringCount = translationEntry && translationEntry.targetStringCount ? translationEntry.targetStringCount : 0;
         const previousTargetWordCount = translationEntry && translationEntry.targetWordCount ? translationEntry.targetWordCount : 0;
         const previousTargetCharacterCount = translationEntry && translationEntry.targetCharacterCount ? translationEntry.targetCharacterCount : 0;
 
         if (translatedText.trim() !== '' && translatedText.trim().length > 0) {
-            dispatch('block-lmatMachineTranslate/translate').translationInfo({ targetStringCount: previousTargetStringCount + sourceText.trim().split(/(?<=[.!?]+)\s+/).length, targetWordCount: previousTargetWordCount + sourceText.trim().split(/\s+/).filter(word => /[^\p{L}\p{N}]/.test(word)).length, targetCharacterCount: previousTargetCharacterCount + sourceText.trim().length, provider: provider });
+            dispatch('block-lmatPageTranslation/translate').translationInfo({ targetStringCount: previousTargetStringCount + sourceText.trim().split(/(?<=[.!?]+)\s+/).length, targetWordCount: previousTargetWordCount + sourceText.trim().split(/\s+/).filter(word => /[^\p{L}\p{N}]/.test(word)).length, targetCharacterCount: previousTargetCharacterCount + sourceText.trim().length, provider: provider });
         }
 
         if(index === totalTranslatedData - 1){

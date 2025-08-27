@@ -7,7 +7,7 @@ import AllowedMetaFields from "../../AllowedMetafileds.js";
 
 const GutenbergPostFetch = async (props) => {
     const apiUrl = lmatPageTranslationGlobal.ajax_url;
-    let blockRules = wp.data.select('block-lmatMachineTranslate/translate').getBlockRules() || {};
+    let blockRules = wp.data.select('block-lmatPageTranslation/translate').getBlockRules() || {};
     const apiController = [];
 
     const destroyHandler = () => {
@@ -22,7 +22,7 @@ const GutenbergPostFetch = async (props) => {
 
     // Update allowed meta fields
     const updateAllowedMetaFields = (data) => {
-        dispatch('block-lmatMachineTranslate/translate').allowedMetaFields(data);
+        dispatch('block-lmatPageTranslation/translate').allowedMetaFields(data);
     }
 
     // Update ACF fields allowed meta fields
@@ -86,7 +86,7 @@ const GutenbergPostFetch = async (props) => {
             .then(response => response.json())
             .then(data => {
                 blockRules = JSON.parse(data.data.blockRules);
-                dispatch('block-lmatMachineTranslate/translate').setBlockRules(blockRules);
+                dispatch('block-lmatPageTranslation/translate').setBlockRules(blockRules);
 
             })
             .catch(error => {
@@ -97,7 +97,7 @@ const GutenbergPostFetch = async (props) => {
     await BlockParseFetch();
 
     const ContentFetch = async () => {
-        const contentExists = select('block-lmatMachineTranslate/translate').getTranslationEntry();
+        const contentExists = select('block-lmatPageTranslation/translate').getTranslationEntry();
 
         if ((contentExists && contentExists.length > 0) || Object.keys(blockRules).length === 0) {
             return;

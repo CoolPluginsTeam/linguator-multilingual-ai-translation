@@ -2,13 +2,13 @@ import { select, dispatch } from "@wordpress/data";
 
 const ElementorSaveSource = (content) => {
 
-    const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
+    const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
     const storeMetaFields = (metaFields) => {
         Object.keys(metaFields).forEach(metaKey => {
             if(Object.keys(AllowedMetaFields).includes(metaKey) && AllowedMetaFields[metaKey].inputType === 'string'){
                 if('' !== metaFields[metaKey][0] && undefined !== metaFields[metaKey][0]){
-                    dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(metaKey, metaFields[metaKey][0]);
+                    dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(metaKey, metaFields[metaKey][0]);
                 }
             }
         });
@@ -29,7 +29,7 @@ const ElementorSaveSource = (content) => {
             const uniqueKey = ids.join('_lmat_page_translation_');
 
             if(value && '' !== value){  
-                dispatch('block-lmatMachineTranslate/translate').contentSaveSource(uniqueKey, value);
+                dispatch('block-lmatPageTranslation/translate').contentSaveSource(uniqueKey, value);
             }
         }
     }

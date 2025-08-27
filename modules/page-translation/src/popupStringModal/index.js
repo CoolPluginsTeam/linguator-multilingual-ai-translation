@@ -9,7 +9,7 @@ const popStringModal = (props) => {
 
     let selectedService = props.service;
 
-    const translateData = select('block-lmatMachineTranslate/translate').getTranslationInfo().translateData[selectedService] || false;
+    const translateData = select('block-lmatPageTranslation/translate').getTranslationInfo().translateData[selectedService] || false;
     const translateStatus=translateData?.translateStatus || false;
 
     const [popupVisibility, setPopupVisibility] = useState(true);
@@ -87,7 +87,7 @@ const popStringModal = (props) => {
     const translateStatusHandler = (status) => {
         let service = props.service;
 
-        const characterCount = select('block-lmatMachineTranslate/translate').getTranslationInfo().translateData[service]?.targetCharacterCount || 0;
+        const characterCount = select('block-lmatPageTranslation/translate').getTranslationInfo().translateData[service]?.targetCharacterCount || 0;
         setCharacterCount(characterCount);
         setTranslatePending(status);
     }
