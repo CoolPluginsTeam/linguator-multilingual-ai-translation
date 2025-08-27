@@ -42,7 +42,7 @@ const SettingModal = (props) => {
 
     return (
         <>
-            {errorModal ? <ErrorModalBox message={errorModal} onDestroy={props.onDestory} onClose={closeErrorModal} Title='AutoPoly - AI Translation For Polylang (Pro)' prefix={prefix} /> :
+            {errorModal ? <ErrorModalBox message={errorModal} onDestroy={props.onDestory} onClose={closeErrorModal} Title='Linguator Multilingual AI Translation' prefix={prefix} /> :
             <div id={`${prefix}-setting-modal-container`}>
                 <div className={`${prefix}-setting-modal-content`}>
                     <SettingModalHeader
