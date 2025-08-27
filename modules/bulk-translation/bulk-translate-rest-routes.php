@@ -1,15 +1,21 @@
 <?php
 namespace Linguator\modules\Bulk_Translation;
 
-use Linguator\modules\Page_Translation\LMAT_Page_Translation_Helper;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
+use Linguator\modules\Page_Translation\LMAT_Page_Translation_Helper;
 
+if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
+	/**
+	 * LMAT_Bulk_Translate_Rest_Routes
+	 *
+	 * @package Linguator\modules\Bulk_Translation
+	 */
 	class LMAT_Bulk_Translate_Rest_Routes {
+
+
 		/**
 		 * The base name of the route.
 		 *
@@ -31,25 +37,29 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 		 * Register the routes
 		 */
 		public function register_routes() {
-
 			register_rest_route(
 				$this->base_name,
 				'/(?P<slug>[\w-]+):bulk-translate-entries',
 				array(
 					'methods'             => 'POST',
+					'callback'            => array( $this, 'bulk_translate_entries' ),
+					'permission_callback' => array( $this, 'permission_only_admins' ),
 					'args'                => array(
-						'ids'  => array(
+						'ids'        => array(
 							'type'     => 'string',
 							'required' => true,
 						),
-						'lang' => array(
+						'lang'       => array(
 							'type'     => 'string',
 							'required' => true,
+						),
+						'privateKey' => array(
+							'type'              => 'string',
+							'required'          => true,
+							'sanitize_callback' => 'sanitize_text_field',
+							'validate_callback' => array( $this, 'validate_lmat_bulk_nonce' ),
 						),
 					),
-					'callback'            => array( $this, 'bulk_translate_entries' ),
-					'validate_callback'   => array( $this, 'validate_bulk_entries_callback' ),
-					'permission_callback' => array( $this, 'validate_bulk_translate_permission_callback' ),
 				)
 			);
 
@@ -59,18 +69,72 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_translate_post' ),
-					'validate_callback'   => array( $this, 'validate_create_translate_post_callback' ),
-					'permission_callback' => array( $this, 'validate_bulk_translate_permission_callback' ),
+					'permission_callback' => array( $this, 'permission_only_admins' ),
+					'args'                => array(
+						'privateKey'      => array(
+							'type'              => 'string',
+							'required'          => true,
+							'sanitize_callback' => 'sanitize_text_field',
+							'validate_callback' => array( $this, 'validate_lmat_create_post_nonce' ),
+						),
+						'post_id'         => array(
+							'type'              => 'integer',
+							'required'          => true,
+							'sanitize_callback' => 'absint',
+						),
+						'target_language' => array(
+							'type'              => 'string',
+							'required'          => true,
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'editor_type'     => array(
+							'type'              => 'string',
+							'required'          => false,
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'source_language' => array(
+							'type'              => 'string',
+							'required'          => true,
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'post_title'      => array(
+							'type'              => 'string',
+							'required'          => false,
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'post_content'    => array(
+							'type'     => 'string',
+							'required' => false,
+						),
+					),
 				)
 			);
 		}
 
-        public function validate_bulk_translate_permission_callback($params){
-            if(!is_user_logged_in()) wp_send_json_error('You are not authorized to perform this action.');
-            if(!current_user_can('manage_options')) wp_send_json_error('You are not authorized to perform this action.');
-            if(!current_user_can('edit_posts')) wp_send_json_error('You are not authorized to perform this action.');
-            return true;
-        }
+		public function permission_only_admins( $request ) {
+
+			$nonce = $request->get_header( 'X-WP-Nonce' );
+
+			if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+				return new WP_Error( 'rest_forbidden', __( 'Invalid nonce.', 'autopoly-ai-translation-for-polylang-pro' ), array( 'status' => 403 ) );
+			}
+
+			if ( ! is_user_logged_in() ) {
+				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'autopoly-ai-translation-for-polylang-pro' ), array( 'status' => 401 ) );
+			}
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'autopoly-ai-translation-for-polylang-pro' ), array( 'status' => 403 ) );
+			}
+			return true;
+		}
+
+		public function validate_lmat_bulk_nonce( $value, $request, $param ) {
+			return wp_verify_nonce( $value, 'lmat_bulk_translate_entries_nonce' ) ? true : new \WP_Error( 'rest_invalid_param', __( 'You are not authorized to perform this action.', 'autopoly-ai-translation-for-polylang-pro' ), array( 'status' => 403 ) );
+		}
+
+		public function validate_lmat_create_post_nonce( $value, $request, $param ) {
+			return wp_verify_nonce( $value, 'lmat_create_translate_post_nonce' ) ? true : new \WP_Error( 'rest_invalid_param', __( 'You are not authorized to perform this action.', 'autopoly-ai-translation-for-polylang-pro' ), array( 'status' => 403 ) );
+		}
 
 		public function validate_bulk_entries_callback( $params ) {
 			if ( ! is_user_logged_in() ) {
@@ -123,6 +187,11 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$lmat_langs       = $linguator->model->get_languages_list();
 				$lmat_langs_slugs = array_column( $lmat_langs, 'slug' );
 				foreach ( $post_ids as $postId ) {
+
+					if ( ! current_user_can( 'edit_post', $postId ) ) {
+						continue;
+					}
+
 					$post_data = get_post( $postId );
 
 					$elementor_enabled = get_post_meta( $postId, '_elementor_edit_mode', true );
@@ -141,12 +210,16 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 					$posts_translate[ $postId ]['metaFields']     = get_post_meta( $postId );
 					$posts_translate[ $postId ]['post_link']      = get_the_permalink( $postId );
 
-					if ( $elementor_enabled && 'builder' === $elementor_enabled ) {
+					if ( $elementor_enabled && 'builder' === $elementor_enabled && defined( 'ELEMENTOR_VERSION' ) ) {
 						$elementor_data = get_post_meta( $postId, '_elementor_data', true );
 
 						if ( $elementor_data && '' !== $elementor_data ) {
 							$posts_translate[ $postId ]['editor_type'] = 'elementor';
-							$elementor_data                            = is_serialized( $elementor_data ) ? unserialize( $elementor_data ) : ( is_string( $elementor_data ) ? json_decode( $elementor_data ) : $elementor_data );
+							$elementor_data                            = array();
+
+							if ( class_exists( '\Elementor\Plugin' ) && property_exists( '\Elementor\Plugin', 'instance' ) ) {
+								$elementor_data = \Elementor\Plugin::$instance->documents->get( $postId )->get_elements_data();
+							}
 
 							$posts_translate[ $postId ]['metaFields']['_elementor_data'] = $elementor_data;
 
@@ -220,6 +293,10 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 
 			$content = isset( $params['post_content'] ) ? $params['post_content'] : '';
 
+			if ( ! current_user_can( 'edit_post', $post_id ) ) {
+				wp_send_json_error( 'You are not authorized to perform this action.' );
+			}
+
 			$post_data = array(
 				'post_title'   => $title,
 				'post_content' => $content,
@@ -264,5 +341,4 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 			}
 		}
 	}
-
 endif;

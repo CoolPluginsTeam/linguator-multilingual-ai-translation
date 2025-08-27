@@ -5,6 +5,7 @@
  * @package Linguator
  */
 namespace Linguator\modules\Bulk_Translation;
+
 use Linguator\Admin\Controllers\LMAT_Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,5 +13,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( $linguator->model->has_languages() ) {
-    class_exists(LMAT_Bulk_Translation::class) && new LMAT_Bulk_Translation();
+	class_exists( LMAT_Bulk_Translation::class ) && new LMAT_Bulk_Translation();
 }

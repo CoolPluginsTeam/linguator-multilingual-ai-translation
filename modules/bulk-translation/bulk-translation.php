@@ -25,8 +25,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			if ( $linguator instanceof LMAT_Admin ) {
 				add_action( 'current_screen', array( $this, 'bulk_translate_btn' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_bulk_translate_assets' ) );
-			}else{
-				new LMAT_Bulk_Translate_Rest_Routes('lmat-bulk-translate');
+			} else {
+				new LMAT_Bulk_Translate_Rest_Routes( 'lmat-bulk-translate' );
 			}
 		}
 
@@ -103,13 +103,12 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 
 			$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/bulk-translate/index.asset.php';
 
-			if(!is_array($editor_script_asset)) {
+			if ( ! is_array( $editor_script_asset ) ) {
 				$editor_script_asset = array(
 					'dependencies' => array(),
-					'version' => LINGUATOR_VERSION,
+					'version'      => LINGUATOR_VERSION,
 				);
 			}
-
 
 			$rtl      = function_exists( 'is_rtl' ) ? is_rtl() : false;
 			$css_file = $rtl ? 'index-rtl.css' : 'index.css';
@@ -134,16 +133,16 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				'lmat-bulk-translate',
 				'lmatBulkTranslationGlobal',
 				array(
-					'ajax_url'                 => admin_url( 'admin-ajax.php' ),
-					'languageObject'           => $lang_object,
-					'nonce'                    => wp_create_nonce( 'wp_rest' ),
-					'bulkTranslateRouteUrl'    => get_rest_url( null, 'lmat-bulk-translate' ),
-					'bulkTranslatePrivateKey'  => wp_create_nonce( 'lmat_bulk_translate_entries_nonce' ),
-					'fetchBlockRulesNonce' => wp_create_nonce( 'lmat_fetch_block_rules_nonce' ),
-					'lmat_url'                => plugins_url( '', LINGUATOR_ROOT_FILE ).'/',
-					'admin_url'                => admin_url(),
-					'post_label'               => $post_label,
-					'update_translate_data'    => 'lmat_update_translate_data',
+					'ajax_url'                => admin_url( 'admin-ajax.php' ),
+					'languageObject'          => $lang_object,
+					'nonce'                   => wp_create_nonce( 'wp_rest' ),
+					'bulkTranslateRouteUrl'   => get_rest_url( null, 'lmat-bulk-translate' ),
+					'bulkTranslatePrivateKey' => wp_create_nonce( 'lmat_bulk_translate_entries_nonce' ),
+					'fetchBlockRulesNonce'    => wp_create_nonce( 'lmat_fetch_block_rules_nonce' ),
+					'lmat_url'                => plugins_url( '', LINGUATOR_ROOT_FILE ) . '/',
+					'admin_url'               => admin_url(),
+					'post_label'              => $post_label,
+					'update_translate_data'   => 'lmat_update_translate_data',
 				)
 			);
 		}
