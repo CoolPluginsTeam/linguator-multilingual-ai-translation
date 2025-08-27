@@ -3,7 +3,7 @@ import { __ } from "@wordpress/i18n";
 const SettingModalHeader = ({ setSettingVisibility }) => {
     return (
         <div className="modal-header">
-            <h2>{__("Step 1 - Select Translation Provider", 'automatic-translations-for-polylang-pro')}</h2>
+            <h2>{__("Step 1 - Select Translation Provider", 'linguator-multilingual-ai-translation')}</h2>
             <span className="close" onClick={() => setSettingVisibility(false)}>&times;</span>
         </div>
     );

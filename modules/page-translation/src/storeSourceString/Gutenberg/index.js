@@ -29,7 +29,7 @@ const filterTranslateAttr = (blockId, blockAttr, filterAttr) => {
 
             newIdArr.forEach(key => {
                 childIdArr.push(key);
-                uniqueId += `lmatMachineTranslate${key}`;
+                uniqueId += `lmat_page_translation_${key}`;
                 dynamicBlockAttr = dynamicBlockAttr[key];
             });
 
@@ -135,16 +135,33 @@ const GutenbergBlockSaveSource = (block, blockRules) => {
             // Store ACF fields
             if(window.acf){
                 acf.getFields().forEach(field => {
-                    if(field.data && AllowedMetaFields[field.data.key]){
-                        const name = field.data.name;
-                        const currentValue=acf.getField(field.data.key)?.val();
+                    const fieldData=JSON.parse(JSON.stringify({key: field.data.key, type: field.data.type, name: field.data.name}));
+
+                    if(field.$el && field.$el.closest('.acf-field.acf-field-repeater') && field.$el.closest('.acf-field.acf-field-repeater').length > 0){
+                        const rowId=field.$el.closest('.acf-row').data('id');
+                        const repeaterItemName=field.$el.closest('.acf-field.acf-field-repeater').data('name');
+
+                        if(rowId && '' !== rowId){
+                            const index=rowId.replace('row-', '');
+                        
+                            fieldData.key=fieldData.key+'_'+index;
+
+                            fieldData.name=repeaterItemName+'_'+index+'_'+fieldData.name;
+                        }
+
+                    }
+
+                    if(field.data && AllowedMetaFields[fieldData.key]){
+                        const name = fieldData.name;
+
+                        const currentValue=acf.getField(fieldData.key)?.val();
 
                         if(block[key] && block[key][name]){
                             if('' !== block[key][name] && undefined !== block[key][name]){
-                                dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(field.data.key, block[key][name][0]);
+                                dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(fieldData.key, block[key][name][0]);
                             }
                         }else if(currentValue && '' !== currentValue && undefined !== currentValue){
-                            dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(field.data.key, currentValue);
+                            dispatch('block-lmatMachineTranslate/translate').metaFieldsSaveSource(fieldData.key, currentValue);
                         }
                     }
                 });

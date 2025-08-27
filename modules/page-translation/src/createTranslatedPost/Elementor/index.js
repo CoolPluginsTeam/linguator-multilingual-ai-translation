@@ -3,11 +3,11 @@ import YoastSeoFields from '../../component/TranslateSeoFields/YoastSeoFields.js
 import RankMathSeo from '../../component/TranslateSeoFields/RankMathSeo.js';
 
 // Update widget content with translations
-const lmatMachineTranslateUpdateWidgetContent = (translations) => {
+const lmatUpdateWidgetContent = (translations) => {
 
     translations.forEach(translation => {
-        // Find the model by ID using the lmatMachineTranslateFindModelById function
-        const model = lmatMachineTranslateFindModelById(elementor.elements.models, translation.ID);
+        // Find the model by ID using the lmatFindModelById function
+        const model = lmatFindModelById(elementor.elements.models, translation.ID);
         if (model) {
             const settings = model.get('settings');
 
@@ -18,7 +18,6 @@ const lmatMachineTranslateUpdateWidgetContent = (translations) => {
 
             // Handle repeater fields (if any)
             const repeaterMatch = translation.key.match(/(.+)\[(\d+)\]\.(.+)/);
-
             if (repeaterMatch) {
 
                 const [_, repeaterKey, index, subKey] = repeaterMatch;
@@ -38,7 +37,7 @@ const lmatMachineTranslateUpdateWidgetContent = (translations) => {
     $e.internal('document/save/set-is-modified', { status: true });
 }
 
-const lmatMachineTranslateUpdateMetaFields = (metaFields, service) => {
+const lmatUpdateMetaFields = (metaFields, service) => {
     const AllowedMetaFields = select('block-lmatMachineTranslate/translate').getAllowedMetaFields();
 
         Object.keys(metaFields).forEach(key => {
@@ -57,13 +56,13 @@ const lmatMachineTranslateUpdateMetaFields = (metaFields, service) => {
 }
 
 // Find Elementor model by ID
-const lmatMachineTranslateFindModelById = (elements, id) => {
+const lmatFindModelById = (elements, id) => {
     for (const model of elements) {
         if (model.get('id') === id) {
             return model;
         }
         const nestedElements = model.get('elements').models;
-        const foundModel = lmatMachineTranslateFindModelById(nestedElements, id);
+        const foundModel = lmatFindModelById(nestedElements, id);
         if (foundModel) {
             return foundModel;
         }
@@ -158,10 +157,10 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
     postContent.widgetsContent.map((widget,index) => storeSourceStrings(widget,index,[]));
 
     // Update widget content with translations
-    lmatMachineTranslateUpdateWidgetContent(translations);
+    lmatUpdateWidgetContent(translations);
     
     // Update Meta Fields
-    lmatMachineTranslateUpdateMetaFields(postContent.metaFields, service);
+    lmatUpdateMetaFields(postContent.metaFields, service);
 
     const replaceSourceString=()=>{
         const elementorData = lmatPageTranslationGlobal.elementorData;
@@ -228,12 +227,10 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
             } else {
                 console.error('Failed to update Elementor data:', data.data);
             }
-            
-            elementor.reloadPreview();
+
             modalClose();
         })
         .catch(error => {
-            elementor.reloadPreview();
             modalClose();
             console.error('Error updating Elementor data:', error);
         });

@@ -171,8 +171,10 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
         switch(serviceProvider){
             case 'google':
                 return 'Google Translate';
+            case 'localAiTranslator':
+                return 'Chrome AI Translator';
             default:
-                return 'AI Translator';
+                return 'Google Translate';
         }
     }
 

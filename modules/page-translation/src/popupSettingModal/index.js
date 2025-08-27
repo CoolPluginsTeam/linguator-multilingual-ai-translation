@@ -20,7 +20,6 @@ const SettingModal = (props) => {
     const googleSupport = googleLanguage().includes(targetLang === 'zh' ? lmatPageTranslationGlobal.languageObject['zh']?.locale.replace('_', '-') : targetLang);
     const [serviceModalErrors, setServiceModalErrors] = useState({});
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
-    const [chromeAiBtnDisabled, setChromeAiBtnDisabled] = useState(false);
 
     const openModalOnLoadHandler = (e) => {
         e.preventDefault();

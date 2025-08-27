@@ -3,9 +3,10 @@ import { __ } from '@wordpress/i18n';
 import StatusModal from './statusModal/index.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetStore, updateServiceProvider } from './ReduxStore/features/actions.js';
-import { selectCountInfo, selectServiceProvider } from './ReduxStore/features/selectors.js';
+import { selectCountInfo } from './ReduxStore/features/selectors.js';
 import ErrorModalBox from './components/ErrorModalBox/index.js';
 import SettingModal from './settingModal/index.js';
+import DOMPurify from 'dompurify';
 
 const App = ({ onDestory, prefix, postIds }) => {
     const dispatch = useDispatch();
@@ -69,7 +70,6 @@ const App = ({ onDestory, prefix, postIds }) => {
         dispatch(updateServiceProvider(services));
         setSettingModalVisibility(false);
         setStatusModalVisibility(true);
-        // setIsLoading(true);
     }
 
     const containerCls=()=>{
@@ -129,7 +129,7 @@ const App = ({ onDestory, prefix, postIds }) => {
                     onClose={closeErrorModal}
                 /> : <div
                     className={`${prefix}-error-message`}
-                    dangerouslySetInnerHTML={{ __html: errorMessage }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(errorMessage) }}
                 />) :
                     <>
                         <div

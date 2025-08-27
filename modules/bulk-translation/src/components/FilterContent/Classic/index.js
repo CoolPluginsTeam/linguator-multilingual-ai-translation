@@ -37,7 +37,7 @@ const FilterClassicContent = async ({content, service, postId, storeDispatch, fi
           // Escape line break and wrap with marker
           const escapedBreak = match[0];
       
-          result.push(`lmat_bulk_content__skip_${escapedBreak}_lmat_bulk_content_`);
+          result.push(`lmat_bulk_content_temp_${escapedBreak}_lmat_bulk_content_temp`);
       
           lastIndex = regex.lastIndex;
         }
@@ -61,7 +61,7 @@ const FilterClassicContent = async ({content, service, postId, storeDispatch, fi
 
             const plainText=!entity && !htmlTag && !isEmptyHtmlTag && !blockCommentTag; 
 
-            if(text !== '' && !text.includes('lmat_bulk_content__skip_') && plainText){
+            if(text !== '' && !text.includes('lmat_bulk_content_temp_') && plainText){
                 let stringContent=text;
 
                 if(filterHtmlContent){

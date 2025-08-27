@@ -1,4 +1,3 @@
-import { select } from '@wordpress/data';
 import { store } from '../ReduxStore/store.js';
 
 export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPostId, currentPostId, editorType, updateTranslateDataNonce }) => {

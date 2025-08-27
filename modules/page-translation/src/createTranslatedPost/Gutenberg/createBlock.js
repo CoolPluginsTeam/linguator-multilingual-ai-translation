@@ -56,7 +56,7 @@ const filterTranslateAttr = (block, blockParseRules, service) => {
 
             newIdArr.forEach(key => {
                 childIdArr.push(key);
-                uniqueId += `lmatMachineTranslate${key}`;
+                uniqueId += `lmat_page_translation_${key}`;
                 dynamicBlockAttr = dynamicBlockAttr[key];
             });
 

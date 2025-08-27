@@ -1,4 +1,3 @@
-// import YandexTranslater from "./yandex";
 import GoogleTranslater from "./google/index.js";
 import { sprintf, __ } from "@wordpress/i18n";
 
@@ -31,9 +30,9 @@ export default (props) => {
             title: "Chrome Built-in AI",
             SettingBtnText: "Translate",
             serviceLabel: "Chrome AI Translator",
-            heading: sprintf(__("Translate Using %s", 'autopoly-ai-translation-for-polylang'), "Chrome built-in API"),
-            Docs: "https://docs.coolplugins.net/doc/chrome-ai-translation-polylang/?utm_source=lmat_page_translation_plugin&utm_medium=inside&utm_campaign=docs&utm_content=popup_chrome",
-            BetaEnabled: true,  
+            heading: sprintf(__("Translate Using %s", 'linguator-multilingual-ai-translation'), "Chrome built-in API"),
+            Docs: "https://docs.coolplugins.net/doc/chrome-ai-translation-polylang/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=bulk_translate_chrome",
+            BetaEnabled: true,
             ButtonDisabled: true,
             ErrorMessage: true ? <div className="lmat-page-translation-provider-disabled button button-primary">{__('Upcoming Feature', 'autopoly-ai-translation-for-polylang')}</div> : <></>,
             Logo: 'chrome.png'

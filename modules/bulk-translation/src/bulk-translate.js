@@ -1,6 +1,5 @@
 import {filterContent, updateFilterContent} from './components/FilterContent/index.js';
 import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules } from './ReduxStore/features/actions.js';
-import { selectTranslatePostInfo } from './ReduxStore/features/selectors.js';
 import { store } from './ReduxStore/store.js';
 import { __ } from '@wordpress/i18n';
 import Provider from './components/translateProvider/index.js';
@@ -148,7 +147,7 @@ export const updateContent=async ({source, postId, sourceLang, lang, editorType,
         storeDispatch(updateTranslatePostInfo({[postId+'_'+lang]: updateData}));
 
     }).catch(error=>{
-        console.log('testing', error);
+        console.log(error);
         storeDispatch(unsetPendingPost(postId+'_'+lang));
         storeDispatch(updateCompletedPosts([postId+'_'+lang]));
         let errorHtml=error;
@@ -186,7 +185,6 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
             ids: JSON.stringify(ids),
             lang: JSON.stringify(langs),
             privateKey: bulkTranslatePrivateKey,
-            lmat_fetch_block_rules_key: lmatBulkTranslationGlobal.fetchBlockRulesNonce,
         }),
         headers: {
             'X-WP-Nonce': nonce,

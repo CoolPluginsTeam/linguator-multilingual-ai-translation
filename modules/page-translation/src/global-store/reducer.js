@@ -1,4 +1,4 @@
-import LmatMachineTranslateActionTypes from "./types.js"; // Importing action types from the types module
+import LmatActionTypes from "./types.js"; // Importing action types from the types module
 
 /**
  * The default state for the translation reducer.
@@ -15,7 +15,7 @@ const TranslateDefaultState = {
     excerpt: {}, // Initial state for excerpt translations
     content: [], // Initial state for content translations
     metaFields: {}, // Initial state for meta field translations
-    allowedMetaFields: {} // Initial state for allowed meta fields
+    allowedMetaFields: {}, // Initial state for allowed meta fields
 };
 
 /**
@@ -28,7 +28,7 @@ const TranslateDefaultState = {
  */
 const reducer = (state = TranslateDefaultState, action) => {
     switch (action.type) {
-        case LmatMachineTranslateActionTypes.sourceTitle: // Action to save the source title
+        case LmatActionTypes.sourceTitle: // Action to save the source title
             // Check if the action text contains any letters or numbers
             if (/[\p{L}\p{N}]/gu.test(action.text)) {
                 // Update the state with the new source title
@@ -36,11 +36,11 @@ const reducer = (state = TranslateDefaultState, action) => {
             }
             return state; // Return the current state if no valid text
 
-        case LmatMachineTranslateActionTypes.traslatedTitle: // Action to save the translated title
+        case LmatActionTypes.traslatedTitle: // Action to save the translated title
             // Update the state with the new target title
             return { ...state, title: { ...state.title, translatedData: { ...(state.title.translatedData || []), [action.provider]: action.text } } };
 
-        case LmatMachineTranslateActionTypes.sourceExcerpt: // Action to save the source excerpt
+        case LmatActionTypes.sourceExcerpt: // Action to save the source excerpt
             // Check if the action text contains any letters or numbers
             if (/[\p{L}\p{N}]/gu.test(action.text)) {
                 // Update the state with the new source excerpt
@@ -48,11 +48,11 @@ const reducer = (state = TranslateDefaultState, action) => {
             }
             return state; // Return the current state if no valid text
 
-        case LmatMachineTranslateActionTypes.traslatedExcerpt: // Action to save the translated excerpt
+        case LmatActionTypes.traslatedExcerpt: // Action to save the translated excerpt
             // Update the state with the new target excerpt
             return { ...state, excerpt: { ...state.excerpt, translatedData: { ...(state.excerpt.translatedData || []), [action.provider]: action.text } } };
 
-        case LmatMachineTranslateActionTypes.sourceContent: // Action to save the source content
+        case LmatActionTypes.sourceContent: // Action to save the source content
             // Check if the action text contains any letters or numbers
             if (/[\p{L}\p{N}]/gu.test(action.text)) {
                 // Update the state with the new source content for the specific ID
@@ -60,7 +60,7 @@ const reducer = (state = TranslateDefaultState, action) => {
             }
             return state; // Return the current state if no valid text
 
-        case LmatMachineTranslateActionTypes.traslatedContent: // Action to save the translated content
+        case LmatActionTypes.traslatedContent: // Action to save the translated content
             // Check if the source of the content matches the action source
             if (state.content[action.id].source === action.source) {
                 // Update the state with the new target content for the specific ID
@@ -68,7 +68,7 @@ const reducer = (state = TranslateDefaultState, action) => {
             }
             return state; // Return the current state if no match
 
-        case LmatMachineTranslateActionTypes.sourceMetaFields: // Action to save the source meta fields
+        case LmatActionTypes.sourceMetaFields: // Action to save the source meta fields
             // Check if the action text contains any letters or numbers
             if (/[\p{L}\p{N}]/gu.test(action.text)) {
                 // Update the state with the new source meta field for the specific ID
@@ -76,15 +76,15 @@ const reducer = (state = TranslateDefaultState, action) => {
             }
             return state; // Return the current state if no valid text
 
-        case LmatMachineTranslateActionTypes.traslatedMetaFields: // Action to save the translated meta fields
+        case LmatActionTypes.traslatedMetaFields: // Action to save the translated meta fields
             // Update the state with the new target meta field for the specific ID
             return { ...state, metaFields: { ...state.metaFields, [action.id]: { ...(state.metaFields[action.id] || []), translatedData: { ...(state.metaFields[action.id].translatedData || []), [action.provider]: action.text } } } };
 
-        case LmatMachineTranslateActionTypes.setBlockRules: // Action to save the block rules
+        case LmatActionTypes.setBlockRules: // Action to save the block rules
             // Update the state with the new block rules
             return { ...state, blockRules: action.data };
 
-        case LmatMachineTranslateActionTypes.translationInfo: // Action to save the translation info
+        case LmatActionTypes.translationInfo: // Action to save the translation info
             // Update the state with the new translation info
             const data = {}
 
@@ -118,10 +118,9 @@ const reducer = (state = TranslateDefaultState, action) => {
 
             return { ...state, translationInfo: { ...state.translationInfo, ...data } };
 
-        case LmatMachineTranslateActionTypes.allowedMetaFields: // Action to save the allowed meta fields
+        case LmatActionTypes.allowedMetaFields: // Action to save the allowed meta fields
             // Update the state with the new allowed meta fields
             return { ...state, allowedMetaFields: { ...state.allowedMetaFields, [action.id]: { ...(state.allowedMetaFields[action.id] || []), inputType: action.inputType } } };
-
         default: // If the action type does not match any case
             return state; // Return the current state unchanged
     }

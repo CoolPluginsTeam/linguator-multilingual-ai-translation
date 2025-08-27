@@ -3,11 +3,9 @@ import './global-store/index.js';
 import { useEffect, useState } from 'react';
 import GutenbergPostFetch from './FetchPost/Gutenberg/index.js';
 import UpdateGutenbergPage from './createTranslatedPost/Gutenberg/index.js';
-// import ProVersionNotice from './component/ProVersionNotice/index.js';
 import Notice from './component/Notice/index.js';
 import { select } from '@wordpress/data';
 import { sprintf, __ } from '@wordpress/i18n';
-import './index.css';
 
 // Elementor post fetch and update page
 import ElementorPostFetch from './FetchPost/Elementor/index.js';
@@ -15,16 +13,18 @@ import ElementorUpdatePage from './createTranslatedPost/Elementor/index.js';
 
 import ReactDOM from "react-dom/client";
 
+import './index.scss';
+
 const editorType = window.lmatPageTranslationGlobal.editor_type;
 
 const init = () => {
-  let lmatMachineTranslateModals = new Array();
-  const lmatMachineTranslateSettingModalWrp = '<!-- The Modal --><div id="lmat-page-translation-setting-modal"></div>';
-  const lmatMachineTranslateStringModalWrp = '<div id="lmat_page_translation_strings_model" class="modal lmat_page_translation_custom_model"></div>';
+  let lmatModals = new Array();
+  const lmatSettingModalWrp = '<!-- The Modal --><div id="lmat-page-translation-setting-modal"></div>';
+  const lmatStringModalWrp = '<div id="lmat_page_translation_strings_model" class="modal lmat_page_translation_custom_model"></div>';
 
-  lmatMachineTranslateModals.push(lmatMachineTranslateSettingModalWrp, lmatMachineTranslateStringModalWrp);
+  lmatModals.push(lmatSettingModalWrp, lmatStringModalWrp);
 
-  lmatMachineTranslateModals.forEach(modal => {
+  lmatModals.forEach(modal => {
     document.body.insertAdjacentHTML('beforeend', modal);
   });
 }
@@ -40,15 +40,15 @@ const StringModalBodyNotice = () => {
     if (postMetaSync) {
       notices.push({
         className: 'lmat-page-translation-notice lmat-page-translation-notice-warning', message: <p>
-          {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'autopoly-ai-translation-for-polylang')}
+          {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'linguator-multilingual-ai-translation')}
           <a
             href={`${lmatPageTranslationGlobal.admin_url}admin.php?page=mlang_settings`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {__('Polylang settings', 'autopoly-ai-translation-for-polylang')}
+            {__('Polylang settings', 'linguator-multilingual-ai-translation')}
           </a>
-          {__('. This may affect linked posts or pages.', 'autopoly-ai-translation-for-polylang')}
+          {__('. This may affect linked posts or pages.', 'linguator-multilingual-ai-translation')}
         </p>
       });
     }
@@ -56,7 +56,7 @@ const StringModalBodyNotice = () => {
     const blockRules = select('block-lmatMachineTranslate/translate').getBlockRules();
 
     if (!blockRules.LmatBlockParseRules || Object.keys(blockRules.LmatBlockParseRules).length === 0) {
-      notices.push({ className: 'lmat-page-translation-notice lmat-page-translation-notice-error', message: <p>{__('No block rules were found. It appears that the block-rules.JSON file could not be fetched, possibly because it is blocked by your server settings. Please check your server configuration to resolve this issue.', 'autopoly-ai-translation-for-polylang')}</p> });
+      notices.push({ className: 'lmat-page-translation-notice lmat-page-translation-notice-error', message: <p>{__('No block rules were found. It appears that the block-rules.JSON file could not be fetched, possibly because it is blocked by your server settings. Please check your server configuration to resolve this issue.', 'linguator-multilingual-ai-translation')}</p> });
     }
   }
 
@@ -131,7 +131,7 @@ const App = () => {
       const metaFieldBtn = document.querySelector(translateWrpSelector);
       if (metaFieldBtn) {
         metaFieldBtn.disabled = true;
-        metaFieldBtn.value = __("Already Translated", 'autopoly-ai-translation-for-polylang');
+        metaFieldBtn.value = __("Already Translated", 'linguator-multilingual-ai-translation');
       }
     }
   }, [pageTranslate]);
@@ -166,10 +166,10 @@ const createMessagePopup = () => {
   messagePopup.innerHTML = `
     <div class="modal-container" style="display: flex">
       <div class="modal-content">
-        <p>${sprintf(__("Would you like to duplicate your original %s content and have it automatically translated into %s?", 'autopoly-ai-translation-for-polylang'), postType, targetLangName)}</p>
+        <p>${sprintf(__("Would you like to duplicate your original %s content and have it automatically translated into %s?", 'linguator-multilingual-ai-translation'), postType, targetLangName)}</p>
         <div>
-          <div data-value="yes">${__("Yes", 'autopoly-ai-translation-for-polylang')}</div>
-          <div data-value="no">${__("No", 'autopoly-ai-translation-for-polylang')}</div>
+          <div data-value="yes">${__("Yes", 'linguator-multilingual-ai-translation')}</div>
+          <div data-value="no">${__("No", 'linguator-multilingual-ai-translation')}</div>
         </div>
       </div>
     </div>`;
@@ -216,7 +216,7 @@ const appendElementorTranslateBtn = () => {
 if (editorType === 'gutenberg') {
   // Render App
   window.addEventListener('load', () => {
-    
+
     // Append app root wrapper in body
     init();
 

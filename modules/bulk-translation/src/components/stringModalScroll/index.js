@@ -1,7 +1,3 @@
-// import SaveTranslation from "../storeTranslatedString";
-// import { select, dispatch } from "@wordpress/data";
-// import StoreTimeTaken from "../StoreTimeTaken";
-
 import storeTranslateString from "../storeTranslateString/index.js";
 
 

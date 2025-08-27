@@ -1,6 +1,5 @@
 import {updateCountInfo, updateTranslatePostInfo} from '../../ReduxStore/features/actions.js';
 import {store} from '../../ReduxStore/store.js';
-import { selectTranslatePostInfo } from '../../ReduxStore/features/selectors.js';
 
 const updateTranslationCount=({postId,key,lang, storeDispatch})=>{
     const sourceText=store.getState().translatedContent[postId][key]?.source;

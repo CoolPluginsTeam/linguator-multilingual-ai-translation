@@ -38,7 +38,7 @@ const StringPopUpBody = (props) => {
             {translateContent.length > 0 && props.postDataFetchStatus ?
                 <>
                     {StringModalBodyNotice && <div className="lmat-page-translation-body-notice-wrapper"><StringModalBodyNotice /></div>}
-                    <div className="lmat_page_translation_translate_progress" key={props.modalRender}>{__("Automatic translation is in progress....", 'autopoly-ai-translation-for-polylang')}<br />{__("It will take few minutes, enjoy ☕ coffee in this time!", 'autopoly-ai-translation-for-polylang')}<br /><br />{__("Please do not leave this window or browser tab while translation is in progress...", 'autopoly-ai-translation-for-polylang')}</div>
+                    <div className="lmat_page_translation_translate_progress" key={props.modalRender}>{__("Automatic translation is in progress....", 'linguator-multilingual-ai-translation')}<br />{__("It will take few minutes, enjoy ☕ coffee in this time!", 'linguator-multilingual-ai-translation')}<br /><br />{__("Please do not leave this window or browser tab while translation is in progress...", 'linguator-multilingual-ai-translation')}</div>
                     <div className={`translator-widget ${service}`} style={{ display: 'flex' }}>
                         <h3 className="choose-lang">{TranslateService({ Service: props.service }).heading} <span className="dashicons-before dashicons-translation"></span></h3>
 
@@ -51,9 +51,9 @@ const StringPopUpBody = (props) => {
                         <table className="scrolldown" id="stringTemplate">
                             <thead>
                                 <tr>
-                                    <th className="notranslate">{__("S.No", 'autopoly-ai-translation-for-polylang')}</th>
-                                    <th className="notranslate">{__("Source Text", 'autopoly-ai-translation-for-polylang')}</th>
-                                    <th className="notranslate">{__("Translation", 'autopoly-ai-translation-for-polylang')}</th>
+                                    <th className="notranslate">{__("S.No", 'linguator-multilingual-ai-translation')}</th>
+                                    <th className="notranslate">{__("Source Text", 'linguator-multilingual-ai-translation')}</th>
+                                    <th className="notranslate">{__("Translation", 'linguator-multilingual-ai-translation')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,10 +68,10 @@ const StringPopUpBody = (props) => {
                                                                 <td>{index + 1}</td>
                                                                 <td data-source="source_text">{data.source}</td>
                                                                 {!props.translatePendingStatus ?
-                                                                    <td className="translate" data-translate-status="translated" data-key={data.id}data-string-type={data.type}>{data.translatedData[props.service]}</td> :
-                                                                    <td className="translate" translate="yes" data-key={data.id} data-string-type={data.type}>
-                                                                        <FilterTargetContent service={props.service} content={data.source} contentKey={data.id} />
-                                                                    </td>
+                                                                        <td className="translate" data-translate-status="translated" data-key={data.id} data-string-type={data.type}>{data.translatedData[props.service]}</td> :
+                                                                        <td className="translate" translate="yes" data-key={data.id} data-string-type={data.type}>
+                                                                            <FilterTargetContent service={props.service} content={data.source} contentKey={data.id} />
+                                                                        </td>
                                                                 }
                                                             </tr>
                                                         </>
@@ -87,7 +87,7 @@ const StringPopUpBody = (props) => {
                     </div>
                 </> :
                 props.postDataFetchStatus ?
-                    <p>{__('No strings are available for translation', 'autopoly-ai-translation-for-polylang')}</p> :
+                    <p>{__('No strings are available for translation', 'linguator-multilingual-ai-translation')}</p> :
 
                     <div className="lmat-page-translation-skeleton-loader-wrapper">
                         <div className="translate-widget">
@@ -97,9 +97,9 @@ const StringPopUpBody = (props) => {
                         <table>
                             <thead>
                                 <tr>
-                                    <th className="notranslate">{__("S.No", 'autopoly-ai-translation-for-polylang')}</th>
-                                    <th className="notranslate">{__("Source Text", 'autopoly-ai-translation-for-polylang')}</th>
-                                    <th className="notranslate">{__("Translation", 'autopoly-ai-translation-for-polylang')}</th>
+                                    <th className="notranslate">{__("S.No", 'linguator-multilingual-ai-translation')}</th>
+                                    <th className="notranslate">{__("Source Text", 'linguator-multilingual-ai-translation')}</th>
+                                    <th className="notranslate">{__("Translation", 'linguator-multilingual-ai-translation')}</th>
                                 </tr>
                             </thead>
                             <tbody>

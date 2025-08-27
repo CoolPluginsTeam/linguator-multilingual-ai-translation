@@ -22,9 +22,9 @@ const SettingModal = (props) => {
         if (!targetElement) {
             return;
         }
-        
+
         const dataService = targetElement.dataset && targetElement.dataset.service;
-        
+
         props.updateProviderHandler(dataService);
     };
 

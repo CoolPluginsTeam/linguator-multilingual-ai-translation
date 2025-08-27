@@ -1,11 +1,11 @@
 /**
- * LmatMachineTranslateActionTypes is an object that defines the action types used in the 
+ * LmatActionTypes is an object that defines the action types used in the 
  * automatic translation feature of the application. Each property in this 
  * object corresponds to a specific action that can be dispatched to the 
  * global store, allowing the application to manage the state related to 
  * source and translated content effectively.
  */
-const LmatMachineTranslateActionTypes = {
+const LmatActionTypes = {
     // Action type for saving the title of the source content
     sourceTitle: 'SAVE_SOURCE_TITLE',
     
@@ -40,4 +40,4 @@ const LmatMachineTranslateActionTypes = {
     allowedMetaFields: 'ALLOWED_META_FIELDS',
 };
 
-export default LmatMachineTranslateActionTypes;
+export default LmatActionTypes;
