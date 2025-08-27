@@ -15,7 +15,22 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 		}
 
         public function lmat_admin_view_language_links_assets() {
-            wp_enqueue_script( 'lmat-admin-view-language-links', plugins_url( 'Admin/Assets/js/admin-view-language-links.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+			global $linguator;
+			if(function_exists('get_current_screen') && property_exists(get_current_screen(), 'post_type') && $linguator && property_exists($linguator, 'model')){
+				$current_screen=get_current_screen();
+				$translated_post_types = $linguator->model->get_translated_post_types();
+				$translated_post_types = array_keys($translated_post_types);
+				
+				$post_type=$current_screen->post_type;
+
+				if(!in_array($post_type, $translated_post_types)){
+					return;
+				}
+
+				wp_enqueue_style( 'lmat-admin-view-language-links', plugins_url( 'Admin/Assets/css/admin-view-language-links.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+				wp_enqueue_script( 'lmat-admin-view-language-links', plugins_url( 'Admin/Assets/js/admin-view-language-links.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+
+			}
         }
 
 		public function lmat_admin_view_language_links($current_screen) {
@@ -48,14 +63,22 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$index=0;
 			$total_languages=count($lmat_languages);
 			$lmat_active_languages=lmat_current_language();
+			$lmat_active_languages = !$lmat_active_languages ? 'all' : $lmat_active_languages;
 			
 			$post_type=isset($current_screen->post_type) ? $current_screen->post_type : '';
 			$post_status=(isset($_GET['post_status']) && 'trash' === sanitize_text_field(wp_unslash($_GET['post_status']))) ? 'trash' : 'publish';
 			$all_translated_post_count=0;
 			$list_html='';
+
 			if(count($lmat_languages) > 1){
-                echo "<div class='lmat_subsubsub' style='display:none; clear:both;'>
-					<ul class='subsubsub lmat_subsubsub_list'>";
+                echo wp_kses("<div class='lmat_subsubsub' style='display:none; clear:both;'>
+					<ul class='lmat_subsubsub_list'>", array(
+						'div' => array(
+							'class' => array(),
+							'style' => array(),
+						),
+						'ul' => array('class' => array()),
+					));
 					foreach($lmat_languages as $lang){
 	
 						$flag=isset($lang->flag) ? $lang->flag : '';
@@ -71,14 +94,29 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 							$translated_post_count+=$pending_post_count;
 						}
 
+						$flag_url=isset($lang->flag_url) ? $lang->flag_url : '';
+
 						$all_translated_post_count+=$translated_post_count;
-						// echo $flag; // phpcs:ignore WordPress.Security.EscapeOutput
-						$list_html.="<li class='lmat_lang_".esc_attr($language_slug)."'><a href='edit.php?post_type=".esc_attr($post_type)."&lang=".esc_attr($language_slug)."' class='".esc_attr($current_class)."'>".esc_html($lang->name)." <span class='count'>(".esc_html($translated_post_count).")</span></a>".($index < $total_languages-1 ? ' |&nbsp;' : '')."</li>";
+						$list_html.="<li class='lmat_lang_".esc_attr($language_slug)."'><a href='edit.php?post_type=".esc_attr($post_type)."&lang=".esc_attr($language_slug)."' class='".esc_attr($current_class)."'><img src='".esc_url($flag_url)."' alt='".esc_attr($lang->name)."' width='16' style='margin-right: 5px;'>".esc_html($lang->name)." <span class='count'>(".esc_html($translated_post_count).")</span></a></li>";
 						$index++;
 					}
 
-					echo "<li class='lmat_lang_all'><a href='edit.php?post_type=".esc_attr($post_type)."&lang=all"."' class=''>All Languages<span class='count'>(".esc_html($all_translated_post_count).")</span></a> |&nbsp;</li>";
-					echo $list_html;
+					$current_lang_link='all' !== $lmat_active_languages ? "edit.php?post_type=".esc_attr($post_type)."&lang=all" : '';
+
+					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($lmat_active_languages == 'all' ? 'current' : '')."	'>All Languages <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";
+					
+					$allowed = [
+						'ul'   => [ 'class' => true ],
+						'ol'   => [ 'class' => true ],
+						'li'   => [ 'class' => true ],
+						'a'    => [ 'href' => true, 'title' => true, 'target' => true, 'rel' => true, 'class' => true ],
+						'span' => [ 'class' => true, 'aria-hidden' => true ],
+						'strong' => [],
+						'em'     => [],
+						'img'    => [ 'src' => true, 'alt' => true, 'width' => true, 'height' => true, 'style' => true ],
+					];
+					
+					echo wp_kses($list_html, $allowed);
 				echo "</ul>
 				</div>";
 			}
