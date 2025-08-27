@@ -70,7 +70,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		 */
 		public function block_parsing_rules() {
 			if ( ! check_ajax_referer( 'lmat_fetch_block_rules_nonce', 'lmat_fetch_block_rules_key', false ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid security token sent for block parsing rules.', 'linguator' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Invalid security token sent for block parsing rules.', 'linguator-multilingual-ai-translation' ) ) );
 				exit;
 			}
 
@@ -84,7 +84,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		 */
 		public function fetch_post_content() {
 			if ( ! check_ajax_referer( 'lmat_page_translation_admin', 'lmat_page_translation_nonce', false ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid security token sent for fetch post content.', 'linguator' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Invalid security token sent for fetch post content.', 'linguator-multilingual-ai-translation' ) ) );
 				exit;
 			}
 
@@ -271,49 +271,62 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		 */
 		public function update_elementor_data() {
 			if ( ! check_ajax_referer( 'lmat_page_translation_admin', 'lmat_page_translation_nonce', false ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid security token sent for update elementor data.', 'linguator' ) ) );
-				exit;
+				wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
+				wp_die( '0', 400 );
+			}
+			$post_id = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( $_POST['post_id'] ) ) : 0;
+			if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+				wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
+				wp_die( '0', 403 );
 			}
 
-			if ( isset( $_POST['post_id'] ) && isset( $_POST['elementor_data'] ) ) {
-				$post_id = intval( $_POST['post_id'] );
-
-				$elementor_data = $_POST['elementor_data'];
-
-				// Check if the current post has Elementor data
-				if ( $elementor_data && '' !== $elementor_data ) {
-					if ( class_exists( 'Elementor\Plugin' ) ) {
-						$plugin   = \Elementor\Plugin::$instance;
-						$document = $plugin->documents->get( $post_id );
-
-						$document->save(
-							array(
-								'elements' => json_decode( stripslashes( $elementor_data ), true ),
-							)
-						);
-
-						$plugin->files_manager->clear_cache();
-					} else {
-						$elementor_data = preg_replace( '#(?<!\\\\)/#', '\\/', $elementor_data );
-						update_post_meta( $post_id, '_elementor_data', $elementor_data );
-					}
+			// Optional hardening: enforce valid JSON if not using Elementor Document API
+			if ( isset( $_POST['elementor_data'] ) && is_string( $_POST['elementor_data'] ) ) {
+				$decoded = json_decode( stripslashes( $_POST['elementor_data'] ), true );
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					wp_send_json_error( __( 'Invalid data.', 'linguator-multilingual-ai-translation' ), 400 );
+					wp_die( '0', 400 );
 				}
-
-				update_post_meta( $post_id, '_lmat_elementor_translated', 'true' );
-				wp_send_json_success( 'Elementor data updated.' );
-				exit;
-			} else {
-				wp_send_json_error( 'Invalid data.' );
-				exit;
 			}
+
+			$elementor_data = isset( $_POST['elementor_data'] ) ? sanitize_text_field( wp_unslash( $_POST['elementor_data'] ) ) : '';
+
+			// Check if the current post has Elementor data
+			if ( $elementor_data && '' !== $elementor_data ) {
+				if ( class_exists( 'Elementor\Plugin' ) ) {
+					$plugin   = \Elementor\Plugin::$instance;
+					$document = $plugin->documents->get( $post_id );
+
+					$elementor_data = json_decode( wp_unslash( $_POST['elementor_data'] ), true );
+
+					if ( json_last_error() !== JSON_ERROR_NONE ) {
+						wp_send_json_error( __( 'Invalid Elementor data.', 'linguator-multilingual-ai-translation' ), 400 );
+						wp_die( '0', 400 );
+					}
+
+					$document->save(
+						array(
+							'elements' => $elementor_data,
+						)
+					);
+
+					$plugin->files_manager->clear_cache();
+					update_post_meta( $post_id, '_lmat_elementor_translated', 'true' );
+				}
+			}
+
+			wp_send_json_success( 'Elementor data updated.' );
+			exit;
 		}
 
-		public function get_block_parse_rules()
-		{
-			$path_url=plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
-			$response = wp_remote_get( esc_url_raw( $path_url ), array(
-				'timeout' => 15,
-			) );
+		public function get_block_parse_rules() {
+			$path_url = plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
+			$response = wp_remote_get(
+				esc_url_raw( $path_url ),
+				array(
+					'timeout' => 15,
+				)
+			);
 
 			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
 				global $wp_filesystem;
@@ -326,29 +339,29 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 				WP_Filesystem();
 
 				$local_path = $path_url;
-				if($wp_filesystem->exists($local_path) && $wp_filesystem->is_readable( $local_path )){
+				if ( $wp_filesystem->exists( $local_path ) && $wp_filesystem->is_readable( $local_path ) ) {
 					$block_rules = $wp_filesystem->get_contents( $local_path );
-				}else{
+				} else {
 					$block_rules = array();
 				}
 			} else {
 				$block_rules = wp_remote_retrieve_body( $response );
 			}
 
-			if(empty($block_rules)){
+			if ( empty( $block_rules ) ) {
 				return array();
 			}
 
-			$block_translation_rules = json_decode($block_rules, true);
+			$block_translation_rules = json_decode( $block_rules, true );
 
-			$this->custom_block_data_array = isset($block_translation_rules['LmatBlockParseRules']) ? $block_translation_rules['LmatBlockParseRules'] : null;
+			$this->custom_block_data_array = isset( $block_translation_rules['LmatBlockParseRules'] ) ? $block_translation_rules['LmatBlockParseRules'] : null;
 
-			$custom_block_translation = get_option('lmat_custom_block_translation', false);
+			$custom_block_translation = get_option( 'lmat_custom_block_translation', false );
 
-			if (! empty($custom_block_translation) && is_array($custom_block_translation)) {
-				foreach ($custom_block_translation as $key => $block_data) {
-					$block_rules = isset($block_translation_rules['LmatBlockParseRules'][$key]) ? $block_translation_rules['LmatBlockParseRules'][$key] : null;
-					$this->filter_custom_block_rules(array($key), $block_data, $block_rules);
+			if ( ! empty( $custom_block_translation ) && is_array( $custom_block_translation ) ) {
+				foreach ( $custom_block_translation as $key => $block_data ) {
+					$block_rules = isset( $block_translation_rules['LmatBlockParseRules'][ $key ] ) ? $block_translation_rules['LmatBlockParseRules'][ $key ] : null;
+					$this->filter_custom_block_rules( array( $key ), $block_data, $block_rules );
 				}
 			}
 

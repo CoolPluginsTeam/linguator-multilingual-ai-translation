@@ -86,7 +86,7 @@ class LMAT_Page_Translation {
 					if ( ! function_exists( 'LMAT' ) || ! LMAT()->model->is_translated_post_type( $post->post_type ) ) {
 						return;
 					}
-					add_meta_box( 'lmat-meta-box', __( 'Automatic Translate', 'linguator' ), array( $this, 'lmat_metabox_text' ), null, 'side', 'high' );
+					add_meta_box( 'lmat-meta-box', __( 'Automatic Translate', 'linguator-multilingual-ai-translation' ), array( $this, 'lmat_metabox_text' ), null, 'side', 'high' );
 				}
 			}
 		}
@@ -111,8 +111,8 @@ class LMAT_Page_Translation {
 				}
 			}
 			?>
-			<input type="button" class="button button-primary" name="lmat_page_translation_meta_box_translate" id="lmat-page-translation-button" value="<?php echo esc_attr__( 'Translate Page', 'linguator' ); ?>" readonly/><br><br>
-			<p style="margin-bottom: .5rem;"><?php echo esc_html( sprintf( __( 'Translate or duplicate content from %1$s to %2$s', 'linguator' ), $parent_post_language, $target_language ) ); ?></p>
+			<input type="button" class="button button-primary" name="lmat_page_translation_meta_box_translate" id="lmat-page-translation-button" value="<?php echo esc_attr__( 'Translate Page', 'linguator-multilingual-ai-translation' ); ?>" readonly/><br><br>
+			<p style="margin-bottom: .5rem;"><?php echo esc_html( sprintf( __( 'Translate or duplicate content from %1$s to %2$s', 'linguator-multilingual-ai-translation' ), $parent_post_language, $target_language ) ); ?></p>
 			<?php
 		}
 	}
@@ -220,7 +220,7 @@ class LMAT_Page_Translation {
 			'metaFields'            => $meta_fields,
 		);
 
-		wp_enqueue_style('lmat-elementor-translate', plugins_url( 'Admin/Assets/css/lmat-elementor-translate.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION);
+		wp_enqueue_style( 'lmat-elementor-translate', plugins_url( 'Admin/Assets/css/lmat-elementor-translate.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		$this->enqueue_automatic_translate_assets( $parent_post_language_slug, $post_language_slug, 'elementor', $data );
 	}
 
@@ -229,10 +229,10 @@ class LMAT_Page_Translation {
 
 		$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/page-translation/index.asset.php';
 
-		if(!is_array($editor_script_asset)) {
+		if ( ! is_array( $editor_script_asset ) ) {
 			$editor_script_asset = array(
 				'dependencies' => array(),
-				'version' => LINGUATOR_VERSION,
+				'version'      => LINGUATOR_VERSION,
 			);
 		}
 
@@ -309,14 +309,15 @@ class LMAT_Page_Translation {
 	}
 
 	public function fetch_post_content() {
+		$post_id = absint( isset( $_POST['postId'] ) ? absint( sanitize_text_field( $_POST['postId'] ) ) : false );
 
-		if ( ! check_ajax_referer( 'lmat_page_translation_admin', 'lmat_page_translation_nonce', false ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid security token sent for fetch post content.', 'linguator' ) ) );
-			exit;
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
+			wp_die( '0', 403 );
 		}
 
 		if ( ! $this->page_translate_helper instanceof LMAT_Page_Translation_Helper || ! method_exists( $this->page_translate_helper, 'fetch_post_content' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Fetch post content method not found.', 'linguator' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Fetch post content method not found.', 'linguator-multilingual-ai-translation' ) ) );
 			exit;
 		}
 
@@ -326,39 +327,34 @@ class LMAT_Page_Translation {
 	}
 
 	public function block_parsing_rules() {
-		if ( ! check_ajax_referer( 'lmat_fetch_block_rules_nonce', 'lmat_fetch_block_rules_key', false ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid security token sent for block parsing rules.', 'linguator' ) ) );
-			exit;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
+			wp_die( '0', 403 );
 		}
 
 		if ( ! $this->page_translate_helper instanceof LMAT_Page_Translation_Helper ) {
-			wp_send_json_error( array( 'message' => __( 'Block parsing rules does exist AJAX handler.', 'linguator' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Block parsing rules does exist AJAX handler.', 'linguator-multilingual-ai-translation' ) ) );
 			exit;
 		}
 
 		if ( ! method_exists( $this->page_translate_helper, 'block_parsing_rules' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Block parsing rules method not found.', 'linguator' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Block parsing rules method not found.', 'linguator-multilingual-ai-translation' ) ) );
 			exit;
 		}
 
 		$data = $this->page_translate_helper->block_parsing_rules();
-		wp_send_json_success( array( 'blockRules' => json_encode($data) ) );
+		wp_send_json_success( array( 'blockRules' => json_encode( $data ) ) );
 		exit;
 	}
 
 	public function update_elementor_data() {
-		if ( ! check_ajax_referer( 'lmat_page_translation_admin', 'lmat_page_translation_nonce', false ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid security token sent for update elementor data.', 'linguator' ) ) );
-			exit;
-		}
-
 		if ( ! $this->page_translate_helper instanceof LMAT_Page_Translation_Helper ) {
-			wp_send_json_error( array( 'message' => __( 'Elementor data update does exist AJAX handler.', 'linguator' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Elementor data update does exist AJAX handler.', 'linguator-multilingual-ai-translation' ) ) );
 			exit;
 		}
 
 		if ( ! method_exists( $this->page_translate_helper, 'update_elementor_data' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Elementor data update method not found.', 'linguator' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Elementor data update method not found.', 'linguator-multilingual-ai-translation' ) ) );
 			exit;
 		}
 
