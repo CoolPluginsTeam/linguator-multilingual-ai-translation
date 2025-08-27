@@ -160,6 +160,26 @@ class Settings extends Abstract_Controller {
 		$response['available_post_types'] = $available_post_types;
 		$response['available_taxonomies'] = $available_taxonomies;
 		
+		// Check if CPFM opt-in choice exists for LMAT
+		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
+		$initial_sync_done = get_option( 'lmat_feedback_initial_sync_done', false );
+		
+		if ( $cpfm_opt_in_choice === false ) {
+			// Remove the Usage Data Sharing setting if CPFM opt-in choice doesn't exist
+			unset( $response['lmat_feedback_data'] );
+		} else {
+			// Only sync once initially, then let the setting be independent
+			if ( ! $initial_sync_done ) {
+				// First time: Set the Usage Data Sharing value based on CPFM opt-in choice
+				$response['lmat_feedback_data'] = ( $cpfm_opt_in_choice === 'yes' );
+				// Mark that initial sync is done
+				update_option( 'lmat_feedback_initial_sync_done', true );
+			} else {
+				// After initial sync: Use the current setting value, don't override
+				$response['lmat_feedback_data'] = $this->options->get( 'lmat_feedback_data' );
+			}
+		}
+		
 		return $response;
 		// return $this->prepare_item_for_response( $this->options->get_all(), $request);
 	}
@@ -215,11 +235,51 @@ class Settings extends Abstract_Controller {
 					flush_rewrite_rules();
 			}
 		}
+		
+		// Handle cron job scheduling/removal based on CPFM opt-in choice and data usage sharing
+		$this->handle_cron_scheduling();
+		
 		if ( $errors->has_errors() ) {
 			return $this->add_status_to_error( $errors );
 		}
 
 		return $this->prepare_item_for_response( $this->options->get_all(), $request );
+	}
+
+	/**
+	 * Handles cron job scheduling/removal based on CPFM opt-in choice and data usage sharing.
+	 *
+	 * @since 1.0.0
+	 */
+	private function handle_cron_scheduling() {
+		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
+		$lmat_feedback_data = $this->options->get( 'lmat_feedback_data' );
+		
+		// Determine if cron should be scheduled based on the conditions
+		$should_schedule_cron = false;
+		
+		if ( $cpfm_opt_in_choice === 'no' && $lmat_feedback_data === true ) {
+			// Case 1: CPFM is 'no' but data usage sharing is 'yes' -> schedule cron
+			$should_schedule_cron = true;
+		} elseif ( $cpfm_opt_in_choice === 'yes' && $lmat_feedback_data === false ) {
+			// Case 2: CPFM is 'yes' but data usage sharing is 'no' -> remove cron
+			$should_schedule_cron = false;
+		} elseif ( $cpfm_opt_in_choice === 'yes' && $lmat_feedback_data === true ) {
+			// Case 3: Both are 'yes' -> schedule cron
+			$should_schedule_cron = true;
+		} else {
+			// All other cases -> remove cron
+			$should_schedule_cron = false;
+		}
+		
+		// Schedule or remove the cron job
+		if ( $should_schedule_cron ) {
+			if ( ! wp_next_scheduled( 'lmat_extra_data_update' ) ) {
+				wp_schedule_event( time(), 'every_30_days', 'lmat_extra_data_update' );
+			}
+		} else {
+			wp_clear_scheduled_hook( 'lmat_extra_data_update' );
+		}
 	}
 
 	/**
