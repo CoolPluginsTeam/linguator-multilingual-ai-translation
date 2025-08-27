@@ -89,7 +89,9 @@ const configs = [
             'settings',
             'term',
             'widgets',
-            'user'
+            'user',
+            'blocks'
+            
         ]
     },
     {
@@ -109,13 +111,15 @@ const configs = [
 ];
 
 export default (env, options) => {
-    // Only first config (output1) gets both regular and minified (no assets)
+    // Only first config (admin JS) gets both regular and minified (no assets)
     const mainBuilds = [
         createConfig(configs[0], false, false), // regular .js, no assets
         createConfig(configs[0], true, false)   // minified .min.js, no assets
     ];
+    
+    
     // Other configs get only regular (non-minified) .js with assets
-    const assetBuilds = configs.slice(1).map(cfg => createConfig(cfg, false, true));
+    const assetBuilds = configs.slice(2).map(cfg => createConfig(cfg, false, true));
 
-    return [...mainBuilds, ...assetBuilds];
+    return [...mainBuilds,  ...assetBuilds];
 };

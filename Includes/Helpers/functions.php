@@ -83,7 +83,7 @@ function lmat_use_block_editor_plugin() {
 	 *
 	 * @param bool $use_plugin True when loading the block editor plugin.
 	 */
-	return false;
+	return apply_filters( 'lmat_use_block_editor_plugin', true );
 }
 
 /**
@@ -191,4 +191,11 @@ function lmat_add_notice( WP_Error $error ) {
 
 		add_settings_error( 'linguator-multilingual-ai-translation', $error_code, $message, $type );
 	}
+}
+
+function lmat_is_edit_rest_request(WP_REST_Request $request): bool {
+	if (in_array($request->get_method(), array('PATCH', 'POST', 'PUT'), true)) {
+		return true;
+	}
+	return 'GET' === $request->get_method() && 'edit' === $request->get_param('context');
 }
