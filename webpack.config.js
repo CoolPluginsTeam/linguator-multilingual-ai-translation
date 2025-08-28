@@ -32,24 +32,24 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
         const styleLoaderRule = {
             test: /\.css$/i,
             use: [
-                "style-loader",
-                {
-                    loader: "css-loader",
-                    options: {
-                        modules: true,
-                        importLoaders: 1,
-                    },
+              "style-loader",
+              {
+                loader: "css-loader",
+                options: {
+                  modules: true,
+                  importLoaders: 1,
                 },
-                {
-                    loader: "postcss-loader",
-                    options: {
-                        postcssOptions: {
-                            plugins: [autoprefixer],
-                        },
-                    },
+              },
+              {
+                loader: "postcss-loader",
+                options: {
+                  postcssOptions: {
+                    plugins: [["postcss-preset-env"]],
+                  },
                 },
+              },
             ],
-        };
+          };
 
         conditionalRules.push(styleLoaderRule);
     }
@@ -88,7 +88,7 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
                             ]
                         }
                     }
-                },
+                }
             ]
         },
         externals: {
@@ -151,7 +151,7 @@ const configs = [
 const machineTranslationConfigs = [
     {
         srcDir: 'modules/inline-translation/src/elementor',
-        outDir: 'Admin/Assets/element-inline-translate',
+        outDir: 'Admin/Assets/elementor-inline-translate',
         sourceFiles: [
             'index'
         ],
