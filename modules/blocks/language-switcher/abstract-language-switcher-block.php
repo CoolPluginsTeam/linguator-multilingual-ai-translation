@@ -109,6 +109,7 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	 */
 	public function register() {
 		if ( \WP_Block_Type_Registry::get_instance()->is_registered( $this->get_block_name() ) ) {
+		
 			// Don't register a block more than once or WordPress send an error. See https://github.com/WordPress/wordpress-develop/blob/5.9/src/wp-includes/class-wp-block-type-registry.php#L82-L90
 			return;
 		}
@@ -169,7 +170,9 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 			);
 		}
 
-		register_block_type(
+		error_log( 'Registering block: ' . $this->get_block_name() );
+		
+		$block_registration = register_block_type(
 			$this->get_block_name(),
 			array(
 				'editor_script'   => $script_handle,
@@ -178,6 +181,12 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 				'uses_context'    => $this->get_context(),
 			)
 		);
+		
+		if ( $block_registration ) {
+			error_log( 'Successfully registered block: ' . $this->get_block_name() );
+		} else {
+			error_log( 'Failed to register block: ' . $this->get_block_name() );
+		}
 
 		// Translated strings used in JS code
 		wp_set_script_translations( $script_handle, 'linguator-multilingual-ai-translation' );
