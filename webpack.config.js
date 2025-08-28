@@ -2,17 +2,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import DependencyExtractionWebpackPlugin from '@wordpress/dependency-extraction-webpack-plugin';
 import defaultConfig from "@wordpress/scripts/config/webpack.config.js";
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generateAssets = false, ext = '.js', styleLoader = false) {
-
+function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, minimize = false, generateAssets = false, ext = '.js', styleLoader = false) {
     const entry = {};
     sourceFiles.forEach(filename => {
-        const entryName = minimize ? `${filename}.min` : filename;
+        const entryName = fileMinimize ? `${filename}.min` : filename;
         entry[entryName] = `./${srcDir}/${filename}${ext}`;
     });
 
@@ -55,7 +52,6 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
     }
 
     return {
-        ...defaultConfig,
         mode: minimize ? 'production' : 'development',
         entry,
         output: {
@@ -64,7 +60,6 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
             clean: false,
         },
         module: {
-            ...defaultConfig.module,
             rules: [
                 ...conditionalRules,
                 {
@@ -145,7 +140,7 @@ const configs = [
         sourceFiles: [
             'setup'
         ]
-    },
+    }
 ];
 
 const machineTranslationConfigs = [
@@ -177,7 +172,7 @@ export default (env, options) => {
     }
 
     if (env && env.type === 'inlineTranslate') {
-        return machineTranslationConfigs.map(cfg => createConfig(cfg, false, cfg.generateAssets, cfg.ext, cfg.styleLoader));
+        return machineTranslationConfigs.map(cfg => createConfig(cfg, false, true, cfg.generateAssets, cfg.ext, cfg.styleLoader));
     }
 
     // Only first config (output1) gets both regular and minified (no assets)
@@ -186,7 +181,7 @@ export default (env, options) => {
         createConfig(configs[0], true, false)   // minified .min.js, no assets
     ];
     // Other configs get only regular (non-minified) .js with assets
-    const assetBuilds = configs.slice(1).map(cfg => createConfig(cfg, false, true));
+    const assetBuilds = configs.slice(1).map(cfg => createConfig(cfg, false, false, true));
 
     return [...mainBuilds, ...assetBuilds];
 };
