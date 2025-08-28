@@ -6,9 +6,18 @@ import {
   ToolbarGroup
 } from "@wordpress/components";
 import { useState, useEffect } from "@wordpress/element";
-import styles from "./ParagraphTranslator.module.css";
+import * as styles from "./ParagraphTranslator.module.css";
 import TranslatorModal from "../../../inline-translate-modal/modal";
+import { createElement } from "@wordpress/element";
 
+export const ToolbarButtonCompat = (props: any) =>
+  createElement(ToolbarButton as any, props);
+
+export const RiTranslateAi2Compat = (props: any) =>
+  createElement(RiTranslateAi2 as any, props);
+
+export const TranslatorModalCompat = (props: any) =>
+  createElement(TranslatorModal as any, props);
 
 const ParagraphRewriter = ({ value, onChange }) => {
   const activePageLanguage = (window as any).lmatGutenbergInlineTranslation?.pageLanguage || 'en';
@@ -61,9 +70,9 @@ const ParagraphRewriter = ({ value, onChange }) => {
     <>
       <BlockControls>
         <ToolbarGroup>
-          <ToolbarButton
+          <ToolbarButtonCompat
             icon={() => (
-              <RiTranslateAi2 size={20} />
+              <RiTranslateAi2Compat size={20} />
             )}
             title="AI Paragraph Translate"
             className={!toolbarActive ? styles.disabledToolbarIcon : ""}
@@ -72,7 +81,7 @@ const ParagraphRewriter = ({ value, onChange }) => {
         </ToolbarGroup>
       </BlockControls>
       {isModalOpen && (
-        <TranslatorModal 
+        <TranslatorModalCompat 
           value={selectedText && '' !== selectedText ? selectedText : value.text.slice(value.start, value.end)} 
           onUpdate={HandlerReplaceText} 
           pageLanguage={activePageLanguage}

@@ -1,23 +1,30 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import styles from './style.modules.css';
+import * as styles from './style.modules.css';
 import Translator from "../Translator";
-import isTranslatorApiAvailable from "../isTranslatorApiAvailable";
-import languages from "../Languages";
-import LanguageDetector from "../LanguageDetector";
-import Languages from "../Languages";
 import Skeleton from 'react-loading-skeleton';
-import skeletonStyles from 'react-loading-skeleton/dist/skeleton.css'
+import * as skeletonStyles from 'react-loading-skeleton/dist/skeleton.css'
 import ModalStyle from './modalStyle';
 import ButtonGroup from './ButtonGroup';
-import { svgIcons } from './svgIcons';
-import ErrorModalBox from '../errorModal';
 
 import {
   Modal,
   Button,
-  SelectControl,
 } from "@wordpress/components";
+
+import { createElement } from "@wordpress/element";
+
+export const ModalCompat = (props: any) =>
+  createElement(Modal as any, props);
+
+export const ButtonCompat = (props: any) =>
+  createElement(Button as any, props);
+
+export const SkeletonCompat = (props: any) =>
+  createElement(Skeleton as any, props);
+
+export const ButtonGroupCompat = (props: any) =>
+  createElement(ButtonGroup as any, props);
 
 interface TranslateModalProps {
   value: string;
@@ -148,7 +155,7 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
   return (isModalOpen &&
     <>
       <ModalStyle modalContainer={styles.modalContainer} />
-      <Modal
+      <ModalCompat
         title="Lingauator Inline Translator"
         onRequestClose={HandlerCloseModal}
         className={styles.modalContainer}
@@ -158,7 +165,7 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
       >
         <div className={styles.modalCloseButton} onClick={HandlerCloseModal}>&times;</div>
         {langError && langError !== "" ? (
-          <div className={styles.error}><p dangerouslySetInnerHTML={{ __html: langError }} />{errorBtns.length > 0 && <ButtonGroup className={styles.errorBtnGroup} buttons={errorBtns} />}</div>
+          <div className={styles.error}><p dangerouslySetInnerHTML={{ __html: langError }} />{errorBtns.length > 0 && <ButtonGroupCompat className={styles.errorBtnGroup} buttons={errorBtns} />}</div>
         ) : (
           <div className={styles.modal}>
             <div className={styles.controls}>
@@ -168,7 +175,7 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
                   <div className={styles.originalText}>
                     {value}
                   </div>
-                  <Skeleton
+                  <SkeletonCompat
                     count={1}
                     height='100%'
                     width="100%"
@@ -180,31 +187,31 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
                 <>
                   <div className={styles.translatedContent}><label>Translated Text</label><p>{translatedContent}</p></div>
                   <div className={styles.translatedButtonWrp}>
-                    <Button
+                    <ButtonCompat
                       className={styles.replaceBtn + " " + styles.btnStyle}
                       onClick={HandlerReplaceText}
                     >
                       Replace
-                    </Button>
-                    <Button
+                    </ButtonCompat>
+                    <ButtonCompat
                       className={styles.copyBtn + " " + styles.btnStyle}
                       onClick={HandlerCopyText}
                     >
                       {copyStatus}
-                    </Button>
-                    <Button
+                    </ButtonCompat>
+                    <ButtonCompat
                       className={styles.closeBtn + " " + styles.btnStyle}
                       onClick={HandlerCloseModal}
                     >
                       Close
-                    </Button>
+                    </ButtonCompat>
                   </div>
                 </>
               }
             </div>
           </div>
         )}
-      </Modal>
+      </ModalCompat>
     </>
   )
 }

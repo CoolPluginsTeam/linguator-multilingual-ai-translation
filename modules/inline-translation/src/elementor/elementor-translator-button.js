@@ -3,6 +3,10 @@ import ElementorWidgetTranslator from './translator-modal/index.js';
 import ReactDom from 'react-dom/client';
 import { RiTranslateAi2 } from "react-icons/ri";
 import styles from './style.modules.css';
+import { createElement } from "@wordpress/element";
+
+export const RiTranslateAi2Compat = (props) =>
+  createElement(RiTranslateAi2, props);
 
 export default class ElementorTranslator extends Marionette.Behavior {
 
@@ -56,7 +60,7 @@ export default class ElementorTranslator extends Marionette.Behavior {
         let iconElement = document.createElement('div');
         iconElement.className=styles.lmatEtTranslatorContainer;
         iconElement.title="Chrome built-in translator AI";
-        ReactDom.createRoot(iconElement).render(<RiTranslateAi2 className={styles.lmatEtTranslatorIcon} />);
+        ReactDom.createRoot(iconElement).render(<RiTranslateAi2Compat size={20} className={styles.lmatEtTranslatorIcon} />);
         $button.html(iconElement);
 
         iconElement=null;

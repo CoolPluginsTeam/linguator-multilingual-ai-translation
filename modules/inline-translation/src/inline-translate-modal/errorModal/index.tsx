@@ -1,8 +1,12 @@
 import CopyClipboard from "../CopyClipboard/index";
 import { useEffect, FC } from 'react';
-import styles from '../modal/style.modules.css';
+import * as styles from '../modal/style.modules.css';
 import { Modal } from '@wordpress/components';
 import ModalStyle from "./modalStyle";
+import { createElement } from "@wordpress/element";
+
+export const ModalCompat = (props: any) =>
+  createElement(Modal as any, props);
 
 interface ErrorModalBoxProps {
     message: string;
@@ -73,7 +77,7 @@ const ErrorModalBox: FC<ErrorModalBoxProps> = ({ message, onClose, Title, childr
     return (
         <>
         <ModalStyle modalContainer={styles.ErrorModalContainer} />
-        <Modal
+        <ModalCompat
           title={Title}
           onRequestClose={onClose}
           className={styles.errorModalBox}
@@ -87,7 +91,7 @@ const ErrorModalBox: FC<ErrorModalBoxProps> = ({ message, onClose, Title, childr
             <div className={styles.errorModalBoxFooter}>
             <button className={styles.errorModalBoxClose} onClick={onClose}>Close</button>
             </div>
-        </Modal>
+        </ModalCompat>
         </>
     );
 };
