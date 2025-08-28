@@ -72,8 +72,9 @@ const SettingModal = (props) => {
     useEffect(() => {
         const languageSupportedStatus = async () => {
             const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
-            const translateBtn = document.querySelector('.lmat-page-translation-service-btn#lmat-page-translation-localAiTranslator-btn');
+            const translateBtn = document.querySelector('.lmat-page-translation-service-btn#lmat-page-translation-local-ai-translator-btn');
 
+            console.log(translateBtn);
             if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object' && translateBtn) {
                 setChromeAiBtnDisabled(true);
     
