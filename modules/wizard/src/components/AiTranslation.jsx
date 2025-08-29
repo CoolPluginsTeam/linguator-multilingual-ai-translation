@@ -123,7 +123,7 @@ const AiTranslation = () => {
                         ai_translation_configuration: {
                             provider: {
                                 chrome_local_ai: chromeLocalAITranslation,
-                                google_machine_translation: googleMachineTranslation
+                                google: googleMachineTranslation
                             }
                         }
                     })

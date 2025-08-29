@@ -83,11 +83,17 @@ class Ai_Translation_Configuration extends Abstract_Option {
 	 */
 	protected function sanitize( $value, Options $options ) {
         $filtered_value = array();
+        $data_structure=self::get_data_structure();
+        $provider_data=array_keys($data_structure['properties']['provider']['properties']);
 
+        
         if(isset($value['provider'])){
             $filtered_value['provider'] = array();
             foreach($value['provider'] as $key => $value){
-                $filtered_value['provider'][$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+
+                if(in_array($key, $provider_data)){
+                    $filtered_value['provider'][$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                }
             }
         }
 
