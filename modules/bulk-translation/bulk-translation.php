@@ -134,6 +134,15 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
 				$providers = LMAT()->options['ai_translation_configuration']['provider'];
 			}
+	
+			$active_providers=array();
+	
+			foreach($providers as $provider => $value){
+				if($value){
+					$provdername = $provider==='chrome_local_ai' ? 'localAiTranslator' : $provider;
+					$active_providers[] = $provdername;
+				}
+			}
 
 			wp_localize_script(
 				'lmat-bulk-translate',
@@ -149,7 +158,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 					'admin_url'               => admin_url(),
 					'post_label'              => $post_label,
 					'update_translate_data'   => 'lmat_update_translate_data',
-					'providers'                => $providers,
+					'providers'                => $active_providers,
 				)
 			);
 		}
