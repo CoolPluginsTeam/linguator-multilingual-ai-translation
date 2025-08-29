@@ -12,6 +12,7 @@ export default (props) => {
     const adminUrl = window.lmatBulkTranslationGlobal.admin_url;
     const assetsUrl = window.lmatBulkTranslationGlobal.lmat_url+'Admin/Assets/images/';
     const errorIcon = assetsUrl + 'error-icon.svg';
+    const providers=window.lmatBulkTranslationGlobal.providers;
 
     const Services = {
         // yandex: {
@@ -43,8 +44,16 @@ export default (props) => {
         }
     };
 
+   
+    const validServices={};
+
+    providers.forEach(provider=>{
+        validServices[provider]=Services[provider];
+    });
+
     if (!Service) {
-        return Services;
+        return validServices;
     }
-    return Services[Service];
+
+    return validServices[Service];
 };
