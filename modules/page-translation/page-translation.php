@@ -242,11 +242,20 @@ class LMAT_Page_Translation {
 		$post_type = get_post_type();
 
 		$languages   = LMAT()->model->get_languages_list();
-		
+
 		$providers=array('google'=>true);
 
 		if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
 			$providers = LMAT()->options['ai_translation_configuration']['provider'];
+		}
+
+		$active_providers=array();
+
+		foreach($providers as $provider => $value){
+			if($value){
+				$provdername = $provider==='chrome_local_ai' ? 'localAiTranslator' : $provider;
+				$active_providers[] = $provdername;
+			}
 		}
 
 		$lang_object = array();
@@ -279,7 +288,7 @@ class LMAT_Page_Translation {
 				'post_type'                => $post_type,
 				'editor_type'              => $editor_type,
 				'current_post_id'          => $post_id,
-				'providers'                => $providers,
+				'providers'                => $active_providers,
 			),
 			$extra_data
 		);

@@ -8,9 +8,10 @@ import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
 import { __ , sprintf } from "@wordpress/i18n";
 import ErrorModalBox from "../component/ErrorModalBox/index.js";
+import TranslateService from "../component/TranslateProvider/index.js";
 
 const SettingModal = (props) => {
-    const [targetBtn, setTargetBtn] = useState({});
+    const [activeService, setActiveService] = useState({});
     const [modalRender, setModalRender] = useState(0);
     const [settingVisibility, setSettingVisibility] = useState(false);
     const sourceLang = lmatPageTranslationGlobal.source_lang;
@@ -22,6 +23,7 @@ const SettingModal = (props) => {
     const [serviceModalErrors, setServiceModalErrors] = useState({});
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
     const [chromeAiBtnDisabled, setChromeAiBtnDisabled] = useState(false);
+    const providers=lmatPageTranslationGlobal.providers;
 
     const openModalOnLoadHandler = (e) => {
         e.preventDefault();
@@ -44,6 +46,11 @@ const SettingModal = (props) => {
         setErrorModalVisibility(service);
     }
 
+    const openModelHandler=(activeService)=>{
+        setActiveService(activeService);
+        setModalRender(prev => prev + 1);
+    }
+
     /**
      * useEffect hook to set settingVisibility.
      * Triggers the setSettingVisibility only when user click on meta field Button.
@@ -55,7 +62,12 @@ const SettingModal = (props) => {
         if (metaFieldBtn) {
             metaFieldBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                setSettingVisibility(prev => !prev);
+
+                if(providers.length > 1){
+                    setSettingVisibility(prev => !prev);
+                }else{
+                    openModelHandler(providers[0]);
+                }
             });
         }
 
@@ -70,18 +82,18 @@ const SettingModal = (props) => {
      * useEffect hook to check if the local AI translator is supported.
      */
     useEffect(() => {
-        const languageSupportedStatus = async () => {
-            const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
-            const translateBtn = document.querySelector('.lmat-page-translation-service-btn#lmat-page-translation-local-ai-translator-btn');
-
-            console.log(translateBtn);
-            if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object' && translateBtn) {
-                setChromeAiBtnDisabled(true);
+        const providerErrors=async()=>{
+            const languageSupportedStatus = async () => {
+                const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
+                const translateBtn = document.querySelector('.lmat-page-translation-service-btn#lmat-page-translation-local-ai-translator-btn');
     
-                setServiceModalErrors(prev => ({ ...prev, localAiTranslator: {message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation')} }));
-            }
-        };
-        if(settingVisibility){
+                if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object' && translateBtn) {
+                    setChromeAiBtnDisabled(true);
+    
+                    setServiceModalErrors(prev => ({ ...prev, localAiTranslator: {message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation')} }));
+                }
+            };
+
             if(!googleSupport){
                 setServiceModalErrors(prev => ({
                     ...prev,
@@ -94,8 +106,22 @@ const SettingModal = (props) => {
                     }
                 }));
             }
+                
+            await languageSupportedStatus();
 
-            languageSupportedStatus();
+            if(providers.length < 2 && providers[0]){
+                const providerId=providers[0];
+                
+                if(serviceModalErrors && serviceModalErrors[providerId]){
+                    openErrorModalHandler(providerId);
+                }else{
+                    openModelHandler(providerId);
+                }
+            }
+        }
+
+        if(settingVisibility){
+            providerErrors();
         }
     }, [settingVisibility]);
 
@@ -103,9 +129,10 @@ const SettingModal = (props) => {
      * useEffect hook to handle displaying the modal and rendering the PopStringModal component.
      */
     useEffect(() => {
-        const btn = targetBtn;
-        const service = btn.dataset && btn.dataset.service;
-        const serviceLabel = btn.dataset && btn.dataset.serviceLabel;
+        const activeServiceObject=TranslateService({ Service: activeService, [activeService + "ButtonDisabled"]: false });
+
+        const service = activeService;
+        const serviceLabel = activeServiceObject && activeServiceObject.ServiceLabel;
         const postId = props.postId;
 
         const parentWrp = document.getElementById("lmat_page_translation_strings_model");
@@ -160,7 +187,7 @@ const SettingModal = (props) => {
         }
         
         setModalRender(prev => prev + 1);
-        setTargetBtn(targetElement);
+        setActiveService(dataService);
     };
 
     const handleSettingVisibility = (visibility) => {
@@ -172,7 +199,7 @@ const SettingModal = (props) => {
             {errorModalVisibility && serviceModalErrors[errorModalVisibility] &&
                 <ErrorModalBox onClose={closeErrorModal} {...serviceModalErrors[errorModalVisibility]}/>
             }
-            {settingVisibility &&
+            {settingVisibility && providers.length > 1 &&
                 <div className="modal-container" style={{ display: settingVisibility ? 'flex' : 'none' }}>
                     <div className="lmat-page-translation-settings modal-content">
                         <SettingModalHeader

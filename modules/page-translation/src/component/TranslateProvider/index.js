@@ -10,6 +10,7 @@ export default (props) => {
     const { Service = false, openErrorModalHandler=()=>{} } = props;
     const assetsUrl = window.lmatPageTranslationGlobal.lmat_url+'Admin/Assets/images/';
     const errorIcon = assetsUrl + 'error-icon.svg';
+    const providers=window.lmatPageTranslationGlobal.providers;
 
     const Services = {
         google: {
@@ -38,8 +39,15 @@ export default (props) => {
         }
     };
 
+    const validServices={};
+
+    providers.forEach(provider=>{
+        validServices[provider]=Services[provider];
+    });
+
     if (!Service) {
-        return Services;
+        return validServices;
     }
-    return Services[Service];
+
+    return validServices[Service];
 };
