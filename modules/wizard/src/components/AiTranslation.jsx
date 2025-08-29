@@ -103,7 +103,7 @@ const AiTranslation = () => {
     const { setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
     const aiTranslation = data?.ai_translation_configuration; //store the media option
     const provider = aiTranslation?.provider;
-    const [googleMachineTranslation, setGoogleMachineTranslation] = React.useState(provider?.google_machine_translation)
+    const [googleMachineTranslation, setGoogleMachineTranslation] = React.useState(provider?.google)
     const [chromeLocalAITranslation, setChromeLocalAITranslation] = React.useState(provider?.chrome_local_ai)
     const [lastUpdatedValue, setLastUpdatedValue] = React.useState({googleMachineTranslation,chromeLocalAITranslation})
 
@@ -147,7 +147,7 @@ const AiTranslation = () => {
                 <p className='text-justify text-sm/6'>{__('Turn on AI translation if you need to translate the content of your website using AI. If not, you can leave it off.', 'linguator-multilingual-ai-translation')}</p>
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
-                    <p className="text-sm/6">{__('Enable Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
+                    <p className="text-sm/6">{__('Enable Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
                     <Switch
                         aria-label="AI Translation"
                         id="google-machine-translation"

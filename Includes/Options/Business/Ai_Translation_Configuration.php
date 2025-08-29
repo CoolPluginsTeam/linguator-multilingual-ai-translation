@@ -62,7 +62,7 @@ class Ai_Translation_Configuration extends Abstract_Option {
         return array(
             'type' => 'object',
             'properties' => array(
-                'provider' => array('type' => 'object', 'properties' => array('chrome_local_ai'=>array('type' => 'boolean'), 'google_machine_translation'=>array('type' => 'boolean'))),
+                'provider' => array('type' => 'object', 'properties' => array('chrome_local_ai'=>array('type' => 'boolean'), 'google'=>array('type' => 'boolean'))),
             ),
         );
     }
