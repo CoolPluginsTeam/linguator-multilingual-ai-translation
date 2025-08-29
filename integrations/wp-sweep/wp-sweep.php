@@ -25,7 +25,7 @@ class LMAT_WP_Sweep {
 	}
 
 	/**
-	 * Add 'term_language' and 'term_translations' to excluded taxonomies otherwise terms loose their language and translation group.
+	 * Add 'lmat_term_language' and 'lmat_term_translations' to excluded taxonomies otherwise terms loose their language and translation group.
 	 *
 	 * @since 1.0.0
 	 *
@@ -33,7 +33,7 @@ class LMAT_WP_Sweep {
 	 * @return array
 	 */
 	public function wp_sweep_excluded_taxonomies( $excluded_taxonomies ) {
-		return array_merge( $excluded_taxonomies, array( 'term_language', 'term_translations' ) );
+		return array_merge( $excluded_taxonomies, array( 'lmat_term_language', 'lmat_term_translations' ) );
 	}
 
 	/**
