@@ -1,755 +1,290 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+/******/ 	"use strict";
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/* global wp */
+(function () {
+  var __ = wp.i18n.__;
+  var _wp$blocks = wp.blocks,
+    registerBlockType = _wp$blocks.registerBlockType,
+    createBlock = _wp$blocks.createBlock;
+  var Fragment = wp.element.Fragment;
+  var _ref = wp.blockEditor || wp.editor,
+    InspectorControls = _ref.InspectorControls,
+    useBlockProps = _ref.useBlockProps; // fallback for older WP
+  var _wp$components = wp.components,
+    PanelBody = _wp$components.PanelBody,
+    ToggleControl = _wp$components.ToggleControl,
+    Disabled = _wp$components.Disabled;
+  var ServerSideRender = wp.serverSideRender && wp.serverSideRender.default || wp.serverSideRender;
+  var addFilter = wp.hooks.addFilter;
 
-/***/ 20:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+  // ---------------------------------------------------------------------------
+  // Icon: translation (simple inline SVG)
+  // ---------------------------------------------------------------------------
+  var TranslationIcon = function TranslationIcon() {
+    return wp.element.createElement('svg', {
+      width: 20,
+      height: 20,
+      viewBox: '0 0 20 20',
+      xmlns: 'http://www.w3.org/2000/svg'
+    }, wp.element.createElement('path', {
+      d: 'M11 7H9.49c-.63 0-1.25.3-1.59.7L7 5H4.13l-2.39 7h1.69l.74-2H7v4H2c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7c1.1 0 2 .9 2 2v2zM6.51 9H4.49l1-2.93zM10 8h7c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2h-7c-1.1 0-2-.9-2-2v-7c0-1.1.9-2 2-2zm7.25 5v-1.08h-3.17V9.75h-1.16v2.17H9.75V13h1.28c.11.85.56 1.85 1.28 2.62-.87.36-1.89.62-2.31.62-.01.02.22.97.2 1.46.84 0 2.21-.5 3.28-1.15 1.09.65 2.48 1.15 3.34 1.15-.02-.49.2-1.44.2-1.46-.43 0-1.49-.27-2.38-.63.7-.77 1.14-1.77 1.25-2.61h1.36zm-3.81 1.93c-.5-.46-.85-1.13-1.01-1.93h2.09c-.17.8-.51 1.47-1 1.93l-.04.03s-.03-.02-.04-.03z'
+    }));
+  };
 
-  "use strict";
-  var __webpack_unused_export__;
-  /**
-   * @license React
-   * react-jsx-runtime.production.min.js
-   *
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   */
-  var f=__webpack_require__(677),k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:!0,ref:!0,__self:!0,__source:!0};
-  function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a)void 0===d[b]&&(d[b]=a[b]);return{$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}__webpack_unused_export__=l;exports.jsx=q;exports.jsxs=q;
-  
-  
-  /***/ }),
-  
-  /***/ 848:
-  /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-  
-  "use strict";
-  
-  
-  if (true) {
-    module.exports = __webpack_require__(20);
-  } else {}
-  
-  
-  /***/ }),
-  
-  /***/ 677:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["React"]; }());
-  
-  /***/ }),
-  
-  /***/ 419:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["lodash"]; }());
-  
-  /***/ }),
-  
-  /***/ 89:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["blockEditor"]; }());
-  
-  /***/ }),
-  
-  /***/ 545:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["blocks"]; }());
-  
-  /***/ }),
-  
-  /***/ 959:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["components"]; }());
-  
-  /***/ }),
-  
-  /***/ 601:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["element"]; }());
-  
-  /***/ }),
-  
-  /***/ 873:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["hooks"]; }());
-  
-  /***/ }),
-  
-  /***/ 75:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["i18n"]; }());
-  
-  /***/ }),
-  
-  /***/ 933:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["primitives"]; }());
-  
-  /***/ }),
-  
-  /***/ 567:
-  /***/ ((module) => {
-  
-  module.exports = (function() { return this["wp"]["serverSideRender"]; }());
-  
-  /***/ })
-  
-  /******/ 	});
-  /************************************************************************/
-  /******/ 	// The module cache
-  /******/ 	var __webpack_module_cache__ = {};
-  /******/ 	
-  /******/ 	// The require function
-  /******/ 	function __webpack_require__(moduleId) {
-  /******/ 		// Check if module is in cache
-  /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-  /******/ 		if (cachedModule !== undefined) {
-  /******/ 			return cachedModule.exports;
-  /******/ 		}
-  /******/ 		// Create a new module (and put it into the cache)
-  /******/ 		var module = __webpack_module_cache__[moduleId] = {
-  /******/ 			// no module.id needed
-  /******/ 			// no module.loaded needed
-  /******/ 			exports: {}
-  /******/ 		};
-  /******/ 	
-  /******/ 		// Execute the module function
-  /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-  /******/ 	
-  /******/ 		// Return the exports of the module
-  /******/ 		return module.exports;
-  /******/ 	}
-  /******/ 	
-  /************************************************************************/
-  /******/ 	/* webpack/runtime/compat get default export */
-  /******/ 	(() => {
-  /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-  /******/ 		__webpack_require__.n = (module) => {
-  /******/ 			var getter = module && module.__esModule ?
-  /******/ 				() => (module['default']) :
-  /******/ 				() => (module);
-  /******/ 			__webpack_require__.d(getter, { a: getter });
-  /******/ 			return getter;
-  /******/ 		};
-  /******/ 	})();
-  /******/ 	
-  /******/ 	/* webpack/runtime/define property getters */
-  /******/ 	(() => {
-  /******/ 		// define getter functions for harmony exports
-  /******/ 		__webpack_require__.d = (exports, definition) => {
-  /******/ 			for(var key in definition) {
-  /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-  /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-  /******/ 				}
-  /******/ 			}
-  /******/ 		};
-  /******/ 	})();
-  /******/ 	
-  /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-  /******/ 	(() => {
-  /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-  /******/ 	})();
-  /******/ 	
-  /************************************************************************/
-  var __webpack_exports__ = {};
-  // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-  (() => {
-  "use strict";
-  
-  // EXTERNAL MODULE: external {"this":["wp","i18n"]}
-  var external_this_wp_i18n_ = __webpack_require__(75);
-  // EXTERNAL MODULE: external {"this":["wp","blocks"]}
-  var external_this_wp_blocks_ = __webpack_require__(545);
-  // EXTERNAL MODULE: external {"this":["wp","element"]}
-  var external_this_wp_element_ = __webpack_require__(601);
-  // EXTERNAL MODULE: external {"this":["wp","blockEditor"]}
-  var external_this_wp_blockEditor_ = __webpack_require__(89);
-  // EXTERNAL MODULE: external {"this":["wp","hooks"]}
-  var external_this_wp_hooks_ = __webpack_require__(873);
-  // EXTERNAL MODULE: external {"this":["wp","components"]}
-  var external_this_wp_components_ = __webpack_require__(959);
-  // EXTERNAL MODULE: external {"this":["wp","serverSideRender"]}
-  var external_this_wp_serverSideRender_ = __webpack_require__(567);
-  var external_this_wp_serverSideRender_default = /*#__PURE__*/__webpack_require__.n(external_this_wp_serverSideRender_);
-  // EXTERNAL MODULE: external "lodash"
-  var external_lodash_ = __webpack_require__(419);
-  // EXTERNAL MODULE: external {"this":["wp","primitives"]}
-  var external_this_wp_primitives_ = __webpack_require__(933);
-  // EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
-  var jsx_runtime = __webpack_require__(848);
-  ;// ./js/src/packages/icons/library/duplication.js
-  /**
-   * Duplication icon - admin-page Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const duplication = isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M6 15v-13h10v13h-10zM5 16h8v2h-10v-13h2v11z"
-    })
-  }) : 'admin-page';
-  /* harmony default export */ const library_duplication = ((/* unused pure expression or super */ null && (duplication)));
-  ;// ./js/src/packages/icons/library/pencil.js
-  /**
-   * Pencil icon - edit Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const pencil_isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const pencil = pencil_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M13.89 3.39l2.71 2.72c0.46 0.46 0.42 1.24 0.030 1.64l-8.010 8.020-5.56 1.16 1.16-5.58s7.6-7.63 7.99-8.030c0.39-0.39 1.22-0.39 1.68 0.070zM11.16 6.18l-5.59 5.61 1.11 1.11 5.54-5.65zM8.19 14.41l5.58-5.6-1.070-1.080-5.59 5.6z"
-    })
-  }) : 'edit';
-  /* harmony default export */ const library_pencil = ((/* unused pure expression or super */ null && (pencil)));
-  ;// ./js/src/packages/icons/library/plus.js
-  /**
-   * Plus icon - plus Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const plus_isPrimitivesComponents = 'undefined' !== typeof wp.primitive;
-  const plus = plus_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M17 7v3h-5v5h-3v-5h-5v-3h5v-5h3v5h5z"
-    })
-  }) : 'plus';
-  /* harmony default export */ const library_plus = ((/* unused pure expression or super */ null && (plus)));
-  ;// ./js/src/packages/icons/library/synchronization.js
-  /**
-   * Synchronization icon - controls-repeat Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const synchronization_isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const synchronization = synchronization_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M5 7v3l-2 1.5v-6.5h11v-2l4 3.010-4 2.99v-2h-9zM15 13v-3l2-1.5v6.5h-11v2l-4-3.010 4-2.99v2h9z"
-    })
-  }) : 'controls-repeat';
-  /* harmony default export */ const library_synchronization = ((/* unused pure expression or super */ null && (synchronization)));
-  ;// ./js/src/packages/icons/library/translation.js
-  /**
-   * Translation icon - translation Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const translation_isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const translation = translation_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M11 7H9.49c-.63 0-1.25.3-1.59.7L7 5H4.13l-2.39 7h1.69l.74-2H7v4H2c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h7c1.1 0 2 .9 2 2v2zM6.51 9H4.49l1-2.93zM10 8h7c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2h-7c-1.1 0-2-.9-2-2v-7c0-1.1.9-2 2-2zm7.25 5v-1.08h-3.17V9.75h-1.16v2.17H9.75V13h1.28c.11.85.56 1.85 1.28 2.62-.87.36-1.89.62-2.31.62-.01.02.22.97.2 1.46.84 0 2.21-.5 3.28-1.15 1.09.65 2.48 1.15 3.34 1.15-.02-.49.2-1.44.2-1.46-.43 0-1.49-.27-2.38-.63.7-.77 1.14-1.77 1.25-2.61h1.36zm-3.81 1.93c-.5-.46-.85-1.13-1.01-1.93h2.09c-.17.8-.51 1.47-1 1.93l-.04.03s-.03-.02-.04-.03z"
-    })
-  }) : 'translation';
-  /* harmony default export */ const library_translation = (translation);
-  ;// ./js/src/packages/icons/library/trash.js
-  /**
-   * Trash icon - trash Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const trash_isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const trash = trash_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"
-    })
-  }) : 'trash';
-  /* harmony default export */ const library_trash = ((/* unused pure expression or super */ null && (trash)));
-  ;// ./js/src/packages/icons/library/star.js
-  /**
-   * Star icon - star-filled Dashicon.
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const star_isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const star_star = star_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    width: "20",
-    height: "20",
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 20 20",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "m10 1 3 6 6 .75-4.12 4.62L16 19l-6-3-6 3 1.13-6.63L1 7.75 7 7z"
-    })
-  }) : 'star-filled';
-  /* harmony default export */ const library_star = ((/* unused pure expression or super */ null && (star_star)));
-  ;// ./js/src/packages/icons/library/submenu.js
-  /**
-   * Submenu icon
-   */
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  const submenu_isPrimitivesComponents = 'undefined' !== typeof wp.primitives;
-  const SubmenuIcon = () => submenu_isPrimitivesComponents ? /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.SVG, {
-    xmlns: "http://www.w3.org/2000/svg",
-    width: "12",
-    height: "12",
-    viewBox: "0 0 12 12",
-    fill: "none",
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_primitives_.Path, {
-      d: "M1.50002 4L6.00002 8L10.5 4",
-      strokeWidth: "1.5"
-    })
-  }) : 'submenu';
-  /* harmony default export */ const submenu = (SubmenuIcon);
-  ;// ./js/src/packages/icons/library/default-lang.js
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  
-  /**
-   * Internal dependencies
-   */
-  
-  
-  const DefaultLangIcon = () => /*#__PURE__*/_jsxs(_Fragment, {
-    children: [/*#__PURE__*/_jsx(Icon, {
-      icon: star,
-      className: "lmat-default-lang-icon"
-    }), /*#__PURE__*/_jsx("span", {
-      className: "screen-reader-text",
-      children: __('Default language.', 'linguator-multilingual-ai-translation')
-    })]
-  });
-  /* harmony default export */ const default_lang = ((/* unused pure expression or super */ null && (DefaultLangIcon)));
-  ;// ./js/src/packages/icons/index.js
-  /**
-   * Icons library
-   */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  ;// ./js/src/blocks/language-switcher-edit.js
-  /**
-   * Language switcher block edit.
-   */
-  
-  /**
-   * External dependencies
-   */
-  
-  
-  /**
-   * WordPress dependencies
-   */
-  
-  
-  /**
-   * Call initialization of lmat/metabox store for getting ready some data.
-   */
-  
-  const i18nAttributeStrings = lmat_block_editor_blocks_settings;
-  function createLanguageSwitcherEdit(props) {
-    const createToggleAttribute = function (propName) {
-      return () => {
-        const value = props.attributes[propName];
-        const {
-          setAttributes
-        } = props;
-        let updatedAttributes = {
-          [propName]: !value
-        };
-        let forcedAttributeName;
-        let forcedAttributeUnchecked;
-  
-        // Both show_names and show_flags attributes can't be unchecked together.
-        switch (propName) {
-          case 'show_names':
-            forcedAttributeName = 'show_flags';
-            forcedAttributeUnchecked = !props.attributes[forcedAttributeName];
-            break;
-          case 'show_flags':
-            forcedAttributeName = 'show_names';
-            forcedAttributeUnchecked = !props.attributes[forcedAttributeName];
-            break;
-        }
-        if ('show_names' === propName || 'show_flags' === propName) {
-          if (value && forcedAttributeUnchecked) {
-            updatedAttributes = (0,external_lodash_.assign)(updatedAttributes, {
-              [forcedAttributeName]: forcedAttributeUnchecked
-            });
-          }
-        }
-        setAttributes(updatedAttributes);
-      };
-    };
-    const toggleDropdown = createToggleAttribute('dropdown');
-    const toggleShowNames = createToggleAttribute('show_names');
-    const toggleShowFlags = createToggleAttribute('show_flags');
-    const toggleForceHome = createToggleAttribute('force_home');
-    const toggleHideCurrent = createToggleAttribute('hide_current');
-    const toggleHideIfNoTranslation = createToggleAttribute('hide_if_no_translation');
-    const {
-      dropdown,
-      show_names,
-      show_flags,
-      force_home,
-      hide_current,
-      hide_if_no_translation
-    } = props.attributes;
-    function ToggleControlDropdown() {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.ToggleControl, {
-        label: i18nAttributeStrings.dropdown,
-        checked: dropdown,
-        onChange: toggleDropdown
-      });
+  // ---------------------------------------------------------------------------
+  // Icon: submenu chevron (used in nav dropdown)
+  // ---------------------------------------------------------------------------
+  var SubmenuChevron = function SubmenuChevron() {
+    return wp.element.createElement('svg', {
+      width: 12,
+      height: 12,
+      viewBox: '0 0 12 12',
+      xmlns: 'http://www.w3.org/2000/svg',
+      fill: 'none'
+    }, wp.element.createElement('path', {
+      d: 'M1.5 4L6 8l4.5-4',
+      strokeWidth: 1.5,
+      stroke: 'currentColor'
+    }));
+  };
+
+  // ---------------------------------------------------------------------------
+  // Shared attributes
+  // ---------------------------------------------------------------------------
+  var sharedAttributes = {
+    dropdown: {
+      type: 'boolean',
+      default: false
+    },
+    show_names: {
+      type: 'boolean',
+      default: true
+    },
+    show_flags: {
+      type: 'boolean',
+      default: false
+    },
+    force_home: {
+      type: 'boolean',
+      default: false
+    },
+    hide_current: {
+      type: 'boolean',
+      default: false
+    },
+    hide_if_no_translation: {
+      type: 'boolean',
+      default: false
     }
-    function ToggleControlShowNames() {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.ToggleControl, {
-        label: i18nAttributeStrings.show_names,
-        checked: show_names // eslint-disable-line camelcase
-        ,
-        onChange: toggleShowNames
-      });
+  };
+
+  // ---------------------------------------------------------------------------
+  // Helper: ensure at least one of show_names/show_flags is true
+  // ---------------------------------------------------------------------------
+  function enforceNamesOrFlags(nextAttrs, currentAttrs) {
+    var result = _objectSpread(_objectSpread({}, currentAttrs), nextAttrs);
+    if (result.show_names === false && result.show_flags === false) {
+      // If the user just turned one off and both are now false, re-enable the other.
+      // Prefer re-enabling the one that did NOT change in this update.
+      if (typeof nextAttrs.show_names !== 'undefined') {
+        result.show_flags = true;
+      } else {
+        result.show_names = true;
+      }
     }
-    function ToggleControlShowFlags() {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.ToggleControl, {
-        label: i18nAttributeStrings.show_flags,
-        checked: show_flags // eslint-disable-line camelcase
-        ,
-        onChange: toggleShowFlags
-      });
-    }
-    function ToggleControlForceHome() {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.ToggleControl, {
-        label: i18nAttributeStrings.force_home,
-        checked: force_home // eslint-disable-line camelcase
-        ,
-        onChange: toggleForceHome
-      });
-    }
-    function ToggleControlHideCurrent() {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.ToggleControl, {
-        label: i18nAttributeStrings.hide_current,
-        checked: hide_current // eslint-disable-line camelcase
-        ,
-        onChange: toggleHideCurrent
-      });
-    }
-    function ToggleControlHideIfNoTranslations() {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.ToggleControl, {
-        label: i18nAttributeStrings.hide_if_no_translation,
-        checked: hide_if_no_translation // eslint-disable-line camelcase
-        ,
-        onChange: toggleHideIfNoTranslation
-      });
-    }
-    return {
-      ToggleControlDropdown,
-      ToggleControlShowNames,
-      ToggleControlShowFlags,
-      ToggleControlForceHome,
-      ToggleControlHideCurrent,
-      ToggleControlHideIfNoTranslations
-    };
+    return result;
   }
-  ;// ./js/src/blocks/block.js
-  /**
-   * Register language switcher block.
-   */
-  
-  /**
-   * WordPress Dependencies
-   */
-  
-  
-  
-  
-  
-  
-  
-  
-  /**
-   * External dependencies
-   */
-  
-  
-  /**
-   * Internal dependencies
-   */
-  
-  
-  
-  const blocktitle = (0,external_this_wp_i18n_.__)('Language switcher', 'linguator-multilingual-ai-translation');
-  const descriptionTitle = (0,external_this_wp_i18n_.__)('Add a language switcher to allow your visitors to select their preferred language.', 'linguator-multilingual-ai-translation');
-  const panelTitle = (0,external_this_wp_i18n_.__)('Language switcher settings', 'linguator-multilingual-ai-translation');
-  
-  // Register the Language Switcher block as first level block in Block Editor.
-  (0,external_this_wp_blocks_.registerBlockType)('linguator/language-switcher', {
-    title: blocktitle,
-    description: descriptionTitle,
-    icon: library_translation,
+
+  // ---------------------------------------------------------------------------
+  // Reusable inspector panel for both blocks
+  // ---------------------------------------------------------------------------
+  function SwitcherInspector(_ref2) {
+    var attributes = _ref2.attributes,
+      setAttributes = _ref2.setAttributes,
+      _ref2$showHideCurrent = _ref2.showHideCurrentEvenInDropdown,
+      showHideCurrentEvenInDropdown = _ref2$showHideCurrent === void 0 ? false : _ref2$showHideCurrent;
+    var dropdown = attributes.dropdown,
+      show_names = attributes.show_names,
+      show_flags = attributes.show_flags,
+      force_home = attributes.force_home,
+      hide_current = attributes.hide_current,
+      hide_if_no_translation = attributes.hide_if_no_translation;
+    var update = function update(patch) {
+      setAttributes(enforceNamesOrFlags(patch, attributes));
+    };
+    return wp.element.createElement(InspectorControls, {}, wp.element.createElement(PanelBody, {
+      title: __('Language switcher settings', 'linguator')
+    }, wp.element.createElement(ToggleControl, {
+      label: __('Display as dropdown', 'linguator'),
+      checked: !!dropdown,
+      onChange: function onChange(v) {
+        return update({
+          dropdown: !!v
+        });
+      }
+    }), (!dropdown || showHideCurrentEvenInDropdown) && wp.element.createElement(ToggleControl, {
+      label: __('Show language names', 'linguator'),
+      checked: !!show_names,
+      onChange: function onChange(v) {
+        return update({
+          show_names: !!v
+        });
+      }
+    }), (!dropdown || showHideCurrentEvenInDropdown) && wp.element.createElement(ToggleControl, {
+      label: __('Show flags', 'linguator'),
+      checked: !!show_flags,
+      onChange: function onChange(v) {
+        return update({
+          show_flags: !!v
+        });
+      }
+    }), wp.element.createElement(ToggleControl, {
+      label: __('Force switch to homepage', 'linguator'),
+      checked: !!force_home,
+      onChange: function onChange(v) {
+        return update({
+          force_home: !!v
+        });
+      }
+    }), !attributes.dropdown && wp.element.createElement(ToggleControl, {
+      label: __('Hide current language', 'linguator'),
+      checked: !!hide_current,
+      onChange: function onChange(v) {
+        return update({
+          hide_current: !!v
+        });
+      }
+    }), wp.element.createElement(ToggleControl, {
+      label: __('Hide languages without translation', 'linguator'),
+      checked: !!hide_if_no_translation,
+      onChange: function onChange(v) {
+        return update({
+          hide_if_no_translation: !!v
+        });
+      }
+    })));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Regular block: linguator/language-switcher
+  // ---------------------------------------------------------------------------
+  registerBlockType('linguator/language-switcher', {
+    title: __('Language switcher', 'linguator'),
+    description: __('Add a language switcher so visitors can select their preferred language.', 'linguator'),
+    icon: TranslationIcon,
     category: 'widgets',
-    example: {},
-    edit: props => {
-      const {
-        dropdown
-      } = props.attributes;
-      const {
-        ToggleControlDropdown,
-        ToggleControlShowNames,
-        ToggleControlShowFlags,
-        ToggleControlForceHome,
-        ToggleControlHideCurrent,
-        ToggleControlHideIfNoTranslations
-      } = createLanguageSwitcherEdit(props);
-      return /*#__PURE__*/(0,jsx_runtime.jsxs)(external_this_wp_element_.Fragment, {
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_blockEditor_.InspectorControls, {
-          children: /*#__PURE__*/(0,jsx_runtime.jsxs)(external_this_wp_components_.PanelBody, {
-            title: panelTitle,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlDropdown, {}), !dropdown && /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlShowNames, {}), !dropdown && /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlShowFlags, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlForceHome, {}), !dropdown && /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlHideCurrent, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlHideIfNoTranslations, {})]
-          })
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.Disabled, {
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)((external_this_wp_serverSideRender_default()), {
-            block: "linguator/language-switcher",
-            attributes: props.attributes
-          })
-        })]
-      });
-    }
+    attributes: _objectSpread({}, sharedAttributes),
+    supports: {
+      html: false
+    },
+    edit: function edit(props) {
+      var blockProps = useBlockProps ? useBlockProps() : {};
+      return wp.element.createElement(Fragment, {}, wp.element.createElement(SwitcherInspector, {
+        attributes: props.attributes,
+        setAttributes: props.setAttributes
+      }), wp.element.createElement(Disabled, {}, ServerSideRender ? wp.element.createElement(ServerSideRender, {
+        block: 'linguator/language-switcher',
+        attributes: props.attributes
+      }) : wp.element.createElement('div', blockProps, __('Language Switcher preview (SSR not available).', 'linguator'))));
+    },
+    save: function save() {
+      return null;
+    } // Rendered via PHP
   });
-  
-  // Register the Language Switcher block as child block of core/navigation block.
-  const navigationLanguageSwitcherName = 'linguator/navigation-language-switcher';
-  (0,external_this_wp_blocks_.registerBlockType)(navigationLanguageSwitcherName, {
-    title: blocktitle,
-    description: descriptionTitle,
-    icon: library_translation,
+
+  // ---------------------------------------------------------------------------
+  // Navigation child block: linguator/navigation-language-switcher
+  // ---------------------------------------------------------------------------
+  var NAV_BLOCK = 'linguator/navigation-language-switcher';
+  registerBlockType(NAV_BLOCK, {
+    title: __('Language switcher', 'linguator'),
+    description: __('Add a language switcher to the Navigation block.', 'linguator'),
+    icon: TranslationIcon,
     category: 'widgets',
     parent: ['core/navigation'],
-    attributes: {
-      dropdown: {
-        type: 'boolean',
-        default: false
-      },
-      show_names: {
-        type: 'boolean',
-        default: true
-      },
-      show_flags: {
-        type: 'boolean',
-        default: false
-      },
-      force_home: {
-        type: 'boolean',
-        default: false
-      },
-      hide_current: {
-        type: 'boolean',
-        default: false
-      },
-      hide_if_no_translation: {
-        type: 'boolean',
-        default: false
-      }
-    },
+    attributes: _objectSpread({}, sharedAttributes),
+    usesContext: ['textColor', 'customTextColor', 'backgroundColor', 'customBackgroundColor', 'overlayTextColor', 'customOverlayTextColor', 'overlayBackgroundColor', 'customOverlayBackgroundColor', 'fontSize', 'customFontSize', 'showSubmenuIcon', 'openSubmenusOnClick', 'style'],
     transforms: {
       from: [{
         type: 'block',
         blocks: ['core/navigation-link'],
-        transform: () => (0,external_this_wp_blocks_.createBlock)(navigationLanguageSwitcherName)
+        transform: function transform() {
+          return createBlock(NAV_BLOCK);
+        }
       }]
     },
-    usesContext: ['textColor', 'customTextColor', 'backgroundColor', 'customBackgroundColor', 'overlayTextColor', 'customOverlayTextColor', 'overlayBackgroundColor', 'customOverlayBackgroundColor', 'fontSize', 'customFontSize', 'showSubmenuIcon', 'openSubmenusOnClick', 'style'],
-    example: {},
-    edit: props => {
-      const {
-        dropdown
-      } = props.attributes;
-      const {
-        showSubmenuIcon,
-        openSubmenusOnClick
-      } = props.context;
-      const {
-        ToggleControlDropdown,
-        ToggleControlShowNames,
-        ToggleControlShowFlags,
-        ToggleControlForceHome,
-        ToggleControlHideCurrent,
-        ToggleControlHideIfNoTranslations
-      } = createLanguageSwitcherEdit(props);
-      return /*#__PURE__*/(0,jsx_runtime.jsxs)(external_this_wp_element_.Fragment, {
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_blockEditor_.InspectorControls, {
-          children: /*#__PURE__*/(0,jsx_runtime.jsxs)(external_this_wp_components_.PanelBody, {
-            title: panelTitle,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlDropdown, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlShowNames, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlShowFlags, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlForceHome, {}), !dropdown && /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlHideCurrent, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(ToggleControlHideIfNoTranslations, {})]
-          })
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(external_this_wp_components_.Disabled, {
-          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: "wp-block-navigation-item",
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)((external_this_wp_serverSideRender_default()), {
-              block: navigationLanguageSwitcherName,
-              attributes: props.attributes,
-              className: 'wp-block-navigation__container block-editor-block-list__layout'
-            }), submenuIcon(showSubmenuIcon, openSubmenusOnClick, dropdown)]
-          })
-        })]
-      });
-    }
+    edit: function edit(props) {
+      var attributes = props.attributes,
+        setAttributes = props.setAttributes,
+        context = props.context;
+      var _ref3 = context || {},
+        showSubmenuIcon = _ref3.showSubmenuIcon,
+        openSubmenusOnClick = _ref3.openSubmenusOnClick;
+      var dropdown = attributes.dropdown;
+      var maybeSubmenuIcon = dropdown && (showSubmenuIcon || openSubmenusOnClick) ? wp.element.createElement('span', {
+        className: 'wp-block-navigation__submenu-icon'
+      }, wp.element.createElement(SubmenuChevron)) : null;
+      return wp.element.createElement(Fragment, {}, wp.element.createElement(SwitcherInspector, {
+        attributes: attributes,
+        setAttributes: setAttributes,
+        // In the nav block we allow toggling names/flags even in dropdown for clarity
+        showHideCurrentEvenInDropdown: true
+      }), wp.element.createElement(Disabled, {}, wp.element.createElement('div', {
+        className: 'wp-block-navigation-item'
+      }, ServerSideRender ? wp.element.createElement(ServerSideRender, {
+        block: NAV_BLOCK,
+        attributes: attributes,
+        className: 'wp-block-navigation__container block-editor-block-list__layout'
+      }) : wp.element.createElement('div', {}, __('Language Switcher (Navigation) preview (SSR not available).', 'linguator')), maybeSubmenuIcon)));
+    },
+    save: function save() {
+      return null;
+    } // Rendered via PHP
   });
-  
-  /**
-   * Apply a callback function on each block of the blocks list.
-   *
-   * @param {Array}  blocks        The list of blocks to process.
-   * @param {Array}  menuItems     The initial menu items from where the blocks are converted to.
-   * @param {Object} blocksMapping The mapping between the menu items and their corresponding blocks.
-   * @param {mapper} mapper        A callback to change the converted block by another one if necessary
-   * @return {Array} Array of blocks updated.
-   */
+
+  // ---------------------------------------------------------------------------
+  // Classic Menu → Navigation conversion hook
+  // Replaces a menu item with URL "#lmat_switcher" by our NAV_BLOCK with options from meta._lmat_menu_item
+  // WARNING: relies on an unstable filter that may change across WP versions.
+  // ---------------------------------------------------------------------------
   function mapBlockTree(blocks, menuItems, blocksMapping, mapper) {
-    /**
-     * A function to apply to each block to convert it if necessary by applying the `mapper` filter.
-     *
-     * @param {Object} block The block to replace or not.
-     * @return {Object} The new block potentially replaced by the `mapper`.
-     */
-    const convertBlock = block => ({
-      ...mapper(block, menuItems, blocksMapping),
-      innerBlocks: mapBlockTree(block.innerBlocks, menuItems, blocksMapping, mapper)
-    });
-    return blocks.map(convertBlock);
+    var _convert = function convert(block) {
+      var replaced = mapper(block, menuItems, blocksMapping);
+      var innerBlocks = (replaced.innerBlocks || []).map(function (b) {
+        return _convert(b);
+      });
+      return _objectSpread(_objectSpread({}, replaced), {}, {
+        innerBlocks: innerBlocks
+      });
+    };
+    return blocks.map(_convert);
   }
-  
-  /**
-   * A filter to detect the `core/navigation-link` block not correctly converted from the language switcher menu item
-   * and convert it to its corresponding `linguator/navigation-language-switcher` block.
-   *
-   * @callback mapper
-   * @param {Object} block         The block converted from the menu item.
-   * @param {Array}  menuItems     The initial menu items from where the blocks are converted to.
-   * @param {Object} blocksMapping The mapping between the menu items and their corresponding blocks.
-   * @return {Object} The block correctly converted.
-   */
-  const blocksFilter = (block, menuItems, blocksMapping) => {
-    if (block.name === 'core/navigation-link' && block.attributes?.url === '#lmat_switcher') {
-      const menuItem = (0,external_lodash_.find)(menuItems, {
-        url: '#lmat_switcher'
-      }); // Get the corresponding menu item.
-      const attributes = menuItem.meta._lmat_menu_item; // Get its options.
-      const newBlock = (0,external_this_wp_blocks_.createBlock)(navigationLanguageSwitcherName, attributes);
-      blocksMapping[menuItem.id] = newBlock.clientId; // Update the blocks mapping.
+  function blocksFilter(block, menuItems, blocksMapping) {
+    if (block.name === 'core/navigation-link' && block.attributes && block.attributes.url === '#lmat_switcher') {
+      var menuItem = (menuItems || []).find(function (m) {
+        return m && m.url === '#lmat_switcher';
+      });
+      var attrs = menuItem && menuItem.meta && menuItem.meta._lmat_menu_item || {};
+      var newBlock = createBlock(NAV_BLOCK, attrs);
+      if (menuItem && typeof menuItem.id !== 'undefined') {
+        blocksMapping[menuItem.id] = newBlock.clientId;
+      }
       return newBlock;
     }
     return block;
-  };
-  
-  /**
-   * A filter callback hooked to `blocks.navigation.__unstableMenuItemsToBlocks`.
-   *
-   * @param {Array} blocks    The list of blocks to process.
-   * @param {Array} menuItems The initial menu items from where the blocks are converted to.
-   * @return {Array} Array of blocks updated.
-   */
-  const menuItemsToBlocksFilter = (blocks, menuItems) => ({
-    ...blocks,
-    innerBlocks: mapBlockTree(blocks.innerBlocks, menuItems, blocks.mapping, blocksFilter)
-  });
-  
-  /**
-   * Returns the submenu icon if block parameters allow it.
-   *
-   * @param {boolean} showSubmenuIcon     Whether to show submenu icon or not.
-   * @param {boolean} openSubmenusOnClick Whether the submenu can be open on click or not.
-   * @param {boolean} dropdown            Whether the language switcher is in dropdown mode or not.
-   * @return {HTMLSpanElement|null} The submenu icon or null.
-   */
-  const submenuIcon = (showSubmenuIcon, openSubmenusOnClick, dropdown) => {
-    if ((showSubmenuIcon || openSubmenusOnClick) && dropdown) {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
-        className: "wp-block-navigation__submenu-icon",
-        children: /*#__PURE__*/(0,jsx_runtime.jsx)(submenu, {})
-      });
-    }
-    return null;
-  };
-  
-  /**
-   * Hooks to the classic menu conversion to core/navigation block to be able to convert
-   * the language switcher menu item to its corresponding block.
-   */
-  (0,external_this_wp_hooks_.addFilter)('blocks.navigation.__unstableMenuItemsToBlocks', 'linguator/include-language-switcher', menuItemsToBlocksFilter);
-  ;// ./js/src/blocks/index.js
-  /**
-   * Registers Linguator block in the editors and enables attributes controls.
-   */
-  
-  })();
-  
-  this["linguator"] = __webpack_exports__;
-  /******/ })()
-  ;
+  }
+  function menuItemsToBlocksFilter(blocks, menuItems) {
+    return _objectSpread(_objectSpread({}, blocks), {}, {
+      innerBlocks: mapBlockTree(blocks.innerBlocks || [], menuItems || [], blocks.mapping || {}, blocksFilter)
+    });
+  }
+  addFilter('blocks.navigation.__unstableMenuItemsToBlocks', 'linguator/include-language-switcher', menuItemsToBlocksFilter);
+})();
+/******/ })()
+;
