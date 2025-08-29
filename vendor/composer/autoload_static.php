@@ -139,6 +139,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Models\\Translated\\LMAT_Translated_Term' => __DIR__ . '/../..' . '/Includes/Models/Translated/translated-term.php',
         'Linguator\\Includes\\Options\\Abstract_Option' => __DIR__ . '/../..' . '/Includes/Options/Abstract_Option.php',
         'Linguator\\Includes\\Options\\Business\\Abstract_Object_Types' => __DIR__ . '/../..' . '/Includes/Options/Business/Abstract_Object_Types.php',
+        'Linguator\\Includes\\Options\\Business\\Ai_Translation_Configuration' => __DIR__ . '/../..' . '/Includes/Options/Business/Ai_Translation_Configuration.php',
         'Linguator\\Includes\\Options\\Business\\Browser' => __DIR__ . '/../..' . '/Includes/Options/Business/Browser.php',
         'Linguator\\Includes\\Options\\Business\\Default_Lang' => __DIR__ . '/../..' . '/Includes/Options/Business/Default_Lang.php',
         'Linguator\\Includes\\Options\\Business\\Domains' => __DIR__ . '/../..' . '/Includes/Options/Business/Domains.php',

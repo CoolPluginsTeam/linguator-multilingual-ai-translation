@@ -45,7 +45,7 @@ const SetupPage = () => {
       let setup = localStorage.getItem("setupProgress")
       if (lmat_setup_data[setup] === "1") {
         setSetupProgress((localStorage.getItem("setupProgress")))
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url") {
+      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "ai_translation") {
         setSetupProgress(localStorage.getItem("setupProgress"))
       }
       else {

@@ -10,6 +10,7 @@ import Media from './Media'
 import HomePage from "./HomePage"
 import Default from "./Default"
 import URLModifications from "./URLModifications"
+import AiTranslation from "./AiTranslation"
 
 //Component router for setup 
 const SetupFileRouting = () => {
@@ -22,10 +23,10 @@ const SetupFileRouting = () => {
     else if (setupProgress === "media") return <Media  />
     else if (setupProgress === "home_page") return <HomePage/>
     else if (setupProgress === "ready") return <Ready />
+    else if (setupProgress === "ai_translation") return <AiTranslation />
 }
 const SetupProgress = ({lmat_setup_data}) => {
     const {setupProgress,setSetupProgress,showHomePage,setupSteps, setSetupSteps} = React.useContext(setupContext) //get the context
-    
 
     //creating steps according to scenerios to show and hide which tabs of setup
     React.useEffect(()=>{
@@ -75,6 +76,12 @@ const SetupProgress = ({lmat_setup_data}) => {
                 step: step++
             })
         }
+        temp_setupSetups.push({
+            label: __("AI Translation","linguator-multilingual-ai-translation"),
+            value: "ai_translation",
+            visible: true,
+            step: step++
+        })
         temp_setupSetups.push({
             label: __("Ready","linguator-multilingual-ai-translation"),
             value: "ready",

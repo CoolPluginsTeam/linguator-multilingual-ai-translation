@@ -89,6 +89,7 @@ return array(
     'Linguator\\Includes\\Models\\Translated\\LMAT_Translated_Term' => $baseDir . '/Includes/Models/Translated/translated-term.php',
     'Linguator\\Includes\\Options\\Abstract_Option' => $baseDir . '/Includes/Options/Abstract_Option.php',
     'Linguator\\Includes\\Options\\Business\\Abstract_Object_Types' => $baseDir . '/Includes/Options/Business/Abstract_Object_Types.php',
+    'Linguator\\Includes\\Options\\Business\\Ai_Translation_Configuration' => $baseDir . '/Includes/Options/Business/Ai_Translation_Configuration.php',
     'Linguator\\Includes\\Options\\Business\\Browser' => $baseDir . '/Includes/Options/Business/Browser.php',
     'Linguator\\Includes\\Options\\Business\\Default_Lang' => $baseDir . '/Includes/Options/Business/Default_Lang.php',
     'Linguator\\Includes\\Options\\Business\\Domains' => $baseDir . '/Includes/Options/Business/Domains.php',
