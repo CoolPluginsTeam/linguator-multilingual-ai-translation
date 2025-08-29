@@ -69,11 +69,6 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		 * Handles the block parsing rules AJAX request.
 		 */
 		public function block_parsing_rules() {
-			if ( ! check_ajax_referer( 'lmat_fetch_block_rules_nonce', 'lmat_fetch_block_rules_key', false ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid security token sent for block parsing rules.', 'linguator-multilingual-ai-translation' ) ) );
-				exit;
-			}
-
 			$block_parse_rules = $this->get_block_parse_rules();
 
 			return $block_parse_rules;

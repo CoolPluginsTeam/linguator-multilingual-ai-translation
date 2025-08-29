@@ -359,6 +359,11 @@ class LMAT_Page_Translation {
 			exit;
 		}
 
+		if ( ! check_ajax_referer( 'lmat_fetch_block_rules_nonce', 'lmat_fetch_block_rules_key', false ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid security token sent for block parsing rules.', 'linguator-multilingual-ai-translation' ) ) );
+			exit;
+		}
+
 		$data = $this->page_translate_helper->block_parsing_rules();
 		wp_send_json_success( array( 'blockRules' => json_encode( $data ) ) );
 		exit;
