@@ -147,7 +147,7 @@ const AiTranslation = () => {
                 <p className='text-justify text-sm/6'>{__('Turn on AI translation if you need to translate the content of your website using AI. If not, you can leave it off.', 'linguator-multilingual-ai-translation')}</p>
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
-                    <p className="text-sm/6">{__('Enable Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
+                    <p className="text-sm/6">{__('Enable Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
                     <Switch
                         aria-label="AI Translation"
                         id="google-machine-translation"
@@ -157,7 +157,7 @@ const AiTranslation = () => {
                     />
                 </div>
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb" }}>
-                    <p className="text-sm/6">{__('Enable Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
+                    <p className="text-sm/6">{__('Enable Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
                     <Switch
                         aria-label="AI Translation"
                         id="chrome-local-ai-translation"
