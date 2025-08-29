@@ -129,6 +129,12 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				);
 			}
 
+			$providers=array('google'=>true);
+
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
+				$providers = LMAT()->options['ai_translation_configuration']['provider'];
+			}
+
 			wp_localize_script(
 				'lmat-bulk-translate',
 				'lmatBulkTranslationGlobal',
@@ -143,6 +149,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 					'admin_url'               => admin_url(),
 					'post_label'              => $post_label,
 					'update_translate_data'   => 'lmat_update_translate_data',
+					'providers'                => $providers,
 				)
 			);
 		}

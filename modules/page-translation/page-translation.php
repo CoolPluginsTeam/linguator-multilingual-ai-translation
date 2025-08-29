@@ -236,12 +236,19 @@ class LMAT_Page_Translation {
 			);
 		}
 
-		wp_register_script( 'lmat-page-machine-translate', plugins_url( 'Admin/Assets/page-translation/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
-		wp_register_style( 'lmat-page-machine-translate', plugins_url( 'Admin/Assets/page-translation/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
+		wp_register_script( 'lmat-page-translate', plugins_url( 'Admin/Assets/page-translation/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
+		wp_register_style( 'lmat-page-translate', plugins_url( 'Admin/Assets/page-translation/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
 
 		$post_type = get_post_type();
 
 		$languages   = LMAT()->model->get_languages_list();
+		
+		$providers=array('google'=>true);
+
+		if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
+			$providers = LMAT()->options['ai_translation_configuration']['provider'];
+		}
+
 		$lang_object = array();
 		foreach ( $languages as $lang ) {
 			$lang_object[ $lang->slug ] = array(
@@ -252,8 +259,8 @@ class LMAT_Page_Translation {
 		}
 
 		// wp_enqueue_style('lmat-automatic-translate-custom');
-		wp_enqueue_style( 'lmat-page-machine-translate' );
-		wp_enqueue_script( 'lmat-page-machine-translate' );
+		wp_enqueue_style( 'lmat-page-translate' );
+		wp_enqueue_script( 'lmat-page-translate' );
 
 		$post_id = get_the_ID();
 
@@ -272,6 +279,7 @@ class LMAT_Page_Translation {
 				'post_type'                => $post_type,
 				'editor_type'              => $editor_type,
 				'current_post_id'          => $post_id,
+				'providers'                => $providers,
 			),
 			$extra_data
 		);
@@ -283,7 +291,7 @@ class LMAT_Page_Translation {
 		}
 
 		wp_localize_script(
-			'lmat-page-machine-translate',
+			'lmat-page-translate',
 			'lmatPageTranslationGlobal',
 			$data
 		);
