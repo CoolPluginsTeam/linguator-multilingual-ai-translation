@@ -52,16 +52,15 @@ const SettingModal = (props) => {
         props.updateProviderHandler(dataService);
     };
 
-    const handleSettingVisibility = (visibility) => {
-        // setSettingVisibility(visibility);
-    }
-
     const errorModalHandler = (msg) => {
         setErrorModal(msg);
     }
 
-    const closeErrorModal = () => {
+    const closeErrorModal = (e) => {
         setErrorModal(false);
+        if(providers.length < 2 && providers[0]){
+            props.onDestory(e);
+        }
     }
 
     return (

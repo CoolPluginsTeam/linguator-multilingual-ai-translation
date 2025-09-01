@@ -47,8 +47,22 @@ const SettingModal = (props) => {
     }
 
     const openModelHandler=(activeService)=>{
-        setActiveService(activeService);
-        setModalRender(prev => prev + 1);
+        if(serviceModalErrors && serviceModalErrors[activeService]){
+            openErrorModalHandler(activeService);
+        }else{
+            setActiveService(activeService);
+            setModalRender(prev => prev + 1);
+        }
+    }
+
+    const handleMetaFieldBtnClick = (e) => {
+        e.preventDefault();
+        
+        if(providers.length > 1){
+            setSettingVisibility(prev => !prev);
+        }else{
+            openModelHandler(providers[0]);
+        }
     }
 
     /**
@@ -58,61 +72,66 @@ const SettingModal = (props) => {
     useEffect(() => {
         const firstRenderBtns = document.querySelectorAll('#lmat-page-translation-modal-open-warning-wrapper .modal-content div[data-value]');
         const metaFieldBtn = document.querySelector(props.translateWrpSelector);
-
         if (metaFieldBtn) {
-            metaFieldBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                if(providers.length > 1){
-                    setSettingVisibility(prev => !prev);
-                }else{
-                    openModelHandler(providers[0]);
-                }
-            });
+            metaFieldBtn.removeEventListener('click', handleMetaFieldBtnClick);
+            metaFieldBtn.addEventListener('click', handleMetaFieldBtnClick);
         }
-
+        
         firstRenderBtns.forEach(ele => {
             if (ele) {
                 ele.addEventListener('click', openModalOnLoadHandler);
             }
         })
-    }, [])
+
+        return () => {
+            metaFieldBtn.removeEventListener('click', handleMetaFieldBtnClick);
+        }
+    }, [serviceModalErrors])
 
     /**
      * useEffect hook to check if the local AI translator is supported.
      */
     useEffect(() => {
         const providerErrors=async()=>{
-            const languageSupportedStatus = async () => {
+            let errors={};
+            const localAiSupportStatus = async () => {
                 const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
-                const translateBtn = document.querySelector('.lmat-page-translation-service-btn#lmat-page-translation-local-ai-translator-btn');
     
-                if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object' && translateBtn) {
+                if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object') {
                     setChromeAiBtnDisabled(true);
     
-                    setServiceModalErrors(prev => ({ ...prev, localAiTranslator: {message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation')} }));
+                    errors.localAiTranslator={message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation')};
+
+                    setServiceModalErrors(prev => ({ ...prev,localAiTranslator: errors.localAiTranslator  }));
                 }
             };
 
-            if(!googleSupport){
-                setServiceModalErrors(prev => ({
-                    ...prev,
-                    google: {
-                        message: "<p style={{ fontSize: '1rem', color: '#ff4646' }}>"+sprintf(
-                            __("Google Translate does not support the target language: %s.", 'linguator-multilingual-ai-translation'),
-                            "<strong>"+targetLangName+"</strong>"
-                        )+"</p>",
-                        Title: __("Google Translate", 'linguator-multilingual-ai-translation')
-                    }
-                }));
+            const googleSupportStatus = async () => {
+                if(!googleSupport){
+                    errors.google={message: "<p style={{ fontSize: '1rem', color: '#ff4646' }}>"+sprintf(
+                        __("Google Translate does not support the target language: %s.", 'linguator-multilingual-ai-translation'),
+                        "<strong>"+targetLangName+"</strong>"
+                    )+"</p>",
+                    Title: __("Google Translate", 'linguator-multilingual-ai-translation')};
+    
+                    setServiceModalErrors(prev => ({
+                        ...prev,
+                        google: errors.google
+                    }));
+                }
             }
                 
-            await languageSupportedStatus();
+            if(providers.includes('localAiTranslator')){
+                await localAiSupportStatus();
+            }
+            if(providers.includes('google')){
+                await googleSupportStatus();
+            }
 
             if(providers.length < 2 && providers[0]){
                 const providerId=providers[0];
                 
-                if(serviceModalErrors && serviceModalErrors[providerId]){
+                if(serviceModalErrors && (serviceModalErrors[providerId] || errors[providerId])){
                     openErrorModalHandler(providerId);
                 }else{
                     openModelHandler(providerId);
