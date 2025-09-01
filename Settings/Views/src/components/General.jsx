@@ -23,6 +23,7 @@ const General = ({ data, setData }) => {
     const [selectedSynchronization, setSelectedSyncronization] = useState(data.sync); // Selected Synchronization options
     const [selectedPostTypes, setSelectedPostTypes] = useState(data.post_types); // Selected Custom Post Types
     const [selectedTaxonomies, setSelectedTaxonomies] = useState(data.taxonomies); //Selected Custom Taxonomies
+    const disabledPostTypes= data.disabled_post_types || []; //Disabled Post Types (programmatically active)
     const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
     const [selectAllSync,setSelectAllSync] = useState(false);
     const previousDomains = React.useRef([])
@@ -588,20 +589,28 @@ const General = ({ data, setData }) => {
                                             <h5>{__('Custom Post Types', 'linguator-multilingual-ai-translation')}</h5>
                                             <div className='flex gap-4 flex-wrap'>
                                                 {
-                                                    AvailablePostTypes.map((postType, index) => (
-                                                        <Checkbox
-                                                            label={{
-                                                                description: '',
-                                                                heading: postType.label
-                                                            }}
-                                                            className='cursor-pointer'
-                                                            value={postType.value}
-                                                            checked={selectedPostTypes.includes(postType.value)}
-                                                            key={index}
-                                                            size="sm"
-                                                            onChange={() => handlePostTypeChange(postType.value)}
-                                                        />
-                                                    ))
+                                                    AvailablePostTypes.map((postType, index) => {
+                                                        const isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(disabledType => {
+                                                            // Handle both string and object formats
+                                                            const postTypeKey = typeof disabledType === 'object' ? disabledType.post_type_key : disabledType;
+                                                            return postTypeKey === postType.value;
+                                                        });
+                                                        return (
+                                                            <Checkbox
+                                                                label={{
+                                                                    description: '',
+                                                                    heading: postType.label + (isDisabled ? ' (Programmatically Active)' : '')
+                                                                }}
+                                                                className={isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}
+                                                                value={postType.value}
+                                                                checked={isDisabled ? true : selectedPostTypes.includes(postType.value)}
+                                                                disabled={isDisabled}
+                                                                key={index}
+                                                                size="sm"
+                                                                onChange={() => handlePostTypeChange(postType.value)}
+                                                            />
+                                                        );
+                                                    })
                                                 }
                                             </div>
 

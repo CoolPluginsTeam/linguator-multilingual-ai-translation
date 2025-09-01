@@ -1,8 +1,8 @@
 <?php
 /**
- * Language Switcher Polylang Elementor Widget
+ * Language Switcher Linguator Elementor Widget
  *
- * @package LanguageSwitcherPolylangElementorWidget
+ * @package LanguageSwitcherLinguatorElementorWidget
  * @since 1.0.0
  */
 
@@ -18,7 +18,7 @@ if (! defined('ABSPATH')) {
 /**
  * Class LMAT_Widget
  *
- * Main widget class for the Language Switcher Polylang Elementor widget.
+ * Main widget class for the Language Switcher Linguator Elementor widget.
  *
  * @since 1.0.0
  */
@@ -53,7 +53,7 @@ class LMAT_Widget extends Widget_Base
             display: inline-block;
             width: 25px;
             height: 25px;
-            background-image: url('" . esc_url(LINGUATOR_URL . '/assets/images/lang_switcher.svg') . "');
+            background-image: url('" . esc_url(LINGUATOR_URL . '/logo/lang_switcher.svg') . "');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -90,7 +90,7 @@ class LMAT_Widget extends Widget_Base
      */
     public function get_icon()
     {
-        return '';
+        return 'lmat-widget-icon';
     }
 
     /**
@@ -225,7 +225,7 @@ class LMAT_Widget extends Widget_Base
         );
 
         $this->add_control(
-            'lmat_language_swtcher_flag_ratio',
+            'lmat_language_switcher_flag_ratio',
             [
                 'label'        => __('Flag Ratio', 'linguator-multilingual-ai-translation'),
                 'type'         => Controls_Manager::SELECT,
@@ -255,8 +255,8 @@ class LMAT_Widget extends Widget_Base
                     'size' => 20,
                 ],
                 'selectors'  => [
-                    '{{WRAPPER}}.lmat-switcher--aspect-ratio-11 .lmat-lang-image img' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}}.lmat-switcher--aspect-ratio-43 .lmat-lang-image img' => 'width: {{SIZE}}{{UNIT}}; height: calc({{SIZE}}{{UNIT}} * 0.75);',
+                    '{{WRAPPER}}.lmat-switcher--aspect-ratio-11 .lmat-lang-image img' => 'height: {{SIZE}}{{UNIT}} !important; width: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}}.lmat-switcher--aspect-ratio-43 .lmat-lang-image img' => 'width: {{SIZE}}{{UNIT}}!important; height: calc({{SIZE}}{{UNIT}} * 0.75) !important;',
                 ],
                 'condition'  => [
                     'lmat_language_switcher_show_flags' => 'yes',
@@ -639,12 +639,12 @@ class LMAT_Widget extends Widget_Base
     }
 
     /**
-     * Localize Polylang data for the widget.
+     * Localize Linguator data for the widget.
      *
      * @param array $data Data to be localized.
      * @return array Localized data.
      */
-    public function lmat_localize_polyglang_data($data)
+    public function lmat_localize_lmat_data($data)
     {
         try {
                 // Try different approach - get languages without show_flags first
@@ -653,7 +653,9 @@ class LMAT_Widget extends Widget_Base
                     return $data; // If no languages, exit early
                 }
                 $lang_curr = strtolower(lmat_current_language());
-                
+                if (empty($lang_curr)) {
+                    $lang_curr = strtolower(lmat_default_language());
+                }
 
                 
                 $languages = array_map(
@@ -707,7 +709,7 @@ class LMAT_Widget extends Widget_Base
         $settings = $this->get_active_settings();
 
         // Get the localized data
-        $data      = $this->lmat_localize_polyglang_data([]);
+        $data      = $this->lmat_localize_lmat_data([]);
         $lmat_data = isset($data['lmatGlobalObj']) ? $data['lmatGlobalObj'] : [];
         if (empty($lmat_data)) {
             return;
