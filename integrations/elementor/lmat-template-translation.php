@@ -20,6 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class LMAT_Template_Translation {
 	/**
+	 * Template ID for current template
+	 *
+	 * @var int
+	 */
+	private $template_id;
+
+
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -137,9 +146,11 @@ class LMAT_Template_Translation {
         }
 
         $default_lang = lmat_default_language();
-        $current_lang = lmat_get_post_language($this->current_template_id);
+        // Get current page/template ID from context
+        $current_template_id = get_the_ID() ?: (is_singular() ? get_queried_object_id() : 0);
+        $current_lang = $current_template_id ? lmat_get_post_language($current_template_id) : null;
 
-        if ($current_lang && $current_lang !== $default_lang && lmat_get_post($this->current_template_id, $default_lang)) {
+        if ($current_lang && $current_lang !== $default_lang && $current_template_id && lmat_get_post($current_template_id, $default_lang)) {
             if (in_array($condition['sub_name'], get_post_types(), true)) {
                 $sub_id = lmat_get_post($sub_id) ?: $sub_id;
             } else {
