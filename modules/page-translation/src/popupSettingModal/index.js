@@ -6,7 +6,7 @@ import ChromeLocalAiTranslator from "../component/TranslateProvider/local-ai-tra
 import SettingModalHeader from "./header.js";
 import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
-import { __ , sprintf } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import ErrorModalBox from "../component/ErrorModalBox/index.js";
 import TranslateService from "../component/TranslateProvider/index.js";
 
@@ -23,7 +23,7 @@ const SettingModal = (props) => {
     const [serviceModalErrors, setServiceModalErrors] = useState({});
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);
     const [chromeAiBtnDisabled, setChromeAiBtnDisabled] = useState(false);
-    const providers=lmatPageTranslationGlobal.providers;
+    const providers = lmatPageTranslationGlobal.providers;
 
     const openModalOnLoadHandler = (e) => {
         e.preventDefault();
@@ -46,10 +46,10 @@ const SettingModal = (props) => {
         setErrorModalVisibility(service);
     }
 
-    const openModelHandler=(activeService)=>{
-        if(serviceModalErrors && serviceModalErrors[activeService]){
+    const openModelHandler = (activeService) => {
+        if (serviceModalErrors && serviceModalErrors[activeService]) {
             openErrorModalHandler(activeService);
-        }else{
+        } else {
             setActiveService(activeService);
             setModalRender(prev => prev + 1);
         }
@@ -57,10 +57,12 @@ const SettingModal = (props) => {
 
     const handleMetaFieldBtnClick = (e) => {
         e.preventDefault();
-        
-        if(providers.length > 1){
+
+        if (providers.length > 1) {
             setSettingVisibility(prev => !prev);
-        }else{
+        } else if (providers.length < 1) {
+            openErrorModalHandler('providerNotConfigured');
+        } else {
             openModelHandler(providers[0]);
         }
     }
@@ -76,7 +78,7 @@ const SettingModal = (props) => {
             metaFieldBtn.removeEventListener('click', handleMetaFieldBtnClick);
             metaFieldBtn.addEventListener('click', handleMetaFieldBtnClick);
         }
-        
+
         firstRenderBtns.forEach(ele => {
             if (ele) {
                 ele.addEventListener('click', openModalOnLoadHandler);
@@ -92,54 +94,68 @@ const SettingModal = (props) => {
      * useEffect hook to check if the local AI translator is supported.
      */
     useEffect(() => {
-        const providerErrors=async()=>{
-            let errors={};
+        const providerErrors = async () => {
+            let errors = {};
             const localAiSupportStatus = async () => {
                 const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
-    
+
                 if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object') {
                     setChromeAiBtnDisabled(true);
-    
-                    errors.localAiTranslator={message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation')};
 
-                    setServiceModalErrors(prev => ({ ...prev,localAiTranslator: errors.localAiTranslator  }));
+                    errors.localAiTranslator = { message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation') };
+
+                    setServiceModalErrors(prev => ({ ...prev, localAiTranslator: errors.localAiTranslator }));
                 }
             };
 
             const googleSupportStatus = async () => {
-                if(!googleSupport){
-                    errors.google={message: "<p style={{ fontSize: '1rem', color: '#ff4646' }}>"+sprintf(
-                        __("Google Translate does not support the target language: %s.", 'linguator-multilingual-ai-translation'),
-                        "<strong>"+targetLangName+"</strong>"
-                    )+"</p>",
-                    Title: __("Google Translate", 'linguator-multilingual-ai-translation')};
-    
+                if (!googleSupport) {
+                    errors.google = {
+                        message: "<p style={{ fontSize: '1rem', color: '#ff4646' }}>" + sprintf(
+                            __("Google Translate does not support the target language: %s.", 'linguator-multilingual-ai-translation'),
+                            "<strong>" + targetLangName + "</strong>"
+                        ) + "</p>",
+                        Title: __("Google Translate", 'linguator-multilingual-ai-translation')
+                    };
+
                     setServiceModalErrors(prev => ({
                         ...prev,
                         google: errors.google
                     }));
                 }
             }
-                
-            if(providers.includes('localAiTranslator')){
+
+            if (providers.includes('localAiTranslator')) {
                 await localAiSupportStatus();
             }
-            if(providers.includes('google')){
+            if (providers.includes('google')) {
                 await googleSupportStatus();
             }
 
-            if(providers.length < 2 && providers[0]){
-                const providerId=providers[0];
-                
-                if(serviceModalErrors && (serviceModalErrors[providerId] || errors[providerId])){
+            if (providers.length < 2 && providers[0]) {
+                const providerId = providers[0];
+
+                if (serviceModalErrors && (serviceModalErrors[providerId] || errors[providerId])) {
                     openErrorModalHandler(providerId);
-                }else{
+                } else {
                     openModelHandler(providerId);
                 }
             }
         }
 
-        if(settingVisibility){
+        if (providers.length < 1) {
+            let providerConfigMsg = sprintf(__(
+                '%sYou have not enabled any translation provider. Please enable at least one service provider to use automatic translation. Go to the %sLinguator settings page%s to configure a translation provider.%s',
+                'linguator-multilingual-ai-translation'
+            ),
+                '<p>',
+                `<strong><a href='${lmatPageTranslationGlobal.admin_url}admin.php?page=lmat_settings' target='_blank' rel='noopener noreferrer'>`,
+                '</a></strong>',
+                '</p>');
+            setServiceModalErrors((prev) => ({ ...prev, providerNotConfigured: { message: providerConfigMsg, Title: __("Translation Provider Not Configured", 'linguator-multilingual-ai-translation') } }));
+            return;
+        }
+        if (settingVisibility) {
             providerErrors();
         }
     }, [settingVisibility]);
@@ -148,7 +164,7 @@ const SettingModal = (props) => {
      * useEffect hook to handle displaying the modal and rendering the PopStringModal component.
      */
     useEffect(() => {
-        const activeServiceObject=TranslateService({ Service: activeService, [activeService + "ButtonDisabled"]: false });
+        const activeServiceObject = TranslateService({ Service: activeService, [activeService + "ButtonDisabled"]: false });
 
         const service = activeService;
         const serviceLabel = activeServiceObject && activeServiceObject.ServiceLabel;
@@ -204,7 +220,7 @@ const SettingModal = (props) => {
                 return;
             }
         }
-        
+
         setModalRender(prev => prev + 1);
         setActiveService(dataService);
     };
@@ -216,7 +232,7 @@ const SettingModal = (props) => {
     return (
         <>
             {errorModalVisibility && serviceModalErrors[errorModalVisibility] &&
-                <ErrorModalBox onClose={closeErrorModal} {...serviceModalErrors[errorModalVisibility]}/>
+                <ErrorModalBox onClose={closeErrorModal} {...serviceModalErrors[errorModalVisibility]} />
             }
             {settingVisibility && providers.length > 1 &&
                 <div className="modal-container" style={{ display: settingVisibility ? 'flex' : 'none' }}>

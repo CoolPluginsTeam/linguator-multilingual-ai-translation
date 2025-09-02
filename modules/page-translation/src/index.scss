@@ -31,6 +31,21 @@
     border-radius: 8px;
 }
 
+#lmat-page-translation-button{
+    &.providers-config-no-active {
+        background: #f6f7f7 !important;
+        border-color: #c3c4c7 !important;
+        color: #50575e !important;
+        transition: all .3s ease-in-out;
+
+        :hover {
+            background: #e1e1e1 !important;
+            border-color: #c9c9c9 !important;
+            color: #50575e !important;
+        }
+    }
+}
+    
 #lmat-page-translation-modal-open-warning-wrapper {
     .modal-content {
         padding: 16px;

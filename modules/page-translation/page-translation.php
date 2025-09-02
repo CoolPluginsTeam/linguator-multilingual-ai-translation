@@ -110,8 +110,22 @@ class LMAT_Page_Translation {
 					}
 				}
 			}
+
+			$providers_config_class=' providers-config-no-active';
+
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
+				$providers = LMAT()->options['ai_translation_configuration']['provider'];
+
+				foreach($providers as $provider => $value){
+					if($value){
+						$providers_config_class = '';
+						break;
+					}
+				}
+			}
+
 			?>
-			<input type="button" class="button button-primary" name="lmat_page_translation_meta_box_translate" id="lmat-page-translation-button" value="<?php echo esc_attr__( 'Translate Page', 'linguator-multilingual-ai-translation' ); ?>" readonly/><br><br>
+			<input type="button" class="button button-primary<?php echo esc_attr($providers_config_class); ?>" name="lmat_page_translation_meta_box_translate" id="lmat-page-translation-button" value="<?php echo esc_attr__( 'Translate Page', 'linguator-multilingual-ai-translation' ); ?>" readonly/><br><br>
 			<p style="margin-bottom: .5rem;"><?php echo esc_html( sprintf( __( 'Translate or duplicate content from %1$s to %2$s', 'linguator-multilingual-ai-translation' ), $parent_post_language, $target_language ) ); ?></p>
 			<?php
 		}
@@ -243,7 +257,7 @@ class LMAT_Page_Translation {
 
 		$languages   = LMAT()->model->get_languages_list();
 
-		$providers=array('google'=>true);
+		$providers=array();
 
 		if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
 			$providers = LMAT()->options['ai_translation_configuration']['provider'];

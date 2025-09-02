@@ -198,7 +198,7 @@ const appendElementorTranslateBtn = () => {
     translateButtonGroup.prepend(buttonElement);
     $e.internal('document/save/set-is-modified', { status: true });
 
-    if ('' === window.lmatPageTranslationGlobal.elementorData || window.lmatPageTranslationGlobal.elementorData.length < 1 || elementor.elements.length < 1) {
+    if (!window.lmatPageTranslationGlobal.elementorData || '' === window.lmatPageTranslationGlobal.elementorData || window.lmatPageTranslationGlobal.elementorData.length < 1 || elementor.elements.length < 1) {
       buttonElement.attr('disabled', 'disabled');
       buttonElement.attr('title', 'Translation is not available because there is no Elementor data.');
       return;
@@ -221,8 +221,9 @@ if (editorType === 'gutenberg') {
     init();
 
     const sourceLang = window.lmatPageTranslationGlobal.source_lang
+    const providers = window.lmatPageTranslationGlobal.providers;
 
-    if (sourceLang && '' !== sourceLang) {
+    if (sourceLang && '' !== sourceLang && providers.length > 0) {
       insertMessagePopup();
     }
 
