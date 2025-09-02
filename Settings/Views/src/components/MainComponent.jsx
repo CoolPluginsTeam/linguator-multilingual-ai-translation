@@ -6,10 +6,11 @@ import { getNonce } from '../utils'
 import { LoaderPinwheel } from "lucide-react"
 import { Loader } from "@bsf/force-ui"
 import { sprintf,__ } from '@wordpress/i18n'
+import TranslationConfig from './TranslationConfig'
 //Component mapper for settings page
 const ComponentSelector = ({currentPage,data, setData})=>{
   if(currentPage === 'general') return <General data={data} setData={setData} />
-
+  if(currentPage === 'translation') return <TranslationConfig data={data} setData={setData} />
 }
 
 

@@ -85,7 +85,7 @@ module.exports = window["ReactDOM"];
 /******/ 			__webpack_require__.r(ns);
 /******/ 			var def = {};
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
 /******/ 			}
 /******/ 			def['default'] = () => (value);
@@ -2839,6 +2839,9 @@ var Header = function Header(_ref) {
   var tabs = [{
     label: (0,external_wp_i18n_namespaceObject.__)("GENERAL", "linguator-multilingual-ai-translation"),
     value: "general"
+  }, {
+    label: (0,external_wp_i18n_namespaceObject.__)("Translation", "linguator-multilingual-ai-translation"),
+    value: "translation"
   }];
   return /*#__PURE__*/React.createElement(topbar_es_i, {
     className: "w-full min-h-[unset] h-16 shadow-sm p-0 relative z-[1] rounded-lg",
@@ -5465,7 +5468,7 @@ const flip = function (options) {
           if (!ignoreCrossAxisOverflow ||
           // We leave the current main axis only if every placement on that axis
           // overflows the main axis.
-          overflowsData.every(d => d.overflows[0] > 0 && floating_ui_utils_getSideAxis(d.placement) === initialSideAxis)) {
+          overflowsData.every(d => floating_ui_utils_getSideAxis(d.placement) === initialSideAxis ? d.overflows[0] > 0 : true)) {
             // Try next placement and re-run the lifecycle.
             return {
               data: {
@@ -6183,14 +6186,9 @@ function getWindowScrollBarX(element, rect) {
   return rect.left + leftScroll;
 }
 
-function getHTMLOffset(documentElement, scroll, ignoreScrollbarX) {
-  if (ignoreScrollbarX === void 0) {
-    ignoreScrollbarX = false;
-  }
+function getHTMLOffset(documentElement, scroll) {
   const htmlRect = documentElement.getBoundingClientRect();
-  const x = htmlRect.left + scroll.scrollLeft - (ignoreScrollbarX ? 0 :
-  // RTL <body> scrollbar.
-  getWindowScrollBarX(documentElement, htmlRect));
+  const x = htmlRect.left + scroll.scrollLeft - getWindowScrollBarX(documentElement, htmlRect);
   const y = htmlRect.top + scroll.scrollTop;
   return {
     x,
@@ -6229,7 +6227,7 @@ function convertOffsetParentRelativeRectToViewportRelativeRect(_ref) {
       offsets.y = offsetRect.y + offsetParent.clientTop;
     }
   }
-  const htmlOffset = documentElement && !isOffsetParentAnElement && !isFixed ? getHTMLOffset(documentElement, scroll, true) : createCoords(0);
+  const htmlOffset = documentElement && !isOffsetParentAnElement && !isFixed ? getHTMLOffset(documentElement, scroll) : createCoords(0);
   return {
     width: rect.width * scale.x,
     height: rect.height * scale.y,
@@ -6263,6 +6261,10 @@ function getDocumentRect(element) {
   };
 }
 
+// Safety check: ensure the scrollbar space is reasonable in case this
+// calculation is affected by unusual styles.
+// Most scrollbars leave 15-18px of space.
+const SCROLLBAR_MAX = 25;
 function getViewportRect(element, strategy) {
   const win = floating_ui_utils_dom_getWindow(element);
   const html = getDocumentElement(element);
@@ -6279,6 +6281,24 @@ function getViewportRect(element, strategy) {
       x = visualViewport.offsetLeft;
       y = visualViewport.offsetTop;
     }
+  }
+  const windowScrollbarX = getWindowScrollBarX(html);
+  // <html> `overflow: hidden` + `scrollbar-gutter: stable` reduces the
+  // visual width of the <html> but this is not considered in the size
+  // of `html.clientWidth`.
+  if (windowScrollbarX <= 0) {
+    const doc = html.ownerDocument;
+    const body = doc.body;
+    const bodyStyles = getComputedStyle(body);
+    const bodyMarginInline = doc.compatMode === 'CSS1Compat' ? parseFloat(bodyStyles.marginLeft) + parseFloat(bodyStyles.marginRight) || 0 : 0;
+    const clippingStableScrollbarWidth = Math.abs(html.clientWidth - body.clientWidth - bodyMarginInline);
+    if (clippingStableScrollbarWidth <= SCROLLBAR_MAX) {
+      width -= clippingStableScrollbarWidth;
+    }
+  } else if (windowScrollbarX <= SCROLLBAR_MAX) {
+    // If the <body> scrollbar is on the left, the width needs to be extended
+    // by the scrollbar amount so there isn't extra space on the right.
+    width += windowScrollbarX;
   }
   return {
     width,
@@ -13728,6 +13748,7 @@ const Toast = (props)=>{
         "data-swipe-out": swipeOut,
         "data-swipe-direction": swipeOutDirection,
         "data-expanded": Boolean(expanded || expandByDefault && mounted),
+        "data-testid": toast.testId,
         style: {
             '--index': index,
             '--toasts-before': index,
@@ -13977,17 +13998,26 @@ function useSonner() {
     };
 }
 const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function Toaster(props, ref) {
-    const { invert, position = 'bottom-right', hotkey = [
+    const { id, invert, position = 'bottom-right', hotkey = [
         'altKey',
         'KeyT'
     ], expand, closeButton, className, offset, mobileOffset, theme = 'light', richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, containerAriaLabel = 'Notifications' } = props;
     const [toasts, setToasts] = external_React_namespaceObject.useState([]);
+    const filteredToasts = external_React_namespaceObject.useMemo(()=>{
+        if (id) {
+            return toasts.filter((toast)=>toast.toasterId === id);
+        }
+        return toasts.filter((toast)=>!toast.toasterId);
+    }, [
+        toasts,
+        id
+    ]);
     const possiblePositions = external_React_namespaceObject.useMemo(()=>{
         return Array.from(new Set([
             position
-        ].concat(toasts.filter((toast)=>toast.position).map((toast)=>toast.position))));
+        ].concat(filteredToasts.filter((toast)=>toast.position).map((toast)=>toast.position))));
     }, [
-        toasts,
+        filteredToasts,
         position
     ]);
     const [heights, setHeights] = external_React_namespaceObject.useState([]);
@@ -14142,7 +14172,7 @@ const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function
     }, possiblePositions.map((position, index)=>{
         var _heights_;
         const [y, x] = position.split('-');
-        if (!toasts.length) return null;
+        if (!filteredToasts.length) return null;
         return /*#__PURE__*/ external_React_namespaceObject.createElement("ol", {
             key: position,
             dir: dir === 'auto' ? getDocumentDirection() : dir,
@@ -14194,7 +14224,7 @@ const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function
                 setInteracting(true);
             },
             onPointerUp: ()=>setInteracting(false)
-        }, toasts.filter((toast)=>!toast.position && index === 0 || toast.position === position).map((toast, index)=>{
+        }, filteredToasts.filter((toast)=>!toast.position && index === 0 || toast.position === position).map((toast, index)=>{
             var _toastOptions_duration, _toastOptions_closeButton;
             return /*#__PURE__*/ external_React_namespaceObject.createElement(Toast, {
                 key: toast.id,
@@ -14217,7 +14247,7 @@ const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function
                 actionButtonStyle: toastOptions == null ? void 0 : toastOptions.actionButtonStyle,
                 closeButtonAriaLabel: toastOptions == null ? void 0 : toastOptions.closeButtonAriaLabel,
                 removeToast: removeToast,
-                toasts: toasts.filter((t)=>t.position == toast.position),
+                toasts: filteredToasts.filter((t)=>t.position == toast.position),
                 heights: heights.filter((h)=>h.position == toast.position),
                 setHeights: setHeights,
                 expandByDefault: expand,
@@ -14485,7 +14515,7 @@ const RefreshCcw = createLucideIcon_createLucideIcon("refresh-ccw", refresh_ccw_
 ;// ./Settings/Views/src/components/General.jsx
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -14793,7 +14823,7 @@ var General = function General(_ref) {
     _SaveSettings = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
       var apiBody, final_domain, used_hosts, _iterator5, _step5, domain, response, _t, _t2;
       return _regenerator().w(function (_context) {
-        while (1) switch (_context.n) {
+        while (1) switch (_context.p = _context.n) {
           case 0:
             _context.p = 0;
             if (!(forceLang === 3)) {
@@ -15302,9 +15332,334 @@ const loader_es_d = ({
 
 //# sourceMappingURL=loader.es.js.map
 
+;// ./node_modules/lucide-react/dist/esm/icons/languages.js
+/**
+ * @license lucide-react v0.524.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+
+const languages_iconNode = [
+  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
+  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
+  ["path", { d: "M2 5h12", key: "or177f" }],
+  ["path", { d: "M7 2h1", key: "1t2jsx" }],
+  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
+  ["path", { d: "M14 18h6", key: "1m8k6r" }]
+];
+const Languages = createLucideIcon_createLucideIcon("languages", languages_iconNode);
+
+
+//# sourceMappingURL=languages.js.map
+
+;// ./Settings/Views/src/components/TranslationConfig.jsx
+function TranslationConfig_typeof(o) { "@babel/helpers - typeof"; return TranslationConfig_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, TranslationConfig_typeof(o); }
+function TranslationConfig_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return TranslationConfig_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (TranslationConfig_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, TranslationConfig_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, TranslationConfig_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), TranslationConfig_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", TranslationConfig_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), TranslationConfig_regeneratorDefine2(u), TranslationConfig_regeneratorDefine2(u, o, "Generator"), TranslationConfig_regeneratorDefine2(u, n, function () { return this; }), TranslationConfig_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (TranslationConfig_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function TranslationConfig_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } TranslationConfig_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { TranslationConfig_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, TranslationConfig_regeneratorDefine2(e, r, n, t); }
+function TranslationConfig_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function TranslationConfig_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? TranslationConfig_ownKeys(Object(t), !0).forEach(function (r) { TranslationConfig_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : TranslationConfig_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function TranslationConfig_defineProperty(e, r, t) { return (r = TranslationConfig_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function TranslationConfig_toPropertyKey(t) { var i = TranslationConfig_toPrimitive(t, "string"); return "symbol" == TranslationConfig_typeof(i) ? i : i + ""; }
+function TranslationConfig_toPrimitive(t, r) { if ("object" != TranslationConfig_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != TranslationConfig_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function TranslationConfig_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function TranslationConfig_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { TranslationConfig_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { TranslationConfig_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function TranslationConfig_slicedToArray(r, e) { return TranslationConfig_arrayWithHoles(r) || TranslationConfig_iterableToArrayLimit(r, e) || TranslationConfig_unsupportedIterableToArray(r, e) || TranslationConfig_nonIterableRest(); }
+function TranslationConfig_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function TranslationConfig_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return TranslationConfig_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? TranslationConfig_arrayLikeToArray(r, a) : void 0; } }
+function TranslationConfig_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function TranslationConfig_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function TranslationConfig_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+
+
+
+
+
+
+
+var ChromeLocalAINotice = function ChromeLocalAINotice() {
+  var _React$useState = external_React_default().useState(false),
+    _React$useState2 = TranslationConfig_slicedToArray(_React$useState, 2),
+    showBrowserNotice = _React$useState2[0],
+    setShowBrowserNotice = _React$useState2[1];
+  var _React$useState3 = external_React_default().useState(false),
+    _React$useState4 = TranslationConfig_slicedToArray(_React$useState3, 2),
+    showSecureNotice = _React$useState4[0],
+    setShowSecureNotice = _React$useState4[1];
+  var _React$useState5 = external_React_default().useState(false),
+    _React$useState6 = TranslationConfig_slicedToArray(_React$useState5, 2),
+    showApiNotice = _React$useState6[0],
+    setShowApiNotice = _React$useState6[1];
+  external_React_default().useEffect(function () {
+    var _window, _window2, _window3, _window4, _window5, _window6, _window7, _window8, _window9, _navigator, _navigator2;
+    var safeBrowser = ((_window = window) === null || _window === void 0 || (_window = _window.location) === null || _window === void 0 ? void 0 : _window.protocol) === "https:";
+    var browserContentSecure = (_window2 = window) === null || _window2 === void 0 ? void 0 : _window2.isSecureContext;
+    // Secure connection + API availability check
+    var apiAvailable = "translation" in ((_window3 = window) === null || _window3 === void 0 ? void 0 : _window3.self) && "createTranslator" in ((_window4 = window) === null || _window4 === void 0 || (_window4 = _window4.self) === null || _window4 === void 0 ? void 0 : _window4.translation) || "ai" in ((_window5 = window) === null || _window5 === void 0 ? void 0 : _window5.self) && "translator" in ((_window6 = window) === null || _window6 === void 0 || (_window6 = _window6.self) === null || _window6 === void 0 ? void 0 : _window6.ai) || "Translator" in ((_window7 = window) === null || _window7 === void 0 ? void 0 : _window7.self) && "create" in ((_window8 = window) === null || _window8 === void 0 || (_window8 = _window8.self) === null || _window8 === void 0 ? void 0 : _window8.Translator);
+
+    // Browser check (must be Chrome, not Edge or others)
+    if (!((_window9 = window) !== null && _window9 !== void 0 && _window9.hasOwnProperty("chrome")) || !((_navigator = navigator) !== null && _navigator !== void 0 && (_navigator = _navigator.userAgent) !== null && _navigator !== void 0 && _navigator.includes("Chrome")) || (_navigator2 = navigator) !== null && _navigator2 !== void 0 && (_navigator2 = _navigator2.userAgent) !== null && _navigator2 !== void 0 && _navigator2.includes("Edg")) {
+      setShowBrowserNotice(true);
+    } else if (!apiAvailable && !safeBrowser && !browserContentSecure) {
+      setShowSecureNotice(true);
+    } else if (!apiAvailable) {
+      setShowApiNotice(true);
+    }
+  }, []);
+  if (!showBrowserNotice && !showSecureNotice && !showApiNotice) {
+    // return null; // no notice needed
+  }
+  var message = '';
+  var heading = '';
+  if (showBrowserNotice) {
+    heading = (0,external_wp_i18n_namespaceObject.__)('⚠️ Important Notice: Browser Compatibility', 'linguator-multilingual-ai-translation');
+    message = "<ul className=\"list-disc ml-5 mt-2\"><li>\n                ".concat(sprintf((0,external_wp_i18n_namespaceObject.__)('The %sTranslator API%s, which uses Chrome Local AI Models, is designed exclusively for use with the %sChrome browser%s.', 'linguator-multilingual-ai-translation'), '<strong>', '</strong>', '<strong>', '</strong>'), "\n              </li>\n              <li>\n                ").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('If you are using a different browser (such as Edge, Firefox, or Safari), the API may not function correctly.', 'linguator-multilingual-ai-translation')), "\n              </li>\n              <li>\n                ").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('Learn more in the %sofficial documentation%s.', 'linguator-multilingual-ai-translation'), '<a href="https://developer.chrome.com/docs/ai/translator-api" target="_blank" rel="noreferrer" class="underline text-blue-600">', '</a>'), "\n              </li>\n      </ul>");
+  } else if (showSecureNotice) {
+    heading = (0,external_wp_i18n_namespaceObject.__)('⚠️ Important Notice: Secure Connection Required', 'linguator-multilingual-ai-translation');
+    message = "<ul className=\"list-disc ml-5 mt-2\">\n              <li>\n                ".concat(sprintf((0,external_wp_i18n_namespaceObject.__)('The %sTranslator API%s requires a secure (HTTPS) connection to function properly.', 'linguator-multilingual-ai-translation'), '<strong>', '</strong>'), "\n              </li>\n              <li>\n                ").concat((0,external_wp_i18n_namespaceObject.__)('If you are on an insecure connection (HTTP), the API will not work.', 'linguator-multilingual-ai-translation'), "\n              </li>\n            </ul>\n            <p className=\"mt-2\">").concat((0,external_wp_i18n_namespaceObject.__)('👉 How to Fix This:', 'linguator-multilingual-ai-translation'), "</p>\n            <ol className=\"list-decimal ml-5 mt-2\">\n              <li>").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('Switch to a secure connection by using %s.', 'linguator-multilingual-ai-translation'), '<strong><code>https://</code></strong>'), "\n              </li>\n              <li>\n                ").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('Alternatively, add this URL to Chrome’s list of insecure origins treated as secure: %s.', 'linguator-multilingual-ai-translation'), '<strong><code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code></strong>'), "\n                <br />\n                ").concat((0,external_wp_i18n_namespaceObject.__)('Copy the URL and then open a new window and paste this URL to access the settings.', 'linguator-multilingual-ai-translation'), "\n              </li>\n            </ol>");
+  } else if (showApiNotice) {
+    heading = (0,external_wp_i18n_namespaceObject.__)('⚠️ Important Notice: API Availability', 'linguator-multilingual-ai-translation');
+    message = "<ol>\n                    <li>".concat(sprintf((0,external_wp_i18n_namespaceObject.__)('Open this URL in a new Chrome tab: %s. Copy this URL and then open a new window and paste this URL to access the settings.', 'linguator-multilingual-ai-translation'), '<strong><code>chrome://flags/#translation-api</code></strong>'), "</li>\n                    <li>").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('Ensure that the %sExperimental translation API%s option is set to <strong>Enabled</strong>.', 'linguator-multilingual-ai-translation'), '<strong>', '</strong>'), "</li>\n                    <li>").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('After change the setting, Click on the %sRelaunch%s button to apply the changes.', 'linguator-multilingual-ai-translation'), '<strong>', '</strong>'), "</li>\n                    <li>").concat((0,external_wp_i18n_namespaceObject.__)('The Translator AI modal should now be enabled and ready for use.', 'linguator-multilingual-ai-translation'), "</li>\n                </ol>\n                <p>").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('For more information, please refer to the %sdocumentation%s.', 'linguator-multilingual-ai-translation'), '<a href="https://developer.chrome.com/docs/ai/translator-api" target="_blank">', '</a>'), "</p>   \n                <p>").concat((0,external_wp_i18n_namespaceObject.__)('If the issue persists, please ensure that your browser is up to date and restart your browser.', 'linguator-multilingual-ai-translation'), "</p>\n                <p>").concat(sprintf((0,external_wp_i18n_namespaceObject.__)('If you continue to experience issues after following the above steps, please %sopen a support ticket%s with our team. We are here to help you resolve any problems and ensure a smooth translation experience.', 'linguator-multilingual-ai-translation'), '<a href="https://my.coolplugins.net/account/support-tickets/" target="_blank" rel="noopener">', '</a>'), "</p>");
+  }
+  return /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex flex-col gap-4 p-6 rounded-lg",
+    style: {
+      border: "1px solid #e5e7eb",
+      background: "#fff5f5",
+      margin: "0 1.5rem 1.5rem 1.5rem"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "text-red-600 text-sm leading-6"
+  }, /*#__PURE__*/external_React_default().createElement("h3", {
+    className: "font-semibold"
+  }, heading), /*#__PURE__*/external_React_default().createElement("div", {
+    dangerouslySetInnerHTML: {
+      __html: message
+    }
+  })));
+};
+var TranslationConfig = function TranslationConfig(_ref) {
+  var data = _ref.data,
+    setData = _ref.setData;
+  var aiTranslation = data === null || data === void 0 ? void 0 : data.ai_translation_configuration; //store the media option
+  var provider = aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.provider;
+  var _useState = (0,external_React_namespaceObject.useState)(provider === null || provider === void 0 ? void 0 : provider.google),
+    _useState2 = TranslationConfig_slicedToArray(_useState, 2),
+    googleMachineTranslation = _useState2[0],
+    setGoogleMachineTranslation = _useState2[1];
+  var _useState3 = (0,external_React_namespaceObject.useState)(provider === null || provider === void 0 ? void 0 : provider.chrome_local_ai),
+    _useState4 = TranslationConfig_slicedToArray(_useState3, 2),
+    chromeLocalAITranslation = _useState4[0],
+    setChromeLocalAITranslation = _useState4[1];
+  var _useState5 = (0,external_React_namespaceObject.useState)({
+      googleMachineTranslation: googleMachineTranslation,
+      chromeLocalAITranslation: chromeLocalAITranslation
+    }),
+    _useState6 = TranslationConfig_slicedToArray(_useState5, 2),
+    lastUpdatedValue = _useState6[0],
+    setLastUpdatedValue = _useState6[1];
+  var _useState7 = (0,external_React_namespaceObject.useState)(true),
+    _useState8 = TranslationConfig_slicedToArray(_useState7, 2),
+    handleButtonDisabled = _useState8[0],
+    setHandleButtonDisabled = _useState8[1];
+  (0,external_React_namespaceObject.useEffect)(function () {
+    var sameChecker = {
+      googleMachineTranslation: true,
+      chromeLocalAITranslation: true
+    };
+    if (googleMachineTranslation !== (provider === null || provider === void 0 ? void 0 : provider.google)) {
+      sameChecker.googleMachineTranslation = false;
+    }
+    if (chromeLocalAITranslation !== (provider === null || provider === void 0 ? void 0 : provider.chrome_local_ai)) {
+      sameChecker.chromeLocalAITranslation = false;
+    }
+    var flag = true;
+    for (var key in sameChecker) {
+      if (!sameChecker[key]) {
+        flag = false;
+        setHandleButtonDisabled(false);
+        break;
+      }
+    }
+    if (flag) {
+      setHandleButtonDisabled(true);
+    }
+  }, [chromeLocalAITranslation, googleMachineTranslation]);
+
+  //Save Setting Function 
+  function SaveSettings() {
+    return _SaveSettings.apply(this, arguments);
+  }
+  function _SaveSettings() {
+    _SaveSettings = TranslationConfig_asyncToGenerator(/*#__PURE__*/TranslationConfig_regenerator().m(function _callee() {
+      var apiBody, response;
+      return TranslationConfig_regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            try {
+              apiBody = {
+                ai_translation_configuration: {
+                  provider: {
+                    google: googleMachineTranslation,
+                    chrome_local_ai: chromeLocalAITranslation
+                  }
+                }
+              };
+              setLastUpdatedValue({
+                googleMachineTranslation: googleMachineTranslation,
+                chromeLocalAITranslation: chromeLocalAITranslation
+              });
+              if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation)) {
+                setData(function (prev) {
+                  return TranslationConfig_objectSpread(TranslationConfig_objectSpread({}, prev), apiBody);
+                });
+              }
+              //API Call
+              response = external_wp_apiFetch_default()({
+                path: 'lmat/v1/settings',
+                method: 'POST',
+                'headers': {
+                  'Content-Type': 'application/json',
+                  'X-WP-Nonce': getNonce()
+                },
+                body: JSON.stringify(apiBody)
+              }).then(function (response) {
+                setData(function (prev) {
+                  return TranslationConfig_objectSpread(TranslationConfig_objectSpread({}, prev), response);
+                });
+              }).catch(function (error) {
+                // Handle general API errors
+                if (error !== null && error !== void 0 && error.message) {
+                  throw new Error(error.message);
+                }
+                throw new Error((0,external_wp_i18n_namespaceObject.__)("Something went wrong", 'linguator-multilingual-ai-translation'));
+              });
+              toast.promise(response, {
+                loading: (0,external_wp_i18n_namespaceObject.__)('Saving Settings', 'linguator-multilingual-ai-translation'),
+                success: (0,external_wp_i18n_namespaceObject.__)('Settings Saved', 'linguator-multilingual-ai-translation'),
+                error: function error(_error) {
+                  return _error.message;
+                }
+              });
+              setHandleButtonDisabled(true);
+            } catch (error) {
+              // Handle domain validation errors
+              if (error.message.includes((0,external_wp_i18n_namespaceObject.__)("Linguator was unable to access", "linguator-multilingual-ai-translation"))) {
+                toast.error(error.message);
+              } else {
+                toast.error(error.message || (0,external_wp_i18n_namespaceObject.__)("Something went wrong", "linguator-multilingual-ai-translation"));
+              }
+            }
+          case 1:
+            return _context.a(2);
+        }
+      }, _callee);
+    }));
+    return _SaveSettings.apply(this, arguments);
+  }
+  return /*#__PURE__*/external_React_default().createElement(S, {
+    className: "bg-white mt-4 p-10 rounded-lg",
+    cols: "1",
+    containerType: "grid"
+  }, /*#__PURE__*/external_React_default().createElement(S, {
+    className: "flex items-center"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex w-full justify-between px-4 gap-6"
+  }, /*#__PURE__*/external_React_default().createElement("h1", {
+    className: "font-bold"
+  }, (0,external_wp_i18n_namespaceObject.__)('Translation Settings', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(R, {
+    disabled: handleButtonDisabled,
+    className: "",
+    iconPosition: "left",
+    size: "md",
+    tag: "button",
+    type: "button",
+    onClick: SaveSettings,
+    variant: "primary"
+  }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "p-6 rounded-lg",
+    style: {
+      border: "1px solid #e5e7eb"
+    }
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, /*#__PURE__*/external_React_default().createElement(Languages, {
+    className: "flex-shrink-0 size-5 text-icon-secondary"
+  }), (0,external_wp_i18n_namespaceObject.__)('Service Provider', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    variant: "help"
+  }, (0,external_wp_i18n_namespaceObject.__)('Select at least one translation service provider below. You can enable multiple providers and choose the one that best fits your needs.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex flex-col gap-2",
+    style: {
+      marginTop: "20px"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      backgroundColor: "#fbfbfb"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "switcher p-6 rounded-lg"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
+    className: "flex items-center gap-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Google Machine Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex items-center justify-end",
+    style: {
+      paddingRight: '30%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+    "aria-label": "Switch Element",
+    id: "google-machine-translation",
+    onChange: function onChange() {
+      setGoogleMachineTranslation(!googleMachineTranslation);
+    },
+    value: googleMachineTranslation,
+    size: "sm"
+  })))), /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      backgroundColor: "#fbfbfb"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "switcher p-6 rounded-lg"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
+    className: "flex items-center gap-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex items-center justify-end",
+    style: {
+      paddingRight: '30%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+    "aria-label": "Switch Element",
+    id: "chrome-local-ai-translation",
+    onChange: function onChange() {
+      setChromeLocalAITranslation(!chromeLocalAITranslation);
+    },
+    value: chromeLocalAITranslation,
+    size: "sm"
+  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null)))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S, {
+    className: "flex items-center justify-end"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex gap-6"
+  }, /*#__PURE__*/external_React_default().createElement(R, {
+    disabled: handleButtonDisabled,
+    className: "",
+    iconPosition: "left",
+    size: "md",
+    tag: "button",
+    type: "button",
+    onClick: SaveSettings,
+    variant: "primary"
+  }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation')))));
+};
+/* harmony default export */ const components_TranslationConfig = (TranslationConfig);
 ;// ./Settings/Views/src/components/MainComponent.jsx
 function MainComponent_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return MainComponent_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (MainComponent_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, MainComponent_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, MainComponent_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), MainComponent_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", MainComponent_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), MainComponent_regeneratorDefine2(u), MainComponent_regeneratorDefine2(u, o, "Generator"), MainComponent_regeneratorDefine2(u, n, function () { return this; }), MainComponent_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (MainComponent_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function MainComponent_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } MainComponent_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { MainComponent_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, MainComponent_regeneratorDefine2(e, r, n, t); }
+function MainComponent_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } MainComponent_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { MainComponent_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, MainComponent_regeneratorDefine2(e, r, n, t); }
 function MainComponent_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function MainComponent_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { MainComponent_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { MainComponent_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function MainComponent_slicedToArray(r, e) { return MainComponent_arrayWithHoles(r) || MainComponent_iterableToArrayLimit(r, e) || MainComponent_unsupportedIterableToArray(r, e) || MainComponent_nonIterableRest(); }
@@ -15321,12 +15676,17 @@ function MainComponent_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
+
 //Component mapper for settings page
 var ComponentSelector = function ComponentSelector(_ref) {
   var currentPage = _ref.currentPage,
     data = _ref.data,
     setData = _ref.setData;
   if (currentPage === 'general') return /*#__PURE__*/external_React_default().createElement(components_General, {
+    data: data,
+    setData: setData
+  });
+  if (currentPage === 'translation') return /*#__PURE__*/external_React_default().createElement(components_TranslationConfig, {
     data: data,
     setData: setData
   });

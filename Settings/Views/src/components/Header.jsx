@@ -5,6 +5,9 @@ const Header = ({ setCurrentPage, currentPage }) => {
     const tabs = [{
         label: __("GENERAL", "linguator-multilingual-ai-translation"),
         value: "general"
+    },{
+        label: __("Translation", "linguator-multilingual-ai-translation"),
+        value: "translation"
     }
     ]
     return (
