@@ -41,8 +41,8 @@ class Ai_Translation_Configuration extends Abstract_Option {
     protected function get_default() {
         $data= array(
             'provider' => array(
-                'chrome_local_ai' => true,
-                'google_machine_translation' => false,
+                'chrome_local_ai' => false,
+                'google' => true,
             ),
         );
 
