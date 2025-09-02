@@ -58,7 +58,21 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 		}
 
 		public function lmat_bulk_translate_button( $views ) {
-			echo "<button class='button lmat-bulk-translate-btn' style='display:none;'>Bulk Translate</button>";
+
+			$providers_config_class=' providers-config-no-active';
+
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
+				$providers = LMAT()->options['ai_translation_configuration']['provider'];
+
+				foreach($providers as $provider => $value){
+					if($value){
+						$providers_config_class = '';
+						break;
+					}
+				}
+			}
+
+			echo "<button class='button lmat-bulk-translate-btn".esc_attr($providers_config_class)."' style='display:none;'>Bulk Translate</button>";
 
 			return $views;
 		}

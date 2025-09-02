@@ -12,6 +12,18 @@
   border-color: #238b23 !important;
 }
 
+.lmat-bulk-translate-btn.providers-config-no-active {
+  background: #f6f7f7 !important;
+  border-color: #c3c4c7 !important;
+  color: #50575e !important;
+}
+
+.lmat-bulk-translate-btn.providers-config-no-active:hover {
+  background: #e1e1e1 !important;
+  color: #50575e !important;
+  border-color: #c9c9c9 !important;
+}
+
 #lmat-bulk-translate-wrapper {
   display: none;
 }
