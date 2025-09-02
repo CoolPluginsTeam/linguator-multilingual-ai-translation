@@ -1355,7 +1355,7 @@
       default: 'every'
     };
     const addLangChoiceAttribute = function (settings, name) {
-      const unallowedBlockNames = ['core/widget-area', 'core/legacy-widget'];
+      const unallowedBlockNames = ['core/widget-area', 'core/legacy-widget', 'linguator/language-switcher', 'linguator/navigation-language-switcher'];
       if (unallowedBlockNames.find(element => element === name)) {
         return settings;
       }
