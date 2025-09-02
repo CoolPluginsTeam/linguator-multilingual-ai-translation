@@ -75,8 +75,8 @@ const HomePage = () => {
     setContinueLoader(true)
     const success = await createHomePageTranslations()
     if (success) {
-      setSetupProgress("ai_translation")
-      localStorage.setItem("setupProgress", "ai_translation");
+      setSetupProgress("translation_configuration")
+      localStorage.setItem("setupProgress", "translation_configuration");
     }
     setContinueLoader(false)
   }

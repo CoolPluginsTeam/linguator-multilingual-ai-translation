@@ -97,8 +97,8 @@ const URLModifications = () => {
       setSetupProgress("home_page")
       localStorage.setItem("setupProgress", "home_page");
     } else {
-      setSetupProgress("ai_translation")
-      localStorage.setItem("setupProgress", "ai_translation");
+      setSetupProgress("translation_configuration")
+      localStorage.setItem("setupProgress", "translation_configuration");
     }
   }
 

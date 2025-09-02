@@ -45,14 +45,21 @@ const SetupPage = () => {
       let setup = localStorage.getItem("setupProgress")
       if (lmat_setup_data[setup] === "1") {
         setSetupProgress((localStorage.getItem("setupProgress")))
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "ai_translation") {
+      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "translation_configuration") {
         setSetupProgress(localStorage.getItem("setupProgress"))
       }
       else {
         localStorage.setItem("setupProgress", "languages");
       }
     } else {
-      localStorage.setItem("setupProgress", "languages");
+      const setupProgress=localStorage.getItem("setupProgress");
+
+      if(setupProgress && setupProgress === 'ai_translation'){
+        setSetupProgress(setupProgress);
+      }else{
+        localStorage.setItem("setupProgress", "languages");
+      }
+
     }
 
 

@@ -23,7 +23,7 @@ const SetupFileRouting = () => {
     else if (setupProgress === "media") return <Media  />
     else if (setupProgress === "home_page") return <HomePage/>
     else if (setupProgress === "ready") return <Ready />
-    else if (setupProgress === "ai_translation") return <AiTranslation />
+    else if (setupProgress === "translation_configuration") return <AiTranslation />
 }
 const SetupProgress = ({lmat_setup_data}) => {
     const {setupProgress,setSetupProgress,showHomePage,setupSteps, setSetupSteps} = React.useContext(setupContext) //get the context
@@ -77,8 +77,8 @@ const SetupProgress = ({lmat_setup_data}) => {
             })
         }
         temp_setupSetups.push({
-            label: __("AI Translation","linguator-multilingual-ai-translation"),
-            value: "ai_translation",
+            label: __("Translation","linguator-multilingual-ai-translation"),
+            value: "translation_configuration",
             visible: true,
             step: step++
         })
