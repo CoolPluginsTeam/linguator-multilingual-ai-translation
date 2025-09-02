@@ -12,7 +12,6 @@ add_action(
 	function ( $linguator ) {
 
 		if ( $linguator->model->has_languages() && lmat_use_block_editor_plugin() ) {
-			error_log("load blocks");
 			$linguator->switcher_block   = ( new \Linguator\Modules\Blocks\LMAT_Language_Switcher_Block( $linguator ) )->init();
 			$linguator->navigation_block = ( new \Linguator\Modules\Blocks\LMAT_Navigation_Language_Switcher_Block( $linguator ) )->init();
 		}
