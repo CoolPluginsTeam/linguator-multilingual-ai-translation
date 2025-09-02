@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import ElementorWidgetTranslator from './translator-modal/index.js';
 import ReactDom from 'react-dom/client';
 import { RiTranslateAi2 } from "react-icons/ri";
-import styles from './style.modules.css';
+import * as styles from './style.modules.css';
 import { createElement } from "@wordpress/element";
 
 export const RiTranslateAi2Compat = (props) =>
