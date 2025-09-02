@@ -13,7 +13,7 @@ function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, mini
         entry[entryName] = `./${srcDir}/${filename}${ext}`;
     });
 
-    const plugins = [...defaultConfig.plugins];
+    const plugins = [];
     if (generateAssets) {
         plugins.push(
             new DependencyExtractionWebpackPlugin({
@@ -26,6 +26,8 @@ function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, mini
     let conditionalRules = [];
 
     if (styleLoader) {
+        plugins.push(...defaultConfig.plugins);
+        
         const styleLoaderRule = {
             test: /\.css$/i,
             use: [
