@@ -129,7 +129,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				);
 			}
 
-			$providers=array('google'=>true);
+			$providers=array();
 
 			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
 				$providers = LMAT()->options['ai_translation_configuration']['provider'];
