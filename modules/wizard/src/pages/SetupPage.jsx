@@ -54,7 +54,7 @@ const SetupPage = () => {
     } else {
       const setupProgress=localStorage.getItem("setupProgress");
 
-      if(setupProgress && setupProgress === 'ai_translation'){
+      if(setupProgress && setupProgress === 'translation_configuration'){
         setSetupProgress(setupProgress);
       }else{
         localStorage.setItem("setupProgress", "languages");
