@@ -146,11 +146,8 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 
 		// Ensure the block editor script is enqueued in the editor context
 		add_action( 'enqueue_block_editor_assets', function() use ( $script_handle, $script_filename ) {
-			error_log( 'enqueue_block_editor_assets: Checking if ' . $script_handle . ' needs enqueuing' );
-			error_log( 'Script file exists: ' . ( file_exists( plugin_dir_path( LINGUATOR_ROOT_FILE ) . $script_filename ) ? 'YES' : 'NO' ) );
 			
 			if ( ! wp_script_is( $script_handle, 'enqueued' ) ) {
-				error_log( 'enqueue_block_editor_assets: Enqueuing ' . $script_handle );
 				wp_enqueue_script( $script_handle );
 			} else {
 				error_log( 'enqueue_block_editor_assets: ' . $script_handle . ' already enqueued' );
@@ -170,7 +167,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 			);
 		}
 
-		error_log( 'Registering block: ' . $this->get_block_name() );
 		
 		$block_registration = register_block_type(
 			$this->get_block_name(),
@@ -182,11 +178,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 			)
 		);
 		
-		if ( $block_registration ) {
-			error_log( 'Successfully registered block: ' . $this->get_block_name() );
-		} else {
-			error_log( 'Failed to register block: ' . $this->get_block_name() );
-		}
 
 		// Translated strings used in JS code
 		wp_set_script_translations( $script_handle, 'linguator-multilingual-ai-translation' );

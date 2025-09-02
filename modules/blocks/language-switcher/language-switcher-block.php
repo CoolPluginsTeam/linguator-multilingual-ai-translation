@@ -8,8 +8,6 @@ namespace Linguator\Modules\Blocks;
 /**
  * Language switcher block.
  *
- * @since 2.8
- * @since 3.2 Extends now the LMAT_Abstract_Language_Switcher_Block abstract class.
  */
 class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block {
 
@@ -27,9 +25,6 @@ class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block
 	/**
 	 * Renders the `linguator/language-switcher` block on server.
 	 *
-	 * @since 2.8
-	 * @since 3.2 Renamed according to its parent abstract class.
-	 * @since 3.3 Accepts two new parameters, $content and $block.
 	 *
 	 * @param array    $attributes The block attributes.
 	 * @param string   $content The saved content. Unused.

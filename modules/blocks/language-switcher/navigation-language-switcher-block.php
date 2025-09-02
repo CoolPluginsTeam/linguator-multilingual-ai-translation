@@ -78,8 +78,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	/**
 	 * Renders the `linguator/navigation-language-switcher` block on server.
 	 *
-	 * @since 3.1
-	 * @since 3.3 Accepts two new parameters, $content and $block.
+
 	 *
 	 * @param array    $attributes The block attributes.
 	 * @param string   $content The saved content. Unused.
@@ -154,7 +153,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	/**
 	 * Register switcher menu item meta options as a REST API field.
 	 *
-	 * @since 3.2
 	 *
 	 * @return void
 	 */
@@ -181,7 +179,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	/**
 	 * Filters core/navigation-link and core/navigation-submenu attributes during registration to add our own.
 	 *
-	 * @since 3.6
 	 *
 	 * @param array $metadata Metadata for registering a block type.
 	 *
@@ -219,7 +216,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	 * Renders a core/naviagation-link or core/naviagation-submenu block by adding hreflang and lang attributes to the <a> tag
 	 * and also the language flag if required.
 	 *
-	 * @since 3.6
 	 *
 	 * @param string   $block_content The block content.
 	 * @param array    $block         The full block, including name and attributes.
@@ -285,7 +281,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	/**
 	 * Returns attributes that fit for core/navigation-link or core/navigation-submenu and specific to linguator/navigation-language-switcher.
 	 *
-	 * @since 3.6
 	 *
 	 * @param array $attributes    Array of linguator/navigation-language-switcher attributes.
 	 * @param array $switcher_item Array of a switcher item data.
