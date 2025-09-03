@@ -40,9 +40,7 @@ abstract class Abstract_Screen {
 	 * @param LMAT_Base $linguator Linguator main object.
 	 */
 	public function __construct( &$linguator ) {
-		if ( ! defined( 'SCRIPT_DEBUG' ) || ! SCRIPT_DEBUG ) {
-			$this->suffix = '.min';
-		}
+		$this->suffix = '';
 
 		$this->model        = &$linguator->model;
 		$this->block_editor = &$linguator->block_editor;
