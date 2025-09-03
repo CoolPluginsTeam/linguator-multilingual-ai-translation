@@ -64,13 +64,14 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$total_languages=count($lmat_languages);
 			$lmat_active_languages=lmat_current_language();
 			$lmat_active_languages = !$lmat_active_languages ? 'all' : $lmat_active_languages;
+			$taxonomy=isset($current_screen->taxonomy) ? $current_screen->taxonomy : '';
 			
 			$post_type=isset($current_screen->post_type) ? $current_screen->post_type : '';
 			$post_status=(isset($_GET['post_status']) && 'trash' === sanitize_text_field(wp_unslash($_GET['post_status']))) ? 'trash' : 'publish';
 			$all_translated_post_count=0;
 			$list_html='';
 
-			if(count($lmat_languages) > 1){
+			if(count($lmat_languages) > 1 && !$taxonomy && empty($taxonomy)){
                 echo wp_kses("<div class='lmat_subsubsub' style='display:none; clear:both;'>
 					<ul class='lmat_subsubsub_list'>", array(
 						'div' => array(
