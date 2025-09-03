@@ -344,7 +344,7 @@ const General = ({ data, setData }) => {
     },]
     return (
         <>
-            <Container className='bg-white mt-4 p-10 rounded-lg' cols="1" containerType='grid'>
+            <Container className='bg-white p-10 rounded-lg' cols="1" containerType='grid'>
                 <Container className='flex items-center'>
                     <Container.Item className='flex w-full justify-between px-4 gap-6'>
                         <h1 className='font-bold'>General Settings</h1>

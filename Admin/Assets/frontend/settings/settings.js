@@ -129,6 +129,52 @@ var __webpack_exports__ = {};
 const external_React_namespaceObject = window["React"];
 var external_React_namespaceObject_0 = /*#__PURE__*/__webpack_require__.t(external_React_namespaceObject, 2);
 var external_React_default = /*#__PURE__*/__webpack_require__.n(external_React_namespaceObject);
+;// external ["wp","i18n"]
+const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
+;// ./Settings/Views/src/components/Header.jsx
+
+
+var Header = function Header(_ref) {
+  var setCurrentPage = _ref.setCurrentPage,
+    currentPage = _ref.currentPage;
+  var tabs = [{
+    label: __("GENERAL", "linguator-multilingual-ai-translation"),
+    value: "general"
+  }, {
+    label: __("Translation", "linguator-multilingual-ai-translation"),
+    value: "translation"
+  }];
+  return /*#__PURE__*/React.createElement(Topbar, {
+    className: "w-full min-h-[unset] h-16 shadow-sm p-0 relative z-[1] rounded-lg",
+    gap: 0
+  }, /*#__PURE__*/React.createElement(Topbar.Left, {
+    className: "p-5"
+  }, /*#__PURE__*/React.createElement(Topbar.Item, {
+    className: "flex items-center p-2"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
+    alt: "Linguator",
+    className: "h-8 w-auto object-contain"
+  }))), /*#__PURE__*/React.createElement(Topbar.Middle, {
+    align: "left",
+    className: "h-full"
+  }, /*#__PURE__*/React.createElement(Topbar.Item, {
+    className: "h-full gap-4"
+  }, tabs.map(function (tab, index) {
+    return /*#__PURE__*/React.createElement("a", {
+      className: "content-center no-underline h-full py-0 px-1 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer relative ".concat(currentPage === tabs[index].value ? "active" : ''),
+      target: "_self",
+      key: index,
+      onClick: function onClick() {
+        setCurrentPage(tab.value);
+      }
+    }, tab.label);
+  }))), /*#__PURE__*/React.createElement(Topbar.Right, {
+    className: "p-5",
+    gap: "md"
+  }, /*#__PURE__*/React.createElement(Topbar.Item, null)));
+};
+/* harmony default export */ const components_Header = ((/* unused pure expression or super */ null && (Header)));
 ;// external "ReactJSXRuntime"
 const external_ReactJSXRuntime_namespaceObject = window["ReactJSXRuntime"];
 ;// ./node_modules/tailwind-merge/dist/bundle-mjs.mjs
@@ -2763,117 +2809,6 @@ const functions_es_c = (...r) => twMerge(clsx(...r)), i = (...r) => (...o) => r.
 
 //# sourceMappingURL=functions.es.js.map
 
-;// ./node_modules/@bsf/force-ui/dist/components/topbar/topbar.es.js
-
-
-const topbar_es_i = ({
-  children: e,
-  gap: t = "lg",
-  className: s,
-  ...m
-}) => /* @__PURE__ */ (0,external_ReactJSXRuntime_namespaceObject.jsx)(
-  "div",
-  {
-    className: functions_es_c(
-      "w-full box-border flex items-center justify-between bg-background-primary p-5 min-h-16",
-      functions_es_g(t),
-      s
-    ),
-    ...m,
-    children: e
-  }
-);
-topbar_es_i.displayName = "Topbar";
-const topbar_es_n = ({ gap: e = "sm", children: t, className: s }) => /* @__PURE__ */ (0,external_ReactJSXRuntime_namespaceObject.jsx)("div", { className: functions_es_c("flex items-center", functions_es_g(e), s), children: t });
-topbar_es_n.displayName = "Topbar.Left";
-const topbar_es_c = ({
-  gap: e = "md",
-  children: t,
-  align: s = "center",
-  className: m
-}) => {
-  const f = {
-    left: "justify-start",
-    center: "justify-center",
-    right: "justify-end"
-  }[s];
-  return /* @__PURE__ */ (0,external_ReactJSXRuntime_namespaceObject.jsx)(
-    "div",
-    {
-      className: functions_es_c(
-        "flex items-center grow",
-        functions_es_g(e),
-        f,
-        m
-      ),
-      children: t
-    }
-  );
-};
-topbar_es_c.displayName = "Topbar.Middle";
-const o = ({ gap: e = "sm", children: t, className: s }) => /* @__PURE__ */ (0,external_ReactJSXRuntime_namespaceObject.jsx)("div", { className: functions_es_c("flex items-center", functions_es_g(e), s), children: t });
-o.displayName = "Topbar.Right";
-const topbar_es_d = ({ children: e, className: t }) => /* @__PURE__ */ (0,external_ReactJSXRuntime_namespaceObject.jsx)(
-  "div",
-  {
-    className: functions_es_c("flex items-center [&>svg]:block h-full", t),
-    children: e
-  }
-);
-topbar_es_d.displayName = "Topbar.Item";
-topbar_es_i.Left = topbar_es_n;
-topbar_es_i.Middle = topbar_es_c;
-topbar_es_i.Right = o;
-topbar_es_i.Item = topbar_es_d;
-
-//# sourceMappingURL=topbar.es.js.map
-
-;// external ["wp","i18n"]
-const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// ./Settings/Views/src/components/Header.jsx
-
-
-var Header = function Header(_ref) {
-  var setCurrentPage = _ref.setCurrentPage,
-    currentPage = _ref.currentPage;
-  var tabs = [{
-    label: (0,external_wp_i18n_namespaceObject.__)("GENERAL", "linguator-multilingual-ai-translation"),
-    value: "general"
-  }, {
-    label: (0,external_wp_i18n_namespaceObject.__)("Translation", "linguator-multilingual-ai-translation"),
-    value: "translation"
-  }];
-  return /*#__PURE__*/React.createElement(topbar_es_i, {
-    className: "w-full min-h-[unset] h-16 shadow-sm p-0 relative z-[1] rounded-lg",
-    gap: 0
-  }, /*#__PURE__*/React.createElement(topbar_es_i.Left, {
-    className: "p-5"
-  }, /*#__PURE__*/React.createElement(topbar_es_i.Item, {
-    className: "flex items-center p-2"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
-    alt: "Linguator",
-    className: "h-8 w-auto object-contain"
-  }))), /*#__PURE__*/React.createElement(topbar_es_i.Middle, {
-    align: "left",
-    className: "h-full"
-  }, /*#__PURE__*/React.createElement(topbar_es_i.Item, {
-    className: "h-full gap-4"
-  }, tabs.map(function (tab, index) {
-    return /*#__PURE__*/React.createElement("a", {
-      className: "content-center no-underline h-full py-0 px-1 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer relative ".concat(currentPage === tabs[index].value ? "active" : ''),
-      target: "_self",
-      key: index,
-      onClick: function onClick() {
-        setCurrentPage(tab.value);
-      }
-    }, tab.label);
-  }))), /*#__PURE__*/React.createElement(topbar_es_i.Right, {
-    className: "p-5",
-    gap: "md"
-  }, /*#__PURE__*/React.createElement(topbar_es_i.Item, null)));
-};
-/* harmony default export */ const components_Header = (Header);
 ;// ./node_modules/@bsf/force-ui/dist/components/container/container-styles.es.js
 const container_styles_es_l = {
   sm: {
@@ -14979,7 +14914,7 @@ var General = function General(_ref) {
     value: false
   }];
   return /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, /*#__PURE__*/external_React_default().createElement(S, {
-    className: "bg-white mt-4 p-10 rounded-lg",
+    className: "bg-white p-10 rounded-lg",
     cols: "1",
     containerType: "grid"
   }, /*#__PURE__*/external_React_default().createElement(S, {
@@ -15560,7 +15495,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     return _SaveSettings.apply(this, arguments);
   }
   return /*#__PURE__*/external_React_default().createElement(S, {
-    className: "bg-white mt-4 p-10 rounded-lg",
+    className: "bg-white p-10 rounded-lg",
     cols: "1",
     containerType: "grid"
   }, /*#__PURE__*/external_React_default().createElement(S, {
@@ -15762,17 +15697,60 @@ function SettingPage_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
+var getCurrentTab = function getCurrentTab() {
+  var url = new URL(window.location);
+  var tab = url.searchParams.get("tab");
+  if (tab && '' !== tab) {
+    return tab;
+  }
+  return 'general';
+};
 var SettingPage = function SettingPage() {
-  var _React$useState = external_React_default().useState('general'),
+  var _React$useState = external_React_default().useState(getCurrentTab()),
     _React$useState2 = SettingPage_slicedToArray(_React$useState, 2),
     currentPage = _React$useState2[0],
     setCurrentPage = _React$useState2[1];
+  var updateTabParameter = function updateTabParameter(newValue) {
+    var url = new URL(window.location);
+
+    // Check if "tab" exists
+    if (url.searchParams.has("tab")) {
+      // Update its value
+      url.searchParams.set("tab", newValue);
+    } else {
+      // Add it if missing
+      url.searchParams.append("tab", newValue);
+    }
+
+    // Push the updated URL without reloading
+    window.history.replaceState({}, '', url);
+  };
+  var handleTabClick = function handleTabClick(e) {
+    var tabBtn = e.target.classList.contains('lmat-settings-header-tab') ? e.target : e.target.closest('.lmat-settings-header-tab');
+    var activeTab = document.querySelector('.lmat-settings-header-tab.active');
+    if (tabBtn.classList.contains('active')) {
+      return;
+    }
+    activeTab && activeTab.classList.remove('active');
+    tabBtn.classList.add('active');
+    var tab = tabBtn.dataset.tab;
+    updateTabParameter(tab);
+    setCurrentPage(tab);
+  };
+  (0,external_React_namespaceObject.useEffect)(function () {
+    var tabs = document.querySelectorAll('.lmat-settings-header-tab:not([data-link="true"])');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', handleTabClick);
+    });
+    return function () {
+      tabs.forEach(function (tab) {
+        tab.removeEventListener('click', handleTabClick);
+      });
+    };
+  }, []);
   return /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement(Toaster, {
     richColors: true,
     position: "top-right"
-  }), /*#__PURE__*/external_React_default().createElement(components_Header, {
-    setCurrentPage: setCurrentPage,
-    currentPage: currentPage
   }), /*#__PURE__*/external_React_default().createElement(components_MainComponent, {
     currentPage: currentPage
   }));

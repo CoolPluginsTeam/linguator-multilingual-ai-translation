@@ -209,6 +209,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => __DIR__ . '/../..' . '/modules/sync/settings-sync.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings' => __DIR__ . '/../..' . '/Settings/Controllers/settings.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => __DIR__ . '/../..' . '/Settings/Controllers/settings-module.php',
+        'Linguator\\Settings\\Header\\Header' => __DIR__ . '/../..' . '/Settings/Header/Header.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => __DIR__ . '/../..' . '/Settings/Tables/table-languages.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_String' => __DIR__ . '/../..' . '/Settings/Tables/table-string.php',
         'Linguator\\modules\\Bulk_Translation\\LMAT_Bulk_Translate_Rest_Routes' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translate-rest-routes.php',

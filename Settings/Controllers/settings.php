@@ -15,6 +15,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Model;
 use Linguator\Settings\Controllers\LMAT_Settings_Module;
 use Linguator\Settings\Tables\LMAT_Table_Languages;
 use Linguator\Settings\Tables\LMAT_Table_String;
+use Linguator\Settings\Header\Header;
 
 use WP_Error;
 
@@ -80,6 +81,17 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public $filter_lang;
 
 	/**
+	 * @var mixed
+	 */
+	private $header;
+
+	/**
+	 * @var mixed
+	 */
+	private $selected_tab;
+
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -89,9 +101,25 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
 
+		$selected_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'general';
+		
+		
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->active_tab = 'lmat' === $_GET['page'] ? 'lang' : substr( sanitize_key( $_GET['page'] ), 5 ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
+		
+		if($selected_tab){
+
+			if($selected_tab === 'strings'){
+				$this->active_tab = $selected_tab;
+			}
+
+			$this->selected_tab = $selected_tab;
+		}else{
+			$this->selected_tab = $this->active_tab;
+		}
+		
+		$this->header = Header::get_instance($this->selected_tab, $this->model);
 
 		LMAT_Admin_Strings::init();
 
@@ -351,6 +379,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			// Render the React container for settings
 			echo '<div class="wrap lmat-styles">';
+			$this->header->header();
 			echo '<div id="lmat-settings"></div>';
 			echo '</div>';
 			return;
@@ -382,6 +411,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		// Displays the page
 		$modules    = $this->modules;
 		$active_tab = $this->active_tab;
+		$header = $this->header;
 		include __DIR__ . '/../Views/view-languages.php';
 	}
 
@@ -423,8 +453,9 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
-		
-		if ( $is_settings_tab ) {
+		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
+
+		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab)) {
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'Admin/Assets/frontend/settings/settings.asset.php';
 
@@ -433,6 +464,9 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			}
 
 			$asset = require $asset_file;
+			
+			$this->header->header_assets();
+			// Enqueue header assets
 
 			// Enqueue React-based settings script
 			wp_enqueue_script(
@@ -481,6 +515,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			
 		} else {
+			$this->header->header_assets();
+
 			// Original scripts for lang and strings tabs
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 

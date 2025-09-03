@@ -4,6 +4,7 @@
  *
  * @package Linguator
  *
+ * @var \Linguator\Settings\Header\Header $header An object representing the header.
  * @var LMAT_Table_String $string_table An object representing the translations list table.
  */
 
@@ -12,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="form-wrap">
+	<?php $header && $header instanceof \Linguator\Settings\Header\Header && $header->header(); ?>
 	<form id="string-translation" method="post" action="<?php echo esc_url( add_query_arg( 'noheader', 'true' ) ); ?>">
 		<input type="hidden" name="lmat_action" value="string-translation" />
 		<?php

@@ -159,6 +159,7 @@ return array(
     'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => $baseDir . '/modules/sync/settings-sync.php',
     'Linguator\\Settings\\Controllers\\LMAT_Settings' => $baseDir . '/Settings/Controllers/settings.php',
     'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => $baseDir . '/Settings/Controllers/settings-module.php',
+    'Linguator\\Settings\\Header\\Header' => $baseDir . '/Settings/Header/Header.php',
     'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => $baseDir . '/Settings/Tables/table-languages.php',
     'Linguator\\Settings\\Tables\\LMAT_Table_String' => $baseDir . '/Settings/Tables/table-string.php',
     'Linguator\\modules\\Bulk_Translation\\LMAT_Bulk_Translate_Rest_Routes' => $baseDir . '/modules/bulk-translation/bulk-translate-rest-routes.php',
