@@ -3164,13 +3164,9 @@
         return /*#__PURE__*/(0,jsx_runtime.jsx)("tr", {
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)(rows, {
             language: translationData.lang,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(add_or_edit, {
-              children: addEditButton()
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)(cells_synchronization, {
-              children: translationData.can_synchronize && /*#__PURE__*/(0,jsx_runtime.jsx)(buttons_synchronization, {
-                translationData: translationData
-              })
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)(translation_input, {
+                         children: [/*#__PURE__*/(0,jsx_runtime.jsx)(add_or_edit, {
+               children: addEditButton()
+             }), /*#__PURE__*/(0,jsx_runtime.jsx)(translation_input, {
               children: /*#__PURE__*/(0,jsx_runtime.jsx)(input, {
                 id: `htr_lang_${translationData.lang.slug}`,
                 autoFocus: false // eslint-disable-line jsx-a11y/no-autofocus
@@ -3544,12 +3540,7 @@
       setCurrentPost(post);
       setCurrentPostType(post?.type);
       
-      // DEBUG: Check translation data in SiteEditor
-      console.log('🔍 SITE_EDITOR TRANSLATIONS CHECK:');
-      console.log('- post?.lang:', post?.lang);
-      console.log('- post?.translations:', post?.translations);
-      console.log('- post?.translations_table:', post?.translations_table);
-      console.log('- post ID:', post?.id);
+
       
       // Use post language if available, otherwise fallback to settings language
       const postLang = post?.lang || lmat_block_editor_plugin_settings?.lang?.slug;
@@ -3558,34 +3549,39 @@
       // Generate proper translations table
       let translationsTableData = post?.translations_table;
       
-      // If no translations table exists, create one based on available languages
+      // If no translations table exists, try to get it from backend settings
       if (!translationsTableData) {
-        try {
-          const allLanguages = (0,external_this_wp_data_.select)(settings_MODULE_KEY)?.getLanguages();
-          
-          if (allLanguages && typeof allLanguages.forEach === 'function') {
+        translationsTableData = lmat_block_editor_plugin_settings?.translations_table || {};
+        
+        // Only create fallback if backend data is also empty
+        if (Object.keys(translationsTableData).length === 0) {
+          try {
+            const allLanguages = (0,external_this_wp_data_.select)(settings_MODULE_KEY)?.getLanguages();
+            
+            if (allLanguages && typeof allLanguages.forEach === 'function') {
+              translationsTableData = {};
+              allLanguages.forEach((lang, slug) => {
+                if (slug !== postLang) { // Don't include current language
+                  translationsTableData[slug] = {
+                    lang: lang,
+                    translated_post: { id: null },
+                    caps: { edit: true, add: true },
+                    links: {
+                      add_link: `${window.location.origin}/wp-admin/post-new.php?post_type=${post?.type || 'post'}&new_lang=${slug}`,
+                      edit_link: ''
+                    },
+                    block_editor: {
+                      edit_link: ''
+                    },
+                    can_synchronize: true
+                  };
+                }
+              });
+            }
+          } catch (error) {
+            // Fallback to empty table if languages can't be loaded
             translationsTableData = {};
-            allLanguages.forEach((lang, slug) => {
-              if (slug !== postLang) { // Don't include current language
-                translationsTableData[slug] = {
-                  lang: lang,
-                  translated_post: { id: null },
-                  caps: { edit: true, add: true },
-                  links: {
-                    add_link: `${window.location.origin}/wp-admin/post-new.php?post_type=${post?.type || 'post'}&new_lang=${slug}`,
-                    edit_link: ''
-                  },
-                  block_editor: {
-                    edit_link: ''
-                  },
-                  can_synchronize: true
-                };
-              }
-            });
           }
-        } catch (error) {
-          // Fallback to empty table if languages can't be loaded
-          translationsTableData = {};
         }
       }
       
@@ -3895,12 +3891,7 @@
       const existingTranslations = select(MODULE_CORE_EDITOR_KEY).getEditedPostAttribute('translations');
       const isAllowed = !settings_UNTRANSLATABLE_POST_TYPE.includes(post?.type);
       
-      // DEBUG: Check what translation data exists
-      console.log('🔍 TRANSLATIONS CHECK:');
-      console.log('- lang:', lang);
-      console.log('- translationsData:', translationsData);
-      console.log('- existingTranslations:', existingTranslations);
-      console.log('- post ID:', post?.id);
+
       
       // Use post lang if available, otherwise fallback to settings language
       const finalLang = lang || lmat_block_editor_plugin_settings?.lang?.slug;
@@ -3908,7 +3899,6 @@
       
       // Fix: If post doesn't have lang attribute but we have a resolved language, update it
       if (!lang && finalLang && language) {
-        console.log('🔧 FIXING: Setting post language to', finalLang);
         try {
           // Update the post with the correct language
           (0,external_this_wp_data_.dispatch)(MODULE_CORE_EDITOR_KEY).editPost({ 
@@ -3922,57 +3912,35 @@
       // Generate proper translations table for PostEditor
       let finalTranslationsData = translationsData;
       
-      // Create translations table with proper existing translation detection
+      // If no post translations data, try backend settings
       if (!finalTranslationsData) {
+        finalTranslationsData = lmat_block_editor_plugin_settings?.translations_table || {};
+      }
+      
+      // Only create fallback if both post and backend data are empty
+      if (!finalTranslationsData || Object.keys(finalTranslationsData).length === 0) {
         try {
           const allLanguages = select(settings_MODULE_KEY)?.getLanguages();
-          console.log('🔍 All languages:', allLanguages);
-          console.log('🔍 Current post:', post);
-          console.log('🔍 Final lang:', finalLang);
           
           if (allLanguages && typeof allLanguages.forEach === 'function') {
             finalTranslationsData = {};
             
-            // Special handling for known test pages
-            const currentTitle = post?.title?.raw || post?.title || '';
-            console.log('🔍 Current title:', currentTitle);
-            
             allLanguages.forEach((lang, slug) => {
               if (slug !== finalLang) { // Don't include current language
-                
-                let existingPostId = null;
-                let editLink = '';
-                
-                // Auto-detect existing translations based on title patterns
-                if (currentTitle.toLowerCase().includes('test') && slug === 'hindi') {
-                  // For English "Test" page, check if Hindi "testing ( hindi )" exists
-                  console.log('🔍 Looking for Hindi translation of Test page');
-                  // In a real implementation, you'd query the REST API here
-                  // For now, we'll assume it exists and set a placeholder
-                  existingPostId = 'unknown'; // Placeholder - would be actual ID
-                  editLink = `${window.location.origin}/wp-admin/post.php?post=${existingPostId}&action=edit`;
-                } else if (currentTitle.toLowerCase().includes('hindi') && slug === 'en_us') {
-                  // For Hindi page, check if English "Test" exists
-                  console.log('🔍 Looking for English translation of Hindi page');
-                  existingPostId = 'unknown'; // Placeholder
-                  editLink = `${window.location.origin}/wp-admin/post.php?post=${existingPostId}&action=edit`;
-                }
-                
                 finalTranslationsData[slug] = {
                   lang: lang,
-                  translated_post: { id: existingPostId },
+                  translated_post: { id: null },
                   caps: { edit: true, add: true },
                   links: {
                     add_link: `${window.location.origin}/wp-admin/post-new.php?post_type=${post?.type || 'post'}&new_lang=${slug}`,
-                    edit_link: editLink
+                    edit_link: ''
                   },
                   block_editor: {
-                    edit_link: editLink
+                    edit_link: ''
                   },
                   can_synchronize: true
                 };
                 
-                console.log(`🔍 Created translation entry for ${slug}:`, finalTranslationsData[slug]);
               }
             });
           }
@@ -4003,8 +3971,6 @@
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)(switcher, {
           selectedLanguage: selectedLanguage,
           tableDispatch: tableDispatch
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(duplicate, {
-          postType: currentPostType
         }), machineTranslation?.isActive && /*#__PURE__*/(0,jsx_runtime.jsx)(machine_translation, {
           postType: currentPostType,
           slug: machineTranslation.slug,

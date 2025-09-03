@@ -1341,10 +1341,6 @@
     /**
      * Internal dependencies
      */
-    
-    
-    
-    
     /*
      * Loads Linguator Redux store, used for languages.
      */
@@ -1421,7 +1417,6 @@
     /**
      * Adds default language parameter to a given request.
      *
-     * @since 3.5
      *
      * @param {APIFetchOptions} options REST request options.
      * @return {APIFetchOptions} Modified REST request options.

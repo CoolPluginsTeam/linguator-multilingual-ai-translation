@@ -98,6 +98,10 @@ abstract class Abstract_Screen {
 		if ( ! empty( $editor_lang ) ) {
 			$editor_lang = $editor_lang->to_array();
 		}
+
+		// Get translations table data for the current post
+		$translations_table_data = $this->get_translations_table_data();
+
 		$lmat_settings_script = 'let lmat_block_editor_plugin_settings = ' . wp_json_encode(
 			/**
 			 * Filters settings required by the UI.
@@ -111,6 +115,7 @@ abstract class Abstract_Screen {
 				array(
 					'lang'  => $editor_lang,
 					'nonce' => wp_create_nonce( 'lmat_language' ),
+					'translations_table' => $translations_table_data,
 				)
 			)
 		);
@@ -194,5 +199,87 @@ abstract class Abstract_Screen {
 			array( 'wp-components' ),
 			LINGUATOR_VERSION
 		);
+	}
+
+	/**
+	 * Gets translations table data for the current post.
+	 *
+	 * @return array Translations table data.
+	 */
+	protected function get_translations_table_data(): array {
+		global $post;
+
+		if ( empty( $post ) || ! $this->model->post_types->is_translated( $post->post_type ) ) {
+			return array();
+		}
+
+		$current_lang = $this->model->post->get_language( $post->ID );
+		if ( empty( $current_lang ) ) {
+			return array();
+		}
+
+		$translations_table = array();
+		$languages_list = $this->model->get_languages_list();
+
+		foreach ( $languages_list as $language ) {
+			// Skip current language
+			if ( $language->slug === $current_lang->slug ) {
+				continue;
+			}
+
+			// Get translated post ID
+			$translation_id = $this->model->post->get_translation( $post->ID, $language );
+			$translated_post = null;
+			$edit_link = '';
+			$add_link = '';
+
+			if ( $translation_id && $translation_id !== $post->ID ) {
+				// Translation exists
+				$translated_post = get_post( $translation_id );
+				if ( $translated_post ) {
+					$edit_link = get_edit_post_link( $translation_id, 'raw' );
+					$add_link = '';
+				}
+			}
+
+			if ( empty( $translated_post ) ) {
+				// No translation exists, create add link
+				$add_link = add_query_arg(
+					array(
+						'post_type' => $post->post_type,
+						'new_lang'  => $language->slug,
+						'from_post' => $post->ID,
+					),
+					admin_url( 'post-new.php' )
+				);
+			}
+
+			$translations_table[ $language->slug ] = array(
+				'lang' => array(
+					'slug'     => $language->slug,
+					'name'     => $language->name,
+					'flag'     => $language->get_display_flag( 'no-alt' ),
+					'flag_url' => $language->get_display_flag_url(),
+				),
+				'translated_post' => $translated_post ? array(
+					'id'    => $translated_post->ID,
+					'title' => $translated_post->post_title,
+				) : array( 'id' => null ),
+				'caps' => array(
+					'edit' => $translated_post ? current_user_can( 'edit_post', $translated_post->ID ) : false,
+					'add'  => current_user_can( 'edit_posts' ),
+				),
+				'links' => array(
+					'add_link'  => $add_link,
+					'edit_link' => $edit_link,
+				),
+				'block_editor' => array(
+					'edit_link' => $edit_link,
+				),
+				'can_synchronize' => true,
+			);
+		}
+
+		return $translations_table;
 	}
 }
