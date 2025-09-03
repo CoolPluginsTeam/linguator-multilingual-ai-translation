@@ -86,7 +86,6 @@ class Post extends Abstract_Screen {
 			return ! empty( $post_lang ) ? $post_lang : null;
 		}
 
-		error_log("=== END LINGUATOR LANGUAGE DEBUG ===");
 		return null;
 	}
 

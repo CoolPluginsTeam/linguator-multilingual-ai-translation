@@ -863,6 +863,7 @@
         });
       }
       if (isError) {
+        
         return /*#__PURE__*/(0,jsx_runtime.jsx)(wrapper, {
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             className: "lmat-metabox-error components-notice is-error",
