@@ -143,9 +143,8 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		
 
 		$tabs['settings'] = __( 'Settings', 'linguator-multilingual-ai-translation' );
-		if ( ! empty( $languages ) ) {
-			$tabs['strings'] = __( 'Translations', 'linguator-multilingual-ai-translation' );
-		}
+		
+		$tabs['localizations'] = __( 'Theme and plugins localization', 'linguator-multilingual-ai-translation' );
 
 		/**
 		 * Filter the list of tabs in Linguator settings
@@ -166,7 +165,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 				$admin_page_hooks[ $page ] = 'languages'; // Hack to avoid the localization of the hook name. See: https://core.trac.wordpress.org/ticket/18857
 			}
 
-			add_submenu_page( $parent, $title, $title, 'manage_options', $page, array( $this, 'languages_page' ) );
+			$hook=add_submenu_page( $parent, $title, $title, 'manage_options', $page, array( $this, 'languages_page' ) );
 		}
 	}
 

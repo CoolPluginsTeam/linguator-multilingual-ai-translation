@@ -107,6 +107,11 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->active_tab = 'lmat' === $_GET['page'] ? 'lang' : substr( sanitize_key( $_GET['page'] ), 5 ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
+
+		if($this->active_tab === 'localizations'){
+			add_action( 'load-languages_page_lmat_localizations', array( $this, 'load_page_localizations' ) );
+			return;
+		}
 		
 		if($selected_tab){
 
@@ -127,7 +132,6 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Adds screen options and the about box in the languages admin panel.
 		add_action( 'load-toplevel_page_lmat', array( $this, 'load_page' ) );
-		add_action( 'load-languages_page_lmat_strings', array( $this, 'load_page_strings' ) );
 
 		// Saves the per-page value in screen options.
 		add_filter( 'set_screen_option_lmat_lang_per_page', array( $this, 'set_screen_option' ), 10, 3 );
@@ -214,6 +218,37 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				'option'  => 'lmat_strings_per_page',
 			)
 		);
+	}
+
+	/**
+	 * Adds screen options in the localizations admin panel
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function load_page_localizations() {
+
+		if(!function_exists('is_plugin_active')){
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+		$loco_plugin_active=is_plugin_active('loco-translate/loco.php');
+		
+		if($loco_plugin_active){
+
+			$plugin_localize_url=admin_url('admin.php?page=loco-plugin');
+
+			wp_safe_redirect( $plugin_localize_url );
+			exit;
+		}
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_die( __( 'You do not have permission to access this page.', 'linguator-multilingual-ai-translation' ) );
+		}
+
+		$target = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=loco-translate' );
+		wp_safe_redirect( $target );
+		exit;
 	}
 
 	/**
@@ -365,7 +400,10 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function languages_page() {
-		// Clear language cache when loading the languages page to ensure fresh data
+		// return if the active tab is localizations
+		if($this->active_tab === 'localizations'){
+			return;
+		}
 		
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
@@ -450,6 +488,10 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 */
 	public function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
+
+		if($this->active_tab === 'localizations'){
+			return;
+		}
 
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
