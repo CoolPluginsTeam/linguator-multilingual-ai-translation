@@ -456,7 +456,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 			'suppress_filters' => false,
 		);
 		
-		$query = new WP_Query( $query_args );
+		$query = new \WP_Query( $query_args );
 		$all_posts = $query->posts;
 		
 		// Filter out posts that already have translations

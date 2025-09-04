@@ -2830,7 +2830,78 @@ topbar_es_i.Item = topbar_es_d;
 
 ;// external ["wp","i18n"]
 const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
+;// ./logo/linguator-icon.svg
+var _circle, _circle2;
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
+var SvgLinguatorIcon = function SvgLinguatorIcon(props) {
+  return /*#__PURE__*/external_React_namespaceObject.createElement("svg", _extends({
+    xmlns: "http://www.w3.org/2000/svg",
+    xmlSpace: "preserve",
+    style: {
+      fillRule: "evenodd",
+      clipRule: "evenodd",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      strokeMiterlimit: 1.5
+    },
+    viewBox: "0 0 44 44"
+  }, props), /*#__PURE__*/external_React_namespaceObject.createElement("path", {
+    d: "M31.81 18.162v5.274c0 2.39-1.94 4.33-4.329 4.33H15.585a4.33 4.33 0 0 1-4.329-4.33v-5.274a4.33 4.33 0 0 1 4.329-4.329h11.896a4.33 4.33 0 0 1 4.329 4.329m-2.25 2.637a4.336 4.336 0 0 0-4.334-4.334H17.84a4.336 4.336 0 0 0-4.334 4.334 4.336 4.336 0 0 0 4.334 4.334h7.386a4.336 4.336 0 0 0 4.334-4.334",
+    style: {
+      fill: "#30b230"
+    }
+  }), /*#__PURE__*/external_React_namespaceObject.createElement("ellipse", {
+    cx: 11.256,
+    cy: 20.799,
+    rx: 1.435,
+    ry: 2.689,
+    style: {
+      fill: "#30b230"
+    }
+  }), /*#__PURE__*/external_React_namespaceObject.createElement("ellipse", {
+    cx: 31.81,
+    cy: 20.799,
+    rx: 1.435,
+    ry: 2.689,
+    style: {
+      fill: "#30b230"
+    }
+  }), _circle || (_circle = /*#__PURE__*/external_React_namespaceObject.createElement("circle", {
+    cx: 17.684,
+    cy: 20.799,
+    r: 2.258
+  })), _circle2 || (_circle2 = /*#__PURE__*/external_React_namespaceObject.createElement("circle", {
+    cx: 25.382,
+    cy: 20.799,
+    r: 2.258
+  })), /*#__PURE__*/external_React_namespaceObject.createElement("path", {
+    d: "m22.09 11.461-1.036 3.867",
+    style: {
+      fill: "none",
+      stroke: "#30b230",
+      strokeWidth: "1.59px"
+    }
+  }), /*#__PURE__*/external_React_namespaceObject.createElement("path", {
+    d: "M22.678 9.158a1.644 1.644 0 0 1 1.161 2.011 1.643 1.643 0 1 1-1.161-2.011",
+    style: {
+      fill: "#30b230"
+    }
+  }), /*#__PURE__*/external_React_namespaceObject.createElement("path", {
+    d: "M27.347 42.27c-1.85.519-3.8.796-5.814.796C9.649 43.066 0 33.417 0 21.533S9.649 0 21.533 0s21.533 9.649 21.533 21.533c0 2.517-.433 4.934-1.228 7.181h-2.251a19.4 19.4 0 0 0 1.372-7.181c0-10.722-8.704-19.427-19.426-19.427S2.106 10.811 2.106 21.533s8.705 19.426 19.427 19.426c2.045 0 4.016-.316 5.868-.903z",
+    style: {
+      fill: "#30b230"
+    }
+  }), /*#__PURE__*/external_React_namespaceObject.createElement("path", {
+    d: "M28.655 29.976h5.857a43 43 0 0 0-.589-1.765l2.144-.435q.526 1.395.799 2.2h5.339v1.892h-2.081q-1.058 3.181-3.048 5.374 2.159 1.492 5.325 2.277-1.163 1.416-1.541 2.06-3.202-1.072-5.437-2.831-2.25 1.696-5.521 2.915a22 22 0 0 0-1.402-2.032q3.147-.981 5.269-2.424-2.018-2.249-2.858-5.339h-2.256zm9.087 1.892h-4.666a9.9 9.9 0 0 0 2.34 3.973 9.6 9.6 0 0 0 2.326-3.973",
+    style: {
+      fillRule: "nonzero"
+    }
+  }));
+};
+/* harmony default export */ const linguator_icon = (SvgLinguatorIcon);
 ;// ./Settings/Views/src/components/Header.jsx
+
 
 
 var Header = function Header(_ref) {
@@ -2847,10 +2918,12 @@ var Header = function Header(_ref) {
     className: "p-5"
   }, /*#__PURE__*/React.createElement(topbar_es_i.Item, {
     className: "flex items-center p-2"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
-    alt: "Linguator",
-    className: "h-8 w-auto object-contain"
+  }, /*#__PURE__*/React.createElement(linguator_icon, {
+    width: "40",
+    height: "40",
+    style: {
+      display: 'block'
+    }
   }))), /*#__PURE__*/React.createElement(topbar_es_i.Middle, {
     align: "left",
     className: "h-full"
@@ -7778,8 +7851,8 @@ const CompositeItem = /*#__PURE__*/(/* unused pure expression or super */ null &
   return renderJsx(render, computedProps);
 })));
 
-function _extends() {
-  _extends = Object.assign ? Object.assign.bind() : function (target) {
+function floating_ui_react_extends() {
+  floating_ui_react_extends = Object.assign ? Object.assign.bind() : function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -7790,7 +7863,7 @@ function _extends() {
     }
     return target;
   };
-  return _extends.apply(this, arguments);
+  return floating_ui_react_extends.apply(this, arguments);
 }
 
 let serverHandoffComplete = false;
@@ -7922,7 +7995,7 @@ const FloatingArrow = /*#__PURE__*/external_React_namespaceObject.forwardRef(fun
     bottom: isCustomShape ? '' : 'rotate(180deg)',
     right: isCustomShape ? 'rotate(-90deg)' : 'rotate(90deg)'
   }[side];
-  return /*#__PURE__*/external_React_namespaceObject.createElement("svg", _extends({}, rest, {
+  return /*#__PURE__*/external_React_namespaceObject.createElement("svg", floating_ui_react_extends({}, rest, {
     "aria-hidden": true,
     ref: ref,
     width: isCustomShape ? width : width + computedStrokeWidth,
@@ -8804,7 +8877,7 @@ const FocusGuard = /*#__PURE__*/external_React_namespaceObject.forwardRef(functi
     [createAttribute('focus-guard')]: '',
     style: HIDDEN_STYLES
   };
-  return /*#__PURE__*/external_React_namespaceObject.createElement("span", _extends({}, props, restProps));
+  return /*#__PURE__*/external_React_namespaceObject.createElement("span", floating_ui_react_extends({}, props, restProps));
 });
 
 const PortalContext = /*#__PURE__*/external_React_namespaceObject.createContext(null);
@@ -9015,7 +9088,7 @@ function getPreviouslyFocusedElement() {
   return previouslyFocusedElements.slice().reverse().find(el => el.isConnected);
 }
 const VisuallyHiddenDismiss = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef(function VisuallyHiddenDismiss(props, ref) {
-  return /*#__PURE__*/React.createElement("button", _extends({}, props, {
+  return /*#__PURE__*/React.createElement("button", floating_ui_react_extends({}, props, {
     type: "button",
     ref: ref,
     tabIndex: -1,
@@ -9485,7 +9558,7 @@ const FloatingOverlay = /*#__PURE__*/(/* unused pure expression or super */ null
       }
     };
   }, [lockScroll]);
-  return /*#__PURE__*/React.createElement("div", _extends({
+  return /*#__PURE__*/React.createElement("div", floating_ui_react_extends({
     ref: ref
   }, rest, {
     style: {

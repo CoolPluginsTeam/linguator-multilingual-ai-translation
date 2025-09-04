@@ -69,24 +69,6 @@ function lmat_get_requested_url() {
 }
 
 /**
- * Determines whether we should load the block editor plugin or the legacy languages metabox.
- *
- * @since 1.0.0
- *
- * @return bool True to use the block editor plugin.
- */
-function lmat_use_block_editor_plugin() {
-	/**
-	 * Filters whether we should load the block editor plugin or the legacy languages metabox.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param bool $use_plugin True when loading the block editor plugin.
-	 */
-	return false;
-}
-
-/**
  * Tells if a constant is defined.
  *
  * @since 1.0.0
@@ -191,4 +173,27 @@ function lmat_add_notice( WP_Error $error ) {
 
 		add_settings_error( 'linguator-multilingual-ai-translation', $error_code, $message, $type );
 	}
+}
+
+function lmat_is_edit_rest_request(WP_REST_Request $request): bool {
+	if (in_array($request->get_method(), array('PATCH', 'POST', 'PUT'), true)) {
+		return true;
+	}
+	return 'GET' === $request->get_method() && 'edit' === $request->get_param('context');
+}
+
+
+/**
+ * Determines whether we should load the block editor plugin or the legacy languages metabox.
+ *
+ *
+ * @return bool True to use the block editor plugin.
+ */
+function lmat_use_block_editor_plugin() {
+	/**
+	 * Filters whether we should load the block editor plugin or the legacy languages metabox.
+	 *
+	 * @param bool $use_plugin True when loading the block editor plugin.
+	 */
+	return class_exists( 'Linguator\Modules\Editors\Screens\Abstract_Screen' ) && apply_filters( 'lmat_use_block_editor_plugin', ! defined( 'LMAT_USE_BLOCK_EDITOR_PLUGIN' ) || LMAT_USE_BLOCK_EDITOR_PLUGIN );
 }
