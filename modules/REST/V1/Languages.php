@@ -248,7 +248,11 @@ class Languages extends Abstract_Controller {
 		}
 
 		/** @var LMAT_Language */
+		// Try to get the language by locale first, then by slug if not found
 		$language = $this->languages->get( $args['locale'] );
+		if ( ! $language ) {
+			$language = $this->languages->get( $args['slug'] );
+		}
 		return $this->prepare_item_for_response( $language, $request );
 	}
 
@@ -324,7 +328,11 @@ class Languages extends Abstract_Controller {
 
 			// Get the created language and prepare response
 			/** @var LMAT_Language */
+			// Try to get the language by locale first, then by slug if not found
 			$language = $this->languages->get( $args['locale'] );
+			if ( ! $language ) {
+				$language = $this->languages->get( $args['slug'] );
+			}
 			$created_languages[ $index ] = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $language, $request )
 			);

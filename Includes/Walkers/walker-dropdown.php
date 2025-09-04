@@ -90,10 +90,12 @@ class LMAT_Walker_Dropdown extends LMAT_Walker {
 		if ( ! empty( $args['flag'] ) ) {
 			$current = wp_list_filter( $elements, array( $args['value'] => $args['selected'] ) );
 			$lang = reset( $current );
-			$output = sprintf(
-				'<span class="lmat-select-flag">%s</span>',
-				empty( $lang->flag ) ? esc_html( $lang->slug ) : $lang->flag
-			);
+			if ( $lang && is_object( $lang ) ) {
+				$output = sprintf(
+					'<span class="lmat-select-flag">%s</span>',
+					empty( $lang->flag ) ? esc_html( $lang->slug ) : $lang->flag
+				);
+			}
 		}
 
 		$output .= sprintf(

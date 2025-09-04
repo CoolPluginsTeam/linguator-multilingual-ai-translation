@@ -143,7 +143,20 @@ class Linguator {
 	public static function is_ajax_on_front() {
 		// Special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
 		// Special test for customize_save done in frontend but for which we want to load the admin
-		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( $_REQUEST['action'] ), array( 'upload-attachment', 'customize_save' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		// Special test for Elementor actions which should be treated as admin/backend operations
+		$excluded_actions = array( 'upload-attachment', 'customize_save' );
+		
+		// Add Elementor-specific actions that should be treated as backend
+		if ( isset( $_REQUEST['action'] ) ) {
+			$action = sanitize_key( $_REQUEST['action'] );
+			// Check for Elementor actions - these should be treated as admin operations
+			if ( strpos( $action, 'elementor' ) !== false || 
+				 in_array( $action, array( 'heartbeat' ) ) ) {
+				$excluded_actions[] = $action;
+			}
+		}
+		
+		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( $_REQUEST['action'] ), $excluded_actions ); // phpcs:ignore WordPress.Security.NonceVerification
 		$is_ajax_on_front = wp_doing_ajax() && empty( $_REQUEST['lmat_ajax_backend'] ) && ! $in; // phpcs:ignore WordPress.Security.NonceVerification
 
 		/**
