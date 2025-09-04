@@ -188,55 +188,25 @@ const Plus = createLucideIcon("plus", plus_iconNode);
 
 //# sourceMappingURL=plus.js.map
 
-;// ./logo/lmat_menu_icon.svg
-var _path, _ellipse, _ellipse2, _circle, _circle2, _path2, _path3, _path4;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+;// external ["wp","primitives"]
+const external_wp_primitives_namespaceObject = window["wp"]["primitives"];
+;// external "ReactJSXRuntime"
+const external_ReactJSXRuntime_namespaceObject = window["ReactJSXRuntime"];
+;// ./node_modules/@wordpress/icons/build-module/library/globe.js
+/**
+ * WordPress dependencies
+ */
 
-var SvgLmatMenuIcon = function SvgLmatMenuIcon(props) {
-  return /*#__PURE__*/external_React_namespaceObject.createElement("svg", _extends({
-    xmlns: "http://www.w3.org/2000/svg",
-    xmlSpace: "preserve",
-    style: {
-      fillRule: "evenodd",
-      clipRule: "evenodd",
-      strokeLinejoin: "round",
-      strokeMiterlimit: 2
-    },
-    viewBox: "0 0 44 44"
-  }, props), _path || (_path = /*#__PURE__*/external_React_namespaceObject.createElement("path", {
-    d: "M31.81 18.162v5.274c0 2.39-1.94 4.33-4.329 4.33H15.585a4.33 4.33 0 0 1-4.329-4.33v-5.274a4.33 4.33 0 0 1 4.329-4.329h11.896a4.33 4.33 0 0 1 4.329 4.329m-2.25 2.637a4.336 4.336 0 0 0-4.334-4.334H17.84a4.336 4.336 0 0 0-4.334 4.334 4.336 4.336 0 0 0 4.334 4.334h7.386a4.336 4.336 0 0 0 4.334-4.334"
-  })), _ellipse || (_ellipse = /*#__PURE__*/external_React_namespaceObject.createElement("ellipse", {
-    cx: 11.256,
-    cy: 20.799,
-    rx: 1.435,
-    ry: 2.689
-  })), _ellipse2 || (_ellipse2 = /*#__PURE__*/external_React_namespaceObject.createElement("ellipse", {
-    cx: 31.81,
-    cy: 20.799,
-    rx: 1.435,
-    ry: 2.689
-  })), _circle || (_circle = /*#__PURE__*/external_React_namespaceObject.createElement("circle", {
-    cx: 17.684,
-    cy: 20.799,
-    r: 2.258
-  })), _circle2 || (_circle2 = /*#__PURE__*/external_React_namespaceObject.createElement("circle", {
-    cx: 25.382,
-    cy: 20.799,
-    r: 2.258
-  })), _path2 || (_path2 = /*#__PURE__*/external_React_namespaceObject.createElement("path", {
-    d: "m21.854 10.289-1.402 5.157 1.366-.018 1.414-4.996z"
-  })), _path3 || (_path3 = /*#__PURE__*/external_React_namespaceObject.createElement("path", {
-    d: "M22.678 9.158a1.644 1.644 0 0 1 1.161 2.011 1.643 1.643 0 1 1-1.161-2.011"
-  })), _path4 || (_path4 = /*#__PURE__*/external_React_namespaceObject.createElement("path", {
-    d: "M27.347 42.27c-1.85.519-3.8.796-5.814.796C9.649 43.066 0 33.417 0 21.533S9.649 0 21.533 0s21.533 9.649 21.533 21.533c0 2.517-.433 4.934-1.228 7.181h-2.251a19.4 19.4 0 0 0 1.372-7.181c0-10.722-8.704-19.427-19.426-19.427S2.106 10.811 2.106 21.533s8.705 19.426 19.427 19.426c2.045 0 4.016-.316 5.868-.903z"
-  })), /*#__PURE__*/external_React_namespaceObject.createElement("path", {
-    d: "M28.655 29.976h5.857a43 43 0 0 0-.589-1.765l2.144-.435q.526 1.395.799 2.2h5.339v1.892h-2.081q-1.058 3.181-3.048 5.374 2.159 1.492 5.325 2.277-1.163 1.416-1.541 2.06-3.202-1.072-5.437-2.831-2.25 1.696-5.521 2.915a22 22 0 0 0-1.402-2.032q3.147-.981 5.269-2.424-2.018-2.249-2.858-5.339h-2.256zm9.087 1.892h-4.666a9.9 9.9 0 0 0 2.34 3.973 9.6 9.6 0 0 0 2.326-3.973",
-    style: {
-      fillRule: "nonzero"
-    }
-  }));
-};
-/* harmony default export */ const lmat_menu_icon = (SvgLmatMenuIcon);
+
+const globe = /*#__PURE__*/(0,external_ReactJSXRuntime_namespaceObject.jsx)(external_wp_primitives_namespaceObject.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: /*#__PURE__*/(0,external_ReactJSXRuntime_namespaceObject.jsx)(external_wp_primitives_namespaceObject.Path, {
+    d: "M12 4c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8Zm6.5 8c0 .6 0 1.2-.2 1.8h-2.7c0-.6.2-1.1.2-1.8s0-1.2-.2-1.8h2.7c.2.6.2 1.1.2 1.8Zm-.9-3.2h-2.4c-.3-.9-.7-1.8-1.1-2.4-.1-.2-.2-.4-.3-.5 1.6.5 3 1.6 3.8 3ZM12.8 17c-.3.5-.6 1-.8 1.3-.2-.3-.5-.8-.8-1.3-.3-.5-.6-1.1-.8-1.7h3.3c-.2.6-.5 1.2-.8 1.7Zm-2.9-3.2c-.1-.6-.2-1.1-.2-1.8s0-1.2.2-1.8H14c.1.6.2 1.1.2 1.8s0 1.2-.2 1.8H9.9ZM11.2 7c.3-.5.6-1 .8-1.3.2.3.5.8.8 1.3.3.5.6 1.1.8 1.7h-3.3c.2-.6.5-1.2.8-1.7Zm-1-1.2c-.1.2-.2.3-.3.5-.4.7-.8 1.5-1.1 2.4H6.4c.8-1.4 2.2-2.5 3.8-3Zm-1.8 8H5.7c-.2-.6-.2-1.1-.2-1.8s0-1.2.2-1.8h2.7c0 .6-.2 1.1-.2 1.8s0 1.2.2 1.8Zm-2 1.4h2.4c.3.9.7 1.8 1.1 2.4.1.2.2.4.3.5-1.6-.5-3-1.6-3.8-3Zm7.4 3c.1-.2.2-.3.3-.5.4-.7.8-1.5 1.1-2.4h2.4c-.8 1.4-2.2 2.5-3.8 3Z"
+  })
+});
+/* harmony default export */ const library_globe = (globe);
+//# sourceMappingURL=globe.js.map
 ;// ./js/src/editors/post.js
 /**
  * Post Editor sidebar bootstrap
@@ -250,15 +220,9 @@ var SvgLmatMenuIcon = function SvgLmatMenuIcon(props) {
 
 
 var SIDEBAR_NAME = 'lmat-post-sidebar';
-var LanguageIcon = function LanguageIcon() {
-  return /*#__PURE__*/React.createElement(lmat_menu_icon, {
-    width: "20",
-    height: "20",
-    style: {
-      display: 'block'
-    }
-  });
-};
+
+// Use WP icon to ensure compatibility with @wordpress/components/Icon expectations
+var LanguageIcon = library_globe;
 var getSettings = function getSettings() {
   // Provided by PHP in Abstract_Screen::enqueue via wp_add_inline_script
   // Inline script declares: let lmat_block_editor_plugin_settings = {...}
@@ -387,6 +351,10 @@ var TranslationsSection = function TranslationsSection(_ref3) {
   }));
 };
 var Sidebar = function Sidebar() {
+  // Runtime guard: ensure editor components exist (avoids React rendering undefined elements)
+  if (!external_wp_editPost_namespaceObject.PluginSidebar || !external_wp_editPost_namespaceObject.PluginSidebarMoreMenuItem) {
+    return null;
+  }
   var settings = getSettings();
   var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;
   var translations = (settings === null || settings === void 0 ? void 0 : settings.translations_table) || {};
@@ -402,9 +370,13 @@ var Sidebar = function Sidebar() {
     translations: translations
   })));
 };
-(0,external_wp_plugins_namespaceObject.registerPlugin)(SIDEBAR_NAME, {
-  render: Sidebar,
-  icon: LanguageIcon
-});
+
+// Guard register to avoid calling with missing deps
+if (typeof external_wp_plugins_namespaceObject.registerPlugin === 'function' && external_wp_editPost_namespaceObject.PluginSidebar && external_wp_editPost_namespaceObject.PluginSidebarMoreMenuItem) {
+  (0,external_wp_plugins_namespaceObject.registerPlugin)(SIDEBAR_NAME, {
+    render: Sidebar,
+    icon: LanguageIcon
+  });
+}
 /******/ })()
 ;

@@ -8,11 +8,12 @@ import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/edit-post';
 import { PanelBody, SelectControl, TextControl, Flex, FlexItem, Icon, ExternalLink } from '@wordpress/components';
 import { useMemo } from '@wordpress/element';
 import { Plus, Pencil } from 'lucide-react';
-import LinguatorIcon from '@linguator-menu-icon.svg';
+import { globe } from '@wordpress/icons';
 
 const SIDEBAR_NAME = 'lmat-post-sidebar';
 
-const LanguageIcon = () => <LinguatorIcon width="20" height="20" style={{ display: 'block' }} />;
+// Use WP icon to ensure compatibility with @wordpress/components/Icon expectations
+const LanguageIcon = globe;
 
 const getSettings = () => {
     // Provided by PHP in Abstract_Screen::enqueue via wp_add_inline_script
@@ -110,6 +111,10 @@ const TranslationsSection = ( { translations } ) => {
 };
 
 const Sidebar = () => {
+    // Runtime guard: ensure editor components exist (avoids React rendering undefined elements)
+    if ( ! PluginSidebar || ! PluginSidebarMoreMenuItem ) {
+        return null;
+    }
     const settings = getSettings();
     const lang = settings?.lang || null;
     const translations = settings?.translations_table || {};
@@ -127,6 +132,9 @@ const Sidebar = () => {
     );
 };
 
-registerPlugin( SIDEBAR_NAME, { render: Sidebar, icon: LanguageIcon } );
+// Guard register to avoid calling with missing deps
+if ( typeof registerPlugin === 'function' && PluginSidebar && PluginSidebarMoreMenuItem ) {
+    registerPlugin( SIDEBAR_NAME, { render: Sidebar, icon: LanguageIcon } );
+}
 
 
