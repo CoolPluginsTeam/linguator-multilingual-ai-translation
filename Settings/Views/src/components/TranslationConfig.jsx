@@ -36,7 +36,7 @@ const ChromeLocalAINotice = () => {
     }, []);
 
     if (!showBrowserNotice && !showSecureNotice && !showApiNotice) {
-        // return null; // no notice needed
+        return null; // no notice needed
     }
 
     let message = '';

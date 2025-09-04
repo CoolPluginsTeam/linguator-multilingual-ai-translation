@@ -15344,7 +15344,7 @@ var ChromeLocalAINotice = function ChromeLocalAINotice() {
     }
   }, []);
   if (!showBrowserNotice && !showSecureNotice && !showApiNotice) {
-    // return null; // no notice needed
+    return null; // no notice needed
   }
   var message = '';
   var heading = '';
