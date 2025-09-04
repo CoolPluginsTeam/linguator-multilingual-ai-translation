@@ -1,132 +1,56 @@
 /**
- * widget.single.js
- * Registers a simple “Language Switcher” block for sidebars/footers and a tiny front-end
- * handler that redirects to the selected language URL.
+ * Widgets Editor integrations
  */
-(function () {
-	if (!window.wp) return;
 
-	const { __ } = wp.i18n;
-	const { registerBlockType } = (wp.blocks || {});
-	const { PanelBody, SelectControl, ServerSideRender, Placeholder, Spinner } = wp.components || {};
-	const { InspectorControls } = (wp.blockEditor || wp.editor || {});
-	const { Fragment, useEffect, useState } = wp.element;
+import { addFilter } from '@wordpress/hooks';
+import { createHigherOrderComponent } from '@wordpress/compose';
+import { __ } from '@wordpress/i18n';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, SelectControl } from '@wordpress/components';
 
-	/** Replace with your real language source or block settings */
-	async function fetchLanguages() {
-		// const res = await wp.apiFetch({ path: '/lmat/v1/languages' });
-		// return res;
-		return [
-			{ slug: 'en', name: 'English' },
-			{ slug: 'fr', name: 'Français' },
-			{ slug: 'de', name: 'Deutsch' }
-		];
-	}
+// Attribute injection: add language choice attribute to all blocks.
+const addLangChoiceAttribute = ( settings, name ) => {
+    if ( ! settings.attributes ) {
+        settings.attributes = {};
+    }
+    settings.attributes.lmatLang = {
+        type: 'string',
+        default: ''
+    };
+    return settings;
+};
 
-	// Helper to generate target URL. Adjust to your site’s structure (e.g., /{lang}/path).
-	function makeLangUrl(lang, currentUrl) {
-		try {
-			const url = new URL(currentUrl, window.location.origin);
-			// Example rule: prefix pathname with /{lang}/ if not default
-			const parts = url.pathname.replace(/^\/+/, '').split('/');
-			// if first segment is a 2-char language code, replace it; else insert
-			if (/^[a-z]{2}(-[a-z0-9]+)?$/i.test(parts[0])) {
-				parts[0] = lang;
-			} else {
-				parts.unshift(lang);
-			}
-			url.pathname = '/' + parts.filter(Boolean).join('/');
-			return url.toString();
-		} catch (e) {
-			return currentUrl;
-		}
-	}
+addFilter( 'blocks.registerBlockType', 'lmat/lang-choice', addLangChoiceAttribute );
 
-	/** ---- Block definition ---- */
-	if (registerBlockType && InspectorControls) {
-		registerBlockType('lmat/language-switcher', {
-			apiVersion: 2,
-			title: __('Language Switcher', 'your-textdomain'),
-			icon: 'translation',
-			category: 'widgets',
-			attributes: {
-				showLabel: { type: 'boolean', default: true }
-			},
-			edit() {
-				const [langs, setLangs] = useState(null);
+// UI control: exposes attribute in InspectorControls.
+const withInspectorControls = createHigherOrderComponent( ( BlockEdit ) => {
+    return ( props ) => {
+        const { attributes, setAttributes } = props;
+        const { lmatLang } = attributes;
+        return (
+            <>
+                <BlockEdit { ...props } />
+                <InspectorControls>
+                    <PanelBody title={ __( 'Language', 'linguator-multilingual-ai-translation' ) }>
+                        <SelectControl
+                            label={ __( 'Display in language', 'linguator-multilingual-ai-translation' ) }
+                            value={ lmatLang }
+                            options={ [
+                                { label: __( 'Any', 'linguator-multilingual-ai-translation' ), value: '' },
+                                // Real options should be injected server-side/localized; placeholder values here.
+                                { label: 'en', value: 'en' },
+                                { label: 'fr', value: 'fr' },
+                                { label: 'de', value: 'de' },
+                            ] }
+                            onChange={ ( value ) => setAttributes( { lmatLang: value } ) }
+                        />
+                    </PanelBody>
+                </InspectorControls>
+            </>
+        );
+    };
+}, 'withInspectorControls' );
 
-				useEffect(() => {
-					let mounted = true;
-					(async () => {
-						const list = await fetchLanguages();
-						if (mounted) setLangs(list);
-					})();
-					return () => (mounted = false);
-				}, []);
+addFilter( 'editor.BlockEdit', 'lmat/lang-choice/controls', withInspectorControls );
 
-				if (!langs) {
-					return wp.element.createElement(Placeholder, { label: __('Language Switcher', 'your-textdomain') },
-						wp.element.createElement(Spinner, null)
-					);
-				}
 
-				return wp.element.createElement(Fragment, null,
-					wp.element.createElement('div', { className: 'lmat-language-switcher-editor' },
-						wp.element.createElement('label', { style: { display: 'block', marginBottom: 6 } }, __('Languages', 'your-textdomain')),
-						wp.element.createElement('select', { disabled: true, style: { minWidth: 200 } },
-							langs.map(l => wp.element.createElement('option', { key: l.slug, value: l.slug }, l.name))
-						),
-						wp.element.createElement('p', { style: { opacity: 0.7 } }, __('This is a preview. On the front end it will redirect.', 'your-textdomain'))
-					),
-					wp.element.createElement(InspectorControls, null,
-						wp.element.createElement(PanelBody, { title: __('Settings', 'your-textdomain'), initialOpen: true },
-							wp.element.createElement('p', null, __('No extra settings in this minimal version.', 'your-textdomain'))
-						)
-					)
-				);
-			},
-			save() {
-				// Front-end markup; we add a small no-dep inline handler below
-				return wp.element.createElement('div', { className: 'lmat-language-switcher' },
-					wp.element.createElement('label', { className: 'screen-reader-text' }, __('Select language', 'your-textdomain')),
-					wp.element.createElement('select', { 'data-lmat-switcher': '1' })
-				);
-			}
-		});
-	}
-
-	/** ---- Front-end behavior (works for both block and hard-coded markup) ---- */
-	function initFrontEndSwitcher(root) {
-		// Populate options (simple; replace with server-render or REST if needed)
-		const select = root.querySelector('select[data-lmat-switcher]');
-		if (!select) return;
-
-		// If already populated, skip
-		if (select.options.length === 0) {
-			fetchLanguages().then((langs) => {
-				langs.forEach((l) => {
-					const opt = document.createElement('option');
-					opt.value = l.slug;
-					opt.textContent = l.name;
-					select.appendChild(opt);
-				});
-			});
-		}
-
-		select.addEventListener('change', function (e) {
-			const lang = e.target.value;
-			if (!lang) return;
-			window.location.href = makeLangUrl(lang, window.location.href);
-		});
-	}
-
-	// Auto-init on DOM ready (works in themes and classic widgets too)
-	function ready(fn) {
-		if (document.readyState !== 'loading') fn();
-		else document.addEventListener('DOMContentLoaded', fn);
-	}
-
-	ready(function () {
-		document.querySelectorAll('.lmat-language-switcher').forEach(initFrontEndSwitcher);
-	});
-})();
