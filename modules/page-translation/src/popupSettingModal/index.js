@@ -145,11 +145,11 @@ const SettingModal = (props) => {
 
         if (providers.length < 1) {
             let providerConfigMsg = sprintf(__(
-                '%sYou have not enabled any translation provider. Please enable at least one service provider to use automatic translation. Go to the %sLinguator settings page%s to configure a translation provider.%s',
+                '%sYou have not enabled any translation provider. Please enable at least one service provider to use automatic translation. Go to the %sTranslation Settings%s to configure a translation provider.%s',
                 'linguator-multilingual-ai-translation'
             ),
                 '<p>',
-                `<strong><a href='${lmatPageTranslationGlobal.admin_url}admin.php?page=lmat_settings' target='_blank' rel='noopener noreferrer'>`,
+                `<strong><a href='${lmatPageTranslationGlobal.admin_url}admin.php?page=lmat_settings&tab=translation' target='_blank' rel='noopener noreferrer'>`,
                 '</a></strong>',
                 '</p>');
             setServiceModalErrors((prev) => ({ ...prev, providerNotConfigured: { message: providerConfigMsg, Title: __("Translation Provider Not Configured", 'linguator-multilingual-ai-translation') } }));

@@ -16,11 +16,11 @@ import { __, sprintf } from '@wordpress/i18n';
 
         const [providerConfigError, setProviderConfigError] = useState(false);
         let providerConfigMsg = sprintf(__(
-            '%sYou have not enabled any translation provider. Please enable at least one service provider to use bulk translation. Go to the %sLinguator settings page%s to configure a translation provider.%s',
+            '%sYou have not enabled any translation provider. Please enable at least one service provider to use bulk translation. Go to the %sTranslation Settings%s to configure a translation provider.%s',
             'linguator-multilingual-ai-translation'
         ),
         '<p>',
-        `<strong><a href='${lmatBulkTranslationGlobal.admin_url}admin.php?page=lmat_settings' target='_blank' rel='noopener noreferrer'>`,
+        `<strong><a href='${lmatBulkTranslationGlobal.admin_url}admin.php?page=lmat_settings&tab=translation' target='_blank' rel='noopener noreferrer'>`,
         '</a></strong>',
         '</p>');
 
