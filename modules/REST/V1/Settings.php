@@ -157,8 +157,17 @@ class Settings extends Abstract_Controller {
 				array_push($available_taxonomies,["taxonomy_name"=>$tx->labels->name,"taxonomy_key"=>$tx->name]);
 			}
 		}
+
+		$disabled_post_types = array();
+		foreach ( $this->disabled_post_types as $disabled_post_type ) {
+			$pt = get_post_type_object( $disabled_post_type );
+			if ( ! empty( $pt ) ) {
+				array_push($disabled_post_types,["post_type_name"=>$pt->labels->name,"post_type_key"=>$pt->name]);
+			}
+		}
 		$response['available_post_types'] = $available_post_types;
 		$response['available_taxonomies'] = $available_taxonomies;
+		$response['disabled_post_types'] = $disabled_post_types;
 		
 		// Check if CPFM opt-in choice exists for LMAT
 		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
@@ -215,6 +224,10 @@ class Settings extends Abstract_Controller {
 
 			if ( 'default_lang' === $option_name ) {
 				$result = $this->languages->update_default( $new_value );
+			} elseif ( 'post_types' === $option_name ) {
+				// Handle post types with programmatically active ones
+				$processed_value = $this->process_post_types_for_save( $new_value );
+				$result = $this->options->set( $option_name, $processed_value );
 			} else {
 				$result = $this->options->set( $option_name, $new_value );
 			}
@@ -456,6 +469,27 @@ class Settings extends Abstract_Controller {
 		
 		/** @var WP_REST_Response */
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Process post types for saving, removing programmatically active ones.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $post_types Post types from frontend.
+	 * @return array Processed post types for saving.
+	 */
+	private function process_post_types_for_save( $post_types ) {
+		if ( ! is_array( $post_types ) ) {
+			return array();
+		}
+		
+		// Get programmatically active post types
+		$programmatically_active = array_unique( apply_filters( 'lmat_get_post_types', array(), false ) );
+		
+		// Remove programmatically active post types from the list to save
+		// They should not be stored in options since they're handled by code
+		return array_diff( $post_types, $programmatically_active );
 	}
 
 	/**

@@ -1,6 +1,7 @@
 
 import { Topbar } from '@bsf/force-ui';
 import { __ } from '@wordpress/i18n';
+import LinguatorIcon from '@linguator-icon.svg';
 const Header = ({ setCurrentPage, currentPage }) => {
     const tabs = [{
         label: __("GENERAL", "linguator-multilingual-ai-translation"),
@@ -14,7 +15,7 @@ const Header = ({ setCurrentPage, currentPage }) => {
         >
             <Topbar.Left className="p-5">
                 <Topbar.Item className='flex items-center p-2'>
-                    <img src={`${window.lmat_settings_logo_data.logoUrl}loco.png`} alt="Linguator" className='h-8 w-auto object-contain' />
+                <LinguatorIcon width="40" height="40" style={{ display: 'block' }} />
                 </Topbar.Item>
             </Topbar.Left>
             <Topbar.Middle

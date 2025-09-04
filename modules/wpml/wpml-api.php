@@ -219,12 +219,12 @@ class LMAT_WPML_API {
 		if ( 0 === strpos( $element_type, 'tax_' ) ) {
 			$element = get_term_by( 'term_taxonomy_id', $element_id );
 			if ( $element instanceof WP_Term ) {
-				$tr_term = LMAT()->model->term->get_object_term( $element->term_id, 'term_translations' );
+				$tr_term = LMAT()->model->term->get_object_term( $element->term_id, 'lmat_term_translations' );
 			}
 		}
 
 		if ( 0 === strpos( $element_type, 'post_' ) ) {
-			$tr_term = LMAT()->model->post->get_object_term( $element_id, 'post_translations' );
+			$tr_term = LMAT()->model->post->get_object_term( $element_id, 'lmat_post_translations' );
 		}
 
 		if ( isset( $tr_term ) && $tr_term instanceof WP_Term ) {

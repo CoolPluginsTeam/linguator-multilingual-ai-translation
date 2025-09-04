@@ -125,6 +125,17 @@ class LMAT_Frontend extends LMAT_Base {
 	 */
 	public $filter_lang;
 
+	// Block module properties
+	/**
+	 * @var mixed
+	 */
+	public $switcher_block;
+
+	/**
+	 * @var mixed
+	 */
+	public $navigation_block;
+
 	/**
 	 * Constructor.
 	 *

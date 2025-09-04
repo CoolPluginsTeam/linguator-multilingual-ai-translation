@@ -24,7 +24,7 @@ class LMAT_Duplicate_Post {
 	}
 
 	/**
-	 * Avoid duplicating the 'post_translations' taxonomy.
+	 * Avoid duplicating the 'lmat_post_translations' taxonomy.
 	 *
 	 * @since 1.0.0
 	 *
@@ -36,7 +36,7 @@ class LMAT_Duplicate_Post {
 			$taxonomies = array(); // As we get an empty string when there is no taxonomy.
 		}
 
-		$taxonomies[] = 'post_translations';
+		$taxonomies[] = 'lmat_post_translations';
 		return $taxonomies;
 	}
 }

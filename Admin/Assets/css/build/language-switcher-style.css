@@ -1,0 +1,221 @@
+.lmat-main-wrapper{
+    --lmat-flag-radius: 0px;
+    --lmat-flag-ratio: 4/3;
+    --lmat-normal-bg-color: #fff;
+    --lmat-normal-text-color: #000;
+  }
+  /* General reset */
+  .lmat-language-list,
+  .lmat-language-list li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+  
+  .lmat-main-wrapper .lmat-language-list{
+    overflow: hidden;
+  }
+  
+  /* Base wrapper */
+  .lmat-main-wrapper {
+      font-family: inherit;
+      font-size: inherit;
+      line-height: 1.5;
+  }
+  
+  .lmat-main-wrapper .lmat-wrapper a{
+    text-decoration: none;
+  }
+  
+  .lmat-main-wrapper .lmat-wrapper.horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  
+  .lmat-main-wrapper .lmat-wrapper.vertical {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Language switcher container */
+  .lmat-wrapper {
+      padding: 10px;
+  }
+  
+  /* Language item styling */
+  .lmat-lang-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      line-height: 1;
+  }
+  
+  .lmat-wrapper.horizontal .lmat-lang-item a,
+  .lmat-wrapper.vertical .lmat-lang-item a{
+    background-color: var(--lmat-normal-bg-color);
+  }
+  
+  
+  .lmat-lang-image{
+    aspect-ratio: var(--lmat-flag-ratio);
+  }
+  
+  /* Flag image styling */
+  .lmat-lang-image img {
+      object-fit: cover;
+      border-radius: var(--lmat-flag-radius);
+  }
+  
+  /* Name, code, and flag inline */
+  .lmat-lang-image,
+  .lmat-lang-name,
+  .lmat-lang-code {
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+      /* text-transform: capitalize; */
+  }
+  
+  /* Link reset */
+  .lmat-lang-item a,
+  .lmat-active-language a {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--lmat-normal-text-color);
+  }
+  
+  /* Active language button (dropdown trigger) */
+  .lmat-active-language {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 4px;
+      color: var(--lmat-normal-text-color);
+  }
+  
+  /* DROPDOWN STYLING */
+  .lmat-wrapper.dropdown {
+    position: relative;
+    display: inline-flex;
+    margin: 0 auto;
+    padding: 10px 15px;
+    cursor: pointer;
+    outline: none;
+    background-color: var(--lmat-normal-bg-color);
+    overflow: visible;
+    align-items: center;
+  }
+  
+  .lmat-active-language .lmat-dropdown-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+  }
+  
+  .lmat-wrapper.dropdown:hover .lmat-dropdown-icon {
+    transform: rotate(180deg);
+  }
+  
+  .lmat-wrapper.dropdown span a{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  
+  .lmat-wrapper.dropdown ul {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    right: 0px;
+    
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    list-style: none;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0px;
+    z-index: 999;
+    /* overflow-wrap: anywhere; */
+    display: inline-table;
+    width: 100%;
+  }
+  
+  .lmat-wrapper.dropdown ul li{
+    text-decoration: none;
+    background: var(--lmat-normal-bg-color);
+    display: block
+  }
+  .lmat-wrapper.dropdown li a{
+    color: var(--lmat-normal-text-color);
+    padding: 5px 15px;
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    white-space: nowrap;
+  }
+  
+  .lmat-dropdown-direction-up .lmat-wrapper.dropdown ul {
+    top: auto;
+    bottom: 100%;
+    justify-content: flex-start;
+  }
+  
+  .lmat-wrapper.dropdown.active::after, .lmat-wrapper.dropdown:hover::after {
+    border-width: 0 6px 6px 6px;
+  }
+  
+  .lmat-wrapper.dropdown.active ul, .lmat-wrapper.dropdown:hover ul {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  
+  .lmat_elementor_review_notice .lmat_elementor_review_wrapper{
+    padding: 10px; border:
+    2px solid #EDACFB;
+  }
+  .lmat_elementor_review_notice #lmat_elementor_review_dismiss{
+    position: absolute;
+    bottom: 4px;
+    background: #EDACFB;
+    color: #0C0D0E;
+    font-size: 10px;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .lmat_elementor_review_notice .lmat_elementor_review_msg{
+    font-size: 12px;
+    line-height: 18px;
+  }
+  
+  .lmat_elementor_review_notice .lmat_elementor_review_msg a{
+    color: #EDACFB;
+  }
+  .lmat_elementor_demo_btn{
+    position: absolute;
+    bottom: 4px;
+    right: 30px;
+    background: #EDACFB;
+    font-size: 10px;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .lmat_elementor_demo_btn a{
+    color: black;
+  }
+  .lmat_elementor_demo_btn a:hover{
+    color:black;
+    text-decoration: none;
+  }

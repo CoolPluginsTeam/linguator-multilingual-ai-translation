@@ -124,20 +124,94 @@ class LMAT_CRUD_Posts {
 
 			$lang = $this->model->post->get_language( $post_id );
 
-			if ( empty( $lang ) ) {
-				$this->set_default_language( $post_id );
-			}
+					if ( empty( $lang ) ) {
+			$this->set_default_language( $post_id );
+			
+			// Handle from_post parameter for translation linking
+			$this->handle_translation_linking( $post_id );
+		}
 
-			/**
-			 * Fires after the post language and translations are saved.
-			 *
-			 * @since 1.0.0
+		/**
+		 * Fires after the post language and translations are saved.
+		 *
+		 * @since 1.0.0
 			 *
 			 * @param int     $post_id      Post id.
 			 * @param WP_Post $post         Post object.
 			 * @param int[]   $translations The list of translations post ids.
 			 */
 			do_action( 'lmat_save_post', $post_id, $post, $this->model->post->get_translations( $post_id ) );
+		}
+	}
+
+	/**
+	 * Handles translation linking when a post is created with from_post parameter.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id Post ID of the newly created post.
+	 * @return void
+	 */
+	public function handle_translation_linking( $post_id ) {
+		// Check if we have a from_post parameter (for translation linking)
+		if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$from_post_id = (int) $_GET['from_post']; // phpcs:ignore WordPress.Security.NonceVerification
+			$new_lang_slug = sanitize_key( $_GET['new_lang'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			
+			// Validate the from_post exists and is translatable
+			$from_post = get_post( $from_post_id );
+			if ( ! $from_post || ! $this->model->is_translated_post_type( $from_post->post_type ) ) {
+				return;
+			}
+			
+			// Validate the new language exists
+			$new_lang = $this->model->get_language( $new_lang_slug );
+			if ( ! $new_lang ) {
+				return;
+			}
+			
+			// Get the original post's language
+			$from_lang = $this->model->post->get_language( $from_post_id );
+			if ( ! $from_lang ) {
+				return;
+			}
+			
+			// Set the language for the new post
+			$this->model->post->set_language( $post_id, $new_lang );
+			
+			// Create the translation link between the posts
+			$this->create_translation_link( $from_post_id, $post_id, $from_lang, $new_lang );
+		}
+	}
+
+	/**
+	 * Creates a translation link between two posts.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int           $from_post_id Original post ID.
+	 * @param int           $to_post_id   New translation post ID.
+	 * @param LMAT_Language $from_lang    Original post language.
+	 * @param LMAT_Language $to_lang      New translation language.
+	 * @return void
+	 */
+	private function create_translation_link( $from_post_id, $to_post_id, $from_lang, $to_lang ) {
+		// Get existing translations for the original post
+		$existing_translations = $this->model->post->get_translations( $from_post_id );
+		
+		// Add the original post to translations if not already there
+		if ( ! isset( $existing_translations[ $from_lang->slug ] ) ) {
+			$existing_translations[ $from_lang->slug ] = $from_post_id;
+		}
+		
+		// Add the new translation
+		$existing_translations[ $to_lang->slug ] = $to_post_id;
+		
+		// Save translations for all posts in the group
+		foreach ( $existing_translations as $lang_slug => $post_id ) {
+			if ( $post_id ) {
+				$this->model->post->save_translations( $post_id, $existing_translations );
+			}
 		}
 	}
 

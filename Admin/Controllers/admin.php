@@ -100,6 +100,38 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public $site_health;
 
+	// Block module properties
+	/**
+	 * @var mixed
+	 */
+	public $switcher_block;
+
+	/**
+	 * @var mixed
+	 */
+	public $navigation_block;
+
+	// Editor module properties
+	/**
+	 * @var mixed
+	 */
+	public $site_editor;
+
+	/**
+	 * @var mixed
+	 */
+	public $post_editor;
+
+	/**
+	 * @var mixed
+	 */
+	public $widget_editor;
+
+	/**
+	 * @var mixed
+	 */
+	public $filter_path;
+
 
 	/**
 	 * Setups filters and action needed on all admin pages and on plugins page.
