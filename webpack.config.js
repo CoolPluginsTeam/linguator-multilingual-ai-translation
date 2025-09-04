@@ -48,6 +48,10 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
                             ]
                         }
                     }
+                },
+                {
+                    test: /\.svg$/,
+                    use: ['@svgr/webpack']
                 }
             ]
         },
@@ -64,7 +68,11 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
             modules: [
                 path.resolve(__dirname, srcDir),
                 'node_modules'
-            ]
+            ],
+            alias: {
+                '@linguator-icon.svg': path.resolve(__dirname, 'logo/linguator-icon.svg'),
+                '@linguator-menu-icon.svg': path.resolve(__dirname, 'logo/lmat_menu_icon.svg'),
+            }
         },
         plugins: plugins,
         stats: {
