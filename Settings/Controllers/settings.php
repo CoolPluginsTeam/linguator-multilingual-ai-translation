@@ -101,20 +101,29 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
 
-		$selected_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'general';
+		$selected_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : '';
+		$loco=isset($_GET['loco']) ? sanitize_text_field($_GET['loco']) : '';
 		
 		
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->active_tab = 'lmat' === $_GET['page'] ? 'lang' : substr( sanitize_key( $_GET['page'] ), 5 ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
-		if($this->active_tab === 'localizations'){
-			add_action( 'load-languages_page_lmat_localizations', array( $this, 'load_page_localizations' ) );
-			return;
+		
+		if($loco === 'true'){
+			add_action( 'load-languages_page_lmat_settings', array( $this, 'loco_page_redirect' ) );
+		}
+
+		if($this->active_tab === 'lang'){
+			$selected_tab='lang';
+		}
+
+		if('loco' === $selected_tab || '' === $selected_tab){
+			$this->selected_tab = 'general';
+			$selected_tab='general';
 		}
 		
 		if($selected_tab){
-
 			if($selected_tab === 'strings'){
 				$this->active_tab = $selected_tab;
 			}
@@ -227,28 +236,52 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 *
 	 * @return void
 	 */
-	public function load_page_localizations() {
+	public function loco_page_assets() {
 
 		if(!function_exists('is_plugin_active')){
 			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 		$loco_plugin_active=is_plugin_active('loco-translate/loco.php');
+		$loco_install="false";
 		
 		if($loco_plugin_active){
+			$loco_install="true";
+			$plugin_info_url=admin_url('admin.php?page=loco');
+		}else{
 
-			$plugin_localize_url=admin_url('admin.php?page=loco-plugin');
+			if ( ! current_user_can( 'install_plugins' ) ) {
+				return;
+			}
 
-			wp_safe_redirect( $plugin_localize_url );
-			exit;
+			// Load ThickBox and updates JS
+			add_thickbox();
+			wp_enqueue_script( 'updates' );
+
+			$plugin_info_url=admin_url('plugin-install.php?tab=plugin-information&plugin=loco-translate&TB_iframe=true&width=772&height=851');
+		}
+		
+
+		wp_enqueue_script('lmat-loco-redirect-script', plugins_url('Admin/Assets/js/loco-redirect-script.js', LINGUATOR_ROOT_FILE), array('jquery'), LINGUATOR_VERSION, true);
+		wp_localize_script('lmat-loco-redirect-script', 'lmat_loco_redirect_script', array('admin_url' => esc_url(admin_url('admin.php?page=lmat_settings')), 'loco_iframe_page_url' => array("url" => $plugin_info_url, "title" => esc_js( __( 'Plugin: Loco Translate', 'linguator-multilingual-ai-translation' ) )), 'loco_install' => $loco_install));
+	}
+
+	/**
+	 * Redirects to the loco page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function loco_page_redirect() {
+		if(!function_exists('is_plugin_active')){
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
-			wp_die( __( 'You do not have permission to access this page.', 'linguator-multilingual-ai-translation' ) );
-		}
+		$loco_plugin_active=is_plugin_active('loco-translate/loco.php');
 
-		$target = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=loco-translate' );
-		wp_safe_redirect( $target );
-		exit;
+		if($loco_plugin_active){
+			wp_safe_redirect(admin_url('admin.php?page=loco'));
+		};
 	}
 
 	/**
@@ -489,10 +522,6 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public function admin_enqueue_scripts() {
 		parent::admin_enqueue_scripts();
 
-		if($this->active_tab === 'localizations'){
-			return;
-		}
-
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
 		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
@@ -567,6 +596,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			wp_enqueue_style( 'lmat_selectmenu', plugins_url( 'Admin/Assets/css/build/selectmenu' . $suffix . '.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		}
+
+		$this->loco_page_assets();
 	}
 
 	/**

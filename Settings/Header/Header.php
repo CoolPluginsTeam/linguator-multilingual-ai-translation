@@ -76,20 +76,21 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		public function tabs() {
 			$default_url = '';
 
-			if ( $this->active_tab && 'strings' === $this->active_tab ) {
+			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang']) ) {
 				$default_url = 'lmat_settings';
 			}
 
 			$tabs = array(
 				'general'     => array( 'title' => __( 'General', 'linguator-multilingual-ai-translation' ) ),
 				'translation' => array( 'title' => __( 'Translation', 'linguator-multilingual-ai-translation' ) ),
+				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
 			);
 
             $languages = $this->model->get_languages_list();
 
             if(!empty($languages)){
                 $tabs['strings']     = array(
-					'title'        => __( 'Strings', 'linguator-multilingual-ai-translation' ),
+					'title'        => __( 'Static Strings', 'linguator-multilingual-ai-translation' ),
 					'redirect'     => true,
 					'redirect_url' => 'lmat_settings&tab=strings',
 				);
