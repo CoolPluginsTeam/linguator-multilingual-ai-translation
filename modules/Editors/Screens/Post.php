@@ -68,8 +68,6 @@ class Post extends Abstract_Screen {
 			
 			// Check if post type is translated
 			$is_translated = $this->model->post_types->is_translated( $post->post_type );
-		} else {
-			error_log("Global post is empty");
 		}
 
 		if ( ! empty( $post ) && ! empty( $this->posts ) && $this->model->post_types->is_translated( $post->post_type ) ) {

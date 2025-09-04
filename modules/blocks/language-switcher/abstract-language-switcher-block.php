@@ -138,19 +138,11 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 
 		wp_localize_script( $script_handle, 'lmat_block_editor_blocks_settings', \Linguator\Includes\Controllers\LMAT_Switcher::get_switcher_options( 'block', 'string' ) );
 
-		// Debug: Add script path info to console
-		wp_add_inline_script( $script_handle, '
-			console.log("Linguator: Loading blocks script from ' . plugins_url( $script_filename, LINGUATOR_ROOT_FILE ) . '");
-			console.log("Linguator: Block settings:", lmat_block_editor_blocks_settings);
-		', 'before' );
-
 		// Ensure the block editor script is enqueued in the editor context
 		add_action( 'enqueue_block_editor_assets', function() use ( $script_handle, $script_filename ) {
 			
 			if ( ! wp_script_is( $script_handle, 'enqueued' ) ) {
 				wp_enqueue_script( $script_handle );
-			} else {
-				error_log( 'enqueue_block_editor_assets: ' . $script_handle . ' already enqueued' );
 			}
 		}, 20 );
 
