@@ -115,7 +115,7 @@ const Languages = () => {
 
             //handle whether to send language code or language code
             for (let apicalls = 0; apicalls < currentSelectedLanguage?.length; apicalls++) {
-              apiBody.push({ ...currentSelectedLanguage[apicalls], slug: currentSelectedLanguage[apicalls].locale.toLowerCase() })
+              apiBody.push({ ...currentSelectedLanguage[apicalls], slug: currentSelectedLanguage[apicalls].code })
             }
             //API call to save languages to database
             languageResponse = await apiFetch({

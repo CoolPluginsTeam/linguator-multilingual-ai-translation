@@ -14,6 +14,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
     public static $prefixLengthsPsr4 = array (
         'L' => 
         array (
+            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -25,6 +26,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
     );
 
     public static $prefixDirsPsr4 = array (
+        'Linguator\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
+        ),
         'Linguator\\Settings\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Settings',
@@ -93,6 +98,9 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Static_Pages' => __DIR__ . '/../..' . '/Admin/Controllers/admin-static-pages.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Strings' => __DIR__ . '/../..' . '/Admin/Controllers/admin-strings.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_View_Language_Links' => __DIR__ . '/../..' . '/Admin/Controllers/admin-view-language-links.php',
+        'Linguator\\Admin\\Feedback\\LMAT_Admin_Feedback' => __DIR__ . '/../..' . '/Admin/Feedback/admin-feedback.php',
+        'Linguator\\Admin\\cpfm_feedback\\CPFM_Feedback_Notice' => __DIR__ . '/../..' . '/Admin/cpfm-feedback/cpfm-feedback-notice.php',
+        'Linguator\\Admin\\cpfm_feedback\\cron\\LMAT_cronjob' => __DIR__ . '/../..' . '/Admin/cpfm-feedback/cron/class-cron.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang' => __DIR__ . '/../..' . '/frontend/Controllers/choose-lang.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Content' => __DIR__ . '/../..' . '/frontend/Controllers/choose-lang-content.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Domain' => __DIR__ . '/../..' . '/frontend/Controllers/choose-lang-domain.php',
@@ -143,6 +151,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Business\\Browser' => __DIR__ . '/../..' . '/Includes/Options/Business/Browser.php',
         'Linguator\\Includes\\Options\\Business\\Default_Lang' => __DIR__ . '/../..' . '/Includes/Options/Business/Default_Lang.php',
         'Linguator\\Includes\\Options\\Business\\Domains' => __DIR__ . '/../..' . '/Includes/Options/Business/Domains.php',
+        'Linguator\\Includes\\Options\\Business\\Feedback_Data' => __DIR__ . '/../..' . '/Includes/Options/Business/Feedback_Data.php',
         'Linguator\\Includes\\Options\\Business\\First_Activation' => __DIR__ . '/../..' . '/Includes/Options/Business/First_Activation.php',
         'Linguator\\Includes\\Options\\Business\\Force_Lang' => __DIR__ . '/../..' . '/Includes/Options/Business/Force_Lang.php',
         'Linguator\\Includes\\Options\\Business\\Hide_Default' => __DIR__ . '/../..' . '/Includes/Options/Business/Hide_Default.php',
@@ -191,6 +200,9 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Integrations\\domain_mapping\\LMAT_Domain_Mapping' => __DIR__ . '/../..' . '/integrations/domain-mapping/domain-mapping.php',
         'Linguator\\Integrations\\duplicate_post\\LMAT_Duplicate_Post' => __DIR__ . '/../..' . '/integrations/duplicate-post/duplicate-post.php',
         'Linguator\\Integrations\\elementor\\LMAT_Elementor' => __DIR__ . '/../..' . '/integrations/elementor/elementor.php',
+        'Linguator\\Integrations\\elementor\\LMAT_Register_Widget' => __DIR__ . '/../..' . '/integrations/elementor/lmat-register-widget.php',
+        'Linguator\\Integrations\\elementor\\LMAT_Template_Translation' => __DIR__ . '/../..' . '/integrations/elementor/lmat-template-translation.php',
+        'Linguator\\Integrations\\elementor\\LMAT_Widget' => __DIR__ . '/../..' . '/integrations/elementor/lmat-widget.php',
         'Linguator\\Integrations\\jetpack\\LMAT_Featured_Content' => __DIR__ . '/../..' . '/integrations/jetpack/featured-content.php',
         'Linguator\\Integrations\\jetpack\\LMAT_Jetpack' => __DIR__ . '/../..' . '/integrations/jetpack/jetpack.php',
         'Linguator\\Integrations\\no_category_base\\LMAT_No_Category_Base' => __DIR__ . '/../..' . '/integrations/no-category-base/no-category-base.php',
@@ -201,6 +213,15 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Integrations\\wpseo\\LMAT_WPSEO' => __DIR__ . '/../..' . '/integrations/wpseo/wpseo.php',
         'Linguator\\Integrations\\wpseo\\LMAT_WPSEO_OGP' => __DIR__ . '/../..' . '/integrations/wpseo/wpseo-ogp.php',
         'Linguator\\Integrations\\yarpp\\LMAT_Yarpp' => __DIR__ . '/../..' . '/integrations/yarpp/yarpp.php',
+        'Linguator\\Modules\\Blocks\\LMAT_Abstract_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/abstract-language-switcher-block.php',
+        'Linguator\\Modules\\Blocks\\LMAT_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/language-switcher-block.php',
+        'Linguator\\Modules\\Blocks\\LMAT_Navigation_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/navigation-language-switcher-block.php',
+        'Linguator\\Modules\\Editors\\Filter_Preload_Paths' => __DIR__ . '/../..' . '/modules/Editors/Filter_Preload_Paths.php',
+        'Linguator\\Modules\\Editors\\Screens\\Abstract_Screen' => __DIR__ . '/../..' . '/modules/Editors/Screens/Abstract_Screen.php',
+        'Linguator\\Modules\\Editors\\Screens\\Post' => __DIR__ . '/../..' . '/modules/Editors/Screens/Post.php',
+        'Linguator\\Modules\\Editors\\Screens\\Site' => __DIR__ . '/../..' . '/modules/Editors/Screens/Site.php',
+        'Linguator\\Modules\\Editors\\Screens\\Widget' => __DIR__ . '/../..' . '/modules/Editors/Screens/Widget.php',
+        'Linguator\\Modules\\Full_Site_Editing\\LMAT_FSE_Tools' => __DIR__ . '/../..' . '/modules/full-site-editing/fse-tools.php',
         'Linguator\\Modules\\REST\\API' => __DIR__ . '/../..' . '/modules/REST/API.php',
         'Linguator\\Modules\\REST\\Abstract_Controller' => __DIR__ . '/../..' . '/modules/REST/Abstract_Controller.php',
         'Linguator\\Modules\\REST\\V1\\Languages' => __DIR__ . '/../..' . '/modules/REST/V1/Languages.php',

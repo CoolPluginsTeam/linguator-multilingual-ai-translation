@@ -170,8 +170,21 @@ class Languages {
 		// First the language taxonomy
 		$description = $this->build_metas( $args );
 		
-		// Always use locale as the slug
-		$final_slug = $args['locale'];
+		// Check if language code already exists in saved languages
+		// This implements a fallback mechanism: if the same language code exists,
+		// we use the locale as the slug to allow multiple variants of the same language
+		$existing_languages = $this->get_list();
+		$code_exists = false;
+		
+		foreach ( $existing_languages as $existing_lang ) {
+			if ( $existing_lang->slug === $args['slug'] ) {
+				$code_exists = true;
+				break;
+			}
+		}
+		
+		// If code exists, use locale as slug; otherwise use the provided slug
+		$final_slug = $code_exists ? $args['locale'] : $args['slug'];
 
 		$r = wp_insert_term(
 			$args['name'],
@@ -183,7 +196,7 @@ class Languages {
 		);
 
 		if ( is_wp_error( $r ) ) {
-			return new WP_Error( 'lmat_add_language', __( 'Impossible to add the language. Please check if the locale is unique.', 'linguator-multilingual-ai-translation' ) );
+			return new WP_Error( 'lmat_add_language', __( 'Impossible to add the language. Please check if the language code or locale is unique.', 'linguator-multilingual-ai-translation' ) );
 		}
 
 		wp_update_term( (int) $r['term_id'], 'lmat_language', array( 'term_group' => (int) $args['term_group'] ) );
@@ -846,8 +859,9 @@ class Languages {
 
 		// Validate slug is unique.
 		foreach ( $this->get_list() as $language ) {
-			if ( $language->slug === $args['slug'] && ( null === $lang || $lang->term_id !== $language->term_id ) && $language->locale === $args['locale'] ) {
-				$errors->add( 'lmat_non_unique_slug', __( 'The language code must be unique', 'linguator-multilingual-ai-translation' ) );
+			// Check if both slug and locale are the same (exact duplicate)
+			if ( $language->slug === $args['slug'] && $language->locale === $args['locale'] && ( null === $lang || $lang->term_id !== $language->term_id ) ) {
+				$errors->add( 'lmat_non_unique_slug', __( 'This language with the same code and locale already exists', 'linguator-multilingual-ai-translation' ) );
 			}
 		}
 

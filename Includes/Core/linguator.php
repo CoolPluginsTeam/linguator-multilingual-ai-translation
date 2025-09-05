@@ -47,6 +47,25 @@ if ( is_readable( LMAT_LOCAL_DIR . '/lmat-config.php' ) ) {
 class Linguator {
 
 	/**
+	 * @var LMAT_Admin_Feedback|null
+	 */
+	public $feedback;
+	/**
+	 * @var CPFM_Feedback_Notice|null
+	 */
+	public $cpfm_feedback_notice;
+
+	/**
+	 * @var LMAT_cronjob|null
+	 */
+	public $lmat_cronjob;
+
+	/**
+	 * @var Options|null
+	 */
+	public $options;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -74,6 +93,37 @@ class Linguator {
 			LMAT_OLT_Manager::instance();
 		}
 
+		// Initialize feedback functionality
+		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
+		$this->cpfm_feedback_notice = new \Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice();
+		$this->lmat_cronjob = new \Linguator\Admin\cpfm_feedback\cron\LMAT_cronjob();
+		add_action('cpfm_register_notice', function () {
+
+			if (!class_exists('Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice') || !current_user_can('manage_options')) {
+				return;
+			}
+			$notice = [
+				'title' => __('Linguator – Multilingual AI Translation', 'linguator-multilingual-ai-translation'),
+				'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation'),
+				'pages' => ['lmat_settings'],
+				'always_show_on' => ['lmat_settings'], // This enables auto-show
+				'plugin_name'=>'lmat',
+				
+			];
+			\Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice::cpfm_register_notice('lmat', $notice);
+				if (!isset($GLOBALS['cool_plugins_feedback'])) {
+					$GLOBALS['cool_plugins_feedback'] = [];
+				}
+				$GLOBALS['cool_plugins_feedback']['lmat'][] = $notice;
+	   
+		});
+		add_action('cpfm_after_opt_in_lmat', function($category) {
+			if ($category === 'lmat') {
+				\Linguator\Admin\cpfm_feedback\cron\LMAT_cronjob::lmat_send_data();
+			}
+		});
+
+
 		/*
 		 * Loads the compatibility with some plugins and themes.
 		 * Loaded as soon as possible as we may need to act before other plugins are loaded.
@@ -93,7 +143,20 @@ class Linguator {
 	public static function is_ajax_on_front() {
 		// Special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
 		// Special test for customize_save done in frontend but for which we want to load the admin
-		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( $_REQUEST['action'] ), array( 'upload-attachment', 'customize_save' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		// Special test for Elementor actions which should be treated as admin/backend operations
+		$excluded_actions = array( 'upload-attachment', 'customize_save' );
+		
+		// Add Elementor-specific actions that should be treated as backend
+		if ( isset( $_REQUEST['action'] ) ) {
+			$action = sanitize_key( $_REQUEST['action'] );
+			// Check for Elementor actions - these should be treated as admin operations
+			if ( strpos( $action, 'elementor' ) !== false || 
+				 in_array( $action, array( 'heartbeat' ) ) ) {
+				$excluded_actions[] = $action;
+			}
+		}
+		
+		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( $_REQUEST['action'] ), $excluded_actions ); // phpcs:ignore WordPress.Security.NonceVerification
 		$is_ajax_on_front = wp_doing_ajax() && empty( $_REQUEST['lmat_ajax_backend'] ) && ! $in; // phpcs:ignore WordPress.Security.NonceVerification
 
 		/**
@@ -281,6 +344,9 @@ class Linguator {
 
 		$links_model = $model->get_links_model();
 		$linguator    = new $class( $links_model );
+		
+		// Set the options property for backward compatibility
+		$linguator->options = $model->options;
 
 		/**
 		 * Fires after Linguator's model init.

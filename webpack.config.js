@@ -85,6 +85,10 @@ function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, mini
                             ]
                         }
                     }
+                },
+                {
+                    test: /\.svg$/,
+                    use: ['@svgr/webpack']
                 }
             ]
         },
@@ -101,7 +105,11 @@ function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, mini
             modules: [
                 path.resolve(__dirname, srcDir),
                 'node_modules'
-            ]
+            ],
+            alias: {
+                '@linguator-icon.svg': path.resolve(__dirname, 'logo/linguator-icon.svg'),
+                '@linguator-menu-icon.svg': path.resolve(__dirname, 'logo/lmat_menu_icon.svg'),
+            }
         },
         plugins: plugins,
         stats: {
@@ -113,36 +121,48 @@ function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, mini
 }
 
 const configs = [
-    {
-        srcDir: 'js/src',
-        outDir: 'Admin/Assets/js/build',
-        sourceFiles: [
-            'admin',
-            'block-editor',
-            'classic-editor',
-            'media',
-            'nav-menu',
-            'post',
-            'settings',
-            'term',
-            'widgets',
-            'user'
-        ]
-    },
-    {
-        srcDir: 'Settings/Views/src',
-        outDir: 'Admin/Assets/frontend/settings',
-        sourceFiles: [
-            'settings'
-        ]
-    },
-    {
-        srcDir: 'modules/wizard/src',
-        outDir: 'Admin/Assets/frontend/setup',
-        sourceFiles: [
-            'setup'
-        ]
-    }
+	{
+		srcDir: 'js/src',
+		outDir: 'Admin/Assets/js/build',
+		sourceFiles: [
+			'admin',
+			'block-editor',
+			'classic-editor',
+			'media',
+			'nav-menu',
+			'post',
+			'settings',
+			'term',
+			'widgets',
+			'user',
+			'blocks'
+			
+		]
+	},
+	// Editors builds: post editor, site editor and widgets editor
+	{
+		srcDir: 'js/src/editors',
+		outDir: 'Admin/Assets/js/build/editors',
+		sourceFiles: [
+			'post',
+			'site',
+			'widget'
+		]
+	},
+	{
+		srcDir: 'Settings/Views/src',
+		outDir: 'Admin/Assets/frontend/settings',
+		sourceFiles: [
+			'settings'
+		]
+	},
+	{
+		srcDir: 'modules/wizard/src',
+		outDir: 'Admin/Assets/frontend/setup',
+		sourceFiles: [
+			'setup'
+		]
+	}
 ];
 
 const machineTranslationConfigs = [
@@ -177,13 +197,20 @@ export default (env, options) => {
         return machineTranslationConfigs.map(cfg => createConfig(cfg, false, true, cfg.generateAssets, cfg.ext, cfg.styleLoader));
     }
 
-    // Only first config (output1) gets both regular and minified (no assets)
-    const mainBuilds = [
-        createConfig(configs[0], false, false), // regular .js, no assets
-        createConfig(configs[0], true, false)   // minified .min.js, no assets
-    ];
-    // Other configs get only regular (non-minified) .js with assets
-    const assetBuilds = configs.slice(1).map(cfg => createConfig(cfg, false, false, true));
+    	// Admin JS gets both regular and minified (no assets)
+	const mainBuilds = [
+		createConfig(configs[0], false, false), // admin: regular .js, no assets
+		createConfig(configs[0], true, false)   // admin: minified .min.js, no assets
+	];
 
-    return [...mainBuilds, ...assetBuilds];
+	// Editors builds (post/site/widget) need WP externals (react, wp.*), so enable dependency extraction
+	const editorBuilds = [
+		createConfig(configs[1], false, true), // editors: regular .js, with assets (deps extraction)
+		createConfig(configs[1], true, true)   // editors: minified .min.js, with assets (deps extraction)
+	];
+
+	// Other configs get only regular (non-minified) .js with assets
+	const assetBuilds = configs.slice(2).map(cfg => createConfig(cfg, false, true, true));
+
+	return [...mainBuilds, ...editorBuilds, ...assetBuilds];
 };

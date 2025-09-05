@@ -157,8 +157,37 @@ class Settings extends Abstract_Controller {
 				array_push($available_taxonomies,["taxonomy_name"=>$tx->labels->name,"taxonomy_key"=>$tx->name]);
 			}
 		}
+
+		$disabled_post_types = array();
+		foreach ( $this->disabled_post_types as $disabled_post_type ) {
+			$pt = get_post_type_object( $disabled_post_type );
+			if ( ! empty( $pt ) ) {
+				array_push($disabled_post_types,["post_type_name"=>$pt->labels->name,"post_type_key"=>$pt->name]);
+			}
+		}
 		$response['available_post_types'] = $available_post_types;
 		$response['available_taxonomies'] = $available_taxonomies;
+		$response['disabled_post_types'] = $disabled_post_types;
+		
+		// Check if CPFM opt-in choice exists for LMAT
+		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
+		$initial_sync_done = get_option( 'lmat_feedback_initial_sync_done', false );
+		
+		if ( $cpfm_opt_in_choice === false ) {
+			// Remove the Usage Data Sharing setting if CPFM opt-in choice doesn't exist
+			unset( $response['lmat_feedback_data'] );
+		} else {
+			// Only sync once initially, then let the setting be independent
+			if ( ! $initial_sync_done ) {
+				// First time: Set the Usage Data Sharing value based on CPFM opt-in choice
+				$response['lmat_feedback_data'] = ( $cpfm_opt_in_choice === 'yes' );
+				// Mark that initial sync is done
+				update_option( 'lmat_feedback_initial_sync_done', true );
+			} else {
+				// After initial sync: Use the current setting value, don't override
+				$response['lmat_feedback_data'] = $this->options->get( 'lmat_feedback_data' );
+			}
+		}
 		
 		return $response;
 		// return $this->prepare_item_for_response( $this->options->get_all(), $request);
@@ -195,6 +224,10 @@ class Settings extends Abstract_Controller {
 
 			if ( 'default_lang' === $option_name ) {
 				$result = $this->languages->update_default( $new_value );
+			} elseif ( 'post_types' === $option_name ) {
+				// Handle post types with programmatically active ones
+				$processed_value = $this->process_post_types_for_save( $new_value );
+				$result = $this->options->set( $option_name, $processed_value );
 			} else {
 				$result = $this->options->set( $option_name, $new_value );
 			}
@@ -215,11 +248,51 @@ class Settings extends Abstract_Controller {
 					flush_rewrite_rules();
 			}
 		}
+		
+		// Handle cron job scheduling/removal based on CPFM opt-in choice and data usage sharing
+		$this->handle_cron_scheduling();
+		
 		if ( $errors->has_errors() ) {
 			return $this->add_status_to_error( $errors );
 		}
 
 		return $this->prepare_item_for_response( $this->options->get_all(), $request );
+	}
+
+	/**
+	 * Handles cron job scheduling/removal based on CPFM opt-in choice and data usage sharing.
+	 *
+	 * @since 1.0.0
+	 */
+	private function handle_cron_scheduling() {
+		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
+		$lmat_feedback_data = $this->options->get( 'lmat_feedback_data' );
+		
+		// Determine if cron should be scheduled based on the conditions
+		$should_schedule_cron = false;
+		
+		if ( $cpfm_opt_in_choice === 'no' && $lmat_feedback_data === true ) {
+			// Case 1: CPFM is 'no' but data usage sharing is 'yes' -> schedule cron
+			$should_schedule_cron = true;
+		} elseif ( $cpfm_opt_in_choice === 'yes' && $lmat_feedback_data === false ) {
+			// Case 2: CPFM is 'yes' but data usage sharing is 'no' -> remove cron
+			$should_schedule_cron = false;
+		} elseif ( $cpfm_opt_in_choice === 'yes' && $lmat_feedback_data === true ) {
+			// Case 3: Both are 'yes' -> schedule cron
+			$should_schedule_cron = true;
+		} else {
+			// All other cases -> remove cron
+			$should_schedule_cron = false;
+		}
+		
+		// Schedule or remove the cron job
+		if ( $should_schedule_cron ) {
+			if ( ! wp_next_scheduled( 'lmat_extra_data_update' ) ) {
+				wp_schedule_event( time(), 'every_30_days', 'lmat_extra_data_update' );
+			}
+		} else {
+			wp_clear_scheduled_hook( 'lmat_extra_data_update' );
+		}
 	}
 
 	/**
@@ -396,6 +469,27 @@ class Settings extends Abstract_Controller {
 		
 		/** @var WP_REST_Response */
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Process post types for saving, removing programmatically active ones.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $post_types Post types from frontend.
+	 * @return array Processed post types for saving.
+	 */
+	private function process_post_types_for_save( $post_types ) {
+		if ( ! is_array( $post_types ) ) {
+			return array();
+		}
+		
+		// Get programmatically active post types
+		$programmatically_active = array_unique( apply_filters( 'lmat_get_post_types', array(), false ) );
+		
+		// Remove programmatically active post types from the list to save
+		// They should not be stored in options since they're handled by code
+		return array_diff( $post_types, $programmatically_active );
 	}
 
 	/**

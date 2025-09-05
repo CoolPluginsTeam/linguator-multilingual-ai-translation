@@ -26,6 +26,8 @@ class Registry {
 		Business\Browser::class,
 		// Media.
 		Business\Media_Support::class,
+		// Usage Data Sharing.
+		Business\Feedback_Data::class,
 		// Custom post types and taxonomies.
 		Business\Post_Types::class,
 		Business\Taxonomies::class,

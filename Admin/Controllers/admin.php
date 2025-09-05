@@ -100,6 +100,39 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public $site_health;
 
+	// Block module properties
+	/**
+	 * @var mixed
+	 */
+	public $switcher_block;
+
+	/**
+	 * @var mixed
+	 */
+	public $navigation_block;
+
+	// Editor module properties
+	/**
+	 * @var mixed
+	 */
+	public $site_editor;
+
+	/**
+	 * @var mixed
+	 */
+	public $post_editor;
+
+	/**
+	 * @var mixed
+	 */
+	public $widget_editor;
+
+	/**
+	 * @var mixed
+	 */
+	public $filter_path;
+
+
 	/**
 	 * Setups filters and action needed on all admin pages and on plugins page.
 	 *
@@ -109,7 +142,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
-
+		
 		// Adds a 'settings' link in the plugins table
 		add_filter( 'plugin_action_links_' . LINGUATOR_BASENAME, array( $this, 'plugin_action_links' ) );
 		add_action( 'in_plugin_update_message-' . LINGUATOR_BASENAME, array( $this, 'plugin_update_message' ), 10, 2 );

@@ -1,0 +1,25 @@
+.lmat-button {
+	padding: 0;
+	height: 20px;
+	background: none;
+	border: none;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+.lmat-button:not(.wp-ui-text-highlight) {
+	color: #DDDDDD;
+}
+
+.lmat-button svg {
+	fill: currentColor;
+}
+
+.lmat-before-post-translations-button {
+	float: right;
+	margin: 13px 7px;
+}
+
+.rtl .lmat-before-post-translations-button {
+	float: left;
+}

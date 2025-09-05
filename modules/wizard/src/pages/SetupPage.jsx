@@ -92,10 +92,10 @@ const SetupPage = () => {
         errors: []
       }
       let apiBody = [];
-      apiBody = [{ ...selectedLanguage, slug: selectedLanguage.locale.toLowerCase() }]
+      apiBody = [{ ...selectedLanguage, slug: selectedLanguage.code }]
 
       for (let apicalls = 0; apicalls < currentSelectedLanguage.length; apicalls++) {
-        apiBody.push({ ...currentSelectedLanguage[apicalls], slug: currentSelectedLanguage[apicalls].locale.toLowerCase() })
+        apiBody.push({ ...currentSelectedLanguage[apicalls], slug: currentSelectedLanguage[apicalls].code })
       }
       languageResponse = await apiFetch({
         path: 'lmat/v1/languages',
@@ -150,7 +150,7 @@ const SetupPage = () => {
         let apiBody = [];
 
         for (let apicalls = 0; apicalls < currentSelectedLanguage.length; apicalls++) {
-          apiBody.push({ ...currentSelectedLanguage[apicalls], slug: currentSelectedLanguage[apicalls].locale.toLowerCase() })
+          apiBody.push({ ...currentSelectedLanguage[apicalls], slug: currentSelectedLanguage[apicalls].code })
         }
         languageResponse = await apiFetch({
           path: 'lmat/v1/languages',

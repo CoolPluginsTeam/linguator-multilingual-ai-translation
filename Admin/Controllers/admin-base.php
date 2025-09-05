@@ -282,7 +282,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @return bool True if the screen is a block editor, false otherwise.
 	 */
 	protected function is_block_editor( $screen ) {
-		return method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() && ! lmat_use_block_editor_plugin();
+		return method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() && !lmat_use_block_editor_plugin();
 	}
 
 	/**
