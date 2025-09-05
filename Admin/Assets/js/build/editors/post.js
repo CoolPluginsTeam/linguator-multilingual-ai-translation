@@ -9,8 +9,12 @@ const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
 const external_wp_editPost_namespaceObject = window["wp"]["editPost"];
 ;// external ["wp","components"]
 const external_wp_components_namespaceObject = window["wp"]["components"];
+;// external ["wp","apiFetch"]
+const external_wp_apiFetch_namespaceObject = window["wp"]["apiFetch"];
 ;// external ["wp","element"]
 const external_wp_element_namespaceObject = window["wp"]["element"];
+;// external ["wp","data"]
+const external_wp_data_namespaceObject = window["wp"]["data"];
 ;// external "React"
 const external_React_namespaceObject = window["React"];
 ;// ./node_modules/lucide-react/dist/esm/shared/src/utils.js
@@ -189,6 +193,16 @@ const Plus = createLucideIcon("plus", plus_iconNode);
 //# sourceMappingURL=plus.js.map
 
 ;// ./js/src/editors/post.js
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { if (r) i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n;else { var o = function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); }; o("next", 0), o("throw", 1), o("return", 2); } }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 /**
  * Post Editor sidebar bootstrap
  */
@@ -199,16 +213,41 @@ const Plus = createLucideIcon("plus", plus_iconNode);
 
 
 
+
+
 var SIDEBAR_NAME = 'lmat-post-sidebar';
 
-// const LanguageIcon = () => (
-//     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2" viewBox="0 0 44 44"><path d="M31.81 18.162v5.274c0 2.39-1.94 4.33-4.329 4.33H15.585a4.33 4.33 0 0 1-4.329-4.33v-5.274a4.33 4.33 0 0 1 4.329-4.329h11.896a4.33 4.33 0 0 1 4.329 4.329m-2.25 2.637a4.336 4.336 0 0 0-4.334-4.334H17.84a4.336 4.336 0 0 0-4.334 4.334 4.336 4.336 0 0 0 4.334 4.334h7.386a4.336 4.336 0 0 0 4.334-4.334"/><ellipse cx="11.256" cy="20.799" rx="1.435" ry="2.689"/><ellipse cx="31.81" cy="20.799" rx="1.435" ry="2.689"/><circle cx="17.684" cy="20.799" r="2.258"/><circle cx="25.382" cy="20.799" r="2.258"/><path d="m21.854 10.289-1.402 5.157 1.366-.018 1.414-4.996z"/><path d="M22.678 9.158a1.644 1.644 0 0 1 1.161 2.011 1.643 1.643 0 1 1-1.161-2.011"/><path d="M27.347 42.27c-1.85.519-3.8.796-5.814.796C9.649 43.066 0 33.417 0 21.533S9.649 0 21.533 0s21.533 9.649 21.533 21.533c0 2.517-.433 4.934-1.228 7.181h-2.251a19.4 19.4 0 0 0 1.372-7.181c0-10.722-8.704-19.427-19.426-19.427S2.106 10.811 2.106 21.533s8.705 19.426 19.427 19.426c2.045 0 4.016-.316 5.868-.903z"/><path d="M28.655 29.976h5.857a43 43 0 0 0-.589-1.765l2.144-.435q.526 1.395.799 2.2h5.339v1.892h-2.081q-1.058 3.181-3.048 5.374 2.159 1.492 5.325 2.277-1.163 1.416-1.541 2.06-3.202-1.072-5.437-2.831-2.25 1.696-5.521 2.915a22 22 0 0 0-1.402-2.032q3.147-.981 5.269-2.424-2.018-2.249-2.858-5.339h-2.256zm9.087 1.892h-4.666a9.9 9.9 0 0 0 2.34 3.973 9.6 9.6 0 0 0 2.326-3.973" style="fill-rule:nonzero"/></svg>
-// );
+/**
+ * Simple debounce hook
+ */
+var useDebouncedCallback = function useDebouncedCallback(callback) {
+  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2000;
+  var timer = (0,external_wp_element_namespaceObject.useRef)(null);
+  var cbRef = (0,external_wp_element_namespaceObject.useRef)(callback);
+  cbRef.current = callback;
+  var debounced = (0,external_wp_element_namespaceObject.useCallback)(function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
+    timer.current = setTimeout(function () {
+      cbRef.current.apply(cbRef, args);
+    }, delay);
+  }, [delay]);
 
+  // optional: clear on unmount
+  var cancel = (0,external_wp_element_namespaceObject.useCallback)(function () {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+  }, []);
+  return [debounced, cancel];
+};
 var getSettings = function getSettings() {
   // Provided by PHP in Abstract_Screen::enqueue via wp_add_inline_script
-  // Inline script declares: let lmat_block_editor_plugin_settings = {...}
-  // Top-level 'let' is not a window property; read the lexical global if present.
   try {
     // eslint-disable-next-line no-undef
     if (typeof lmat_block_editor_plugin_settings !== 'undefined') {
@@ -293,10 +332,211 @@ var TranslationRow = function TranslationRow(_ref2) {
   var lang = row.lang,
     translated_post = row.translated_post,
     links = row.links;
-  var title = (translated_post === null || translated_post === void 0 ? void 0 : translated_post.title) || '';
+  var initialTitle = (translated_post === null || translated_post === void 0 ? void 0 : translated_post.title) || '';
+  var _useState = (0,external_wp_element_namespaceObject.useState)(initialTitle),
+    _useState2 = _slicedToArray(_useState, 2),
+    title = _useState2[0],
+    setTitle = _useState2[1];
+  var _useState3 = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState4 = _slicedToArray(_useState3, 2),
+    saving = _useState4[0],
+    setSaving = _useState4[1];
+  var _useState5 = (0,external_wp_element_namespaceObject.useState)(''),
+    _useState6 = _slicedToArray(_useState5, 2),
+    error = _useState6[0],
+    setError = _useState6[1];
+  var _useState7 = (0,external_wp_element_namespaceObject.useState)([]),
+    _useState8 = _slicedToArray(_useState7, 2),
+    allPages = _useState8[0],
+    setAllPages = _useState8[1];
+  var _useState9 = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState0 = _slicedToArray(_useState9, 2),
+    loadingPages = _useState0[0],
+    setLoadingPages = _useState0[1];
+  var _useState1 = (0,external_wp_element_namespaceObject.useState)([]),
+    _useState10 = _slicedToArray(_useState1, 2),
+    suggestions = _useState10[0],
+    setSuggestions = _useState10[1];
+  var _useState11 = (0,external_wp_element_namespaceObject.useState)(null),
+    _useState12 = _slicedToArray(_useState11, 2),
+    selectedSuggestion = _useState12[0],
+    setSelectedSuggestion = _useState12[1];
+  var _useState13 = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState14 = _slicedToArray(_useState13, 2),
+    linking = _useState14[0],
+    setLinking = _useState14[1];
+  var editable = !initialTitle; // editable only if there is no value initially
+
+  // Debounced save
+  var _useDebouncedCallback = useDebouncedCallback(/*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(nextTitle) {
+        var clean, _t;
+        return _regenerator().w(function (_context) {
+          while (1) switch (_context.n) {
+            case 0:
+              // Guard: don’t send empty or whitespace-only titles
+              clean = (nextTitle || '').trim();
+              if (clean) {
+                _context.n = 1;
+                break;
+              }
+              return _context.a(2);
+            case 1:
+              _context.p = 1;
+              setSaving(true);
+              setError('');
+
+              // Example payload — adjust to match your PHP route/handler.
+              // Expect your server to create/update a placeholder translation record’s title.
+              _context.n = 2;
+              return external_wp_apiFetch_namespaceObject({
+                path: '/lmat/v1/translation-title',
+                method: 'POST',
+                data: {
+                  postId: (translated_post === null || translated_post === void 0 ? void 0 : translated_post.id) || null,
+                  // if you have it
+                  lang: lang === null || lang === void 0 ? void 0 : lang.slug,
+                  title: clean
+                }
+              });
+            case 2:
+              setSaving(false);
+              _context.n = 4;
+              break;
+            case 3:
+              _context.p = 3;
+              _t = _context.v;
+              setSaving(false);
+              setError((0,external_wp_i18n_namespaceObject.__)('Failed to save title. Please try again.', 'linguator-multilingual-ai-translation'));
+              // Optional: console.error(e);
+            case 4:
+              return _context.a(2);
+          }
+        }, _callee, null, [[1, 3]]);
+      }));
+      return function (_x) {
+        return _ref3.apply(this, arguments);
+      };
+    }(), 2000),
+    _useDebouncedCallback2 = _slicedToArray(_useDebouncedCallback, 1),
+    debouncedSave = _useDebouncedCallback2[0];
   var hasEdit = !!(links !== null && links !== void 0 && links.edit_link);
   var hasAdd = !!(links !== null && links !== void 0 && links.add_link);
-  return /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Flex, {
+  var loadAllPages = (0,external_wp_element_namespaceObject.useCallback)(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+    var pages, _t2;
+    return _regenerator().w(function (_context2) {
+      while (1) switch (_context2.n) {
+        case 0:
+          if (!(loadingPages || allPages.length > 0)) {
+            _context2.n = 1;
+            break;
+          }
+          return _context2.a(2);
+        case 1:
+          _context2.p = 1;
+          setLoadingPages(true);
+          _context2.n = 2;
+          return external_wp_apiFetch_namespaceObject({
+            path: '/lmat/v1/languages/utils/get_all_pages_data'
+          });
+        case 2:
+          pages = _context2.v;
+          setAllPages(Array.isArray(pages) ? pages : []);
+          _context2.n = 4;
+          break;
+        case 3:
+          _context2.p = 3;
+          _t2 = _context2.v;
+        case 4:
+          _context2.p = 4;
+          setLoadingPages(false);
+          return _context2.f(4);
+        case 5:
+          return _context2.a(2);
+      }
+    }, _callee2, null, [[1, 3, 4, 5]]);
+  })), [loadingPages, allPages.length]);
+  var computeSuggestions = (0,external_wp_element_namespaceObject.useCallback)(function (query) {
+    var q = (query || '').trim().toLowerCase();
+    if (!q) return [];
+    return allPages.filter(function (p) {
+      var _p$language;
+      var sameLang = (p === null || p === void 0 || (_p$language = p.language) === null || _p$language === void 0 ? void 0 : _p$language.slug) === (lang === null || lang === void 0 ? void 0 : lang.slug);
+      var unlinked = !(p !== null && p !== void 0 && p.is_linked);
+      var matches = ((p === null || p === void 0 ? void 0 : p.title) || '').toLowerCase().includes(q) || ((p === null || p === void 0 ? void 0 : p.slug) || '').toLowerCase().includes(q);
+      return sameLang && unlinked && matches;
+    }).slice(0, 10);
+  }, [allPages, lang === null || lang === void 0 ? void 0 : lang.slug]);
+  var handleTitleChange = function handleTitleChange(val) {
+    setTitle(val);
+    setSelectedSuggestion(null);
+    if (editable) {
+      if (val && val.trim().length > 1) {
+        if (allPages.length === 0) {
+          loadAllPages().then(function () {
+            setSuggestions(computeSuggestions(val));
+          });
+        } else {
+          setSuggestions(computeSuggestions(val));
+        }
+      } else {
+        setSuggestions([]);
+      }
+    }
+  };
+  var linkSelected = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {
+      var _select, _select$getCurrentPos, postId, _t3;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.n) {
+          case 0:
+            e.preventDefault();
+            if (selectedSuggestion) {
+              _context3.n = 1;
+              break;
+            }
+            return _context3.a(2);
+          case 1:
+            _context3.p = 1;
+            setLinking(true);
+            setError('');
+            postId = (_select = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select === void 0 || (_select$getCurrentPos = _select.getCurrentPostId) === null || _select$getCurrentPos === void 0 ? void 0 : _select$getCurrentPos.call(_select);
+            _context3.n = 2;
+            return external_wp_apiFetch_namespaceObject({
+              path: '/lmat/v1/languages/link-translation',
+              method: 'POST',
+              data: {
+                source_id: postId,
+                target_id: selectedSuggestion.ID,
+                target_lang: lang === null || lang === void 0 ? void 0 : lang.slug
+              }
+            });
+          case 2:
+            window.location.reload();
+            _context3.n = 4;
+            break;
+          case 3:
+            _context3.p = 3;
+            _t3 = _context3.v;
+            setError((0,external_wp_i18n_namespaceObject.__)('Failed to link page. Please try again.', 'linguator-multilingual-ai-translation'));
+          case 4:
+            _context3.p = 4;
+            setLinking(false);
+            return _context3.f(4);
+          case 5:
+            return _context3.a(2);
+        }
+      }, _callee3, null, [[1, 3, 4, 5]]);
+    }));
+    return function linkSelected(_x2) {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Flex, {
     align: "center",
     style: {
       marginBottom: 8
@@ -314,24 +554,63 @@ var TranslationRow = function TranslationRow(_ref2) {
     }
   }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.TextControl, {
     value: title,
-    onChange: function onChange() {},
-    placeholder: (0,external_wp_i18n_namespaceObject.__)('title', 'linguator-multilingual-ai-translation')
+    onChange: handleTitleChange,
+    placeholder: (0,external_wp_i18n_namespaceObject.__)('title', 'linguator-multilingual-ai-translation'),
+    readOnly: !editable,
+    disabled: !editable,
+    help: editable ? saving ? (0,external_wp_i18n_namespaceObject.__)('Saving…', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Type a title to create/update this translation (auto-saves).', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Existing title. Use the Edit button to modify content.', 'linguator-multilingual-ai-translation')
   })), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, null, hasEdit ? /*#__PURE__*/React.createElement("a", {
     href: links.edit_link,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Edit translation', 'linguator-multilingual-ai-translation'),
     style: {
       marginLeft: 8
     }
-  }, /*#__PURE__*/React.createElement(Pencil, null)) : null, !hasEdit && hasAdd ? /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement(Pencil, null)) : null, !hasEdit && (selectedSuggestion ? /*#__PURE__*/React.createElement("button", {
+    onClick: linkSelected,
+    "aria-label": (0,external_wp_i18n_namespaceObject.__)('Link existing page', 'linguator-multilingual-ai-translation'),
+    style: {
+      marginLeft: 8,
+      background: 'transparent',
+      border: 0,
+      padding: 0,
+      cursor: 'pointer'
+    }
+  }, /*#__PURE__*/React.createElement(Plus, null)) : hasAdd ? /*#__PURE__*/React.createElement("a", {
     href: links.add_link,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Add translation', 'linguator-multilingual-ai-translation'),
     style: {
       marginLeft: 8
     }
-  }, /*#__PURE__*/React.createElement(Plus, null)) : null));
+  }, /*#__PURE__*/React.createElement(Plus, null)) : null), saving || linking ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Spinner, {
+    style: {
+      marginLeft: 8
+    }
+  }) : null)), editable && suggestions.length > 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 4
+    }
+  }, suggestions.map(function (s) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: s.ID,
+      style: {
+        padding: '4px 6px',
+        cursor: 'pointer',
+        background: (selectedSuggestion === null || selectedSuggestion === void 0 ? void 0 : selectedSuggestion.ID) === s.ID ? '#eef' : 'transparent'
+      },
+      onClick: function onClick() {
+        return setSelectedSuggestion(s);
+      },
+      onMouseEnter: function onMouseEnter() {
+        return setSelectedSuggestion(s);
+      }
+    }, s.title, " (", s.slug, ")");
+  })) : null, error ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Notice, {
+    status: "error",
+    isDismissible: false
+  }, error) : null);
 };
-var TranslationsSection = function TranslationsSection(_ref3) {
-  var translations = _ref3.translations;
+var TranslationsSection = function TranslationsSection(_ref6) {
+  var translations = _ref6.translations;
   var rows = Object.values(translations);
   return /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.PanelBody, {
     title: (0,external_wp_i18n_namespaceObject.__)('Translations', 'linguator-multilingual-ai-translation'),
@@ -359,6 +638,53 @@ var Sidebar = function Sidebar() {
     translations: translations
   })));
 };
+
+// Small pinned icon that shows the current page language flag in the editor header.
+var FlagPin = function FlagPin() {
+  var settings = getSettings();
+  var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(external_wp_editPost_namespaceObject.PluginSidebar, {
+    name: 'lmat-flag-pin',
+    title: (0,external_wp_i18n_namespaceObject.__)('Language', 'linguator-multilingual-ai-translation')
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 12
+    }
+  }, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement("img", {
+    src: lang.flag_url,
+    alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
+    style: {
+      width: 24,
+      height: 16,
+      marginRight: 8
+    }
+  }) : null, /*#__PURE__*/React.createElement("div", null, (lang === null || lang === void 0 ? void 0 : lang.name) || ''))));
+};
+
+// Compute a dynamic icon element for the flag pin
+var FlagIcon = function () {
+  var settings = getSettings();
+  var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;
+  if (lang !== null && lang !== void 0 && lang.flag_url) {
+    return /*#__PURE__*/React.createElement("img", {
+      src: lang.flag_url,
+      alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
+      style: {
+        width: 16,
+        height: 11
+      }
+    });
+  }
+  return /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "11",
+    viewBox: "0 0 16 11"
+  }, /*#__PURE__*/React.createElement("rect", {
+    width: "16",
+    height: "11",
+    fill: "#ddd"
+  }));
+}();
 (0,external_wp_plugins_namespaceObject.registerPlugin)(SIDEBAR_NAME, {
   render: Sidebar,
   icon: /*#__PURE__*/React.createElement("svg", {
@@ -405,6 +731,12 @@ var Sidebar = function Sidebar() {
       fillRule: "nonzero"
     }
   }))
+});
+
+// Register the pinned language flag button (appears in the header toolbar)
+(0,external_wp_plugins_namespaceObject.registerPlugin)('lmat-flag-pin', {
+  render: FlagPin,
+  icon: FlagIcon
 });
 /******/ })()
 ;
