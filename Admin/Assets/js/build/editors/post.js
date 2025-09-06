@@ -532,6 +532,60 @@ var TranslationRow = function TranslationRow(_ref2) {
       return _ref5.apply(this, arguments);
     };
   }();
+  var createFromTyped = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {
+      var clean, _select2, _select2$getCurrentPos, postId, _select3, _select3$getCurrentPo, postType, _t4;
+      return _regenerator().w(function (_context4) {
+        while (1) switch (_context4.n) {
+          case 0:
+            e.preventDefault();
+            clean = (title || '').trim();
+            if (clean) {
+              _context4.n = 1;
+              break;
+            }
+            if (links !== null && links !== void 0 && links.add_link) {
+              window.location.href = links.add_link;
+            }
+            return _context4.a(2);
+          case 1:
+            _context4.p = 1;
+            setLinking(true);
+            setError('');
+            postId = (_select2 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select2 === void 0 || (_select2$getCurrentPos = _select2.getCurrentPostId) === null || _select2$getCurrentPos === void 0 ? void 0 : _select2$getCurrentPos.call(_select2);
+            postType = (_select3 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select3 === void 0 || (_select3$getCurrentPo = _select3.getCurrentPostType) === null || _select3$getCurrentPo === void 0 ? void 0 : _select3$getCurrentPo.call(_select3);
+            _context4.n = 2;
+            return external_wp_apiFetch_namespaceObject({
+              path: '/lmat/v1/languages/create-translation',
+              method: 'POST',
+              data: {
+                source_id: postId,
+                target_lang: lang === null || lang === void 0 ? void 0 : lang.slug,
+                title: clean,
+                post_type: postType || 'page'
+              }
+            });
+          case 2:
+            window.location.reload();
+            _context4.n = 4;
+            break;
+          case 3:
+            _context4.p = 3;
+            _t4 = _context4.v;
+            setError((0,external_wp_i18n_namespaceObject.__)('Failed to create page. Please try again.', 'linguator-multilingual-ai-translation'));
+          case 4:
+            _context4.p = 4;
+            setLinking(false);
+            return _context4.f(4);
+          case 5:
+            return _context4.a(2);
+        }
+      }, _callee4, null, [[1, 3, 4, 5]]);
+    }));
+    return function createFromTyped(_x3) {
+      return _ref6.apply(this, arguments);
+    };
+  }();
   return /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 12
@@ -539,9 +593,14 @@ var TranslationRow = function TranslationRow(_ref2) {
   }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Flex, {
     align: "center",
     style: {
-      marginBottom: 8
+      marginBottom: 8,
+      alignItems: 'start'
     }
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, null, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement("img", {
+  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
+    style: {
+      paddingTop: '8px'
+    }
+  }, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement("img", {
     src: lang.flag_url,
     alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
     style: {
@@ -550,7 +609,8 @@ var TranslationRow = function TranslationRow(_ref2) {
     }
   }) : null), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
     style: {
-      flex: 1
+      flex: 1,
+      padding: '0px'
     }
   }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.TextControl, {
     value: title,
@@ -559,11 +619,20 @@ var TranslationRow = function TranslationRow(_ref2) {
     readOnly: !editable,
     disabled: !editable,
     help: editable ? saving ? (0,external_wp_i18n_namespaceObject.__)('Saving…', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Type a title to create/update this translation (auto-saves).', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Existing title. Use the Edit button to modify content.', 'linguator-multilingual-ai-translation')
-  })), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, null, hasEdit ? /*#__PURE__*/React.createElement("a", {
+  })), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
+    style: {
+      paddingTop: '8px'
+    }
+  }, hasEdit ? /*#__PURE__*/React.createElement("a", {
     href: links.edit_link,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Edit translation', 'linguator-multilingual-ai-translation'),
     style: {
-      marginLeft: 8
+      marginLeft: 8,
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement(Pencil, null)) : null, !hasEdit && (selectedSuggestion ? /*#__PURE__*/React.createElement("button", {
     onClick: linkSelected,
@@ -575,13 +644,28 @@ var TranslationRow = function TranslationRow(_ref2) {
       padding: 0,
       cursor: 'pointer'
     }
-  }, /*#__PURE__*/React.createElement(Plus, null)) : hasAdd ? /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement(Plus, null)) : hasAdd ? (title && title.trim().length > 0 ? /*#__PURE__*/React.createElement("button", {
+    onClick: createFromTyped,
+    "aria-label": (0,external_wp_i18n_namespaceObject.__)('Create translation from typed title', 'linguator-multilingual-ai-translation'),
+    style: {
+      marginLeft: 8,
+      background: 'transparent',
+      border: 0,
+      padding: 0,
+      cursor: 'pointer'
+    }
+  }, /*#__PURE__*/React.createElement(Plus, null)) : /*#__PURE__*/React.createElement("a", {
     href: links.add_link,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Add translation', 'linguator-multilingual-ai-translation'),
     style: {
-      marginLeft: 8
+      marginLeft: 8,
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
     }
-  }, /*#__PURE__*/React.createElement(Plus, null)) : null), saving || linking ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Spinner, {
+  }, /*#__PURE__*/React.createElement(Plus, null))) : null), saving || linking ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Spinner, {
     style: {
       marginLeft: 8
     }

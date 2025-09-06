@@ -227,15 +227,49 @@ const TranslationRow = ( { row } ) => {
         }
     };
 
+    const createFromTyped = async (e) => {
+        e.preventDefault();
+        const clean = (title || '').trim();
+        if (!clean) {
+            // Fallback: if no title, navigate to add page
+            if (links?.add_link) {
+                window.location.href = links.add_link;
+            }
+            return;
+        }
+        try {
+            setLinking(true);
+            setError('');
+            const postId = select('core/editor')?.getCurrentPostId?.();
+            const postType = select('core/editor')?.getCurrentPostType?.();
+            await apiFetch({
+                path: '/lmat/v1/languages/create-translation',
+                method: 'POST',
+                data: {
+                    source_id: postId,
+                    target_lang: lang?.slug,
+                    title: clean,
+                    post_type: postType || 'page',
+                },
+            });
+            // Refresh to reflect new translation and show Edit icon
+            window.location.reload();
+        } catch (e) {
+            setError( __( 'Failed to create page. Please try again.', 'linguator-multilingual-ai-translation' ) );
+        } finally {
+            setLinking(false);
+        }
+    };
+
     return (
         <div style={{ marginBottom: 12 }}>
-            <Flex align="center" style={ { marginBottom: 8 } }>
-                <FlexItem>
+            <Flex align="center" style={ { marginBottom: 8, alignItems: 'start' } }>
+                <FlexItem style={{paddingTop:'8px'}}>
                     { lang?.flag_url ? (
                         <img src={ lang.flag_url } alt={ lang?.name || '' } style={ { width: 18, height: 12 } } />
                     ) : null }
                 </FlexItem>
-                <FlexItem style={ { flex: 1 } }>
+                <FlexItem style={ { flex: 1,padding:'0px' } }>
                     <TextControl
                         value={ title }
                         onChange={ handleTitleChange }
@@ -252,9 +286,9 @@ const TranslationRow = ( { row } ) => {
                         }
                     />
                 </FlexItem>
-                <FlexItem>
+                <FlexItem style={{paddingTop:'8px'}}>
                     { hasEdit ? (
-                        <a href={ links.edit_link } aria-label={ __( 'Edit translation', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8 } }>
+                        <a href={ links.edit_link } aria-label={ __( 'Edit translation', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8,height: "100%",width: "100%",display: "flex",alignItems: "center",justifyContent: "center" } }>
                             <Pencil />
                         </a>
                     ) : null }
@@ -265,9 +299,15 @@ const TranslationRow = ( { row } ) => {
                             </button>
                         ) : (
                             hasAdd ? (
-                                <a href={ links.add_link } aria-label={ __( 'Add translation', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8 } }>
-                                    <Plus />
-                                </a>
+                                (title || '').trim().length > 0 ? (
+                                    <button onClick={ createFromTyped } aria-label={ __( 'Create translation from typed title', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8, background: 'transparent', border: 0, padding: 0, cursor: 'pointer' } }>
+                                        <Plus />
+                                    </button>
+                                ) : (
+                                    <a href={ links.add_link } aria-label={ __( 'Add translation', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8,height: "100%",width: "100%",display: "flex",alignItems: "center",justifyContent: "center" } }>
+                                        <Plus />
+                                    </a>
+                                )
                             ) : null
                         )
                     ) }
