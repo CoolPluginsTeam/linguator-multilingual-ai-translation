@@ -34,8 +34,8 @@ const Media = () => {
                 setSetupProgress("home_page")
                 localStorage.setItem("setupProgress", "home_page");
             } else {
-                setSetupProgress("ready")
-                localStorage.setItem("setupProgress", "ready");
+                setSetupProgress("translation_configuration")
+                localStorage.setItem("setupProgress", "translation_configuration");
             }
         } catch (error) {
             toast.error(__("Please try again later", "linguator-multilingual-ai-translation"))

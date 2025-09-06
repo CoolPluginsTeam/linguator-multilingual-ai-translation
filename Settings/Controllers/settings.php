@@ -15,6 +15,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Model;
 use Linguator\Settings\Controllers\LMAT_Settings_Module;
 use Linguator\Settings\Tables\LMAT_Table_Languages;
 use Linguator\Settings\Tables\LMAT_Table_String;
+use Linguator\Settings\Header\Header;
 
 use WP_Error;
 
@@ -80,6 +81,17 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public $filter_lang;
 
 	/**
+	 * @var mixed
+	 */
+	private $header;
+
+	/**
+	 * @var mixed
+	 */
+	private $selected_tab;
+
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -89,9 +101,39 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
 
+		$selected_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : '';
+		$loco=isset($_GET['loco']) ? sanitize_text_field($_GET['loco']) : '';
+		
+		
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->active_tab = 'lmat' === $_GET['page'] ? 'lang' : substr( sanitize_key( $_GET['page'] ), 5 ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
+
+		
+		if($loco === 'true'){
+			add_action( 'load-languages_page_lmat_settings', array( $this, 'loco_page_redirect' ) );
+		}
+
+		if($this->active_tab === 'lang'){
+			$selected_tab='lang';
+		}
+
+		if('loco' === $selected_tab || '' === $selected_tab){
+			$this->selected_tab = 'general';
+			$selected_tab='general';
+		}
+		
+		if($selected_tab){
+			if($selected_tab === 'strings'){
+				$this->active_tab = $selected_tab;
+			}
+
+			$this->selected_tab = $selected_tab;
+		}else{
+			$this->selected_tab = $this->active_tab;
+		}
+		
+		$this->header = Header::get_instance($this->selected_tab, $this->model);
 
 		LMAT_Admin_Strings::init();
 
@@ -99,7 +141,6 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Adds screen options and the about box in the languages admin panel.
 		add_action( 'load-toplevel_page_lmat', array( $this, 'load_page' ) );
-		add_action( 'load-languages_page_lmat_strings', array( $this, 'load_page_strings' ) );
 
 		// Saves the per-page value in screen options.
 		add_filter( 'set_screen_option_lmat_lang_per_page', array( $this, 'set_screen_option' ), 10, 3 );
@@ -186,6 +227,61 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				'option'  => 'lmat_strings_per_page',
 			)
 		);
+	}
+
+	/**
+	 * Adds screen options in the localizations admin panel
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function loco_page_assets() {
+
+		if(!function_exists('is_plugin_active')){
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+		$loco_plugin_active=is_plugin_active('loco-translate/loco.php');
+		$loco_install="false";
+		
+		if($loco_plugin_active){
+			$loco_install="true";
+			$plugin_info_url=admin_url('admin.php?page=loco');
+		}else{
+
+			if ( ! current_user_can( 'install_plugins' ) ) {
+				return;
+			}
+
+			// Load ThickBox and updates JS
+			add_thickbox();
+			wp_enqueue_script( 'updates' );
+
+			$plugin_info_url=admin_url('plugin-install.php?tab=plugin-information&plugin=loco-translate&TB_iframe=true&width=772&height=851');
+		}
+		
+
+		wp_enqueue_script('lmat-loco-redirect-script', plugins_url('Admin/Assets/js/loco-redirect-script.js', LINGUATOR_ROOT_FILE), array('jquery'), LINGUATOR_VERSION, true);
+		wp_localize_script('lmat-loco-redirect-script', 'lmat_loco_redirect_script', array('admin_url' => esc_url(admin_url('admin.php?page=lmat_settings')), 'loco_iframe_page_url' => array("url" => $plugin_info_url, "title" => esc_js( __( 'Plugin: Loco Translate', 'linguator-multilingual-ai-translation' ) )), 'loco_install' => $loco_install));
+	}
+
+	/**
+	 * Redirects to the loco page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function loco_page_redirect() {
+		if(!function_exists('is_plugin_active')){
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+
+		$loco_plugin_active=is_plugin_active('loco-translate/loco.php');
+
+		if($loco_plugin_active){
+			wp_safe_redirect(admin_url('admin.php?page=loco'));
+		};
 	}
 
 	/**
@@ -337,7 +433,10 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function languages_page() {
-		// Clear language cache when loading the languages page to ensure fresh data
+		// return if the active tab is localizations
+		if($this->active_tab === 'localizations'){
+			return;
+		}
 		
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
@@ -351,6 +450,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			// Render the React container for settings
 			echo '<div class="wrap lmat-styles">';
+			$this->header->header();
 			echo '<div id="lmat-settings"></div>';
 			echo '</div>';
 			return;
@@ -382,6 +482,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		// Displays the page
 		$modules    = $this->modules;
 		$active_tab = $this->active_tab;
+		$header = $this->header;
 		include __DIR__ . '/../Views/view-languages.php';
 	}
 
@@ -423,8 +524,9 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
-		
-		if ( $is_settings_tab ) {
+		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
+
+		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab)) {
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'Admin/Assets/frontend/settings/settings.asset.php';
 
@@ -433,6 +535,9 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			}
 
 			$asset = require $asset_file;
+			
+			$this->header->header_assets();
+			// Enqueue header assets
 
 			// Enqueue React-based settings script
 			wp_enqueue_script(
@@ -481,6 +586,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			
 		} else {
+			$this->header->header_assets();
+
 			// Original scripts for lang and strings tabs
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
@@ -489,6 +596,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			wp_enqueue_style( 'lmat_selectmenu', plugins_url( 'Admin/Assets/css/build/selectmenu' . $suffix . '.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		}
+
+		$this->loco_page_assets();
 	}
 
 	/**

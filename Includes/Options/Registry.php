@@ -41,6 +41,9 @@ class Registry {
 		Business\First_Activation::class,
 		Business\Previous_Version::class,
 		Business\Version::class,
+
+		// AI Translation.
+		Business\Ai_Translation_Configuration::class,
 	);
 
 	/**

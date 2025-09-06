@@ -1,15 +1,16 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import DependencyExtractionWebpackPlugin from '@wordpress/dependency-extraction-webpack-plugin';
+import defaultConfig from "@wordpress/scripts/config/webpack.config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generateAssets = false) {
+function createConfig({ srcDir, outDir, sourceFiles },fileMinimize = false, minimize = false, generateAssets = false, ext = '.js', styleLoader = false) {
     const entry = {};
     sourceFiles.forEach(filename => {
-        const entryName = minimize ? `${filename}.min` : filename;
-        entry[entryName] = `./${srcDir}/${filename}.js`;
+        const entryName = fileMinimize ? `${filename}.min` : filename;
+        entry[entryName] = `./${srcDir}/${filename}${ext}`;
     });
 
     const plugins = [];
@@ -22,6 +23,36 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
         );
     }
 
+    let conditionalRules = [];
+
+    if (styleLoader) {
+        plugins.push(...defaultConfig.plugins);
+        
+        const styleLoaderRule = {
+            test: /\.css$/i,
+            use: [
+              "style-loader",
+              {
+                loader: "css-loader",
+                options: {
+                  modules: true,
+                  importLoaders: 1,
+                },
+              },
+              {
+                loader: "postcss-loader",
+                options: {
+                  postcssOptions: {
+                    plugins: [["postcss-preset-env"]],
+                  },
+                },
+              },
+            ],
+          };
+
+        conditionalRules.push(styleLoaderRule);
+    }
+
     return {
         mode: minimize ? 'production' : 'development',
         entry,
@@ -32,6 +63,12 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
         },
         module: {
             rules: [
+                ...conditionalRules,
+                {
+                    test: /\.tsx?$/,
+                    use: "ts-loader",
+                    exclude: /node_modules/,
+                },
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
@@ -64,7 +101,7 @@ function createConfig({ srcDir, outDir, sourceFiles }, minimize = false, generat
             minimize: minimize,
         },
         resolve: {
-            extensions: ['.js', '.jsx'],
+            extensions: ['.js', '.jsx', '.ts', '.tsx'],
             modules: [
                 path.resolve(__dirname, srcDir),
                 'node_modules'
@@ -128,8 +165,39 @@ const configs = [
 	}
 ];
 
+const machineTranslationConfigs = [
+    {
+        srcDir: 'modules/inline-translation/src/elementor',
+        outDir: 'Admin/Assets/elementor-inline-translate',
+        sourceFiles: [
+            'index'
+        ],
+        styleLoader: true,
+        generateAssets: false
+    },
+    {
+        srcDir: 'modules/inline-translation/src/gutenberg/editorAssets',
+        outDir: 'Admin/Assets/gutenberg-inline-translate',
+        sourceFiles: [
+            'index'
+        ],
+        styleLoader: true,
+        generateAssets: false,
+        ext: '.ts'
+    }
+];
+
 export default (env, options) => {
-	// Admin JS gets both regular and minified (no assets)
+
+    if(env && env.configType === 'default'){
+        return defaultConfig;
+    }
+
+    if (env && env.type === 'inlineTranslate') {
+        return machineTranslationConfigs.map(cfg => createConfig(cfg, false, true, cfg.generateAssets, cfg.ext, cfg.styleLoader));
+    }
+
+    	// Admin JS gets both regular and minified (no assets)
 	const mainBuilds = [
 		createConfig(configs[0], false, false), // admin: regular .js, no assets
 		createConfig(configs[0], true, false)   // admin: minified .min.js, no assets
@@ -142,7 +210,7 @@ export default (env, options) => {
 	];
 
 	// Other configs get only regular (non-minified) .js with assets
-	const assetBuilds = configs.slice(2).map(cfg => createConfig(cfg, false, true));
+	const assetBuilds = configs.slice(2).map(cfg => createConfig(cfg, false, true, true));
 
 	return [...mainBuilds, ...editorBuilds, ...assetBuilds];
 };

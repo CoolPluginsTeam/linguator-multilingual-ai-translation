@@ -16,6 +16,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 
 ?>
 <div id="col-container">
+	<?php $header && $header instanceof \Linguator\Settings\Header\Header && $header->header(); ?>
 	<div id="col-right">
 		<div class="col-wrap">
 			<?php

@@ -113,6 +113,9 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		$this->links = new LMAT_Admin_Links( $this );
 		$this->filters_links = new LMAT_Filters_Links( $this );
 
+		// Add view language links
+		new LMAT_Admin_View_Language_Links();
+
 		// Filter admin language for users
 		// We must not call user info before WordPress defines user roles in wp-settings.php
 		add_action( 'setup_theme', array( $this, 'init_user' ) );
@@ -140,9 +143,8 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		
 
 		$tabs['settings'] = __( 'Settings', 'linguator-multilingual-ai-translation' );
-		if ( ! empty( $languages ) ) {
-			$tabs['strings'] = __( 'Translations', 'linguator-multilingual-ai-translation' );
-		}
+		
+		$tabs['settings&tab=general&loco=true'] = __( 'Theme and plugins localization', 'linguator-multilingual-ai-translation' );
 
 		/**
 		 * Filter the list of tabs in Linguator settings
