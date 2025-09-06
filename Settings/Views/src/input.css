@@ -9,6 +9,11 @@ body{
     font-family: "Poppins", sans-serif;
     min-height: 100vh;
 }
+#lmat-setup {
+    min-width: 100%;
+    min-height: 100vh;
+    background-color: #F3F4F6;
+}
 .setup-body {
     /* min-height: 100vh; */
     background-color: #F3F4F6;

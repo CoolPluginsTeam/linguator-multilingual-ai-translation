@@ -2815,6 +2815,10 @@
   opacity: 0.5;
 }
 
+.lmat-styles .opacity-60{
+  opacity: 0.6;
+}
+
 .lmat-styles .shadow-2xl{
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
@@ -3113,6 +3117,12 @@ body{
   background-color: #F3F4F6;
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
+}
+
+#lmat-setup {
+  min-width: 100%;
+  min-height: 100vh;
+  background-color: #F3F4F6;
 }
 
 .setup-body {
