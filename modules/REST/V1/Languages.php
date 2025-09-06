@@ -70,6 +70,8 @@ class Languages extends Abstract_Controller {
 	 * @return void
 	 */
 	public function register_routes(): void {
+
+		
 		register_rest_route(
 			$this->namespace,
 			"/{$this->rest_base}",
@@ -90,6 +92,15 @@ class Languages extends Abstract_Controller {
 				'allow_batch' => array( 'v1' => true ),
 			)
 		);
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/utils/get_all_pages_data",
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_all_pages_data' ),
+				'permission_callback' => array( $this, 'get_all_post_data_permissions_check' ),
+			)
+			);
 
 		register_rest_route(
 			$this->namespace,
@@ -162,6 +173,33 @@ class Languages extends Abstract_Controller {
 				),
 			)
 		);
+		// Link an existing page to the current translation group
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/link-translation",
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'link_translation' ),
+				'permission_callback' => array( $this, 'link_translation_permissions_check' ),
+				'args'                => array(
+					'source_id' => array(
+						'description' => __( 'ID of the source post (current).', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'target_id' => array(
+						'description' => __( 'ID of the existing page to link.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'target_lang' => array(
+						'description' => __( 'Language slug of the target page.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'string',
+						'required'    => true,
+					),
+				),
+			)
+		);
 		register_rest_route(
 			$this->namespace,
 			"/{$this->rest_base}/create-home-page-translation",
@@ -171,6 +209,107 @@ class Languages extends Abstract_Controller {
 				'permission_callback' => array( $this, 'create_home_page_translation_permissions_check' ),
 			)
 		);
+		// Create and link a new translation from a typed title (no redirect)
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/create-translation",
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'create_translation_from_title' ),
+				'permission_callback' => array( $this, 'create_translation_permissions_check' ),
+				'args'                => array(
+					'source_id' => array(
+						'description' => __( 'ID of the source post (current).', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'target_lang' => array(
+						'description' => __( 'Language slug for the new translation.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'string',
+						'required'    => true,
+					),
+					'title' => array(
+						'description' => __( 'Title for the new translation post.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'string',
+						'required'    => true,
+					),
+					'post_type' => array(
+						'description' => __( 'Post type for the new translation (default page).', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'string',
+						'required'    => false,
+					),
+				),
+			)
+		);
+
+		
+	}
+
+	/**
+	 * Retrieves all translatable posts with their language.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|array
+	 */
+	public function get_all_pages_data( $request ) {
+		$response = array();
+
+		// Get post types managed by Linguator
+		$post_types = array( 'page' );
+		if ( empty( $post_types ) ) {
+			return rest_ensure_response( $response );
+		}
+
+		$posts = get_posts( array(
+			'post_type'        => 'page',
+			'post_status'      => array( 'publish' ),
+			'posts_per_page'   => -1,
+			'suppress_filters' => false,
+		) );
+
+		foreach ( $posts as $post ) {
+			$language = $this->model->post->get_language( $post->ID );
+			// Translations mapping: language slug/locale => post ID
+			$translations = (array) $this->model->post->get_translations( $post->ID );
+			$linked_ids = array();
+			foreach ( $translations as $lang_key => $tr_post_id ) {
+				if ( $tr_post_id && (int) $tr_post_id !== (int) $post->ID ) {
+					$linked_ids[ $lang_key ] = (int) $tr_post_id;
+				}
+			}
+			$response[] = array(
+				'ID'       => $post->ID,
+				'title'    => $post->post_title,
+				'slug'     => $post->post_name,
+				'type'     => $post->post_type,
+				'status'   => $post->post_status,
+				'date'     => $post->post_date,
+				'modified' => $post->post_modified,
+				'language' => $language ? $language->to_array() : null,
+				'translations' => $translations,
+				'is_linked' => ! empty( $linked_ids ),
+				'linked_ids' => $linked_ids,
+			);
+		}
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Permissions for get_all_post_data endpoint.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error
+	 */
+	public function get_all_post_data_permissions_check( $request ) {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to view posts data.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+		return true;
 	}
 
 	/**
@@ -502,6 +641,172 @@ class Languages extends Abstract_Controller {
 			'message'  => sprintf( __( 'Language %s assigned to untranslated content.', 'linguator-multilingual-ai-translation' ), $language->name ),
 			'language' => $language->to_array(),
 		) );
+	}
+
+	/**
+	 * Links an existing page as a translation of the source post.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function link_translation( $request ) {
+		$source_id = (int) $request['source_id'];
+		$target_id = (int) $request['target_id'];
+		$target_lang_slug = sanitize_key( $request['target_lang'] );
+
+		if ( ! $source_id || ! $target_id || ! $target_lang_slug ) {
+			return new WP_Error( 'lmat_link_invalid_params', __( 'Missing required parameters.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+		}
+
+		$source = get_post( $source_id );
+		$target = get_post( $target_id );
+		if ( ! $source || ! $target ) {
+			return new WP_Error( 'lmat_link_invalid_posts', __( 'Invalid source or target.', 'linguator-multilingual-ai-translation' ), array( 'status' => 404 ) );
+		}
+
+		// Validate target language
+		$target_lang = $this->model->get_language( $target_lang_slug );
+		if ( ! $target_lang ) {
+			return new WP_Error( 'lmat_invalid_language', __( 'Invalid target language.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+		}
+
+		// Ensure target is in requested language
+		$current_target_lang = $this->model->post->get_language( $target_id );
+		if ( ! $current_target_lang || $current_target_lang->slug !== $target_lang->slug ) {
+			$this->model->post->set_language( $target_id, $target_lang );
+		}
+
+		// Merge translations
+		$translations = $this->model->post->get_translations( $source_id );
+		$source_lang  = $this->model->post->get_language( $source_id );
+		if ( $source_lang ) {
+			$translations[ $source_lang->slug ] = $source_id;
+		}
+		$translations[ $target_lang->slug ] = $target_id;
+
+		// Save for all posts in the group
+		foreach ( $translations as $lang_slug => $post_id ) {
+			if ( $post_id ) {
+				$this->model->post->save_translations( $post_id, $translations );
+			}
+		}
+
+		return rest_ensure_response( array(
+			'success'      => true,
+			'translations' => $translations,
+		) );
+	}
+
+	/**
+	 * Permission check for linking translations.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error
+	 */
+	public function link_translation_permissions_check( $request ) {
+		$source_id = (int) $request['source_id'];
+		$target_id = (int) $request['target_id'];
+		if ( ( $source_id && ! current_user_can( 'edit_post', $source_id ) ) || ( $target_id && ! current_user_can( 'edit_post', $target_id ) ) ) {
+			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to link these posts.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		// Verify nonce for non-GET requests
+		$nonce_check = $this->verify_nonce( $request );
+		if ( is_wp_error( $nonce_check ) ) {
+			return $nonce_check;
+		}
+		return true;
+	}
+
+	/**
+	 * Creates a new post in target language and links it to the source post translations.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function create_translation_from_title( $request ) {
+		$source_id       = (int) $request['source_id'];
+		$target_lang_slug = sanitize_key( $request['target_lang'] );
+		$title           = sanitize_text_field( (string) $request['title'] );
+		$post_type       = sanitize_key( $request['post_type'] ?: 'page' );
+
+		if ( ! $source_id || ! $target_lang_slug || '' === $title ) {
+			return new WP_Error( 'lmat_create_tr_invalid_params', __( 'Missing required parameters.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+		}
+
+		$source = get_post( $source_id );
+		if ( ! $source ) {
+			return new WP_Error( 'lmat_create_tr_invalid_source', __( 'Invalid source post.', 'linguator-multilingual-ai-translation' ), array( 'status' => 404 ) );
+		}
+
+		$target_lang = $this->model->get_language( $target_lang_slug );
+		if ( ! $target_lang ) {
+			return new WP_Error( 'lmat_create_tr_invalid_language', __( 'Invalid target language.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+		}
+
+		// If a translation already exists, return it.
+		$existing_tr_id = $this->model->post->get_translation( $source_id, $target_lang );
+		if ( $existing_tr_id && (int) $existing_tr_id !== (int) $source_id ) {
+			return rest_ensure_response( array(
+				'success'   => true,
+				'already'   => true,
+				'id'        => (int) $existing_tr_id,
+				'edit_link' => get_edit_post_link( $existing_tr_id, 'raw' ),
+			) );
+		}
+
+		// Create the post as draft to avoid publishing unintentionally.
+		$new_post_id = wp_insert_post( array(
+			'post_title'  => $title,
+			'post_type'   => $post_type,
+			'post_status' => 'draft',
+		) );
+
+		if ( is_wp_error( $new_post_id ) || ! $new_post_id ) {
+			return new WP_Error( 'lmat_create_tr_failed', __( 'Failed to create translation post.', 'linguator-multilingual-ai-translation' ), array( 'status' => 500 ) );
+		}
+
+		// Assign language and link translations.
+		lmat_set_post_language( $new_post_id, $target_lang_slug );
+
+		$translations = $this->model->post->get_translations( $source_id );
+		$source_lang  = $this->model->post->get_language( $source_id );
+		if ( $source_lang ) {
+			$translations[ $source_lang->slug ] = $source_id;
+		}
+		$translations[ $target_lang->slug ] = $new_post_id;
+
+		foreach ( $translations as $lang_slug => $post_id ) {
+			if ( $post_id ) {
+				$this->model->post->save_translations( $post_id, $translations );
+			}
+		}
+
+		return rest_ensure_response( array(
+			'success'   => true,
+			'id'        => (int) $new_post_id,
+			'edit_link' => get_edit_post_link( $new_post_id, 'raw' ),
+		) );
+	}
+
+	/**
+	 * Permission check for creating a translation from a typed title.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error
+	 */
+	public function create_translation_permissions_check( $request ) {
+		$source_id = (int) $request['source_id'];
+		if ( $source_id && ! current_user_can( 'edit_post', $source_id ) ) {
+			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create a translation for this post.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create posts.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		$nonce_check = $this->verify_nonce( $request );
+		if ( is_wp_error( $nonce_check ) ) {
+			return $nonce_check;
+		}
+		return true;
 	}
 
 	/**
