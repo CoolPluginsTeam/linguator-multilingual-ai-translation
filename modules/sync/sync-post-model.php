@@ -45,7 +45,7 @@ class LMAT_Sync_Post_Model {
 	 *
 	 * @param object $linguator Linguator object.
 	 */
-	public function __construct( &$linguator ) {
+	public function __construct( &$linguator) {
 		$this->options      = &$linguator->options;
 		$this->model        = &$linguator->model;
 		$this->sync         = &$linguator->sync;
@@ -124,10 +124,6 @@ class LMAT_Sync_Post_Model {
 			}
 		}
 
-		if(isset($post_data['post_title'])){
-			$tr_post->post_name = sanitize_title($post_data['post_title']);
-		}
-
 		if(isset($tr_post->post_content)){
 			$tr_post->post_content=wp_kses_post(lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language));
 		}
@@ -174,14 +170,14 @@ class LMAT_Sync_Post_Model {
 
 			$post=get_post($post_id);
 			do_action( 'lmat_save_post', $post_id, $post, $translations ); // Fire again as we just updated $translations.
-			
+
 			unset( $this->temp_synchronized[ $post_id ][ $tr_id ] );
 		}
-		
+
 		if ( $save_group ) {
 			$this->save_group( $post_id, $languages );
 		}
-		
+
 		$tr_post->ID = $tr_id;
 		$post=get_post($post_id);
 
@@ -256,8 +252,13 @@ class LMAT_Sync_Post_Model {
 	 * @param string $elementor_data The Elementor data to update.
 	 * @return void
 	 */
-	private function update_elementor_data($tr_id, $post_data){
+	private function update_elementor_data($tr_id, $post_data, $parent_post_id = 0){
 		$current_post_elementor_data = get_post_meta($tr_id, '_elementor_data', true);
+
+		if(!isset($post_data['meta_fields']['_elementor_data'])){
+			return;
+		}
+
 		$elementor_data=$post_data['meta_fields']['_elementor_data'];
 
 		// Check if the current post has Elementor data
@@ -272,9 +273,13 @@ class LMAT_Sync_Post_Model {
 
 				$plugin->files_manager->clear_cache();
 			}else{
-				// $elementor_data = sanitize_textarea_field( wp_unslash( $post_data['meta_fields']['_elementor_data']));
-				$elementor_data=preg_replace('#(?<!\\\\)/#', '\\/', $elementor_data);
-				update_post_meta($tr_id, '_elementor_data', $elementor_data);
+
+				if($parent_post_id > 0){
+					$elementor_data=\Elementor\Plugin::$instance->documents->get($parent_post_id)->get_elements_data();
+					$elementor_data=wp_json_encode($elementor_data);
+					$elementor_data=preg_replace('#(?<!\\\\)/#', '\\/', $elementor_data);
+					update_post_meta($tr_id, '_elementor_data', $elementor_data);
+				}
 			}
 		}
 	}
