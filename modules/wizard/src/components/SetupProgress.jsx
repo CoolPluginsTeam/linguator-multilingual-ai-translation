@@ -11,6 +11,7 @@ import HomePage from "./HomePage"
 import Default from "./Default"
 import URLModifications from "./URLModifications"
 import AiTranslation from "./AiTranslation"
+import LanguageSwitcher from "./LanguageSwitcher"
 
 //Component router for setup 
 const SetupFileRouting = () => {
@@ -24,6 +25,7 @@ const SetupFileRouting = () => {
     else if (setupProgress === "home_page") return <HomePage/>
     else if (setupProgress === "ready") return <Ready />
     else if (setupProgress === "translation_configuration") return <AiTranslation />
+    else if(setupProgress === "language_switcher") return <LanguageSwitcher/>
 }
 const SetupProgress = ({lmat_setup_data}) => {
     const {setupProgress,setSetupProgress,showHomePage,setupSteps, setSetupSteps} = React.useContext(setupContext) //get the context
@@ -79,6 +81,13 @@ const SetupProgress = ({lmat_setup_data}) => {
         temp_setupSetups.push({
             label: __("Translation","linguator-multilingual-ai-translation"),
             value: "translation_configuration",
+            visible: true,
+            step: step++
+        })
+
+        temp_setupSetups.push({
+            label: __("Switcher","linguator-multilingual-ai-translation"),
+            value: "language_switcher",
             visible: true,
             step: step++
         })
