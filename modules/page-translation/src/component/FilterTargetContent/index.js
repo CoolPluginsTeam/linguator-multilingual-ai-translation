@@ -202,7 +202,7 @@ const FilterTargetContent = (props) => {
 
         // Filter shortcode content
         const shortcodePattern = /\[(.*?)\]/g;
-        const shortcodeMatches = string.match(shortcodePattern);
+        const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
 
         if (shortcodeMatches) {
             string = string.replace(shortcodePattern, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);

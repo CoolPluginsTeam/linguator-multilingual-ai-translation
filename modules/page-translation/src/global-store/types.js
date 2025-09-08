@@ -38,6 +38,12 @@ const LmatActionTypes = {
 
     // Action type for saving the allowed meta fields
     allowedMetaFields: 'ALLOWED_META_FIELDS',
+
+    // Action type for saving the slug of the source content
+    sourceSlug: 'SAVE_SOURCE_SLUG',
+
+    // Action type for saving the slug of the translated content
+    traslatedSlug: 'SAVE_TRANSLATE_SLUG',
 };
 
 export default LmatActionTypes;

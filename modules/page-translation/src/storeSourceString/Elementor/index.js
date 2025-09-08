@@ -106,6 +106,22 @@ const ElementorSaveSource = (content) => {
     }
 
     storeMetaFields(content.metaFields);
+
+    if(content.title && '' !== content.title){
+        const currentPostId=lmatPageTranslationGlobal.current_post_id;
+
+        if(currentPostId){
+            const existingTitle=elementor?.settings?.page?.model?.get('post_title');
+
+            if(existingTitle && '' !== existingTitle && existingTitle === `Elementor #${currentPostId}`){
+                dispatch('block-lmatPageTranslation/translate').titleSaveSource(content.title);
+            }
+        }
+    }
+
+    if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+        dispatch('block-lmatPageTranslation/translate').slugSaveSource(content.slug_name);
+    }
 }
 
 export default ElementorSaveSource;

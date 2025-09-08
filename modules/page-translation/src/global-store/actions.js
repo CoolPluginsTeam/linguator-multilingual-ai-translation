@@ -53,6 +53,32 @@ export const excerptSaveTranslate = (data, provider) => {
 };
 
 /**
+ * Action creator for saving the source slug.
+ * @param {string} data - The source slug to be saved.
+ * @returns {Object} The action object containing the type and text.
+ */
+export const slugSaveSource = (data) => {
+    return {
+        type: LmatActionTypes.sourceSlug, // Action type for saving the source slug
+        text: data, // The source slug text
+    }
+};
+
+/**
+ * Action creator for saving the translated slug.
+ * @param {string} data - The translated slug to be saved.
+ * @param {string} provider - The provider of the translated slug.
+ * @returns {Object} The action object containing the type, text, and provider.
+ */
+export const slugSaveTranslate = (data, provider) => {
+    return {
+        type: LmatActionTypes.traslatedSlug, // Action type for saving the translated slug
+        text: data, // The translated slug text
+        provider: provider // The provider of the translated slug
+    }
+};
+
+/**
  * Action creator for saving the source content.
  * @param {string} id - The identifier for the content.
  * @param {string} data - The source content to be saved.

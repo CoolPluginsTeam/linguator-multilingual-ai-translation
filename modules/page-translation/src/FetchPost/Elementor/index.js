@@ -16,6 +16,14 @@ const fetchPostContent = async (props) => {
         metaFields:metaFields
     }
 
+    if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+        content.slug_name=lmatPageTranslationGlobal.slug_name;
+    }
+
+    if(lmatPageTranslationGlobal.parent_post_title && '' !== lmatPageTranslationGlobal.parent_post_title){
+        content.title=lmatPageTranslationGlobal.parent_post_title;
+    }
+
     
     // Update allowed meta fields
     Object.keys(AllowedMetaFields).forEach(key => {

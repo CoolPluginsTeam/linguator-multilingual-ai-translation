@@ -30,6 +30,19 @@ const translatePost = (props) => {
         });
 
         editPost(data);
+
+        if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+            const slugData = select('block-lmatPageTranslation/translate').getTranslatedString('slug', postContent.slug_name, null, service);
+
+            editPost({ slug: slugData });
+        }
+
+        if(lmatPageTranslationGlobal.slug_translation_option === 'slug_keep'){
+            const slugData=lmatPageTranslationGlobal.slug_name;
+            setTimeout(() => {
+                editPost({ slug: slugData });
+            }, 500);
+        }
     }
 
     /**

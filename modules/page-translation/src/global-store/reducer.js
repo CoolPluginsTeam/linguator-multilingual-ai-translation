@@ -13,6 +13,7 @@ import LmatActionTypes from "./types.js"; // Importing action types from the typ
 const TranslateDefaultState = {
     title: {}, // Initial state for title translations
     excerpt: {}, // Initial state for excerpt translations
+    slug: {}, // Initial state for slug translations
     content: [], // Initial state for content translations
     metaFields: {}, // Initial state for meta field translations
     allowedMetaFields: {}, // Initial state for allowed meta fields
@@ -51,6 +52,14 @@ const reducer = (state = TranslateDefaultState, action) => {
         case LmatActionTypes.traslatedExcerpt: // Action to save the translated excerpt
             // Update the state with the new target excerpt
             return { ...state, excerpt: { ...state.excerpt, translatedData: { ...(state.excerpt.translatedData || []), [action.provider]: action.text } } };
+
+        case LmatActionTypes.sourceSlug: // Action to save the source slug
+            // Update the state with the new source slug
+            return { ...state, slug: { ...state.slug, source: action.text } };
+
+        case LmatActionTypes.traslatedSlug: // Action to save the translated slug
+            // Update the state with the new target slug
+            return { ...state, slug: { ...state.slug, translatedData: { ...(state.slug.translatedData || []), [action.provider]: action.text } } };
 
         case LmatActionTypes.sourceContent: // Action to save the source content
             // Check if the action text contains any letters or numbers
