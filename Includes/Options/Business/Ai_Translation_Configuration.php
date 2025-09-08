@@ -46,8 +46,6 @@ class Ai_Translation_Configuration extends Abstract_Option {
             ),
         );
 
-        $data = (object) $data;
-
         return $data;
     }
 
