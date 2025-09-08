@@ -17,7 +17,8 @@
             "Linguator\\Settings\\": "Settings/",
             "Linguator\\Modules\\": "modules/",
             "Linguator\\Integrations\\": "integrations/",
-            "Linguator\\Install\\": "install/"
+            "Linguator\\Install\\": "install/",
+            "Linguator\\Services\\": "services/"
         },
         "classmap": [
             "Includes/",
@@ -26,7 +27,8 @@
             "integrations/",
             "modules/",
             "Settings/",
-            "install/"
+            "install/",
+            "services/"
         ],
         "files": [
             "Includes/Helpers/functions.php",
