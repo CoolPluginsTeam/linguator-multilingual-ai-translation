@@ -83,6 +83,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			$tabs = array(
 				'general'     => array( 'title' => __( 'General', 'linguator-multilingual-ai-translation' ) ),
 				'translation' => array( 'title' => __( 'Translation', 'linguator-multilingual-ai-translation' ) ),
+				'switcher'    => array( 'title' => __( 'Switcher', 'linguator-multilingual-ai-translation' ) ),
 				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
 			);
 
@@ -101,6 +102,9 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				$tabs['general']['redirect_url']     = $default_url . '&tab=general';
 				$tabs['translation']['redirect']     = true;
 				$tabs['translation']['redirect_url'] = $default_url . '&tab=translation';
+
+				$tabs['switcher']['redirect']     = true;
+				$tabs['switcher']['redirect_url'] = $default_url . '&tab=switcher';
 			}
 
 			return apply_filters( 'lmat_settings_header_tabs', $tabs );
