@@ -18,7 +18,7 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
      * @returns {boolean}
      */
     const replaceValue=(Object, key, translateValue)=>{
-        if(Object && Object[key] && Object[key].trim() !== ''){
+        if(Object && Object[key] && typeof Object[key] === 'string' && Object[key].trim() !== ''){
             Object[key]=translateValue;
             return true;
         }
@@ -102,6 +102,26 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
     }
 
     /**
+    * @param {Object} source
+    * @param {string} value
+    */
+    const updatePostName=(source, value)=>{
+        if(value && '' !== value){
+            source.post_name=getTransaltedValue('post_name');
+        }
+    }
+
+    /**
+     * @param {Object} source
+     * @param {string} value
+     */
+    const updateExcerpt=(source, value)=>{
+        if(value && '' !== value){
+            source.excerpt=getTransaltedValue('excerpt');
+        }
+    }
+
+    /**
      * @param {Object} source
      * @param {Object} translation
      */
@@ -113,6 +133,10 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
 
             if(keys[0] === 'title'){
                 updateTitle(source, translation[keys[0]]);
+            }else if(keys[0] === 'post_name'){
+                updatePostName(source, translation[keys[0]]);
+            }else if(keys[0] === 'excerpt'){
+                updateExcerpt(source, translation[keys[0]]);
             }else if(keys[0] === 'content'){
                 let keyArray=keys;
 

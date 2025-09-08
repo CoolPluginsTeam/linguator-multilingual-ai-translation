@@ -5,9 +5,9 @@ const updateTranslationCount=({postId,key,lang, storeDispatch})=>{
     const sourceText=store.getState().translatedContent[postId][key]?.source;
 
     if(sourceText){
-        const stringCount = sourceText.split(/(?<=[.!?]+)\s+/).length;
-        const wordCount = sourceText.trim().split(/\s+/).filter(word => /[^\p{L}\p{N}]/.test(word)).length;
-        const characterCount = sourceText.length;
+        const stringCount = typeof sourceText === 'string' ? sourceText.split(/(?<=[.!?]+)\s+/).length : 0;
+        const wordCount = typeof sourceText === 'string' ? sourceText.trim().split(/\s+/).filter(word => /[^\p{L}\p{N}]/.test(word)).length : 0;
+        const characterCount = typeof sourceText === 'string' ? sourceText.length : 0;
 
         const previousPostInfo=store.getState().translatePostInfo[postId+'_'+lang];
         const previousStringCount=previousPostInfo?.stringsTranslated || 0;

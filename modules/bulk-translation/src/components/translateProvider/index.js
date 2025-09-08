@@ -2,7 +2,6 @@ import localAiTranslator from "./localAi/index.js";
 import GoogleTranslater from "./google/index.js";
 import { sprintf, __ } from "@wordpress/i18n";
 
-
 /**
  * Provides translation services using Yandex Translate.
  */
@@ -13,6 +12,7 @@ export default (props) => {
     const assetsUrl = window.lmatBulkTranslationGlobal.lmat_url+'Admin/Assets/images/';
     const errorIcon = assetsUrl + 'error-icon.svg';
     const providers=window.lmatBulkTranslationGlobal.providers;
+
 
     const Services = {
         // yandex: {
@@ -44,7 +44,6 @@ export default (props) => {
         }
     };
 
-   
     const validServices={};
 
     providers.forEach(provider=>{

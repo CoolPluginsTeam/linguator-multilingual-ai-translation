@@ -11,9 +11,8 @@ import DOMPurify from 'dompurify';
 
 const App = ({ onDestory, prefix, postIds }) => {
     const dispatch = useDispatch();
-    const { languageObject = {} } = lmatBulkTranslationGlobal || {};
-    const emptyPostIdsErrorMessage = __('Please select at least one post for translation.', 'linguator-multilingual-ai-translation');
-    const [selectedLanguages, setSelectedLanguages] = useState([]);
+    const { languageObject = {} } = lmatBulkTranslationGlobal|| {};
+    const emptyPostIdsErrorMessage = sprintf(__('Please select %s for translation.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label);    const [selectedLanguages, setSelectedLanguages] = useState([]);
     const [errorMessage, setErrorMessage] = useState(postIds.length === 0 ? emptyPostIdsErrorMessage : '');
     const [settingModalVisibility, setSettingModalVisibility] = useState(false);
     const [statusModalVisibility, setStatusModalVisibility] = useState(false);

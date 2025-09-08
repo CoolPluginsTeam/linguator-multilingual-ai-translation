@@ -1,10 +1,12 @@
 import FilterClassicContent from './Classic/index.js';
 import FilterElementorContent from './Elementor/index.js';
 import FilterGutenbergContent from './Gutenberg/index.js';
+import FilterTaxonomyContent from './Taxonomy/index.js';
 
 import updateClassicContent from './Classic/updateContent.js';
 import updateElementorContent from './Elementor/updateContent.js';
 import updateGutenbergContent from './Gutenberg/updateContent.js';
+import updateTaxonomyContent from './Taxonomy/updateContent.js';
 
 import Provider from '../translateProvider/index.js';
 
@@ -14,10 +16,12 @@ import {store} from '../../ReduxStore/store.js';
 
 
 const filterContent = ({content, editorType, service, postId, storeDispatch, blockParseRules=null, metaFields=null}) => {
+
     const filters={     
         'classic':FilterClassicContent,
         'elementor':FilterElementorContent,
         'block':FilterGutenbergContent,
+        'taxonomy':FilterTaxonomyContent,
     }
 
     const data={content, service, postId, storeDispatch};
@@ -39,6 +43,7 @@ const updateFilterContent=async ({source, postId, lang, editorType})=>{
         'classic':updateClassicContent,
         'elementor':updateElementorContent,
         'block':updateGutenbergContent,
+        'taxonomy':updateTaxonomyContent,
     }
 
     const serviceProvider=selectServiceProvider(store.getState());

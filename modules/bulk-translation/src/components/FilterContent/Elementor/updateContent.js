@@ -10,7 +10,7 @@ const updateElementorContent = async ({source, lang, translatedContent, serviceP
     * @returns {boolean}
     */
     const replaceValue = (Object, key, translateValue) => {
-        if (Object && Object[key] && Object[key].trim() !== '') {
+        if (Object && Object[key] && typeof Object[key] === 'string' && Object[key].trim() !== '') {
             Object[key] = translateValue;
 
             return true;
@@ -26,11 +26,27 @@ const updateElementorContent = async ({source, lang, translatedContent, serviceP
 
     /**
      * @param {Object} source
-     * @param {Object} translation
+     * @param {string} value
      */
     const updateTitle=(source, value)=>{
         if(value && '' !== value){
             source.title=getTransaltedValue('title');
+        }
+    }
+
+    /**
+     * @param {Object} source
+     * @param {string} value
+     */
+    const updatePostName=(source, value)=>{
+        if(value && '' !== value){
+            source.post_name=getTransaltedValue('post_name');
+        }
+    }
+
+    const updateExcerpt=(source, value)=>{
+        if(value && '' !== value){
+            source.excerpt=getTransaltedValue('excerpt');
         }
     }
 
@@ -43,6 +59,10 @@ const updateElementorContent = async ({source, lang, translatedContent, serviceP
             const keys=key.split('_lmat_bulk_content_temp_');
             if(keys[0] === 'title'){
                 updateTitle(source, translation[keys[0]]);
+            }else if(keys[0] === 'post_name'){
+                updatePostName(source, translation[keys[0]]);
+            }else if(keys[0] === 'excerpt'){
+                updateExcerpt(source, translation[keys[0]]);
             }else if(keys[0] === 'content'){
                 let keyArray=keys;
 

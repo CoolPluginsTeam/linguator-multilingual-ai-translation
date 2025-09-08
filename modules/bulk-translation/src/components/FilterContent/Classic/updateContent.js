@@ -55,11 +55,26 @@ const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
 
     /**
      * @param {Object} source
-     * @param {Object} translation
+     * @param {string} value
      */
     const updateTitle=async (source, value)=>{
         if(value && '' !== value){
             source.title=await getTransaltedValue('title');
+        }
+    }
+    /**
+     * @param {Object} source
+     * @param {string} value
+     */
+    const updatePostName=async (source, value)=>{
+        if(value && '' !== value){
+            source.post_name=await getTransaltedValue('post_name');
+        }
+    }
+
+    const updateExcerpt=async (source, value)=>{
+        if(value && '' !== value){
+            source.excerpt=await getTransaltedValue('excerpt');
         }
     }
 
@@ -100,6 +115,8 @@ const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
     }
 
     await updateTitle(source, source.title);
+    await updatePostName(source, source.post_name);
+    await updateExcerpt(source, source.excerpt);
     await updatePostContent({content: source.content});
 
     return source;
