@@ -42,7 +42,7 @@ Just install the plugin and start translating right inside your WordPress dashbo
 ## Development Resources
 
 - **jQuery Source Code:** `linguator/Assets/js/src`  
-- **React (Settings Tab):** `linguator/Settings/View/src`  
+- **React (Settings Tab):** `linguator/Admin/Settings/View/src`  
 - **React (Setup Wizard):** `linguator/modules/wizard/src`  
 - **Build Files:** `linguator/Admin/Assets`
 

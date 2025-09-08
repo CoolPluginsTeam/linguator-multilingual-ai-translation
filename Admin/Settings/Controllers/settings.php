@@ -69,6 +69,16 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 */
 	public $rest;
 
+	/**
+	 * @var mixed
+	 */
+	public $switcher_block;
+
+	/**
+	 * @var mixed
+	 */
+	public $navigation_block;
+
 	// Additional dynamic properties
 	/**
 	 * @var mixed

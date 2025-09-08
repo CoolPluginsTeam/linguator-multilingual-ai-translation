@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
-    "build:css": "tailwindcss -i Settings/Views/src/input.css -o Admin/Assets/css/build/main.css",
+    "build:css": "tailwindcss -i Admin/Settings/Views/src/input.css -o Admin/Assets/css/build/main.css",
     "build": "webpack --config webpack.config.js --mode=production",
     "start": "wp-scripts start modules/wizard/src/setup.js --output-path Admin/Assets/frontend/setup",
     "start:js": "webpack --config webpack.config.js --mode=development --watch",
