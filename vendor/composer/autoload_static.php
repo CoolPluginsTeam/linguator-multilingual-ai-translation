@@ -16,6 +16,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         array (
             'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
+            'Linguator\\Services\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
             'Linguator\\Install\\' => 18,
@@ -33,6 +34,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Settings\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Settings',
+        ),
+        'Linguator\\Services\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/services',
         ),
         'Linguator\\Modules\\' => 
         array (
@@ -176,6 +181,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Other\\LMAT_Model' => __DIR__ . '/../..' . '/Includes/other/model.php',
         'Linguator\\Includes\\Other\\LMAT_OLT_Manager' => __DIR__ . '/../..' . '/Includes/other/olt-manager.php',
         'Linguator\\Includes\\Other\\LMAT_Query' => __DIR__ . '/../..' . '/Includes/other/query.php',
+        'Linguator\\Includes\\Other\\LMAT_Translation_Dashboard' => __DIR__ . '/../..' . '/Includes/other/lmat-translation-dashboard.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Posts' => __DIR__ . '/../..' . '/Includes/Services/Crud/crud-posts.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Terms' => __DIR__ . '/../..' . '/Includes/Services/Crud/crud-terms.php',
         'Linguator\\Includes\\Services\\Links\\LMAT_Links' => __DIR__ . '/../..' . '/Includes/Services/Links/links.php',
@@ -228,6 +234,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\REST\\V1\\Settings' => __DIR__ . '/../..' . '/modules/REST/V1/Settings.php',
         'Linguator\\Modules\\Wizard\\LMAT_Wizard' => __DIR__ . '/../..' . '/modules/wizard/wizard.php',
         'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => __DIR__ . '/../..' . '/modules/sync/settings-sync.php',
+        'Linguator\\Services\\Translation\\Translation_Term_Model' => __DIR__ . '/../..' . '/services/translation/translation-term-translate.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings' => __DIR__ . '/../..' . '/Settings/Controllers/settings.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => __DIR__ . '/../..' . '/Settings/Controllers/settings-module.php',
         'Linguator\\Settings\\Header\\Header' => __DIR__ . '/../..' . '/Settings/Header/Header.php',
