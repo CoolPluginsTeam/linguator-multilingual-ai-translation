@@ -336,7 +336,7 @@ class LMAT_Wizard
 				'lmat_setup',
 				'lmat_setup_flag_data',
 				[
-					'flagsUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . 'flags/',
+					'flagsUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/Assets/flags/',
 					'nonce' => wp_create_nonce('wp_rest'),
 					'restUrl' => rest_url('lmat/v1/'),
 				]

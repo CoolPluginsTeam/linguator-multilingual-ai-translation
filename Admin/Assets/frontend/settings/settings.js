@@ -131,7 +131,7 @@ var external_React_namespaceObject_0 = /*#__PURE__*/__webpack_require__.t(extern
 var external_React_default = /*#__PURE__*/__webpack_require__.n(external_React_namespaceObject);
 ;// external ["wp","i18n"]
 const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// ./logo/linguator-icon.svg
+;// ./Assets/logo/linguator-icon.svg
 var _circle, _circle2;
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
@@ -15393,7 +15393,7 @@ var General = function General(_ref) {
     className: "flex-shrink-0 size-5 text-icon-secondary"
   }), (0,external_wp_i18n_namespaceObject.__)('Language Switcher', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "flex gap-6 flex-wrap"
-  }, console.log(selectedLanguageSwitchers), languageSwitcherOptions.map(function (switcher, index) {
+  }, languageSwitcherOptions.map(function (switcher, index) {
     return /*#__PURE__*/external_React_default().createElement("div", {
       key: index,
       className: "flex items-center gap-2"

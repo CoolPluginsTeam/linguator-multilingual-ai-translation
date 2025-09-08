@@ -7,7 +7,7 @@ const external_wp_plugins_namespaceObject = window["wp"]["plugins"];
 const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
 ;// external ["wp","editSite"]
 const external_wp_editSite_namespaceObject = window["wp"]["editSite"];
-;// ./js/src/editors/site.js
+;// ./Assets/js/src/editors/site.js
 /**
  * Site Editor sidebar bootstrap
  */

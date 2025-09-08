@@ -332,7 +332,7 @@ td.column-default_lang .icon-default-lang:before,
 #wpadminbar #wp-admin-bar-languages .ab-icon:before {
 	content: "";
 	top: 1px;
-	background-image: url(../../../../logo/lmat_menu_icon.svg);
+	background-image: url(../../../../Assets/logo/lmat_menu_icon.svg);
 	background-size: 20px;
 	background-repeat: no-repeat;
 	background-position: center;

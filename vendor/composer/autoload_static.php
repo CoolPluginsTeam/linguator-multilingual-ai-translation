@@ -155,6 +155,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Business\\First_Activation' => __DIR__ . '/../..' . '/Includes/Options/Business/First_Activation.php',
         'Linguator\\Includes\\Options\\Business\\Force_Lang' => __DIR__ . '/../..' . '/Includes/Options/Business/Force_Lang.php',
         'Linguator\\Includes\\Options\\Business\\Hide_Default' => __DIR__ . '/../..' . '/Includes/Options/Business/Hide_Default.php',
+        'Linguator\\Includes\\Options\\Business\\Language_Switcher_Options' => __DIR__ . '/../..' . '/Includes/Options/Business/Language_Switcher_Options.php',
         'Linguator\\Includes\\Options\\Business\\Language_Taxonomies' => __DIR__ . '/../..' . '/Includes/Options/Business/Language_Taxonomies.php',
         'Linguator\\Includes\\Options\\Business\\Media_Support' => __DIR__ . '/../..' . '/Includes/Options/Business/Media_Support.php',
         'Linguator\\Includes\\Options\\Business\\Nav_Menus' => __DIR__ . '/../..' . '/Includes/Options/Business/Nav_Menus.php',
