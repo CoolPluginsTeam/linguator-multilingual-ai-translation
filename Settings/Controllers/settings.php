@@ -515,6 +515,30 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	}
 
 	/**
+	 * Get language switcher options formatted for JavaScript
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Array of language switcher options with label and value
+	 */
+	private function get_language_switcher_options() {
+		return array(
+			array(
+				'label' => __( 'Default Widget', 'linguator-multilingual-ai-translation' ),
+				'value' => 'default',
+			),
+			array(
+				'label' => __( 'Block Editor', 'linguator-multilingual-ai-translation' ),
+				'value' => 'block',
+			),
+			array(
+				'label' => __( 'Elementor', 'linguator-multilingual-ai-translation' ),
+				'value' => 'elementor',
+			),
+		);
+	}
+
+	/**
 	 * Enqueues scripts and styles
 	 *
 	 * @return void
@@ -564,6 +588,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					'active_tab'     => $this->active_tab,
 					'locoai_plugin_status' => $this->get_locoai_plugin_status(),
 					'sync_options'   => $this->get_sync_options(),
+					'language_switcher_options' => $this->get_language_switcher_options(),
 				)
 			);
 			wp_localize_script(
