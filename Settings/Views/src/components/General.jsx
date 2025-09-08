@@ -4,9 +4,9 @@ import { Badge, Accordion, Button, Checkbox, Container, Input, Label, RadioButto
 import apiFetch from "@wordpress/api-fetch"
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'; // importing toaster and toast for notification purpose
-import { synchronizations } from '../utils'
+import { synchronizations, languageSwitcherOptions } from '../utils'
 import { getNonce } from '../utils'
-import { Link, Globe, Focus, Milestone, RefreshCcw, Share2 } from 'lucide-react';
+import { Link, Globe, Focus, Milestone, RefreshCcw, Share2, Languages } from 'lucide-react';
 import { __, sprintf } from '@wordpress/i18n';
 
 const General = ({ data, setData }) => {
@@ -28,6 +28,7 @@ const General = ({ data, setData }) => {
     const [selectAllSync,setSelectAllSync] = useState(false);
     const previousDomains = React.useRef([])
     const [lmatFeedbackData, setLmatFeedbackData] = useState(data.lmat_feedback_data !== undefined ? data.lmat_feedback_data : false); // For Usage Data Sharing
+    const [selectedLanguageSwitchers, setSelectedLanguageSwitchers] = useState(data.lmat_language_switcher_options || ['default']); // Selected Language Switcher options
     const [showTerms, setShowTerms] = useState(false); // For showing/hiding terms box
 
 
@@ -54,7 +55,8 @@ const General = ({ data, setData }) => {
             domains: true,
             selectedSynchronization: true,
             selectedPostTypes: true,
-            selectedTaxonomies: true
+            selectedTaxonomies: true,
+            selectedLanguageSwitchers: true
         }
         
         // Only include lmatFeedbackData in the checker if the setting is available
@@ -128,6 +130,17 @@ const General = ({ data, setData }) => {
             }
         }
 
+        if (data.lmat_language_switcher_options && data.lmat_language_switcher_options.length != selectedLanguageSwitchers.length) {
+            sameChecker.selectedLanguageSwitchers = false
+        } else if (data.lmat_language_switcher_options) {
+            for (const value of data.lmat_language_switcher_options) {
+                if (!selectedLanguageSwitchers.includes(value)) {
+                    sameChecker.selectedLanguageSwitchers = false
+                    break;
+                }
+            }
+        }
+
         let flag = true;
         for (const key in sameChecker) {
             if (!sameChecker[key]) {
@@ -139,7 +152,7 @@ const General = ({ data, setData }) => {
         if (flag) {
             setHandleButtonDisabled(true)
         }
-    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData])
+    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers])
 
     //Make the post types and taxonomies from  posttype->posttype_name   to {value: postype ,label:posttype_name (posttype)}
     useEffect(() => {
@@ -193,6 +206,18 @@ const General = ({ data, setData }) => {
             }
         });
 
+    };
+
+    //Handle Checkboxes of Language Switcher
+    const handleLanguageSwitcherChange = (switcher) => {
+        setHandleButtonDisabled(false)
+        setSelectedLanguageSwitchers(prev => {
+            if (prev.includes(switcher)) {
+                return prev.filter(item => item !== switcher);
+            } else {
+                return [...prev, switcher];
+            }
+        });
     };
 
     //Handle Select All Sync
@@ -255,7 +280,8 @@ const General = ({ data, setData }) => {
                     domains: final_domain,
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
-                    taxonomies: selectedTaxonomies
+                    taxonomies: selectedTaxonomies,
+                    lmat_language_switcher_options: selectedLanguageSwitchers
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -271,7 +297,8 @@ const General = ({ data, setData }) => {
                     rewrite: rewrite,
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
-                    taxonomies: selectedTaxonomies
+                    taxonomies: selectedTaxonomies,
+                    lmat_language_switcher_options: selectedLanguageSwitchers
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -680,6 +707,34 @@ const General = ({ data, setData }) => {
                                     size="sm"
                                     onChange={() => handleSynchronizationChange(synchronization.value)}
                                 />
+                            ))
+                        }
+                    </Container.Item>
+                </Container>
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                <Container cols="1" containerType='grid' >
+                    <Container.Item className='switcher'>
+                        <Label size='md' className='font-bold flex items-center gap-2'>
+                            <Languages className="flex-shrink-0 size-5 text-icon-secondary" />
+                            {__('Language Switcher', 'linguator-multilingual-ai-translation')}
+                        </Label>
+                    </Container.Item>
+                    <Container.Item className='flex gap-6 flex-wrap'>
+                        {
+                           
+                            languageSwitcherOptions.map((switcher, index) => (
+                                <div key={index} className='flex items-center gap-2'>
+                                    <Switch
+                                        aria-label={`Switch for ${switcher.label}`}
+                                        id={`lmat_language_switcher_${switcher.value}`}
+                                        onChange={() => handleLanguageSwitcherChange(switcher.value)}
+                                        size="sm"
+                                        value={selectedLanguageSwitchers.includes(switcher.value)}
+                                    />
+                                    <Label htmlFor={`lmat_language_switcher_${switcher.value}`} className='cursor-pointer'>
+                                        {switcher.label}
+                                    </Label>
+                                </div>
                             ))
                         }
                     </Container.Item>

@@ -28,6 +28,7 @@ class Registry {
 		Business\Media_Support::class,
 		// Usage Data Sharing.
 		Business\Feedback_Data::class,
+		Business\Language_Switcher_Options::class,
 		// Custom post types and taxonomies.
 		Business\Post_Types::class,
 		Business\Taxonomies::class,

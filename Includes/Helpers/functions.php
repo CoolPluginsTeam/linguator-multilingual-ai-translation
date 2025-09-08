@@ -294,3 +294,29 @@ function lmat_use_block_editor_plugin() {
 	 */
 	return class_exists( 'Linguator\Modules\Editors\Screens\Abstract_Screen' ) && apply_filters( 'lmat_use_block_editor_plugin', ! defined( 'LMAT_USE_BLOCK_EDITOR_PLUGIN' ) || LMAT_USE_BLOCK_EDITOR_PLUGIN );
 }
+
+/**
+ * Checks if a specific language switcher type is enabled
+ *
+ * @since 1.0.0
+ *
+ * @param string $switcher_type The switcher type to check ('default', 'block', 'elementor')
+ * @return bool True if the switcher type is enabled
+ */
+function lmat_is_switcher_type_enabled( $switcher_type ) {
+	// Get the options instance
+	global $linguator;
+	
+	if ( ! isset( $linguator->options ) ) {
+		// Fallback to default if options not available
+		return 'default' === $switcher_type;
+	}
+	
+	$enabled_switchers = $linguator->options->get( 'lmat_language_switcher_options' );
+	
+	// Ensure it's an array
+	if ( ! is_array( $enabled_switchers ) ) {
+		$enabled_switchers = array( 'default' );
+	}
+	return in_array( $switcher_type, $enabled_switchers, true );
+}

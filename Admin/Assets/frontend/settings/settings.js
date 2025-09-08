@@ -14270,16 +14270,19 @@ const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function
 
 
 ;// ./Settings/Views/src/utils.js
-var _window$lmat_settings;
+var _window$lmat_settings, _window$lmat_settings2;
 
 
 // Get synchronization options from localized data
 var synchronizations = ((_window$lmat_settings = window.lmat_settings) === null || _window$lmat_settings === void 0 ? void 0 : _window$lmat_settings.sync_options) || [];
 
+// Get language switcher options from localized data
+var languageSwitcherOptions = ((_window$lmat_settings2 = window.lmat_settings) === null || _window$lmat_settings2 === void 0 ? void 0 : _window$lmat_settings2.language_switcher_options) || [];
+
 // Get nonce from localized script data
 var getNonce = function getNonce() {
-  var _window$lmat_settings2;
-  return ((_window$lmat_settings2 = window.lmat_settings) === null || _window$lmat_settings2 === void 0 ? void 0 : _window$lmat_settings2.nonce) || '';
+  var _window$lmat_settings3;
+  return ((_window$lmat_settings3 = window.lmat_settings) === null || _window$lmat_settings3 === void 0 ? void 0 : _window$lmat_settings3.nonce) || '';
 };
 ;// ./node_modules/lucide-react/dist/esm/shared/src/utils.js
 /**
@@ -14520,6 +14523,29 @@ const RefreshCcw = createLucideIcon_createLucideIcon("refresh-ccw", refresh_ccw_
 
 //# sourceMappingURL=refresh-ccw.js.map
 
+;// ./node_modules/lucide-react/dist/esm/icons/languages.js
+/**
+ * @license lucide-react v0.524.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+
+const languages_iconNode = [
+  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
+  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
+  ["path", { d: "M2 5h12", key: "or177f" }],
+  ["path", { d: "M7 2h1", key: "1t2jsx" }],
+  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
+  ["path", { d: "M14 18h6", key: "1m8k6r" }]
+];
+const Languages = createLucideIcon_createLucideIcon("languages", languages_iconNode);
+
+
+//# sourceMappingURL=languages.js.map
+
 ;// ./node_modules/lucide-react/dist/esm/icons/share-2.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -14636,10 +14662,14 @@ var General = function General(_ref) {
     _useState26 = _slicedToArray(_useState25, 2),
     lmatFeedbackData = _useState26[0],
     setLmatFeedbackData = _useState26[1]; // For Usage Data Sharing
-  var _useState27 = (0,external_React_namespaceObject.useState)(false),
+  var _useState27 = (0,external_React_namespaceObject.useState)(data.lmat_language_switcher_options || ['default']),
     _useState28 = _slicedToArray(_useState27, 2),
-    showTerms = _useState28[0],
-    setShowTerms = _useState28[1]; // For showing/hiding terms box
+    selectedLanguageSwitchers = _useState28[0],
+    setSelectedLanguageSwitchers = _useState28[1]; // Selected Language Switcher options
+  var _useState29 = (0,external_React_namespaceObject.useState)(false),
+    _useState30 = _slicedToArray(_useState29, 2),
+    showTerms = _useState30[0],
+    setShowTerms = _useState30[1]; // For showing/hiding terms box
 
   //make the Domains in a suitable way to view
   (0,external_React_namespaceObject.useEffect)(function () {
@@ -14664,7 +14694,8 @@ var General = function General(_ref) {
       domains: true,
       selectedSynchronization: true,
       selectedPostTypes: true,
-      selectedTaxonomies: true
+      selectedTaxonomies: true,
+      selectedLanguageSwitchers: true
     };
 
     // Only include lmatFeedbackData in the checker if the setting is available
@@ -14693,8 +14724,8 @@ var General = function General(_ref) {
       _step;
     try {
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var _value3 = _step.value;
-        if (!domains.includes(_value3) || previousDomains.current.length != domains.length) {
+        var _value4 = _step.value;
+        if (!domains.includes(_value4) || previousDomains.current.length != domains.length) {
           sameChecker.domains = false;
           break;
         }
@@ -14761,6 +14792,25 @@ var General = function General(_ref) {
         _iterator4.f();
       }
     }
+    if (data.lmat_language_switcher_options && data.lmat_language_switcher_options.length != selectedLanguageSwitchers.length) {
+      sameChecker.selectedLanguageSwitchers = false;
+    } else if (data.lmat_language_switcher_options) {
+      var _iterator5 = _createForOfIteratorHelper(data.lmat_language_switcher_options),
+        _step5;
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var _value3 = _step5.value;
+          if (!selectedLanguageSwitchers.includes(_value3)) {
+            sameChecker.selectedLanguageSwitchers = false;
+            break;
+          }
+        }
+      } catch (err) {
+        _iterator5.e(err);
+      } finally {
+        _iterator5.f();
+      }
+    }
     var flag = true;
     for (var key in sameChecker) {
       if (!sameChecker[key]) {
@@ -14772,7 +14822,7 @@ var General = function General(_ref) {
     if (flag) {
       setHandleButtonDisabled(true);
     }
-  }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData]);
+  }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers]);
 
   //Make the post types and taxonomies from  posttype->posttype_name   to {value: postype ,label:posttype_name (posttype)}
   (0,external_React_namespaceObject.useEffect)(function () {
@@ -14834,6 +14884,20 @@ var General = function General(_ref) {
     });
   };
 
+  //Handle Checkboxes of Language Switcher
+  var handleLanguageSwitcherChange = function handleLanguageSwitcherChange(switcher) {
+    setHandleButtonDisabled(false);
+    setSelectedLanguageSwitchers(function (prev) {
+      if (prev.includes(switcher)) {
+        return prev.filter(function (item) {
+          return item !== switcher;
+        });
+      } else {
+        return [].concat(_toConsumableArray(prev), [switcher]);
+      }
+    });
+  };
+
   //Handle Select All Sync
   var handleSelectAllSync = function handleSelectAllSync() {
     setHandleButtonDisabled(false);
@@ -14874,7 +14938,7 @@ var General = function General(_ref) {
   } //label and descriptions of URL modifications
   function _SaveSettings() {
     _SaveSettings = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var apiBody, final_domain, used_hosts, _iterator5, _step5, domain, response, _t, _t2;
+      var apiBody, final_domain, used_hosts, _iterator6, _step6, domain, response, _t, _t2;
       return _regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
@@ -14885,15 +14949,15 @@ var General = function General(_ref) {
             }
             final_domain = {};
             used_hosts = []; // Validate domains before processing
-            _iterator5 = _createForOfIteratorHelper(domains);
+            _iterator6 = _createForOfIteratorHelper(domains);
             _context.p = 1;
-            _iterator5.s();
+            _iterator6.s();
           case 2:
-            if ((_step5 = _iterator5.n()).done) {
+            if ((_step6 = _iterator6.n()).done) {
               _context.n = 6;
               break;
             }
-            domain = _step5.value;
+            domain = _step6.value;
             if (!(!domain.value || domain.value.trim() === '')) {
               _context.n = 3;
               break;
@@ -14916,10 +14980,10 @@ var General = function General(_ref) {
           case 7:
             _context.p = 7;
             _t = _context.v;
-            _iterator5.e(_t);
+            _iterator6.e(_t);
           case 8:
             _context.p = 8;
-            _iterator5.f();
+            _iterator6.f();
             return _context.f(8);
           case 9:
             //API Body
@@ -14932,7 +14996,8 @@ var General = function General(_ref) {
               domains: final_domain,
               sync: selectedSynchronization,
               post_types: selectedPostTypes,
-              taxonomies: selectedTaxonomies
+              taxonomies: selectedTaxonomies,
+              lmat_language_switcher_options: selectedLanguageSwitchers
             };
 
             // Only include lmat_feedback_data if the setting is available
@@ -14950,7 +15015,8 @@ var General = function General(_ref) {
               rewrite: rewrite,
               sync: selectedSynchronization,
               post_types: selectedPostTypes,
-              taxonomies: selectedTaxonomies
+              taxonomies: selectedTaxonomies,
+              lmat_language_switcher_options: selectedLanguageSwitchers
             };
 
             // Only include lmat_feedback_data if the setting is available
@@ -15313,6 +15379,36 @@ var General = function General(_ref) {
         return handleSynchronizationChange(synchronization.value);
       }
     });
+  }))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S, {
+    cols: "1",
+    containerType: "grid"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "switcher"
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, /*#__PURE__*/external_React_default().createElement(Languages, {
+    className: "flex-shrink-0 size-5 text-icon-secondary"
+  }), (0,external_wp_i18n_namespaceObject.__)('Language Switcher', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex gap-6 flex-wrap"
+  }, console.log(selectedLanguageSwitchers), languageSwitcherOptions.map(function (switcher, index) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      key: index,
+      className: "flex items-center gap-2"
+    }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+      "aria-label": "Switch for ".concat(switcher.label),
+      id: "lmat_language_switcher_".concat(switcher.value),
+      onChange: function onChange() {
+        return handleLanguageSwitcherChange(switcher.value);
+      },
+      size: "sm",
+      value: selectedLanguageSwitchers.includes(switcher.value)
+    }), /*#__PURE__*/external_React_default().createElement(label_es_c, {
+      htmlFor: "lmat_language_switcher_".concat(switcher.value),
+      className: "cursor-pointer"
+    }, switcher.label));
   }))), data.lmat_feedback_data !== undefined && /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement("div", {
@@ -15550,29 +15646,6 @@ const loader_es_d = ({
 };
 
 //# sourceMappingURL=loader.es.js.map
-
-;// ./node_modules/lucide-react/dist/esm/icons/languages.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const languages_iconNode = [
-  ["path", { d: "m5 8 6 6", key: "1wu5hv" }],
-  ["path", { d: "m4 14 6-6 2-3", key: "1k1g8d" }],
-  ["path", { d: "M2 5h12", key: "or177f" }],
-  ["path", { d: "M7 2h1", key: "1t2jsx" }],
-  ["path", { d: "m22 22-5-10-5 10", key: "don7ne" }],
-  ["path", { d: "M14 18h6", key: "1m8k6r" }]
-];
-const Languages = createLucideIcon_createLucideIcon("languages", languages_iconNode);
-
-
-//# sourceMappingURL=languages.js.map
 
 ;// ./Settings/Views/src/components/TranslationConfig.jsx
 function TranslationConfig_typeof(o) { "@babel/helpers - typeof"; return TranslationConfig_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, TranslationConfig_typeof(o); }
