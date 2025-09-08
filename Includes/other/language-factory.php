@@ -201,7 +201,7 @@ class LMAT_Language_Factory {
 	 */
 	private function get_languages() {
 		if ( empty( self::$languages ) ) {
-			self::$languages = include LINGUATOR_DIR . '/Settings/Controllers/languages.php';
+			self::$languages = include LINGUATOR_DIR . '/Admin/Settings/Controllers/languages.php';
 		}
 
 		return self::$languages;

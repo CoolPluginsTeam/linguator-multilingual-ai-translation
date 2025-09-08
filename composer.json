@@ -14,7 +14,7 @@
             "Linguator\\Admin\\": "Admin/",
             "Linguator\\Frontend\\": "frontend/",
             "Linguator\\Includes\\": "Includes/",
-            "Linguator\\Settings\\": "Settings/",
+            "Linguator\\Settings\\": "Admin/Settings/",
             "Linguator\\Modules\\": "modules/",
             "Linguator\\Integrations\\": "integrations/",
             "Linguator\\Install\\": "install/"
@@ -25,7 +25,7 @@
             "frontend/",
             "integrations/",
             "modules/",
-            "Settings/",
+            "Admin/Settings/",
             "install/"
         ],
         "files": [

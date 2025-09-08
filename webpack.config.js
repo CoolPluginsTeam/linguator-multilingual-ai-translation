@@ -165,7 +165,7 @@ const configs = [
     sourceFiles: ['post', 'site', 'widget'],
   },
   {
-    srcDir: 'Settings/Views/src',
+    srcDir: 'Admin/Settings/Views/src',
     outDir: 'Admin/Assets/frontend/settings',
     sourceFiles: ['settings'],
   },

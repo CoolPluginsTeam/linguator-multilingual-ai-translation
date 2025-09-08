@@ -5,7 +5,7 @@ import { RenderedLanguage } from '../components/Languages'
 import { Loader, Dialog, Button } from "@bsf/force-ui"
 import apiFetch from "@wordpress/api-fetch"
 import { __ } from '@wordpress/i18n'
-import { getNonce } from '../../../../Settings/Views/src/utils'
+import { getNonce } from '../../../../Admin/Settings/Views/src/utils'
 import { Toaster, toast } from 'sonner'
 
 export const setupContext = React.createContext(null)
