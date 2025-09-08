@@ -131,7 +131,7 @@ var external_React_namespaceObject_0 = /*#__PURE__*/__webpack_require__.t(extern
 var external_React_default = /*#__PURE__*/__webpack_require__.n(external_React_namespaceObject);
 ;// external ["wp","i18n"]
 const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// ./logo/linguator-icon.svg
+;// ./Assets/logo/linguator-icon.svg
 var _circle, _circle2;
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 

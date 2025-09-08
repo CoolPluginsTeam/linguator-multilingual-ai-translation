@@ -11,7 +11,7 @@ const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
 const external_wp_blockEditor_namespaceObject = window["wp"]["blockEditor"];
 ;// external ["wp","components"]
 const external_wp_components_namespaceObject = window["wp"]["components"];
-;// ./js/src/editors/widget.js
+;// ./Assets/js/src/editors/widget.js
 /**
  * Widgets Editor integrations
  */

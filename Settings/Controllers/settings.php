@@ -595,7 +595,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				'lmat_settings',
 				'lmat_settings_logo_data',
 				[
-					'logoUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . 'logo/',
+					'logoUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/Assets/logo/',
 					'nonce' => wp_create_nonce('wp_rest'),
 					'restUrl' => rest_url('lmat/v1/'),
 				]

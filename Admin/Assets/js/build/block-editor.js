@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// ./js/src/lib/confirmation-modal.js
+;// ./Assets/js/src/lib/confirmation-modal.js
 /**
  * @package Linguator
  */
@@ -95,7 +95,7 @@ var initializeLanguageOldValue = function initializeLanguageOldValue() {
   // Keep the old language value to be able to compare to the new one and revert to it if necessary.
   languagesList.attr('data-old-value', languagesList.children(':selected').first().val());
 };
-;// ./js/src/lib/metabox-autocomplete.js
+;// ./Assets/js/src/lib/metabox-autocomplete.js
 /**
  * @package Linguator
  */
@@ -125,7 +125,7 @@ function initMetaboxAutoComplete() {
     });
   });
 }
-;// ./js/src/lib/filter-path-middleware.js
+;// ./Assets/js/src/lib/filter-path-middleware.js
 /**
  * @package Linguator
  */
@@ -149,7 +149,7 @@ var filterPathMiddleware = function filterPathMiddleware(options, filteredRoutes
   }) ? filter(options) : options;
 };
 /* harmony default export */ const filter_path_middleware = (filterPathMiddleware);
-;// ./js/src/block-editor.js
+;// ./Assets/js/src/block-editor.js
 /**
  * @package Linguator
  */

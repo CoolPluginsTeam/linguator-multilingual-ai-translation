@@ -126,8 +126,8 @@ function createConfig({ srcDir, outDir, sourceFiles }, opts = {}) {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       modules: [path.resolve(__dirname, srcDir), 'node_modules'],
       alias: {
-        '@linguator-icon.svg': path.resolve(__dirname, 'logo/linguator-icon.svg'),
-        '@linguator-menu-icon.svg': path.resolve(__dirname, 'logo/lmat_menu_icon.svg'),
+        '@linguator-icon.svg': path.resolve(__dirname, 'Assets/logo/linguator-icon.svg'),
+        '@linguator-menu-icon.svg': path.resolve(__dirname, 'Assets/logo/lmat_menu_icon.svg'),
       },
     },
     plugins,
@@ -142,7 +142,7 @@ function createConfig({ srcDir, outDir, sourceFiles }, opts = {}) {
 /** Base groups **/
 const configs = [
   {
-    srcDir: 'js/src',
+    srcDir: 'Assets/js/src',
     outDir: 'Admin/Assets/js/build',
     sourceFiles: [
       'admin',
@@ -160,7 +160,7 @@ const configs = [
   },
   // Editors builds: post editor, site editor and widgets editor
   {
-    srcDir: 'js/src/editors',
+    srcDir: 'Assets/js/src/editors',
     outDir: 'Admin/Assets/js/build/editors',
     sourceFiles: ['post', 'site', 'widget'],
   },

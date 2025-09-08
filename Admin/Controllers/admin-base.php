@@ -249,7 +249,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		wp_enqueue_style( 'linguator_dialog', plugins_url( "Admin/Assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
 
 		// Add CSS to display custom SVG menu icon as background
-		$svg_url = plugins_url( 'logo/lmat_menu_icon.svg', LINGUATOR_ROOT_FILE );
+		$svg_url = plugins_url( 'Assets/logo/lmat_menu_icon.svg', LINGUATOR_ROOT_FILE );
 		$custom_css = '
 			#adminmenu .toplevel_page_lmat .wp-menu-image:before {
 				content: "" !important;

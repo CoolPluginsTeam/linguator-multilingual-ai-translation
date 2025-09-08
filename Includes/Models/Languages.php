@@ -872,7 +872,7 @@ class Languages {
 		}
 
 		// Validate flag.
-		if ( ! empty( $args['flag'] ) && ! is_readable( LINGUATOR_DIR . '/flags/' . $args['flag'] . '.png' ) ) {
+		if ( ! empty( $args['flag'] ) && ! is_readable( LINGUATOR_DIR . '/Assets/flags/' . $args['flag'] . '.png' ) ) {
 			$flag = LMAT_Language::get_flag_information( $args['flag'] );
 
 			if ( ! empty( $flag['url'] ) ) {

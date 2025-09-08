@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// ./js/src/lib/ajax-filter/index.js
+;// ./Assets/js/src/lib/ajax-filter/index.js
 /**
  * @package Linguator
  */
@@ -40,7 +40,7 @@ function ajaxFilter(data) {
     }
   });
 }
-;// ./js/src/admin.js
+;// ./Assets/js/src/admin.js
 var _lmat_admin;
 /**
  * @package Linguator

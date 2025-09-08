@@ -363,16 +363,17 @@ class LMAT_Language {
 		);
 
 		// Linguator builtin flags.
-		if ( ! empty( $code ) && is_readable( LINGUATOR_DIR . ( $file = '/flags/' . $code . '.png' ) ) ) {
-			$default_flag['url'] = plugins_url( $file, LINGUATOR_FILE );
+		if ( ! empty( $code ) && is_readable( LINGUATOR_DIR . '/Assets/flags/' . $code . '.png' ) ) {
+			$default_flag['url'] = plugins_url( 'Assets/flags/' . $code . '.png', LINGUATOR_FILE );
 
 			// If base64 encoded flags are preferred.
 			if ( lmat_get_constant( 'LMAT_ENCODED_FLAGS', true ) ) {
-				$imagesize = getimagesize( LINGUATOR_DIR . $file );
+				$file_path = LINGUATOR_DIR . '/Assets/flags/' . $code . '.png';
+				$imagesize = getimagesize( $file_path );
 				if ( is_array( $imagesize ) ) {
 					list( $default_flag['width'], $default_flag['height'] ) = $imagesize;
 				}
-				$file_contents       = file_get_contents( LINGUATOR_DIR . $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$file_contents       = file_get_contents( $file_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 				$default_flag['src'] = 'data:image/png;base64,' . base64_encode( $file_contents ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			}
 		}

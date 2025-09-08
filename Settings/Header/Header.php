@@ -118,7 +118,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			echo '<div id="lmat-settings-header-tabs">';
 			echo '<div class="lmat-settings-header-tab-container">';
 			echo '<div class="lmat-settings-header-logo">';
-			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'logo/loco.png' ) . '" alt="Linguator" />';
+			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'Assets/logo/loco.png' ) . '" alt="Linguator" />';
 			echo '</div>';
 			echo '<div class="lmat-settings-header-tab-list">';
 			foreach ( $this->tabs() as $key => $value ) {

@@ -100,6 +100,7 @@ return array(
     'Linguator\\Includes\\Options\\Business\\First_Activation' => $baseDir . '/Includes/Options/Business/First_Activation.php',
     'Linguator\\Includes\\Options\\Business\\Force_Lang' => $baseDir . '/Includes/Options/Business/Force_Lang.php',
     'Linguator\\Includes\\Options\\Business\\Hide_Default' => $baseDir . '/Includes/Options/Business/Hide_Default.php',
+    'Linguator\\Includes\\Options\\Business\\Language_Switcher_Options' => $baseDir . '/Includes/Options/Business/Language_Switcher_Options.php',
     'Linguator\\Includes\\Options\\Business\\Language_Taxonomies' => $baseDir . '/Includes/Options/Business/Language_Taxonomies.php',
     'Linguator\\Includes\\Options\\Business\\Media_Support' => $baseDir . '/Includes/Options/Business/Media_Support.php',
     'Linguator\\Includes\\Options\\Business\\Nav_Menus' => $baseDir . '/Includes/Options/Business/Nav_Menus.php',
