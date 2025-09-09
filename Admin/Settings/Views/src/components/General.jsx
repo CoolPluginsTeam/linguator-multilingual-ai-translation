@@ -208,17 +208,7 @@ const General = ({ data, setData }) => {
 
     };
 
-    //Handle Checkboxes of Language Switcher
-    const handleLanguageSwitcherChange = (switcher) => {
-        setHandleButtonDisabled(false)
-        setSelectedLanguageSwitchers(prev => {
-            if (prev.includes(switcher)) {
-                return prev.filter(item => item !== switcher);
-            } else {
-                return [...prev, switcher];
-            }
-        });
-    };
+
 
     //Handle Select All Sync
     const handleSelectAllSync = () => {
@@ -281,7 +271,6 @@ const General = ({ data, setData }) => {
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies,
-                    lmat_language_switcher_options: selectedLanguageSwitchers
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -298,7 +287,6 @@ const General = ({ data, setData }) => {
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies,
-                    lmat_language_switcher_options: selectedLanguageSwitchers
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -712,33 +700,7 @@ const General = ({ data, setData }) => {
                     </Container.Item>
                 </Container>
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
-                <Container cols="1" containerType='grid' >
-                    <Container.Item className='switcher'>
-                        <Label size='md' className='font-bold flex items-center gap-2'>
-                            <Languages className="flex-shrink-0 size-5 text-icon-secondary" />
-                            {__('Language Switcher', 'linguator-multilingual-ai-translation')}
-                        </Label>
-                    </Container.Item>
-                    <Container.Item className='flex gap-6 flex-wrap'>
-                        {
-                           
-                            languageSwitcherOptions.map((switcher, index) => (
-                                <div key={index} className='flex items-center gap-2'>
-                                    <Switch
-                                        aria-label={`Switch for ${switcher.label}`}
-                                        id={`lmat_language_switcher_${switcher.value}`}
-                                        onChange={() => handleLanguageSwitcherChange(switcher.value)}
-                                        size="sm"
-                                        value={selectedLanguageSwitchers.includes(switcher.value)}
-                                    />
-                                    <Label htmlFor={`lmat_language_switcher_${switcher.value}`} className='cursor-pointer'>
-                                        {switcher.label}
-                                    </Label>
-                                </div>
-                            ))
-                        }
-                    </Container.Item>
-                </Container>
+                
                 {data.lmat_feedback_data !== undefined && (
                     <>
                         <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
