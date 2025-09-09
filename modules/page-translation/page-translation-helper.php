@@ -95,7 +95,12 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 				$post_data               = get_post( absint( $post_id ) );
 				$locale                  = isset( $_POST['local'] ) ? sanitize_text_field( $_POST['local'] ) : 'en';
 				$current_locale          = isset( $_POST['current_local'] ) ? sanitize_text_field( $_POST['current_local'] ) : 'en';
-				$slug_translation_option = get_option( 'lmat_slug_translation_option', 'title_translate' );
+
+				$slug_translation_option = 'title_translate';
+
+				if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+					$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
+				}
 
 				$content = $post_data->post_content;
 
@@ -324,9 +329,14 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 			}
 
 			$parent_post_id          = intval( $_POST['parent_post_id'] );
-			$slug_translation_option = get_option( 'lmat_slug_translation_option', 'title_translate' );
+
 			$current_slug            = get_post_field( 'post_name', $post_id );
 			$new_post_name           = false;
+			
+			$slug_translation_option = 'title_translate';
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
+			}
 
 			$elementor_data = isset( $_POST['elementor_data'] ) ? sanitize_text_field( wp_unslash( $_POST['elementor_data'] ) ) : '';
 

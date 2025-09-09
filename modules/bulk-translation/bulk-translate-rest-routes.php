@@ -244,14 +244,18 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
 
-			$slug_translation_option = get_option( 'lmat_slug_translation_option', 'title_translate' );
-
 			// check language exists or not
 			$translate_lang = json_decode( $params['lang'] );
 
 			$post_ids        = json_decode( $params['ids'] );
 			$posts_translate = array();
 			$gutenberg_block = false;
+
+			$slug_translation_option = 'title_translate';
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
+			}
+
 			if ( count( $translate_lang ) > 0 && ! ( count( $post_ids ) < 1 ) ) {
 				global $linguator;
 				$lmat_langs       = $linguator->model->get_languages_list();
@@ -375,6 +379,12 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 
 			$content = isset( $params['post_content'] ) ? $params['post_content'] : '';
 
+			$slug_translation_option = 'title_translate';
+
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
+			}
+
 			if ( ! current_user_can( 'edit_post', $post_id ) ) {
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
@@ -388,7 +398,6 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$post_data['post_excerpt'] = sanitize_text_field( $excerpt );
 			}
 
-			$slug_translation_option = get_option( 'lmat_slug_translation_option', 'title_translate' );
 
 			if ( $slug_translation_option === 'slug_translate' && $slug && ! empty( $slug ) ) {
 				$post_data['post_name'] = sanitize_title( $slug );
@@ -426,6 +435,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$post_title     = html_entity_decode( get_the_title( $post_id ) );
 				$post_edit_link = html_entity_decode( get_edit_post_link( $post_id ) );
 
+				wp_delete_post($post_id, true);
+
 				wp_send_json_success(
 					array(
 						'post_id'                     => $post_id,
@@ -461,17 +472,21 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
 
-			$params                  = $params->get_params();
-			$slug_translation_option = get_option( 'lmat_slug_translation_option', 'title_translate' );
+			$params = $params->get_params();
 
 			// Verify the nonce
 			if ( ! wp_verify_nonce( $params['privateKey'], 'lmat_bulk_translate_entries_nonce' ) ) {
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
-
+			
 			$translate_lang = json_decode( $params['lang'] );
-
+			
 			$taxonomy_translate = array();
+			
+			$slug_translation_option = 'title_translate';
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
+			}
 
 			if ( $translate_lang && count( $translate_lang ) > 0 ) {
 				global $linguator;
@@ -560,7 +575,11 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 			$taxonomy_name           = isset( $params['taxonomy_name'] ) ? sanitize_text_field( $params['taxonomy_name'] ) : '';
 			$taxonomy_slug           = isset( $params['taxonomy_slug'] ) ? sanitize_title( $params['taxonomy_slug'] ) : '';
 			$taxonomy_description    = isset( $params['taxonomy_description'] ) ? wp_kses_post( $params['taxonomy_description'] ) : '';
-			$slug_translation_option = get_option( 'lmat_slug_translation_option', 'title_translate' );
+			
+			$slug_translation_option = 'title_translate';
+			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
+			}
 
 			if ( ! $target_language ) {
 				wp_send_json_error( 'Invalid target language' );

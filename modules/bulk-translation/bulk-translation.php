@@ -140,9 +140,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				'version'      => LINGUATOR_VERSION,
 			);
 		}
-        
-        $slug_translation_option = get_option('lmat_slug_translation_option','title_translate');
-        
+                
         $rtl=function_exists('is_rtl') ? is_rtl() : false;
         $css_file=$rtl ? 'index-rtl.css' : 'index.css';
       
@@ -171,6 +169,12 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				$provdername = $provider==='chrome_local_ai' ? 'localAiTranslator' : $provider;
 				$active_providers[] = $provdername;
 			}
+		}
+
+		$slug_translation_option = 'title_translate';
+
+		if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
+			$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
 		}
 
 

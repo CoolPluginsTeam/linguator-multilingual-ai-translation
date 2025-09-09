@@ -128,10 +128,16 @@ class LMAT_Sync_Post_Model {
 			$tr_post->post_content=wp_kses_post(lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language));
 		}
 
+		$post_status='draft';
+
+		if(isset($this->options['ai_translation_configuration']['bulk_translation_post_status'])){
+			$post_status=$this->options['ai_translation_configuration']['bulk_translation_post_status'];
+		}
+
 		// If it does not exist, create it.
 		if ( ! $tr_id ) {
 			$tr_post->ID = 0;
-			$tr_post->post_status = get_option('lmat_bulk_post_status', 'draft');
+			$tr_post->post_status = $post_status;
 		
 			$tr_id       = wp_insert_post( wp_slash( $tr_post->to_array() ) );
 			$this->model->post->set_language( $tr_id, $target_language ); // Necessary to do it now to share slug.
