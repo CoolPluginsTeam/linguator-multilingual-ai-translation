@@ -15859,15 +15859,15 @@ const Settings = createLucideIcon_createLucideIcon("settings", settings_iconNode
 
 ;// ./Admin/Settings/Views/src/components/Switcher.jsx
 function Switcher_typeof(o) { "@babel/helpers - typeof"; return Switcher_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, Switcher_typeof(o); }
-function Switcher_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return Switcher_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (Switcher_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, Switcher_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, Switcher_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), Switcher_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", Switcher_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), Switcher_regeneratorDefine2(u), Switcher_regeneratorDefine2(u, o, "Generator"), Switcher_regeneratorDefine2(u, n, function () { return this; }), Switcher_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (Switcher_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function Switcher_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } Switcher_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { Switcher_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, Switcher_regeneratorDefine2(e, r, n, t); }
 function Switcher_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function Switcher_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? Switcher_ownKeys(Object(t), !0).forEach(function (r) { Switcher_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : Switcher_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function Switcher_defineProperty(e, r, t) { return (r = Switcher_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function Switcher_toPropertyKey(t) { var i = Switcher_toPrimitive(t, "string"); return "symbol" == Switcher_typeof(i) ? i : i + ""; }
 function Switcher_toPrimitive(t, r) { if ("object" != Switcher_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != Switcher_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function Switcher_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function Switcher_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { Switcher_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { Switcher_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function Switcher_toConsumableArray(r) { return Switcher_arrayWithoutHoles(r) || Switcher_iterableToArray(r) || Switcher_unsupportedIterableToArray(r) || Switcher_nonIterableSpread(); }
+function Switcher_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function Switcher_iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function Switcher_arrayWithoutHoles(r) { if (Array.isArray(r)) return Switcher_arrayLikeToArray(r); }
 function Switcher_slicedToArray(r, e) { return Switcher_arrayWithHoles(r) || Switcher_iterableToArrayLimit(r, e) || Switcher_unsupportedIterableToArray(r, e) || Switcher_nonIterableRest(); }
 function Switcher_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function Switcher_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return Switcher_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? Switcher_arrayLikeToArray(r, a) : void 0; } }
@@ -15881,135 +15881,59 @@ function Switcher_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
+
 var Switcher = function Switcher(_ref) {
   var data = _ref.data,
     setData = _ref.setData;
-  var switcherSettings = data === null || data === void 0 ? void 0 : data.switcher_configuration; //store the switcher option
-  var widgets = switcherSettings === null || switcherSettings === void 0 ? void 0 : switcherSettings.widgets;
-  var _useState = (0,external_React_namespaceObject.useState)(widgets === null || widgets === void 0 ? void 0 : widgets.default),
-    _useState2 = Switcher_slicedToArray(_useState, 2),
-    defaultWidget = _useState2[0],
-    setDefaultWidget = _useState2[1];
-  var _useState3 = (0,external_React_namespaceObject.useState)(widgets === null || widgets === void 0 ? void 0 : widgets.block),
-    _useState4 = Switcher_slicedToArray(_useState3, 2),
-    blockWidget = _useState4[0],
-    setBlockWidget = _useState4[1];
-  var _useState5 = (0,external_React_namespaceObject.useState)(widgets === null || widgets === void 0 ? void 0 : widgets.elementor),
-    _useState6 = Switcher_slicedToArray(_useState5, 2),
-    elementorWidget = _useState6[0],
-    setElementorWidget = _useState6[1];
-  var _useState7 = (0,external_React_namespaceObject.useState)({
-      defaultWidget: defaultWidget,
-      blockWidget: blockWidget,
-      elementorWidget: elementorWidget
-    }),
-    _useState8 = Switcher_slicedToArray(_useState7, 2),
-    lastUpdatedValue = _useState8[0],
-    setLastUpdatedValue = _useState8[1];
-  var _useState9 = (0,external_React_namespaceObject.useState)(true),
-    _useState0 = Switcher_slicedToArray(_useState9, 2),
-    handleButtonDisabled = _useState0[0],
-    setHandleButtonDisabled = _useState0[1];
-  (0,external_React_namespaceObject.useEffect)(function () {
-    var sameChecker = {
-      defaultWidget: true,
-      blockWidget: true,
-      elementorWidget: true
-    };
-    if (defaultWidget !== (widgets === null || widgets === void 0 ? void 0 : widgets.default)) {
-      sameChecker.defaultWidget = false;
-    }
-    if (blockWidget !== (widgets === null || widgets === void 0 ? void 0 : widgets.block)) {
-      sameChecker.blockWidget = false;
-    }
-    if (elementorWidget !== (widgets === null || widgets === void 0 ? void 0 : widgets.elementor)) {
-      sameChecker.elementorWidget = false;
-    }
-    var flag = true;
-    for (var key in sameChecker) {
-      if (!sameChecker[key]) {
-        flag = false;
-        setHandleButtonDisabled(false);
-        break;
-      }
-    }
-    if (flag) {
+  var _React$useState = external_React_default().useState(data.lmat_language_switcher_options || ['default']),
+    _React$useState2 = Switcher_slicedToArray(_React$useState, 2),
+    selectedLanguageSwitchers = _React$useState2[0],
+    setSelectedLanguageSwitchers = _React$useState2[1];
+  var _React$useState3 = external_React_default().useState(true),
+    _React$useState4 = Switcher_slicedToArray(_React$useState3, 2),
+    handleButtonDisabled = _React$useState4[0],
+    setHandleButtonDisabled = _React$useState4[1];
+  //Handle Checkboxes of Language Switcher
+  var handleLanguageSwitcherChange = function handleLanguageSwitcherChange(switcher) {
+    if (selectedLanguageSwitchers !== data.lmat_language_switcher_options) {
+      setHandleButtonDisabled(false);
+    } else {
       setHandleButtonDisabled(true);
     }
-  }, [defaultWidget, blockWidget, elementorWidget]);
-
-  //Save Setting Function 
+    setSelectedLanguageSwitchers(function (prev) {
+      if (prev.includes(switcher)) {
+        return prev.filter(function (item) {
+          return item !== switcher;
+        });
+      } else {
+        return [].concat(Switcher_toConsumableArray(prev), [switcher]);
+      }
+    });
+  };
   function SaveSettings() {
-    return _SaveSettings.apply(this, arguments);
-  }
-  function _SaveSettings() {
-    _SaveSettings = Switcher_asyncToGenerator(/*#__PURE__*/Switcher_regenerator().m(function _callee() {
-      var apiBody, response;
-      return Switcher_regenerator().w(function (_context) {
-        while (1) switch (_context.n) {
-          case 0:
-            try {
-              apiBody = {
-                switcher_configuration: {
-                  widgets: {
-                    default: defaultWidget,
-                    block: blockWidget,
-                    elementor: elementorWidget
-                  }
-                }
-              };
-              setLastUpdatedValue({
-                defaultWidget: defaultWidget,
-                blockWidget: blockWidget,
-                elementorWidget: elementorWidget
-              });
-              if (switcherSettings && (lastUpdatedValue.defaultWidget !== defaultWidget || lastUpdatedValue.blockWidget !== blockWidget || lastUpdatedValue.elementorWidget !== elementorWidget)) {
-                setData(function (prev) {
-                  return Switcher_objectSpread(Switcher_objectSpread({}, prev), apiBody);
-                });
-              }
-              //API Call
-              response = external_wp_apiFetch_default()({
-                path: 'lmat/v1/settings',
-                method: 'POST',
-                'headers': {
-                  'Content-Type': 'application/json',
-                  'X-WP-Nonce': getNonce()
-                },
-                body: JSON.stringify(apiBody)
-              }).then(function (response) {
-                setData(function (prev) {
-                  return Switcher_objectSpread(Switcher_objectSpread({}, prev), response);
-                });
-              }).catch(function (error) {
-                // Handle general API errors
-                if (error !== null && error !== void 0 && error.message) {
-                  throw new Error(error.message);
-                }
-                throw new Error((0,external_wp_i18n_namespaceObject.__)("Something went wrong", 'linguator-multilingual-ai-translation'));
-              });
-              toast.promise(response, {
-                loading: (0,external_wp_i18n_namespaceObject.__)('Saving Settings', 'linguator-multilingual-ai-translation'),
-                success: (0,external_wp_i18n_namespaceObject.__)('Settings Saved', 'linguator-multilingual-ai-translation'),
-                error: function error(_error) {
-                  return _error.message;
-                }
-              });
-              setHandleButtonDisabled(true);
-            } catch (error) {
-              // Handle domain validation errors
-              if (error.message.includes((0,external_wp_i18n_namespaceObject.__)("Linguator was unable to access", "linguator-multilingual-ai-translation"))) {
-                toast.error(error.message);
-              } else {
-                toast.error(error.message || (0,external_wp_i18n_namespaceObject.__)("Something went wrong", "linguator-multilingual-ai-translation"));
-              }
-            }
-          case 1:
-            return _context.a(2);
-        }
-      }, _callee);
-    }));
-    return _SaveSettings.apply(this, arguments);
+    try {
+      var apiBody = {
+        lmat_language_switcher_options: selectedLanguageSwitchers
+      };
+      var response = external_wp_apiFetch_default()({
+        path: 'lmat/v1/settings',
+        method: 'POST',
+        'headers': {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': getNonce()
+        },
+        body: JSON.stringify(apiBody)
+      }).then(function (response) {
+        setData(function (prev) {
+          return Switcher_objectSpread(Switcher_objectSpread({}, prev), response);
+        });
+        //Dynamically move to next page
+        setSetupProgress("ready");
+        localStorage.setItem("setupProgress", "ready");
+      });
+    } catch (error) {
+      toast.error(error.message || (0,external_wp_i18n_namespaceObject.__)("Something went wrong", "linguator-multilingual-ai-translation"));
+    }
   }
   return /*#__PURE__*/external_React_default().createElement(S, {
     className: "bg-white p-10 rounded-lg",
@@ -16021,7 +15945,7 @@ var Switcher = function Switcher(_ref) {
     className: "flex w-full justify-between px-4 gap-6"
   }, /*#__PURE__*/external_React_default().createElement("h1", {
     className: "font-bold"
-  }, (0,external_wp_i18n_namespaceObject.__)('Switcher Settings', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(R, {
+  }, (0,external_wp_i18n_namespaceObject.__)('Language Switcher Widget Configuration', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(R, {
     disabled: handleButtonDisabled,
     className: "",
     iconPosition: "left",
@@ -16044,75 +15968,35 @@ var Switcher = function Switcher(_ref) {
     className: "flex-shrink-0 size-5 text-icon-secondary"
   }), (0,external_wp_i18n_namespaceObject.__)('Widget Types', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
     variant: "help"
-  }, (0,external_wp_i18n_namespaceObject.__)('Enable or disable different types of language switcher widgets. You can enable multiple widget types to provide different options for displaying the language switcher.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+  }, (0,external_wp_i18n_namespaceObject.__)('Enable or disable different types of language switcher . You can enable multiple  types to provide different options for displaying the language switcher.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
     className: "flex flex-col gap-2",
     style: {
       marginTop: "20px"
     }
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    style: {
-      backgroundColor: "#fbfbfb"
-    }
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "switcher p-6 rounded-lg"
-  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
-    className: "flex items-center gap-2"
-  }, (0,external_wp_i18n_namespaceObject.__)('Default Widget', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Standard language switcher widget that can be added to widget areas and sidebars.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
-    className: "flex items-center justify-end",
-    style: {
-      paddingRight: '30%'
-    }
-  }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
-    "aria-label": "Switch Element",
-    id: "default-widget",
-    onChange: function onChange() {
-      setDefaultWidget(!defaultWidget);
-    },
-    value: defaultWidget,
-    size: "sm"
-  })))), /*#__PURE__*/external_React_default().createElement("div", {
-    style: {
-      backgroundColor: "#fbfbfb"
-    }
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "switcher p-6 rounded-lg"
-  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
-    className: "flex items-center gap-2"
-  }, (0,external_wp_i18n_namespaceObject.__)('Block Widget', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Gutenberg block widget for the block editor, compatible with modern WordPress themes.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
-    className: "flex items-center justify-end",
-    style: {
-      paddingRight: '30%'
-    }
-  }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
-    "aria-label": "Switch Element",
-    id: "block-widget",
-    onChange: function onChange() {
-      setBlockWidget(!blockWidget);
-    },
-    value: blockWidget,
-    size: "sm"
-  })))), /*#__PURE__*/external_React_default().createElement("div", {
-    style: {
-      backgroundColor: "#fbfbfb"
-    }
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "switcher p-6 rounded-lg"
-  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
-    className: "flex items-center gap-2"
-  }, (0,external_wp_i18n_namespaceObject.__)('Elementor Widget', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Specialized widget for Elementor page builder with enhanced styling and customization options.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
-    className: "flex items-center justify-end",
-    style: {
-      paddingRight: '30%'
-    }
-  }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
-    "aria-label": "Switch Element",
-    id: "elementor-widget",
-    onChange: function onChange() {
-      setElementorWidget(!elementorWidget);
-    },
-    value: elementorWidget,
-    size: "sm"
-  })))))), /*#__PURE__*/external_React_default().createElement("hr", {
+  }, languageSwitcherOptions.map(function (switcher, index) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      style: {
+        backgroundColor: "#fbfbfb"
+      }
+    }, /*#__PURE__*/external_React_default().createElement("div", {
+      className: "switcher p-6 rounded-lg"
+    }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
+      className: "flex items-center gap-2"
+    }, (0,external_wp_i18n_namespaceObject.__)(switcher.label, 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)(switcher.subheading, 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+      className: "flex items-center justify-end",
+      style: {
+        paddingRight: '30%'
+      }
+    }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+      "aria-label": "Switch for ".concat(switcher.label),
+      id: "lmat_language_switcher_".concat(switcher.value),
+      onChange: function onChange() {
+        return handleLanguageSwitcherChange(switcher.value);
+      },
+      size: "sm",
+      value: selectedLanguageSwitchers.includes(switcher.value)
+    }))));
+  }))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S, {
     className: "flex items-center justify-end"
