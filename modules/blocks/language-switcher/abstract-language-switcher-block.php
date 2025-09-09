@@ -151,6 +151,10 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 				'type'    => 'string',
 				'default' => '',
 			),
+			'lmatLang' => array(
+				'type'    => 'string',
+				'default' => '',
+			),
 		);
 		foreach ( \Linguator\Includes\Controllers\LMAT_Switcher::get_switcher_options( 'block', 'default' ) as $option => $default ) {
 			$attributes[ $option ] = array(

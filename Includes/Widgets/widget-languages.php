@@ -39,7 +39,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	 */
 	public function __construct() {
 		parent::__construct(
-			'linguator',
+			'linguator_widget',
 			__( 'Language switcher', 'linguator-multilingual-ai-translation' ),
 			array(
 				'description'                 => __( 'Displays a language switcher', 'linguator-multilingual-ai-translation' ),

@@ -82,7 +82,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	 *
 	 * @param array    $attributes The block attributes.
 	 * @param string   $content The saved content. Unused.
-	 * @param WP_Block $block The parsed block.
+	 * @param \WP_Block $block The parsed block.
 	 * @return string The HTML string output to serve.
 	 */
 	public function render( $attributes, $content, $block ) {
@@ -103,7 +103,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 					'attrs'     => $this->get_core_block_attributes( $attributes, $switcher_element ),
 				);
 
-				$inner_nav_link_blocks[] = new WP_Block( $nav_link_block_args, $block->context );
+				$inner_nav_link_blocks[] = new \WP_Block( $nav_link_block_args, $block->context );
 
 				if ( $switcher_element['current_lang'] && ! $attributes['hide_current'] ) {
 					$top_level_lang = $switcher_element;
@@ -118,7 +118,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 				'innerBlocks' => $inner_nav_link_blocks,
 			);
 
-			$submenu_block = new WP_Block( $submenu_block_args, $block->context );
+			$submenu_block = new \WP_Block( $submenu_block_args, $block->context );
 			$output        = $submenu_block->render();
 		} else {
 			$output = '';
@@ -131,7 +131,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 					'attrs'     => $link_attributes,
 				);
 
-				$link_block  = new WP_Block( $nav_link_block_args, $block->context );
+				$link_block  = new \WP_Block( $nav_link_block_args, $block->context );
 				$output     .= $link_block->render();
 			}
 		}
@@ -219,7 +219,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	 *
 	 * @param string   $block_content The block content.
 	 * @param array    $block         The full block, including name and attributes.
-	 * @param WP_Block $instance      The block instance.
+	 * @param \WP_Block $instance      The block instance.
 	 *
 	 * @return string A formatted HTML string representing the core/navigation-link or core/navigation-submenu block.
 	 */
@@ -236,7 +236,7 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 			return $block_content;
 		}
 
-		$content_tags = new WP_HTML_Tag_Processor( $block_content );
+		$content_tags = new \WP_HTML_Tag_Processor( $block_content );
 
 		if ( 'core/navigation-submenu' === $instance->name ) {
 			// If `openSubmenusOnClick`, the submenu is rendered as a button, so there are no `<a>` to process.

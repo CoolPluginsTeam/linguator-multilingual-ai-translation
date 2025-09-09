@@ -34,9 +34,11 @@ class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block
 	public function render( $attributes, $content, $block ) { //phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		static $dropdown_id = 0;
 		++$dropdown_id;
-
 		// Sets a unique id for dropdown in LMAT_Switcher::the_language().
-		$attributes['dropdown'] = empty( $attributes['dropdown'] ) ? 0 : $dropdown_id;
+		// Only set dropdown ID if dropdown is actually enabled (truthy value)
+		if ( ! empty( $attributes['dropdown'] ) ) {
+			$attributes['dropdown'] = $dropdown_id;
+		}
 
 		$attributes = $this->set_attributes_for_block( $attributes );
 

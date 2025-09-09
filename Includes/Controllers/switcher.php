@@ -26,7 +26,7 @@ use WP_Post;
  */
 class LMAT_Switcher {
 	public const DEFAULTS = array(
-		'dropdown'               => 1, // Display as list and not as dropdown.
+		'dropdown'               => 0, // Display as list and not as dropdown.
 		'echo'                   => 1, // Echoes the list.
 		'hide_if_empty'          => 1, // Hides languages with no posts (or pages).
 		'show_flags'             => 0, // Don't show flags.
@@ -59,7 +59,7 @@ class LMAT_Switcher {
 	 */
 	public static function get_switcher_options( $type = 'widget', $key = 'string' ) {
 		$options = array(
-			'dropdown'               => array( 'string' => __( 'Displays as a dropdown', 'linguator-multilingual-ai-translation' ), 'default' => 1 ),
+			'dropdown'               => array( 'string' => __( 'Displays as a dropdown', 'linguator-multilingual-ai-translation' ), 'default' => 0 ),
 			'show_names'             => array( 'string' => __( 'Displays language names', 'linguator-multilingual-ai-translation' ), 'default' => 1 ),
 			'show_flags'             => array( 'string' => __( 'Displays flags', 'linguator-multilingual-ai-translation' ), 'default' => 0 ),
 			'force_home'             => array( 'string' => __( 'Forces link to front page', 'linguator-multilingual-ai-translation' ), 'default' => 0 ),

@@ -131,7 +131,9 @@ abstract class LMAT_Base {
 	 * @return void
 	 */
 	public function widgets_init() {
-		register_widget( LMAT_Widget_Languages::class );
+		if ( lmat_is_switcher_type_enabled( 'default' ) ) {
+			register_widget( LMAT_Widget_Languages::class );
+		}
 
 		// Overwrites the calendar widget to filter posts by language
 		if ( ! defined( 'LMAT_WIDGET_CALENDAR' ) || LMAT_WIDGET_CALENDAR ) {
