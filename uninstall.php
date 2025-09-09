@@ -164,7 +164,7 @@ class LMAT_Uninstall {
 
 		// Delete options.
 		delete_option( 'linguator' );
-		delete_option( 'widget_linguator' ); // Automatically created by WP.
+		delete_option( 'widget_linguator_widget' ); // Automatically created by WP.
 		delete_option( 'linguator_wpml_strings' ); // Strings registered with icl_register_string.
 		delete_option( 'linguator_licenses' );
 		delete_option( 'lmat_dismissed_notices' );
