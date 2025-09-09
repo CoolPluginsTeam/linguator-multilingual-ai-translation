@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly
 }
 
-
 use Linguator\Includes\Base\LMAT_Base;
 use Linguator\Includes\Options\Options;
 use Linguator\Includes\Options\Registry as Options_Registry;
@@ -23,8 +22,6 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
 use Linguator\Includes\Controllers\LMAT_REST_Request;
 use Linguator\Integrations\LMAT_Integrations;
 use Linguator\Settings\Controllers\LMAT_Settings;
-
-
 
 
 // Default directory to store user data such as custom flags
@@ -381,9 +378,7 @@ class Linguator {
 				require_once $load_script; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 			}
 		}
-
 		$linguator->init();
-
 		/**
 		 * Fires after the $linguator object and the API is loaded
 		 *

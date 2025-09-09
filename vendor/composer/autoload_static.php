@@ -14,7 +14,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
     public static $prefixLengthsPsr4 = array (
         'L' => 
         array (
-            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -26,10 +25,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
     );
 
     public static $prefixDirsPsr4 = array (
-        'Linguator\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
-        ),
         'Linguator\\Settings\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Admin/Settings',
@@ -172,11 +167,11 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Primitive\\Abstract_List' => __DIR__ . '/../..' . '/Includes/Options/Primitive/Abstract_List.php',
         'Linguator\\Includes\\Options\\Primitive\\Abstract_String' => __DIR__ . '/../..' . '/Includes/Options/Primitive/Abstract_String.php',
         'Linguator\\Includes\\Options\\Registry' => __DIR__ . '/../..' . '/Includes/Options/Registry.php',
-        'Linguator\\Includes\\Other\\LMAT_Language' => __DIR__ . '/../..' . '/Includes/other/language.php',
-        'Linguator\\Includes\\Other\\LMAT_Language_Factory' => __DIR__ . '/../..' . '/Includes/other/language-factory.php',
-        'Linguator\\Includes\\Other\\LMAT_Model' => __DIR__ . '/../..' . '/Includes/other/model.php',
-        'Linguator\\Includes\\Other\\LMAT_OLT_Manager' => __DIR__ . '/../..' . '/Includes/other/olt-manager.php',
-        'Linguator\\Includes\\Other\\LMAT_Query' => __DIR__ . '/../..' . '/Includes/other/query.php',
+        'Linguator\\Includes\\Other\\LMAT_Language' => __DIR__ . '/../..' . '/Includes/Other/language.php',
+        'Linguator\\Includes\\Other\\LMAT_Language_Factory' => __DIR__ . '/../..' . '/Includes/Other/language-factory.php',
+        'Linguator\\Includes\\Other\\LMAT_Model' => __DIR__ . '/../..' . '/Includes/Other/model.php',
+        'Linguator\\Includes\\Other\\LMAT_OLT_Manager' => __DIR__ . '/../..' . '/Includes/Other/olt-manager.php',
+        'Linguator\\Includes\\Other\\LMAT_Query' => __DIR__ . '/../..' . '/Includes/Other/query.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Posts' => __DIR__ . '/../..' . '/Includes/Services/Crud/crud-posts.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Terms' => __DIR__ . '/../..' . '/Includes/Services/Crud/crud-terms.php',
         'Linguator\\Includes\\Services\\Links\\LMAT_Links' => __DIR__ . '/../..' . '/Includes/Services/Links/links.php',

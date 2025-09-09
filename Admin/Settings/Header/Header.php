@@ -82,9 +82,10 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 
 			$tabs = array(
 				'general'     => array( 'title' => __( 'General', 'linguator-multilingual-ai-translation' ) ),
+				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
 				'translation' => array( 'title' => __( 'Translation', 'linguator-multilingual-ai-translation' ) ),
 				'switcher'    => array( 'title' => __( 'Switcher', 'linguator-multilingual-ai-translation' ) ),
-				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
+				
 			);
 
             $languages = $this->model->get_languages_list();
@@ -118,7 +119,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			echo '<div id="lmat-settings-header-tabs">';
 			echo '<div class="lmat-settings-header-tab-container">';
 			echo '<div class="lmat-settings-header-logo">';
-			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'Assets/logo/loco.png' ) . '" alt="Linguator" />';
+			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'Assets/logo/linguator-icon.svg' ) . '" alt="Linguator" />';
 			echo '</div>';
 			echo '<div class="lmat-settings-header-tab-list">';
 			foreach ( $this->tabs() as $key => $value ) {

@@ -89,15 +89,18 @@ class LMAT_CRUD_Posts {
 		if ( ! is_admin() ) {
 			return;
 		}
-		if ( empty( $_GET['from_post'] ) || empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
 			return;
 		}
-		$user_id = get_current_user_id();
-		if ( $user_id ) {
+		if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			update_user_meta( $user_id, '_lmat_pending_linking_intent', array(
 				'from_post' => (int) $_GET['from_post'], // phpcs:ignore WordPress.Security.NonceVerification
 				'new_lang'  => sanitize_key( $_GET['new_lang'] ), // phpcs:ignore WordPress.Security.NonceVerification
 			) );
+		} else {
+			// Visiting the editor without explicit intent: purge any stale intent.
+			delete_user_meta( $user_id, '_lmat_pending_linking_intent' );
 		}
 	}
 
@@ -155,6 +158,12 @@ class LMAT_CRUD_Posts {
 					update_post_meta( $post_id, '_lmat_from_post', (int) $intent['from_post'] );
 					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $intent['new_lang'] ) );
 				}
+				else {
+					// No intent captured for this auto-draft: ensure there is no leftover meta
+					// so a regular Add New action creates an unlinked page.
+					delete_post_meta( $post_id, '_lmat_from_post' );
+					delete_post_meta( $post_id, '_lmat_new_lang' );
+				}
 			}
 		}
 	}
@@ -190,6 +199,11 @@ class LMAT_CRUD_Posts {
 				if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 					update_post_meta( $post_id, '_lmat_from_post', (int) $_GET['from_post'] ); // phpcs:ignore WordPress.Security.NonceVerification
 					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				}
+				else {
+					// Ensure a plain Add New (no query args) doesn't inherit stale intent
+					delete_post_meta( $post_id, '_lmat_from_post' );
+					delete_post_meta( $post_id, '_lmat_new_lang' );
 				}
 			} else {
 				// Handle from_post parameter or previously stored intent for translation linking

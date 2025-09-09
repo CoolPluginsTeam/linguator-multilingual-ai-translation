@@ -12,7 +12,7 @@
     "autoload": {
         "psr-4": {
             "Linguator\\Admin\\": "Admin/",
-            "Linguator\\Frontend\\": "frontend/",
+            "Linguator\\Frontend\\": "Frontend/",
             "Linguator\\Includes\\": "Includes/",
             "Linguator\\Settings\\": "Admin/Settings/",
             "Linguator\\Modules\\": "modules/",
@@ -22,7 +22,7 @@
         "classmap": [
             "Includes/",
             "Admin/",
-            "frontend/",
+            "Frontend/",
             "integrations/",
             "modules/",
             "Admin/Settings/",
