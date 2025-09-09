@@ -187,6 +187,11 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
+		// Don't load admin scripts on wizard page as it has its own scripts
+		if ( \Linguator\Includes\Core\Linguator::is_wizard() ) {
+			return;
+		}
+
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_script( 'lmat_admin', plugins_url( "Admin/Assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );

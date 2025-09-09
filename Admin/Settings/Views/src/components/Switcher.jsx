@@ -53,9 +53,7 @@ const Switcher = ({ data, setData }) => {
                 body: JSON.stringify(apiBody)
             }).then((response) => {
                     setData(prev => ({ ...prev, ...response }))
-                    //Dynamically move to next page
-            setSetupProgress("ready")
-            localStorage.setItem("setupProgress", "ready");
+                    setHandleButtonDisabled(true);
                 })
 
         } catch (error) {
@@ -94,7 +92,7 @@ const Switcher = ({ data, setData }) => {
                 <div className='flex flex-col gap-2' style={{ marginTop: "20px" }}>
                     {
                         languageSwitcherOptions.map((switcher, index) => (
-                            <div style={{ backgroundColor: "#fbfbfb" }}>
+                            <div key={index} style={{ backgroundColor: "#fbfbfb" }}>
                                 <div className='switcher p-6 rounded-lg'>
                                     <Container.Item>
                                         <h3 className='flex items-center gap-2'>

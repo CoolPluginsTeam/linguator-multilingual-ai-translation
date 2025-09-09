@@ -15233,7 +15233,7 @@ var General = function General(_ref) {
     className: "flex items-center gap-2"
   }, /*#__PURE__*/external_React_default().createElement(Share2, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
-  }), (0,external_wp_i18n_namespaceObject.__)('Usage Data Sharing', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation'), /*#__PURE__*/external_React_default().createElement("a", {
+  }), (0,external_wp_i18n_namespaceObject.__)('Usage Data Sharing', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("a", {
     href: "#",
     className: "lmat-see-terms",
     onClick: handleTermsToggle
@@ -15891,9 +15891,7 @@ var Switcher = function Switcher(_ref) {
         setData(function (prev) {
           return Switcher_objectSpread(Switcher_objectSpread({}, prev), response);
         });
-        //Dynamically move to next page
-        setSetupProgress("ready");
-        localStorage.setItem("setupProgress", "ready");
+        setHandleButtonDisabled(true);
       });
     } catch (error) {
       toast.error(error.message || (0,external_wp_i18n_namespaceObject.__)("Something went wrong", "linguator-multilingual-ai-translation"));
@@ -15939,6 +15937,7 @@ var Switcher = function Switcher(_ref) {
     }
   }, languageSwitcherOptions.map(function (switcher, index) {
     return /*#__PURE__*/external_React_default().createElement("div", {
+      key: index,
       style: {
         backgroundColor: "#fbfbfb"
       }

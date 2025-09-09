@@ -710,8 +710,8 @@ const General = ({ data, setData }) => {
                                     <Share2 className="flex-shrink-0 size-5 text-icon-secondary" />
                                     {__('Usage Data Sharing', 'linguator-multilingual-ai-translation')}
                                 </h3>
-                                <p>
-                                    {__('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation')}
+                                <div>
+                                    <p>{__('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation')}</p>
                                     <a href="#" className="lmat-see-terms" onClick={handleTermsToggle}>[{showTerms ? 'Hide terms' : 'See terms'}]</a>
                                     <div id="termsBox" className="lmat-terms-box" style={{display: showTerms ? 'block' : 'none', paddingLeft: '20px', marginTop: '10px', fontSize: '12px', color: '#999'}}>
                                         <p>{__("Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We'll collect:", 'linguator-multilingual-ai-translation')} <a href='https://my.coolplugins.net/terms/usage-tracking/' target='_blank' rel="noopener noreferrer">Click Here</a></p>
@@ -720,7 +720,7 @@ const General = ({ data, setData }) => {
                                             <li>{__("To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.", 'linguator-multilingual-ai-translation')}</li>
                                         </ul>
                                     </div>
-                                </p>
+                                </div>
                             </Container.Item>
                             <Container.Item className='flex items-center justify-end' style={{paddingRight: '30%'}}>
                                 <Switch
