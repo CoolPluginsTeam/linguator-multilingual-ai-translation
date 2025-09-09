@@ -363,12 +363,12 @@ class LMAT_Language {
 		);
 
 		// Linguator builtin flags.
-		if ( ! empty( $code ) && is_readable( LINGUATOR_DIR . '/Assets/flags/' . $code . '.png' ) ) {
-			$default_flag['url'] = plugins_url( 'Assets/flags/' . $code . '.png', LINGUATOR_FILE );
+		if ( ! empty( $code ) && is_readable( LINGUATOR_DIR . '/Assets/flags/' . $code . '.svg' ) ) {
+			$default_flag['url'] = plugins_url( 'Assets/flags/' . $code . '.svg', LINGUATOR_FILE );
 
 			// If base64 encoded flags are preferred.
 			if ( lmat_get_constant( 'LMAT_ENCODED_FLAGS', true ) ) {
-				$file_path = LINGUATOR_DIR . '/Assets/flags/' . $code . '.png';
+				$file_path = LINGUATOR_DIR . '/Assets/flags/' . $code . '.svg';
 				$imagesize = getimagesize( $file_path );
 				if ( is_array( $imagesize ) ) {
 					list( $default_flag['width'], $default_flag['height'] ) = $imagesize;

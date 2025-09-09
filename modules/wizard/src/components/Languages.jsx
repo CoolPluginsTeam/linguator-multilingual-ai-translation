@@ -21,7 +21,7 @@ const DropdownRenderLangauage = ({ flagUrl }) => {
           {" " + selectedLanguage?.name}
         </span> :
         <span>
-          <img src={`${window.lmat_setup_flag_data.flagsUrl}${selectedLanguage?.flag}.png`} alt="" />
+          <img src={`${window.lmat_setup_flag_data.flagsUrl}${selectedLanguage?.flag}.svg`} alt="" />
           {" " + selectedLanguage?.name + " - " + selectedLanguage?.locale}</span>
     }
   </>)
@@ -41,7 +41,7 @@ export const RenderedLanguage = ({ languageName, languageFlag, flagUrl, language
             {" " + languageName + " - " + languageLocale}
           </span> :
           <span>
-            <img src={`${window.lmat_setup_flag_data.flagsUrl}${languageFlag}.png`} alt="" />
+            <img src={`${window.lmat_setup_flag_data.flagsUrl}${languageFlag}.svg`} alt="" />
             {" " + languageName + " - " + languageLocale}</span>
       }
     </>
