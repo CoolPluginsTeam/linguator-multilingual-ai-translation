@@ -129,125 +129,6 @@ var __webpack_exports__ = {};
 const external_React_namespaceObject = window["React"];
 var external_React_namespaceObject_0 = /*#__PURE__*/__webpack_require__.t(external_React_namespaceObject, 2);
 var external_React_default = /*#__PURE__*/__webpack_require__.n(external_React_namespaceObject);
-;// external ["wp","i18n"]
-const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// ./Assets/logo/linguator-icon.svg
-var _circle, _circle2;
-function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-
-var SvgLinguatorIcon = function SvgLinguatorIcon(props) {
-  return /*#__PURE__*/React.createElement("svg", _extends({
-    xmlns: "http://www.w3.org/2000/svg",
-    xmlSpace: "preserve",
-    style: {
-      fillRule: "evenodd",
-      clipRule: "evenodd",
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      strokeMiterlimit: 1.5
-    },
-    viewBox: "0 0 44 44"
-  }, props), /*#__PURE__*/React.createElement("path", {
-    d: "M31.81 18.162v5.274c0 2.39-1.94 4.33-4.329 4.33H15.585a4.33 4.33 0 0 1-4.329-4.33v-5.274a4.33 4.33 0 0 1 4.329-4.329h11.896a4.33 4.33 0 0 1 4.329 4.329m-2.25 2.637a4.336 4.336 0 0 0-4.334-4.334H17.84a4.336 4.336 0 0 0-4.334 4.334 4.336 4.336 0 0 0 4.334 4.334h7.386a4.336 4.336 0 0 0 4.334-4.334",
-    style: {
-      fill: "#30b230"
-    }
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: 11.256,
-    cy: 20.799,
-    rx: 1.435,
-    ry: 2.689,
-    style: {
-      fill: "#30b230"
-    }
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: 31.81,
-    cy: 20.799,
-    rx: 1.435,
-    ry: 2.689,
-    style: {
-      fill: "#30b230"
-    }
-  }), _circle || (_circle = /*#__PURE__*/React.createElement("circle", {
-    cx: 17.684,
-    cy: 20.799,
-    r: 2.258
-  })), _circle2 || (_circle2 = /*#__PURE__*/React.createElement("circle", {
-    cx: 25.382,
-    cy: 20.799,
-    r: 2.258
-  })), /*#__PURE__*/React.createElement("path", {
-    d: "m22.09 11.461-1.036 3.867",
-    style: {
-      fill: "none",
-      stroke: "#30b230",
-      strokeWidth: "1.59px"
-    }
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M22.678 9.158a1.644 1.644 0 0 1 1.161 2.011 1.643 1.643 0 1 1-1.161-2.011",
-    style: {
-      fill: "#30b230"
-    }
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M27.347 42.27c-1.85.519-3.8.796-5.814.796C9.649 43.066 0 33.417 0 21.533S9.649 0 21.533 0s21.533 9.649 21.533 21.533c0 2.517-.433 4.934-1.228 7.181h-2.251a19.4 19.4 0 0 0 1.372-7.181c0-10.722-8.704-19.427-19.426-19.427S2.106 10.811 2.106 21.533s8.705 19.426 19.427 19.426c2.045 0 4.016-.316 5.868-.903z",
-    style: {
-      fill: "#30b230"
-    }
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M28.655 29.976h5.857a43 43 0 0 0-.589-1.765l2.144-.435q.526 1.395.799 2.2h5.339v1.892h-2.081q-1.058 3.181-3.048 5.374 2.159 1.492 5.325 2.277-1.163 1.416-1.541 2.06-3.202-1.072-5.437-2.831-2.25 1.696-5.521 2.915a22 22 0 0 0-1.402-2.032q3.147-.981 5.269-2.424-2.018-2.249-2.858-5.339h-2.256zm9.087 1.892h-4.666a9.9 9.9 0 0 0 2.34 3.973 9.6 9.6 0 0 0 2.326-3.973",
-    style: {
-      fillRule: "nonzero"
-    }
-  }));
-};
-/* harmony default export */ const linguator_icon = ((/* unused pure expression or super */ null && (SvgLinguatorIcon)));
-;// ./Admin/Settings/Views/src/components/Header.jsx
-
-
-
-var Header = function Header(_ref) {
-  var setCurrentPage = _ref.setCurrentPage,
-    currentPage = _ref.currentPage;
-  var tabs = [{
-    label: __("GENERAL", "linguator-multilingual-ai-translation"),
-    value: "general"
-  }, {
-    label: __("Translation", "linguator-multilingual-ai-translation"),
-    value: "translation"
-  }];
-  return /*#__PURE__*/React.createElement(Topbar, {
-    className: "w-full min-h-[unset] h-16 shadow-sm p-0 relative z-[1] rounded-lg",
-    gap: 0
-  }, /*#__PURE__*/React.createElement(Topbar.Left, {
-    className: "p-5"
-  }, /*#__PURE__*/React.createElement(Topbar.Item, {
-    className: "flex items-center p-2"
-  }, /*#__PURE__*/React.createElement(LinguatorIcon, {
-    width: "40",
-    height: "40",
-    style: {
-      display: 'block'
-    }
-  }))), /*#__PURE__*/React.createElement(Topbar.Middle, {
-    align: "left",
-    className: "h-full"
-  }, /*#__PURE__*/React.createElement(Topbar.Item, {
-    className: "h-full gap-4"
-  }, tabs.map(function (tab, index) {
-    return /*#__PURE__*/React.createElement("a", {
-      className: "content-center no-underline h-full py-0 px-1 m-0 bg-transparent outline-none shadow-none border-0 focus:outline-none text-text-secondary text-sm font-medium cursor-pointer relative ".concat(currentPage === tabs[index].value ? "active" : ''),
-      target: "_self",
-      key: index,
-      onClick: function onClick() {
-        setCurrentPage(tab.value);
-      }
-    }, tab.label);
-  }))), /*#__PURE__*/React.createElement(Topbar.Right, {
-    className: "p-5",
-    gap: "md"
-  }, /*#__PURE__*/React.createElement(Topbar.Item, null)));
-};
-/* harmony default export */ const components_Header = ((/* unused pure expression or super */ null && (Header)));
 ;// external "ReactJSXRuntime"
 const external_ReactJSXRuntime_namespaceObject = window["ReactJSXRuntime"];
 ;// ./node_modules/tailwind-merge/dist/bundle-mjs.mjs
@@ -7806,8 +7687,8 @@ const CompositeItem = /*#__PURE__*/(/* unused pure expression or super */ null &
   return renderJsx(render, computedProps);
 })));
 
-function floating_ui_react_extends() {
-  floating_ui_react_extends = Object.assign ? Object.assign.bind() : function (target) {
+function _extends() {
+  _extends = Object.assign ? Object.assign.bind() : function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -7818,7 +7699,7 @@ function floating_ui_react_extends() {
     }
     return target;
   };
-  return floating_ui_react_extends.apply(this, arguments);
+  return _extends.apply(this, arguments);
 }
 
 let serverHandoffComplete = false;
@@ -7950,7 +7831,7 @@ const FloatingArrow = /*#__PURE__*/external_React_namespaceObject.forwardRef(fun
     bottom: isCustomShape ? '' : 'rotate(180deg)',
     right: isCustomShape ? 'rotate(-90deg)' : 'rotate(90deg)'
   }[side];
-  return /*#__PURE__*/external_React_namespaceObject.createElement("svg", floating_ui_react_extends({}, rest, {
+  return /*#__PURE__*/external_React_namespaceObject.createElement("svg", _extends({}, rest, {
     "aria-hidden": true,
     ref: ref,
     width: isCustomShape ? width : width + computedStrokeWidth,
@@ -8832,7 +8713,7 @@ const FocusGuard = /*#__PURE__*/external_React_namespaceObject.forwardRef(functi
     [createAttribute('focus-guard')]: '',
     style: HIDDEN_STYLES
   };
-  return /*#__PURE__*/external_React_namespaceObject.createElement("span", floating_ui_react_extends({}, props, restProps));
+  return /*#__PURE__*/external_React_namespaceObject.createElement("span", _extends({}, props, restProps));
 });
 
 const PortalContext = /*#__PURE__*/external_React_namespaceObject.createContext(null);
@@ -9043,7 +8924,7 @@ function getPreviouslyFocusedElement() {
   return previouslyFocusedElements.slice().reverse().find(el => el.isConnected);
 }
 const VisuallyHiddenDismiss = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef(function VisuallyHiddenDismiss(props, ref) {
-  return /*#__PURE__*/React.createElement("button", floating_ui_react_extends({}, props, {
+  return /*#__PURE__*/React.createElement("button", _extends({}, props, {
     type: "button",
     ref: ref,
     tabIndex: -1,
@@ -9513,7 +9394,7 @@ const FloatingOverlay = /*#__PURE__*/(/* unused pure expression or super */ null
       }
     };
   }, [lockScroll]);
-  return /*#__PURE__*/React.createElement("div", floating_ui_react_extends({
+  return /*#__PURE__*/React.createElement("div", _extends({
     ref: ref
   }, rest, {
     style: {
@@ -14269,6 +14150,8 @@ const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function
 
 
 
+;// external ["wp","i18n"]
+const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
 ;// ./Admin/Settings/Views/src/utils.js
 var _window$lmat_settings, _window$lmat_settings2;
 
@@ -15974,7 +15857,7 @@ const Settings = createLucideIcon_createLucideIcon("settings", settings_iconNode
 
 //# sourceMappingURL=settings.js.map
 
-;// ./Settings/Views/src/components/Switcher.jsx
+;// ./Admin/Settings/Views/src/components/Switcher.jsx
 function Switcher_typeof(o) { "@babel/helpers - typeof"; return Switcher_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, Switcher_typeof(o); }
 function Switcher_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return Switcher_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (Switcher_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, Switcher_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, Switcher_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), Switcher_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", Switcher_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), Switcher_regeneratorDefine2(u), Switcher_regeneratorDefine2(u, o, "Generator"), Switcher_regeneratorDefine2(u, n, function () { return this; }), Switcher_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (Switcher_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function Switcher_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } Switcher_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { Switcher_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, Switcher_regeneratorDefine2(e, r, n, t); }
@@ -16247,7 +16130,7 @@ var Switcher = function Switcher(_ref) {
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation')))));
 };
 /* harmony default export */ const components_Switcher = (Switcher);
-;// ./Settings/Views/src/components/MainComponent.jsx
+;// ./Admin/Settings/Views/src/components/MainComponent.jsx
 function MainComponent_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return MainComponent_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (MainComponent_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, MainComponent_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, MainComponent_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), MainComponent_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", MainComponent_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), MainComponent_regeneratorDefine2(u), MainComponent_regeneratorDefine2(u, o, "Generator"), MainComponent_regeneratorDefine2(u, n, function () { return this; }), MainComponent_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (MainComponent_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function MainComponent_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } MainComponent_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { MainComponent_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, MainComponent_regeneratorDefine2(e, r, n, t); }
 function MainComponent_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -16360,7 +16243,6 @@ function SettingPage_unsupportedIterableToArray(r, a) { if (r) { if ("string" ==
 function SettingPage_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function SettingPage_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function SettingPage_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-
 
 
 

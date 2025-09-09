@@ -558,6 +558,10 @@
   margin-left: 1rem;
 }
 
+.lmat-styles .ml-5{
+  margin-left: 1.25rem;
+}
+
 .lmat-styles .ml-auto{
   margin-left: auto;
 }
@@ -750,10 +754,6 @@
   height: 3rem;
 }
 
-.lmat-styles .h-16{
-  height: 4rem;
-}
-
 .lmat-styles .h-2{
   height: 0.5rem;
 }
@@ -845,10 +845,6 @@
 
 .lmat-styles .min-h-\[40vh\]{
   min-height: 40vh;
-}
-
-.lmat-styles .min-h-\[unset\]{
-  min-height: unset;
 }
 
 .lmat-styles .min-h-fit{
@@ -1191,6 +1187,14 @@
 
 .lmat-styles .resize{
   resize: both;
+}
+
+.lmat-styles .list-decimal{
+  list-style-type: decimal;
+}
+
+.lmat-styles .list-disc{
+  list-style-type: disc;
 }
 
 .lmat-styles .list-none{
@@ -2270,11 +2274,6 @@
   padding-right: 1.375rem;
 }
 
-.lmat-styles .py-0{
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
 .lmat-styles .py-0\.5{
   padding-top: 0.125rem;
   padding-bottom: 0.125rem;
@@ -2575,6 +2574,11 @@
   color: rgb(161 98 7 / var(--tw-text-opacity, 1));
 }
 
+.lmat-styles .text-blue-600{
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+}
+
 .lmat-styles .text-border-strong{
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
@@ -2698,6 +2702,11 @@
 .lmat-styles .text-red-500{
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+}
+
+.lmat-styles .text-red-600{
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
 }
 
 .lmat-styles .text-support-error{
@@ -3020,9 +3029,7 @@
 }
 
 .lmat-styles .transition{
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }

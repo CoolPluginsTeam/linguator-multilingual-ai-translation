@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Header from '../components/Header'
 import MainComponent from '../components/MainComponent'
 import { Toaster } from 'sonner'
 
