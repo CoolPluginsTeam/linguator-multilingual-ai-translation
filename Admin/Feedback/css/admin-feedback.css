@@ -27,7 +27,7 @@
 .cp-feedback-header {
     padding: 20px;
     min-height: 25px;
-    background-color: #0D1031;
+    background-color: #30B230;
     color: #fff;
     display: flex;
     justify-content: space-between;
@@ -144,12 +144,12 @@ p.cp-feedback-error {
     color: #a4afb7;
 }
 .cp-feedback-button.cp-submit {
-    background-color: #0D1031;
+    background-color: #30B230;
     color: white;
     padding: 8px;
 }
 .cp-feedback-button.cp-submit:hover {
-    background-color: #27C3F3;
+    background-color: #2F942F;
 }
 .cp-feedback-button.cp-skip:hover {
     color: black;
@@ -168,11 +168,11 @@ p.cp-feedback-error {
 }
 /* Handle */
 .cp-feedback-wrapper::-webkit-scrollbar-thumb {
-    background: #78dbf9; 
+    background: #30B230; 
 }
 /* Handle on hover */
 .cp-feedback-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #27C3F3; 
+    background: #2F942F; 
 }
 /* -------------------------- Overflow Scroll - END ------------------------- */
 
