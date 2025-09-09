@@ -374,7 +374,7 @@ class LMAT_Language {
 					list( $default_flag['width'], $default_flag['height'] ) = $imagesize;
 				}
 				$file_contents       = file_get_contents( $file_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-				$default_flag['src'] = 'data:image/png;base64,' . base64_encode( $file_contents ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+				$default_flag['src'] = plugins_url( 'Assets/flags/' . $code . '.svg', LINGUATOR_FILE ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 			}
 		}
 
