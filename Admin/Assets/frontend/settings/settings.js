@@ -15893,9 +15893,17 @@ var Switcher = function Switcher(_ref) {
     _React$useState4 = Switcher_slicedToArray(_React$useState3, 2),
     handleButtonDisabled = _React$useState4[0],
     setHandleButtonDisabled = _React$useState4[1];
+  var arraysEqualIgnoreOrder = function arraysEqualIgnoreOrder(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    var set1 = new Set(arr1);
+    var set2 = new Set(arr2);
+    return set1.size === set2.size && Switcher_toConsumableArray(set1).every(function (val) {
+      return set2.has(val);
+    });
+  };
   //Handle Checkboxes of Language Switcher
   var handleLanguageSwitcherChange = function handleLanguageSwitcherChange(switcher) {
-    if (selectedLanguageSwitchers !== data.lmat_language_switcher_options) {
+    if (arraysEqualIgnoreOrder(selectedLanguageSwitchers, data.lmat_language_switcher_options)) {
       setHandleButtonDisabled(false);
     } else {
       setHandleButtonDisabled(true);

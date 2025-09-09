@@ -11,9 +11,20 @@ const Switcher = ({ data, setData }) => {
 
      const [selectedLanguageSwitchers, setSelectedLanguageSwitchers] = React.useState(data.lmat_language_switcher_options || ['default']);
      const [handleButtonDisabled, setHandleButtonDisabled] = React.useState(true);
+
+
+     const arraysEqualIgnoreOrder = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+    
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
+    
+    return set1.size === set2.size && 
+           [...set1].every(val => set2.has(val));
+};
      //Handle Checkboxes of Language Switcher
     const handleLanguageSwitcherChange = (switcher) => {
-        if(selectedLanguageSwitchers !== data.lmat_language_switcher_options){
+        if(arraysEqualIgnoreOrder(selectedLanguageSwitchers,data.lmat_language_switcher_options)){
             setHandleButtonDisabled(false);
         }else{
             setHandleButtonDisabled(true);
