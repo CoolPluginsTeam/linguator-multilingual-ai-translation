@@ -44,6 +44,8 @@ class Ai_Translation_Configuration extends Abstract_Option {
                 'chrome_local_ai' => false,
                 'google' => true,
             ),
+            'bulk_translation_post_status' => 'draft',
+            'slug_translation_option' => 'title_translate',
         );
 
         return $data;
@@ -61,6 +63,8 @@ class Ai_Translation_Configuration extends Abstract_Option {
             'type' => 'object',
             'properties' => array(
                 'provider' => array('type' => 'object', 'properties' => array('chrome_local_ai'=>array('type' => 'boolean'), 'google'=>array('type' => 'boolean'))),
+                'bulk_translation_post_status' => array('type' => 'string', 'enum' => array('draft', 'publish')),
+                'slug_translation_option' => array('type' => 'string', 'enum' => array('title_translate', 'slug_translate', 'slug_keep')),
             ),
         );
     }
@@ -83,16 +87,23 @@ class Ai_Translation_Configuration extends Abstract_Option {
         $filtered_value = array();
         $data_structure=self::get_data_structure();
         $provider_data=array_keys($data_structure['properties']['provider']['properties']);
-
         
         if(isset($value['provider'])){
             $filtered_value['provider'] = array();
-            foreach($value['provider'] as $key => $value){
+            foreach($value['provider'] as $key => $provider_value){
 
                 if(in_array($key, $provider_data)){
-                    $filtered_value['provider'][$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                    $filtered_value['provider'][$key] = filter_var($provider_value, FILTER_VALIDATE_BOOLEAN);
                 }
             }
+        }
+
+        if(isset($value['bulk_translation_post_status']) && in_array($value['bulk_translation_post_status'], array('draft', 'publish'))){
+            $filtered_value['bulk_translation_post_status'] = sanitize_text_field($value['bulk_translation_post_status']);
+        }
+
+        if(isset($value['slug_translation_option']) && in_array($value['slug_translation_option'], array('title_translate', 'slug_translate', 'slug_keep'))){
+            $filtered_value['slug_translation_option'] = sanitize_text_field($value['slug_translation_option']);
         }
 
         return $filtered_value;
