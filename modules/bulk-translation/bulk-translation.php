@@ -40,6 +40,10 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			$translated_post_types = $linguator->model->get_translated_post_types();
 			$translated_post_types = array_keys( $translated_post_types );
 
+			$translated_post_types=array_filter($translated_post_types, function($post_type){
+				return is_string($post_type);
+			});
+
             if(!isset($screen->id) || empty($screen->post_type)){
 				return;
 			}
@@ -90,6 +94,10 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
         
         $translated_post_types = $linguator->model->get_translated_post_types();
         $translated_post_types = array_keys($translated_post_types);
+
+		$translated_post_types=array_filter($translated_post_types, function($post_type){
+			return is_string($post_type);
+		});
         
         $current_screen = get_current_screen();
         
