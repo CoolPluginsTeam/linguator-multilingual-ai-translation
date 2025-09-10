@@ -19,7 +19,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			if(function_exists('get_current_screen') && property_exists(get_current_screen(), 'post_type') && $linguator && property_exists($linguator, 'model')){
 				$current_screen=get_current_screen();
 				$translated_post_types = $linguator->model->get_translated_post_types();
-				$translated_post_types = array_keys($translated_post_types);
+				$translated_post_types = array_values($translated_post_types);
 
 				$translated_post_types=array_filter($translated_post_types, function($post_type){
 					return is_string($post_type);
@@ -47,7 +47,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 				}
 
 				$translated_post_types = $linguator->model->get_translated_post_types();
-				$translated_post_types = array_keys($translated_post_types);
+				$translated_post_types = array_values($translated_post_types);
 
 				$translated_post_types=array_filter($translated_post_types, function($post_type){
 					return is_string($post_type);
