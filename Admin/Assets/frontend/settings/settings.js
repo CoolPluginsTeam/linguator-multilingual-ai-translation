@@ -15223,9 +15223,7 @@ var General = function General(_ref) {
         return handleSynchronizationChange(synchronization.value);
       }
     });
-  }))), /*#__PURE__*/external_React_default().createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
-  }), data.lmat_feedback_data !== undefined && /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, /*#__PURE__*/external_React_default().createElement("hr", {
+  }))), data.lmat_feedback_data !== undefined && /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement("div", {
     className: "switcher"

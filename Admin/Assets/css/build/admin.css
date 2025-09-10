@@ -330,15 +330,8 @@ td.column-default_lang .icon-default-lang:before,
 }
 
 #wpadminbar #wp-admin-bar-languages .ab-icon:before {
-	content: "";
+	content: "\f326";
 	top: 1px;
-	background-image: url(../../../../Assets/logo/lmat_menu_icon.svg);
-	background-size: 20px;
-	background-repeat: no-repeat;
-	background-position: center;
-	display: inline-block;
-	width: 20px;
-	height: 20px;
 }
 
 #wp-admin-bar-languages.lmat-filtered-languages {

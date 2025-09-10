@@ -114,13 +114,11 @@ class LMAT_Admin_Notices {
 		if ( empty( $screen ) ) {
 			return false;
 		}
-
 		if ( empty( $allowed_screens ) ) {
 			$screen_id       = sanitize_title( __( 'Languages', 'linguator-multilingual-ai-translation' ) );
 			$allowed_screens = array(
 				'dashboard',
 				'plugins',
-				'toplevel_page_lmat',
 				$screen_id . '_page_lmat_strings',
 				$screen_id . '_page_lmat_settings',
 			);

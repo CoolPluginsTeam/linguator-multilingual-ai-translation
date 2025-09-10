@@ -161,7 +161,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 			$page = 'lang' === $tab ? 'lmat' : "lmat_$tab";
 			if ( empty( $parent ) ) {
 				$parent = $page;
-				add_menu_page( $title, __( 'Linguator', 'linguator-multilingual-ai-translation' ), 'manage_options', $page, '__return_null' );
+				add_menu_page( $title, __( 'Linguator', 'linguator-multilingual-ai-translation' ), 'manage_options', $page, '__return_null', 'dashicons-translation' );
 				$admin_page_hooks[ $page ] = 'languages'; // Hack to avoid the localization of the hook name. See: https://core.trac.wordpress.org/ticket/18857
 			}
 
@@ -252,27 +252,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		wp_register_style( 'linguator_admin', plugins_url( "Admin/Assets/css/build/admin{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'wp-jquery-ui-dialog' ), LINGUATOR_VERSION );
 		wp_enqueue_style( 'linguator_dialog', plugins_url( "Admin/Assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
-
-		// Add CSS to display custom SVG menu icon as background
-		$svg_url = plugins_url( 'Assets/logo/lmat_menu_icon.svg', LINGUATOR_ROOT_FILE );
-		$custom_css = '
-			#adminmenu .toplevel_page_lmat .wp-menu-image:before {
-				content: "" !important;
-				background-image: url(' . $svg_url . ') !important;
-				background-size: 20px 20px !important;
-				background-repeat: no-repeat !important;
-				background-position: center !important;
-				width: 20px !important;
-				margin-left: 8px !important;
-				height: 20px !important;
-				display: block !important;
-			}
-			#adminmenu .toplevel_page_lmat .wp-menu-image img,
-			#adminmenu .toplevel_page_lmat .wp-menu-image svg {
-				display: none !important;
-			}
-		';
-		wp_add_inline_style( 'linguator_admin', $custom_css );
 
 		$this->add_inline_scripts();
 	}

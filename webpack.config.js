@@ -126,7 +126,7 @@ function createConfig({ srcDir, outDir, sourceFiles }, opts = {}) {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       modules: [path.resolve(__dirname, srcDir), 'node_modules'],
       alias: {
-        '@linguator-icon.svg': path.resolve(__dirname, 'Assets/logo/linguator-icon.svg'),
+        '@linguator_icon.svg': path.resolve(__dirname, 'Assets/logo/linguator_icon.svg'),
         '@linguator-menu-icon.svg': path.resolve(__dirname, 'Assets/logo/lmat_menu_icon.svg'),
       },
     },

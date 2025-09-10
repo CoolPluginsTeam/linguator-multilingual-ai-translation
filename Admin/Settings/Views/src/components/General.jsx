@@ -699,7 +699,6 @@ const General = ({ data, setData }) => {
                         }
                     </Container.Item>
                 </Container>
-                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
                 
                 {data.lmat_feedback_data !== undefined && (
                     <>
