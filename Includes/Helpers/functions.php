@@ -220,12 +220,18 @@ function lmat_replace_links_with_translations($content, $locale, $current_locale
  
 		 return false;
 	 }
- 
+
+	 $admin_url=get_admin_url();
  
 	if (preg_match_all($pattern, $content, $matches)) {
 		foreach ($matches[1] as $href) {
+
+			if(strpos($href, $admin_url) !== false){
+				continue;
+			}
+			
 			$postID = url_to_postid($href);
- 
+
 			if ($postID > 0) {
 				$translatedPost = lmat_get_post($postID, $locale);
 				if ($translatedPost) {
