@@ -185,7 +185,7 @@ class LMAT_Admin_Notices {
 		if ( current_user_can( 'manage_options' ) ) {
 			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
 				$html = $this->review_notice();
-				printf('<div class="lmat-notice notice notice-info is-dismissible">%s</div>', wp_kses_post( $html ) );
+				printf('<div class="lmat-notice notice notice-info is-dismissible" style="display: flex;">%s</div>', wp_kses_post( $html ) );
 				
 			}
 			// Custom notices
@@ -235,11 +235,17 @@ class LMAT_Admin_Notices {
 				$like_it_text   = esc_html__( 'Rate Now! ★★★★★', 'linguator-multilingual-ai-translation' );
 				$already_rated_text = esc_html__( 'I already rated it', 'linguator-multilingual-ai-translation' );
 				$not_like_it_text   = esc_html__( 'Not Interested', 'linguator-multilingual-ai-translation' );
+				$logo_url = plugins_url( 'Assets/logo/linguator_icon.svg', LINGUATOR_ROOT_FILE );
 				$html = sprintf(
 						/* translators: %1$s: Already rated URL, %2$s: Dismiss URL */
-						__('<p>Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net/?utm_source=ectbe_plugin&utm_medium=inside&utm_campaign=coolplugins&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!<br/></p>
+						__('<div class="logo_container">
+							<img src="%6$s" alt="Linguator Logo" style="width: 60px; height: 80px; margin-right: 15px; flex-shrink: 0; margin-top: 5px;">
+						</div>
 						<div class="callto_action">
-							<ul>
+							<div class="callto_action_text">
+								<p style="margin: 0;">Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net/?utm_source=ectbe_plugin&utm_medium=inside&utm_campaign=coolplugins&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!</p>
+							</div>
+							<ul class="callto_action_buttons">
 								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">%3$s</a></li>
 								<li class="already_rated" style="float: left;"><a href="%1$s" class="already_rated_btn button" title="I already rated it">%4$s</a></li>    
 								<li class="not_interested"><a href="%2$s" class="not_interested_btn button" title="Not interested">%5$s</a></li>
@@ -249,7 +255,8 @@ class LMAT_Admin_Notices {
 						$not_interested_url,
 						$like_it_text,
 						$already_rated_text,
-						$not_like_it_text
+						$not_like_it_text,
+						$logo_url
 						);
 		return $html;
 	}
