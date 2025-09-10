@@ -5,7 +5,7 @@ export default withTW({
 	mode: 'jit',
 	content: [
 		'./Admin/Settings/Views/src/**/*.{js,jsx}',
-		'./modules/wizard/src/**/*.{js,jsx}',
+		'./Modules/wizard/src/**/*.{js,jsx}',
 		'node_modules/@bsf/force-ui/dist/force-ui.js'  // Include force-ui content explicitly
 	],
 	theme: {
