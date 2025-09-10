@@ -372,7 +372,7 @@ class Linguator {
 		require_once LINGUATOR_DIR . '/Includes/API/LanguageAPI.php';
 
 		// Loads the modules.
-		$load_scripts = glob( LINGUATOR_DIR . '/modules/*/load.php', GLOB_NOSORT );
+		$load_scripts = glob( LINGUATOR_DIR . '/Modules/*/load.php', GLOB_NOSORT );
 		if ( is_array( $load_scripts ) ) {
 			foreach ( $load_scripts as $load_script ) {
 				require_once $load_script; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable

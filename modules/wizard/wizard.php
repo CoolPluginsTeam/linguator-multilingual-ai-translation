@@ -254,21 +254,21 @@ class LMAT_Wizard
 	 * @return array Array of language switcher options with label and value
 	 */
 	private function get_language_switcher_options() {
-        $language_switcher_options = array(
+		$language_switcher_options = array(
             array(
-                'label' => __( 'Default Widget', 'linguator-multilingual-ai-translation' ),
+                'label' => __( 'Classic (Menu, Widgets) Based', 'linguator-multilingual-ai-translation' ),
                 'value' => 'default',
 				'subheading' => 'Standard language switcher widget that can be added to widget areas and sidebars.'
             ),
             array(
-                'label' => __( 'Block Editor', 'linguator-multilingual-ai-translation' ),
+                'label' => __( 'Block Based', 'linguator-multilingual-ai-translation' ),
                 'value' => 'block',
 				'subheading' => 'Gutenberg block widget for the block editor, compatible with modern WordPress themes.'
             )
         );
         if(lmat_is_plugin_active('elementor/elementor.php')){
             $language_switcher_options[] = array(
-                'label' => __( 'Elementor', 'linguator-multilingual-ai-translation' ),
+                'label' => __( 'Elementor Widget Based', 'linguator-multilingual-ai-translation' ),
                 'value' => 'elementor',
 				'subheading' => 'Specialized widget for Elementor page builder with enhanced styling and customization options.'
             );

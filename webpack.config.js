@@ -170,7 +170,7 @@ const configs = [
     sourceFiles: ['settings'],
   },
   {
-    srcDir: 'modules/wizard/src',
+    srcDir: 'Modules/wizard/src',
     outDir: 'Admin/Assets/frontend/setup',
     sourceFiles: ['setup'],
   },
@@ -179,7 +179,7 @@ const configs = [
 /** Inline translation builds **/
 const machineTranslationConfigs = [
   {
-    srcDir: 'modules/inline-translation/src/elementor',
+    srcDir: 'Modules/inline-translation/src/elementor',
     outDir: 'Admin/Assets/elementor-inline-translate',
     sourceFiles: ['index'],
     styleLoader: true,
@@ -187,7 +187,7 @@ const machineTranslationConfigs = [
     ext: '.js',
   },
   {
-    srcDir: 'modules/inline-translation/src/gutenberg/editorAssets',
+    srcDir: 'Modules/inline-translation/src/gutenberg/editorAssets',
     outDir: 'Admin/Assets/gutenberg-inline-translate',
     sourceFiles: ['index'],
     styleLoader: true,

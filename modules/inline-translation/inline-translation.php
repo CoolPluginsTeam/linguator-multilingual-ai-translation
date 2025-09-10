@@ -1,6 +1,6 @@
 <?php
 
-namespace Linguator\modules\Inline_Translation;
+namespace Linguator\Modules\Inline_Translation;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

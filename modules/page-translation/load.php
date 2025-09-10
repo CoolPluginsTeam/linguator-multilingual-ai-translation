@@ -4,7 +4,7 @@
  *
  * @package Linguator
  */
-namespace Linguator\modules\Page_Translation;
+namespace Linguator\Modules\Page_Translation;
 use Linguator\Admin\Controllers\LMAT_Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -1,17 +1,17 @@
 <?php
-namespace Linguator\modules\Bulk_Translation;
+namespace Linguator\Modules\Bulk_Translation;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Linguator\modules\Page_Translation\LMAT_Page_Translation_Helper;
+use Linguator\Modules\Page_Translation\LMAT_Page_Translation_Helper;
 
 if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 	/**
 	 * LMAT_Bulk_Translate_Rest_Routes
 	 *
-	 * @package Linguator\modules\Bulk_Translation
+	 * @package Linguator\Modules\Bulk_Translation
 	 */
 	class LMAT_Bulk_Translate_Rest_Routes {
 

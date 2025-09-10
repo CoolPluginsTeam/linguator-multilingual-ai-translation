@@ -7,10 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Linguator\\Settings\\' => array($baseDir . '/Admin/Settings'),
-    'Linguator\\Modules\\' => array($baseDir . '/modules'),
-    'Linguator\\Integrations\\' => array($baseDir . '/integrations'),
-    'Linguator\\Install\\' => array($baseDir . '/install'),
+    'Linguator\\Modules\\' => array($baseDir . '/Modules'),
+    'Linguator\\Integrations\\' => array($baseDir . '/Integrations'),
+    'Linguator\\Install\\' => array($baseDir . '/Install'),
     'Linguator\\Includes\\' => array($baseDir . '/Includes'),
-    'Linguator\\Frontend\\' => array($baseDir . '/frontend'),
+    'Linguator\\Frontend\\' => array($baseDir . '/Frontend'),
     'Linguator\\Admin\\' => array($baseDir . '/Admin'),
 );

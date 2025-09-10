@@ -15,18 +15,18 @@
             "Linguator\\Frontend\\": "Frontend/",
             "Linguator\\Includes\\": "Includes/",
             "Linguator\\Settings\\": "Admin/Settings/",
-            "Linguator\\Modules\\": "modules/",
-            "Linguator\\Integrations\\": "integrations/",
-            "Linguator\\Install\\": "install/"
+            "Linguator\\Modules\\": "Modules/",
+            "Linguator\\Integrations\\": "Integrations/",
+            "Linguator\\Install\\": "Install/"
         },
         "classmap": [
             "Includes/",
             "Admin/",
             "Frontend/",
-            "integrations/",
-            "modules/",
+            "Integrations/",
+            "Modules/",
             "Admin/Settings/",
-            "install/"
+            "Install/"
         ],
         "files": [
             "Includes/Helpers/functions.php",

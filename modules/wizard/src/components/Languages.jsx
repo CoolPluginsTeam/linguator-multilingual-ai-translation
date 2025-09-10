@@ -1,7 +1,7 @@
 import { Select, Button } from '@bsf/force-ui'
 import SetupContinueButton from './SetupContinueButton'
 import { getNonce } from '../utils'
-import { setupContext } from '../../../../modules/wizard/src/pages/SetupPage'
+import { setupContext } from '../../../../Modules/wizard/src/pages/SetupPage'
 import { Plus, Trash } from 'lucide-react'
 import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'

@@ -1,5 +1,5 @@
 <?php
-namespace Linguator\modules\Bulk_Translation;
+namespace Linguator\Modules\Bulk_Translation;
 
 use Linguator\Admin\Controllers\LMAT_Admin;
 
