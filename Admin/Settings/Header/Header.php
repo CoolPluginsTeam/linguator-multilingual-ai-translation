@@ -85,12 +85,11 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
 				'translation' => array( 'title' => __( 'Translation', 'linguator-multilingual-ai-translation' ) ),
 				'switcher'    => array( 'title' => __( 'Switcher', 'linguator-multilingual-ai-translation' ) ),
-				
 			);
 
             $languages = $this->model->get_languages_list();
-
-            if(!empty($languages)){
+            $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
+            if(!empty($languages) && $static_strings_visibility){
                 $tabs['strings']     = array(
 					'title'        => __( 'Static Strings', 'linguator-multilingual-ai-translation' ),
 					'redirect'     => true,

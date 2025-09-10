@@ -4,9 +4,9 @@ import { Badge, Accordion, Button, Checkbox, Container, Input, Label, RadioButto
 import apiFetch from "@wordpress/api-fetch"
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'; // importing toaster and toast for notification purpose
-import { synchronizations, languageSwitcherOptions } from '../utils'
+import { synchronizations } from '../utils'
 import { getNonce } from '../utils'
-import { Link, Globe, Focus, Milestone, RefreshCcw, Share2, Languages } from 'lucide-react';
+import { Link, Globe, Focus, Milestone, RefreshCcw, Share2, Settings2 } from 'lucide-react';
 import { __, sprintf } from '@wordpress/i18n';
 
 const General = ({ data, setData }) => {
@@ -30,6 +30,7 @@ const General = ({ data, setData }) => {
     const [lmatFeedbackData, setLmatFeedbackData] = useState(data.lmat_feedback_data !== undefined ? data.lmat_feedback_data : false); // For Usage Data Sharing
     const [selectedLanguageSwitchers, setSelectedLanguageSwitchers] = useState(data.lmat_language_switcher_options || ['default']); // Selected Language Switcher options
     const [showTerms, setShowTerms] = useState(false); // For showing/hiding terms box
+    const [staticStringsVisibility, setStaticStringsVisibility] = useState(data.static_strings_visibility !== undefined ? data.static_strings_visibility : false); // For Static Strings tab visibility
 
 
     //make the Domains in a suitable way to view
@@ -56,7 +57,8 @@ const General = ({ data, setData }) => {
             selectedSynchronization: true,
             selectedPostTypes: true,
             selectedTaxonomies: true,
-            selectedLanguageSwitchers: true
+            selectedLanguageSwitchers: true,
+            staticStringsVisibility: true
         }
         
         // Only include lmatFeedbackData in the checker if the setting is available
@@ -88,6 +90,10 @@ const General = ({ data, setData }) => {
 
         if (mediaSupport !== data.media_support) {
             sameChecker.mediaSupport = false
+        }
+
+        if (staticStringsVisibility !== data.static_strings_visibility) {
+            sameChecker.staticStringsVisibility = false
         }
         for (const value of previousDomains.current) {
             if (!domains.includes(value) || previousDomains.current.length != domains.length) {
@@ -152,7 +158,7 @@ const General = ({ data, setData }) => {
         if (flag) {
             setHandleButtonDisabled(true)
         }
-    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers])
+    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers, staticStringsVisibility])
 
     //Make the post types and taxonomies from  posttype->posttype_name   to {value: postype ,label:posttype_name (posttype)}
     useEffect(() => {
@@ -271,6 +277,7 @@ const General = ({ data, setData }) => {
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies,
+                    static_strings_visibility: staticStringsVisibility,
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -287,6 +294,7 @@ const General = ({ data, setData }) => {
                     sync: selectedSynchronization,
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies,
+                    static_strings_visibility: staticStringsVisibility,
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -580,6 +588,29 @@ const General = ({ data, setData }) => {
                             }}
                             size="sm"
                             value={mediaSupport}
+                        />
+                    </Container.Item>
+                </div>
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                <div className='switcher'>
+                    <Container.Item>
+                        <h3 className='flex items-center gap-2'>
+                            <Settings2 className="flex-shrink-0 size-5 text-icon-secondary" />
+                            {__('Static Strings Tab', 'linguator-multilingual-ai-translation')}
+                        </h3>
+                        <p>
+                            {__('Show or hide the Static Strings tab in the admin menu. This tab allows you to translate static strings from your theme and plugins.', 'linguator-multilingual-ai-translation')}
+                        </p>
+                    </Container.Item>
+                    <Container.Item className='flex items-center justify-end' style={{paddingRight: '30%'}}>
+                        <Switch
+                            aria-label="Switch Element"
+                            id="static-strings-visibility"
+                            onChange={() => {
+                                setStaticStringsVisibility(!staticStringsVisibility)
+                            }}
+                            size="sm"
+                            value={staticStringsVisibility}
                         />
                     </Container.Item>
                 </div>

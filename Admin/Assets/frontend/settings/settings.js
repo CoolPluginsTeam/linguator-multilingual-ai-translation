@@ -14359,6 +14359,27 @@ const Focus = createLucideIcon_createLucideIcon("focus", focus_iconNode);
 
 //# sourceMappingURL=focus.js.map
 
+;// ./node_modules/lucide-react/dist/esm/icons/settings-2.js
+/**
+ * @license lucide-react v0.524.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+
+const settings_2_iconNode = [
+  ["path", { d: "M14 17H5", key: "gfn3mx" }],
+  ["path", { d: "M19 7h-9", key: "6i9tg" }],
+  ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
+  ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
+];
+const Settings2 = createLucideIcon_createLucideIcon("settings-2", settings_2_iconNode);
+
+
+//# sourceMappingURL=settings-2.js.map
+
 ;// ./node_modules/lucide-react/dist/esm/icons/milestone.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -14530,6 +14551,10 @@ var General = function General(_ref) {
     _useState30 = _slicedToArray(_useState29, 2),
     showTerms = _useState30[0],
     setShowTerms = _useState30[1]; // For showing/hiding terms box
+  var _useState31 = (0,external_React_namespaceObject.useState)(data.static_strings_visibility !== undefined ? data.static_strings_visibility : false),
+    _useState32 = _slicedToArray(_useState31, 2),
+    staticStringsVisibility = _useState32[0],
+    setStaticStringsVisibility = _useState32[1]; // For Static Strings tab visibility
 
   //make the Domains in a suitable way to view
   (0,external_React_namespaceObject.useEffect)(function () {
@@ -14555,7 +14580,8 @@ var General = function General(_ref) {
       selectedSynchronization: true,
       selectedPostTypes: true,
       selectedTaxonomies: true,
-      selectedLanguageSwitchers: true
+      selectedLanguageSwitchers: true,
+      staticStringsVisibility: true
     };
 
     // Only include lmatFeedbackData in the checker if the setting is available
@@ -14579,6 +14605,9 @@ var General = function General(_ref) {
     }
     if (mediaSupport !== data.media_support) {
       sameChecker.mediaSupport = false;
+    }
+    if (staticStringsVisibility !== data.static_strings_visibility) {
+      sameChecker.staticStringsVisibility = false;
     }
     var _iterator = _createForOfIteratorHelper(previousDomains.current),
       _step;
@@ -14682,7 +14711,7 @@ var General = function General(_ref) {
     if (flag) {
       setHandleButtonDisabled(true);
     }
-  }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers]);
+  }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers, staticStringsVisibility]);
 
   //Make the post types and taxonomies from  posttype->posttype_name   to {value: postype ,label:posttype_name (posttype)}
   (0,external_React_namespaceObject.useEffect)(function () {
@@ -14842,7 +14871,8 @@ var General = function General(_ref) {
               domains: final_domain,
               sync: selectedSynchronization,
               post_types: selectedPostTypes,
-              taxonomies: selectedTaxonomies
+              taxonomies: selectedTaxonomies,
+              static_strings_visibility: staticStringsVisibility
             };
 
             // Only include lmat_feedback_data if the setting is available
@@ -14860,7 +14890,8 @@ var General = function General(_ref) {
               rewrite: rewrite,
               sync: selectedSynchronization,
               post_types: selectedPostTypes,
-              taxonomies: selectedTaxonomies
+              taxonomies: selectedTaxonomies,
+              static_strings_visibility: staticStringsVisibility
             };
 
             // Only include lmat_feedback_data if the setting is available
@@ -15123,6 +15154,27 @@ var General = function General(_ref) {
     },
     size: "sm",
     value: mediaSupport
+  }))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement("div", {
+    className: "switcher"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/external_React_default().createElement(Settings2, {
+    className: "flex-shrink-0 size-5 text-icon-secondary"
+  }), (0,external_wp_i18n_namespaceObject.__)('Static Strings Tab', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Show or hide the Static Strings tab in the admin menu. This tab allows you to translate static strings from your theme and plugins.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex items-center justify-end",
+    style: {
+      paddingRight: '30%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+    "aria-label": "Switch Element",
+    id: "static-strings-visibility",
+    onChange: function onChange() {
+      setStaticStringsVisibility(!staticStringsVisibility);
+    },
+    size: "sm",
+    value: staticStringsVisibility
   }))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S, {
