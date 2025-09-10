@@ -15329,7 +15329,7 @@ var Sidebar = function Sidebar() {
     }
   };
   var buttonConfig = getButtonConfig();
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "w-full"
   }, /*#__PURE__*/React.createElement("div", {
     className: "w-full rounded-lg"
@@ -15367,7 +15367,7 @@ var Sidebar = function Sidebar() {
     className: "text-sm text-gray-700 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Time Taken', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
-  }, "0"))))), /*#__PURE__*/React.createElement("div", {
+  }, "0"))))), locoaiStatus.status !== 'active' ? /*#__PURE__*/React.createElement("div", {
     className: " p-6"
   }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
@@ -15390,7 +15390,7 @@ var Sidebar = function Sidebar() {
     className: "w-full h-auto  ",
     src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
     alt: "Loco translate logo"
-  }))), /*#__PURE__*/React.createElement("div", null)))));
+  }))), /*#__PURE__*/React.createElement("div", null))) : null)));
 };
 /* harmony default export */ const components_Sidebar = (Sidebar);
 ;// ./node_modules/lucide-react/dist/esm/icons/loader-pinwheel.js
