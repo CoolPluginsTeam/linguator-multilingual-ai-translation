@@ -71,7 +71,7 @@ const LanguageSwitcher = () => {
                 </div>
             </div>
             <div className='flex justify-between ' style={{ marginTop: "14px" }}>
-                <SetupBackButton handleClick={() => { setSetupProgress("url"); localStorage.setItem("setupProgress", "url"); }} />
+                <SetupBackButton handleClick={() => { setSetupProgress("translation_configuration"); localStorage.setItem("setupProgress", "url"); }} />
                 <SetupContinueButton SaveSettings={saveLanguageSwitcherSettings} />
             </div>
         </div>

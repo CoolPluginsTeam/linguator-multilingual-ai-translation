@@ -146,7 +146,7 @@ const AiTranslation = () => {
         <div className='mx-auto p-10 max-w-[600px] min-h-[40vh] bg-white shadow-sm flex flex-col'>
             <div className='flex-grow'>
                 <h2>{__('Translation Configuration', 'linguator-multilingual-ai-translation')}</h2>
-                <p className='text-justify text-sm/6'>{__('Linguator lets you translate content using AI. You can translate the content of your website using AI. You can translate the content of your website using AI.', 'linguator-multilingual-ai-translation')}</p>
+                <p className='text-justify text-sm/6'>{__('Linguator lets you translate content using AI. You can translate the content of your website using AI.', 'linguator-multilingual-ai-translation')}</p>
                 <p className='text-justify text-sm/6'>{__('Turn on AI translation if you need to translate the content of your website using AI. If not, you can leave it off.', 'linguator-multilingual-ai-translation')}</p>
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
