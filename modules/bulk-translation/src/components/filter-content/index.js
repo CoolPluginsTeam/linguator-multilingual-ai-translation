@@ -1,16 +1,16 @@
-import FilterClassicContent from './Classic/index.js';
-import FilterElementorContent from './Elementor/index.js';
-import FilterGutenbergContent from './Gutenberg/index.js';
+import FilterClassicContent from './classic/index.js';
+import FilterElementorContent from './elementor/index.js';
+import FilterGutenbergContent from './gutenberg/index.js';
 
-import updateClassicContent from './Classic/updateContent.js';
-import updateElementorContent from './Elementor/updateContent.js';
-import updateGutenbergContent from './Gutenberg/updateContent.js';
+import updateClassicContent from './classic/update-content.js';
+import updateElementorContent from './elementor/update-content.js';
+import updateGutenbergContent from './gutenberg/update-content.js';
 
-import Provider from '../translateProvider/index.js';
+import Provider from '../translate-provider/index.js';
 
-import {selectSourceEntries, selectServiceProvider} from '../../ReduxStore/features/selectors.js';
+import {selectSourceEntries, selectServiceProvider} from '../../redux-store/features/selectors.js';
 
-import {store} from '../../ReduxStore/store.js';
+import {store} from '../../redux-store/store.js';
 
 
 const filterContent = ({content, editorType, service, postId, storeDispatch, blockParseRules=null, metaFields=null}) => {

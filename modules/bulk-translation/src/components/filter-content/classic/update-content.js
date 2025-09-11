@@ -1,5 +1,5 @@
-import {selectTranslatedContent} from '../../../ReduxStore/features/selectors.js';
-import {store} from '../../../ReduxStore/store.js';
+import {selectTranslatedContent} from '../../../redux-store/features/selectors.js';
+import {store} from '../../../redux-store/store.js';
 
 /**
  * @param {Object} source

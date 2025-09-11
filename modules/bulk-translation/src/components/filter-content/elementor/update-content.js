@@ -1,5 +1,5 @@
-import {selectTranslatedContent} from '../../../redux store/features/selectors.js';
-import {store} from '../../../redux store/store.js';
+import {selectTranslatedContent} from '../../../redux-store/features/selectors.js';
+import {store} from '../../../redux-store/store.js';
 
 const updateElementorContent = async ({source, lang, translatedContent, serviceProvider, postId}) => {
 

@@ -1,5 +1,5 @@
-import {updateCountInfo, updateTranslatePostInfo} from '../../ReduxStore/features/actions.js';
-import {store} from '../../ReduxStore/store.js';
+import {updateCountInfo, updateTranslatePostInfo} from '../../redux-store/features/actions.js';
+import {store} from '../../redux-store/store.js';
 
 const updateTranslationCount=({postId,key,lang, storeDispatch})=>{
     const sourceText=store.getState().translatedContent[postId][key]?.source;

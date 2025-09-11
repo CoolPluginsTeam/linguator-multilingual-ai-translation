@@ -1,5 +1,5 @@
-import {selectTranslatedContent, selectBlockParseRules, selectSourceEntries, selectSourceContent} from '../../../ReduxStore/features/selectors.js';
-import {store} from '../../../ReduxStore/store.js';
+import {selectTranslatedContent, selectBlockParseRules, selectSourceEntries, selectSourceContent} from '../../../redux-store/features/selectors.js';
+import {store} from '../../../redux-store/store.js';
 
 /**
  * @param {Object} source

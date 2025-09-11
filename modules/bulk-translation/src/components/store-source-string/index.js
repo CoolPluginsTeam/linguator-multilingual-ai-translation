@@ -1,5 +1,5 @@
-import {updateSourceContent, updateTargetContent, updateParentPostsInfo} from '../../ReduxStore/features/actions.js';
-import { store } from '../../ReduxStore/store.js';
+import {updateSourceContent, updateTargetContent, updateParentPostsInfo} from '../../redux-store/features/actions.js';
+import { store } from '../../redux-store/store.js';
 
 const storeSourceString=(postId, uniqueKey, value, targetContent, storeDispatch)=>{
     storeDispatch(updateSourceContent({postId, uniqueKey, value}));
