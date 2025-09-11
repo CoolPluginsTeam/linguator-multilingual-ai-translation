@@ -193,6 +193,7 @@ const Plus = createLucideIcon("plus", plus_iconNode);
 //# sourceMappingURL=plus.js.map
 
 ;// ./Assets/js/src/editors/post.js
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -753,5 +754,138 @@ var FlagIcon = function () {
   render: Sidebar,
   icon: FlagIcon
 });
+
+// Auto-open sidebar logic using editor ready event
+var subscribe = wp.data.subscribe;
+
+// Check for lang parameter and auto-open sidebar
+var params = new URLSearchParams(window.location.search);
+var hasLangParam = params.has('lang') || params.has('new_lang');
+if (hasLangParam) {
+  // Subscribe to editor changes and open sidebar when ready
+  var unsubscribe = null;
+  var attempts = 0;
+  var maxAttempts = 20;
+  var tryOpenSidebar = function tryOpenSidebar() {
+    attempts++;
+    try {
+      var editPostStore = wp.data.select('core/edit-post');
+      var editPostDispatch = wp.data.dispatch('core/edit-post');
+      if (editPostStore && editPostDispatch && typeof editPostDispatch.openGeneralSidebar === 'function') {
+        var target = "plugin-sidebar/".concat(SIDEBAR_NAME);
+
+        // First, close any existing sidebar to force a fresh open
+        try {
+          if (typeof editPostDispatch.closeGeneralSidebar === 'function') {
+            editPostDispatch.closeGeneralSidebar();
+          }
+        } catch (e) {
+          // Ignore errors when closing
+        }
+
+        // Open our specific sidebar (this should also open the sidebar panel)
+        editPostDispatch.openGeneralSidebar(target);
+
+        // Force the sidebar panel to be visible by trying multiple approaches
+        try {
+          // Try method 1: enableComplementaryArea
+          if (typeof editPostDispatch.enableComplementaryArea === 'function') {
+            editPostDispatch.enableComplementaryArea('core/edit-post', target);
+          }
+
+          // Try method 2: setIsInserterOpened(false) to close inserter, then open sidebar
+          if (typeof editPostDispatch.setIsInserterOpened === 'function') {
+            editPostDispatch.setIsInserterOpened(false);
+          }
+
+          // Try method 3: Force sidebar visibility with DOM manipulation if APIs fail
+          setTimeout(function () {
+            var sidebarElement = document.querySelector('.interface-complementary-area');
+            if (sidebarElement) {
+              sidebarElement.style.display = 'block';
+              sidebarElement.style.visibility = 'visible';
+            }
+
+            // Also try to find and show the specific LMAT sidebar content
+            var lmatSidebar = document.querySelector('[data-sidebar="lmat-post-sidebar"], .lmat-post-sidebar');
+            if (lmatSidebar) {
+              lmatSidebar.style.display = 'block';
+              lmatSidebar.style.visibility = 'visible';
+            }
+          }, 100);
+        } catch (e) {
+          console.log('LMAT: Error with fallback methods:', e);
+        }
+
+        // Debug: Check what sidebar elements exist
+        setTimeout(function () {
+          var sidebarButton = document.querySelector('[aria-label*="Linguator"], button[aria-label*="Linguator"], [data-label*="Linguator"]');
+          var complementaryArea = document.querySelector('.interface-complementary-area');
+          var sidebarContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
+
+          // Try clicking the actual sidebar button if it exists
+          if (sidebarButton && typeof sidebarButton.click === 'function') {
+            sidebarButton.click();
+
+            // Try clicking multiple times with delays
+            setTimeout(function () {
+              sidebarButton.click();
+            }, 100);
+            setTimeout(function () {
+              sidebarButton.click();
+
+              // Check if sidebar is now visible
+              setTimeout(function () {
+                var isVisible = document.querySelector('.interface-complementary-area:not([style*="display: none"])');
+                var lmatContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
+              }, 100);
+            }, 200);
+          } else {
+            // Try to find and click any button that opens our sidebar
+            var allButtons = document.querySelectorAll('button, [role="button"]');
+            var _iterator = _createForOfIteratorHelper(allButtons),
+              _step;
+            try {
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                var button = _step.value;
+                var text = button.textContent || button.getAttribute('aria-label') || '';
+                if (text.toLowerCase().includes('linguator')) {
+                  console.log('LMAT: Found and clicking Linguator button:', button);
+                  button.click();
+                  break;
+                }
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
+            }
+          }
+        }, 200);
+        if (unsubscribe) {
+          unsubscribe();
+        }
+        return true;
+      }
+    } catch (e) {
+      console.log('LMAT: Error trying to open sidebar:', e);
+    }
+    if (attempts >= maxAttempts) {
+      console.log('LMAT: Max attempts reached, giving up');
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    }
+    return false;
+  };
+
+  // Try immediately
+  if (!tryOpenSidebar()) {
+    // If it fails, subscribe to store changes and keep trying
+    unsubscribe = subscribe(function () {
+      tryOpenSidebar();
+    });
+  }
+}
 /******/ })()
 ;

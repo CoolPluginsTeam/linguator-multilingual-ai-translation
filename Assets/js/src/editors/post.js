@@ -377,3 +377,138 @@ const FlagIcon = (() => {
 registerPlugin( SIDEBAR_NAME, { render: Sidebar, icon: FlagIcon } );
 
 
+// Auto-open sidebar logic using editor ready event
+const { subscribe } = wp.data;
+
+// Check for lang parameter and auto-open sidebar
+const params = new URLSearchParams(window.location.search);
+const hasLangParam = params.has('lang') || params.has('new_lang');
+
+if (hasLangParam) {
+    
+    // Subscribe to editor changes and open sidebar when ready
+    let unsubscribe = null;
+    let attempts = 0;
+    const maxAttempts = 20;
+    
+    const tryOpenSidebar = () => {
+        attempts++;
+        
+        try {
+            const editPostStore = wp.data.select('core/edit-post');
+            const editPostDispatch = wp.data.dispatch('core/edit-post');
+            
+            if (editPostStore && editPostDispatch && typeof editPostDispatch.openGeneralSidebar === 'function') {
+                const target = `plugin-sidebar/${SIDEBAR_NAME}`;
+                
+                // First, close any existing sidebar to force a fresh open
+                try {
+                    if (typeof editPostDispatch.closeGeneralSidebar === 'function') {
+                        editPostDispatch.closeGeneralSidebar();
+                    }
+                } catch (e) {
+                    // Ignore errors when closing
+                }
+                
+                // Open our specific sidebar (this should also open the sidebar panel)
+                editPostDispatch.openGeneralSidebar(target);
+                
+                // Force the sidebar panel to be visible by trying multiple approaches
+                try {
+                    // Try method 1: enableComplementaryArea
+                    if (typeof editPostDispatch.enableComplementaryArea === 'function') {
+                        editPostDispatch.enableComplementaryArea('core/edit-post', target);
+                    }
+                    
+                    // Try method 2: setIsInserterOpened(false) to close inserter, then open sidebar
+                    if (typeof editPostDispatch.setIsInserterOpened === 'function') {
+                        editPostDispatch.setIsInserterOpened(false);
+                    }
+                    
+                    // Try method 3: Force sidebar visibility with DOM manipulation if APIs fail
+                    setTimeout(() => {
+                        const sidebarElement = document.querySelector('.interface-complementary-area');
+                        if (sidebarElement) {
+                            sidebarElement.style.display = 'block';
+                            sidebarElement.style.visibility = 'visible';
+                        }
+                        
+                        // Also try to find and show the specific LMAT sidebar content
+                        const lmatSidebar = document.querySelector('[data-sidebar="lmat-post-sidebar"], .lmat-post-sidebar');
+                        if (lmatSidebar) {
+                            lmatSidebar.style.display = 'block';
+                            lmatSidebar.style.visibility = 'visible';
+                        }
+                    }, 100);
+                } catch (e) {
+                    console.log('LMAT: Error with fallback methods:', e);
+                }
+                
+                // Debug: Check what sidebar elements exist
+                setTimeout(() => {
+                    const sidebarButton = document.querySelector('[aria-label*="Linguator"], button[aria-label*="Linguator"], [data-label*="Linguator"]');
+                    const complementaryArea = document.querySelector('.interface-complementary-area');
+                    const sidebarContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
+                    
+                    
+                    // Try clicking the actual sidebar button if it exists
+                    if (sidebarButton && typeof sidebarButton.click === 'function') {
+                        sidebarButton.click();
+                        
+                        // Try clicking multiple times with delays
+                        setTimeout(() => {
+                            sidebarButton.click();
+                        }, 100);
+                        
+                        setTimeout(() => {
+                            sidebarButton.click();
+                            
+                            // Check if sidebar is now visible
+                            setTimeout(() => {
+                                const isVisible = document.querySelector('.interface-complementary-area:not([style*="display: none"])');
+                                const lmatContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
+                            }, 100);
+                        }, 200);
+                        
+                    } else {
+                        // Try to find and click any button that opens our sidebar
+                        const allButtons = document.querySelectorAll('button, [role="button"]');
+                        for (const button of allButtons) {
+                            const text = button.textContent || button.getAttribute('aria-label') || '';
+                            if (text.toLowerCase().includes('linguator')) {
+                                console.log('LMAT: Found and clicking Linguator button:', button);
+                                button.click();
+                                break;
+                            }
+                        }
+                    }
+                }, 200);
+                
+                
+                if (unsubscribe) {
+                    unsubscribe();
+                }
+                return true;
+            }
+        } catch (e) {
+            console.log('LMAT: Error trying to open sidebar:', e);
+        }
+        
+        if (attempts >= maxAttempts) {
+            console.log('LMAT: Max attempts reached, giving up');
+            if (unsubscribe) {
+                unsubscribe();
+            }
+        }
+        
+        return false;
+    };
+    
+    // Try immediately
+    if (!tryOpenSidebar()) {
+        // If it fails, subscribe to store changes and keep trying
+        unsubscribe = subscribe(() => {
+            tryOpenSidebar();
+        });
+    }
+}
