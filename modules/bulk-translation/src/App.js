@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import StatusModal from './statusModal/index.js';
+import StatusModal from './status-modal/index.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetStore, updateServiceProvider } from './ReduxStore/features/actions.js';
-import { selectCountInfo } from './ReduxStore/features/selectors.js';
-import ChromeAiTranslator from './components/translateProvider/localAi/local-ai-translate.js';
-import ErrorModalBox from './components/ErrorModalBox/index.js';
-import SettingModal from './settingModal/index.js';
+import { resetStore, updateServiceProvider } from './redux-store/features/actions.js';
+import { selectCountInfo } from './redux-store/features/selectors.js';
+import ChromeAiTranslator from './components/translate-provider/localAi/local-ai-translate.js';
+import ErrorModalBox from './components/error-modal-box/index.js';
+import SettingModal from './setting-modal/index.js';
 import DOMPurify from 'dompurify';
 
 const App = ({ onDestory, prefix, postIds }) => {

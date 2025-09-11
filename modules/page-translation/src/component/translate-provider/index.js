@@ -8,7 +8,7 @@ import { sprintf, __ } from "@wordpress/i18n";
 export default (props) => {
     props=props || {};
     const { Service = false, openErrorModalHandler=()=>{} } = props;
-    const assetsUrl = window.lmatPageTranslationGlobal.lmat_url+'Admin/Assets/images/';
+    const assetsUrl = window.lmatPageTranslationGlobal.lmat_url+'admin/assets/images/';
     const errorIcon = assetsUrl + 'error-icon.svg';
     const providers=window.lmatPageTranslationGlobal.providers;
 

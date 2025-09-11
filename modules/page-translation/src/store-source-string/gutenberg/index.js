@@ -1,4 +1,4 @@
-import FilterBlockNestedAttr from "../../component/FilterNestedAttr/index.js";
+import FilterBlockNestedAttr from "../../component/filter-nested-attr/index.js";
 import { dispatch, select } from "@wordpress/data";
 
 /**

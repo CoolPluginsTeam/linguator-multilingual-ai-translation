@@ -1,4 +1,4 @@
-import FilterBlockNestedAttr from "../../component/FilterNestedAttr/index.js";
+import FilterBlockNestedAttr from "../../component/filter-nested-attr/index.js";
 
 /**
  * Filters and translates attributes of a block based on provided rules.

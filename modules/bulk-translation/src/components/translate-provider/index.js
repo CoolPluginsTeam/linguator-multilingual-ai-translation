@@ -10,7 +10,7 @@ export default (props) => {
     props=props || {};
     const { Service = false, openErrorModalHandler=()=>{}, prefix='' } = props;
     const adminUrl = window.lmatBulkTranslationGlobal.admin_url;
-    const assetsUrl = window.lmatBulkTranslationGlobal.lmat_url+'Admin/Assets/images/';
+    const assetsUrl = window.lmatBulkTranslationGlobal.lmat_url+'admin/assets/images/';
     const errorIcon = assetsUrl + 'error-icon.svg';
     const providers=window.lmatBulkTranslationGlobal.providers;
 

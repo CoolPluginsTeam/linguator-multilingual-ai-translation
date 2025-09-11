@@ -1,8 +1,8 @@
 import ChromeAiTranslator from "./local-ai-translator.js";
 import { __ } from "@wordpress/i18n";
 import { select, dispatch } from "@wordpress/data";
-import SaveTranslation from "../../storeTranslatedString/index.js";
-import StoreTimeTaken from "../../../component/StoreTimeTaken/index.js";
+import SaveTranslation from "../../store-translated-string/index.js";
+import StoreTimeTaken from "../../../component/store-time-taken/index.js";
 
 const localAiTranslator = async (props) => {
     const targetLangName = lmatPageTranslationGlobal.languageObject[props.targetLang]['name'];

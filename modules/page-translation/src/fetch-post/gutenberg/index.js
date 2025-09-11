@@ -1,9 +1,9 @@
-import GutenbergBlockSaveSource from "../../storeSourceString/Gutenberg/index.js";
+import GutenbergBlockSaveSource from "../../store-source-string/gutenberg/index.js";
 import { dispatch, select } from "@wordpress/data";
 import { parse } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 
-import AllowedMetaFields from "../../AllowedMetafileds.js";
+import AllowedMetaFields from "../../allowed-meta-fields.js";
 
 const GutenbergPostFetch = async (props) => {
     const apiUrl = lmatPageTranslationGlobal.ajax_url;

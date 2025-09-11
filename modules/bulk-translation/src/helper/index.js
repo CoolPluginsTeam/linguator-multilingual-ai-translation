@@ -1,4 +1,4 @@
-import { store } from '../ReduxStore/store.js';
+import { store } from '../redux-store/store.js';
 
 export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPostId, currentPostId, editorType, updateTranslateDataNonce }) => {
 

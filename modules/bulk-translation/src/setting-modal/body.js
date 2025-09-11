@@ -1,5 +1,5 @@
 import Providers from "./providers.js";
-import TranslateService from "../components/translateProvider/index.js";
+import TranslateService from "../components/translate-provider/index.js";
 
 const SettingModalBody = (props) => {
     const { prefix, localAiModalError } = props;

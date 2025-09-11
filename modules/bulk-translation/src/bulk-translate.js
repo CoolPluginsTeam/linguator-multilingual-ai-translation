@@ -1,8 +1,8 @@
-import {filterContent, updateFilterContent} from './components/FilterContent/index.js';
-import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules } from './ReduxStore/features/actions.js';
-import { store } from './ReduxStore/store.js';
+import {filterContent, updateFilterContent} from './components/filter-content/index.js';
+import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules } from './redux-store/features/actions.js';
+import { store } from './redux-store/store.js';
 import { __ } from '@wordpress/i18n';
-import Provider from './components/translateProvider/index.js';
+import Provider from './components/translate-provider/index.js';
 import { updateTranslateData } from './helper/index.js';
 
 const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, updateDestoryHandler)=>{

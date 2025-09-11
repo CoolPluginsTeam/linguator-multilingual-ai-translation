@@ -1,4 +1,4 @@
-import CopyClipboard from "../CopyClipboard/index.js";
+import CopyClipboard from "../copy-clipboard/index.js";
 import { useEffect } from "@wordpress/element";
 import DOMPurify from 'dompurify';
 

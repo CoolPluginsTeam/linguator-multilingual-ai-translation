@@ -1,8 +1,8 @@
-import SaveTranslation from "../storeTranslatedString/index.js";
+import SaveTranslation from "../store-translated-string/index.js";
 import { select, dispatch } from "@wordpress/data";
-import StoreTimeTaken from "../StoreTimeTaken/index.js";
-import AddProgressBar from "../ProgressBar/index.js";
-import ShowStringCount from "../ProgressBar/showStringCount.js";
+import StoreTimeTaken from "../store-time-taken/index.js";
+import AddProgressBar from "../progress-bar/index.js";
+import ShowStringCount from "../progress-bar/show-string-count.js";
 
 /**
  * Handles the scrolling animation of a specified element.

@@ -1,5 +1,5 @@
 import { select } from '@wordpress/data';
-import FormatNumberCount from "../FormateNumberCount/index.js";
+import FormatNumberCount from "../format-number-count/index.js";
 
 const ShowStringCount = (provider, status='none', characterCount=false) => {
 

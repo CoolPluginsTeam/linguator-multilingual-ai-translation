@@ -4,11 +4,11 @@ import SettingModalHeader from "./header.js";
 import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
 import { __ } from "@wordpress/i18n";
-import ErrorModalBox from "../components/ErrorModalBox/index.js";
+import ErrorModalBox from "../components/error-modal-box/index.js";
 
 const SettingModal = (props) => {
     const prefix=props.prefix || 'lmat-bulk-translate';
-    const imgFolder = lmatBulkTranslationGlobal.lmat_url + 'Admin/Assets/images/';
+    const imgFolder = lmatBulkTranslationGlobal.lmat_url + 'admin/assets/images/';
     const [errorModal, setErrorModal] = useState(false);
     const providers=lmatBulkTranslationGlobal.providers;
 

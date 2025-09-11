@@ -1,6 +1,6 @@
 import { dispatch } from "@wordpress/data";
-import AllowedMetaFields from "../../AllowedMetafileds.js";
-import ElementorSaveSource from "../../storeSourceString/Elementor/index.js";
+import AllowedMetaFields from "../../allowed-meta-fields.js";
+import ElementorSaveSource from "../../store-source-string/elementor/index.js";
 
 // Update allowed meta fields
 const updateAllowedMetaFields = (data) => {

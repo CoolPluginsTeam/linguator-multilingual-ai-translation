@@ -1,6 +1,6 @@
 import { select } from '@wordpress/data';
-import YoastSeoFields from '../../component/TranslateSeoFields/YoastSeoFields.js';
-import RankMathSeo from '../../component/TranslateSeoFields/RankMathSeo.js';
+import YoastSeoFields from '../../component/translate-seo-fields/yoast-seo-fields.js';
+import RankMathSeo from '../../component/translate-seo-fields/rank-math-seo.js';    
 
 // Update widget content with translations
 const lmatUpdateWidgetContent = (translations) => {

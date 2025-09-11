@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import FilterTargetContent from "../component/FilterTargetContent/index.js";
+import FilterTargetContent from "../component/filter-target-content/index.js";
 import { __ } from "@wordpress/i18n";
 import { select } from "@wordpress/data";
 import { Fragment } from "@wordpress/element";
-import TranslateService from "../component/TranslateProvider/index.js";
+import TranslateService from "../component/translate-provider/index.js";
 
 const StringPopUpBody = (props) => {
 

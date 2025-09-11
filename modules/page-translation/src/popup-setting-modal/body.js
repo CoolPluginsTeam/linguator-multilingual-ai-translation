@@ -1,6 +1,6 @@
 import { sprintf, __ } from "@wordpress/i18n";
 import Providers from "./providers.js";
-import TranslateService from "../component/TranslateProvider/index.js";
+import TranslateService from "../component/translate-provider/index.js";
 
 const SettingModalBody = (props) => {
     const ServiceProviders = TranslateService();

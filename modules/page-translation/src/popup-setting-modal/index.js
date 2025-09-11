@@ -1,14 +1,14 @@
 import ReactDOM from "react-dom/client";
 import { useEffect, useState } from "@wordpress/element";
-import PopStringModal from "../popupStringModal/index.js";
-import googleLanguage from "../component/TranslateProvider/google/google-language.js";
-import ChromeLocalAiTranslator from "../component/TranslateProvider/local-ai-translator/local-ai-translator.js";
+import PopStringModal from "../popup-string-modal/index.js";
+import googleLanguage from "../component/translate-provider/google/google-language.js";
+import ChromeLocalAiTranslator from "../component/translate-provider/local-ai-translator/local-ai-translator.js";
 import SettingModalHeader from "./header.js";
 import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
 import { __, sprintf } from "@wordpress/i18n";
-import ErrorModalBox from "../component/ErrorModalBox/index.js";
-import TranslateService from "../component/TranslateProvider/index.js";
+import ErrorModalBox from "../component/error-modal-box/index.js";
+import TranslateService from "../component/translate-provider/index.js";
 
 const SettingModal = (props) => {
     const [activeService, setActiveService] = useState({});
@@ -18,7 +18,7 @@ const SettingModal = (props) => {
     const targetLang = props.targetLang;
     const sourceLangName = lmatPageTranslationGlobal.languageObject[sourceLang]['name'];
     const targetLangName = lmatPageTranslationGlobal.languageObject[targetLang]['name'];
-    const imgFolder = lmatPageTranslationGlobal.lmat_url + 'Admin/Assets/images/';
+    const imgFolder = lmatPageTranslationGlobal.lmat_url + 'admin/assets/images/';
     const googleSupport = googleLanguage().includes(targetLang === 'zh' ? lmatPageTranslationGlobal.languageObject['zh']?.locale.replace('_', '-') : targetLang);
     const [serviceModalErrors, setServiceModalErrors] = useState({});
     const [errorModalVisibility, setErrorModalVisibility] = useState(false);

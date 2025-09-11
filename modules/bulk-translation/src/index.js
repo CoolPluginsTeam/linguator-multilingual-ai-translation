@@ -2,9 +2,9 @@ import App from './App.js';
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { store } from './ReduxStore/store.js';
+import { store } from './redux-store/store.js';
 import { Provider } from 'react-redux';
-import ErrorModalBox from './components/ErrorModalBox/index.js';
+import ErrorModalBox from './components/error-modal-box/index.js';
 import { __, sprintf } from '@wordpress/i18n';
 
 (() => {

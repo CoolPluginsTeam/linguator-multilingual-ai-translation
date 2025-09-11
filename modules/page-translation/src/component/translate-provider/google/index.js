@@ -1,4 +1,4 @@
-import ModalStringScroll from "../../stringModalScroll/index.js";
+import ModalStringScroll from "../../string-modal-scroll/index.js";
 
 /**
  * Initializes Google Translate functionality on specific elements based on provided data.

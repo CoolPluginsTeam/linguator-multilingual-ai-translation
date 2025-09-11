@@ -1,4 +1,4 @@
-import TranslateService from "../component/TranslateProvider/index.js";
+import TranslateService from "../component/translate-provider/index.js";
 
 const Providers = (props) => {
     const service = props.Service;

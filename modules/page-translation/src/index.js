@@ -1,15 +1,15 @@
-import SettingModal from './popupSettingModal/index.js';
+import SettingModal from './popup-setting-modal/index.js';
 import './global-store/index.js';
 import { useEffect, useState } from 'react';
-import GutenbergPostFetch from './FetchPost/Gutenberg/index.js';
-import UpdateGutenbergPage from './createTranslatedPost/Gutenberg/index.js';
-import Notice from './component/Notice/index.js';
+import GutenbergPostFetch from './fetch-post/gutenberg/index.js';
+import UpdateGutenbergPage from './create-translated-post/gutenberg/index.js';
+import Notice from './component/notice/index.js';
 import { select } from '@wordpress/data';
 import { sprintf, __ } from '@wordpress/i18n';
 
 // Elementor post fetch and update page
-import ElementorPostFetch from './FetchPost/Elementor/index.js';
-import ElementorUpdatePage from './createTranslatedPost/Elementor/index.js';
+import ElementorPostFetch from './fetch-post/elementor/index.js';
+import ElementorUpdatePage from './create-translated-post/elementor/index.js';
 
 import ReactDOM from "react-dom/client";
 
