@@ -58,7 +58,7 @@ class LMAT_Page_Translation {
 	 * Register and display the automatic translation metabox.
 	 */
 	public function lmat_gutenberg_metabox() {
-		if ( isset( $_GET['from_post'], $_GET['new_lang'], $_GET['_wpnonce'] ) &&
+		if ( isset( $_GET['from_post'], $_GET['lang'], $_GET['_wpnonce'] ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'new-post-translation' ) ) {
 			$post_id = isset( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
 
@@ -76,7 +76,7 @@ class LMAT_Page_Translation {
 
 			$current_screen = get_current_screen();
 			if ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() && ! in_array( $editor, array( 'Elementor', 'Divi' ), true ) ) {
-				if ( 'post-new.php' === $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['new_lang'] ) ) {
+				if ( 'post-new.php' === $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['lang'] ) ) {
 					global $post;
 
 					if ( ! ( $post instanceof \WP_Post ) ) {
@@ -102,7 +102,7 @@ class LMAT_Page_Translation {
 			if ( function_exists( 'LMAT' ) ) {
 				$parent_post_id       = isset( $_GET['from_post'] ) ? sanitize_key( $_GET['from_post'] ) : '';
 				$parent_post_language = lmat_get_post_language( $parent_post_id, 'name' );
-				$target_code          = isset( $_GET['new_lang'] ) ? sanitize_key( $_GET['new_lang'] ) : '';
+				$target_code          = isset( $_GET['lang'] ) ? sanitize_key( $_GET['lang'] ) : '';
 				$languages            = LMAT()->model->get_languages_list();
 				foreach ( $languages as $lang ) {
 					if ( $lang->slug === $target_code ) {
@@ -137,7 +137,7 @@ class LMAT_Page_Translation {
 	public function enqueue_gutenberg_translate_assets() {
 		$current_screen = get_current_screen();
 		if (
-			isset( $_GET['from_post'], $_GET['new_lang'], $_GET['_wpnonce'] ) &&
+			isset( $_GET['from_post'], $_GET['lang'], $_GET['_wpnonce'] ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'new-post-translation' )
 		) {
 			if ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) {
@@ -169,7 +169,7 @@ class LMAT_Page_Translation {
 				}
 
 				$post_translate = LMAT()->model->is_translated_post_type( $post->post_type );
-				$lang           = isset( $_GET['new_lang'] ) ? sanitize_key( $_GET['new_lang'] ) : '';
+				$lang           = isset( $_GET['lang'] ) ? sanitize_key( $_GET['lang'] ) : '';
 				$post_type      = isset( $_GET['post_type'] ) ? sanitize_key( $_GET['post_type'] ) : '';
 
 				if ( $post_translate && $lang && $post_type ) {

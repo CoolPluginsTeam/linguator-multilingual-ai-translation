@@ -33,7 +33,7 @@ class LMAT_Cft {
 	 */
 	public function cft_copy( $post_type, $post ) {
 		global $custom_field_template; // WordPress core global variable from Custom Field Template plugin
-		if ( isset( $custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang'] ) && ! empty( $post ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( isset( $custom_field_template, $_REQUEST['from_post'], $_REQUEST['lang'] ) && ! empty( $post ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$_REQUEST['post'] = $post->ID;
 		}
 	}

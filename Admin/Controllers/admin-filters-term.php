@@ -124,7 +124,7 @@ class LMAT_Admin_Filters_Term {
 
 		$from_term_id = isset( $_GET['from_tag'] ) ? (int) $_GET['from_tag'] : 0; // phpcs:ignore WordPress.Security.NonceVerification
 
-		$lang = isset( $_GET['new_lang'] ) ? $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ) : $this->pref_lang; // phpcs:ignore WordPress.Security.NonceVerification
+		$lang = isset( $_GET['lang'] ) ? $this->model->get_language( sanitize_key( $_GET['lang'] ) ) : $this->pref_lang; // phpcs:ignore WordPress.Security.NonceVerification
 
 		$dropdown = new LMAT_Walker_Dropdown();
 
@@ -303,11 +303,11 @@ class LMAT_Admin_Filters_Term {
 			$taxonomy = sanitize_key( $_GET['taxonomy'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
-		if ( isset( $taxonomy, $_GET['from_tag'], $_GET['new_lang'] ) && taxonomy_exists( $taxonomy ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( isset( $taxonomy, $_GET['from_tag'], $_GET['lang'] ) && taxonomy_exists( $taxonomy ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$term = get_term( (int) $_GET['from_tag'], $taxonomy ); // phpcs:ignore WordPress.Security.NonceVerification
 
 			if ( $term instanceof WP_Term && $id = $term->parent ) {
-				$lang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$lang = $this->model->get_language( sanitize_key( $_GET['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 				if ( $parent = $this->model->term->get_translation( $id, $lang ) ) {
 					return str_replace( '"' . $parent . '"', '"' . $parent . '" selected="selected"', $output );
 				}

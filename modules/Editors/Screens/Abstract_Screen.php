@@ -245,7 +245,7 @@ abstract class Abstract_Screen {
 				$add_link = add_query_arg(
 					array(
 						'post_type' => $post->post_type,
-						'new_lang'  => $language->slug,
+						'lang'  => $language->slug,
 						'from_post' => $post->ID,
 					),
 					admin_url( 'post-new.php' )
