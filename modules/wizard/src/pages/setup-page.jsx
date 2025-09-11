@@ -1,11 +1,11 @@
 import React from 'react'
-import SetupProgress from '../components/SetupProgress'
+import SetupProgress from '../components/setup-progress'
 import { LoaderPinwheel } from "lucide-react"
-import { RenderedLanguage } from '../components/Languages'
+import { RenderedLanguage } from '../components/languages'
 import { Loader, Dialog, Button } from "@bsf/force-ui"
 import apiFetch from "@wordpress/api-fetch"
 import { __ } from '@wordpress/i18n'
-import { getNonce } from '../../../../Admin/Settings/Views/src/utils'
+import { getNonce } from '../../../../admin/settings/views/src/utils'
 import { Toaster, toast } from 'sonner'
 
 export const setupContext = React.createContext(null)

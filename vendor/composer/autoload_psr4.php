@@ -6,11 +6,11 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Linguator\\Settings\\' => array($baseDir . '/Admin/Settings'),
-    'Linguator\\Modules\\' => array($baseDir . '/Modules'),
-    'Linguator\\Integrations\\' => array($baseDir . '/Integrations'),
-    'Linguator\\Install\\' => array($baseDir . '/Install'),
-    'Linguator\\Includes\\' => array($baseDir . '/Includes'),
-    'Linguator\\Frontend\\' => array($baseDir . '/Frontend'),
-    'Linguator\\Admin\\' => array($baseDir . '/Admin'),
+    'Linguator\\includes\\' => array($baseDir . '/includes'),
+    'Linguator\\Settings\\' => array($baseDir . '/admin/settings'),
+    'Linguator\\Modules\\' => array($baseDir . '/modules'),
+    'Linguator\\Integrations\\' => array($baseDir . '/integrations'),
+    'Linguator\\Install\\' => array($baseDir . '/install'),
+    'Linguator\\Frontend\\' => array($baseDir . '/frontend'),
+    'Linguator\\Admin\\' => array($baseDir . '/admin'),
 );

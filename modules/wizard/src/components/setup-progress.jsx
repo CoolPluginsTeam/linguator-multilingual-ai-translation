@@ -1,14 +1,14 @@
 import { ProgressSteps, Topbar } from "@bsf/force-ui"
 import React from 'react'
 // import DefaultLanguage from './DefaultLanguage'
-import Languages from './Languages'
-import Ready from './Ready0'
+import Languages from './languages'
+import Ready from './ready'
 import { sprintf,__ } from '@wordpress/i18n'
 import { BadgeCheck } from 'lucide-react'
 import { setupContext } from '../pages/setup-page'
-import Media from './media0'
+import Media from './media'
 import HomePage from "./home-page"
-import Default from "./Default0"
+import Default from "./default"
 import URLModifications from "./url-modifications"
 import AiTranslation from "./ai-translation"
 import LanguageSwitcher from "./language-switcher"

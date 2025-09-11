@@ -23,7 +23,7 @@
             "includes/",
             "admin/",
             "frontend/",
-            "ignore/",
+            "integrations/",
             "modules/",
             "admin/settings/",
             "install/"

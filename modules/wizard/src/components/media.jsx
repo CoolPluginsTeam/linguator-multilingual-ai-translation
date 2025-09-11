@@ -3,7 +3,7 @@ import apiFetch from "@wordpress/api-fetch"
 import React from 'react'
 import { toast } from 'sonner'
 import { setupContext } from '../pages/setup-page'
-import { getNonce } from '../../../../Admin/Settings/Views/src/utils'
+import { getNonce } from '../../../../admin/settings/views/src/utils'
 import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 import { __, sprintf } from '@wordpress/i18n'
 const Media = () => {

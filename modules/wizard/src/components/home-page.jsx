@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 import { setupContext } from '../pages/setup-page'
 import { __, sprintf } from '@wordpress/i18n'
-import { RenderedLanguage } from './Languages'
+import { RenderedLanguage } from './languages'
 import { Star } from 'lucide-react'
 import apiFetch from '@wordpress/api-fetch'
 

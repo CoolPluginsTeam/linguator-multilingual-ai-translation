@@ -7,7 +7,7 @@ import { handle } from '@wordpress/icons'
 import { getNonce } from '../utils'
 import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
-import { RenderedLanguage } from './Languages'
+import { RenderedLanguage } from './languages'
 const Default = () => {
   const { setupProgress, setSetupProgress, selectedLanguageData,setSelectedLanguageData, data, setData,  setHomePageLangauge, showUntranslatedContent, setShowUntranslatedContent } = React.useContext(setupContext) //get context
   const [defaultLanguage, setDefaultLanguage] = React.useState(selectedLanguageData.find((lang) => lang.locale?.toLowerCase() === data.default_lang) || selectedLanguageData.find((language) => language.is_default) || null)
