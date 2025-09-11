@@ -1,5 +1,5 @@
 import React from 'react';
-import filterContent from '../../../../../page-translation/src/component/FilterTargetContent/index.js';
+import filterContent from '../../../../../page-translation/src/component/filter-target-content/index.js';
 import extractInnerContent from '../extarct-inner-content/index.js';
 import storeSourceString from '../../store-source-string/index.js';
 
