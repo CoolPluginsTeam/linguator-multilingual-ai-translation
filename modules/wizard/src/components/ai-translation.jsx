@@ -1,5 +1,5 @@
-import { setupContext } from "../pages/SetupPage"
-import SetupContinueButton, { SetupBackButton } from './SetupContinueButton'
+import { setupContext } from "../pages/setup-page"
+import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 import { getNonce } from '../utils'
 import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'

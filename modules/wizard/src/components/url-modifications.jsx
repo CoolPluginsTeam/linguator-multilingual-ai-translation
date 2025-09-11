@@ -1,11 +1,11 @@
 import React from 'react'
 import { Badge, Accordion, Button, Checkbox, Container, Input, Label, RadioButton, Switch } from '@bsf/force-ui'
 import { __, sprintf } from '@wordpress/i18n'
-import { setupContext } from '../pages/SetupPage'
+import { setupContext } from '../pages/setup-page'
 import { toast } from 'sonner'
 import apiFetch from '@wordpress/api-fetch'
 import { getNonce } from '../utils'
-import SetupContinueButton, { SetupBackButton } from './SetupContinueButton'
+import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 const URLModifications = () => {
   const { loading, setupProgress, setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
   const [forceLang, setForceLang] = React.useState(data.force_lang)

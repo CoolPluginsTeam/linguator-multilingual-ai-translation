@@ -2,16 +2,16 @@ import { ProgressSteps, Topbar } from "@bsf/force-ui"
 import React from 'react'
 // import DefaultLanguage from './DefaultLanguage'
 import Languages from './Languages'
-import Ready from './Ready'
+import Ready from './Ready0'
 import { sprintf,__ } from '@wordpress/i18n'
 import { BadgeCheck } from 'lucide-react'
-import { setupContext } from '../pages/SetupPage'
-import Media from './Media'
-import HomePage from "./HomePage"
-import Default from "./Default"
-import URLModifications from "./URLModifications"
-import AiTranslation from "./AiTranslation"
-import LanguageSwitcher from "./LanguageSwitcher"
+import { setupContext } from '../pages/setup-page'
+import Media from './media0'
+import HomePage from "./home-page"
+import Default from "./Default0"
+import URLModifications from "./url-modifications"
+import AiTranslation from "./ai-translation"
+import LanguageSwitcher from "./language-switcher"
 
 //Component router for setup 
 const SetupFileRouting = () => {

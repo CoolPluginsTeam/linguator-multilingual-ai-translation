@@ -2,9 +2,9 @@ import { Switch } from "@bsf/force-ui"
 import apiFetch from "@wordpress/api-fetch"
 import React from 'react'
 import { toast } from 'sonner'
-import { setupContext } from '../pages/SetupPage'
+import { setupContext } from '../pages/setup-page'
 import { getNonce } from '../../../../Admin/Settings/Views/src/utils'
-import SetupContinueButton, { SetupBackButton } from './SetupContinueButton'
+import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 import { __, sprintf } from '@wordpress/i18n'
 const Media = () => {
     const { setupProgress, setSetupProgress, data, setData } = React.useContext(setupContext) // get the context

@@ -1,12 +1,12 @@
 import React from 'react'
-import { setupContext } from "../pages/SetupPage"
+import { setupContext } from "../pages/setup-page"
 import { sprintf, __ } from '@wordpress/i18n'
 import { Switch } from '@bsf/force-ui'
 import { toast } from 'sonner'
 import { languageSwitcherOptions } from '../utils'
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
-import SetupContinueButton, { SetupBackButton } from './SetupContinueButton'
+import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 const LanguageSwitcher = () => {
     const { setupProgress, setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
     const [selectedLanguageSwitchers, setSelectedLanguageSwitchers] = React.useState(data.lmat_language_switcher_options || ['default']);
