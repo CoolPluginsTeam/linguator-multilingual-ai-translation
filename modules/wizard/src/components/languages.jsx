@@ -174,7 +174,7 @@ const Languages = () => {
       <div className='flex-grow mb-5'>
         <p className='text-sm'>{__('This wizard will help you set up Linguator and start using your multilingual website quickly.', 'linguator-multilingual-ai-translation')}</p>
         <p className='text-sm'>{__('First, let’s choose the languages for your website.', 'linguator-multilingual-ai-translation')}</p>
-        <h2>{__('Languages', 'linguator-multilingual-ai-translation')}</h2>
+        <h2>{__('Translation Languages', 'linguator-multilingual-ai-translation')}</h2>
         <div className='flex items-end gap-2'>
           <Select
             combobox
@@ -192,7 +192,7 @@ const Languages = () => {
             searchPlaceholder="Search..."
           >
             <Select.Button
-              label={__('Choose the language to be add', 'linguator-multilingual-ai-translation')}
+              label={__('Which languages do you want to translate your site into?', 'linguator-multilingual-ai-translation')}
               placeholder={__('Select an option', 'linguator-multilingual-ai-translation')}
               render={() => <DropdownRenderLangauage flagUrl={false} />}
             />
