@@ -2,7 +2,7 @@ import ChromeAiTranslator from "./local-ai-translate.js";
 import { updateProgressStatus, updateTranslatePostInfo, unsetPendingPost } from "../../../ReduxStore/features/actions.js";
 import { selectProgressStatus, selectTargetContent, selectTranslatePostInfo } from "../../../ReduxStore/features/selectors.js";
 import { store } from "../../../ReduxStore/store.js";
-import storeTranslateString from "../../storeTranslateString/index.js";
+import storeTranslateString from "../../store-translate-strings/index.js";
 import { __ } from "@wordpress/i18n";
 
 // Define a class for LocalAiTranslate

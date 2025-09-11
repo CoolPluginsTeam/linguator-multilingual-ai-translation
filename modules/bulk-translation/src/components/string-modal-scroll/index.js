@@ -1,4 +1,4 @@
-import storeTranslateString from "../storeTranslateString/index.js";
+import storeTranslateString from "../store-translate-strings/index.js";
 
 
 /**

@@ -1,7 +1,7 @@
 import React from 'react';
 import filterContent from '../../../../../page-translation/src/component/FilterTargetContent/index.js';
-import extractInnerContent from '../extractInnerContent/index.js';
-import saveSourceString from '../../storeSourceString/index.js';
+import extractInnerContent from '../extarct-inner-content/index.js';
+import saveSourceString from '../../store-source-string/index.js';
 
 /**
  * @param {Object} content
