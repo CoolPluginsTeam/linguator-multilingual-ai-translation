@@ -15440,7 +15440,12 @@ var Sidebar = function Sidebar() {
     className: "w-full h-auto  ",
     src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
     alt: "Loco translate logo"
-  }))), /*#__PURE__*/React.createElement("div", null))) : null)));
+  }))), /*#__PURE__*/React.createElement("div", null))) : null, /*#__PURE__*/React.createElement(S, {
+    className: "bg-white flex flex-col gap-4 p-6 shadow-sm rounded-lg"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+    target: "_blank",
+    href: "https://wordpress.org/support/plugin/automatic-translations-for-polylang/reviews/#new-post"
+  }, (0,external_wp_i18n_namespaceObject.__)('Submit a Review →', 'linguator-multilingual-ai-translation')))))));
 };
 /* harmony default export */ const sidebar = (Sidebar);
 ;// ./node_modules/lucide-react/dist/esm/icons/loader-pinwheel.js

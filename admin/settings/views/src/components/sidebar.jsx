@@ -95,7 +95,15 @@ const Sidebar = () => {
 
             ) : null
           }
+          <Container className='bg-white flex flex-col gap-4 p-6 shadow-sm rounded-lg'>
+            <div>
+              <h2>{__('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation')}</h2>
+              <p>{__("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')}</p>
+              <a target="_blank" href="https://wordpress.org/support/plugin/automatic-translations-for-polylang/reviews/#new-post">{__('Submit a Review →', 'linguator-multilingual-ai-translation')}</a>
+            </div>
+          </Container>
         </div>
+        
       </div>
     </>
   )
