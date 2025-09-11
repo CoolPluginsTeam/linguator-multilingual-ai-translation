@@ -1,4 +1,4 @@
-import CopyClipboard from "../CopyClipboard/index";
+import CopyClipboard from "../copy-clipboard/index";
 import { useEffect, FC } from 'react';
 import * as styles from '../modal/style.modules.css';
 import { Modal } from '@wordpress/components';

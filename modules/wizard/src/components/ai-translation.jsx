@@ -109,6 +109,18 @@ const AiTranslation = () => {
     const [chromeLocalAITranslation, setChromeLocalAITranslation] = React.useState(provider?.chrome_local_ai)
     const [lastUpdatedValue, setLastUpdatedValue] = React.useState({googleMachineTranslation,chromeLocalAITranslation})
 
+    const handleBack = () => {
+      if (window.lmat_setup.home_page == "1") {
+        setSetupProgress("home_page")
+        localStorage.setItem("setupProgress", "home_page");
+    }else if (lmat_setup_data.media == "1") {
+        setSetupProgress("media")
+        localStorage.setItem("setupProgress", "media");
+      } else {
+        setSetupProgress("url")
+        localStorage.setItem("setupProgress", "url");
+      }
+    }
     //function to handle save button in the media page
     async function saveAITranslation() {
         try {
@@ -174,7 +186,7 @@ const AiTranslation = () => {
                 </div>
             </div>
             <div className='flex justify-between ' style={{ marginTop: "14px" }}>
-                <SetupBackButton handleClick={() => { setSetupProgress("url"); localStorage.setItem("setupProgress", "url"); }} />
+                <SetupBackButton handleClick={handleBack} />
                 <SetupContinueButton SaveSettings={saveAITranslation} />
             </div>
         </div>
