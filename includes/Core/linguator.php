@@ -68,7 +68,7 @@ class Linguator {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		require_once __DIR__ . '/../Helpers/functions.php'; // VIP functions
+		require_once __DIR__ . '/../helpers/functions.php'; // VIP functions
 
 		// register an action when plugin is activating.
 		register_activation_hook( LINGUATOR_BASENAME, array( '\\Linguator\\Modules\\Wizard\\LMAT_Wizard', 'start_wizard' ) );
@@ -369,10 +369,10 @@ class Linguator {
 		do_action_ref_array( 'lmat_pre_init', array( &$linguator ) );
 
 		// Loads the API
-		require_once LINGUATOR_DIR . '/Includes/API/LanguageAPI.php';
+		require_once LINGUATOR_DIR . '/includes/api/language-api.php';
 
 		// Loads the modules.
-		$load_scripts = glob( LINGUATOR_DIR . '/Modules/*/load.php', GLOB_NOSORT );
+		$load_scripts = glob( LINGUATOR_DIR . '/modules/*/load.php', GLOB_NOSORT );
 		if ( is_array( $load_scripts ) ) {
 			foreach ( $load_scripts as $load_script ) {
 				require_once $load_script; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable

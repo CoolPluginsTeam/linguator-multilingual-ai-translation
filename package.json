@@ -6,17 +6,17 @@
   "type": "module",
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
-    "build:css": "tailwindcss -i Admin/Settings/Views/src/input.css -o Admin/Assets/css/build/main.css",
+    "build:css": "tailwindcss -i admin/settings/Views/src/input.css -o admin/assets/css/build/main.css",
     "build": "webpack --config webpack.config.js --mode=production",
-    "start": "wp-scripts start Modules/wizard/src/setup.js --output-path Admin/Assets/frontend/setup",
+    "start": "wp-scripts start modules/wizard/src/setup.js --output-path admin/assets/frontend/setup",
     "start:js": "webpack --config webpack.config.js --mode=development --watch",
     "dev": "tailwindcss -i src/input.css -o output.css && wp-scripts build",
     "build:inline-translate": "webpack --config webpack.config.js --mode=production --env type=inlineTranslate",
     "start:inline-translate": "webpack --config webpack.config.js --mode=development --env type=inlineTranslate --watch",
-    "build:page-translate": "wp-scripts build Modules/page-translation/src/index.js --output-path Admin/Assets/page-translation --env configType=default",
-    "start:page-translate": "wp-scripts start Modules/page-translation/src/index.js --output-path Admin/Assets/page-translation --env configType=default",
-    "build:bulk-translate": "wp-scripts build Modules/bulk-translation/src/index.js --output-path Admin/Assets/bulk-translate --env configType=default",
-    "start:bulk-translate": "wp-scripts start Modules/bulk-translation/src/index.js --output-path Admin/Assets/bulk-translate --env configType=default"
+    "build:page-translate": "wp-scripts build modules/page-translation/src/index.js --output-path admin/assets/page-translation --env configType=default",
+    "start:page-translate": "wp-scripts start modules/page-translation/src/index.js --output-path admin/assets/page-translation --env configType=default",
+    "build:bulk-translate": "wp-scripts build modules/bulk-translation/src/index.js --output-path admin/assets/bulk-translate --env configType=default",
+    "start:bulk-translate": "wp-scripts start modules/bulk-translation/src/index.js --output-path admin/assets/bulk-translate --env configType=default"
   },
   "keywords": [],
   "author": "Cool Plugins",

@@ -113,7 +113,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		}
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script( 'lmat_nav_menu', plugins_url( "Admin/Assets/js/build/nav-menu{$suffix}.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
+		wp_enqueue_script( 'lmat_nav_menu', plugins_url( "admin/assets/js/build/nav-menu{$suffix}.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
 
 		$data = array(
 			'strings' => LMAT_Switcher::get_switcher_options( 'menu', 'string' ), // The strings for the options

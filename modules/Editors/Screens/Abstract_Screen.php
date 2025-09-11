@@ -193,7 +193,7 @@ abstract class Abstract_Screen {
 	protected function enqueue_style(): void {
 		wp_enqueue_style(
 			'linguator-block-widget-editor-css',
-			plugins_url( '/Admin/Assets/css/build/style' . $this->suffix . '.css', LINGUATOR_ROOT_FILE ),
+			plugins_url( '/admin/assets/css/build/style' . $this->suffix . '.css', LINGUATOR_ROOT_FILE ),
 			array( 'wp-components' ),
 			LINGUATOR_VERSION
 		);

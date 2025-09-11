@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-require_once __DIR__ . '/API.php';
-require_once __DIR__ . '/Abstract_Controller.php';
-require_once __DIR__ . '/V1/Languages.php';
-require_once __DIR__ . '/V1/Settings.php';
+require_once __DIR__ . '/api.php';
+require_once __DIR__ . '/abstract-controller.php';
+require_once __DIR__ . '/v1/languages.php';
+require_once __DIR__ . '/v1/settings.php';
 
 add_action(
 	'lmat_init',

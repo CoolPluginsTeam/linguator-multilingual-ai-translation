@@ -145,7 +145,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 						<select name="flag" id="flag_list">
 							<option value=""></option>
 							<?php
-							$flags = include __DIR__ . '/../Controllers/flags.php';
+							$flags = include __DIR__ . '/../controllers/flags.php';
 							foreach ( $flags as $code => $label ) {
 								printf(
 									'<option value="%s" data-flag-html="%s"%s>%s</option>' . "\n",

@@ -177,7 +177,7 @@ class LMAT_Page_Translation {
 						$update_blocks = get_option( 'lmat_custom_block_status', false ) && 'true' === get_option( 'lmat_custom_block_status', false ) ? true : false;
 						if ( $update_blocks ) {
 							// Custom Translation Block update script
-							wp_register_script( 'lmat-custom-blocks', plugins_url( 'Assets/Build/automatic-translate/index.js', LINGUATOR_ROOT_FILE ), array( 'wp-data', 'jquery' ), LINGUATOR_VERSION, true );
+							wp_register_script( 'lmat-custom-blocks', plugins_url( 'assets/build/automatic-translate/index.js', LINGUATOR_ROOT_FILE ), array( 'wp-data', 'jquery' ), LINGUATOR_VERSION, true );
 							wp_enqueue_script( 'lmat-custom-blocks' );
 
 							wp_localize_script(
@@ -234,14 +234,14 @@ class LMAT_Page_Translation {
 			'metaFields'            => $meta_fields,
 		);
 
-		wp_enqueue_style( 'lmat-elementor-translate', plugins_url( 'Admin/Assets/css/lmat-elementor-translate.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+		wp_enqueue_style( 'lmat-elementor-translate', plugins_url( 'admin/assets/css/lmat-elementor-translate.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		$this->enqueue_automatic_translate_assets( $parent_post_language_slug, $post_language_slug, 'elementor', $data );
 	}
 
 	public function enqueue_automatic_translate_assets( $source_lang, $target_lang, $editor_type, $extra_data = array() ) {
 		wp_register_script( 'lmat-google-api', 'https://translate.google.com/translate_a/element.js', '', LINGUATOR_VERSION, true );
 
-		$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/page-translation/index.asset.php';
+		$editor_script_asset = include LINGUATOR_DIR . '/admin/assets/page-translation/index.asset.php';
 
 		if ( ! is_array( $editor_script_asset ) ) {
 			$editor_script_asset = array(
@@ -250,8 +250,8 @@ class LMAT_Page_Translation {
 			);
 		}
 
-		wp_register_script( 'lmat-page-translate', plugins_url( 'Admin/Assets/page-translation/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
-		wp_register_style( 'lmat-page-translate', plugins_url( 'Admin/Assets/page-translation/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
+		wp_register_script( 'lmat-page-translate', plugins_url( 'admin/assets/page-translation/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
+		wp_register_style( 'lmat-page-translate', plugins_url( 'admin/assets/page-translation/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
 
 		$post_type = get_post_type();
 

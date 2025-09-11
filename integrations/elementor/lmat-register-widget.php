@@ -35,7 +35,7 @@ class LMAT_Register_Widget {
 	 * @return void
 	 */
 	public function lmat_register_widgets() {
-		require_once LINGUATOR_DIR . '/Integrations/elementor/lmat-widget.php';
+		require_once LINGUATOR_DIR . '/integrations/elementor/lmat-widget.php';
 		\Elementor\Plugin::instance()->widgets_manager->register( new LMAT_Widget() );
 	}
 }

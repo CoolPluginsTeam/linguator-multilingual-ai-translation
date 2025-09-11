@@ -1413,7 +1413,7 @@ class Languages extends Abstract_Controller {
 		}
 
 		// Create a language from our default list with only the locale.
-		$languages = include LINGUATOR_DIR . '/Admin/Settings/Controllers/languages.php';
+		$languages = include LINGUATOR_DIR . '/admin/settings/controllers/languages.php';
 
 		if ( empty( $languages[ $request['locale'] ] ) ) {
 			return new WP_Error(

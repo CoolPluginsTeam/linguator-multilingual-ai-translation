@@ -235,7 +235,7 @@ class LMAT_Admin_Notices {
 				$like_it_text   = esc_html__( 'Rate Now! ★★★★★', 'linguator-multilingual-ai-translation' );
 				$already_rated_text = esc_html__( 'I already rated it', 'linguator-multilingual-ai-translation' );
 				$not_like_it_text   = esc_html__( 'Not Interested', 'linguator-multilingual-ai-translation' );
-				$logo_url = plugins_url( 'Assets/logo/linguator_icon.svg', LINGUATOR_ROOT_FILE );
+				$logo_url = plugins_url( 'assets/logo/linguator_icon.svg', LINGUATOR_ROOT_FILE );
 				$html = sprintf(
 						/* translators: %1$s: Already rated URL, %2$s: Dismiss URL */
 						__('<div class="logo_container">

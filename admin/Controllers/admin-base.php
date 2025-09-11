@@ -194,7 +194,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_script( 'lmat_admin', plugins_url( "Admin/Assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+		wp_enqueue_script( 'lmat_admin', plugins_url( "admin/assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 		$inline_script = sprintf( 'let lmat_admin = %s;', wp_json_encode( array( 'ajax_filter' => $this->get_ajax_filter_data() ) ) );
 		wp_add_inline_script( 'lmat_admin', $inline_script, 'before' );
 
@@ -243,15 +243,15 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		foreach ( $scripts as $script => $v ) {
 			if ( in_array( $screen->base, $v[0] ) && ( $v[2] || $this->model->has_languages() ) ) {
-				wp_enqueue_script( "lmat_{$script}", plugins_url( "Admin/Assets/js/build/{$script}{$suffix}.js", LINGUATOR_ROOT_FILE ), $v[1], LINGUATOR_VERSION, $v[3] );
+				wp_enqueue_script( "lmat_{$script}", plugins_url( "admin/assets/js/build/{$script}{$suffix}.js", LINGUATOR_ROOT_FILE ), $v[1], LINGUATOR_VERSION, $v[3] );
 				if ( 'classic-editor' === $script || 'block-editor' === $script ) {
 					wp_set_script_translations( "lmat_{$script}", 'linguator' );
 				}
 			}
 		}
 
-		wp_register_style( 'linguator_admin', plugins_url( "Admin/Assets/css/build/admin{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'wp-jquery-ui-dialog' ), LINGUATOR_VERSION );
-		wp_enqueue_style( 'linguator_dialog', plugins_url( "Admin/Assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
+		wp_register_style( 'linguator_admin', plugins_url( "admin/assets/css/build/admin{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'wp-jquery-ui-dialog' ), LINGUATOR_VERSION );
+		wp_enqueue_style( 'linguator_dialog', plugins_url( "admin/assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
 
 		$this->add_inline_scripts();
 	}
@@ -279,7 +279,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	public function customize_controls_enqueue_scripts() {
 		if ( $this->model->has_languages() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-			wp_enqueue_script( 'lmat_widgets', plugins_url( 'Admin/Assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+			wp_enqueue_script( 'lmat_widgets', plugins_url( 'admin/assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 			$this->add_inline_scripts();
 		}
 	}

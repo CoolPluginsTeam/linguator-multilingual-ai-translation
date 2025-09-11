@@ -304,7 +304,7 @@ class LMAT_Wizard
 	{
 		if (Linguator::is_wizard()) {
 			// Enqueue React-based settings for settings tabs
-			$asset_file = plugin_dir_path(LINGUATOR_ROOT_FILE) . 'Admin/Assets/frontend/setup/setup.asset.php';
+			$asset_file = plugin_dir_path(LINGUATOR_ROOT_FILE) . 'admin/assets/frontend/setup/setup.asset.php';
 			$asset = require $asset_file;
 			$languages = $this->model->get_languages_list();
 			$home_page_id = get_option('page_on_front');
@@ -331,7 +331,7 @@ class LMAT_Wizard
 			// Enqueue React-based settings script
 			wp_enqueue_script(
 				'lmat_setup',
-				plugins_url('Admin/Assets/frontend/setup/setup.js', LINGUATOR_ROOT_FILE),
+				plugins_url('admin/assets/frontend/setup/setup.js', LINGUATOR_ROOT_FILE),
 				$asset['dependencies'],
 				$asset['version'],
 				true
@@ -368,7 +368,7 @@ class LMAT_Wizard
 				'lmat_setup',
 				'lmat_setup_flag_data',
 				[
-					'flagsUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/Assets/flags/',
+					'flagsUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/assets/flags/',
 					'nonce' => wp_create_nonce('wp_rest'),
 					'restUrl' => rest_url('lmat/v1/'),
 				]
@@ -376,7 +376,7 @@ class LMAT_Wizard
 			// Enqueue styles
 			wp_enqueue_style(
 				'lmat_setup',
-				plugins_url('Admin/Assets/css/build/main.css', LINGUATOR_ROOT_FILE),
+				plugins_url('admin/assets/css/build/main.css', LINGUATOR_ROOT_FILE),
 				array(),
 				LINGUATOR_VERSION
 			);

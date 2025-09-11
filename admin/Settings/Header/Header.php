@@ -118,7 +118,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			echo '<div id="lmat-settings-header-tabs">';
 			echo '<div class="lmat-settings-header-tab-container">';
 			echo '<div class="lmat-settings-header-logo">';
-			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'Assets/logo/linguator_icon.svg' ) . '" alt="Linguator" />';
+			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'assets/logo/linguator_icon.svg' ) . '" alt="Linguator" />';
 			echo '</div>';
 			echo '<div class="lmat-settings-header-tab-list">';
 			foreach ( $this->tabs() as $key => $value ) {
@@ -142,7 +142,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		 * @return void
 		 */
 		public function header_assets() {
-			wp_enqueue_style( 'lmat-settings-header', plugins_url( 'Admin/Assets/css/settings-header.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+			wp_enqueue_style( 'lmat-settings-header', plugins_url( 'admin/assets/css/settings-header.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		}
 	}
 

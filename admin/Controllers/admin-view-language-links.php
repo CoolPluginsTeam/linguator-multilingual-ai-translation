@@ -27,8 +27,8 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 					return;
 				}
 
-				wp_enqueue_style( 'lmat-admin-view-language-links', plugins_url( 'Admin/Assets/css/admin-view-language-links.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
-				wp_enqueue_script( 'lmat-admin-view-language-links', plugins_url( 'Admin/Assets/js/admin-view-language-links.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+				wp_enqueue_style( 'lmat-admin-view-language-links', plugins_url( 'admin/assets/css/admin-view-language-links.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+				wp_enqueue_script( 'lmat-admin-view-language-links', plugins_url( 'admin/assets/js/admin-view-language-links.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 
 			}
         }

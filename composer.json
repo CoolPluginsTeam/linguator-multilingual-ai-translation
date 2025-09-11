@@ -11,26 +11,26 @@
     },
     "autoload": {
         "psr-4": {
-            "Linguator\\Admin\\": "Admin/",
-            "Linguator\\Frontend\\": "Frontend/",
-            "Linguator\\Includes\\": "Includes/",
-            "Linguator\\Settings\\": "Admin/Settings/",
-            "Linguator\\Modules\\": "Modules/",
-            "Linguator\\Integrations\\": "Integrations/",
-            "Linguator\\Install\\": "Install/"
+            "Linguator\\Admin\\": "admin/",
+            "Linguator\\Frontend\\": "frontend/",
+            "Linguator\\includes\\": "includes/",
+            "Linguator\\Settings\\": "admin/settings/",
+            "Linguator\\Modules\\": "modules/",
+            "Linguator\\Integrations\\": "integrations/",
+            "Linguator\\Install\\": "install/"
         },
         "classmap": [
-            "Includes/",
-            "Admin/",
-            "Frontend/",
-            "Integrations/",
-            "Modules/",
-            "Admin/Settings/",
-            "Install/"
+            "includes/",
+            "admin/",
+            "frontend/",
+            "ignore/",
+            "modules/",
+            "admin/settings/",
+            "install/"
         ],
         "files": [
-            "Includes/Helpers/functions.php",
-            "Includes/API/LanguageAPI.php"
+            "includes/helpers/functions.php",
+            "includes/api/language-api.php"
         ]
     },
     "autoload-dev": {

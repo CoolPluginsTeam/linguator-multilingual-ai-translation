@@ -271,8 +271,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		}
 		
 
-		wp_enqueue_script('lmat-loco-redirect-script', plugins_url('Admin/Assets/js/loco-redirect-script.js', LINGUATOR_ROOT_FILE), array('jquery'), LINGUATOR_VERSION, true);
-		wp_localize_script('lmat-loco-redirect-script', 'lmat_loco_redirect_script', array('admin_url' => esc_url(admin_url('admin.php?page=lmat_settings')), 'loco_iframe_page_url' => array("url" => $plugin_info_url, "title" => esc_js( __( 'Plugin: Loco Translate', 'linguator-multilingual-ai-translation' ) )), 'loco_install' => $loco_install));
+		wp_enqueue_script('lmat-loco-redirect-script', plugins_url('admin/assets/js/loco-redirect-script.js', LINGUATOR_ROOT_FILE), array('jquery'), LINGUATOR_VERSION, true);
+		wp_localize_script('lmat-loco-redirect-script', 'lmat_loco_redirect_script', array('admin_' => esc_url(admin_url('admin.php?page=lmat_settings')), 'loco_iframe_page_url' => array("url" => $plugin_info_url, "title" => esc_js( __( 'Plugin: Loco Translate', 'linguator-multilingual-ai-translation' ) )), 'loco_install' => $loco_install));
 	}
 
 	/**
@@ -493,7 +493,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		$modules    = $this->modules;
 		$active_tab = $this->active_tab;
 		$header = $this->header;
-		include __DIR__ . '/../Views/view-languages.php';
+		include __DIR__ . '/../views/view-languages.php';
 	}
 
 	/**
@@ -568,7 +568,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab)) {
 			// Enqueue React-based settings for settings tabs
-			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'Admin/Assets/frontend/settings/settings.asset.php';
+			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'admin/assets/frontend/settings/settings.asset.php';
 
 			if ( ! file_exists( $asset_file ) ) {
 				return;
@@ -582,7 +582,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			// Enqueue React-based settings script
 			wp_enqueue_script(
 				'lmat_settings',
-				plugins_url( 'Admin/Assets/frontend/settings/settings.js', LINGUATOR_ROOT_FILE ),
+				plugins_url( 'admin/assets/frontend/settings/settings.js', LINGUATOR_ROOT_FILE ),
 				$asset['dependencies'],
 				$asset['version'],
 				true
@@ -611,7 +611,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				'lmat_settings',
 				'lmat_settings_logo_data',
 				[
-					'logoUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/Assets/logo/',
+					'logoUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/assets/logo/',
 					'nonce' => wp_create_nonce('wp_rest'),
 					'restUrl' => rest_url('lmat/v1/'),
 				]
@@ -620,7 +620,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			// Enqueue styles
 			wp_enqueue_style(
 				'lmat_settings',
-				plugins_url( 'Admin/Assets/css/build/main.css', LINGUATOR_ROOT_FILE ),
+				plugins_url( 'admin/assets/css/build/main.css', LINGUATOR_ROOT_FILE ),
 				array(),
 				LINGUATOR_VERSION
 			);
@@ -632,10 +632,10 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			// Original scripts for lang and strings tabs
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-			wp_enqueue_script( 'lmat_settings', plugins_url( 'Admin/Assets/js/build/settings' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery', 'wp-ajax-response', 'postbox', 'jquery-ui-selectmenu', 'wp-hooks' ), LINGUATOR_VERSION, true );
+			wp_enqueue_script( 'lmat_settings', plugins_url( 'admin/assets/js/build/settings' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery', 'wp-ajax-response', 'postbox', 'jquery-ui-selectmenu', 'wp-hooks' ), LINGUATOR_VERSION, true );
 			wp_localize_script( 'lmat_settings', 'lmat_settings', array( 'dismiss_notice' => esc_html__( 'Dismiss this notice.', 'linguator-multilingual-ai-translation' ) ) );
 
-			wp_enqueue_style( 'lmat_selectmenu', plugins_url( 'Admin/Assets/css/build/selectmenu' . $suffix . '.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+			wp_enqueue_style( 'lmat_selectmenu', plugins_url( 'admin/assets/css/build/selectmenu' . $suffix . '.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		}
 
 		$this->loco_page_assets();

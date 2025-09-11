@@ -310,7 +310,7 @@ class ClassLoader
     }
 
     /**
-     * Turns on searching the include path for class files.
+     * Turns on searching the  path for class files.
      *
      * @param bool $useIncludePath
      *
@@ -547,7 +547,7 @@ class ClassLoader
             }
         }
 
-        // PSR-0 include paths.
+        // PSR-0  paths.
         if ($this->useIncludePath && $file = stream_resolve_include_path($logicalPathPsr0)) {
             return $file;
         }

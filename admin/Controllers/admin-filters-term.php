@@ -189,7 +189,7 @@ class LMAT_Admin_Filters_Term {
 		// Adds translation fields
 		echo '<div id="term-translations" class="form-field">';
 		if ( $lang ) {
-			include __DIR__ . '/../Views/view-translations-term.php';
+			include __DIR__ . '/../views/view-translations-term.php';
 		}
 		echo '</div>' . "\n";
 	}
@@ -286,7 +286,7 @@ class LMAT_Admin_Filters_Term {
 		);
 
 		echo '<tr id="term-translations" class="form-field">';
-		include __DIR__ . '/../Views/view-translations-term.php';
+		include __DIR__ . '/../views/view-translations-term.php';
 		echo '</tr>' . "\n";
 	}
 
@@ -522,7 +522,7 @@ class LMAT_Admin_Filters_Term {
 		}
 
 		ob_start();
-		include __DIR__ . '/../Views/view-translations-term.php';
+		include __DIR__ . '/../views/view-translations-term.php';
 		$x = new WP_Ajax_Response( array( 'what' => 'translations', 'data' => ob_get_contents() ) );
 		ob_end_clean();
 

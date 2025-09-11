@@ -180,9 +180,9 @@ class LMAT_Admin_Classic_Editor {
 		echo '<div id="post-translations" class="translations">';
 		if ( $lang ) {
 			if ( 'attachment' === $post_type ) {
-				include __DIR__ . '/../Views/view-translations-media.php';
+				include __DIR__ . '/../views/view-translations-media.php';
 			} else {
-				include __DIR__ . '/../Views/view-translations-post.php';
+				include __DIR__ . '/../views/view-translations-post.php';
 			}
 		}
 		echo '</div>' . "\n";
@@ -226,9 +226,9 @@ class LMAT_Admin_Classic_Editor {
 
 		ob_start();
 		if ( 'attachment' === $post_type ) {
-			include __DIR__ . '/../Views/view-translations-media.php';
+			include __DIR__ . '/../views/view-translations-media.php';
 		} else {
-			include __DIR__ . '/../Views/view-translations-post.php';
+			include __DIR__ . '/../views/view-translations-post.php';
 		}
 		$x = new WP_Ajax_Response( array( 'what' => 'translations', 'data' => ob_get_contents() ) );
 		ob_end_clean();

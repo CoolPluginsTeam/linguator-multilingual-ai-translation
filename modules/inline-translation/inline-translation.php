@@ -74,7 +74,7 @@ class LMAT_Inline_Translation {
 			$current_language_code = '';
 		}
 
-		$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/' . sanitize_file_name( $type ) . '-inline-translate/index.asset.php';
+		$editor_script_asset = include LINGUATOR_DIR . '/admin/assets/' . sanitize_file_name( $type ) . '-inline-translate/index.asset.php';
 
 		if(!is_array($editor_script_asset)) {
 			$editor_script_asset = array(
@@ -87,7 +87,7 @@ class LMAT_Inline_Translation {
 		
 		$extra_dependencies[] = 'lmat-inline-google-api';
 		
-		wp_register_script( 'lmat-' . sanitize_file_name( $type ) . '-inline-translation', plugins_url( '/Admin/Assets/' . sanitize_file_name( $type ) . '-inline-translate/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], $extra_dependencies ), $editor_script_asset['version'], true );
+		wp_register_script( 'lmat-' . sanitize_file_name( $type ) . '-inline-translation', plugins_url( '/admin/assets/' . sanitize_file_name( $type ) . '-inline-translate/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], $extra_dependencies ), $editor_script_asset['version'], true );
 
 		wp_enqueue_script( 'lmat-inline-google-api' );
 		wp_enqueue_script( 'lmat-' . sanitize_file_name( $type ) . '-inline-translation' );

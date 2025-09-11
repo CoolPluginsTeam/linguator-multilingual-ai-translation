@@ -115,7 +115,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				}
 			}
 
-			$editor_script_asset = include LINGUATOR_DIR . '/Admin/Assets/bulk-translate/index.asset.php';
+			$editor_script_asset = include LINGUATOR_DIR . '/admin/assets/bulk-translate/index.asset.php';
 
 			if ( ! is_array( $editor_script_asset ) ) {
 				$editor_script_asset = array(
@@ -128,9 +128,9 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			$css_file = $rtl ? 'index-rtl.css' : 'index.css';
 
 			wp_enqueue_script( 'lmat-google-api', 'https://translate.google.com/translate_a/element.js', '', LINGUATOR_VERSION, true );
-			wp_enqueue_script( 'lmat-bulk-translate', plugins_url( 'Admin/Assets/bulk-translate/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
+			wp_enqueue_script( 'lmat-bulk-translate', plugins_url( 'admin/assets/bulk-translate/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
 
-			wp_enqueue_style( 'lmat-bulk-translate', plugins_url( 'Admin/Assets/bulk-translate/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
+			wp_enqueue_style( 'lmat-bulk-translate', plugins_url( 'admin/assets/bulk-translate/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
 
 			$languages = LMAT()->model->get_languages_list();
 
