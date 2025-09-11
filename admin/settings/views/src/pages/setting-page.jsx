@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import MainComponent from '../components/MainComponent'
+import MainComponent from '../components/main-component'
 import { Toaster } from 'sonner'
 
 const getCurrentTab=()=>{

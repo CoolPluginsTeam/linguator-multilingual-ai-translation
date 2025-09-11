@@ -1,14 +1,14 @@
 //This page is the main ruter from where which tab->Components is mapped
 import React from 'react'
-import General from './General'
-import Sidebar from './Sidebar'
+import General from './general'
+import Sidebar from './sidebar'
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { LoaderPinwheel } from "lucide-react"
 import { Loader } from "@bsf/force-ui"
 import { sprintf,__ } from '@wordpress/i18n'
-import TranslationConfig from './TranslationConfig'
-import Switcher from './Switcher'
+import TranslationConfig from './translation-config'
+import Switcher from './switcher'
 //Component mapper for settings page
 const ComponentSelector = ({currentPage,data, setData})=>{
   if(currentPage === 'general') return <General data={data} setData={setData} />

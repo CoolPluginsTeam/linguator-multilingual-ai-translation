@@ -14449,7 +14449,7 @@ const Share2 = createLucideIcon_createLucideIcon("share-2", share_2_iconNode);
 
 //# sourceMappingURL=share-2.js.map
 
-;// ./Admin/Settings/Views/src/components/General.jsx
+;// ./Admin/Settings/Views/src/components/general.jsx
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -15336,9 +15336,9 @@ var General = function General(_ref) {
     variant: "primary"
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation'))))));
 };
-/* harmony default export */ const components_General = (General);
-;// ./Admin/Settings/Views/src/components/Sidebar.jsx
-function Sidebar_extends() { return Sidebar_extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, Sidebar_extends.apply(null, arguments); }
+/* harmony default export */ const general = (General);
+;// ./Admin/Settings/Views/src/components/sidebar.jsx
+function sidebar_extends() { return sidebar_extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, sidebar_extends.apply(null, arguments); }
 
 
 var Sidebar = function Sidebar() {
@@ -15425,7 +15425,7 @@ var Sidebar = function Sidebar() {
     className: "flex"
   }, /*#__PURE__*/React.createElement("div", {
     className: "w-[70%]"
-  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Loco Addon to translate plugins and themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", Sidebar_extends({
+  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Loco Addon to translate plugins and themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", sidebar_extends({
     href: buttonConfig.href,
     target: buttonConfig.target,
     className: buttonConfig.className
@@ -15442,7 +15442,7 @@ var Sidebar = function Sidebar() {
     alt: "Loco translate logo"
   }))), /*#__PURE__*/React.createElement("div", null))) : null)));
 };
-/* harmony default export */ const components_Sidebar = (Sidebar);
+/* harmony default export */ const sidebar = (Sidebar);
 ;// ./node_modules/lucide-react/dist/esm/icons/loader-pinwheel.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -15536,23 +15536,23 @@ const Languages = createLucideIcon_createLucideIcon("languages", languages_iconN
 
 //# sourceMappingURL=languages.js.map
 
-;// ./Admin/Settings/Views/src/components/TranslationConfig.jsx
-function TranslationConfig_typeof(o) { "@babel/helpers - typeof"; return TranslationConfig_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, TranslationConfig_typeof(o); }
-function TranslationConfig_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return TranslationConfig_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (TranslationConfig_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, TranslationConfig_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, TranslationConfig_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), TranslationConfig_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", TranslationConfig_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), TranslationConfig_regeneratorDefine2(u), TranslationConfig_regeneratorDefine2(u, o, "Generator"), TranslationConfig_regeneratorDefine2(u, n, function () { return this; }), TranslationConfig_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (TranslationConfig_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function TranslationConfig_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } TranslationConfig_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { TranslationConfig_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, TranslationConfig_regeneratorDefine2(e, r, n, t); }
-function TranslationConfig_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function TranslationConfig_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? TranslationConfig_ownKeys(Object(t), !0).forEach(function (r) { TranslationConfig_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : TranslationConfig_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function TranslationConfig_defineProperty(e, r, t) { return (r = TranslationConfig_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function TranslationConfig_toPropertyKey(t) { var i = TranslationConfig_toPrimitive(t, "string"); return "symbol" == TranslationConfig_typeof(i) ? i : i + ""; }
-function TranslationConfig_toPrimitive(t, r) { if ("object" != TranslationConfig_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != TranslationConfig_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function TranslationConfig_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function TranslationConfig_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { TranslationConfig_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { TranslationConfig_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function TranslationConfig_slicedToArray(r, e) { return TranslationConfig_arrayWithHoles(r) || TranslationConfig_iterableToArrayLimit(r, e) || TranslationConfig_unsupportedIterableToArray(r, e) || TranslationConfig_nonIterableRest(); }
-function TranslationConfig_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function TranslationConfig_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return TranslationConfig_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? TranslationConfig_arrayLikeToArray(r, a) : void 0; } }
-function TranslationConfig_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function TranslationConfig_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function TranslationConfig_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+;// ./Admin/Settings/Views/src/components/translation-config.jsx
+function translation_config_typeof(o) { "@babel/helpers - typeof"; return translation_config_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, translation_config_typeof(o); }
+function translation_config_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return translation_config_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (translation_config_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), translation_config_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", translation_config_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), translation_config_regeneratorDefine2(u), translation_config_regeneratorDefine2(u, o, "Generator"), translation_config_regeneratorDefine2(u, n, function () { return this; }), translation_config_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (translation_config_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function translation_config_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } translation_config_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { translation_config_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, translation_config_regeneratorDefine2(e, r, n, t); }
+function translation_config_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function translation_config_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? translation_config_ownKeys(Object(t), !0).forEach(function (r) { translation_config_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : translation_config_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function translation_config_defineProperty(e, r, t) { return (r = translation_config_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function translation_config_toPropertyKey(t) { var i = translation_config_toPrimitive(t, "string"); return "symbol" == translation_config_typeof(i) ? i : i + ""; }
+function translation_config_toPrimitive(t, r) { if ("object" != translation_config_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != translation_config_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function translation_config_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function translation_config_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { translation_config_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { translation_config_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function translation_config_slicedToArray(r, e) { return translation_config_arrayWithHoles(r) || translation_config_iterableToArrayLimit(r, e) || translation_config_unsupportedIterableToArray(r, e) || translation_config_nonIterableRest(); }
+function translation_config_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function translation_config_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return translation_config_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? translation_config_arrayLikeToArray(r, a) : void 0; } }
+function translation_config_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function translation_config_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function translation_config_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
@@ -15562,15 +15562,15 @@ function TranslationConfig_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 var ChromeLocalAINotice = function ChromeLocalAINotice() {
   var _React$useState = external_React_default().useState(false),
-    _React$useState2 = TranslationConfig_slicedToArray(_React$useState, 2),
+    _React$useState2 = translation_config_slicedToArray(_React$useState, 2),
     showBrowserNotice = _React$useState2[0],
     setShowBrowserNotice = _React$useState2[1];
   var _React$useState3 = external_React_default().useState(false),
-    _React$useState4 = TranslationConfig_slicedToArray(_React$useState3, 2),
+    _React$useState4 = translation_config_slicedToArray(_React$useState3, 2),
     showSecureNotice = _React$useState4[0],
     setShowSecureNotice = _React$useState4[1];
   var _React$useState5 = external_React_default().useState(false),
-    _React$useState6 = TranslationConfig_slicedToArray(_React$useState5, 2),
+    _React$useState6 = translation_config_slicedToArray(_React$useState5, 2),
     showApiNotice = _React$useState6[0],
     setShowApiNotice = _React$useState6[1];
   external_React_default().useEffect(function () {
@@ -15627,22 +15627,22 @@ var TranslationConfig = function TranslationConfig(_ref) {
   var aiTranslation = data === null || data === void 0 ? void 0 : data.ai_translation_configuration; //store the media option
   var provider = aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.provider;
   var _useState = (0,external_React_namespaceObject.useState)(provider === null || provider === void 0 ? void 0 : provider.google),
-    _useState2 = TranslationConfig_slicedToArray(_useState, 2),
+    _useState2 = translation_config_slicedToArray(_useState, 2),
     googleMachineTranslation = _useState2[0],
     setGoogleMachineTranslation = _useState2[1];
   var _useState3 = (0,external_React_namespaceObject.useState)(provider === null || provider === void 0 ? void 0 : provider.chrome_local_ai),
-    _useState4 = TranslationConfig_slicedToArray(_useState3, 2),
+    _useState4 = translation_config_slicedToArray(_useState3, 2),
     chromeLocalAITranslation = _useState4[0],
     setChromeLocalAITranslation = _useState4[1];
   var _useState5 = (0,external_React_namespaceObject.useState)({
       googleMachineTranslation: googleMachineTranslation,
       chromeLocalAITranslation: chromeLocalAITranslation
     }),
-    _useState6 = TranslationConfig_slicedToArray(_useState5, 2),
+    _useState6 = translation_config_slicedToArray(_useState5, 2),
     lastUpdatedValue = _useState6[0],
     setLastUpdatedValue = _useState6[1];
   var _useState7 = (0,external_React_namespaceObject.useState)(true),
-    _useState8 = TranslationConfig_slicedToArray(_useState7, 2),
+    _useState8 = translation_config_slicedToArray(_useState7, 2),
     handleButtonDisabled = _useState8[0],
     setHandleButtonDisabled = _useState8[1];
   (0,external_React_namespaceObject.useEffect)(function () {
@@ -15674,9 +15674,9 @@ var TranslationConfig = function TranslationConfig(_ref) {
     return _SaveSettings.apply(this, arguments);
   }
   function _SaveSettings() {
-    _SaveSettings = TranslationConfig_asyncToGenerator(/*#__PURE__*/TranslationConfig_regenerator().m(function _callee() {
+    _SaveSettings = translation_config_asyncToGenerator(/*#__PURE__*/translation_config_regenerator().m(function _callee() {
       var apiBody, response;
-      return TranslationConfig_regenerator().w(function (_context) {
+      return translation_config_regenerator().w(function (_context) {
         while (1) switch (_context.n) {
           case 0:
             try {
@@ -15694,7 +15694,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
               });
               if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation)) {
                 setData(function (prev) {
-                  return TranslationConfig_objectSpread(TranslationConfig_objectSpread({}, prev), apiBody);
+                  return translation_config_objectSpread(translation_config_objectSpread({}, prev), apiBody);
                 });
               }
               //API Call
@@ -15708,7 +15708,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
                 body: JSON.stringify(apiBody)
               }).then(function (response) {
                 setData(function (prev) {
-                  return TranslationConfig_objectSpread(TranslationConfig_objectSpread({}, prev), response);
+                  return translation_config_objectSpread(translation_config_objectSpread({}, prev), response);
                 });
               }).catch(function (error) {
                 // Handle general API errors
@@ -15837,7 +15837,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     variant: "primary"
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation')))));
 };
-/* harmony default export */ const components_TranslationConfig = (TranslationConfig);
+/* harmony default export */ const translation_config = (TranslationConfig);
 ;// ./node_modules/lucide-react/dist/esm/icons/settings.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -15863,23 +15863,23 @@ const Settings = createLucideIcon_createLucideIcon("settings", settings_iconNode
 
 //# sourceMappingURL=settings.js.map
 
-;// ./Admin/Settings/Views/src/components/Switcher.jsx
-function Switcher_typeof(o) { "@babel/helpers - typeof"; return Switcher_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, Switcher_typeof(o); }
-function Switcher_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function Switcher_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? Switcher_ownKeys(Object(t), !0).forEach(function (r) { Switcher_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : Switcher_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function Switcher_defineProperty(e, r, t) { return (r = Switcher_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function Switcher_toPropertyKey(t) { var i = Switcher_toPrimitive(t, "string"); return "symbol" == Switcher_typeof(i) ? i : i + ""; }
-function Switcher_toPrimitive(t, r) { if ("object" != Switcher_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != Switcher_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function Switcher_toConsumableArray(r) { return Switcher_arrayWithoutHoles(r) || Switcher_iterableToArray(r) || Switcher_unsupportedIterableToArray(r) || Switcher_nonIterableSpread(); }
-function Switcher_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function Switcher_iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function Switcher_arrayWithoutHoles(r) { if (Array.isArray(r)) return Switcher_arrayLikeToArray(r); }
-function Switcher_slicedToArray(r, e) { return Switcher_arrayWithHoles(r) || Switcher_iterableToArrayLimit(r, e) || Switcher_unsupportedIterableToArray(r, e) || Switcher_nonIterableRest(); }
-function Switcher_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function Switcher_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return Switcher_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? Switcher_arrayLikeToArray(r, a) : void 0; } }
-function Switcher_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function Switcher_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function Switcher_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+;// ./Admin/Settings/Views/src/components/switcher.jsx
+function switcher_typeof(o) { "@babel/helpers - typeof"; return switcher_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, switcher_typeof(o); }
+function switcher_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function switcher_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? switcher_ownKeys(Object(t), !0).forEach(function (r) { switcher_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : switcher_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function switcher_defineProperty(e, r, t) { return (r = switcher_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function switcher_toPropertyKey(t) { var i = switcher_toPrimitive(t, "string"); return "symbol" == switcher_typeof(i) ? i : i + ""; }
+function switcher_toPrimitive(t, r) { if ("object" != switcher_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != switcher_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function switcher_toConsumableArray(r) { return switcher_arrayWithoutHoles(r) || switcher_iterableToArray(r) || switcher_unsupportedIterableToArray(r) || switcher_nonIterableSpread(); }
+function switcher_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function switcher_iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function switcher_arrayWithoutHoles(r) { if (Array.isArray(r)) return switcher_arrayLikeToArray(r); }
+function switcher_slicedToArray(r, e) { return switcher_arrayWithHoles(r) || switcher_iterableToArrayLimit(r, e) || switcher_unsupportedIterableToArray(r, e) || switcher_nonIterableRest(); }
+function switcher_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function switcher_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return switcher_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? switcher_arrayLikeToArray(r, a) : void 0; } }
+function switcher_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function switcher_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function switcher_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
@@ -15892,18 +15892,18 @@ var Switcher = function Switcher(_ref) {
   var data = _ref.data,
     setData = _ref.setData;
   var _React$useState = external_React_default().useState(data.lmat_language_switcher_options || ['default']),
-    _React$useState2 = Switcher_slicedToArray(_React$useState, 2),
+    _React$useState2 = switcher_slicedToArray(_React$useState, 2),
     selectedLanguageSwitchers = _React$useState2[0],
     setSelectedLanguageSwitchers = _React$useState2[1];
   var _React$useState3 = external_React_default().useState(true),
-    _React$useState4 = Switcher_slicedToArray(_React$useState3, 2),
+    _React$useState4 = switcher_slicedToArray(_React$useState3, 2),
     handleButtonDisabled = _React$useState4[0],
     setHandleButtonDisabled = _React$useState4[1];
   var arraysEqualIgnoreOrder = function arraysEqualIgnoreOrder(arr1, arr2) {
     if (arr1.length !== arr2.length) return false;
     var set1 = new Set(arr1);
     var set2 = new Set(arr2);
-    return set1.size === set2.size && Switcher_toConsumableArray(set1).every(function (val) {
+    return set1.size === set2.size && switcher_toConsumableArray(set1).every(function (val) {
       return set2.has(val);
     });
   };
@@ -15920,7 +15920,7 @@ var Switcher = function Switcher(_ref) {
           return item !== switcher;
         });
       } else {
-        return [].concat(Switcher_toConsumableArray(prev), [switcher]);
+        return [].concat(switcher_toConsumableArray(prev), [switcher]);
       }
     });
   };
@@ -15939,7 +15939,7 @@ var Switcher = function Switcher(_ref) {
         body: JSON.stringify(apiBody)
       }).then(function (response) {
         setData(function (prev) {
-          return Switcher_objectSpread(Switcher_objectSpread({}, prev), response);
+          return switcher_objectSpread(switcher_objectSpread({}, prev), response);
         });
         setHandleButtonDisabled(true);
       });
@@ -16026,18 +16026,18 @@ var Switcher = function Switcher(_ref) {
     variant: "primary"
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation')))));
 };
-/* harmony default export */ const components_Switcher = (Switcher);
-;// ./Admin/Settings/Views/src/components/MainComponent.jsx
-function MainComponent_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return MainComponent_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (MainComponent_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, MainComponent_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, MainComponent_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), MainComponent_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", MainComponent_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), MainComponent_regeneratorDefine2(u), MainComponent_regeneratorDefine2(u, o, "Generator"), MainComponent_regeneratorDefine2(u, n, function () { return this; }), MainComponent_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (MainComponent_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function MainComponent_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } MainComponent_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { MainComponent_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, MainComponent_regeneratorDefine2(e, r, n, t); }
-function MainComponent_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function MainComponent_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { MainComponent_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { MainComponent_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function MainComponent_slicedToArray(r, e) { return MainComponent_arrayWithHoles(r) || MainComponent_iterableToArrayLimit(r, e) || MainComponent_unsupportedIterableToArray(r, e) || MainComponent_nonIterableRest(); }
-function MainComponent_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function MainComponent_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return MainComponent_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? MainComponent_arrayLikeToArray(r, a) : void 0; } }
-function MainComponent_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function MainComponent_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function MainComponent_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+/* harmony default export */ const switcher = (Switcher);
+;// ./Admin/Settings/Views/src/components/main-component.jsx
+function main_component_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return main_component_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (main_component_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, main_component_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, main_component_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), main_component_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", main_component_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), main_component_regeneratorDefine2(u), main_component_regeneratorDefine2(u, o, "Generator"), main_component_regeneratorDefine2(u, n, function () { return this; }), main_component_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (main_component_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function main_component_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } main_component_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { main_component_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, main_component_regeneratorDefine2(e, r, n, t); }
+function main_component_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function main_component_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { main_component_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { main_component_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function main_component_slicedToArray(r, e) { return main_component_arrayWithHoles(r) || main_component_iterableToArrayLimit(r, e) || main_component_unsupportedIterableToArray(r, e) || main_component_nonIterableRest(); }
+function main_component_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function main_component_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return main_component_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? main_component_arrayLikeToArray(r, a) : void 0; } }
+function main_component_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function main_component_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function main_component_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 //This page is the main ruter from where which tab->Components is mapped
 
 
@@ -16054,15 +16054,15 @@ var ComponentSelector = function ComponentSelector(_ref) {
   var currentPage = _ref.currentPage,
     data = _ref.data,
     setData = _ref.setData;
-  if (currentPage === 'general') return /*#__PURE__*/external_React_default().createElement(components_General, {
+  if (currentPage === 'general') return /*#__PURE__*/external_React_default().createElement(general, {
     data: data,
     setData: setData
   });
-  if (currentPage === 'translation') return /*#__PURE__*/external_React_default().createElement(components_TranslationConfig, {
+  if (currentPage === 'translation') return /*#__PURE__*/external_React_default().createElement(translation_config, {
     data: data,
     setData: setData
   });
-  if (currentPage === 'switcher') return /*#__PURE__*/external_React_default().createElement(components_Switcher, {
+  if (currentPage === 'switcher') return /*#__PURE__*/external_React_default().createElement(switcher, {
     data: data,
     setData: setData
   });
@@ -16070,11 +16070,11 @@ var ComponentSelector = function ComponentSelector(_ref) {
 var MainComponent = function MainComponent(_ref2) {
   var currentPage = _ref2.currentPage;
   var _React$useState = external_React_default().useState({}),
-    _React$useState2 = MainComponent_slicedToArray(_React$useState, 2),
+    _React$useState2 = main_component_slicedToArray(_React$useState, 2),
     data = _React$useState2[0],
     setData = _React$useState2[1]; //General Settings data
   var _React$useState3 = external_React_default().useState(true),
-    _React$useState4 = MainComponent_slicedToArray(_React$useState3, 2),
+    _React$useState4 = main_component_slicedToArray(_React$useState3, 2),
     loading = _React$useState4[0],
     setLoading = _React$useState4[1]; //Loading state tracker
   external_React_default().useEffect(function () {
@@ -16082,9 +16082,9 @@ var MainComponent = function MainComponent(_ref2) {
       return _serverCall.apply(this, arguments);
     }
     function _serverCall() {
-      _serverCall = MainComponent_asyncToGenerator(/*#__PURE__*/MainComponent_regenerator().m(function _callee() {
+      _serverCall = main_component_asyncToGenerator(/*#__PURE__*/main_component_regenerator().m(function _callee() {
         var responseData;
-        return MainComponent_regenerator().w(function (_context) {
+        return main_component_regenerator().w(function (_context) {
           while (1) switch (_context.n) {
             case 0:
               _context.n = 1;
@@ -16130,16 +16130,16 @@ var MainComponent = function MainComponent(_ref2) {
     setData: setData
   }))), /*#__PURE__*/external_React_default().createElement("div", {
     className: "md:w-[25%] mt-4 w-full "
-  }, /*#__PURE__*/external_React_default().createElement(components_Sidebar, null)));
+  }, /*#__PURE__*/external_React_default().createElement(sidebar, null)));
 };
-/* harmony default export */ const components_MainComponent = (MainComponent);
-;// ./Admin/Settings/Views/src/pages/SettingPage.jsx
-function SettingPage_slicedToArray(r, e) { return SettingPage_arrayWithHoles(r) || SettingPage_iterableToArrayLimit(r, e) || SettingPage_unsupportedIterableToArray(r, e) || SettingPage_nonIterableRest(); }
-function SettingPage_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function SettingPage_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return SettingPage_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? SettingPage_arrayLikeToArray(r, a) : void 0; } }
-function SettingPage_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function SettingPage_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function SettingPage_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+/* harmony default export */ const main_component = (MainComponent);
+;// ./Admin/Settings/Views/src/pages/setting-page.jsx
+function setting_page_slicedToArray(r, e) { return setting_page_arrayWithHoles(r) || setting_page_iterableToArrayLimit(r, e) || setting_page_unsupportedIterableToArray(r, e) || setting_page_nonIterableRest(); }
+function setting_page_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function setting_page_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return setting_page_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? setting_page_arrayLikeToArray(r, a) : void 0; } }
+function setting_page_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function setting_page_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function setting_page_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
@@ -16153,7 +16153,7 @@ var getCurrentTab = function getCurrentTab() {
 };
 var SettingPage = function SettingPage() {
   var _React$useState = external_React_default().useState(getCurrentTab()),
-    _React$useState2 = SettingPage_slicedToArray(_React$useState, 2),
+    _React$useState2 = setting_page_slicedToArray(_React$useState, 2),
     currentPage = _React$useState2[0],
     setCurrentPage = _React$useState2[1];
   var updateTabParameter = function updateTabParameter(newValue) {
@@ -16197,11 +16197,11 @@ var SettingPage = function SettingPage() {
   return /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement(Toaster, {
     richColors: true,
     position: "top-right"
-  }), /*#__PURE__*/external_React_default().createElement(components_MainComponent, {
+  }), /*#__PURE__*/external_React_default().createElement(main_component, {
     currentPage: currentPage
   }));
 };
-/* harmony default export */ const pages_SettingPage = (SettingPage);
+/* harmony default export */ const setting_page = (SettingPage);
 ;// external ["wp","domReady"]
 const external_wp_domReady_namespaceObject = window["wp"]["domReady"];
 // EXTERNAL MODULE: ./node_modules/react-dom/client.js
@@ -16213,7 +16213,7 @@ var client = __webpack_require__(338);
 
 //Settings Page Component
 var SettingsPage = function SettingsPage() {
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(pages_SettingPage, null));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(setting_page, null));
 };
 external_wp_domReady_namespaceObject(function () {
   var element = document.getElementById('lmat-settings');

@@ -1,4 +1,4 @@
-import SettingPage from "./pages/SettingPage.jsx";
+import SettingPage from "./pages/setting-page.jsx";
 import domReady from '@wordpress/dom-ready';
 import { createRoot } from 'react-dom/client';
 
