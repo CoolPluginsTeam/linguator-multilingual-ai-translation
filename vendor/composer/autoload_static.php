@@ -15,6 +15,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'L' => 
         array (
             'Linguator\\includes\\' => 19,
+            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -28,6 +29,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
+        ),
+        'Linguator\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
         ),
         'Linguator\\Settings\\' => 
         array (
@@ -230,8 +235,8 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\REST\\V1\\Settings' => __DIR__ . '/../..' . '/modules/rest/v1/settings.php',
         'Linguator\\Modules\\Wizard\\LMAT_Wizard' => __DIR__ . '/../..' . '/modules/wizard/wizard.php',
         'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => __DIR__ . '/../..' . '/modules/sync/settings-sync.php',
-        'Linguator\\Settings\\Controllers\\LMAT_Settings' => __DIR__ . '/../..' . '/admin/settings/controller/settings.php',
-        'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => __DIR__ . '/../..' . '/admin/settings/controller/settings-module.php',
+        'Linguator\\Settings\\Controllers\\LMAT_Settings' => __DIR__ . '/../..' . '/admin/settings/controllers/settings.php',
+        'Linguator\\Settings\\Controllers\\LMAT_Settings_Module' => __DIR__ . '/../..' . '/admin/settings/controllers/settings-module.php',
         'Linguator\\Settings\\Header\\Header' => __DIR__ . '/../..' . '/admin/settings/header/header.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => __DIR__ . '/../..' . '/admin/settings/tables/table-languages.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_String' => __DIR__ . '/../..' . '/admin/settings/tables/table-string.php',
