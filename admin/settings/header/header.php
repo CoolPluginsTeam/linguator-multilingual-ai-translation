@@ -83,7 +83,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			$tabs = array(
 				'general'     => array( 'title' => __( 'General', 'linguator-multilingual-ai-translation' ) ),
 				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
-				'translation' => array( 'title' => __( 'Translation', 'linguator-multilingual-ai-translation' ) ),
+				'translation' => array( 'title' => __( 'AI Translation', 'linguator-multilingual-ai-translation' ) ),
 				'switcher'    => array( 'title' => __( 'Switcher', 'linguator-multilingual-ai-translation' ) ),
 			);
 
