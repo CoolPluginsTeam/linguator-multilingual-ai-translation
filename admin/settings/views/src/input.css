@@ -9,6 +9,14 @@ body{
     font-family: "Poppins", sans-serif;
     min-height: 100vh;
 }
+
+.wrap{
+    margin: 0;
+}
+
+#wpcontent{
+    padding: 0;
+}
 #lmat-setup {
     min-width: 100%;
     min-height: 100vh;

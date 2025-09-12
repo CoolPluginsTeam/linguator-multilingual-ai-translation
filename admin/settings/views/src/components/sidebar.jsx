@@ -40,7 +40,7 @@ const Sidebar = () => {
   return (
     <>
       <div className='w-full'>
-        <div className='w-full rounded-lg'>
+        <div className='w-full flex flex-col gap-4 rounded-lg'>
           <Container className='flex flex-col p-6  bg-white border border-gray-200 rounded-lg shadow-sm'>
             <Container.Item>
               <h2 className='text-lg font-semibold text-gray-900 mb-2'>{__('Auto Translation Status', 'linguator-multilingual-ai-translation')}</h2>
@@ -70,7 +70,7 @@ const Sidebar = () => {
           {
             locoaiStatus.status !== 'active' ? (
 
-              <div className=' p-6'>
+              <div className=' p-6 bg-white border border-gray-200 rounded-lg shadow-sm'>
                 <h2>{__('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')}</h2>
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1" />
                 <Container.Item className='flex'>

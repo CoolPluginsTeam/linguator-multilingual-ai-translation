@@ -41,7 +41,7 @@ const MainComponent = ({ currentPage }) => {
   }, [])
 
   return (
-    <div className='md:flex gap-8'>
+    <div className='md:flex gap-8 px-8 mt-8'>
       <div className='md:w-[75%]'>
         {
           loading ?
@@ -60,7 +60,7 @@ const MainComponent = ({ currentPage }) => {
         }
 
       </div>
-      <div className='md:w-[25%] mt-4 w-full '>
+      <div className='md:w-[25%]  w-full '>
         <Sidebar />
       </div>
     </div>

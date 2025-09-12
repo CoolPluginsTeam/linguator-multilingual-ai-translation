@@ -534,6 +534,10 @@
   margin-bottom: 1.25rem;
 }
 
+.lmat-styles .mb-6{
+  margin-bottom: 1.5rem;
+}
+
 .lmat-styles .me-3{
   margin-inline-end: 0.75rem;
 }
@@ -622,12 +626,12 @@
   margin-top: 0.625rem;
 }
 
-.lmat-styles .mt-4{
-  margin-top: 1rem;
-}
-
 .lmat-styles .mt-5{
   margin-top: 1.25rem;
+}
+
+.lmat-styles .mt-8{
+  margin-top: 2rem;
 }
 
 .lmat-styles .mt-\[2px\]{
@@ -760,6 +764,10 @@
 
 .lmat-styles .h-2\.5{
   height: 0.625rem;
+}
+
+.lmat-styles .h-20{
+  height: 5rem;
 }
 
 .lmat-styles .h-3{
@@ -930,6 +938,10 @@
 
 .lmat-styles .w-2\.5{
   width: 0.625rem;
+}
+
+.lmat-styles .w-20{
+  width: 5rem;
 }
 
 .lmat-styles .w-3{
@@ -2274,6 +2286,11 @@
   padding-right: 1.375rem;
 }
 
+.lmat-styles .px-8{
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .lmat-styles .py-0\.5{
   padding-top: 0.125rem;
   padding-bottom: 0.125rem;
@@ -3124,6 +3141,14 @@ body{
   background-color: #F3F4F6;
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
+}
+
+.wrap{
+  margin: 0;
+}
+
+#wpcontent{
+  padding: 0;
 }
 
 #lmat-setup {

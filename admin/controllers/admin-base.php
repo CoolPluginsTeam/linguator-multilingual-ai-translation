@@ -120,6 +120,21 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		// We must not call user info before WordPress defines user roles in wp-settings.php
 		add_action( 'setup_theme', array( $this, 'init_user' ) );
 		add_filter( 'request', array( $this, 'request' ) );
+		add_action('admin_head', function () {
+			echo '<style>
+				#screen-meta-links {
+					position: relative;
+					float: none;
+					margin-top: 15px;
+					display: none;
+				}
+				#screen-options-link-wrap {
+					float: none !important;
+					margin: 10px 0;
+					display: inline-block;
+				}
+			</style>';
+		});
 
 		// Adds the languages in admin bar
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ), 100 ); // 100 determines the position

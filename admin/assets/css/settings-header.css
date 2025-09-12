@@ -1,6 +1,6 @@
-body.toplevel_page_lmat #lmat-settings-header{
+/* body.toplevel_page_lmat #lmat-settings-header{
     margin-block: 3rem;
-}
+} */
 
 .lmat-settings-header-tab-container{
     display: flex;
@@ -10,9 +10,24 @@ body.toplevel_page_lmat #lmat-settings-header{
     border-radius: 7px;
     box-shadow: 0 0 transparent, 0 0 transparent, 0 1px 2px 0 #0000000d;
     padding-inline: 1.8rem;
-    margin-block: 1rem;
+    margin-bottom: 1rem;
     width: 100%;
     box-sizing: border-box;
+}
+.wrap{
+    margin: 0;
+}
+
+#col-left{
+    padding-left: 2rem;
+    width: 32%;
+}
+#col-right{
+    padding-right: 2rem;
+    width: 62%;
+}
+#wpcontent{
+    padding: 0;
 }
 
 .lmat-settings-header-logo{

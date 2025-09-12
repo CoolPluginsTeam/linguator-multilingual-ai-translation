@@ -315,7 +315,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		}
 
 		public function get_block_parse_rules() {
-			$path_url = plugins_url( '/Modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
+			$path_url = plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
 			$response = wp_remote_get(
 				esc_url_raw( $path_url ),
 				array(

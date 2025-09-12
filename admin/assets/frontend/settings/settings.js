@@ -15382,7 +15382,7 @@ var Sidebar = function Sidebar() {
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "w-full"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "w-full rounded-lg"
+    className: "w-full flex flex-col gap-4 rounded-lg"
   }, /*#__PURE__*/React.createElement(S, {
     className: "flex flex-col p-6  bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement(S.Item, null, /*#__PURE__*/React.createElement("h2", {
@@ -15418,7 +15418,7 @@ var Sidebar = function Sidebar() {
   }, (0,external_wp_i18n_namespaceObject.__)('Time Taken', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
   }, "0"))))), locoaiStatus.status !== 'active' ? /*#__PURE__*/React.createElement("div", {
-    className: " p-6"
+    className: " p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
   }), /*#__PURE__*/React.createElement(S.Item, {
@@ -16115,7 +16115,7 @@ var MainComponent = function MainComponent(_ref2) {
     serverCall();
   }, []);
   return /*#__PURE__*/external_React_default().createElement("div", {
-    className: "md:flex gap-8"
+    className: "md:flex gap-8 px-8 mt-8"
   }, /*#__PURE__*/external_React_default().createElement("div", {
     className: "md:w-[75%]"
   }, loading ? /*#__PURE__*/external_React_default().createElement("div", {
@@ -16134,7 +16134,7 @@ var MainComponent = function MainComponent(_ref2) {
     data: data,
     setData: setData
   }))), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "md:w-[25%] mt-4 w-full "
+    className: "md:w-[25%]  w-full "
   }, /*#__PURE__*/external_React_default().createElement(sidebar, null)));
 };
 /* harmony default export */ const main_component = (MainComponent);
