@@ -136,7 +136,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		global $admin_page_hooks;
 
 		// Prepare the list of tabs
-		$tabs = array( 'lang' => __( 'Languages', 'linguator-multilingual-ai-translation' ) );
+		$tabs = array( 'lang' => __( 'Language Manager', 'linguator-multilingual-ai-translation' ) );
 
 		// Only if at least one language has been created
 		$languages = $this->model->get_languages_list();
@@ -254,6 +254,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		wp_enqueue_style( 'linguator_dialog', plugins_url( "admin/assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
 
 		$this->add_inline_scripts();
+		$this->add_menu_redirect_script();
 	}
 
 	/**
@@ -282,6 +283,31 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 			wp_enqueue_script( 'lmat_widgets', plugins_url( 'admin/assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 			$this->add_inline_scripts();
 		}
+	}
+
+	/**
+	 * Adds JavaScript to redirect main menu click to settings page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	private function add_menu_redirect_script() {
+		$script = "
+		jQuery(document).ready(function($) {
+			// Find the main Linguator menu link (the one that points to the first submenu)
+			var mainMenuLink = $('a[href*=\"page=lmat\"][href*=\"admin.php\"]').first();
+			if (mainMenuLink.length) {
+				// Override the click event to redirect to settings
+				mainMenuLink.off('click').on('click', function(e) {
+					e.preventDefault();
+					window.location.href = '" . admin_url( 'admin.php?page=lmat_settings' ) . "';
+				});
+			}
+		});
+		";
+		
+		wp_add_inline_script( 'lmat_admin', $script );
 	}
 
 	/**

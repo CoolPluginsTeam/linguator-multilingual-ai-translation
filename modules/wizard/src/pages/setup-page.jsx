@@ -1,5 +1,6 @@
 import React from 'react'
 import SetupProgress from '../components/setup-progress'
+import VideoIntro from '../components/video-intro'
 import { LoaderPinwheel } from "lucide-react"
 import { RenderedLanguage } from '../components/languages'
 import { Loader, Dialog, Button } from "@bsf/force-ui"
@@ -28,6 +29,7 @@ const SetupPage = () => {
   const [contentSelectedLanguage, setContentSelectedLanguage] = React.useState(null) // Add missing content selected language state
   const [languageAddLoader, setLanguageAddLoader] = React.useState(false)
   const [languageDeleteLoader, setLanguageDeleteLoader] = React.useState(false)
+  const [showWizard, setShowWizard] = React.useState(false) // Track if user clicked "Get Started"
 
   //turning all languages into array format from object format
   let lmat_all_languages = [];
@@ -212,6 +214,35 @@ const SetupPage = () => {
     localStorage.setItem("setupProgress", "default");
   }
 
+  // Handle "Get Started" button click
+  const handleGetStarted = async () => {
+    try {
+      // Update the video status to true using the dedicated endpoint
+      const response = await apiFetch({
+        path: 'lmat/v1/settings/video-status',
+        method: 'POST',
+        data: {
+          status: true
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': getNonce()
+        }
+      });
+      // Update local state to reflect the change
+      setData(prevData => ({
+        ...prevData,
+        lmat_video_status: true
+      }));
+      // Show the wizard
+      setShowWizard(true);
+    } catch (error) {
+      console.error('Failed to update video status:', error);
+      // Still show the wizard even if the API call fails
+      setShowWizard(true);
+    }
+  }
+
   async function handleLanguageDelete() {
     setLanguageDeleteLoader(true)
     try {
@@ -237,7 +268,7 @@ const SetupPage = () => {
 
   }
   return (
-    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, homePageLanguage, setHomePageLangauge, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage,showHomePage,setShowHomePage }}>
+    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, homePageLanguage, setHomePageLangauge, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage,showHomePage,setShowHomePage, showWizard, setShowWizard }}>
       <div className='bg-background-secondary m-0 pt-4 setup-body'>
         <Dialog
           design="simple"
@@ -355,8 +386,12 @@ const SetupPage = () => {
                 /></h1> <h1 className='m-0'>{__("Loading", "linguator-multilingual-ai-translation")}</h1>
             </div> :
             <>
-              <h1 style={{paddingTop: "30px"}} className='bg-background-secondary text-center m-0'>{__("Linguator - AI Multilingual Translation", "linguator-multilingual-ai-translation")}</h1>
-              <SetupProgress lmat_setup_data={lmat_setup_data} />
+            <h1 style={{paddingTop: "30px"}} className='bg-background-secondary text-center m-0'>{__("Linguator - AI Multilingual Translation", "linguator-multilingual-ai-translation")}</h1>
+              {data.lmat_video_status === false ? (
+                <VideoIntro onGetStarted={handleGetStarted} />
+              ) : (
+                  <SetupProgress lmat_setup_data={lmat_setup_data} />
+              )}
             </>
         }
 

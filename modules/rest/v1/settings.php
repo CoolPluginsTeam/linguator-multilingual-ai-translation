@@ -115,6 +115,53 @@ class Settings extends Abstract_Controller {
 				'allow_batch' => array( 'v1' => true ),
 			)
 		);
+		
+		// Add specific endpoint for video status
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/video-status",
+			array(
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_video_status' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => array(
+						'status' => array(
+							'required' => true,
+							'type'     => 'boolean',
+						),
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Updates video status option.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function update_video_status( $request ) {
+		$status = $request->get_param( 'status' );
+		
+		$result = update_option( 'lmat_video_status', $status );
+		
+		if ( $result ) {
+			return rest_ensure_response( array(
+				'success' => true,
+				'lmat_video_status' => $status,
+				'message' => 'Video status updated successfully'
+			) );
+		} else {
+			return new WP_Error(
+				'update_failed',
+				'Failed to update video status',
+				array( 'status' => 500 )
+			);
+		}
 	}
 
 	/**
@@ -174,7 +221,7 @@ class Settings extends Abstract_Controller {
 		$response['available_post_types'] = $available_post_types;
 		$response['available_taxonomies'] = $available_taxonomies;
 		$response['disabled_post_types'] = $disabled_post_types;
-		
+		$response['lmat_video_status'] = get_option('lmat_video_status');
 		// Check if CPFM opt-in choice exists for LMAT
 		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
 		$initial_sync_done = get_option( 'lmat_feedback_initial_sync_done', false );

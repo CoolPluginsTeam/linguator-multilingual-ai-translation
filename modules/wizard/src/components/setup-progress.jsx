@@ -34,7 +34,7 @@ const SetupProgress = ({lmat_setup_data}) => {
     React.useEffect(()=>{
         let step = 1;
         let temp_setupSetups = [{
-            label: __("Languages","linguator-multilingual-ai-translation"),
+            label: __("Language Manager","linguator-multilingual-ai-translation"),
             value: "languages",
             visible: true,
             step: step++
@@ -104,7 +104,7 @@ const SetupProgress = ({lmat_setup_data}) => {
     //get admin url
     let currentDomain = lmat_setup_data.admin_url;
     return (
-        <div className="bg-background-secondary  w-full pb-10">
+        <div className="bg-background-secondary w-full pb-10">
             <Topbar className="bg-background-secondary">
                 <Topbar.Middle>
                     <Topbar.Item>
