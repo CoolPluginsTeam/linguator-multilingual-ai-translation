@@ -136,7 +136,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		global $admin_page_hooks;
 
 		// Prepare the list of tabs
-		$tabs = array( 'lang' => __( 'Language Manager', 'linguator-multilingual-ai-translation' ) );
+		$tabs = array( 'lang' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ) );
 
 		// Only if at least one language has been created
 		$languages = $this->model->get_languages_list();
