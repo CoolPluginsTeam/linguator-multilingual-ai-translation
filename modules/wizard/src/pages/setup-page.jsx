@@ -8,7 +8,6 @@ import apiFetch from "@wordpress/api-fetch"
 import { __ } from '@wordpress/i18n'
 import { getNonce } from '../utils'
 import { Toaster, toast } from 'sonner'
-
 export const setupContext = React.createContext(null)
 const SetupPage = () => {
   const [setupSteps, setSetupSteps] = React.useState([])  // Initialize as empty array
