@@ -34,7 +34,7 @@ const SetupProgress = ({lmat_setup_data}) => {
     React.useEffect(()=>{
         let step = 1;
         let temp_setupSetups = [{
-            label: __("Language Manager","linguator-multilingual-ai-translation"),
+            label: __("Languages","linguator-multilingual-ai-translation"),
             value: "languages",
             visible: true,
             step: step++
@@ -79,7 +79,7 @@ const SetupProgress = ({lmat_setup_data}) => {
             })
         }
         temp_setupSetups.push({
-            label: __("Translation","linguator-multilingual-ai-translation"),
+            label: __("AI Translation","linguator-multilingual-ai-translation"),
             value: "translation_configuration",
             visible: true,
             step: step++
