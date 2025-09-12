@@ -15382,7 +15382,7 @@ var Sidebar = function Sidebar() {
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "w-full"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "w-full flex flex-col gap-4 rounded-lg"
+    className: "w-full flex flex-col gap-8 rounded-lg"
   }, /*#__PURE__*/React.createElement(S, {
     className: "flex flex-col p-6  bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement(S.Item, null, /*#__PURE__*/React.createElement("h2", {

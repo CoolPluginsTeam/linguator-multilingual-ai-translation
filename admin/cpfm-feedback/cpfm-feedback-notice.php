@@ -67,14 +67,14 @@ class CPFM_Feedback_Notice {
         }
         wp_enqueue_style(
             'cpfm-common-review-style',
-            LINGUATOR_URL . 'Admin/cpfm-feedback/css/cpfm-admin-feedback.css',
+            LINGUATOR_URL . 'admin/cpfm-feedback/css/cpfm-admin-feedback.css',
             [],
             LINGUATOR_VERSION
         );
         
         wp_enqueue_script(
             'cpfm-common-review-script', 
-            LINGUATOR_URL . 'Admin/cpfm-feedback/js/cpfm-admin-feedback.js', 
+            LINGUATOR_URL . 'admin/cpfm-feedback/js/cpfm-admin-feedback.js', 
             ['jquery'], 
             LINGUATOR_VERSION, 
             true

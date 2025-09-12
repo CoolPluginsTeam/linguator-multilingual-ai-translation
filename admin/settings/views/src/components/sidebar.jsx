@@ -40,7 +40,7 @@ const Sidebar = () => {
   return (
     <>
       <div className='w-full'>
-        <div className='w-full flex flex-col gap-4 rounded-lg'>
+        <div className='w-full flex flex-col gap-8 rounded-lg'>
           <Container className='flex flex-col p-6  bg-white border border-gray-200 rounded-lg shadow-sm'>
             <Container.Item>
               <h2 className='text-lg font-semibold text-gray-900 mb-2'>{__('Auto Translation Status', 'linguator-multilingual-ai-translation')}</h2>
