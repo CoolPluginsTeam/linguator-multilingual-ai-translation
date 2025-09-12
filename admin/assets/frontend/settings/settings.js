@@ -15912,13 +15912,15 @@ var Switcher = function Switcher(_ref) {
       return set2.has(val);
     });
   };
+
+  // Check for changes and update button state
+  (0,external_React_namespaceObject.useEffect)(function () {
+    var hasChanges = !arraysEqualIgnoreOrder(selectedLanguageSwitchers, data.lmat_language_switcher_options || ['default']);
+    setHandleButtonDisabled(!hasChanges);
+  }, [selectedLanguageSwitchers, data.lmat_language_switcher_options]);
+
   //Handle Checkboxes of Language Switcher
   var handleLanguageSwitcherChange = function handleLanguageSwitcherChange(switcher) {
-    if (arraysEqualIgnoreOrder(selectedLanguageSwitchers, data.lmat_language_switcher_options)) {
-      setHandleButtonDisabled(false);
-    } else {
-      setHandleButtonDisabled(true);
-    }
     setSelectedLanguageSwitchers(function (prev) {
       if (prev.includes(switcher)) {
         return prev.filter(function (item) {
