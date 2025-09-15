@@ -25,9 +25,9 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			if ( $linguator instanceof LMAT_Admin ) {
 				add_action( 'current_screen', array( $this, 'bulk_translate_btn' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_bulk_translate_assets' ) );
-			} else {
-				new LMAT_Bulk_Translate_Rest_Routes( 'lmat-bulk-translate' );
 			}
+			
+			new LMAT_Bulk_Translate_Rest_Routes( 'lmat-bulk-translate' );
 		}
 
 		public function bulk_translate_btn( $screen ) {

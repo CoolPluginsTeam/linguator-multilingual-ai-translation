@@ -46,7 +46,9 @@ class LMAT_Page_Translation {
 			add_action( 'add_meta_boxes', array( $this, 'lmat_gutenberg_metabox' ) );
 			add_action( 'add_meta_boxes', array( $this, 'lmat_save_elementor_post_meta' ) );
 
-		} elseif ( is_admin() && is_user_logged_in() ) {
+		} 
+		
+		if ( is_admin() && is_user_logged_in() ) {
 			$this->page_translate_helper = new LMAT_Page_Translation_Helper();
 			add_action( 'wp_ajax_lmat_fetch_post_content', array( $this, 'fetch_post_content' ) );
 			add_action( 'wp_ajax_lmat_block_parsing_rules', array( $this, 'block_parsing_rules' ) );
