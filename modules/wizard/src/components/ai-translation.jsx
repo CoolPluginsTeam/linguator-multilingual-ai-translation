@@ -102,7 +102,7 @@ const ChromeLocalAINotice = () => {
 };
 
 const AiTranslation = () => {
-    const { setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
+    const { setSetupProgress, data, setData, showHomePage } = React.useContext(setupContext) // get the context
     const aiTranslation = data?.ai_translation_configuration; //store the media option
     const provider = aiTranslation?.provider;
     const [googleMachineTranslation, setGoogleMachineTranslation] = React.useState(provider?.google)
@@ -110,10 +110,10 @@ const AiTranslation = () => {
     const [lastUpdatedValue, setLastUpdatedValue] = React.useState({googleMachineTranslation,chromeLocalAITranslation})
 
     const handleBack = () => {
-      if (window.lmat_setup.home_page == "1") {
+      if (showHomePage == "1") {
         setSetupProgress("home_page")
         localStorage.setItem("setupProgress", "home_page");
-    }else if (lmat_setup_data.media == "1") {
+    }else if (window.lmat_setup.media == "1") {
         setSetupProgress("media")
         localStorage.setItem("setupProgress", "media");
       } else {

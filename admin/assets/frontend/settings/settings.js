@@ -14343,6 +14343,27 @@ const Milestone = createLucideIcon_createLucideIcon("milestone", milestone_iconN
 
 //# sourceMappingURL=milestone.js.map
 
+;// ./node_modules/lucide-react/dist/esm/icons/refresh-ccw.js
+/**
+ * @license lucide-react v0.524.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+
+const refresh_ccw_iconNode = [
+  ["path", { d: "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "14sxne" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
+  ["path", { d: "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16", key: "1hlbsb" }],
+  ["path", { d: "M16 16h5v5", key: "ccwih5" }]
+];
+const RefreshCcw = createLucideIcon_createLucideIcon("refresh-ccw", refresh_ccw_iconNode);
+
+
+//# sourceMappingURL=refresh-ccw.js.map
+
 ;// ./node_modules/lucide-react/dist/esm/icons/globe.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -14405,27 +14426,6 @@ const Settings2 = createLucideIcon_createLucideIcon("settings-2", settings_2_ico
 
 
 //# sourceMappingURL=settings-2.js.map
-
-;// ./node_modules/lucide-react/dist/esm/icons/refresh-ccw.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const refresh_ccw_iconNode = [
-  ["path", { d: "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "14sxne" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
-  ["path", { d: "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16", key: "1hlbsb" }],
-  ["path", { d: "M16 16h5v5", key: "ccwih5" }]
-];
-const RefreshCcw = createLucideIcon_createLucideIcon("refresh-ccw", refresh_ccw_iconNode);
-
-
-//# sourceMappingURL=refresh-ccw.js.map
 
 ;// ./node_modules/lucide-react/dist/esm/icons/share-2.js
 /**
@@ -15192,12 +15192,12 @@ var General = function General(_ref) {
     containerType: "grid"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "switcher"
-  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+  }, /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "md",
     className: "font-bold flex items-center gap-2"
   }, /*#__PURE__*/external_React_default().createElement(Milestone, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
-  }), (0,external_wp_i18n_namespaceObject.__)('Custom Post Types', 'linguator-multilingual-ai-translation')), AvailablePostTypes.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
+  }), (0,external_wp_i18n_namespaceObject.__)('Custom Post Types', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("Choose the custom post types you want to enable for translation.For example, if you have a 'Portfolio' post type, check the box to enable it for translation.", 'linguator-multilingual-ai-translation'))), AvailablePostTypes.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
     className: "flex items-center justify-end gap-2",
     style: {
       paddingRight: '30%'
@@ -15248,12 +15248,12 @@ var General = function General(_ref) {
     containerType: "grid"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "switcher"
-  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+  }, /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "md",
     className: "font-bold flex items-center gap-2"
   }, /*#__PURE__*/external_React_default().createElement(Milestone, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
-  }), (0,external_wp_i18n_namespaceObject.__)('Custom Taxonomies', 'linguator-multilingual-ai-translation')), AvailableTaxonomies.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
+  }), (0,external_wp_i18n_namespaceObject.__)('Custom Taxonomies', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Choose the Custom Taxonomies you want to enable for translation', 'linguator-multilingual-ai-translation'))), AvailableTaxonomies.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
     className: "flex items-center justify-end gap-2",
     style: {
       paddingRight: '30%'
@@ -15292,6 +15292,50 @@ var General = function General(_ref) {
       }
     });
   })))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S, {
+    cols: "1",
+    containerType: "grid"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "switcher"
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, /*#__PURE__*/external_React_default().createElement(RefreshCcw, {
+    className: "flex-shrink-0 size-5 text-icon-secondary"
+  }), (0,external_wp_i18n_namespaceObject.__)('Synchronization', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center justify-end  gap-2",
+    style: {
+      paddingRight: '30%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "sm",
+    className: "cursor-pointer",
+    htmlFor: "select-all-sync"
+  }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Choose synchronization options for translated content.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+    "aria-label": "Select All Synchronization",
+    id: "select-all-sync",
+    value: selectAllSync,
+    onChange: handleSelectAllSync,
+    size: "sm"
+  }))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex gap-6 flex-wrap"
+  }, synchronizations.map(function (synchronization, index) {
+    return /*#__PURE__*/external_React_default().createElement(checkbox_es_B, {
+      label: {
+        description: '',
+        heading: synchronization.label
+      },
+      className: "cursor-pointer",
+      value: synchronization.value,
+      key: index,
+      checked: selectedSynchronization.includes(synchronization.value),
+      size: "sm",
+      onChange: function onChange() {
+        return handleSynchronizationChange(synchronization.value);
+      }
+    });
+  }))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement("div", {
     className: "switcher"
@@ -15363,50 +15407,6 @@ var General = function General(_ref) {
     },
     size: "sm",
     value: staticStringsVisibility
-  }))), /*#__PURE__*/external_React_default().createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
-  }), /*#__PURE__*/external_React_default().createElement(S, {
-    cols: "1",
-    containerType: "grid"
-  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
-    className: "switcher"
-  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
-    size: "md",
-    className: "font-bold flex items-center gap-2"
-  }, /*#__PURE__*/external_React_default().createElement(RefreshCcw, {
-    className: "flex-shrink-0 size-5 text-icon-secondary"
-  }), (0,external_wp_i18n_namespaceObject.__)('Synchronization', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex items-center justify-end  gap-2",
-    style: {
-      paddingRight: '30%'
-    }
-  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
-    size: "sm",
-    className: "cursor-pointer",
-    htmlFor: "select-all-sync"
-  }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
-    "aria-label": "Select All Synchronization",
-    id: "select-all-sync",
-    value: selectAllSync,
-    onChange: handleSelectAllSync,
-    size: "sm"
-  }))), /*#__PURE__*/external_React_default().createElement(S.Item, {
-    className: "flex gap-6 flex-wrap"
-  }, synchronizations.map(function (synchronization, index) {
-    return /*#__PURE__*/external_React_default().createElement(checkbox_es_B, {
-      label: {
-        description: '',
-        heading: synchronization.label
-      },
-      className: "cursor-pointer",
-      value: synchronization.value,
-      key: index,
-      checked: selectedSynchronization.includes(synchronization.value),
-      size: "sm",
-      onChange: function onChange() {
-        return handleSynchronizationChange(synchronization.value);
-      }
-    });
   }))), data.lmat_feedback_data !== undefined && /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement("div", {

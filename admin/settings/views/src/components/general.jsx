@@ -602,10 +602,13 @@ const General = ({ data, setData }) => {
                 {/* Custom Post Types section */}
                 <Container cols="1" containerType='grid' >
                     <Container.Item className='switcher'>
-                        <Label size='md' className='font-bold flex items-center gap-2'>
+                       <div>
+                         <Label size='md' className='font-bold flex items-center gap-2'>
                             <Milestone className="flex-shrink-0 size-5 text-icon-secondary" />
                             {__('Custom Post Types', 'linguator-multilingual-ai-translation')}
                         </Label>
+                        <p>{__("Choose the custom post types you want to enable for translation.For example, if you have a 'Portfolio' post type, check the box to enable it for translation.", 'linguator-multilingual-ai-translation')}</p>
+                       </div>
                         {AvailablePostTypes.length > 0 && (
                             <div className='flex items-center justify-end gap-2' style={{paddingRight: '30%'}}>
                                 <Label size='sm' className='cursor-pointer' htmlFor="select-all-post-types">
@@ -660,10 +663,13 @@ const General = ({ data, setData }) => {
                 {/* Custom Taxonomies section */}
                 <Container cols="1" containerType='grid' >
                     <Container.Item className='switcher'>
-                        <Label size='md' className='font-bold flex items-center gap-2'>
+                        <div>
+                            <Label size='md' className='font-bold flex items-center gap-2'>
                             <Milestone className="flex-shrink-0 size-5 text-icon-secondary" />
                             {__('Custom Taxonomies', 'linguator-multilingual-ai-translation')}
                         </Label>
+                        <p>{__('Choose the Custom Taxonomies you want to enable for translation', 'linguator-multilingual-ai-translation')}</p>
+                        </div>
                         {AvailableTaxonomies.length > 0 && (
                             <div className='flex items-center justify-end gap-2' style={{paddingRight: '30%'}}>
                                 <Label size='sm' className='cursor-pointer' htmlFor="select-all-taxonomies">
@@ -703,6 +709,50 @@ const General = ({ data, setData }) => {
                                         ))
                                     }
                                 </div>
+                        }
+                    </Container.Item>
+                </Container>
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Synchronization section */}
+                <Container cols="1" containerType='grid' >
+                    <Container.Item className='switcher'>
+                        <Label size='md' className='font-bold flex items-center gap-2'>
+                            <RefreshCcw className="flex-shrink-0 size-5 text-icon-secondary" />
+                            {__('Synchronization', 'linguator-multilingual-ai-translation')}
+                        </Label>
+                        <div className='flex items-center justify-end  gap-2' style={{paddingRight: '30%'}}>
+                        <div>
+                            <Label size='sm' className='cursor-pointer' htmlFor="select-all-sync">
+                                {__('Select All', 'linguator-multilingual-ai-translation')}
+                            </Label>
+                            <p>{__('Choose synchronization options for translated content.', 'linguator-multilingual-ai-translation')}</p>
+                        </div>
+                            <Switch
+                                        aria-label="Select All Synchronization"
+                                        id="select-all-sync"
+                                        value={selectAllSync}
+                                        onChange={handleSelectAllSync}
+                                        size="sm"
+                                    />
+                            
+                        </div>
+                    </Container.Item>
+                    <Container.Item className='flex gap-6 flex-wrap'>
+                        {
+                            synchronizations.map((synchronization, index) => (
+                                <Checkbox
+                                    label={{
+                                        description: '',
+                                        heading: synchronization.label
+                                    }}
+                                    className='cursor-pointer'
+                                    value={synchronization.value}
+                                    key={index}
+                                    checked={selectedSynchronization.includes(synchronization.value)}
+                                    size="sm"
+                                    onChange={() => handleSynchronizationChange(synchronization.value)}
+                                />
+                            ))
                         }
                     </Container.Item>
                 </Container>
@@ -794,47 +844,7 @@ const General = ({ data, setData }) => {
                     </Container.Item>
                 </div>
 
-                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
-                {/* Synchronization section */}
-                <Container cols="1" containerType='grid' >
-                    <Container.Item className='switcher'>
-                        <Label size='md' className='font-bold flex items-center gap-2'>
-                            <RefreshCcw className="flex-shrink-0 size-5 text-icon-secondary" />
-                            {__('Synchronization', 'linguator-multilingual-ai-translation')}
-                        </Label>
-                        <div className='flex items-center justify-end  gap-2' style={{paddingRight: '30%'}}>
-                        <Label size='sm' className='cursor-pointer' htmlFor="select-all-sync">
-                                {__('Select All', 'linguator-multilingual-ai-translation')}
-                            </Label>
-                            <Switch
-                                        aria-label="Select All Synchronization"
-                                        id="select-all-sync"
-                                        value={selectAllSync}
-                                        onChange={handleSelectAllSync}
-                                        size="sm"
-                                    />
-                            
-                        </div>
-                    </Container.Item>
-                    <Container.Item className='flex gap-6 flex-wrap'>
-                        {
-                            synchronizations.map((synchronization, index) => (
-                                <Checkbox
-                                    label={{
-                                        description: '',
-                                        heading: synchronization.label
-                                    }}
-                                    className='cursor-pointer'
-                                    value={synchronization.value}
-                                    key={index}
-                                    checked={selectedSynchronization.includes(synchronization.value)}
-                                    size="sm"
-                                    onChange={() => handleSynchronizationChange(synchronization.value)}
-                                />
-                            ))
-                        }
-                    </Container.Item>
-                </Container>
+                
                 
                 {data.lmat_feedback_data !== undefined && (
                     <>

@@ -4,7 +4,6 @@
     align-items: center;
     background-color: #fff;
     padding: 0;
-    border-radius: 7px;
     box-shadow: 0 0 transparent, 0 0 transparent, 0 1px 2px 0 #0000000d;
     padding-inline: 1.8rem;
     margin-bottom: 1rem;
@@ -13,6 +12,27 @@
 }
 .wrap{
     margin: 0;
+}
+
+.toplevel_page_lmat #lmat-settings-header{
+    position:absolute;
+    top:0;
+    width:100%;
+}
+.toplevel_page_lmat .show-settings:not(.screen-meta-active){
+    margin-top:65px;
+
+}
+.toplevel_page_lmat .show-settings.screen-meta-active{
+    margin-top:0;
+}
+.toplevel_page_lmat #screen-meta{
+    margin-top:65px;
+    width: 100%;
+}
+
+.toplevel_page_lmat .wrap{
+    margin-top:95px;
 }
 #wpcontent{
     padding: 0;

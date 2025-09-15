@@ -53,13 +53,7 @@ const SetupPage = () => {
         localStorage.setItem("setupProgress", "languages");
       }
     } else {
-      const setupProgress=localStorage.getItem("setupProgress");
-
-      if(setupProgress && setupProgress === 'translation_configuration'){
-        setSetupProgress(setupProgress);
-      }else{
-        localStorage.setItem("setupProgress", "languages");
-      }
+      localStorage.setItem("setupProgress", "languages");
 
     }
 

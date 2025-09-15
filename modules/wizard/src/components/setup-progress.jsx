@@ -53,7 +53,7 @@ const SetupProgress = ({lmat_setup_data}) => {
             visible: true,
             step:step++
         })
-        if(lmat_setup_data.media == "1"){
+        if(window.lmat_setup.media == "1"){
             temp_setupSetups.push({
                 label: __("Media","linguator-multilingual-ai-translation"),
                 value: "media",
