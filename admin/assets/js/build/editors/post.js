@@ -1,902 +1,238 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
-;// external ["wp","plugins"]
-const external_wp_plugins_namespaceObject = window["wp"]["plugins"];
-;// external ["wp","i18n"]
-const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// external ["wp","editPost"]
-const external_wp_editPost_namespaceObject = window["wp"]["editPost"];
-;// external ["wp","components"]
-const external_wp_components_namespaceObject = window["wp"]["components"];
-;// external ["wp","apiFetch"]
-const external_wp_apiFetch_namespaceObject = window["wp"]["apiFetch"];
-;// external ["wp","element"]
-const external_wp_element_namespaceObject = window["wp"]["element"];
-;// external ["wp","data"]
-const external_wp_data_namespaceObject = window["wp"]["data"];
-;// external "React"
-const external_React_namespaceObject = window["React"];
-;// ./node_modules/lucide-react/dist/esm/shared/src/utils.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-const toCamelCase = (string) => string.replace(
-  /^([A-Z])|[\s-_]+(\w)/g,
-  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
-);
-const toPascalCase = (string) => {
-  const camelCase = toCamelCase(string);
-  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-};
-const mergeClasses = (...classes) => classes.filter((className, index, array) => {
-  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-}).join(" ").trim();
-const hasA11yProp = (props) => {
-  for (const prop in props) {
-    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
-      return true;
-    }
-  }
-};
-
-
-//# sourceMappingURL=utils.js.map
-
-;// ./node_modules/lucide-react/dist/esm/defaultAttributes.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-var defaultAttributes = {
-  xmlns: "http://www.w3.org/2000/svg",
-  width: 24,
-  height: 24,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round",
-  strokeLinejoin: "round"
-};
-
-
-//# sourceMappingURL=defaultAttributes.js.map
-
-;// ./node_modules/lucide-react/dist/esm/Icon.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-
-
-const Icon = (0,external_React_namespaceObject.forwardRef)(
-  ({
-    color = "currentColor",
-    size = 24,
-    strokeWidth = 2,
-    absoluteStrokeWidth,
-    className = "",
-    children,
-    iconNode,
-    ...rest
-  }, ref) => (0,external_React_namespaceObject.createElement)(
-    "svg",
-    {
-      ref,
-      ...defaultAttributes,
-      width: size,
-      height: size,
-      stroke: color,
-      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-      className: mergeClasses("lucide", className),
-      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
-      ...rest
-    },
-    [
-      ...iconNode.map(([tag, attrs]) => (0,external_React_namespaceObject.createElement)(tag, attrs)),
-      ...Array.isArray(children) ? children : [children]
-    ]
-  )
-);
-
-
-//# sourceMappingURL=Icon.js.map
+/***/ "./Assets/js/src/editors/post.js":
+/*!***************************************!*\
+  !*** ./Assets/js/src/editors/post.js ***!
+  \***************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-;// ./node_modules/lucide-react/dist/esm/createLucideIcon.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _wordpress_plugins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/plugins */ \"@wordpress/plugins\");\n/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ \"@wordpress/i18n\");\n/* harmony import */ var _wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/edit-post */ \"@wordpress/edit-post\");\n/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ \"@wordpress/components\");\n/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ \"@wordpress/api-fetch\");\n/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/element */ \"@wordpress/element\");\n/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/data */ \"@wordpress/data\");\n/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ \"./node_modules/lucide-react/dist/esm/icons/circle-plus.js\");\n/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lucide-react */ \"./node_modules/lucide-react/dist/esm/icons/square-pen.js\");\nfunction _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = \"function\" == typeof Symbol ? Symbol : {}, n = r.iterator || \"@@iterator\", o = r.toStringTag || \"@@toStringTag\"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, \"_invoke\", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError(\"Generator is already running\"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = \"next\"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError(\"iterator result is not an object\"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError(\"The iterator does not provide a '\" + o + \"' method\"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, \"GeneratorFunction\")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, \"constructor\", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, \"constructor\", GeneratorFunction), GeneratorFunction.displayName = \"GeneratorFunction\", _regeneratorDefine2(GeneratorFunctionPrototype, o, \"GeneratorFunction\"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, \"Generator\"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, \"toString\", function () { return \"[object Generator]\"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }\nfunction _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, \"\", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o(\"next\", 0), o(\"throw\", 1), o(\"return\", 2)); }, _regeneratorDefine2(e, r, n, t); }\nfunction asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }\nfunction _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, \"next\", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, \"throw\", n); } _next(void 0); }); }; }\nfunction _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }\nfunction _nonIterableRest() { throw new TypeError(\"Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); }\nfunction _unsupportedIterableToArray(r, a) { if (r) { if (\"string\" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return \"Object\" === t && r.constructor && (t = r.constructor.name), \"Map\" === t || \"Set\" === t ? Array.from(r) : \"Arguments\" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }\nfunction _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }\nfunction _iterableToArrayLimit(r, l) { var t = null == r ? null : \"undefined\" != typeof Symbol && r[Symbol.iterator] || r[\"@@iterator\"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }\nfunction _arrayWithHoles(r) { if (Array.isArray(r)) return r; }\n/**\r\n * Post Editor sidebar bootstrap\r\n */\n\n\n\n\n\n\n\n\n\nvar SIDEBAR_NAME = 'lmat-post-sidebar';\n\n/**\r\n * Simple debounce hook\r\n */\nvar useDebouncedCallback = function useDebouncedCallback(callback) {\n  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2000;\n  var timer = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useRef)(null);\n  var cbRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useRef)(callback);\n  cbRef.current = callback;\n  var debounced = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useCallback)(function () {\n    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {\n      args[_key] = arguments[_key];\n    }\n    if (timer.current) {\n      clearTimeout(timer.current);\n    }\n    timer.current = setTimeout(function () {\n      cbRef.current.apply(cbRef, args);\n    }, delay);\n  }, [delay]);\n\n  // optional: clear on unmount\n  var cancel = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useCallback)(function () {\n    if (timer.current) {\n      clearTimeout(timer.current);\n      timer.current = null;\n    }\n  }, []);\n  return [debounced, cancel];\n};\nvar getSettings = function getSettings() {\n  // Provided by PHP in Abstract_Screen::enqueue via wp_add_inline_script\n  try {\n    // eslint-disable-next-line no-undef\n    if (typeof lmat_block_editor_plugin_settings !== 'undefined') {\n      // eslint-disable-next-line no-undef\n      return lmat_block_editor_plugin_settings;\n    }\n  } catch (e) {}\n  if (typeof window !== 'undefined' && window.lmat_block_editor_plugin_settings) {\n    return window.lmat_block_editor_plugin_settings;\n  }\n  return {\n    lang: null,\n    translations_table: {}\n  };\n};\nvar LanguageSection = function LanguageSection(_ref) {\n  var lang = _ref.lang,\n    allLanguages = _ref.allLanguages;\n  var options = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useMemo)(function () {\n    var list = [];\n    if (lang) {\n      list.push({\n        label: lang.name,\n        value: lang.slug,\n        flag_url: lang.flag_url\n      });\n    }\n    Object.values(allLanguages).forEach(function (row) {\n      list.push({\n        label: row.lang.name,\n        value: row.lang.slug,\n        flag_url: row.lang.flag_url\n      });\n    });\n    return list;\n  }, [lang, allLanguages]);\n  return /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {\n    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Language', 'linguator-multilingual-ai-translation'),\n    initialOpen: true\n  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Flex, {\n    align: \"center\"\n  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.FlexItem, null, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement(\"img\", {\n    src: lang.flag_url,\n    alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',\n    className: \"flag\",\n    style: {\n      marginRight: 8,\n      width: 20,\n      height: 14\n    }\n  }) : null), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.FlexItem, {\n    style: {\n      flex: 1\n    }\n  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {\n    label: undefined,\n    value: (lang === null || lang === void 0 ? void 0 : lang.slug) || '',\n    onChange: function onChange(value) {\n      // If selecting the current language, do nothing.\n      if (!value || lang && value === lang.slug) {\n        return;\n      }\n      // Look up the selected language row in translations table\n      var selected = allLanguages === null || allLanguages === void 0 ? void 0 : allLanguages[value];\n      if (selected && selected.links) {\n        var target = selected.links.edit_link || selected.links.add_link;\n        if (target) {\n          window.location.href = target;\n        }\n      }\n    },\n    help: undefined,\n    options: options.map(function (opt) {\n      return {\n        label: opt.label,\n        value: opt.value\n      };\n    })\n    // Changing language navigates to the corresponding edit/add page.\n  }))));\n};\nvar TranslationRow = function TranslationRow(_ref2) {\n  var row = _ref2.row;\n  var lang = row.lang,\n    translated_post = row.translated_post,\n    links = row.links;\n  var initialTitle = (translated_post === null || translated_post === void 0 ? void 0 : translated_post.title) || '';\n  var _useState = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(initialTitle),\n    _useState2 = _slicedToArray(_useState, 2),\n    title = _useState2[0],\n    setTitle = _useState2[1];\n  var _useState3 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false),\n    _useState4 = _slicedToArray(_useState3, 2),\n    saving = _useState4[0],\n    setSaving = _useState4[1];\n  var _useState5 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(''),\n    _useState6 = _slicedToArray(_useState5, 2),\n    error = _useState6[0],\n    setError = _useState6[1];\n  var _useState7 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)([]),\n    _useState8 = _slicedToArray(_useState7, 2),\n    allPages = _useState8[0],\n    setAllPages = _useState8[1];\n  var _useState9 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false),\n    _useState0 = _slicedToArray(_useState9, 2),\n    loadingPages = _useState0[0],\n    setLoadingPages = _useState0[1];\n  var _useState1 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)([]),\n    _useState10 = _slicedToArray(_useState1, 2),\n    suggestions = _useState10[0],\n    setSuggestions = _useState10[1];\n  var _useState11 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(null),\n    _useState12 = _slicedToArray(_useState11, 2),\n    selectedSuggestion = _useState12[0],\n    setSelectedSuggestion = _useState12[1];\n  var _useState13 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false),\n    _useState14 = _slicedToArray(_useState13, 2),\n    linking = _useState14[0],\n    setLinking = _useState14[1];\n  var editable = !initialTitle; // editable only if there is no value initially\n\n  // Debounced save\n  var _useDebouncedCallback = useDebouncedCallback(/*#__PURE__*/function () {\n      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(nextTitle) {\n        var clean, _t;\n        return _regenerator().w(function (_context) {\n          while (1) switch (_context.p = _context.n) {\n            case 0:\n              // Guard: don’t send empty or whitespace-only titles\n              clean = (nextTitle || '').trim();\n              if (clean) {\n                _context.n = 1;\n                break;\n              }\n              return _context.a(2);\n            case 1:\n              _context.p = 1;\n              setSaving(true);\n              setError('');\n\n              // Example payload — adjust to match your PHP route/handler.\n              // Expect your server to create/update a placeholder translation record’s title.\n              _context.n = 2;\n              return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__({\n                path: '/lmat/v1/translation-title',\n                method: 'POST',\n                data: {\n                  postId: (translated_post === null || translated_post === void 0 ? void 0 : translated_post.id) || null,\n                  // if you have it\n                  lang: lang === null || lang === void 0 ? void 0 : lang.slug,\n                  title: clean\n                }\n              });\n            case 2:\n              setSaving(false);\n              _context.n = 4;\n              break;\n            case 3:\n              _context.p = 3;\n              _t = _context.v;\n              setSaving(false);\n              setError((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Failed to save title. Please try again.', 'linguator-multilingual-ai-translation'));\n              // Optional: console.error(e);\n            case 4:\n              return _context.a(2);\n          }\n        }, _callee, null, [[1, 3]]);\n      }));\n      return function (_x) {\n        return _ref3.apply(this, arguments);\n      };\n    }(), 2000),\n    _useDebouncedCallback2 = _slicedToArray(_useDebouncedCallback, 1),\n    debouncedSave = _useDebouncedCallback2[0];\n  var hasEdit = !!(links !== null && links !== void 0 && links.edit_link);\n  var hasAdd = !!(links !== null && links !== void 0 && links.add_link);\n  var loadAllPages = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useCallback)(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {\n    var pages, _t2;\n    return _regenerator().w(function (_context2) {\n      while (1) switch (_context2.p = _context2.n) {\n        case 0:\n          if (!(loadingPages || allPages.length > 0)) {\n            _context2.n = 1;\n            break;\n          }\n          return _context2.a(2);\n        case 1:\n          _context2.p = 1;\n          setLoadingPages(true);\n          _context2.n = 2;\n          return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__({\n            path: '/lmat/v1/languages/utils/get_all_pages_data'\n          });\n        case 2:\n          pages = _context2.v;\n          setAllPages(Array.isArray(pages) ? pages : []);\n          _context2.n = 4;\n          break;\n        case 3:\n          _context2.p = 3;\n          _t2 = _context2.v;\n        case 4:\n          _context2.p = 4;\n          setLoadingPages(false);\n          return _context2.f(4);\n        case 5:\n          return _context2.a(2);\n      }\n    }, _callee2, null, [[1, 3, 4, 5]]);\n  })), [loadingPages, allPages.length]);\n  var computeSuggestions = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useCallback)(function (query) {\n    var q = (query || '').trim().toLowerCase();\n    if (!q) return [];\n    return allPages.filter(function (p) {\n      var _p$language;\n      var sameLang = (p === null || p === void 0 || (_p$language = p.language) === null || _p$language === void 0 ? void 0 : _p$language.slug) === (lang === null || lang === void 0 ? void 0 : lang.slug);\n      var unlinked = !(p !== null && p !== void 0 && p.is_linked);\n      var matches = ((p === null || p === void 0 ? void 0 : p.title) || '').toLowerCase().includes(q) || ((p === null || p === void 0 ? void 0 : p.slug) || '').toLowerCase().includes(q);\n      return sameLang && unlinked && matches;\n    }).slice(0, 10);\n  }, [allPages, lang === null || lang === void 0 ? void 0 : lang.slug]);\n  var handleTitleChange = function handleTitleChange(val) {\n    setTitle(val);\n    setSelectedSuggestion(null);\n    if (editable) {\n      if (val && val.trim().length > 1) {\n        if (allPages.length === 0) {\n          loadAllPages().then(function () {\n            setSuggestions(computeSuggestions(val));\n          });\n        } else {\n          setSuggestions(computeSuggestions(val));\n        }\n      } else {\n        setSuggestions([]);\n      }\n    }\n  };\n  var linkSelected = /*#__PURE__*/function () {\n    var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {\n      var _select, _select$getCurrentPos, postId, _t3;\n      return _regenerator().w(function (_context3) {\n        while (1) switch (_context3.p = _context3.n) {\n          case 0:\n            e.preventDefault();\n            if (selectedSuggestion) {\n              _context3.n = 1;\n              break;\n            }\n            return _context3.a(2);\n          case 1:\n            _context3.p = 1;\n            setLinking(true);\n            setError('');\n            postId = (_select = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.select)('core/editor')) === null || _select === void 0 || (_select$getCurrentPos = _select.getCurrentPostId) === null || _select$getCurrentPos === void 0 ? void 0 : _select$getCurrentPos.call(_select);\n            _context3.n = 2;\n            return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__({\n              path: '/lmat/v1/languages/link-translation',\n              method: 'POST',\n              data: {\n                source_id: postId,\n                target_id: selectedSuggestion.ID,\n                target_lang: lang === null || lang === void 0 ? void 0 : lang.slug\n              }\n            });\n          case 2:\n            window.location.reload();\n            _context3.n = 4;\n            break;\n          case 3:\n            _context3.p = 3;\n            _t3 = _context3.v;\n            setError((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Failed to link page. Please try again.', 'linguator-multilingual-ai-translation'));\n          case 4:\n            _context3.p = 4;\n            setLinking(false);\n            return _context3.f(4);\n          case 5:\n            return _context3.a(2);\n        }\n      }, _callee3, null, [[1, 3, 4, 5]]);\n    }));\n    return function linkSelected(_x2) {\n      return _ref5.apply(this, arguments);\n    };\n  }();\n  var createFromTyped = /*#__PURE__*/function () {\n    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {\n      var clean, _select2, _select2$getCurrentPo, _select3, _select3$getCurrentPo, postId, postType, _t4;\n      return _regenerator().w(function (_context4) {\n        while (1) switch (_context4.p = _context4.n) {\n          case 0:\n            e.preventDefault();\n            clean = (title || '').trim();\n            if (clean) {\n              _context4.n = 1;\n              break;\n            }\n            // Fallback: if no title, navigate to add page\n            if (links !== null && links !== void 0 && links.add_link) {\n              window.location.href = links.add_link;\n            }\n            return _context4.a(2);\n          case 1:\n            _context4.p = 1;\n            setLinking(true);\n            setError('');\n            postId = (_select2 = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.select)('core/editor')) === null || _select2 === void 0 || (_select2$getCurrentPo = _select2.getCurrentPostId) === null || _select2$getCurrentPo === void 0 ? void 0 : _select2$getCurrentPo.call(_select2);\n            postType = (_select3 = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.select)('core/editor')) === null || _select3 === void 0 || (_select3$getCurrentPo = _select3.getCurrentPostType) === null || _select3$getCurrentPo === void 0 ? void 0 : _select3$getCurrentPo.call(_select3);\n            _context4.n = 2;\n            return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__({\n              path: '/lmat/v1/languages/create-translation',\n              method: 'POST',\n              data: {\n                source_id: postId,\n                target_lang: lang === null || lang === void 0 ? void 0 : lang.slug,\n                title: clean,\n                post_type: postType || 'page'\n              }\n            });\n          case 2:\n            // Refresh to reflect new translation and show Edit icon\n            window.location.reload();\n            _context4.n = 4;\n            break;\n          case 3:\n            _context4.p = 3;\n            _t4 = _context4.v;\n            setError((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Failed to create page. Please try again.', 'linguator-multilingual-ai-translation'));\n          case 4:\n            _context4.p = 4;\n            setLinking(false);\n            return _context4.f(4);\n          case 5:\n            return _context4.a(2);\n        }\n      }, _callee4, null, [[1, 3, 4, 5]]);\n    }));\n    return function createFromTyped(_x3) {\n      return _ref6.apply(this, arguments);\n    };\n  }();\n  return /*#__PURE__*/React.createElement(\"div\", {\n    style: {\n      marginBottom: 12\n    }\n  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Flex, {\n    align: \"center\",\n    style: {\n      marginBottom: 8,\n      alignItems: 'start'\n    }\n  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.FlexItem, {\n    style: {\n      paddingTop: '14px'\n    }\n  }, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement(\"img\", {\n    src: lang.flag_url,\n    alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',\n    style: {\n      width: 20,\n      height: 14\n    }\n  }) : null), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.FlexItem, {\n    style: {\n      flex: 1,\n      padding: '0px'\n    }\n  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {\n    value: title,\n    onChange: handleTitleChange,\n    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('title', 'linguator-multilingual-ai-translation'),\n    readOnly: !editable,\n    disabled: !editable,\n    help: editable ? saving ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Saving…', 'linguator-multilingual-ai-translation') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Type title to save translation.', 'linguator-multilingual-ai-translation') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Modify title via Edit.', 'linguator-multilingual-ai-translation')\n  })), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.FlexItem, {\n    style: {\n      paddingTop: '14px'\n    }\n  }, hasEdit ? /*#__PURE__*/React.createElement(\"a\", {\n    href: links.edit_link,\n    \"aria-label\": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Edit translation', 'linguator-multilingual-ai-translation'),\n    style: {\n      marginLeft: 8,\n      height: \"100%\",\n      width: \"100%\",\n      display: \"flex\",\n      alignItems: \"center\",\n      justifyContent: \"center\"\n    }\n  }, /*#__PURE__*/React.createElement(lucide_react__WEBPACK_IMPORTED_MODULE_8__[\"default\"], {\n    size: 20\n  })) : null, !hasEdit && (selectedSuggestion ? /*#__PURE__*/React.createElement(\"button\", {\n    onClick: linkSelected,\n    \"aria-label\": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Link existing page', 'linguator-multilingual-ai-translation'),\n    style: {\n      marginLeft: 8,\n      background: 'transparent',\n      border: 0,\n      padding: 0,\n      cursor: 'pointer'\n    }\n  }, /*#__PURE__*/React.createElement(lucide_react__WEBPACK_IMPORTED_MODULE_7__[\"default\"], {\n    size: 20\n  })) : hasAdd ? (title || '').trim().length > 0 ? /*#__PURE__*/React.createElement(\"button\", {\n    onClick: createFromTyped,\n    \"aria-label\": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Create translation from typed title', 'linguator-multilingual-ai-translation'),\n    style: {\n      marginLeft: 8,\n      background: 'transparent',\n      border: 0,\n      padding: 0,\n      cursor: 'pointer'\n    }\n  }, /*#__PURE__*/React.createElement(lucide_react__WEBPACK_IMPORTED_MODULE_7__[\"default\"], {\n    size: 20\n  })) : /*#__PURE__*/React.createElement(\"a\", {\n    href: links.add_link,\n    \"aria-label\": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add translation', 'linguator-multilingual-ai-translation'),\n    style: {\n      marginLeft: 8,\n      height: \"100%\",\n      width: \"100%\",\n      display: \"flex\",\n      alignItems: \"center\",\n      justifyContent: \"center\"\n    }\n  }, /*#__PURE__*/React.createElement(lucide_react__WEBPACK_IMPORTED_MODULE_7__[\"default\"], {\n    size: 20\n  })) : null), saving || linking ? /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Spinner, {\n    style: {\n      marginLeft: 8\n    }\n  }) : null)), editable && suggestions.length > 0 ? /*#__PURE__*/React.createElement(\"div\", {\n    style: {\n      marginTop: 4\n    }\n  }, suggestions.map(function (s) {\n    return /*#__PURE__*/React.createElement(\"div\", {\n      key: s.ID,\n      style: {\n        padding: '4px 6px',\n        cursor: 'pointer',\n        background: (selectedSuggestion === null || selectedSuggestion === void 0 ? void 0 : selectedSuggestion.ID) === s.ID ? '#eef' : 'transparent'\n      },\n      onClick: function onClick() {\n        return setSelectedSuggestion(s);\n      },\n      onMouseEnter: function onMouseEnter() {\n        return setSelectedSuggestion(s);\n      }\n    }, s.title, \" (\", s.slug, \")\");\n  })) : null, error ? /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Notice, {\n    status: \"error\",\n    isDismissible: false\n  }, error) : null);\n};\nvar TranslationsSection = function TranslationsSection(_ref7) {\n  var translations = _ref7.translations;\n  var rows = Object.values(translations);\n  return /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {\n    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Translations', 'linguator-multilingual-ai-translation'),\n    initialOpen: true\n  }, rows.map(function (row) {\n    return /*#__PURE__*/React.createElement(TranslationRow, {\n      key: row.lang.slug,\n      row: row\n    });\n  }));\n};\nvar Sidebar = function Sidebar() {\n  var settings = getSettings();\n  var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;\n  var translations = (settings === null || settings === void 0 ? void 0 : settings.translations_table) || {};\n  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__.PluginSidebarMoreMenuItem, {\n    target: SIDEBAR_NAME\n  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Linguator', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement(_wordpress_edit_post__WEBPACK_IMPORTED_MODULE_2__.PluginSidebar, {\n    name: SIDEBAR_NAME,\n    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Linguator', 'linguator-multilingual-ai-translation')\n  }, /*#__PURE__*/React.createElement(LanguageSection, {\n    lang: lang,\n    allLanguages: translations\n  }), /*#__PURE__*/React.createElement(TranslationsSection, {\n    translations: translations\n  })));\n};\n\n// Compute a dynamic icon element for the flag pin\nvar FlagIcon = function () {\n  var settings = getSettings();\n  var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;\n  if (lang !== null && lang !== void 0 && lang.flag_url) {\n    return /*#__PURE__*/React.createElement(\"img\", {\n      src: lang.flag_url,\n      alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',\n      style: {\n        width: 16,\n        height: 11\n      }\n    });\n  }\n  return /*#__PURE__*/React.createElement(\"svg\", {\n    width: \"16\",\n    height: \"11\",\n    viewBox: \"0 0 16 11\"\n  }, /*#__PURE__*/React.createElement(\"rect\", {\n    width: \"16\",\n    height: \"11\",\n    fill: \"#ddd\"\n  }));\n}();\n(0,_wordpress_plugins__WEBPACK_IMPORTED_MODULE_0__.registerPlugin)(SIDEBAR_NAME, {\n  render: Sidebar,\n  icon: FlagIcon\n});\n\n// Auto-open sidebar logic using editor ready event\nvar subscribe = wp.data.subscribe;\n\n// Check for lang parameter and auto-open sidebar\nvar params = new URLSearchParams(window.location.search);\nvar hasLangParam = params.has('lang') || params.has('new_lang');\nif (hasLangParam) {\n  var unsubscribe = null;\n  var attempts = 0;\n  var maxAttempts = 50;\n  var sidebarOpened = false;\n  var tryOpenSidebar = function tryOpenSidebar() {\n    attempts++;\n    if (sidebarOpened) {\n      return true;\n    }\n    try {\n      var editPostStore = wp.data.select('core/edit-post');\n      var editPostDispatch = wp.data.dispatch('core/edit-post');\n      if (!editPostStore || !editPostDispatch) {\n        return false;\n      }\n\n      // Try modern interface store if edit-post doesn't work\n      var interfaceStore = wp.data.select('core/interface');\n      var interfaceDispatch = wp.data.dispatch('core/interface');\n      var target = \"plugin-sidebar/\".concat(SIDEBAR_NAME);\n\n      // Try multiple approaches to open the sidebar\n      var openSuccess = false;\n\n      // Method 1: Standard openGeneralSidebar\n      if (typeof editPostDispatch.openGeneralSidebar === 'function') {\n        try {\n          // Close any existing sidebar first\n          if (typeof editPostDispatch.closeGeneralSidebar === 'function') {\n            editPostDispatch.closeGeneralSidebar();\n          }\n\n          // Close inserter if open\n          if (typeof editPostDispatch.setIsInserterOpened === 'function') {\n            editPostDispatch.setIsInserterOpened(false);\n          }\n          editPostDispatch.openGeneralSidebar(target);\n          openSuccess = true;\n        } catch (e) {\n          // Silent error handling\n        }\n      }\n\n      // Method 2: Try interface store approach\n      if (!openSuccess && interfaceDispatch && typeof interfaceDispatch.enableComplementaryArea === 'function') {\n        try {\n          // First ensure the sidebar is enabled at the interface level\n          if (typeof interfaceDispatch.enableComplementaryArea === 'function') {\n            interfaceDispatch.enableComplementaryArea('core/edit-post', target);\n          }\n\n          // Also try to set the pinned state if available\n          if (typeof interfaceDispatch.pinItem === 'function') {\n            interfaceDispatch.pinItem('core/edit-post', target);\n          }\n          openSuccess = true;\n        } catch (e) {\n          // Silent error handling\n        }\n      }\n\n      // Method 2.5: Try to ensure the sidebar panel itself is open\n      if (interfaceDispatch) {\n        try {\n          // Try to enable the complementary area first\n          if (typeof interfaceDispatch.setDefaultComplementaryArea === 'function') {\n            interfaceDispatch.setDefaultComplementaryArea('core/edit-post', target);\n          }\n\n          // Try to set the sidebar as active\n          if (typeof interfaceDispatch.setActiveComplementaryArea === 'function') {\n            interfaceDispatch.setActiveComplementaryArea('core/edit-post', target);\n          }\n        } catch (e) {\n          // Silent error handling\n        }\n      }\n\n      // Method 3: Try direct edit-post enableComplementaryArea\n      if (!openSuccess && typeof editPostDispatch.enableComplementaryArea === 'function') {\n        try {\n          editPostDispatch.enableComplementaryArea('core/edit-post', target);\n          openSuccess = true;\n        } catch (e) {\n          // Silent error handling\n        }\n      }\n      if (openSuccess) {\n        // Verify if it worked after a delay\n        setTimeout(function () {\n          var currentSidebar = null;\n\n          // Check multiple ways to see if sidebar is open\n          if (editPostStore.getActiveComplementaryArea) {\n            currentSidebar = editPostStore.getActiveComplementaryArea('core/edit-post');\n          }\n          if (!currentSidebar && interfaceStore && interfaceStore.getActiveComplementaryArea) {\n            currentSidebar = interfaceStore.getActiveComplementaryArea('core/edit-post');\n          }\n          if (currentSidebar === target) {\n            // Even though API says it's open, let's ensure the visual sidebar is actually visible\n            setTimeout(function () {\n              // Check if sidebar panel is actually visible\n              var sidebarPanel = document.querySelector('.interface-complementary-area, .edit-post-sidebar, .components-panel');\n              var sidebarContainer = document.querySelector('.interface-interface-skeleton__sidebar, .edit-post-layout__sidebar');\n              if (sidebarPanel) {\n                var isVisible = sidebarPanel.offsetParent !== null && !sidebarPanel.hidden;\n                if (!isVisible) {\n                  // Force sidebar panel visibility\n                  sidebarPanel.style.display = 'block';\n                  sidebarPanel.style.visibility = 'visible';\n                  sidebarPanel.style.opacity = '1';\n                  sidebarPanel.hidden = false;\n                  if (sidebarContainer) {\n                    sidebarContainer.style.display = 'block';\n                    sidebarContainer.style.visibility = 'visible';\n                    sidebarContainer.style.width = '280px';\n                  }\n                }\n              }\n\n              // Also try to click the sidebar toggle button if sidebar is still not visible\n              setTimeout(function () {\n                var sidebarToggle = document.querySelector('button[aria-label*=\"Settings\"], .edit-post-header__settings button, button[data-label*=\"Settings\"]');\n                var sidebarStillHidden = !document.querySelector('.interface-complementary-area:not([hidden])');\n                if (sidebarToggle && sidebarStillHidden) {\n                  sidebarToggle.click();\n\n                  // Then try to click our specific sidebar tab\n                  setTimeout(function () {\n                    var linguatorTab = document.querySelector('button[aria-label*=\"Linguator\"], .components-button[aria-label*=\"Linguator\"]');\n                    if (linguatorTab) {\n                      linguatorTab.click();\n                    }\n                  }, 300);\n                }\n              }, 200);\n            }, 100);\n            sidebarOpened = true;\n            if (unsubscribe) {\n              unsubscribe();\n              unsubscribe = null;\n            }\n          } else {\n            // Try DOM-based verification\n            var sidebarElement = document.querySelector(\"[data-sidebar=\\\"\".concat(SIDEBAR_NAME, \"\\\"], .\").concat(SIDEBAR_NAME));\n            if (sidebarElement && sidebarElement.offsetParent !== null) {\n              sidebarOpened = true;\n              if (unsubscribe) {\n                unsubscribe();\n                unsubscribe = null;\n              }\n            }\n          }\n        }, 500);\n        return sidebarOpened;\n      } else {\n        // As a last resort, try to find and click the sidebar button in DOM\n        setTimeout(function () {\n          var sidebarButton = document.querySelector(\"button[aria-label*=\\\"Linguator\\\"], button[data-label*=\\\"Linguator\\\"], [data-sidebar=\\\"\".concat(SIDEBAR_NAME, \"\\\"]\"));\n          if (sidebarButton) {\n            sidebarButton.click();\n\n            // Check if it worked\n            setTimeout(function () {\n              var sidebarElement = document.querySelector('.interface-complementary-area');\n              var isVisible = sidebarElement && sidebarElement.offsetParent !== null;\n              if (isVisible) {\n                sidebarOpened = true;\n                if (unsubscribe) {\n                  unsubscribe();\n                  unsubscribe = null;\n                }\n              }\n            }, 300);\n          }\n        }, 500);\n      }\n    } catch (e) {\n      // Silent error handling\n    }\n    if (attempts >= maxAttempts) {\n      if (unsubscribe) {\n        unsubscribe();\n        unsubscribe = null;\n      }\n    }\n    return false;\n  };\n\n  // Wait for editor to be ready before trying\n  var waitForEditor = function waitForEditor() {\n    // Try immediately first\n    if (tryOpenSidebar()) {\n      return;\n    }\n\n    // If immediate attempt fails, subscribe to store changes\n    unsubscribe = subscribe(function () {\n      if (!sidebarOpened && attempts < maxAttempts) {\n        tryOpenSidebar();\n      }\n    });\n\n    // Also try with regular intervals as a fallback\n    var intervalAttempts = setInterval(function () {\n      if (sidebarOpened || attempts >= maxAttempts) {\n        clearInterval(intervalAttempts);\n        return;\n      }\n      tryOpenSidebar();\n    }, 1000); // Try every second\n\n    // Cleanup after maximum time\n    setTimeout(function () {\n      if (intervalAttempts) {\n        clearInterval(intervalAttempts);\n      }\n      if (unsubscribe) {\n        unsubscribe();\n        unsubscribe = null;\n      }\n      // Cleanup completed\n    }, 30000); // Give up after 30 seconds\n  };\n\n  // Start the process after a small delay to ensure everything is loaded\n  setTimeout(waitForEditor, 500);\n}\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/editors/post.js?\n}");
 
+/***/ }),
 
+/***/ "./node_modules/lucide-react/dist/esm/Icon.js":
+/*!****************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/Icon.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Icon)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"react\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _defaultAttributes_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./defaultAttributes.js */ \"./node_modules/lucide-react/dist/esm/defaultAttributes.js\");\n/* harmony import */ var _shared_src_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./shared/src/utils.js */ \"./node_modules/lucide-react/dist/esm/shared/src/utils.js\");\n/**\n * @license lucide-react v0.524.0 - ISC\n *\n * This source code is licensed under the ISC license.\n * See the LICENSE file in the root directory of this source tree.\n */\n\n\n\n\n\nconst Icon = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(\n  ({\n    color = \"currentColor\",\n    size = 24,\n    strokeWidth = 2,\n    absoluteStrokeWidth,\n    className = \"\",\n    children,\n    iconNode,\n    ...rest\n  }, ref) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(\n    \"svg\",\n    {\n      ref,\n      ..._defaultAttributes_js__WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n      width: size,\n      height: size,\n      stroke: color,\n      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,\n      className: (0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_2__.mergeClasses)(\"lucide\", className),\n      ...!children && !(0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_2__.hasA11yProp)(rest) && { \"aria-hidden\": \"true\" },\n      ...rest\n    },\n    [\n      ...iconNode.map(([tag, attrs]) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(tag, attrs)),\n      ...Array.isArray(children) ? children : [children]\n    ]\n  )\n);\n\n\n//# sourceMappingURL=Icon.js.map\n\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./node_modules/lucide-react/dist/esm/Icon.js?\n}");
 
+/***/ }),
 
-const createLucideIcon = (iconName, iconNode) => {
-  const Component = (0,external_React_namespaceObject.forwardRef)(
-    ({ className, ...props }, ref) => (0,external_React_namespaceObject.createElement)(Icon, {
-      ref,
-      iconNode,
-      className: mergeClasses(
-        `lucide-${toKebabCase(toPascalCase(iconName))}`,
-        `lucide-${iconName}`,
-        className
-      ),
-      ...props
-    })
-  );
-  Component.displayName = toPascalCase(iconName);
-  return Component;
-};
-
-
-//# sourceMappingURL=createLucideIcon.js.map
-
-;// ./node_modules/lucide-react/dist/esm/icons/square-pen.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const __iconNode = [
-  ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7", key: "1m0v6g" }],
-  [
-    "path",
-    {
-      d: "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z",
-      key: "ohrbg2"
-    }
-  ]
-];
-const SquarePen = createLucideIcon("square-pen", __iconNode);
-
-
-//# sourceMappingURL=square-pen.js.map
-
-;// ./node_modules/lucide-react/dist/esm/icons/circle-plus.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const circle_plus_iconNode = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M8 12h8", key: "1wcyev" }],
-  ["path", { d: "M12 8v8", key: "napkw2" }]
-];
-const CirclePlus = createLucideIcon("circle-plus", circle_plus_iconNode);
-
-
-//# sourceMappingURL=circle-plus.js.map
-
-;// ./Assets/js/src/editors/post.js
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-/**
- * Post Editor sidebar bootstrap
- */
-
-
-
-
-
-
-
-
-
-var SIDEBAR_NAME = 'lmat-post-sidebar';
-
-/**
- * Simple debounce hook
- */
-var useDebouncedCallback = function useDebouncedCallback(callback) {
-  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2000;
-  var timer = (0,external_wp_element_namespaceObject.useRef)(null);
-  var cbRef = (0,external_wp_element_namespaceObject.useRef)(callback);
-  cbRef.current = callback;
-  var debounced = (0,external_wp_element_namespaceObject.useCallback)(function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-    if (timer.current) {
-      clearTimeout(timer.current);
-    }
-    timer.current = setTimeout(function () {
-      cbRef.current.apply(cbRef, args);
-    }, delay);
-  }, [delay]);
-
-  // optional: clear on unmount
-  var cancel = (0,external_wp_element_namespaceObject.useCallback)(function () {
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = null;
-    }
-  }, []);
-  return [debounced, cancel];
-};
-var getSettings = function getSettings() {
-  // Provided by PHP in Abstract_Screen::enqueue via wp_add_inline_script
-  try {
-    // eslint-disable-next-line no-undef
-    if (typeof lmat_block_editor_plugin_settings !== 'undefined') {
-      // eslint-disable-next-line no-undef
-      return lmat_block_editor_plugin_settings;
-    }
-  } catch (e) {}
-  if (typeof window !== 'undefined' && window.lmat_block_editor_plugin_settings) {
-    return window.lmat_block_editor_plugin_settings;
-  }
-  return {
-    lang: null,
-    translations_table: {}
-  };
-};
-var LanguageSection = function LanguageSection(_ref) {
-  var lang = _ref.lang,
-    allLanguages = _ref.allLanguages;
-  var options = (0,external_wp_element_namespaceObject.useMemo)(function () {
-    var list = [];
-    if (lang) {
-      list.push({
-        label: lang.name,
-        value: lang.slug,
-        flag_url: lang.flag_url
-      });
-    }
-    Object.values(allLanguages).forEach(function (row) {
-      list.push({
-        label: row.lang.name,
-        value: row.lang.slug,
-        flag_url: row.lang.flag_url
-      });
-    });
-    return list;
-  }, [lang, allLanguages]);
-  return /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.PanelBody, {
-    title: (0,external_wp_i18n_namespaceObject.__)('Language', 'linguator-multilingual-ai-translation'),
-    initialOpen: true
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Flex, {
-    align: "center"
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, null, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement("img", {
-    src: lang.flag_url,
-    alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
-    className: "flag",
-    style: {
-      marginRight: 8,
-      width: 20,
-      height: 14
-    }
-  }) : null), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
-    style: {
-      flex: 1
-    }
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.SelectControl, {
-    label: undefined,
-    value: (lang === null || lang === void 0 ? void 0 : lang.slug) || '',
-    onChange: function onChange(value) {
-      // If selecting the current language, do nothing.
-      if (!value || lang && value === lang.slug) {
-        return;
-      }
-      // Look up the selected language row in translations table
-      var selected = allLanguages === null || allLanguages === void 0 ? void 0 : allLanguages[value];
-      if (selected && selected.links) {
-        var target = selected.links.edit_link || selected.links.add_link;
-        if (target) {
-          window.location.href = target;
-        }
-      }
-    },
-    help: undefined,
-    options: options.map(function (opt) {
-      return {
-        label: opt.label,
-        value: opt.value
-      };
-    })
-    // Changing language navigates to the corresponding edit/add page.
-  }))));
-};
-var TranslationRow = function TranslationRow(_ref2) {
-  var row = _ref2.row;
-  var lang = row.lang,
-    translated_post = row.translated_post,
-    links = row.links;
-  var initialTitle = (translated_post === null || translated_post === void 0 ? void 0 : translated_post.title) || '';
-  var _useState = (0,external_wp_element_namespaceObject.useState)(initialTitle),
-    _useState2 = _slicedToArray(_useState, 2),
-    title = _useState2[0],
-    setTitle = _useState2[1];
-  var _useState3 = (0,external_wp_element_namespaceObject.useState)(false),
-    _useState4 = _slicedToArray(_useState3, 2),
-    saving = _useState4[0],
-    setSaving = _useState4[1];
-  var _useState5 = (0,external_wp_element_namespaceObject.useState)(''),
-    _useState6 = _slicedToArray(_useState5, 2),
-    error = _useState6[0],
-    setError = _useState6[1];
-  var _useState7 = (0,external_wp_element_namespaceObject.useState)([]),
-    _useState8 = _slicedToArray(_useState7, 2),
-    allPages = _useState8[0],
-    setAllPages = _useState8[1];
-  var _useState9 = (0,external_wp_element_namespaceObject.useState)(false),
-    _useState0 = _slicedToArray(_useState9, 2),
-    loadingPages = _useState0[0],
-    setLoadingPages = _useState0[1];
-  var _useState1 = (0,external_wp_element_namespaceObject.useState)([]),
-    _useState10 = _slicedToArray(_useState1, 2),
-    suggestions = _useState10[0],
-    setSuggestions = _useState10[1];
-  var _useState11 = (0,external_wp_element_namespaceObject.useState)(null),
-    _useState12 = _slicedToArray(_useState11, 2),
-    selectedSuggestion = _useState12[0],
-    setSelectedSuggestion = _useState12[1];
-  var _useState13 = (0,external_wp_element_namespaceObject.useState)(false),
-    _useState14 = _slicedToArray(_useState13, 2),
-    linking = _useState14[0],
-    setLinking = _useState14[1];
-  var editable = !initialTitle; // editable only if there is no value initially
-
-  // Debounced save
-  var _useDebouncedCallback = useDebouncedCallback(/*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(nextTitle) {
-        var clean, _t;
-        return _regenerator().w(function (_context) {
-          while (1) switch (_context.p = _context.n) {
-            case 0:
-              // Guard: don’t send empty or whitespace-only titles
-              clean = (nextTitle || '').trim();
-              if (clean) {
-                _context.n = 1;
-                break;
-              }
-              return _context.a(2);
-            case 1:
-              _context.p = 1;
-              setSaving(true);
-              setError('');
-
-              // Example payload — adjust to match your PHP route/handler.
-              // Expect your server to create/update a placeholder translation record’s title.
-              _context.n = 2;
-              return external_wp_apiFetch_namespaceObject({
-                path: '/lmat/v1/translation-title',
-                method: 'POST',
-                data: {
-                  postId: (translated_post === null || translated_post === void 0 ? void 0 : translated_post.id) || null,
-                  // if you have it
-                  lang: lang === null || lang === void 0 ? void 0 : lang.slug,
-                  title: clean
-                }
-              });
-            case 2:
-              setSaving(false);
-              _context.n = 4;
-              break;
-            case 3:
-              _context.p = 3;
-              _t = _context.v;
-              setSaving(false);
-              setError((0,external_wp_i18n_namespaceObject.__)('Failed to save title. Please try again.', 'linguator-multilingual-ai-translation'));
-              // Optional: console.error(e);
-            case 4:
-              return _context.a(2);
-          }
-        }, _callee, null, [[1, 3]]);
-      }));
-      return function (_x) {
-        return _ref3.apply(this, arguments);
-      };
-    }(), 2000),
-    _useDebouncedCallback2 = _slicedToArray(_useDebouncedCallback, 1),
-    debouncedSave = _useDebouncedCallback2[0];
-  var hasEdit = !!(links !== null && links !== void 0 && links.edit_link);
-  var hasAdd = !!(links !== null && links !== void 0 && links.add_link);
-  var loadAllPages = (0,external_wp_element_namespaceObject.useCallback)(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-    var pages, _t2;
-    return _regenerator().w(function (_context2) {
-      while (1) switch (_context2.p = _context2.n) {
-        case 0:
-          if (!(loadingPages || allPages.length > 0)) {
-            _context2.n = 1;
-            break;
-          }
-          return _context2.a(2);
-        case 1:
-          _context2.p = 1;
-          setLoadingPages(true);
-          _context2.n = 2;
-          return external_wp_apiFetch_namespaceObject({
-            path: '/lmat/v1/languages/utils/get_all_pages_data'
-          });
-        case 2:
-          pages = _context2.v;
-          setAllPages(Array.isArray(pages) ? pages : []);
-          _context2.n = 4;
-          break;
-        case 3:
-          _context2.p = 3;
-          _t2 = _context2.v;
-        case 4:
-          _context2.p = 4;
-          setLoadingPages(false);
-          return _context2.f(4);
-        case 5:
-          return _context2.a(2);
-      }
-    }, _callee2, null, [[1, 3, 4, 5]]);
-  })), [loadingPages, allPages.length]);
-  var computeSuggestions = (0,external_wp_element_namespaceObject.useCallback)(function (query) {
-    var q = (query || '').trim().toLowerCase();
-    if (!q) return [];
-    return allPages.filter(function (p) {
-      var _p$language;
-      var sameLang = (p === null || p === void 0 || (_p$language = p.language) === null || _p$language === void 0 ? void 0 : _p$language.slug) === (lang === null || lang === void 0 ? void 0 : lang.slug);
-      var unlinked = !(p !== null && p !== void 0 && p.is_linked);
-      var matches = ((p === null || p === void 0 ? void 0 : p.title) || '').toLowerCase().includes(q) || ((p === null || p === void 0 ? void 0 : p.slug) || '').toLowerCase().includes(q);
-      return sameLang && unlinked && matches;
-    }).slice(0, 10);
-  }, [allPages, lang === null || lang === void 0 ? void 0 : lang.slug]);
-  var handleTitleChange = function handleTitleChange(val) {
-    setTitle(val);
-    setSelectedSuggestion(null);
-    if (editable) {
-      if (val && val.trim().length > 1) {
-        if (allPages.length === 0) {
-          loadAllPages().then(function () {
-            setSuggestions(computeSuggestions(val));
-          });
-        } else {
-          setSuggestions(computeSuggestions(val));
-        }
-      } else {
-        setSuggestions([]);
-      }
-    }
-  };
-  var linkSelected = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {
-      var _select, _select$getCurrentPos, postId, _t3;
-      return _regenerator().w(function (_context3) {
-        while (1) switch (_context3.p = _context3.n) {
-          case 0:
-            e.preventDefault();
-            if (selectedSuggestion) {
-              _context3.n = 1;
-              break;
-            }
-            return _context3.a(2);
-          case 1:
-            _context3.p = 1;
-            setLinking(true);
-            setError('');
-            postId = (_select = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select === void 0 || (_select$getCurrentPos = _select.getCurrentPostId) === null || _select$getCurrentPos === void 0 ? void 0 : _select$getCurrentPos.call(_select);
-            _context3.n = 2;
-            return external_wp_apiFetch_namespaceObject({
-              path: '/lmat/v1/languages/link-translation',
-              method: 'POST',
-              data: {
-                source_id: postId,
-                target_id: selectedSuggestion.ID,
-                target_lang: lang === null || lang === void 0 ? void 0 : lang.slug
-              }
-            });
-          case 2:
-            window.location.reload();
-            _context3.n = 4;
-            break;
-          case 3:
-            _context3.p = 3;
-            _t3 = _context3.v;
-            setError((0,external_wp_i18n_namespaceObject.__)('Failed to link page. Please try again.', 'linguator-multilingual-ai-translation'));
-          case 4:
-            _context3.p = 4;
-            setLinking(false);
-            return _context3.f(4);
-          case 5:
-            return _context3.a(2);
-        }
-      }, _callee3, null, [[1, 3, 4, 5]]);
-    }));
-    return function linkSelected(_x2) {
-      return _ref5.apply(this, arguments);
-    };
-  }();
-  var createFromTyped = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {
-      var clean, _select2, _select2$getCurrentPo, _select3, _select3$getCurrentPo, postId, postType, _t4;
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.p = _context4.n) {
-          case 0:
-            e.preventDefault();
-            clean = (title || '').trim();
-            if (clean) {
-              _context4.n = 1;
-              break;
-            }
-            // Fallback: if no title, navigate to add page
-            if (links !== null && links !== void 0 && links.add_link) {
-              window.location.href = links.add_link;
-            }
-            return _context4.a(2);
-          case 1:
-            _context4.p = 1;
-            setLinking(true);
-            setError('');
-            postId = (_select2 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select2 === void 0 || (_select2$getCurrentPo = _select2.getCurrentPostId) === null || _select2$getCurrentPo === void 0 ? void 0 : _select2$getCurrentPo.call(_select2);
-            postType = (_select3 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select3 === void 0 || (_select3$getCurrentPo = _select3.getCurrentPostType) === null || _select3$getCurrentPo === void 0 ? void 0 : _select3$getCurrentPo.call(_select3);
-            _context4.n = 2;
-            return external_wp_apiFetch_namespaceObject({
-              path: '/lmat/v1/languages/create-translation',
-              method: 'POST',
-              data: {
-                source_id: postId,
-                target_lang: lang === null || lang === void 0 ? void 0 : lang.slug,
-                title: clean,
-                post_type: postType || 'page'
-              }
-            });
-          case 2:
-            // Refresh to reflect new translation and show Edit icon
-            window.location.reload();
-            _context4.n = 4;
-            break;
-          case 3:
-            _context4.p = 3;
-            _t4 = _context4.v;
-            setError((0,external_wp_i18n_namespaceObject.__)('Failed to create page. Please try again.', 'linguator-multilingual-ai-translation'));
-          case 4:
-            _context4.p = 4;
-            setLinking(false);
-            return _context4.f(4);
-          case 5:
-            return _context4.a(2);
-        }
-      }, _callee4, null, [[1, 3, 4, 5]]);
-    }));
-    return function createFromTyped(_x3) {
-      return _ref6.apply(this, arguments);
-    };
-  }();
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 12
-    }
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Flex, {
-    align: "center",
-    style: {
-      marginBottom: 8,
-      alignItems: 'start'
-    }
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
-    style: {
-      paddingTop: '14px'
-    }
-  }, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement("img", {
-    src: lang.flag_url,
-    alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
-    style: {
-      width: 20,
-      height: 14
-    }
-  }) : null), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
-    style: {
-      flex: 1,
-      padding: '0px'
-    }
-  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.TextControl, {
-    value: title,
-    onChange: handleTitleChange,
-    placeholder: (0,external_wp_i18n_namespaceObject.__)('title', 'linguator-multilingual-ai-translation'),
-    readOnly: !editable,
-    disabled: !editable,
-    help: editable ? saving ? (0,external_wp_i18n_namespaceObject.__)('Saving…', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Type title to save translation.', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Modify title via Edit.', 'linguator-multilingual-ai-translation')
-  })), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
-    style: {
-      paddingTop: '14px'
-    }
-  }, hasEdit ? /*#__PURE__*/React.createElement("a", {
-    href: links.edit_link,
-    "aria-label": (0,external_wp_i18n_namespaceObject.__)('Edit translation', 'linguator-multilingual-ai-translation'),
-    style: {
-      marginLeft: 8,
-      height: "100%",
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }
-  }, /*#__PURE__*/React.createElement(SquarePen, {
-    size: 20
-  })) : null, !hasEdit && (selectedSuggestion ? /*#__PURE__*/React.createElement("button", {
-    onClick: linkSelected,
-    "aria-label": (0,external_wp_i18n_namespaceObject.__)('Link existing page', 'linguator-multilingual-ai-translation'),
-    style: {
-      marginLeft: 8,
-      background: 'transparent',
-      border: 0,
-      padding: 0,
-      cursor: 'pointer'
-    }
-  }, /*#__PURE__*/React.createElement(CirclePlus, {
-    size: 20
-  })) : hasAdd ? (title || '').trim().length > 0 ? /*#__PURE__*/React.createElement("button", {
-    onClick: createFromTyped,
-    "aria-label": (0,external_wp_i18n_namespaceObject.__)('Create translation from typed title', 'linguator-multilingual-ai-translation'),
-    style: {
-      marginLeft: 8,
-      background: 'transparent',
-      border: 0,
-      padding: 0,
-      cursor: 'pointer'
-    }
-  }, /*#__PURE__*/React.createElement(CirclePlus, {
-    size: 20
-  })) : /*#__PURE__*/React.createElement("a", {
-    href: links.add_link,
-    "aria-label": (0,external_wp_i18n_namespaceObject.__)('Add translation', 'linguator-multilingual-ai-translation'),
-    style: {
-      marginLeft: 8,
-      height: "100%",
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }
-  }, /*#__PURE__*/React.createElement(CirclePlus, {
-    size: 20
-  })) : null), saving || linking ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Spinner, {
-    style: {
-      marginLeft: 8
-    }
-  }) : null)), editable && suggestions.length > 0 ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 4
-    }
-  }, suggestions.map(function (s) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: s.ID,
-      style: {
-        padding: '4px 6px',
-        cursor: 'pointer',
-        background: (selectedSuggestion === null || selectedSuggestion === void 0 ? void 0 : selectedSuggestion.ID) === s.ID ? '#eef' : 'transparent'
-      },
-      onClick: function onClick() {
-        return setSelectedSuggestion(s);
-      },
-      onMouseEnter: function onMouseEnter() {
-        return setSelectedSuggestion(s);
-      }
-    }, s.title, " (", s.slug, ")");
-  })) : null, error ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Notice, {
-    status: "error",
-    isDismissible: false
-  }, error) : null);
-};
-var TranslationsSection = function TranslationsSection(_ref7) {
-  var translations = _ref7.translations;
-  var rows = Object.values(translations);
-  return /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.PanelBody, {
-    title: (0,external_wp_i18n_namespaceObject.__)('Translations', 'linguator-multilingual-ai-translation'),
-    initialOpen: true
-  }, rows.map(function (row) {
-    return /*#__PURE__*/React.createElement(TranslationRow, {
-      key: row.lang.slug,
-      row: row
-    });
-  }));
-};
-var Sidebar = function Sidebar() {
-  var settings = getSettings();
-  var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;
-  var translations = (settings === null || settings === void 0 ? void 0 : settings.translations_table) || {};
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(external_wp_editPost_namespaceObject.PluginSidebarMoreMenuItem, {
-    target: SIDEBAR_NAME
-  }, (0,external_wp_i18n_namespaceObject.__)('Linguator', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement(external_wp_editPost_namespaceObject.PluginSidebar, {
-    name: SIDEBAR_NAME,
-    title: (0,external_wp_i18n_namespaceObject.__)('Linguator', 'linguator-multilingual-ai-translation')
-  }, /*#__PURE__*/React.createElement(LanguageSection, {
-    lang: lang,
-    allLanguages: translations
-  }), /*#__PURE__*/React.createElement(TranslationsSection, {
-    translations: translations
-  })));
-};
-
-// Compute a dynamic icon element for the flag pin
-var FlagIcon = function () {
-  var settings = getSettings();
-  var lang = (settings === null || settings === void 0 ? void 0 : settings.lang) || null;
-  if (lang !== null && lang !== void 0 && lang.flag_url) {
-    return /*#__PURE__*/React.createElement("img", {
-      src: lang.flag_url,
-      alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
-      style: {
-        width: 16,
-        height: 11
-      }
-    });
-  }
-  return /*#__PURE__*/React.createElement("svg", {
-    width: "16",
-    height: "11",
-    viewBox: "0 0 16 11"
-  }, /*#__PURE__*/React.createElement("rect", {
-    width: "16",
-    height: "11",
-    fill: "#ddd"
-  }));
-}();
-(0,external_wp_plugins_namespaceObject.registerPlugin)(SIDEBAR_NAME, {
-  render: Sidebar,
-  icon: FlagIcon
-});
-
-// Auto-open sidebar logic using editor ready event
-var subscribe = wp.data.subscribe;
-
-// Check for lang parameter and auto-open sidebar
-var params = new URLSearchParams(window.location.search);
-var hasLangParam = params.has('lang') || params.has('new_lang');
-if (hasLangParam) {
-  // Subscribe to editor changes and open sidebar when ready
-  var unsubscribe = null;
-  var attempts = 0;
-  var maxAttempts = 20;
-  var tryOpenSidebar = function tryOpenSidebar() {
-    attempts++;
-    try {
-      var editPostStore = wp.data.select('core/edit-post');
-      var editPostDispatch = wp.data.dispatch('core/edit-post');
-      if (editPostStore && editPostDispatch && typeof editPostDispatch.openGeneralSidebar === 'function') {
-        var target = "plugin-sidebar/".concat(SIDEBAR_NAME);
-
-        // First, close any existing sidebar to force a fresh open
-        try {
-          if (typeof editPostDispatch.closeGeneralSidebar === 'function') {
-            editPostDispatch.closeGeneralSidebar();
-          }
-        } catch (e) {
-          // Ignore errors when closing
-        }
-
-        // Open our specific sidebar (this should also open the sidebar panel)
-        editPostDispatch.openGeneralSidebar(target);
-
-        // Force the sidebar panel to be visible by trying multiple approaches
-        try {
-          // Try method 1: enableComplementaryArea
-          if (typeof editPostDispatch.enableComplementaryArea === 'function') {
-            editPostDispatch.enableComplementaryArea('core/edit-post', target);
-          }
-
-          // Try method 2: setIsInserterOpened(false) to close inserter, then open sidebar
-          if (typeof editPostDispatch.setIsInserterOpened === 'function') {
-            editPostDispatch.setIsInserterOpened(false);
-          }
-
-          // Try method 3: Force sidebar visibility with DOM manipulation if APIs fail
-          setTimeout(function () {
-            var sidebarElement = document.querySelector('.interface-complementary-area');
-            if (sidebarElement) {
-              sidebarElement.style.display = 'block';
-              sidebarElement.style.visibility = 'visible';
-            }
-
-            // Also try to find and show the specific LMAT sidebar content
-            var lmatSidebar = document.querySelector('[data-sidebar="lmat-post-sidebar"], .lmat-post-sidebar');
-            if (lmatSidebar) {
-              lmatSidebar.style.display = 'block';
-              lmatSidebar.style.visibility = 'visible';
-            }
-          }, 100);
-        } catch (e) {
-          console.log('LMAT: Error with fallback methods:', e);
-        }
-
-        // Debug: Check what sidebar elements exist
-        setTimeout(function () {
-          var sidebarButton = document.querySelector('[aria-label*="Linguator"], button[aria-label*="Linguator"], [data-label*="Linguator"]');
-          var complementaryArea = document.querySelector('.interface-complementary-area');
-          var sidebarContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
-
-          // Try clicking the actual sidebar button if it exists
-          if (sidebarButton && typeof sidebarButton.click === 'function') {
-            sidebarButton.click();
-
-            // Try clicking multiple times with delays
-            setTimeout(function () {
-              sidebarButton.click();
-            }, 100);
-            setTimeout(function () {
-              sidebarButton.click();
-
-              // Check if sidebar is now visible
-              setTimeout(function () {
-                var isVisible = document.querySelector('.interface-complementary-area:not([style*="display: none"])');
-                var lmatContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
-              }, 100);
-            }, 200);
-          } else {
-            // Try to find and click any button that opens our sidebar
-            var allButtons = document.querySelectorAll('button, [role="button"]');
-            var _iterator = _createForOfIteratorHelper(allButtons),
-              _step;
-            try {
-              for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                var button = _step.value;
-                var text = button.textContent || button.getAttribute('aria-label') || '';
-                if (text.toLowerCase().includes('linguator')) {
-                  console.log('LMAT: Found and clicking Linguator button:', button);
-                  button.click();
-                  break;
-                }
-              }
-            } catch (err) {
-              _iterator.e(err);
-            } finally {
-              _iterator.f();
-            }
-          }
-        }, 200);
-        if (unsubscribe) {
-          unsubscribe();
-        }
-        return true;
-      }
-    } catch (e) {
-      console.log('LMAT: Error trying to open sidebar:', e);
-    }
-    if (attempts >= maxAttempts) {
-      console.log('LMAT: Max attempts reached, giving up');
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    }
-    return false;
-  };
-
-  // Try immediately
-  if (!tryOpenSidebar()) {
-    // If it fails, subscribe to store changes and keep trying
-    unsubscribe = subscribe(function () {
-      tryOpenSidebar();
-    });
-  }
-}
+/***/ "./node_modules/lucide-react/dist/esm/createLucideIcon.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/createLucideIcon.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ createLucideIcon)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"react\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shared/src/utils.js */ \"./node_modules/lucide-react/dist/esm/shared/src/utils.js\");\n/* harmony import */ var _Icon_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Icon.js */ \"./node_modules/lucide-react/dist/esm/Icon.js\");\n/**\n * @license lucide-react v0.524.0 - ISC\n *\n * This source code is licensed under the ISC license.\n * See the LICENSE file in the root directory of this source tree.\n */\n\n\n\n\n\nconst createLucideIcon = (iconName, iconNode) => {\n  const Component = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(\n    ({ className, ...props }, ref) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Icon_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"], {\n      ref,\n      iconNode,\n      className: (0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__.mergeClasses)(\n        `lucide-${(0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__.toKebabCase)((0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__.toPascalCase)(iconName))}`,\n        `lucide-${iconName}`,\n        className\n      ),\n      ...props\n    })\n  );\n  Component.displayName = (0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__.toPascalCase)(iconName);\n  return Component;\n};\n\n\n//# sourceMappingURL=createLucideIcon.js.map\n\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./node_modules/lucide-react/dist/esm/createLucideIcon.js?\n}");
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/defaultAttributes.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/defaultAttributes.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ defaultAttributes)\n/* harmony export */ });\n/**\n * @license lucide-react v0.524.0 - ISC\n *\n * This source code is licensed under the ISC license.\n * See the LICENSE file in the root directory of this source tree.\n */\n\nvar defaultAttributes = {\n  xmlns: \"http://www.w3.org/2000/svg\",\n  width: 24,\n  height: 24,\n  viewBox: \"0 0 24 24\",\n  fill: \"none\",\n  stroke: \"currentColor\",\n  strokeWidth: 2,\n  strokeLinecap: \"round\",\n  strokeLinejoin: \"round\"\n};\n\n\n//# sourceMappingURL=defaultAttributes.js.map\n\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./node_modules/lucide-react/dist/esm/defaultAttributes.js?\n}");
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/circle-plus.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/circle-plus.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   __iconNode: () => (/* binding */ __iconNode),\n/* harmony export */   \"default\": () => (/* binding */ CirclePlus)\n/* harmony export */ });\n/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ \"./node_modules/lucide-react/dist/esm/createLucideIcon.js\");\n/**\n * @license lucide-react v0.524.0 - ISC\n *\n * This source code is licensed under the ISC license.\n * See the LICENSE file in the root directory of this source tree.\n */\n\n\n\nconst __iconNode = [\n  [\"circle\", { cx: \"12\", cy: \"12\", r: \"10\", key: \"1mglay\" }],\n  [\"path\", { d: \"M8 12h8\", key: \"1wcyev\" }],\n  [\"path\", { d: \"M12 8v8\", key: \"napkw2\" }]\n];\nconst CirclePlus = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(\"circle-plus\", __iconNode);\n\n\n//# sourceMappingURL=circle-plus.js.map\n\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./node_modules/lucide-react/dist/esm/icons/circle-plus.js?\n}");
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/square-pen.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/square-pen.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   __iconNode: () => (/* binding */ __iconNode),\n/* harmony export */   \"default\": () => (/* binding */ SquarePen)\n/* harmony export */ });\n/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ \"./node_modules/lucide-react/dist/esm/createLucideIcon.js\");\n/**\n * @license lucide-react v0.524.0 - ISC\n *\n * This source code is licensed under the ISC license.\n * See the LICENSE file in the root directory of this source tree.\n */\n\n\n\nconst __iconNode = [\n  [\"path\", { d: \"M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\", key: \"1m0v6g\" }],\n  [\n    \"path\",\n    {\n      d: \"M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z\",\n      key: \"ohrbg2\"\n    }\n  ]\n];\nconst SquarePen = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(\"square-pen\", __iconNode);\n\n\n//# sourceMappingURL=square-pen.js.map\n\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./node_modules/lucide-react/dist/esm/icons/square-pen.js?\n}");
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/shared/src/utils.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/shared/src/utils.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   hasA11yProp: () => (/* binding */ hasA11yProp),\n/* harmony export */   mergeClasses: () => (/* binding */ mergeClasses),\n/* harmony export */   toCamelCase: () => (/* binding */ toCamelCase),\n/* harmony export */   toKebabCase: () => (/* binding */ toKebabCase),\n/* harmony export */   toPascalCase: () => (/* binding */ toPascalCase)\n/* harmony export */ });\n/**\n * @license lucide-react v0.524.0 - ISC\n *\n * This source code is licensed under the ISC license.\n * See the LICENSE file in the root directory of this source tree.\n */\n\nconst toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, \"$1-$2\").toLowerCase();\nconst toCamelCase = (string) => string.replace(\n  /^([A-Z])|[\\s-_]+(\\w)/g,\n  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()\n);\nconst toPascalCase = (string) => {\n  const camelCase = toCamelCase(string);\n  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);\n};\nconst mergeClasses = (...classes) => classes.filter((className, index, array) => {\n  return Boolean(className) && className.trim() !== \"\" && array.indexOf(className) === index;\n}).join(\" \").trim();\nconst hasA11yProp = (props) => {\n  for (const prop in props) {\n    if (prop.startsWith(\"aria-\") || prop === \"role\" || prop === \"title\") {\n      return true;\n    }\n  }\n};\n\n\n//# sourceMappingURL=utils.js.map\n\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./node_modules/lucide-react/dist/esm/shared/src/utils.js?\n}");
+
+/***/ }),
+
+/***/ "@wordpress/api-fetch":
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["apiFetch"];
+
+/***/ }),
+
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/data":
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["data"];
+
+/***/ }),
+
+/***/ "@wordpress/edit-post":
+/*!**********************************!*\
+  !*** external ["wp","editPost"] ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["editPost"];
+
+/***/ }),
+
+/***/ "@wordpress/element":
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "@wordpress/i18n":
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ }),
+
+/***/ "@wordpress/plugins":
+/*!*********************************!*\
+  !*** external ["wp","plugins"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["plugins"];
+
+/***/ }),
+
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = window["React"];
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = __webpack_require__("./Assets/js/src/editors/post.js");
+/******/ 	
 /******/ })()
 ;

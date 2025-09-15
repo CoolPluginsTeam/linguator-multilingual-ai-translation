@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import * as styles from './style.modules.css';
-import Translator from "../Translator";
+import Translator from "../translator";
 import Skeleton from 'react-loading-skeleton';
 import * as skeletonStyles from 'react-loading-skeleton/dist/skeleton.css'
-import ModalStyle from './modalStyle';
-import ButtonGroup from './ButtonGroup';
+import ModalStyle from './modal-style';
+import ButtonGroup from './button-group';
 
 import {
   Modal,

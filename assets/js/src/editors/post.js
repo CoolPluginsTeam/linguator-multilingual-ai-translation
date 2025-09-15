@@ -385,130 +385,252 @@ const params = new URLSearchParams(window.location.search);
 const hasLangParam = params.has('lang') || params.has('new_lang');
 
 if (hasLangParam) {
-    
-    // Subscribe to editor changes and open sidebar when ready
     let unsubscribe = null;
     let attempts = 0;
-    const maxAttempts = 20;
+    const maxAttempts = 50;
+    let sidebarOpened = false;
     
     const tryOpenSidebar = () => {
         attempts++;
+        
+        if (sidebarOpened) {
+            return true;
+        }
         
         try {
             const editPostStore = wp.data.select('core/edit-post');
             const editPostDispatch = wp.data.dispatch('core/edit-post');
             
-            if (editPostStore && editPostDispatch && typeof editPostDispatch.openGeneralSidebar === 'function') {
-                const target = `plugin-sidebar/${SIDEBAR_NAME}`;
-                
-                // First, close any existing sidebar to force a fresh open
+            if (!editPostStore || !editPostDispatch) {
+                return false;
+            }
+            
+            // Try modern interface store if edit-post doesn't work
+            const interfaceStore = wp.data.select('core/interface');
+            const interfaceDispatch = wp.data.dispatch('core/interface');
+            
+            const target = `plugin-sidebar/${SIDEBAR_NAME}`;
+            
+            // Try multiple approaches to open the sidebar
+            let openSuccess = false;
+            
+            // Method 1: Standard openGeneralSidebar
+            if (typeof editPostDispatch.openGeneralSidebar === 'function') {
                 try {
+                    // Close any existing sidebar first
                     if (typeof editPostDispatch.closeGeneralSidebar === 'function') {
                         editPostDispatch.closeGeneralSidebar();
                     }
-                } catch (e) {
-                    // Ignore errors when closing
-                }
-                
-                // Open our specific sidebar (this should also open the sidebar panel)
-                editPostDispatch.openGeneralSidebar(target);
-                
-                // Force the sidebar panel to be visible by trying multiple approaches
-                try {
-                    // Try method 1: enableComplementaryArea
-                    if (typeof editPostDispatch.enableComplementaryArea === 'function') {
-                        editPostDispatch.enableComplementaryArea('core/edit-post', target);
-                    }
                     
-                    // Try method 2: setIsInserterOpened(false) to close inserter, then open sidebar
+                    // Close inserter if open
                     if (typeof editPostDispatch.setIsInserterOpened === 'function') {
                         editPostDispatch.setIsInserterOpened(false);
                     }
                     
-                    // Try method 3: Force sidebar visibility with DOM manipulation if APIs fail
-                    setTimeout(() => {
-                        const sidebarElement = document.querySelector('.interface-complementary-area');
-                        if (sidebarElement) {
-                            sidebarElement.style.display = 'block';
-                            sidebarElement.style.visibility = 'visible';
-                        }
-                        
-                        // Also try to find and show the specific LMAT sidebar content
-                        const lmatSidebar = document.querySelector('[data-sidebar="lmat-post-sidebar"], .lmat-post-sidebar');
-                        if (lmatSidebar) {
-                            lmatSidebar.style.display = 'block';
-                            lmatSidebar.style.visibility = 'visible';
-                        }
-                    }, 100);
+                    editPostDispatch.openGeneralSidebar(target);
+                    openSuccess = true;
                 } catch (e) {
-                    console.log('LMAT: Error with fallback methods:', e);
+                    // Silent error handling
                 }
-                
-                // Debug: Check what sidebar elements exist
+            }
+            
+            // Method 2: Try interface store approach
+            if (!openSuccess && interfaceDispatch && typeof interfaceDispatch.enableComplementaryArea === 'function') {
+                try {
+                    // First ensure the sidebar is enabled at the interface level
+                    if (typeof interfaceDispatch.enableComplementaryArea === 'function') {
+                        interfaceDispatch.enableComplementaryArea('core/edit-post', target);
+                    }
+                    
+                    // Also try to set the pinned state if available
+                    if (typeof interfaceDispatch.pinItem === 'function') {
+                        interfaceDispatch.pinItem('core/edit-post', target);
+                    }
+                    
+                    openSuccess = true;
+                } catch (e) {
+                    // Silent error handling
+                }
+            }
+            
+            // Method 2.5: Try to ensure the sidebar panel itself is open
+            if (interfaceDispatch) {
+                try {
+                    // Try to enable the complementary area first
+                    if (typeof interfaceDispatch.setDefaultComplementaryArea === 'function') {
+                        interfaceDispatch.setDefaultComplementaryArea('core/edit-post', target);
+                    }
+                    
+                    // Try to set the sidebar as active
+                    if (typeof interfaceDispatch.setActiveComplementaryArea === 'function') {
+                        interfaceDispatch.setActiveComplementaryArea('core/edit-post', target);
+                    }
+                } catch (e) {
+                    // Silent error handling
+                }
+            }
+            
+            // Method 3: Try direct edit-post enableComplementaryArea
+            if (!openSuccess && typeof editPostDispatch.enableComplementaryArea === 'function') {
+                try {
+                    editPostDispatch.enableComplementaryArea('core/edit-post', target);
+                    openSuccess = true;
+                } catch (e) {
+                    // Silent error handling
+                }
+            }
+            
+            if (openSuccess) {
+                // Verify if it worked after a delay
                 setTimeout(() => {
-                    const sidebarButton = document.querySelector('[aria-label*="Linguator"], button[aria-label*="Linguator"], [data-label*="Linguator"]');
-                    const complementaryArea = document.querySelector('.interface-complementary-area');
-                    const sidebarContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
+                    let currentSidebar = null;
                     
+                    // Check multiple ways to see if sidebar is open
+                    if (editPostStore.getActiveComplementaryArea) {
+                        currentSidebar = editPostStore.getActiveComplementaryArea('core/edit-post');
+                    }
                     
-                    // Try clicking the actual sidebar button if it exists
-                    if (sidebarButton && typeof sidebarButton.click === 'function') {
-                        sidebarButton.click();
-                        
-                        // Try clicking multiple times with delays
+                    if (!currentSidebar && interfaceStore && interfaceStore.getActiveComplementaryArea) {
+                        currentSidebar = interfaceStore.getActiveComplementaryArea('core/edit-post');
+                    }
+                    
+                    if (currentSidebar === target) {
+                        // Even though API says it's open, let's ensure the visual sidebar is actually visible
                         setTimeout(() => {
-                            sidebarButton.click();
+                            // Check if sidebar panel is actually visible
+                            const sidebarPanel = document.querySelector('.interface-complementary-area, .edit-post-sidebar, .components-panel');
+                            const sidebarContainer = document.querySelector('.interface-interface-skeleton__sidebar, .edit-post-layout__sidebar');
+                            
+                            if (sidebarPanel) {
+                                const isVisible = sidebarPanel.offsetParent !== null && !sidebarPanel.hidden;
+                                
+                                if (!isVisible) {
+                                    // Force sidebar panel visibility
+                                    sidebarPanel.style.display = 'block';
+                                    sidebarPanel.style.visibility = 'visible';
+                                    sidebarPanel.style.opacity = '1';
+                                    sidebarPanel.hidden = false;
+                                    
+                                    if (sidebarContainer) {
+                                        sidebarContainer.style.display = 'block';
+                                        sidebarContainer.style.visibility = 'visible';
+                                        sidebarContainer.style.width = '280px';
+                                    }
+                                }
+                            }
+                            
+                            // Also try to click the sidebar toggle button if sidebar is still not visible
+                            setTimeout(() => {
+                                const sidebarToggle = document.querySelector('button[aria-label*="Settings"], .edit-post-header__settings button, button[data-label*="Settings"]');
+                                const sidebarStillHidden = !document.querySelector('.interface-complementary-area:not([hidden])');
+                                
+                                if (sidebarToggle && sidebarStillHidden) {
+                                    sidebarToggle.click();
+                                    
+                                    // Then try to click our specific sidebar tab
+                                    setTimeout(() => {
+                                        const linguatorTab = document.querySelector('button[aria-label*="Linguator"], .components-button[aria-label*="Linguator"]');
+                                        if (linguatorTab) {
+                                            linguatorTab.click();
+                                        }
+                                    }, 300);
+                                }
+                            }, 200);
                         }, 100);
                         
-                        setTimeout(() => {
-                            sidebarButton.click();
-                            
-                            // Check if sidebar is now visible
-                            setTimeout(() => {
-                                const isVisible = document.querySelector('.interface-complementary-area:not([style*="display: none"])');
-                                const lmatContent = document.querySelector('[class*="lmat"], [data-sidebar*="lmat"]');
-                            }, 100);
-                        }, 200);
-                        
+                        sidebarOpened = true;
+                        if (unsubscribe) {
+                            unsubscribe();
+                            unsubscribe = null;
+                        }
                     } else {
-                        // Try to find and click any button that opens our sidebar
-                        const allButtons = document.querySelectorAll('button, [role="button"]');
-                        for (const button of allButtons) {
-                            const text = button.textContent || button.getAttribute('aria-label') || '';
-                            if (text.toLowerCase().includes('linguator')) {
-                                console.log('LMAT: Found and clicking Linguator button:', button);
-                                button.click();
-                                break;
+                        // Try DOM-based verification
+                        const sidebarElement = document.querySelector(`[data-sidebar="${SIDEBAR_NAME}"], .${SIDEBAR_NAME}`);
+                        if (sidebarElement && sidebarElement.offsetParent !== null) {
+                            sidebarOpened = true;
+                            if (unsubscribe) {
+                                unsubscribe();
+                                unsubscribe = null;
                             }
                         }
                     }
-                }, 200);
+                }, 500);
                 
-                
-                if (unsubscribe) {
-                    unsubscribe();
-                }
-                return true;
+                return sidebarOpened;
+            } else {
+                // As a last resort, try to find and click the sidebar button in DOM
+                setTimeout(() => {
+                    const sidebarButton = document.querySelector(`button[aria-label*="Linguator"], button[data-label*="Linguator"], [data-sidebar="${SIDEBAR_NAME}"]`);
+                    if (sidebarButton) {
+                        sidebarButton.click();
+                        
+                        // Check if it worked
+                        setTimeout(() => {
+                            const sidebarElement = document.querySelector('.interface-complementary-area');
+                            const isVisible = sidebarElement && sidebarElement.offsetParent !== null;
+                            
+                            if (isVisible) {
+                                sidebarOpened = true;
+                                if (unsubscribe) {
+                                    unsubscribe();
+                                    unsubscribe = null;
+                                }
+                            }
+                        }, 300);
+                    }
+                }, 500);
             }
         } catch (e) {
-            console.log('LMAT: Error trying to open sidebar:', e);
+            // Silent error handling
         }
         
         if (attempts >= maxAttempts) {
-            console.log('LMAT: Max attempts reached, giving up');
             if (unsubscribe) {
                 unsubscribe();
+                unsubscribe = null;
             }
         }
         
         return false;
     };
     
-    // Try immediately
-    if (!tryOpenSidebar()) {
-        // If it fails, subscribe to store changes and keep trying
+    // Wait for editor to be ready before trying
+    const waitForEditor = () => {
+        // Try immediately first
+        if (tryOpenSidebar()) {
+            return;
+        }
+        
+        // If immediate attempt fails, subscribe to store changes
         unsubscribe = subscribe(() => {
-            tryOpenSidebar();
+            if (!sidebarOpened && attempts < maxAttempts) {
+                tryOpenSidebar();
+            }
         });
-    }
+        
+        // Also try with regular intervals as a fallback
+        const intervalAttempts = setInterval(() => {
+            if (sidebarOpened || attempts >= maxAttempts) {
+                clearInterval(intervalAttempts);
+                return;
+            }
+            
+            tryOpenSidebar();
+        }, 1000); // Try every second
+        
+        // Cleanup after maximum time
+        setTimeout(() => {
+            if (intervalAttempts) {
+                clearInterval(intervalAttempts);
+            }
+            if (unsubscribe) {
+                unsubscribe();
+                unsubscribe = null;
+            }
+            // Cleanup completed
+        }, 30000); // Give up after 30 seconds
+    };
+    
+    // Start the process after a small delay to ensure everything is loaded
+    setTimeout(waitForEditor, 500);
 }

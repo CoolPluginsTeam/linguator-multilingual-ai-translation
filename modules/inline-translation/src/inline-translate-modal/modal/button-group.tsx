@@ -1,4 +1,4 @@
-import Button from './Button';
+import Button from './button';
 import { createElement } from "@wordpress/element";
 
 export const ButtonCompat = (props: any) =>

@@ -1,120 +1,49 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/**
- * Adds a flag to the widgets filtered by a language.
- *
- * @package Linguator
- */
+/******/ 	var __webpack_modules__ = ({
 
-jQuery(function ($) {
-  var widgets_container,
-    widgets_selector,
-    flags,
-    isBlockEditor = 'undefined' !== typeof wp.blockEditor;
-  if ('undefined' !== typeof lmat_widgets && lmat_widgets.hasOwnProperty('flags')) {
-    flags = lmat_widgets.flags;
-  }
+/***/ "./Assets/js/src/widgets.js":
+/*!**********************************!*\
+  !*** ./Assets/js/src/widgets.js ***!
+  \**********************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-  /**
-   * Prepend widget titles with a flag once a language is selected.
-   *
-   * @param {object} widget The widget element.
-   * @return {void} Nothing.
-   */
-  function add_flag(widget) {
-    if (!flags) {
-      return;
-    }
-    widget = $(widget);
-    var title = isBlockEditor ? widget.prev('h3') : $('.widget-top .widget-title h3', widget),
-      locale = $('.lmat-lang-choice option:selected', widget).val(),
-      // Icon is HTML built and come from server side and is well escaped when necessary
-      icon = locale && flags.hasOwnProperty(locale) ? flags[locale] : null;
-    if (icon) {
-      icon += ' &nbsp; ';
-      var current = $('.lmat-lang', title);
-      if (current.length) {
-        current.html(icon); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
-      } else {
-        flag = $('<span />').addClass('lmat-lang').html(icon); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
-        // See the comment above about the icon which is safe. So it is also safe to prepend flag which uses icon.
-        title.prepend(flag); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
-      }
-    } else {
-      $('.lmat-lang', title).remove();
-    }
-  }
-  if (isBlockEditor) {
-    widgets_container = $('.edit-widgets-main-block-list');
-    widgets_selector = '.widget';
+eval("{__webpack_require__.r(__webpack_exports__);\n/**\r\n * Adds a flag to the widgets filtered by a language.\r\n *\r\n * @package Linguator\r\n */\n\njQuery(function ($) {\n  var widgets_container,\n    widgets_selector,\n    flags,\n    isBlockEditor = 'undefined' !== typeof wp.blockEditor;\n  if ('undefined' !== typeof lmat_widgets && lmat_widgets.hasOwnProperty('flags')) {\n    flags = lmat_widgets.flags;\n  }\n\n  /**\r\n   * Prepend widget titles with a flag once a language is selected.\r\n   *\r\n   * @param {object} widget The widget element.\r\n   * @return {void} Nothing.\r\n   */\n  function add_flag(widget) {\n    if (!flags) {\n      return;\n    }\n    widget = $(widget);\n    var title = isBlockEditor ? widget.prev('h3') : $('.widget-top .widget-title h3', widget),\n      locale = $('.lmat-lang-choice option:selected', widget).val(),\n      // Icon is HTML built and come from server side and is well escaped when necessary\n      icon = locale && flags.hasOwnProperty(locale) ? flags[locale] : null;\n    if (icon) {\n      icon += ' &nbsp; ';\n      var current = $('.lmat-lang', title);\n      if (current.length) {\n        current.html(icon); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n      } else {\n        flag = $('<span />').addClass('lmat-lang').html(icon); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n        // See the comment above about the icon which is safe. So it is also safe to prepend flag which uses icon.\n        title.prepend(flag); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend\n      }\n    } else {\n      $('.lmat-lang', title).remove();\n    }\n  }\n  if (isBlockEditor) {\n    widgets_container = $('.edit-widgets-main-block-list');\n    widgets_selector = '.widget';\n\n    // Update flags when we click on the legacy widget to display its form.\n    widgets_container.on('click', '.wp-block-legacy-widget', function () {\n      add_flag($(this).find('.widget'));\n    });\n  } else {\n    if ('undefined' !== typeof wp.customize) {\n      /**\r\n       * WP Customizer add control listener.\r\n       *\r\n       * @link https://wordpress.stackexchange.com/questions/256536/callback-after-wordpress-customizer-complete-loading\r\n       *\r\n       * @param {object} control The control type.\r\n       * @return {void} Nothing.\r\n       */\n      var customize_add_flag = function customize_add_flag(control) {\n        if (!control.extended(wp.customize.Widgets.WidgetControl)) {\n          return;\n        }\n\n        /*\r\n        * Make sure the widget's contents are embedded; normally this is done\r\n        * when the control is expanded, for DOM performance reasons.\r\n        */\n        control.embedWidgetContent();\n\n        // Now we know for sure the widget is fully embedded.\n        add_flag(control.container.find('.widget'));\n      };\n      widgets_container = $('#customize-controls');\n      widgets_selector = '.customize-control .widget';\n      wp.customize.control.each(customize_add_flag);\n      wp.customize.control.bind('add', customize_add_flag);\n    } else {\n      widgets_container = $('#widgets-right');\n      widgets_selector = '.widget';\n    }\n\n    // Add flags on load.\n    $(widgets_selector, widgets_container).each(function () {\n      add_flag(this);\n    });\n  }\n\n  // Update flags.\n  widgets_container.on('change', '.lmat-lang-choice', function () {\n    add_flag($(this).parents('.widget'));\n  });\n  function lmat_toggle(a, test) {\n    test ? a.show() : a.hide();\n  }\n\n  // Remove all options if dropdown is checked.\n  $('.widgets-sortables,.control-section-sidebar,.edit-widgets-main-block-list').on('change', '.lmat-dropdown', function () {\n    var this_id = $(this).parent().parent().parent().children('.widget-id').attr('value');\n    lmat_toggle($('.no-dropdown-' + this_id), true != $(this).prop('checked'));\n  });\n\n  // Disallow unchecking both show names and show flags.\n  var options = ['-show_flags', '-show_names'];\n  $.each(options, function (i, v) {\n    $('.widgets-sortables,.control-section-sidebar,.edit-widgets-main-block-list').on('change', '.lmat' + v, function () {\n      var this_id = $(this).parent().parent().parent().children('.widget-id').attr('value');\n      if (true != $(this).prop('checked')) {\n        $('#widget-' + this_id + options[1 - i]).prop('checked', true);\n      }\n    });\n  });\n});\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/widgets.js?\n}");
 
-    // Update flags when we click on the legacy widget to display its form.
-    widgets_container.on('click', '.wp-block-legacy-widget', function () {
-      add_flag($(this).find('.widget'));
-    });
-  } else {
-    if ('undefined' !== typeof wp.customize) {
-      /**
-       * WP Customizer add control listener.
-       *
-       * @link https://wordpress.stackexchange.com/questions/256536/callback-after-wordpress-customizer-complete-loading
-       *
-       * @param {object} control The control type.
-       * @return {void} Nothing.
-       */
-      var customize_add_flag = function customize_add_flag(control) {
-        if (!control.extended(wp.customize.Widgets.WidgetControl)) {
-          return;
-        }
+/***/ })
 
-        /*
-        * Make sure the widget's contents are embedded; normally this is done
-        * when the control is expanded, for DOM performance reasons.
-        */
-        control.embedWidgetContent();
-
-        // Now we know for sure the widget is fully embedded.
-        add_flag(control.container.find('.widget'));
-      };
-      widgets_container = $('#customize-controls');
-      widgets_selector = '.customize-control .widget';
-      wp.customize.control.each(customize_add_flag);
-      wp.customize.control.bind('add', customize_add_flag);
-    } else {
-      widgets_container = $('#widgets-right');
-      widgets_selector = '.widget';
-    }
-
-    // Add flags on load.
-    $(widgets_selector, widgets_container).each(function () {
-      add_flag(this);
-    });
-  }
-
-  // Update flags.
-  widgets_container.on('change', '.lmat-lang-choice', function () {
-    add_flag($(this).parents('.widget'));
-  });
-  function lmat_toggle(a, test) {
-    test ? a.show() : a.hide();
-  }
-
-  // Remove all options if dropdown is checked.
-  $('.widgets-sortables,.control-section-sidebar,.edit-widgets-main-block-list').on('change', '.lmat-dropdown', function () {
-    var this_id = $(this).parent().parent().parent().children('.widget-id').attr('value');
-    lmat_toggle($('.no-dropdown-' + this_id), true != $(this).prop('checked'));
-  });
-
-  // Disallow unchecking both show names and show flags.
-  var options = ['-show_flags', '-show_names'];
-  $.each(options, function (i, v) {
-    $('.widgets-sortables,.control-section-sidebar,.edit-widgets-main-block-list').on('change', '.lmat' + v, function () {
-      var this_id = $(this).parent().parent().parent().children('.widget-id').attr('value');
-      if (true != $(this).prop('checked')) {
-        $('#widget-' + this_id + options[1 - i]).prop('checked', true);
-      }
-    });
-  });
-});
+/******/ 	});
+/************************************************************************/
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = {};
+/******/ 	__webpack_modules__["./Assets/js/src/widgets.js"](0, __webpack_exports__, __webpack_require__);
+/******/ 	
 /******/ })()
 ;
