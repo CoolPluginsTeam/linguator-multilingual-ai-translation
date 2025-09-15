@@ -119,7 +119,13 @@ class CPFM_Feedback_Notice {
         }
 
         update_option("cpfm_opt_in_choice_{$category}", $opt_in);
-
+        $option = get_option("linguator");
+       
+        // Update the lmat_feedback_data within the linguator option array
+        if (is_array($option)) {
+            $option['lmat_feedback_data'] = $opt_in == 'yes' ? true : false;
+            update_option('linguator', $option);
+        }
         $review_option = get_option("cpfm_opt_in_choice_{$category}");
 
         if ($review_option === 'yes') {
