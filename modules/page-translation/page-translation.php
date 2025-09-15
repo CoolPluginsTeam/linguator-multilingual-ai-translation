@@ -212,33 +212,42 @@ class LMAT_Page_Translation {
 
 	public function enqueue_elementor_translate_assets() {
 
-		$page_translated           = get_post_meta( get_the_ID(), '_lmat_elementor_translated', true );
-		$parent_post_language_slug = get_post_meta( get_the_ID(), '_lmat_parent_post_language_slug', true );
+        $page_translated = get_post_meta(get_the_ID(), '_lmat_elementor_translated', true);
+        $parent_post_language_slug = get_post_meta(get_the_ID(), '_lmat_parent_post_language_slug', true);
 
-		if ( ( ! empty( $page_translated ) && $page_translated === 'true' ) || empty( $parent_post_language_slug ) ) {
-			return;
-		}
+        if ((!empty($page_translated) && $page_translated === 'true') || empty($parent_post_language_slug)) {
+            return;
+        }
 
-		$post_language_slug = lmat_get_post_language( get_the_ID(), 'slug' );
-		$current_post_id    = get_the_ID(); // Get the current post ID
-		$elementor_data     = get_post_meta( $current_post_id, '_elementor_data', true );
-		$elementor_data     = is_serialized( $elementor_data ) ? unserialize( $elementor_data ) : ( is_string( $elementor_data ) ? json_decode( $elementor_data ) : $elementor_data );
+        $post_language_slug = lmat_get_post_language(get_the_ID(), 'slug');
+        $current_post_id = get_the_ID(); // Get the current post ID
 
-		if ( $parent_post_language_slug === $post_language_slug ) {
-			return;
-		}
+        if(!class_exists('\Elementor\Plugin') || !property_exists('\Elementor\Plugin', 'instance') ){
+            return;
+        }
 
-		$meta_fields = get_post_meta( $current_post_id );
+        $elementor_data = \Elementor\Plugin::$instance->documents->get( $current_post_id )->get_elements_data();
 
-		$data = array(
-			'update_elementor_data' => 'lmat_update_elementor_data',
-			'elementorData'         => $elementor_data,
-			'metaFields'            => $meta_fields,
-		);
+
+        if ($parent_post_language_slug === $post_language_slug) {
+            return;
+        }
+
+        $meta_fields=get_post_meta($current_post_id);
+
+        $parent_post_id=LMAT()->model->post->get_translation($current_post_id, $parent_post_language_slug);
+
+        $data = array(
+            'update_elementor_data' => 'lmat_update_elementor_data',
+            'elementorData' => $elementor_data,
+            'metaFields' => $meta_fields,
+            'parent_post_id' => $parent_post_id,
+            'parent_post_title' => get_the_title($parent_post_id),
+        );
 
 		wp_enqueue_style( 'lmat-elementor-translate', plugins_url( 'Admin/Assets/css/lmat-elementor-translate.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
-		$this->enqueue_automatic_translate_assets( $parent_post_language_slug, $post_language_slug, 'elementor', $data );
-	}
+		$this->enqueue_automatic_translate_assets($parent_post_language_slug, $post_language_slug, 'elementor', $data);
+    }
 
 	public function enqueue_automatic_translate_assets( $source_lang, $target_lang, $editor_type, $extra_data = array() ) {
 		wp_register_script( 'lmat-google-api', 'https://translate.google.com/translate_a/element.js', '', LINGUATOR_VERSION, true );
