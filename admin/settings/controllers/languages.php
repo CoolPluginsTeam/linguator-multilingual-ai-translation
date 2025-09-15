@@ -127,7 +127,7 @@ return array(
 		'facebook' => 'az_AZ',
 	),
 	'azb' => array(
-		'code'     => 'az',
+		'code'     => 'azb',
 		'locale'   => 'azb',
 		'name'     => 'گؤنئی آذربایجان',
 		'label'    => 'South Azerbaijani',

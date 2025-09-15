@@ -77,7 +77,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
-
 		// Adds the link to the languages panel in the WordPress admin menu
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 

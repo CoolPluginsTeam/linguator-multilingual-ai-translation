@@ -267,7 +267,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			add_thickbox();
 			wp_enqueue_script( 'updates' );
 
-			$plugin_info_url=admin_url('plugin-install.php?tab=plugin-information&plugin=loco-translate&TB_iframe=true&width=772&height=851');
+			$plugin_info_url=admin_url('plugin-install.php?tab=plugin-information&plugin=loco-translate&TB_iframe=true&width=772&height=800');
 		}
 		
 
