@@ -120,21 +120,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		// We must not call user info before WordPress defines user roles in wp-settings.php
 		add_action( 'setup_theme', array( $this, 'init_user' ) );
 		add_filter( 'request', array( $this, 'request' ) );
-		add_action('admin_head', function () {
-			echo '<style>
-				#screen-meta-links {
-					position: relative;
-					float: none;
-					margin-top: 15px;
-					display: none;
-				}
-				#screen-options-link-wrap {
-					float: none !important;
-					margin: 10px 0;
-					display: inline-block;
-				}
-			</style>';
-		});
 
 		// Adds the languages in admin bar
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ), 100 ); // 100 determines the position
@@ -151,7 +136,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		global $admin_page_hooks;
 
 		// Prepare the list of tabs
-		$tabs = array( 'lang' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ) );
+		$tabs = array( 'lang' => __( 'Languages', 'linguator-multilingual-ai-translation' ) );
 
 		// Only if at least one language has been created
 		$languages = $this->model->get_languages_list();
@@ -209,7 +194,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_script( 'lmat_admin', plugins_url( "admin/assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+		wp_enqueue_script( 'lmat_admin', plugins_url( "Admin/Assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 		$inline_script = sprintf( 'let lmat_admin = %s;', wp_json_encode( array( 'ajax_filter' => $this->get_ajax_filter_data() ) ) );
 		wp_add_inline_script( 'lmat_admin', $inline_script, 'before' );
 
@@ -258,18 +243,17 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		foreach ( $scripts as $script => $v ) {
 			if ( in_array( $screen->base, $v[0] ) && ( $v[2] || $this->model->has_languages() ) ) {
-				wp_enqueue_script( "lmat_{$script}", plugins_url( "admin/assets/js/build/{$script}{$suffix}.js", LINGUATOR_ROOT_FILE ), $v[1], LINGUATOR_VERSION, $v[3] );
+				wp_enqueue_script( "lmat_{$script}", plugins_url( "Admin/Assets/js/build/{$script}{$suffix}.js", LINGUATOR_ROOT_FILE ), $v[1], LINGUATOR_VERSION, $v[3] );
 				if ( 'classic-editor' === $script || 'block-editor' === $script ) {
 					wp_set_script_translations( "lmat_{$script}", 'linguator' );
 				}
 			}
 		}
 
-		wp_register_style( 'linguator_admin', plugins_url( "admin/assets/css/build/admin{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'wp-jquery-ui-dialog' ), LINGUATOR_VERSION );
-		wp_enqueue_style( 'linguator_dialog', plugins_url( "admin/assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
+		wp_register_style( 'linguator_admin', plugins_url( "Admin/Assets/css/build/admin{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'wp-jquery-ui-dialog' ), LINGUATOR_VERSION );
+		wp_enqueue_style( 'linguator_dialog', plugins_url( "Admin/Assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
 
 		$this->add_inline_scripts();
-		$this->add_menu_redirect_script();
 	}
 
 	/**
@@ -295,34 +279,9 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	public function customize_controls_enqueue_scripts() {
 		if ( $this->model->has_languages() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-			wp_enqueue_script( 'lmat_widgets', plugins_url( 'admin/assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+			wp_enqueue_script( 'lmat_widgets', plugins_url( 'Admin/Assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 			$this->add_inline_scripts();
 		}
-	}
-
-	/**
-	 * Adds JavaScript to redirect main menu click to settings page.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	private function add_menu_redirect_script() {
-		$script = "
-		jQuery(document).ready(function($) {
-			// Find the main Linguator menu link (the one that points to the first submenu)
-			var mainMenuLink = $('a[href*=\"page=lmat\"][href*=\"admin.php\"]').first();
-			if (mainMenuLink.length) {
-				// Override the click event to redirect to settings
-				mainMenuLink.off('click').on('click', function(e) {
-					e.preventDefault();
-					window.location.href = '" . admin_url( 'admin.php?page=lmat_settings' ) . "';
-				});
-			}
-		});
-		";
-		
-		wp_add_inline_script( 'lmat_admin', $script );
 	}
 
 	/**
@@ -402,7 +361,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		} elseif ( 'post.php' === $GLOBALS['pagenow'] && isset( $_GET['post'] ) && $this->model->is_translated_post_type( get_post_type( (int) $_GET['post'] ) ) && $lang = $this->model->post->get_language( (int) $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->curlang = $lang;
 		} elseif ( 'post-new.php' === $GLOBALS['pagenow'] && ( empty( $_GET['post_type'] ) || $this->model->is_translated_post_type( sanitize_key( $_GET['post_type'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->curlang = empty( $_GET['lang'] ) ? $this->pref_lang : $this->model->get_language( sanitize_key( $_GET['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$this->curlang = empty( $_GET['new_lang'] ) ? $this->pref_lang : $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		// Edit Term
@@ -411,8 +370,8 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		} elseif ( in_array( $GLOBALS['pagenow'], array( 'edit-tags.php', 'term.php' ) ) && isset( $_GET['taxonomy'] ) && $this->model->is_translated_taxonomy( sanitize_key( $_GET['taxonomy'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			if ( isset( $_GET['tag_ID'] ) && $lang = $this->model->term->get_language( (int) $_GET['tag_ID'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$this->curlang = $lang;
-			} elseif ( ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$this->curlang = $this->model->get_language( sanitize_key( $_GET['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			} elseif ( ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				$this->curlang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			} elseif ( empty( $this->curlang ) ) {
 				$this->curlang = $this->pref_lang;
 			}

@@ -248,7 +248,7 @@ abstract class Abstract_Screen {
 				$add_link = add_query_arg(
 					array(
 						'post_type' => $post->post_type,
-						'lang'  => $language->slug,
+						'new_lang'  => $language->slug,
 						'from_post' => $post->ID,
 						'_wpnonce' => wp_create_nonce( 'new-post-translation' ),
 					),

@@ -58,7 +58,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 			return $post_parent;
 		}
 
-		$tr_parent = $this->model->post->get_translation( $parent_id, $context_data['lang'] );
+		$tr_parent = $this->model->post->get_translation( $parent_id, $context_data['new_lang'] );
 
 		if ( empty( $tr_parent ) ) {
 			return $post_parent;
@@ -118,7 +118,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 			return $is_block_editor;
 		}
 
-		$lang = $this->model->get_language( $context_data['lang'] );
+		$lang = $this->model->get_language( $context_data['new_lang'] );
 
 		if ( empty( $lang ) ) {
 			return $is_block_editor;

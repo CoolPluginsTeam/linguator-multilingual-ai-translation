@@ -26,6 +26,8 @@ const General = ({ data, setData }) => {
     const disabledPostTypes= data.disabled_post_types || []; //Disabled Post Types (programmatically active)
     const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
     const [selectAllSync,setSelectAllSync] = useState(false);
+    const [selectAllPostTypes, setSelectAllPostTypes] = useState(false);
+    const [selectAllTaxonomies, setSelectAllTaxonomies] = useState(false);
     const previousDomains = React.useRef([])
     const [lmatFeedbackData, setLmatFeedbackData] = useState(data.lmat_feedback_data !== undefined ? data.lmat_feedback_data : false); // For Usage Data Sharing
     const [selectedLanguageSwitchers, setSelectedLanguageSwitchers] = useState(data.lmat_language_switcher_options || ['default']); // Selected Language Switcher options
@@ -238,6 +240,68 @@ const General = ({ data, setData }) => {
         setSelectAllSync(allSelected && selectedSynchronization.length > 0);
     }, [selectedSynchronization]);
 
+    //Handle Select All Post Types
+    const handleSelectAllPostTypes = () => {
+        setHandleButtonDisabled(false);
+        if (selectAllPostTypes) {
+            // Deselect all (except disabled ones)
+            const enabledPostTypes = selectedPostTypes.filter(postType => {
+                const isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(disabledType => {
+                    const postTypeKey = typeof disabledType === 'object' ? disabledType.post_type_key : disabledType;
+                    return postTypeKey === postType;
+                });
+                return isDisabled;
+            });
+            setSelectedPostTypes(enabledPostTypes);
+            setSelectAllPostTypes(false);
+        } else {
+            // Select all
+            const allPostTypeValues = AvailablePostTypes.map(postType => postType.value);
+            setSelectedPostTypes(allPostTypeValues);
+            setSelectAllPostTypes(true);
+        }
+    };
+
+    // Update selectAllPostTypes state when individual post type items change
+    React.useEffect(() => {
+        if (AvailablePostTypes.length > 0) {
+            const enabledPostTypes = AvailablePostTypes.filter(postType => {
+                const isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(disabledType => {
+                    const postTypeKey = typeof disabledType === 'object' ? disabledType.post_type_key : disabledType;
+                    return postTypeKey === postType.value;
+                });
+                return !isDisabled;
+            });
+            const enabledPostTypeValues = enabledPostTypes.map(postType => postType.value);
+            const allEnabledSelected = enabledPostTypeValues.every(value => selectedPostTypes.includes(value));
+            setSelectAllPostTypes(allEnabledSelected && enabledPostTypeValues.length > 0);
+        }
+    }, [selectedPostTypes, AvailablePostTypes]);
+
+    //Handle Select All Taxonomies
+    const handleSelectAllTaxonomies = () => {
+        setHandleButtonDisabled(false);
+        if (selectAllTaxonomies) {
+            // Deselect all
+            setSelectedTaxonomies([]);
+            setSelectAllTaxonomies(false);
+        } else {
+            // Select all
+            const allTaxonomyValues = AvailableTaxonomies.map(taxonomy => taxonomy.value);
+            setSelectedTaxonomies(allTaxonomyValues);
+            setSelectAllTaxonomies(true);
+        }
+    };
+
+    // Update selectAllTaxonomies state when individual taxonomy items change
+    React.useEffect(() => {
+        if (AvailableTaxonomies.length > 0) {
+            const allTaxonomyValues = AvailableTaxonomies.map(taxonomy => taxonomy.value);
+            const allSelected = allTaxonomyValues.every(value => selectedTaxonomies.includes(value));
+            setSelectAllTaxonomies(allSelected && selectedTaxonomies.length > 0);
+        }
+    }, [selectedTaxonomies, AvailableTaxonomies]);
+
     // Handle terms box visibility
     const handleTermsToggle = (e) => {
         e.preventDefault();
@@ -413,6 +477,7 @@ const General = ({ data, setData }) => {
                     </Container.Item>
                 </Container>
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* URL modifications section */}
                 <Container cols="1" containerType='grid' className='border border-b-2' >
                     <Container.Item>
                         <Label size='md' className='font-bold flex items-center gap-2'>
@@ -486,6 +551,7 @@ const General = ({ data, setData }) => {
                                 </div>
                             }
                         </Container.Item>
+                        {/* Hide URL language information for default language */}
                         <Container.Item>
                             {
                                 forceLang !== 3 &&
@@ -501,7 +567,8 @@ const General = ({ data, setData }) => {
                                     }}
                                 />
                             }
-                            {
+                            {/* Remove or Keep /language/ in pretty permalinks */}
+                            {  
                                 forceLang === 1 &&
                                 <RadioButton.Group
                                     columns={1}
@@ -532,6 +599,115 @@ const General = ({ data, setData }) => {
 
                 </Container>
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Custom Post Types section */}
+                <Container cols="1" containerType='grid' >
+                    <Container.Item className='switcher'>
+                        <Label size='md' className='font-bold flex items-center gap-2'>
+                            <Milestone className="flex-shrink-0 size-5 text-icon-secondary" />
+                            {__('Custom Post Types', 'linguator-multilingual-ai-translation')}
+                        </Label>
+                        {AvailablePostTypes.length > 0 && (
+                            <div className='flex items-center justify-end gap-2' style={{paddingRight: '30%'}}>
+                                <Label size='sm' className='cursor-pointer' htmlFor="select-all-post-types">
+                                    {__('Select All', 'linguator-multilingual-ai-translation')}
+                                </Label>
+                                <Switch
+                                    aria-label="Select All Post Types"
+                                    id="select-all-post-types"
+                                    value={selectAllPostTypes}
+                                    onChange={handleSelectAllPostTypes}
+                                    size="sm"
+                                />
+                            </div>
+                        )}
+                    </Container.Item>
+                    <Container.Item className='flex gap-4 flex-wrap'>
+                        {
+                            AvailablePostTypes.length == 0 ?
+                                <div style={{ color: "red" }}>
+                                    {__('No Custom Post Types Available', 'linguator-multilingual-ai-translation')}
+                                </div> :
+                                <div className='flex gap-4 flex-wrap'>
+                                    {
+                                        AvailablePostTypes.map((postType, index) => {
+                                            const isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(disabledType => {
+                                                // Handle both string and object formats
+                                                const postTypeKey = typeof disabledType === 'object' ? disabledType.post_type_key : disabledType;
+                                                return postTypeKey === postType.value;
+                                            });
+                                            return (
+                                                <Checkbox
+                                                    label={{
+                                                        description: '',
+                                                        heading: postType.label + (isDisabled ? ' (Programmatically Active)' : '')
+                                                    }}
+                                                    className={isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}
+                                                    value={postType.value}
+                                                    checked={isDisabled ? true : selectedPostTypes.includes(postType.value)}
+                                                    disabled={isDisabled}
+                                                    key={index}
+                                                    size="sm"
+                                                    onChange={() => handlePostTypeChange(postType.value)}
+                                                />
+                                            );
+                                        })
+                                    }
+                                </div>
+                        }
+                    </Container.Item>
+                </Container>
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Custom Taxonomies section */}
+                <Container cols="1" containerType='grid' >
+                    <Container.Item className='switcher'>
+                        <Label size='md' className='font-bold flex items-center gap-2'>
+                            <Milestone className="flex-shrink-0 size-5 text-icon-secondary" />
+                            {__('Custom Taxonomies', 'linguator-multilingual-ai-translation')}
+                        </Label>
+                        {AvailableTaxonomies.length > 0 && (
+                            <div className='flex items-center justify-end gap-2' style={{paddingRight: '30%'}}>
+                                <Label size='sm' className='cursor-pointer' htmlFor="select-all-taxonomies">
+                                    {__('Select All', 'linguator-multilingual-ai-translation')}
+                                </Label>
+                                <Switch
+                                    aria-label="Select All Taxonomies"
+                                    id="select-all-taxonomies"
+                                    value={selectAllTaxonomies}
+                                    onChange={handleSelectAllTaxonomies}
+                                    size="sm"
+                                />
+                            </div>
+                        )}
+                    </Container.Item>
+                    <Container.Item className='flex gap-4 flex-wrap'>
+                        {
+                            AvailableTaxonomies.length == 0 ?
+                                <div style={{ color: "red" }}>
+                                    {__('No Custom Taxonomies Available', 'linguator-multilingual-ai-translation')}
+                                </div> :
+                                <div className='flex gap-4 flex-wrap'>
+                                    {
+                                        AvailableTaxonomies.map((taxonomy, index) => (
+                                            <Checkbox
+                                                label={{
+                                                    description: '',
+                                                    heading: taxonomy.label
+                                                }}
+                                                className='cursor-pointer'
+                                                value={taxonomy.value}
+                                                checked={selectedTaxonomies.includes(taxonomy.value)}
+                                                key={index}
+                                                size="sm"
+                                                onChange={() => handleTaxonomyChange(taxonomy.value)}
+                                            />
+                                        ))
+                                    }
+                                </div>
+                        }
+                    </Container.Item>
+                </Container>
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Detect Browser Language section */}
                 <div className='switcher'>
                     <Container.Item >
                         <h3 className='flex items-center gap-2'>
@@ -568,7 +744,9 @@ const General = ({ data, setData }) => {
                         }
                     </Container.Item>
                 </div>
+                
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Media section */}
                 <div className='switcher'>
                     <Container.Item>
                         <h3 className='flex items-center gap-2'>
@@ -592,6 +770,7 @@ const General = ({ data, setData }) => {
                     </Container.Item>
                 </div>
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Static Strings Tab section */}
                 <div className='switcher'>
                     <Container.Item>
                         <h3 className='flex items-center gap-2'>
@@ -614,83 +793,9 @@ const General = ({ data, setData }) => {
                         />
                     </Container.Item>
                 </div>
-                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
-                <Container cols="1" containerType='grid' >
-                    <Container.Item>
-                        <Label size='md' className='font-bold flex items-center gap-2'>
-                            <Milestone className="flex-shrink-0 size-5 text-icon-secondary" />
-                            {__('Custom post types and Taxonomies', 'linguator-multilingual-ai-translation')}
-                        </Label>
-                    </Container.Item>
-                    <Container.Item className='flex gap-4 flex-wrap'>
-                        {
-                            AvailablePostTypes.length == 0 && AvailableTaxonomies.length == 0 ?
-                                <div style={{ color: "red" }}>
-                                    {__('No Custom Post Types and Taxonomies Available', 'linguator-multilingual-ai-translation')}
-                                </div> :
-                                <>
-                                    {
-                                        AvailablePostTypes.length > 0 &&
-                                        <div >
-                                            <h5>{__('Custom Post Types', 'linguator-multilingual-ai-translation')}</h5>
-                                            <div className='flex gap-4 flex-wrap'>
-                                                {
-                                                    AvailablePostTypes.map((postType, index) => {
-                                                        const isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(disabledType => {
-                                                            // Handle both string and object formats
-                                                            const postTypeKey = typeof disabledType === 'object' ? disabledType.post_type_key : disabledType;
-                                                            return postTypeKey === postType.value;
-                                                        });
-                                                        return (
-                                                            <Checkbox
-                                                                label={{
-                                                                    description: '',
-                                                                    heading: postType.label + (isDisabled ? ' (Programmatically Active)' : '')
-                                                                }}
-                                                                className={isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}
-                                                                value={postType.value}
-                                                                checked={isDisabled ? true : selectedPostTypes.includes(postType.value)}
-                                                                disabled={isDisabled}
-                                                                key={index}
-                                                                size="sm"
-                                                                onChange={() => handlePostTypeChange(postType.value)}
-                                                            />
-                                                        );
-                                                    })
-                                                }
-                                            </div>
 
-                                        </div>
-                                    }
-                                    {
-                                        AvailableTaxonomies.length > 0 &&
-                                        <div >
-                                            <h5>{__('Custom Taxonomies', 'linguator-multilingual-ai-translation')}</h5>
-                                            <div className='flex gap-4 flex-wrap'>
-                                                {
-                                                    AvailableTaxonomies.map((taxonomy, index) => (
-                                                        <Checkbox
-                                                            label={{
-                                                                description: '',
-                                                                heading: taxonomy.label
-                                                            }}
-                                                            className='cursor-pointer'
-                                                            value={taxonomy.value}
-                                                            checked={selectedTaxonomies.includes(taxonomy.value)}
-                                                            key={index}
-                                                            size="sm"
-                                                            onChange={() => handleTaxonomyChange(taxonomy.value)}
-                                                        />
-                                                    ))
-                                                }
-                                            </div>
-                                        </div>
-                                    }
-                                </>
-                        }
-                    </Container.Item>
-                </Container>
                 <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Synchronization section */}
                 <Container cols="1" containerType='grid' >
                     <Container.Item className='switcher'>
                         <Label size='md' className='font-bold flex items-center gap-2'>

@@ -276,7 +276,7 @@ class LMAT_Template_Translation {
                 $create_link = add_query_arg([
                     'post_type' => get_post_type($post_id),
                     'from_post' => esc_attr($post_id),
-                    'lang'  => esc_attr($lang_slug),
+                    'new_lang'  => esc_attr($lang_slug),
                     '_wpnonce'  => wp_create_nonce('new-post-translation'),
                 ], admin_url('post-new.php'));
 

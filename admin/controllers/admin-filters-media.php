@@ -98,12 +98,12 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 		$post_id = $data['from_post']->ID;
 
 		// Bails if the translations already exists.
-		if ( $this->model->post->get_translation( $post_id, $data['lang'] ) ) {
+		if ( $this->model->post->get_translation( $post_id, $data['new_lang'] ) ) {
 			wp_safe_redirect( wp_get_referer() );
 			exit;
 		}
 
-		$tr_id = $this->model->post->create_media_translation( $post_id, $data['lang'] );
+		$tr_id = $this->model->post->create_media_translation( $post_id, $data['new_lang'] );
 		wp_safe_redirect( admin_url( sprintf( 'post.php?post=%d&action=edit', $tr_id ) ) ); // WP 3.5+.
 		exit;
 	}

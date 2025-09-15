@@ -148,7 +148,7 @@ const createLucideIcon = (iconName, iconNode) => {
 
 //# sourceMappingURL=createLucideIcon.js.map
 
-;// ./node_modules/lucide-react/dist/esm/icons/pencil.js
+;// ./node_modules/lucide-react/dist/esm/icons/square-pen.js
 /**
  * @license lucide-react v0.524.0 - ISC
  *
@@ -159,21 +159,21 @@ const createLucideIcon = (iconName, iconNode) => {
 
 
 const __iconNode = [
+  ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7", key: "1m0v6g" }],
   [
     "path",
     {
-      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
-      key: "1a8usu"
+      d: "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z",
+      key: "ohrbg2"
     }
-  ],
-  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+  ]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode);
+const SquarePen = createLucideIcon("square-pen", __iconNode);
 
 
-//# sourceMappingURL=pencil.js.map
+//# sourceMappingURL=square-pen.js.map
 
-;// ./node_modules/lucide-react/dist/esm/icons/plus.js
+;// ./node_modules/lucide-react/dist/esm/icons/circle-plus.js
 /**
  * @license lucide-react v0.524.0 - ISC
  *
@@ -183,14 +183,15 @@ const Pencil = createLucideIcon("pencil", __iconNode);
 
 
 
-const plus_iconNode = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+const circle_plus_iconNode = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M8 12h8", key: "1wcyev" }],
+  ["path", { d: "M12 8v8", key: "napkw2" }]
 ];
-const Plus = createLucideIcon("plus", plus_iconNode);
+const CirclePlus = createLucideIcon("circle-plus", circle_plus_iconNode);
 
 
-//# sourceMappingURL=plus.js.map
+//# sourceMappingURL=circle-plus.js.map
 
 ;// ./Assets/js/src/editors/post.js
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
@@ -295,7 +296,9 @@ var LanguageSection = function LanguageSection(_ref) {
     alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
     className: "flag",
     style: {
-      marginRight: 8
+      marginRight: 8,
+      width: 20,
+      height: 14
     }
   }) : null), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
     style: {
@@ -601,14 +604,14 @@ var TranslationRow = function TranslationRow(_ref2) {
     }
   }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
     style: {
-      paddingTop: '8px'
+      paddingTop: '14px'
     }
   }, lang !== null && lang !== void 0 && lang.flag_url ? /*#__PURE__*/React.createElement("img", {
     src: lang.flag_url,
     alt: (lang === null || lang === void 0 ? void 0 : lang.name) || '',
     style: {
-      width: 18,
-      height: 12
+      width: 20,
+      height: 14
     }
   }) : null), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
     style: {
@@ -621,10 +624,10 @@ var TranslationRow = function TranslationRow(_ref2) {
     placeholder: (0,external_wp_i18n_namespaceObject.__)('title', 'linguator-multilingual-ai-translation'),
     readOnly: !editable,
     disabled: !editable,
-    help: editable ? saving ? (0,external_wp_i18n_namespaceObject.__)('Saving…', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Type a title to create/update this translation (auto-saves).', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Existing title. Use the Edit button to modify content.', 'linguator-multilingual-ai-translation')
+    help: editable ? saving ? (0,external_wp_i18n_namespaceObject.__)('Saving…', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Type title to save translation.', 'linguator-multilingual-ai-translation') : (0,external_wp_i18n_namespaceObject.__)('Modify title via Edit.', 'linguator-multilingual-ai-translation')
   })), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.FlexItem, {
     style: {
-      paddingTop: '8px'
+      paddingTop: '14px'
     }
   }, hasEdit ? /*#__PURE__*/React.createElement("a", {
     href: links.edit_link,
@@ -637,7 +640,9 @@ var TranslationRow = function TranslationRow(_ref2) {
       alignItems: "center",
       justifyContent: "center"
     }
-  }, /*#__PURE__*/React.createElement(Pencil, null)) : null, !hasEdit && (selectedSuggestion ? /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(SquarePen, {
+    size: 20
+  })) : null, !hasEdit && (selectedSuggestion ? /*#__PURE__*/React.createElement("button", {
     onClick: linkSelected,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Link existing page', 'linguator-multilingual-ai-translation'),
     style: {
@@ -647,7 +652,9 @@ var TranslationRow = function TranslationRow(_ref2) {
       padding: 0,
       cursor: 'pointer'
     }
-  }, /*#__PURE__*/React.createElement(Plus, null)) : hasAdd ? (title || '').trim().length > 0 ? /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(CirclePlus, {
+    size: 20
+  })) : hasAdd ? (title || '').trim().length > 0 ? /*#__PURE__*/React.createElement("button", {
     onClick: createFromTyped,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Create translation from typed title', 'linguator-multilingual-ai-translation'),
     style: {
@@ -657,7 +664,9 @@ var TranslationRow = function TranslationRow(_ref2) {
       padding: 0,
       cursor: 'pointer'
     }
-  }, /*#__PURE__*/React.createElement(Plus, null)) : /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement(CirclePlus, {
+    size: 20
+  })) : /*#__PURE__*/React.createElement("a", {
     href: links.add_link,
     "aria-label": (0,external_wp_i18n_namespaceObject.__)('Add translation', 'linguator-multilingual-ai-translation'),
     style: {
@@ -668,7 +677,9 @@ var TranslationRow = function TranslationRow(_ref2) {
       alignItems: "center",
       justifyContent: "center"
     }
-  }, /*#__PURE__*/React.createElement(Plus, null)) : null), saving || linking ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Spinner, {
+  }, /*#__PURE__*/React.createElement(CirclePlus, {
+    size: 20
+  })) : null), saving || linking ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Spinner, {
     style: {
       marginLeft: 8
     }

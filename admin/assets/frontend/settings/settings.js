@@ -14317,6 +14317,32 @@ const Link = createLucideIcon_createLucideIcon("link", __iconNode);
 
 //# sourceMappingURL=link.js.map
 
+;// ./node_modules/lucide-react/dist/esm/icons/milestone.js
+/**
+ * @license lucide-react v0.524.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+
+const milestone_iconNode = [
+  ["path", { d: "M12 13v8", key: "1l5pq0" }],
+  ["path", { d: "M12 3v3", key: "1n5kay" }],
+  [
+    "path",
+    {
+      d: "M4 6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h13a2 2 0 0 0 1.152-.365l3.424-2.317a1 1 0 0 0 0-1.635l-3.424-2.318A2 2 0 0 0 17 6z",
+      key: "1btarq"
+    }
+  ]
+];
+const Milestone = createLucideIcon_createLucideIcon("milestone", milestone_iconNode);
+
+
+//# sourceMappingURL=milestone.js.map
+
 ;// ./node_modules/lucide-react/dist/esm/icons/globe.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -14380,32 +14406,6 @@ const Settings2 = createLucideIcon_createLucideIcon("settings-2", settings_2_ico
 
 //# sourceMappingURL=settings-2.js.map
 
-;// ./node_modules/lucide-react/dist/esm/icons/milestone.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const milestone_iconNode = [
-  ["path", { d: "M12 13v8", key: "1l5pq0" }],
-  ["path", { d: "M12 3v3", key: "1n5kay" }],
-  [
-    "path",
-    {
-      d: "M4 6a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h13a2 2 0 0 0 1.152-.365l3.424-2.317a1 1 0 0 0 0-1.635l-3.424-2.318A2 2 0 0 0 17 6z",
-      key: "1btarq"
-    }
-  ]
-];
-const Milestone = createLucideIcon_createLucideIcon("milestone", milestone_iconNode);
-
-
-//# sourceMappingURL=milestone.js.map
-
 ;// ./node_modules/lucide-react/dist/esm/icons/refresh-ccw.js
 /**
  * @license lucide-react v0.524.0 - ISC
@@ -14452,7 +14452,6 @@ const Share2 = createLucideIcon_createLucideIcon("share-2", share_2_iconNode);
 ;// ./Admin/Settings/Views/src/components/general.jsx
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -14460,6 +14459,7 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -14538,23 +14538,31 @@ var General = function General(_ref) {
     _useState24 = _slicedToArray(_useState23, 2),
     selectAllSync = _useState24[0],
     setSelectAllSync = _useState24[1];
-  var previousDomains = external_React_default().useRef([]);
-  var _useState25 = (0,external_React_namespaceObject.useState)(data.lmat_feedback_data !== undefined ? data.lmat_feedback_data : false),
+  var _useState25 = (0,external_React_namespaceObject.useState)(false),
     _useState26 = _slicedToArray(_useState25, 2),
-    lmatFeedbackData = _useState26[0],
-    setLmatFeedbackData = _useState26[1]; // For Usage Data Sharing
-  var _useState27 = (0,external_React_namespaceObject.useState)(data.lmat_language_switcher_options || ['default']),
+    selectAllPostTypes = _useState26[0],
+    setSelectAllPostTypes = _useState26[1];
+  var _useState27 = (0,external_React_namespaceObject.useState)(false),
     _useState28 = _slicedToArray(_useState27, 2),
-    selectedLanguageSwitchers = _useState28[0],
-    setSelectedLanguageSwitchers = _useState28[1]; // Selected Language Switcher options
-  var _useState29 = (0,external_React_namespaceObject.useState)(false),
+    selectAllTaxonomies = _useState28[0],
+    setSelectAllTaxonomies = _useState28[1];
+  var previousDomains = external_React_default().useRef([]);
+  var _useState29 = (0,external_React_namespaceObject.useState)(data.lmat_feedback_data !== undefined ? data.lmat_feedback_data : false),
     _useState30 = _slicedToArray(_useState29, 2),
-    showTerms = _useState30[0],
-    setShowTerms = _useState30[1]; // For showing/hiding terms box
-  var _useState31 = (0,external_React_namespaceObject.useState)(data.static_strings_visibility !== undefined ? data.static_strings_visibility : false),
+    lmatFeedbackData = _useState30[0],
+    setLmatFeedbackData = _useState30[1]; // For Usage Data Sharing
+  var _useState31 = (0,external_React_namespaceObject.useState)(data.lmat_language_switcher_options || ['default']),
     _useState32 = _slicedToArray(_useState31, 2),
-    staticStringsVisibility = _useState32[0],
-    setStaticStringsVisibility = _useState32[1]; // For Static Strings tab visibility
+    selectedLanguageSwitchers = _useState32[0],
+    setSelectedLanguageSwitchers = _useState32[1]; // Selected Language Switcher options
+  var _useState33 = (0,external_React_namespaceObject.useState)(false),
+    _useState34 = _slicedToArray(_useState33, 2),
+    showTerms = _useState34[0],
+    setShowTerms = _useState34[1]; // For showing/hiding terms box
+  var _useState35 = (0,external_React_namespaceObject.useState)(data.static_strings_visibility !== undefined ? data.static_strings_visibility : false),
+    _useState36 = _slicedToArray(_useState35, 2),
+    staticStringsVisibility = _useState36[0],
+    setStaticStringsVisibility = _useState36[1]; // For Static Strings tab visibility
 
   //make the Domains in a suitable way to view
   (0,external_React_namespaceObject.useEffect)(function () {
@@ -14800,6 +14808,80 @@ var General = function General(_ref) {
     });
     setSelectAllSync(allSelected && selectedSynchronization.length > 0);
   }, [selectedSynchronization]);
+
+  //Handle Select All Post Types
+  var handleSelectAllPostTypes = function handleSelectAllPostTypes() {
+    setHandleButtonDisabled(false);
+    if (selectAllPostTypes) {
+      // Deselect all (except disabled ones)
+      var enabledPostTypes = selectedPostTypes.filter(function (postType) {
+        var isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(function (disabledType) {
+          var postTypeKey = _typeof(disabledType) === 'object' ? disabledType.post_type_key : disabledType;
+          return postTypeKey === postType;
+        });
+        return isDisabled;
+      });
+      setSelectedPostTypes(enabledPostTypes);
+      setSelectAllPostTypes(false);
+    } else {
+      // Select all
+      var allPostTypeValues = AvailablePostTypes.map(function (postType) {
+        return postType.value;
+      });
+      setSelectedPostTypes(allPostTypeValues);
+      setSelectAllPostTypes(true);
+    }
+  };
+
+  // Update selectAllPostTypes state when individual post type items change
+  external_React_default().useEffect(function () {
+    if (AvailablePostTypes.length > 0) {
+      var enabledPostTypes = AvailablePostTypes.filter(function (postType) {
+        var isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(function (disabledType) {
+          var postTypeKey = _typeof(disabledType) === 'object' ? disabledType.post_type_key : disabledType;
+          return postTypeKey === postType.value;
+        });
+        return !isDisabled;
+      });
+      var enabledPostTypeValues = enabledPostTypes.map(function (postType) {
+        return postType.value;
+      });
+      var allEnabledSelected = enabledPostTypeValues.every(function (value) {
+        return selectedPostTypes.includes(value);
+      });
+      setSelectAllPostTypes(allEnabledSelected && enabledPostTypeValues.length > 0);
+    }
+  }, [selectedPostTypes, AvailablePostTypes]);
+
+  //Handle Select All Taxonomies
+  var handleSelectAllTaxonomies = function handleSelectAllTaxonomies() {
+    setHandleButtonDisabled(false);
+    if (selectAllTaxonomies) {
+      // Deselect all
+      setSelectedTaxonomies([]);
+      setSelectAllTaxonomies(false);
+    } else {
+      // Select all
+      var allTaxonomyValues = AvailableTaxonomies.map(function (taxonomy) {
+        return taxonomy.value;
+      });
+      setSelectedTaxonomies(allTaxonomyValues);
+      setSelectAllTaxonomies(true);
+    }
+  };
+
+  // Update selectAllTaxonomies state when individual taxonomy items change
+  external_React_default().useEffect(function () {
+    if (AvailableTaxonomies.length > 0) {
+      var allTaxonomyValues = AvailableTaxonomies.map(function (taxonomy) {
+        return taxonomy.value;
+      });
+      var allSelected = allTaxonomyValues.every(function (value) {
+        return selectedTaxonomies.includes(value);
+      });
+      setSelectAllTaxonomies(allSelected && selectedTaxonomies.length > 0);
+    }
+  }, [selectedTaxonomies, AvailableTaxonomies]);
 
   // Handle terms box visibility
   var handleTermsToggle = function handleTermsToggle(e) {
@@ -15105,6 +15187,112 @@ var General = function General(_ref) {
     });
   }))))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S, {
+    cols: "1",
+    containerType: "grid"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "switcher"
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, /*#__PURE__*/external_React_default().createElement(Milestone, {
+    className: "flex-shrink-0 size-5 text-icon-secondary"
+  }), (0,external_wp_i18n_namespaceObject.__)('Custom Post Types', 'linguator-multilingual-ai-translation')), AvailablePostTypes.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center justify-end gap-2",
+    style: {
+      paddingRight: '30%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "sm",
+    className: "cursor-pointer",
+    htmlFor: "select-all-post-types"
+  }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+    "aria-label": "Select All Post Types",
+    id: "select-all-post-types",
+    value: selectAllPostTypes,
+    onChange: handleSelectAllPostTypes,
+    size: "sm"
+  }))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex gap-4 flex-wrap"
+  }, AvailablePostTypes.length == 0 ? /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      color: "red"
+    }
+  }, (0,external_wp_i18n_namespaceObject.__)('No Custom Post Types Available', 'linguator-multilingual-ai-translation')) : /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex gap-4 flex-wrap"
+  }, AvailablePostTypes.map(function (postType, index) {
+    var isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(function (disabledType) {
+      // Handle both string and object formats
+      var postTypeKey = _typeof(disabledType) === 'object' ? disabledType.post_type_key : disabledType;
+      return postTypeKey === postType.value;
+    });
+    return /*#__PURE__*/external_React_default().createElement(checkbox_es_B, {
+      label: {
+        description: '',
+        heading: postType.label + (isDisabled ? ' (Programmatically Active)' : '')
+      },
+      className: isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
+      value: postType.value,
+      checked: isDisabled ? true : selectedPostTypes.includes(postType.value),
+      disabled: isDisabled,
+      key: index,
+      size: "sm",
+      onChange: function onChange() {
+        return handlePostTypeChange(postType.value);
+      }
+    });
+  })))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S, {
+    cols: "1",
+    containerType: "grid"
+  }, /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "switcher"
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, /*#__PURE__*/external_React_default().createElement(Milestone, {
+    className: "flex-shrink-0 size-5 text-icon-secondary"
+  }), (0,external_wp_i18n_namespaceObject.__)('Custom Taxonomies', 'linguator-multilingual-ai-translation')), AvailableTaxonomies.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center justify-end gap-2",
+    style: {
+      paddingRight: '30%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "sm",
+    className: "cursor-pointer",
+    htmlFor: "select-all-taxonomies"
+  }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
+    "aria-label": "Select All Taxonomies",
+    id: "select-all-taxonomies",
+    value: selectAllTaxonomies,
+    onChange: handleSelectAllTaxonomies,
+    size: "sm"
+  }))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+    className: "flex gap-4 flex-wrap"
+  }, AvailableTaxonomies.length == 0 ? /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      color: "red"
+    }
+  }, (0,external_wp_i18n_namespaceObject.__)('No Custom Taxonomies Available', 'linguator-multilingual-ai-translation')) : /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex gap-4 flex-wrap"
+  }, AvailableTaxonomies.map(function (taxonomy, index) {
+    return /*#__PURE__*/external_React_default().createElement(checkbox_es_B, {
+      label: {
+        description: '',
+        heading: taxonomy.label
+      },
+      className: "cursor-pointer",
+      value: taxonomy.value,
+      checked: selectedTaxonomies.includes(taxonomy.value),
+      key: index,
+      size: "sm",
+      onChange: function onChange() {
+        return handleTaxonomyChange(taxonomy.value);
+      }
+    });
+  })))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement("div", {
     className: "switcher"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
@@ -15176,62 +15364,6 @@ var General = function General(_ref) {
     size: "sm",
     value: staticStringsVisibility
   }))), /*#__PURE__*/external_React_default().createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
-  }), /*#__PURE__*/external_React_default().createElement(S, {
-    cols: "1",
-    containerType: "grid"
-  }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
-    size: "md",
-    className: "font-bold flex items-center gap-2"
-  }, /*#__PURE__*/external_React_default().createElement(Milestone, {
-    className: "flex-shrink-0 size-5 text-icon-secondary"
-  }), (0,external_wp_i18n_namespaceObject.__)('Custom post types and Taxonomies', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
-    className: "flex gap-4 flex-wrap"
-  }, AvailablePostTypes.length == 0 && AvailableTaxonomies.length == 0 ? /*#__PURE__*/external_React_default().createElement("div", {
-    style: {
-      color: "red"
-    }
-  }, (0,external_wp_i18n_namespaceObject.__)('No Custom Post Types and Taxonomies Available', 'linguator-multilingual-ai-translation')) : /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, AvailablePostTypes.length > 0 && /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("h5", null, (0,external_wp_i18n_namespaceObject.__)('Custom Post Types', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex gap-4 flex-wrap"
-  }, AvailablePostTypes.map(function (postType, index) {
-    var isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(function (disabledType) {
-      // Handle both string and object formats
-      var postTypeKey = _typeof(disabledType) === 'object' ? disabledType.post_type_key : disabledType;
-      return postTypeKey === postType.value;
-    });
-    return /*#__PURE__*/external_React_default().createElement(checkbox_es_B, {
-      label: {
-        description: '',
-        heading: postType.label + (isDisabled ? ' (Programmatically Active)' : '')
-      },
-      className: isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
-      value: postType.value,
-      checked: isDisabled ? true : selectedPostTypes.includes(postType.value),
-      disabled: isDisabled,
-      key: index,
-      size: "sm",
-      onChange: function onChange() {
-        return handlePostTypeChange(postType.value);
-      }
-    });
-  }))), AvailableTaxonomies.length > 0 && /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("h5", null, (0,external_wp_i18n_namespaceObject.__)('Custom Taxonomies', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex gap-4 flex-wrap"
-  }, AvailableTaxonomies.map(function (taxonomy, index) {
-    return /*#__PURE__*/external_React_default().createElement(checkbox_es_B, {
-      label: {
-        description: '',
-        heading: taxonomy.label
-      },
-      className: "cursor-pointer",
-      value: taxonomy.value,
-      checked: selectedTaxonomies.includes(taxonomy.value),
-      key: index,
-      size: "sm",
-      onChange: function onChange() {
-        return handleTaxonomyChange(taxonomy.value);
-      }
-    });
-  })))))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S, {
     cols: "1",

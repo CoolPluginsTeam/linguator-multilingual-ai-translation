@@ -93,10 +93,10 @@ class LMAT_CRUD_Posts {
 		if ( ! $user_id ) {
 			return;
 		}
-		if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			update_user_meta( $user_id, '_lmat_pending_linking_intent', array(
 				'from_post' => (int) $_GET['from_post'], // phpcs:ignore WordPress.Security.NonceVerification
-				'lang'  => sanitize_key( $_GET['lang'] ), // phpcs:ignore WordPress.Security.NonceVerification
+				'new_lang'  => sanitize_key( $_GET['new_lang'] ), // phpcs:ignore WordPress.Security.NonceVerification
 			) );
 		} else {
 			// Visiting the editor without explicit intent: purge any stale intent.
@@ -130,7 +130,7 @@ class LMAT_CRUD_Posts {
 	 */
 	public function set_default_language( $post_id ) {
 		if ( ! $this->model->post->get_language( $post_id ) ) {
-			if ( ! empty( $_GET['lang'] ) && $lang = $this->model->get_language( sanitize_key( $_GET['lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( ! empty( $_GET['new_lang'] ) && $lang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				// Defined only on admin.
 				$this->model->post->set_language( $post_id, $lang );
 			} elseif ( ! isset( $this->pref_lang ) && ! empty( $_REQUEST['lang'] ) && $lang = $this->model->get_language( sanitize_key( $_REQUEST['lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -154,9 +154,9 @@ class LMAT_CRUD_Posts {
 			if ( 'auto-draft' === get_post_status( $post_id ) ) {
 				$user_id = get_current_user_id();
 				$intent  = $user_id ? get_user_meta( $user_id, '_lmat_pending_linking_intent', true ) : array();
-				if ( ! empty( $intent['from_post'] ) && ! empty( $intent['lang'] ) ) {
+				if ( ! empty( $intent['from_post'] ) && ! empty( $intent['new_lang'] ) ) {
 					update_post_meta( $post_id, '_lmat_from_post', (int) $intent['from_post'] );
-					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $intent['lang'] ) );
+					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $intent['new_lang'] ) );
 				}
 				else {
 					// No intent captured for this auto-draft: ensure there is no leftover meta
@@ -196,9 +196,9 @@ class LMAT_CRUD_Posts {
 			$is_autodraft = isset( $post->post_status ) && 'auto-draft' === $post->post_status;
 			if ( $is_autodraft ) {
 				// Persist intended linking info to apply on first real save.
-				if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 					update_post_meta( $post_id, '_lmat_from_post', (int) $_GET['from_post'] ); // phpcs:ignore WordPress.Security.NonceVerification
-					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $_GET['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 				}
 				else {
 					// Ensure a plain Add New (no query args) doesn't inherit stale intent
@@ -236,9 +236,9 @@ class LMAT_CRUD_Posts {
 		// Prefer explicit query args, otherwise use any stored intent from post meta.
 		$from_post_id = 0;
 		$new_lang_slug = '';
-		if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$from_post_id = (int) $_GET['from_post']; // phpcs:ignore WordPress.Security.NonceVerification
-			$new_lang_slug = sanitize_key( $_GET['lang'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			$new_lang_slug = sanitize_key( $_GET['new_lang'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			$from_post_id = (int) get_post_meta( $post_id, '_lmat_from_post', true );
 			$new_lang_slug = sanitize_key( (string) get_post_meta( $post_id, '_lmat_new_lang', true ) );

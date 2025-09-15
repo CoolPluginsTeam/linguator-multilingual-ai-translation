@@ -94,7 +94,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 			$args = array(
 				'action'     => 'translate_media',
 				'from_media' => $post_id,
-				'lang' => $language->slug,
+				'new_lang' => $language->slug,
 			);
 
 			$link = add_query_arg( $args, admin_url( 'admin.php' ) );
@@ -109,7 +109,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 			$args = array(
 				'post_type' => $post_type,
 				'from_post' => $post_id,
-				'lang' => $language->slug,
+				'new_lang' => $language->slug,
 			);
 
 			$link = add_query_arg( $args, admin_url( 'post-new.php' ) );
@@ -182,7 +182,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 			'taxonomy'  => $taxonomy,
 			'post_type' => $post_type,
 			'from_tag'  => $term_id,
-			'lang' => $language->slug,
+			'new_lang' => $language->slug,
 		);
 
 		$link = add_query_arg( $args, admin_url( 'edit-tags.php' ) );
@@ -234,24 +234,24 @@ class LMAT_Admin_Links extends LMAT_Links {
 	}
 
 	/**
-	 * Returns some data (`from_post` and `lang`) from the current request.
+	 * Returns some data (`from_post` and `new_lang`) from the current request.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $post_type A post type.
 	 * @return array {
 	 *     @type WP_Post      $from_post The source post.
-	 *     @type LMAT_Language $lang  The target language.
+	 *     @type LMAT_Language $new_lang  The target language.
 	 * }
 	 *
-	 * @phpstan-return array{}|array{from_post: WP_Post, lang: LMAT_Language}|never
+	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: LMAT_Language}|never
 	 */
 	public function get_data_from_new_post_translation_request( string $post_type ): array {
 		if ( 'attachment' === $post_type ) {
 			return $this->get_data_from_new_media_translation_request();
 		}
 
-		if ( ! isset( $GLOBALS['pagenow'], $_GET['_wpnonce'], $_GET['from_post'], $_GET['lang'], $_GET['post_type'] ) ) {
+		if ( ! isset( $GLOBALS['pagenow'], $_GET['_wpnonce'], $_GET['from_post'], $_GET['new_lang'], $_GET['post_type'] ) ) {
 			return array();
 		}
 
@@ -265,32 +265,32 @@ class LMAT_Admin_Links extends LMAT_Links {
 
 		// Capability check already done in post-new.php.
 		check_admin_referer( 'new-post-translation' );
-		return $this->get_objects_from_new_post_translation_request( (int) $_GET['from_post'], sanitize_key( $_GET['lang'] ) );
+		return $this->get_objects_from_new_post_translation_request( (int) $_GET['from_post'], sanitize_key( $_GET['new_lang'] ) );
 	}
 
 	/**
-	 * Returns some data (`from_post` and `lang`) from the current request.
+	 * Returns some data (`from_post` and `new_lang`) from the current request.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return array {
 	 *     @type WP_Post      $from_post The source media.
-	 *     @type LMAT_Language $lang  The target language.
+	 *     @type LMAT_Language $new_lang  The target language.
 	 * }
 	 *
-	 * @phpstan-return array{}|array{from_post: WP_Post, lang: LMAT_Language}|never
+	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: LMAT_Language}|never
 	 */
 	public function get_data_from_new_media_translation_request(): array {
 		if ( ! $this->options['media_support'] ) {
 			return array();
 		}
 
-		if ( ! isset( $_GET['action'], $_GET['_wpnonce'], $_GET['from_media'], $_GET['lang'] ) || 'translate_media' !== $_GET['action'] ) {
+		if ( ! isset( $_GET['action'], $_GET['_wpnonce'], $_GET['from_media'], $_GET['new_lang'] ) || 'translate_media' !== $_GET['action'] ) {
 			return array();
 		}
 
 		check_admin_referer( 'translate_media' );
-		return $this->get_objects_from_new_post_translation_request( (int) $_GET['from_media'], sanitize_key( $_GET['lang'] ) );
+		return $this->get_objects_from_new_post_translation_request( (int) $_GET['from_media'], sanitize_key( $_GET['new_lang'] ) );
 	}
 
 	/**
@@ -302,10 +302,10 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param string $lang_slug The new translation language provided
 	 * @return array {
 	 *     @type WP_Post      $from_post The source post.
-	 *     @type LMAT_Language $lang  The target language.
+	 *     @type LMAT_Language $new_lang  The target language.
 	 * }
 	 *
-	 * @phpstan-return array{}|array{from_post: WP_Post, lang: LMAT_Language}|never
+	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: LMAT_Language}|never
 	 */
 	private function get_objects_from_new_post_translation_request( int $post_id, string $lang_slug ): array {
 		if ( $post_id <= 0 || empty( $lang_slug ) ) {
@@ -321,7 +321,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 
 		return array(
 			'from_post' => $post,
-			'lang'=>$lang,
+			'new_lang'=>$lang,
 		);
 	}
 }

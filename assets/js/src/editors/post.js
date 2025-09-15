@@ -19,7 +19,7 @@ import {
 import apiFetch from '@wordpress/api-fetch';
 import { useMemo, useState, useRef, useCallback } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { Plus, Pencil } from 'lucide-react';
+import { CirclePlus, SquarePen } from 'lucide-react';
 
 const SIDEBAR_NAME = 'lmat-post-sidebar';
 
@@ -83,7 +83,7 @@ const LanguageSection = ( { lang, allLanguages } ) => {
             <Flex align="center">
                 <FlexItem>
                     { lang?.flag_url ? (
-                        <img src={ lang.flag_url } alt={ lang?.name || '' } className="flag" style={ { marginRight: 8 } } />
+                        <img src={ lang.flag_url } alt={ lang?.name || '' } className="flag" style={ { marginRight: 8, width: 20, height: 14 } } />
                     ) : null }
                 </FlexItem>
                 <FlexItem style={ { flex: 1 } }>
@@ -264,9 +264,9 @@ const TranslationRow = ( { row } ) => {
     return (
         <div style={{ marginBottom: 12 }}>
             <Flex align="center" style={ { marginBottom: 8, alignItems: 'start' } }>
-                <FlexItem style={{paddingTop:'8px'}}>
+                <FlexItem style={{paddingTop:'14px'}}>
                     { lang?.flag_url ? (
-                        <img src={ lang.flag_url } alt={ lang?.name || '' } style={ { width: 18, height: 12 } } />
+                        <img src={ lang.flag_url } alt={ lang?.name || '' } style={ { width: 20, height: 14 } } />
                     ) : null }
                 </FlexItem>
                 <FlexItem style={ { flex: 1,padding:'0px' } }>
@@ -280,32 +280,32 @@ const TranslationRow = ( { row } ) => {
                             editable
                                 ? ( saving
                                     ? __( 'Saving…', 'linguator-multilingual-ai-translation' )
-                                    : __( 'Type a title to create/update this translation (auto-saves).', 'linguator-multilingual-ai-translation' )
+                                    : __( 'Type title to save translation.', 'linguator-multilingual-ai-translation' )
                                   )
-                                : __( 'Existing title. Use the Edit button to modify content.', 'linguator-multilingual-ai-translation' )
+                                : __( 'Modify title via Edit.', 'linguator-multilingual-ai-translation' )
                         }
                     />
                 </FlexItem>
-                <FlexItem style={{paddingTop:'8px'}}>
+                <FlexItem style={{paddingTop:'14px'}}>
                     { hasEdit ? (
                         <a href={ links.edit_link } aria-label={ __( 'Edit translation', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8,height: "100%",width: "100%",display: "flex",alignItems: "center",justifyContent: "center" } }>
-                            <Pencil />
+                            <SquarePen size={20} />
                         </a>
                     ) : null }
                     { ! hasEdit && (
                         selectedSuggestion ? (
                             <button onClick={ linkSelected } aria-label={ __( 'Link existing page', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8, background: 'transparent', border: 0, padding: 0, cursor: 'pointer' } }>
-                                <Plus />
+                                <CirclePlus size={20} />
                             </button>
                         ) : (
                             hasAdd ? (
                                 (title || '').trim().length > 0 ? (
                                     <button onClick={ createFromTyped } aria-label={ __( 'Create translation from typed title', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8, background: 'transparent', border: 0, padding: 0, cursor: 'pointer' } }>
-                                        <Plus />
+                                        <CirclePlus size={20} />
                                     </button>
                                 ) : (
                                     <a href={ links.add_link } aria-label={ __( 'Add translation', 'linguator-multilingual-ai-translation' ) } style={ { marginLeft: 8,height: "100%",width: "100%",display: "flex",alignItems: "center",justifyContent: "center" } }>
-                                        <Plus />
+                                        <CirclePlus size={20} />
                                     </a>
                                 )
                             ) : null

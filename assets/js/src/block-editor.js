@@ -156,15 +156,15 @@ jQuery(
 				 * @param {string} lang The target language code.
 				 */
 				function reloadPageForEmptyPost( lang ) {
-					// Change the lang parameter with the new language value for reloading the page
-					// WPCS location.search is never written in the page, just used to reload page with the right value of lang
-					// lang input is controlled server side in PHP. The value come from the dropdown list of language returned and escaped server side.
+					// Change the new_lang parameter with the new language value for reloading the page
+					// WPCS location.search is never written in the page, just used to reload page with the right value of new_lang
+					// new_lang input is controlled server side in PHP. The value come from the dropdown list of language returned and escaped server side.
 					// Notice that window.location changing triggers automatically page reloading.
-					if ( -1 != location.search.indexOf( 'lang' ) ) {
-						// use regexp non capturing group to replace lang parameter no matter where it is and capture other parameters which can be behind it
-						window.location.search = window.location.search.replace( /(?:lang=[^&]*)(&)?(.*)/, 'lang=' + lang + '$1$2' ); // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment
+					if ( -1 != location.search.indexOf( 'new_lang' ) ) {
+						// use regexp non capturing group to replace new_lang parameter no matter where it is and capture other parameters which can be behind it
+						window.location.search = window.location.search.replace( /(?:new_lang=[^&]*)(&)?(.*)/, 'new_lang=' + lang + '$1$2' ); // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment
 					} else {
-						window.location.search = window.location.search + ( ( -1 != window.location.search.indexOf( '?' ) ) ? '&' : '?' ) + 'lang=' + lang; // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment
+						window.location.search = window.location.search + ( ( -1 != window.location.search.indexOf( '?' ) ) ? '&' : '?' ) + 'new_lang=' + lang; // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment
 					}
 				};
 

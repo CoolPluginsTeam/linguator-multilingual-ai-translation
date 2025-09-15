@@ -109,7 +109,7 @@ class LMAT_Admin_Classic_Editor {
 		$from_post_id = isset( $_GET['from_post'] ) ? (int) $_GET['from_post'] : 0;
 
 		$lang = ( $lg = $this->model->post->get_language( $post_ID ) ) ? $lg :
-			( isset( $_GET['lang'] ) ? $this->model->get_language( sanitize_key( $_GET['lang'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification
+			( isset( $_GET['new_lang'] ) ? $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification
 			$this->pref_lang );
 
 		$dropdown = new LMAT_Walker_Dropdown();
