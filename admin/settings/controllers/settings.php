@@ -459,8 +459,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			}
 
 			// Render the React container for settings
-			echo '<div class="wrap lmat-styles">';
 			$this->header->header();
+			echo '<div class="wrap lmat-styles">';
 			echo '<div id="lmat-settings"></div>';
 			echo '</div>';
 			return;

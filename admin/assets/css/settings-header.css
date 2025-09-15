@@ -14,7 +14,9 @@
 .wrap{
     margin: 0;
 }
-
+#wpcontent{
+    padding: 0;
+}
 #col-left{
     padding-left: 2rem;
     width: 32%;
