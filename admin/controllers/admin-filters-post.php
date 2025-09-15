@@ -52,6 +52,9 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 
 		// Sets the language in Tiny MCE
 		add_filter( 'tiny_mce_before_init', array( $this, 'tiny_mce_before_init' ) );
+
+		// Add lang parameter to WordPress default edit links
+		add_filter( 'get_edit_post_link', array( $this, 'add_lang_to_edit_post_link' ), 10, 3 );
 	}
 
 	/**
@@ -232,5 +235,28 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 			$mce_init['directionality'] = $this->curlang->is_rtl ? 'rtl' : 'ltr';
 		}
 		return $mce_init;
+	}
+
+	/**
+	 * Adds lang parameter to WordPress default edit post links
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $link    The edit post link.
+	 * @param int    $post_id The post ID.
+	 * @param string $context The link context.
+	 * @return string
+	 */
+	public function add_lang_to_edit_post_link( $link, $post_id, $context ) {
+		if ( empty( $link ) || ! $this->model->post_types->is_translated( get_post_type( $post_id ) ) ) {
+			return $link;
+		}
+
+		$language = $this->model->post->get_language( $post_id );
+		if ( $language ) {
+			$link = add_query_arg( 'lang', $language->slug, $link );
+		}
+
+		return $link;
 	}
 }

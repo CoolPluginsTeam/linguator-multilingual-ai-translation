@@ -239,6 +239,9 @@ abstract class Abstract_Screen {
 				$translated_post = get_post( $translation_id );
 				if ( $translated_post ) {
 					$edit_link = get_edit_post_link( $translation_id, 'raw' );
+					if ( $edit_link ) {
+						$edit_link = add_query_arg( 'lang', $language->slug, $edit_link );
+					}
 					$add_link = '';
 				}
 			}

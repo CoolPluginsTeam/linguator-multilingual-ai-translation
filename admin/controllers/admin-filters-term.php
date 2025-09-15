@@ -96,6 +96,9 @@ class LMAT_Admin_Filters_Term {
 
 		// Updates the translations term ids when splitting a shared term
 		add_action( 'split_shared_term', array( $this, 'split_shared_term' ), 10, 4 ); // WP 4.2
+
+		// Add lang parameter to WordPress default edit term links
+		add_filter( 'get_edit_term_link', array( $this, 'add_lang_to_edit_term_link' ), 10, 4 );
 	}
 
 	/**
@@ -786,5 +789,29 @@ class LMAT_Admin_Filters_Term {
 		}
 
 		return $parent;
+	}
+
+	/**
+	 * Adds lang parameter to WordPress default edit term links
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $link     The edit term link.
+	 * @param int    $term_id  The term ID.
+	 * @param string $taxonomy The taxonomy name.
+	 * @param string $context  The link context.
+	 * @return string
+	 */
+	public function add_lang_to_edit_term_link( $link, $term_id, $taxonomy, $context ) {
+		if ( empty( $link ) || ! $this->model->is_translated_taxonomy( $taxonomy ) ) {
+			return $link;
+		}
+
+		$language = $this->model->term->get_language( $term_id );
+		if ( $language ) {
+			$link = add_query_arg( 'lang', $language->slug, $link );
+		}
+
+		return $link;
 	}
 }
