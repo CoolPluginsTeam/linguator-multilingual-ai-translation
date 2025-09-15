@@ -224,22 +224,12 @@ class Settings extends Abstract_Controller {
 		$response['lmat_video_status'] = get_option('lmat_video_status');
 		// Check if CPFM opt-in choice exists for LMAT
 		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
-		$initial_sync_done = get_option( 'lmat_feedback_initial_sync_done', false );
 		
 		if ( $cpfm_opt_in_choice === false ) {
 			// Remove the Usage Data Sharing setting if CPFM opt-in choice doesn't exist
 			unset( $response['lmat_feedback_data'] );
 		} else {
-			// Only sync once initially, then let the setting be independent
-			if ( ! $initial_sync_done ) {
-				// First time: Set the Usage Data Sharing value based on CPFM opt-in choice
-				$response['lmat_feedback_data'] = ( $cpfm_opt_in_choice === 'yes' );
-				// Mark that initial sync is done
-				update_option( 'lmat_feedback_initial_sync_done', true );
-			} else {
-				// After initial sync: Use the current setting value, don't override
-				$response['lmat_feedback_data'] = $this->options->get( 'lmat_feedback_data' );
-			}
+			$response['lmat_feedback_data'] = $this->options->get( 'lmat_feedback_data' );
 		}
 		
 		return $response;
