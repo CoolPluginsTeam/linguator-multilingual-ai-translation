@@ -254,6 +254,8 @@ class LMAT_Template_Translation {
             if (isset($translations[$lang_slug])) {
                 $translated_post_id = $translations[$lang_slug];
                 $edit_link = get_edit_post_link($translated_post_id, 'edit');
+                
+                $edit_link = add_query_arg('lang', $lang_slug, $edit_link);
 
                 if (get_post_meta($translated_post_id, '_elementor_edit_mode', true)) {
                     $edit_link = add_query_arg('action', 'elementor', $edit_link);

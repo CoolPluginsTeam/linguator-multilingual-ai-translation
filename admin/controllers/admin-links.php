@@ -158,6 +158,11 @@ class LMAT_Admin_Links extends LMAT_Links {
 	public function edit_post_translation_link( $post_id ) {
 		$link = get_edit_post_link( $post_id );
 		$language = $this->model->post->get_language( $post_id );
+		
+		if ( $language && $link ) {
+			$link = add_query_arg( 'lang', $language->slug, $link );
+		}
+		
 		return $this->edit_translation_link( $link, $language );
 	}
 
@@ -230,6 +235,12 @@ class LMAT_Admin_Links extends LMAT_Links {
 	public function edit_term_translation_link( $term_id, $taxonomy, $post_type ) {
 		$link = get_edit_term_link( $term_id, $taxonomy, $post_type );
 		$language = $this->model->term->get_language( $term_id );
+		
+		// Add lang parameter to the edit link similar to how it's done in add new links
+		if ( $language && $link ) {
+			$link = add_query_arg( 'lang', $language->slug, $link );
+		}
+		
 		return $this->edit_translation_link( $link, $language );
 	}
 

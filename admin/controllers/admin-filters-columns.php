@@ -173,6 +173,7 @@ class LMAT_Admin_Filters_Columns {
 		if ( $id = $this->model->post->get( $post_id, $language ) ) {
 			// get_edit_post_link returns nothing if the user cannot edit the post
 			if ( $link = get_edit_post_link( $id ) ) {
+				$link = add_query_arg( 'lang', $language->slug, $link );
 				$flag = '';
 				if ( $id === $post_id ) {
 					$flag = $this->get_flag_html( $language );
@@ -314,6 +315,8 @@ class LMAT_Admin_Filters_Columns {
 		// Link to edit term ( or a translation )
 		if ( ( $id = $this->model->term->get( $term_id, $language ) ) && $term = get_term( $id, $taxonomy ) ) {
 			if ( $term instanceof WP_Term && $link = get_edit_term_link( $id, $taxonomy, $post_type ) ) {
+				// Add lang parameter to the edit link similar to how it's done in add new links
+				$link = add_query_arg( 'lang', $language->slug, $link );
 				$flag = '';
 				if ( $id === $term_id ) {
 					$flag = $this->get_flag_html( $language );
