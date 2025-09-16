@@ -238,7 +238,8 @@ function lmat_replace_links_with_translations($content, $locale, $current_locale
 				}
 			} else {
 				 $path = trim(str_replace(lmat_home_url($current_locale), '', $href), '/');
-				 $category_slug = end(array_filter(explode('/', $path)));
+				 $path_parts = array_filter(explode('/', $path));
+				 $category_slug = end($path_parts);
 				 $taxonomy_name=lmat_extract_taxonomy_name($path, $terms_data);
 				 $taxonomy_name=$taxonomy_name ? $taxonomy_name : 'category';
  
