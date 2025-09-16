@@ -36,7 +36,7 @@ class LMAT_Widget extends Widget_Base
         parent::__construct($data, $args);
         wp_register_style(
             'lmat-style',
-            LINGUATOR_URL . '/Admin/Assets/css/build/language-switcher-style.css',
+            LINGUATOR_URL . '/admin/assets/css/build/language-switcher-style.css',
             [],
             LINGUATOR_VERSION
         );

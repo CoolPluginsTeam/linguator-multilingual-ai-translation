@@ -304,7 +304,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	public function customize_controls_enqueue_scripts() {
 		if ( $this->model->has_languages() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-			wp_enqueue_script( 'lmat_widgets', plugins_url( 'Admin/Assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
+			wp_enqueue_script( 'lmat_widgets', plugins_url( 'admin/assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 			$this->add_inline_scripts();
 		}
 	}
