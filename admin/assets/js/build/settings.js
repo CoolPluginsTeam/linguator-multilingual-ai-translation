@@ -1,49 +1,349 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+/**
+ * @package Linguator
+ */
 
-/***/ "./Assets/js/src/settings.js":
-/*!***********************************!*\
-  !*** ./Assets/js/src/settings.js ***!
-  \***********************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+jQuery(function ($) {
+  // languages list table
+  // accessibility to row actions on focus
+  // mainly copy paste of WP code from common.js
+  var transitionTimeout;
+  $('table.languages').on({
+    // restricted to languages list table
+    focusin: function focusin() {
+      clearTimeout(transitionTimeout);
+      var focusedRowActions = $(this).find('.row-actions');
+      // transitionTimeout is necessary for Firefox, but Chrome won't remove the CSS class without a little help.
+      $('.row-actions').not(this).removeClass('visible');
+      focusedRowActions.addClass('visible');
+    },
+    focusout: function focusout() {
+      // Tabbing between post title and .row-actions links needs a brief pause, otherwise
+      // the .row-actions div gets hidden in transit in some browsers ( ahem, Firefox ).
+      transitionTimeout = setTimeout(function () {
+        focusedRowActions.removeClass('visible');
+      }, 30);
+    }
+  }, 'tr'); // acts on the whole tr instead of single td as we have actions links in several columns
 
-eval("{__webpack_require__.r(__webpack_exports__);\n/**\r\n * @package Linguator\r\n */\n\njQuery(function ($) {\n  // languages list table\n  // accessibility to row actions on focus\n  // mainly copy paste of WP code from common.js\n  var transitionTimeout;\n  $('table.languages').on({\n    // restricted to languages list table\n    focusin: function focusin() {\n      clearTimeout(transitionTimeout);\n      var focusedRowActions = $(this).find('.row-actions');\n      // transitionTimeout is necessary for Firefox, but Chrome won't remove the CSS class without a little help.\n      $('.row-actions').not(this).removeClass('visible');\n      focusedRowActions.addClass('visible');\n    },\n    focusout: function focusout() {\n      // Tabbing between post title and .row-actions links needs a brief pause, otherwise\n      // the .row-actions div gets hidden in transit in some browsers ( ahem, Firefox ).\n      transitionTimeout = setTimeout(function () {\n        focusedRowActions.removeClass('visible');\n      }, 30);\n    }\n  }, 'tr'); // acts on the whole tr instead of single td as we have actions links in several columns\n\n  /**\r\n   * Common functions and variables for overriding languages and flags dropdown list by a jQuery UI selectmenu widget.\r\n   */\n\n  // Allow to check if a flag list dropdown is present. Not present in the Wizard steps or other settings page.\n  var flagListExist = $(\"#flag_list\").length;\n  // Allow to check if a language list dropdown is present. Not present in other settings page.\n  var langListExist = $(\"#lang_list\").length;\n  // jQuery UI selectmenu widget width option\n  var defaultSelectmenuWidth = '95%';\n  var wizardSelectmenuWidth = '100%';\n\n  // Inject flag image when jQuery UI selectmenu is created or an item is selected.\n  // jQuery UI 1.12 introduce a wrapper inside de li tag which is necessary to selectmenu widget to work correctly.\n  // Mainly copy from the original jQuery UI 1.12 selectmenu widget _renderItem method.\n  // Note this code works fine with jQuery UI 1.11.4 too.\n  var selectmenuRenderItem = function selectmenuRenderItem(ul, item) {\n    var li = $('<li>');\n    var wrapper = $('<div>');\n    if (item.disabled) {\n      this._addClass(li, null, \"ui-state-disabled\");\n    }\n    // `item.label` is the original `<option>`'s label.\n    this._setText(wrapper, item.label);\n\n    // Add the flag from the data attribute in the selected element.\n    // `item.element` is the original `<option>` element, the data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.\n    wrapper.prepend($(item.element).data('flag-html')); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend\n    wrapper.children('img').addClass('ui-icon');\n\n    // `wrapper` and `ul` are safe, see above.\n    return li.append(wrapper).appendTo(ul); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append, WordPressVIPMinimum.JS.HTMLExecutingFunctions.appendTo\n  };\n  // Override selected item to inject flag for jQuery UI less than 1.12.\n  var selectmenuRefreshButtonText = function selectmenuRefreshButtonText(selectElement) {\n    var buttonText = $(selectElement).selectmenu('instance').buttonText;\n    // The data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.\n    buttonText.prepend($(selectElement).children(':selected').data('flag-html')); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend\n    buttonText.children('img').addClass('ui-icon');\n  };\n  // Override selected item since jQuery UI 1.12 which introduces extension point method _renderButtonItem.\n  // @see https://api.jqueryui.com/1.12/selectmenu/#method-_renderButtonItem _renderButtonItem documentation.\n  var selectmenuRenderButtonItem = function selectmenuRenderButtonItem(selectElement) {\n    var buttonItem = $('<span>');\n    this._setText(buttonItem, selectElement.label);\n    this._addClass(buttonItem, \"ui-selectmenu-text\");\n\n    // Add the flag from the data attribute in the selected element.\n    // The data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.\n    buttonItem.prepend($(selectElement.element).data('flag-html')); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend\n    buttonItem.children('img').addClass('ui-icon');\n    return buttonItem;\n  };\n\n  /**\r\n   * Initialize a jQuery UI selectmenu widget on a DOM element\r\n   *\r\n   * @param {*} element - The jQuery object representing the DOM element to attach the widget with.\r\n   * @param {*} config  - All the parameters - options and callbacks - necessary to configure the jQuery UI selectmenu widget.\r\n   * @return {Object} - The jQuery UI selectmenu widget object instance.\r\n   */\n  function initializeSelectmenuWidget(element, config) {\n    // Create the jQuery UI selectmenu widget for flags list dropdown and return its instance.\n    var selectmenuWidgetInstance = element.selectmenu(config).selectmenu('instance');\n    // Overrides each item in the jQuery UI selectmenu list by injecting flag image.\n    selectmenuWidgetInstance._renderItem = selectmenuRenderItem;\n    // Override the selected item rendering for jQuery UI 1.12+\n    selectmenuWidgetInstance._renderButtonItem = selectmenuRenderButtonItem;\n    // Need to refresh to take in account the new button item rendering method after the selectmenu widget instanciaion.\n    selectmenuWidgetInstance.refresh();\n    return selectmenuWidgetInstance;\n  }\n  /**\r\n   *  Selectmenu widget common parameters for its configuration: options and callbacks.\r\n   */\n\n  // Selectmenu widget options\n  var selectmenuOptions = {\n    width: defaultSelectmenuWidth,\n    classes: {\n      'ui-selectmenu-menu': 'lmat-selectmenu-menu',\n      'ui-selectmenu-button': 'lmat-selectmenu-button'\n    }\n  };\n\n  // Selectmenu widget callbacks\n  var selectmenuFlagListCallbacks = {};\n  // Callbacks when Selectmenu widget create or select event is triggered.\n  var createSelectCallback = function createSelectCallback(event, ui) {\n    selectmenuRefreshButtonText(event.target);\n  };\n\n  /**\r\n   *  Overrides the flag dropdown list with our customized jquery ui selectmenu.\r\n   */\n\n  // Callbacks when Selectmenu widget change or open event is triggered.\n  // Needed to correctly refresh the selected element in the list when editing an existing language or when the value change is triggered by the language choice.\n  // jQuery UI 1.11 callback version.\n  var changeOpenCallback = function changeOpenCallback(event, ui) {\n    selectmenuRefreshButtonText($(event.target).selectmenu('refresh'));\n  };\n  // jQueryUI 1.12 callback version.\n  var changeOpenCallbackjQueryUI112 = function changeOpenCallbackjQueryUI112(event, ui) {\n    // Just a refresh of the menu is needed with jQuery UI 1.12 because _renderButtonItem is triggered and then inject correctly the flag.\n    $(event.target).selectmenu('refresh');\n  };\n  // Use jQuery UI 1.12+ callbacks - no need for create and select callbacks since _renderButtonItem method handles rendering.\n  selectmenuFlagListCallbacks = {\n    change: changeOpenCallbackjQueryUI112,\n    open: changeOpenCallbackjQueryUI112\n  };\n\n  // Create the selectmenu widget only if the field is present.\n  if (flagListExist) {\n    // Create the jQuery UI selectmenu widget for flags list dropdown and return its instance.\n    var selectmenuFlagList = initializeSelectmenuWidget($('#flag_list'), Object.assign({}, selectmenuOptions, selectmenuFlagListCallbacks));\n    $('#lang_list').on('languageChanged', function (event, flag) {\n      // Refresh the flag field\n      selectmenuFlagList.element.val(flag);\n      selectmenuFlagList._trigger('change');\n    });\n  }\n\n  /**\r\n   * Language choice in predefined languages in Linguator Languages settings page and wizard.\r\n   * Overrides the predefined language dropdown list with our customized jQuery ui selectmenu widget.\r\n   */\n\n  /**\r\n   * Fill the other language form fields from the language element selected in the language list dropdown.\r\n   *\r\n   * @param {Object} language - language object of the selected element in the language list dropdown.\r\n   */\n  function fillLanguageFields(language) {\n    $('#lang_slug').val(language.slug);\n    $('#lang_locale').val(language.locale);\n    $('input[name=\"rtl\"]').val(language.rtl);\n    $('#lang_name').val(language.name);\n  }\n\n  /**\r\n   * Parse selected language element in the language list dropdown.\r\n   *\r\n   * @param {object} event - jQuery triggered event.\r\n   * @return {object} The language object with its named properties.\r\n   */\n  function parseSelectedLanguage(event) {\n    var selectedElement = $('option:selected', event.target);\n    var values = selectedElement.val().split(':');\n    return {\n      slug: values[0],\n      locale: values[1],\n      rtl: [values[2]],\n      flag: values[3],\n      name: selectedElement.text().split(' - ')[0] // At the moment there is no need of the 2nd part because it corresponds on the locale which is already known by splitting the selected element value\n    };\n  }\n\n  // Callback when selectmenu widget change event is triggered.\n  var changeCallback = function changeCallback(event, ui) {\n    var language = parseSelectedLanguage(event);\n    fillLanguageFields(language);\n    $(event.target).trigger('languageChanged', language.flag);\n  };\n\n  // Create the jQuery UI selectmenu widget languages list dropdown and return its instance.\n  var selectmenuLangListCallbacks = {};\n  // For the wizard we need a 100% width. So we override the previous defined value of selectmenuOptions.\n  if ($('#lang_list').closest('.lmat-wizard-content').length > 0) {\n    selectmenuOptions = Object.assign(selectmenuOptions, {\n      width: wizardSelectmenuWidth\n    });\n  }\n\n  // Use jQuery UI 1.12+ callbacks - no need for create and select callbacks since _renderButtonItem method handles rendering.\n  selectmenuLangListCallbacks = {\n    change: changeCallback\n  };\n  if (langListExist) {\n    initializeSelectmenuWidget($('#lang_list'), Object.assign({}, selectmenuOptions, selectmenuLangListCallbacks));\n  }\n\n  // strings translations\n  // save translations when pressing enter\n  $('.translation input').on('keydown', function (event) {\n    if ('Enter' === event.key) {\n      event.preventDefault();\n      $('#submit').trigger('click');\n    }\n  });\n\n  // settings page\n  // click on configure link\n  $('#the-list').on('click', '.configure>a', function () {\n    $('.lmat-configure').hide().prev().show();\n    $(this).closest('tr').hide().next().show();\n    return false;\n  });\n\n  // cancel\n  $('#the-list').on('click', '.cancel', function () {\n    $(this).closest('tr').hide().prev().show();\n  });\n\n  // save settings\n  $('#the-list').on('click', '.save', function () {\n    var tr = $(this).closest('tr');\n    var parts = tr.attr('id').split('-');\n    var data = {\n      action: 'lmat_save_options',\n      lmat_ajax_settings: true,\n      module: parts[parts.length - 1],\n      _lmat_nonce: $('#_lmat_nonce').val()\n    };\n    data = tr.find(':input').serialize() + '&' + $.param(data);\n    $.post(ajaxurl, data, function (response) {\n      // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.\n      var res = wpAjax.parseAjaxResponse(response, 'lmat-ajax-response');\n      $.each(res.responses, function () {\n        /**\r\n         * Fires after saving the settings, before applying changes to the DOM.\r\n         *\r\n         * @since 3.6.0\r\n         *\r\n         * @param {Object}      response The response from the AJAX call.\r\n         * @param {HTMLElement} tr       The HTML element containing the fields.\r\n         */\n        wp.hooks.doAction('lmat_settings_saved', this, tr.get(0));\n        switch (this.what) {\n          case 'license-update':\n            // Data comes from `LMAT_License::get_form_field()`, where everything is escaped.\n            $('#lmat-license-' + this.data).replaceWith(this.supplemental.html); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith\n            break;\n          case 'success':\n            tr.hide().prev().show();\n          // close only if there is no error\n          case 'error':\n            $('.settings-error').remove(); // remove previous messages if any\n            // The data comes from `lmat_add_notice()`, where message are passed through `wp_kses()`.\n            $('h1').after(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after\n\n            // Make notices dismissible\n            // copy paste of common.js from WP 4.2.2\n            $('.notice.is-dismissible').each(function () {\n              var $this = $(this),\n                $button = $('<button type=\"button\" class=\"notice-dismiss\"><span class=\"screen-reader-text\"></span></button>'),\n                btnText = lmat_settings.dismiss_notice || '';\n\n              // Ensure plain text\n              $button.find('.screen-reader-text').text(btnText);\n\n              // Whitelist because of how the button is built. See above\n              $this.append($button); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append\n\n              $button.on('click.wp-dismiss-notice', function (event) {\n                event.preventDefault();\n                $this.fadeTo(100, 0, function () {\n                  $(this).slideUp(100, function () {\n                    $(this).remove();\n                  });\n                });\n              });\n            });\n            break;\n        }\n      });\n    });\n  });\n\n  // act when pressing enter or esc in configurations\n  $('.lmat-configure').on('keydown', function (event) {\n    if ('Enter' === event.key) {\n      event.preventDefault();\n      $(this).find('.save').trigger('click');\n    }\n    if ('Escape' === event.key) {\n      event.preventDefault();\n      $(this).find('.cancel').trigger('click');\n    }\n  });\n\n  // settings URL modifications\n  // manages visibility of fields\n  $(\"input[name='force_lang']\").on('change', function () {\n    function lmat_toggle(a, test) {\n      test ? a.show() : a.hide();\n    }\n    var value = $(this).val();\n    lmat_toggle($('#lmat-domains-table'), 3 == value);\n    lmat_toggle($(\"#lmat-hide-default\"), 3 > value);\n    lmat_toggle($(\"#lmat-rewrite\"), 2 > value);\n    lmat_toggle($(\"#lmat-redirect-lang\"), 2 > value);\n  });\n\n  // settings license\n  // deactivate button\n  $('.lmat-deactivate-license').on('click', function () {\n    var data = {\n      action: 'lmat_deactivate_license',\n      lmat_ajax_settings: true,\n      id: $(this).attr('id'),\n      _lmat_nonce: $('#_lmat_nonce').val()\n    };\n    $.post(ajaxurl, data, function (response) {\n      // Data comes from `LMAT_License::get_form_field()`, where everything is escaped.\n      $('#lmat-license-' + response.id).replaceWith(response.html); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith\n    });\n  });\n\n  // Manage closing the metabox.\n  // close postboxes that should be closed\n  $('.if-js-closed').removeClass('if-js-closed').addClass('closed');\n  // postboxes setup\n  if ('undefined' !== typeof postboxes) {\n    postboxes.add_postbox_toggles(pagenow);\n  }\n});\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/settings.js?\n}");
+  /**
+   * Common functions and variables for overriding languages and flags dropdown list by a jQuery UI selectmenu widget.
+   */
 
-/***/ })
+  // Allow to check if a flag list dropdown is present. Not present in the Wizard steps or other settings page.
+  var flagListExist = $("#flag_list").length;
+  // Allow to check if a language list dropdown is present. Not present in other settings page.
+  var langListExist = $("#lang_list").length;
+  // jQuery UI selectmenu widget width option
+  var defaultSelectmenuWidth = '95%';
+  var wizardSelectmenuWidth = '100%';
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./Assets/js/src/settings.js"](0, __webpack_exports__, __webpack_require__);
-/******/ 	
+  // Inject flag image when jQuery UI selectmenu is created or an item is selected.
+  // jQuery UI 1.12 introduce a wrapper inside de li tag which is necessary to selectmenu widget to work correctly.
+  // Mainly copy from the original jQuery UI 1.12 selectmenu widget _renderItem method.
+  // Note this code works fine with jQuery UI 1.11.4 too.
+  var selectmenuRenderItem = function selectmenuRenderItem(ul, item) {
+    var li = $('<li>');
+    var wrapper = $('<div>');
+    if (item.disabled) {
+      this._addClass(li, null, "ui-state-disabled");
+    }
+    // `item.label` is the original `<option>`'s label.
+    this._setText(wrapper, item.label);
+
+    // Add the flag from the data attribute in the selected element.
+    // `item.element` is the original `<option>` element, the data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.
+    wrapper.prepend($(item.element).data('flag-html')); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
+    wrapper.children('img').addClass('ui-icon');
+
+    // `wrapper` and `ul` are safe, see above.
+    return li.append(wrapper).appendTo(ul); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append, WordPressVIPMinimum.JS.HTMLExecutingFunctions.appendTo
+  };
+  // Override selected item to inject flag for jQuery UI less than 1.12.
+  var selectmenuRefreshButtonText = function selectmenuRefreshButtonText(selectElement) {
+    var buttonText = $(selectElement).selectmenu('instance').buttonText;
+    // The data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.
+    buttonText.prepend($(selectElement).children(':selected').data('flag-html')); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
+    buttonText.children('img').addClass('ui-icon');
+  };
+  // Override selected item since jQuery UI 1.12 which introduces extension point method _renderButtonItem.
+  // @see https://api.jqueryui.com/1.12/selectmenu/#method-_renderButtonItem _renderButtonItem documentation.
+  var selectmenuRenderButtonItem = function selectmenuRenderButtonItem(selectElement) {
+    var buttonItem = $('<span>');
+    this._setText(buttonItem, selectElement.label);
+    this._addClass(buttonItem, "ui-selectmenu-text");
+
+    // Add the flag from the data attribute in the selected element.
+    // The data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.
+    buttonItem.prepend($(selectElement.element).data('flag-html')); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
+    buttonItem.children('img').addClass('ui-icon');
+    return buttonItem;
+  };
+
+  /**
+   * Initialize a jQuery UI selectmenu widget on a DOM element
+   *
+   * @param {*} element - The jQuery object representing the DOM element to attach the widget with.
+   * @param {*} config  - All the parameters - options and callbacks - necessary to configure the jQuery UI selectmenu widget.
+   * @return {Object} - The jQuery UI selectmenu widget object instance.
+   */
+  function initializeSelectmenuWidget(element, config) {
+    // Create the jQuery UI selectmenu widget for flags list dropdown and return its instance.
+    var selectmenuWidgetInstance = element.selectmenu(config).selectmenu('instance');
+    // Overrides each item in the jQuery UI selectmenu list by injecting flag image.
+    selectmenuWidgetInstance._renderItem = selectmenuRenderItem;
+    // Override the selected item rendering for jQuery UI 1.12+
+    selectmenuWidgetInstance._renderButtonItem = selectmenuRenderButtonItem;
+    // Need to refresh to take in account the new button item rendering method after the selectmenu widget instanciaion.
+    selectmenuWidgetInstance.refresh();
+    return selectmenuWidgetInstance;
+  }
+  /**
+   *  Selectmenu widget common parameters for its configuration: options and callbacks.
+   */
+
+  // Selectmenu widget options
+  var selectmenuOptions = {
+    width: defaultSelectmenuWidth,
+    classes: {
+      'ui-selectmenu-menu': 'lmat-selectmenu-menu',
+      'ui-selectmenu-button': 'lmat-selectmenu-button'
+    }
+  };
+
+  // Selectmenu widget callbacks
+  var selectmenuFlagListCallbacks = {};
+  // Callbacks when Selectmenu widget create or select event is triggered.
+  var createSelectCallback = function createSelectCallback(event, ui) {
+    selectmenuRefreshButtonText(event.target);
+  };
+
+  /**
+   *  Overrides the flag dropdown list with our customized jquery ui selectmenu.
+   */
+
+  // Callbacks when Selectmenu widget change or open event is triggered.
+  // Needed to correctly refresh the selected element in the list when editing an existing language or when the value change is triggered by the language choice.
+  // jQuery UI 1.11 callback version.
+  var changeOpenCallback = function changeOpenCallback(event, ui) {
+    selectmenuRefreshButtonText($(event.target).selectmenu('refresh'));
+  };
+  // jQueryUI 1.12 callback version.
+  var changeOpenCallbackjQueryUI112 = function changeOpenCallbackjQueryUI112(event, ui) {
+    // Just a refresh of the menu is needed with jQuery UI 1.12 because _renderButtonItem is triggered and then inject correctly the flag.
+    $(event.target).selectmenu('refresh');
+  };
+  // Use jQuery UI 1.12+ callbacks - no need for create and select callbacks since _renderButtonItem method handles rendering.
+  selectmenuFlagListCallbacks = {
+    change: changeOpenCallbackjQueryUI112,
+    open: changeOpenCallbackjQueryUI112
+  };
+
+  // Create the selectmenu widget only if the field is present.
+  if (flagListExist) {
+    // Create the jQuery UI selectmenu widget for flags list dropdown and return its instance.
+    var selectmenuFlagList = initializeSelectmenuWidget($('#flag_list'), Object.assign({}, selectmenuOptions, selectmenuFlagListCallbacks));
+    $('#lang_list').on('languageChanged', function (event, flag) {
+      // Refresh the flag field
+      selectmenuFlagList.element.val(flag);
+      selectmenuFlagList._trigger('change');
+    });
+  }
+
+  /**
+   * Language choice in predefined languages in Linguator Languages settings page and wizard.
+   * Overrides the predefined language dropdown list with our customized jQuery ui selectmenu widget.
+   */
+
+  /**
+   * Fill the other language form fields from the language element selected in the language list dropdown.
+   *
+   * @param {Object} language - language object of the selected element in the language list dropdown.
+   */
+  function fillLanguageFields(language) {
+    $('#lang_slug').val(language.slug);
+    $('#lang_locale').val(language.locale);
+    $('input[name="rtl"]').val(language.rtl);
+    $('#lang_name').val(language.name);
+  }
+
+  /**
+   * Parse selected language element in the language list dropdown.
+   *
+   * @param {object} event - jQuery triggered event.
+   * @return {object} The language object with its named properties.
+   */
+  function parseSelectedLanguage(event) {
+    var selectedElement = $('option:selected', event.target);
+    var values = selectedElement.val().split(':');
+    return {
+      slug: values[0],
+      locale: values[1],
+      rtl: [values[2]],
+      flag: values[3],
+      name: selectedElement.text().split(' - ')[0] // At the moment there is no need of the 2nd part because it corresponds on the locale which is already known by splitting the selected element value
+    };
+  }
+
+  // Callback when selectmenu widget change event is triggered.
+  var changeCallback = function changeCallback(event, ui) {
+    var language = parseSelectedLanguage(event);
+    fillLanguageFields(language);
+    $(event.target).trigger('languageChanged', language.flag);
+  };
+
+  // Create the jQuery UI selectmenu widget languages list dropdown and return its instance.
+  var selectmenuLangListCallbacks = {};
+  // For the wizard we need a 100% width. So we override the previous defined value of selectmenuOptions.
+  if ($('#lang_list').closest('.lmat-wizard-content').length > 0) {
+    selectmenuOptions = Object.assign(selectmenuOptions, {
+      width: wizardSelectmenuWidth
+    });
+  }
+
+  // Use jQuery UI 1.12+ callbacks - no need for create and select callbacks since _renderButtonItem method handles rendering.
+  selectmenuLangListCallbacks = {
+    change: changeCallback
+  };
+  if (langListExist) {
+    initializeSelectmenuWidget($('#lang_list'), Object.assign({}, selectmenuOptions, selectmenuLangListCallbacks));
+  }
+
+  // strings translations
+  // save translations when pressing enter
+  $('.translation input').on('keydown', function (event) {
+    if ('Enter' === event.key) {
+      event.preventDefault();
+      $('#submit').trigger('click');
+    }
+  });
+
+  // settings page
+  // click on configure link
+  $('#the-list').on('click', '.configure>a', function () {
+    $('.lmat-configure').hide().prev().show();
+    $(this).closest('tr').hide().next().show();
+    return false;
+  });
+
+  // cancel
+  $('#the-list').on('click', '.cancel', function () {
+    $(this).closest('tr').hide().prev().show();
+  });
+
+  // save settings
+  $('#the-list').on('click', '.save', function () {
+    var tr = $(this).closest('tr');
+    var parts = tr.attr('id').split('-');
+    var data = {
+      action: 'lmat_save_options',
+      lmat_ajax_settings: true,
+      module: parts[parts.length - 1],
+      _lmat_nonce: $('#_lmat_nonce').val()
+    };
+    data = tr.find(':input').serialize() + '&' + $.param(data);
+    $.post(ajaxurl, data, function (response) {
+      // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.
+      var res = wpAjax.parseAjaxResponse(response, 'lmat-ajax-response');
+      $.each(res.responses, function () {
+        /**
+         * Fires after saving the settings, before applying changes to the DOM.
+         *
+         * @since 3.6.0
+         *
+         * @param {Object}      response The response from the AJAX call.
+         * @param {HTMLElement} tr       The HTML element containing the fields.
+         */
+        wp.hooks.doAction('lmat_settings_saved', this, tr.get(0));
+        switch (this.what) {
+          case 'license-update':
+            // Data comes from `LMAT_License::get_form_field()`, where everything is escaped.
+            $('#lmat-license-' + this.data).replaceWith(this.supplemental.html); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith
+            break;
+          case 'success':
+            tr.hide().prev().show();
+          // close only if there is no error
+          case 'error':
+            $('.settings-error').remove(); // remove previous messages if any
+            // The data comes from `lmat_add_notice()`, where message are passed through `wp_kses()`.
+            $('h1').after(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after
+
+            // Make notices dismissible
+            // copy paste of common.js from WP 4.2.2
+            $('.notice.is-dismissible').each(function () {
+              var $this = $(this),
+                $button = $('<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>'),
+                btnText = lmat_settings.dismiss_notice || '';
+
+              // Ensure plain text
+              $button.find('.screen-reader-text').text(btnText);
+
+              // Whitelist because of how the button is built. See above
+              $this.append($button); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append
+
+              $button.on('click.wp-dismiss-notice', function (event) {
+                event.preventDefault();
+                $this.fadeTo(100, 0, function () {
+                  $(this).slideUp(100, function () {
+                    $(this).remove();
+                  });
+                });
+              });
+            });
+            break;
+        }
+      });
+    });
+  });
+
+  // act when pressing enter or esc in configurations
+  $('.lmat-configure').on('keydown', function (event) {
+    if ('Enter' === event.key) {
+      event.preventDefault();
+      $(this).find('.save').trigger('click');
+    }
+    if ('Escape' === event.key) {
+      event.preventDefault();
+      $(this).find('.cancel').trigger('click');
+    }
+  });
+
+  // settings URL modifications
+  // manages visibility of fields
+  $("input[name='force_lang']").on('change', function () {
+    function lmat_toggle(a, test) {
+      test ? a.show() : a.hide();
+    }
+    var value = $(this).val();
+    lmat_toggle($('#lmat-domains-table'), 3 == value);
+    lmat_toggle($("#lmat-hide-default"), 3 > value);
+    lmat_toggle($("#lmat-rewrite"), 2 > value);
+    lmat_toggle($("#lmat-redirect-lang"), 2 > value);
+  });
+
+  // settings license
+  // deactivate button
+  $('.lmat-deactivate-license').on('click', function () {
+    var data = {
+      action: 'lmat_deactivate_license',
+      lmat_ajax_settings: true,
+      id: $(this).attr('id'),
+      _lmat_nonce: $('#_lmat_nonce').val()
+    };
+    $.post(ajaxurl, data, function (response) {
+      // Data comes from `LMAT_License::get_form_field()`, where everything is escaped.
+      $('#lmat-license-' + response.id).replaceWith(response.html); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith
+    });
+  });
+
+  // Manage closing the metabox.
+  // close postboxes that should be closed
+  $('.if-js-closed').removeClass('if-js-closed').addClass('closed');
+  // postboxes setup
+  if ('undefined' !== typeof postboxes) {
+    postboxes.add_postbox_toggles(pagenow);
+  }
+});
 /******/ })()
 ;
