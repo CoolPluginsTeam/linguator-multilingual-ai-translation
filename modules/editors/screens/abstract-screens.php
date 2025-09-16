@@ -180,7 +180,7 @@ abstract class Abstract_Screen {
 	 * @return string The full path.
 	 */
 	protected function get_script_path(): string {
-		return "/Admin/Assets/js/build/editors/{$this->get_screen_name()}{$this->suffix}.js";
+		return "/admin/assets/js/build/editors/{$this->get_screen_name()}{$this->suffix}.js";
 	}
 
 	/**

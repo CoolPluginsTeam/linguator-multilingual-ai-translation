@@ -116,8 +116,8 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		// Build output lives under Admin/Assets/js/build per webpack config
-		$script_filename = 'Admin/Assets/js/build/blocks' . $suffix . '.js';
+		// Build output lives under admin/assets/js/build per webpack config
+		$script_filename = 'admin/assets/js/build/blocks' . $suffix . '.js';
 		$script_handle = 'lmat_blocks';
 		wp_register_script(
 			$script_handle,
