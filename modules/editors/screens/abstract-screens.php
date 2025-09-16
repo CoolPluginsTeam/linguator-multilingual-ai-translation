@@ -227,7 +227,7 @@ abstract class Abstract_Screen {
 
 			// Get translated post ID
 			$translation_id = $this->model->post->get_translation( $post->ID, $language );
-			if ( empty( $translation_id ) && ! empty( $_GET['from_post'] ) && ! empty( $_GET['lang'] ) ) {
+			if ( empty( $translation_id ) && ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) {
 				$translation_id = $this->model->post->get_translation( $_GET['from_post'], $language );
 			}
 			$translated_post = null;
