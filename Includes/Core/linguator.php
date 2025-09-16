@@ -144,13 +144,13 @@ class Linguator {
 		// Special test for plupload which does not use jquery ajax and thus does not pass our ajax prefilter
 		// Special test for customize_save done in frontend but for which we want to load the admin
 		// Special test for Elementor actions which should be treated as admin/backend operations
-		$excluded_actions = array( 'upload-attachment', 'customize_save' );
+		$excluded_actions = array( 'upload-attachment', 'customize_save', 'lmat_fetch_post_content', 'lmat_block_parsing_rules', 'lmat_update_elementor_data', 'lmat_update_translate_data' );
 		
 		// Add Elementor-specific actions that should be treated as backend
 		if ( isset( $_REQUEST['action'] ) ) {
 			$action = sanitize_key( $_REQUEST['action'] );
-			// Check for Elementor actions - these should be treated as admin operations
-			if ( strpos( $action, 'elementor' ) !== false || 
+			// Check for specific Elementor actions that should be treated as admin operations
+			if ( $action === 'elementor_ajax' || 
 				 in_array( $action, array( 'heartbeat' ) ) ) {
 				$excluded_actions[] = $action;
 			}
