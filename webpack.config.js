@@ -142,8 +142,8 @@ function createConfig({ srcDir, outDir, sourceFiles }, opts = {}) {
 /** Base groups **/
 const configs = [
   {
-    srcDir: 'Assets/js/src',
-    outDir: 'Admin/Assets/js/build',
+    srcDir: 'assets/js/src',
+    outDir: 'admin/assets/js/build',
     sourceFiles: [
       'admin',
       'block-editor',
@@ -160,18 +160,18 @@ const configs = [
   },
   // Editors builds: post editor, site editor and widgets editor
   {
-    srcDir: 'Assets/js/src/editors',
-    outDir: 'Admin/Assets/js/build/editors',
+    srcDir: 'assets/js/src/editors',
+    outDir: 'admin/assets/js/build/editors',
     sourceFiles: ['post', 'site', 'widget'],
   },
   {
-    srcDir: 'Admin/Settings/Views/src',
-    outDir: 'Admin/Assets/frontend/settings',
+    srcDir: 'admin/Settings/Views/src',
+    outDir: 'admin/assets/frontend/settings',
     sourceFiles: ['settings'],
   },
   {
-    srcDir: 'Modules/wizard/src',
-    outDir: 'Admin/Assets/frontend/setup',
+    srcDir: 'modules/wizard/src',
+    outDir: 'admin/Assets/frontend/setup',
     sourceFiles: ['setup'],
   },
 ];
@@ -179,16 +179,16 @@ const configs = [
 /** Inline translation builds **/
 const machineTranslationConfigs = [
   {
-    srcDir: 'Modules/inline-translation/src/elementor',
-    outDir: 'Admin/Assets/elementor-inline-translate',
+    srcDir: 'modules/inline-translation/src/elementor',
+    outDir: 'admin/assets/elementor-inline-translate',
     sourceFiles: ['index'],
     styleLoader: true,
     generateAssets: false,
     ext: '.js',
   },
   {
-    srcDir: 'Modules/inline-translation/src/gutenberg/editorAssets',
-    outDir: 'Admin/Assets/gutenberg-inline-translate',
+    srcDir: 'modules/inline-translation/src/gutenberg/editorAssets',
+    outDir: 'admin/assets/gutenberg-inline-translate',
     sourceFiles: ['index'],
     styleLoader: true,
     generateAssets: false,
