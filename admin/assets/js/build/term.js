@@ -1,49 +1,217 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+/**
+ * @package Linguator
+ */
 
-/***/ "./Assets/js/src/term.js":
-/*!*******************************!*\
-  !*** ./Assets/js/src/term.js ***!
-  \*******************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+/**
+ * Quick edit
+ */
+jQuery(function ($) {
+  var handleQuickEditInsertion = function handleQuickEditInsertion(mutationsList) {
+    var _iterator = _createForOfIteratorHelper(mutationsList),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var mutation = _step.value;
+        var addedNodes = Array.from(mutation.addedNodes).filter(function (el) {
+          return el.nodeType === Node.ELEMENT_NODE;
+        });
+        var form = addedNodes[0];
+        if (0 < mutation.addedNodes.length && form.classList.contains('inline-edit-row')) {
+          // WordPress has inserted the quick edit form.
+          var term_id = Number(form.id.substring(5));
+          if (term_id > 0) {
+            var _document$querySelect;
+            // Get the language dropdown.
+            var select = form.querySelector('select[name="inline_lang_choice"]');
+            var lang = document.querySelector('#lang_' + String(term_id)).innerHTML;
+            select.value = lang; // Populates the dropdown with the post language.
 
-eval("{__webpack_require__.r(__webpack_exports__);\nfunction _createForOfIteratorHelper(r, e) { var t = \"undefined\" != typeof Symbol && r[Symbol.iterator] || r[\"@@iterator\"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && \"number\" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError(\"Invalid attempt to iterate non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.\"); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }\nfunction _unsupportedIterableToArray(r, a) { if (r) { if (\"string\" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return \"Object\" === t && r.constructor && (t = r.constructor.name), \"Map\" === t || \"Set\" === t ? Array.from(r) : \"Arguments\" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }\nfunction _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }\n/**\r\n * @package Linguator\r\n */\n\n/**\r\n * Quick edit\r\n */\njQuery(function ($) {\n  var handleQuickEditInsertion = function handleQuickEditInsertion(mutationsList) {\n    var _iterator = _createForOfIteratorHelper(mutationsList),\n      _step;\n    try {\n      for (_iterator.s(); !(_step = _iterator.n()).done;) {\n        var mutation = _step.value;\n        var addedNodes = Array.from(mutation.addedNodes).filter(function (el) {\n          return el.nodeType === Node.ELEMENT_NODE;\n        });\n        var form = addedNodes[0];\n        if (0 < mutation.addedNodes.length && form.classList.contains('inline-edit-row')) {\n          // WordPress has inserted the quick edit form.\n          var term_id = Number(form.id.substring(5));\n          if (term_id > 0) {\n            var _document$querySelect;\n            // Get the language dropdown.\n            var select = form.querySelector('select[name=\"inline_lang_choice\"]');\n            var lang = document.querySelector('#lang_' + String(term_id)).innerHTML;\n            select.value = lang; // Populates the dropdown with the post language.\n\n            // Disable the language dropdown for default categories.\n            var default_cat = (_document$querySelect = document.querySelector(\"#default_cat_\".concat(term_id))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.innerHTML;\n            if (term_id == default_cat) {\n              select.disabled = true;\n            }\n          }\n        }\n      }\n    } catch (err) {\n      _iterator.e(err);\n    } finally {\n      _iterator.f();\n    }\n  };\n  var table = document.getElementById('the-list');\n  if (null !== table) {\n    // Ensure the table is displayed before listening to any change.\n    var config = {\n      childList: true,\n      subtree: true\n    };\n    var observer = new MutationObserver(handleQuickEditInsertion);\n    observer.observe(table, config);\n  }\n});\n\n/**\r\n * Update rows of translated terms when adding / deleting a translation or when the language is modified in quick edit.\r\n * Acts on ajaxSuccess event.\r\n */\njQuery(function ($) {\n  $(document).ajaxSuccess(function (event, xhr, settings) {\n    function update_rows(term_id) {\n      // collect old translations\n      var translations = new Array();\n      $('.translation_' + term_id).each(function () {\n        translations.push($(this).parent().parent().attr('id').substring(4));\n      });\n      var data = {\n        action: 'lmat_update_term_rows',\n        term_id: term_id,\n        translations: translations.join(','),\n        taxonomy: $(\"input[name='taxonomy']\").val(),\n        post_type: $(\"input[name='post_type']\").val(),\n        screen: $(\"input[name='screen']\").val(),\n        _lmat_nonce: $('#_lmat_nonce').val()\n      };\n\n      // get the modified rows in ajax and update them\n      $.post(ajaxurl, data, function (response) {\n        if (response) {\n          // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.\n          var res = wpAjax.parseAjaxResponse(response, 'lmat-ajax-response');\n          $.each(res.responses, function () {\n            if ('row' == this.what) {\n              // data is built with a call to WP_Terms_List_Table::single_row method\n              // which uses internally other WordPress methods which escape correctly values.\n              // For Linguator language columns the HTML code is correctly escaped in LMAT_Admin_Filters_Columns::term_column method.\n              $(\"#tag-\" + this.supplemental.term_id).replaceWith(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith\n            }\n          });\n        }\n      });\n    }\n    var data = wpAjax.unserialize(settings.data); // what were the data sent by the ajax request?\n    if ('undefined' != typeof data['action']) {\n      switch (data['action']) {\n        // when adding a term, the new term_id is in the ajax response\n        case 'add-tag':\n          // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.\n          var res = wpAjax.parseAjaxResponse(xhr.responseXML, 'lmat-ajax-response');\n          $.each(res.responses, function () {\n            if ('term' == this.what) {\n              update_rows(this.supplemental.term_id);\n            }\n          });\n\n          // and also reset translations hidden input fields\n          $('.htr_lang').val(0);\n          break;\n\n        // when deleting a term\n        case 'delete-tag':\n          update_rows(data['tag_ID']);\n          break;\n\n        // in case the language is modified in quick edit and breaks translations\n        case 'inline-save-tax':\n          update_rows(data['tax_ID']);\n          break;\n      }\n    }\n  });\n});\njQuery(function ($) {\n  // translations autocomplete input box\n  function init_translations() {\n    $('.tr_lang').each(function () {\n      var tr_lang = $(this).attr('id').substring(8);\n      var td = $(this).parent().parent().siblings('.lmat-edit-column');\n      $(this).autocomplete({\n        minLength: 0,\n        source: ajaxurl + '?action=lmat_terms_not_translated' + '&term_language=' + $('#term_lang_choice').val() + '&term_id=' + $(\"input[name='tag_ID']\").val() + '&taxonomy=' + $(\"input[name='taxonomy']\").val() + '&translation_language=' + tr_lang + '&post_type=' + typenow + '&_lmat_nonce=' + $('#_lmat_nonce').val(),\n        select: function select(event, ui) {\n          $('#htr_lang_' + tr_lang).val(ui.item.id);\n          // ui.item.link is built and come from server side and is well escaped when necessary\n          td.html(ui.item.link); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n        }\n      });\n\n      // when the input box is emptied\n      $(this).on('blur', function () {\n        if (!$(this).val()) {\n          $('#htr_lang_' + tr_lang).val(0);\n          // Value is retrieved from HTML already generated server side\n          td.html(td.siblings('.hidden').children().clone()); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n        }\n      });\n    });\n  }\n  init_translations();\n\n  // ajax for changing the term's language\n  $('#term_lang_choice').on('change', function () {\n    var value = $(this).val();\n    // The selected option in the dropdown list.\n    var selectedOption = event.target;\n    var data = {\n      action: 'lmat_term_lang_choice',\n      lang: value,\n      from_tag: $(\"input[name='from_tag']\").val(),\n      term_id: $(\"input[name='tag_ID']\").val(),\n      taxonomy: $(\"input[name='taxonomy']\").val(),\n      post_type: typenow,\n      _lmat_nonce: $('#_lmat_nonce').val()\n    };\n    $.post(ajaxurl, data, function (response) {\n      // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.\n      var res = wpAjax.parseAjaxResponse(response, 'lmat-ajax-response');\n      $.each(res.responses, function () {\n        switch (this.what) {\n          case 'translations':\n            // translations fields\n            // Data is built and come from server side and is well escaped when necessary\n            $(\"#term-translations\").html(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n            init_translations();\n            break;\n          case 'parent':\n            // parent dropdown list for hierarchical taxonomies\n            // data correctly escaped in LMAT_Admin_Filters_Term::term_lang_choice method which uses wp_dropdown_categories function.\n            $('#parent').replaceWith(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith\n            break;\n          case 'tag_cloud':\n            // popular items\n            // data correctly escaped in LMAT_Admin_Filters_Term::term_lang_choice method which uses wp_tag_cloud and wp_generate_tag_cloud functions.\n            $('.tagcloud').replaceWith(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith\n            break;\n          case 'flag':\n            // flag in front of the select dropdown\n            // Data is built and come from server side and is well escaped when necessary\n            $('.lmat-select-flag').html(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n            break;\n        }\n      });\n\n      // Creates an event once the language has been successfully changed.\n      var onTermLangChoice = new CustomEvent(\"onTermLangChoice\", {\n        detail: {\n          lang: JSON.parse(selectedOption.options[selectedOption.options.selectedIndex].getAttribute('data-lang'))\n        }\n      });\n      document.dispatchEvent(onTermLangChoice);\n    });\n  });\n\n  // Listen to `onTermLangChoice` to perform actions after the language has been changed.\n  document.addEventListener('onTermLangChoice', function (e) {\n    // Modifies the text direction.\n    var dir = e.detail.lang.is_rtl ? 'rtl' : 'ltr';\n    $('body').removeClass('lmat-dir-rtl').removeClass('lmat-dir-ltr').addClass('lmat-dir-' + dir);\n  });\n});\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/term.js?\n}");
+            // Disable the language dropdown for default categories.
+            var default_cat = (_document$querySelect = document.querySelector("#default_cat_".concat(term_id))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.innerHTML;
+            if (term_id == default_cat) {
+              select.disabled = true;
+            }
+          }
+        }
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  };
+  var table = document.getElementById('the-list');
+  if (null !== table) {
+    // Ensure the table is displayed before listening to any change.
+    var config = {
+      childList: true,
+      subtree: true
+    };
+    var observer = new MutationObserver(handleQuickEditInsertion);
+    observer.observe(table, config);
+  }
+});
 
-/***/ })
+/**
+ * Update rows of translated terms when adding / deleting a translation or when the language is modified in quick edit.
+ * Acts on ajaxSuccess event.
+ */
+jQuery(function ($) {
+  $(document).ajaxSuccess(function (event, xhr, settings) {
+    function update_rows(term_id) {
+      // collect old translations
+      var translations = new Array();
+      $('.translation_' + term_id).each(function () {
+        translations.push($(this).parent().parent().attr('id').substring(4));
+      });
+      var data = {
+        action: 'lmat_update_term_rows',
+        term_id: term_id,
+        translations: translations.join(','),
+        taxonomy: $("input[name='taxonomy']").val(),
+        post_type: $("input[name='post_type']").val(),
+        screen: $("input[name='screen']").val(),
+        _lmat_nonce: $('#_lmat_nonce').val()
+      };
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./Assets/js/src/term.js"](0, __webpack_exports__, __webpack_require__);
-/******/ 	
+      // get the modified rows in ajax and update them
+      $.post(ajaxurl, data, function (response) {
+        if (response) {
+          // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.
+          var res = wpAjax.parseAjaxResponse(response, 'lmat-ajax-response');
+          $.each(res.responses, function () {
+            if ('row' == this.what) {
+              // data is built with a call to WP_Terms_List_Table::single_row method
+              // which uses internally other WordPress methods which escape correctly values.
+              // For Linguator language columns the HTML code is correctly escaped in LMAT_Admin_Filters_Columns::term_column method.
+              $("#tag-" + this.supplemental.term_id).replaceWith(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith
+            }
+          });
+        }
+      });
+    }
+    var data = wpAjax.unserialize(settings.data); // what were the data sent by the ajax request?
+    if ('undefined' != typeof data['action']) {
+      switch (data['action']) {
+        // when adding a term, the new term_id is in the ajax response
+        case 'add-tag':
+          // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.
+          var res = wpAjax.parseAjaxResponse(xhr.responseXML, 'lmat-ajax-response');
+          $.each(res.responses, function () {
+            if ('term' == this.what) {
+              update_rows(this.supplemental.term_id);
+            }
+          });
+
+          // and also reset translations hidden input fields
+          $('.htr_lang').val(0);
+          break;
+
+        // when deleting a term
+        case 'delete-tag':
+          update_rows(data['tag_ID']);
+          break;
+
+        // in case the language is modified in quick edit and breaks translations
+        case 'inline-save-tax':
+          update_rows(data['tax_ID']);
+          break;
+      }
+    }
+  });
+});
+jQuery(function ($) {
+  // translations autocomplete input box
+  function init_translations() {
+    $('.tr_lang').each(function () {
+      var tr_lang = $(this).attr('id').substring(8);
+      var td = $(this).parent().parent().siblings('.lmat-edit-column');
+      $(this).autocomplete({
+        minLength: 0,
+        source: ajaxurl + '?action=lmat_terms_not_translated' + '&term_language=' + $('#term_lang_choice').val() + '&term_id=' + $("input[name='tag_ID']").val() + '&taxonomy=' + $("input[name='taxonomy']").val() + '&translation_language=' + tr_lang + '&post_type=' + typenow + '&_lmat_nonce=' + $('#_lmat_nonce').val(),
+        select: function select(event, ui) {
+          $('#htr_lang_' + tr_lang).val(ui.item.id);
+          // ui.item.link is built and come from server side and is well escaped when necessary
+          td.html(ui.item.link); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+        }
+      });
+
+      // when the input box is emptied
+      $(this).on('blur', function () {
+        if (!$(this).val()) {
+          $('#htr_lang_' + tr_lang).val(0);
+          // Value is retrieved from HTML already generated server side
+          td.html(td.siblings('.hidden').children().clone()); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+        }
+      });
+    });
+  }
+  init_translations();
+
+  // ajax for changing the term's language
+  $('#term_lang_choice').on('change', function () {
+    var value = $(this).val();
+    // The selected option in the dropdown list.
+    var selectedOption = event.target;
+    var data = {
+      action: 'lmat_term_lang_choice',
+      lang: value,
+      from_tag: $("input[name='from_tag']").val(),
+      term_id: $("input[name='tag_ID']").val(),
+      taxonomy: $("input[name='taxonomy']").val(),
+      post_type: typenow,
+      _lmat_nonce: $('#_lmat_nonce').val()
+    };
+    $.post(ajaxurl, data, function (response) {
+      // Target a non existing WP HTML id to avoid a conflict with WP ajax requests.
+      var res = wpAjax.parseAjaxResponse(response, 'lmat-ajax-response');
+      $.each(res.responses, function () {
+        switch (this.what) {
+          case 'translations':
+            // translations fields
+            // Data is built and come from server side and is well escaped when necessary
+            $("#term-translations").html(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+            init_translations();
+            break;
+          case 'parent':
+            // parent dropdown list for hierarchical taxonomies
+            // data correctly escaped in LMAT_Admin_Filters_Term::term_lang_choice method which uses wp_dropdown_categories function.
+            $('#parent').replaceWith(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith
+            break;
+          case 'tag_cloud':
+            // popular items
+            // data correctly escaped in LMAT_Admin_Filters_Term::term_lang_choice method which uses wp_tag_cloud and wp_generate_tag_cloud functions.
+            $('.tagcloud').replaceWith(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.replaceWith
+            break;
+          case 'flag':
+            // flag in front of the select dropdown
+            // Data is built and come from server side and is well escaped when necessary
+            $('.lmat-select-flag').html(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+            break;
+        }
+      });
+
+      // Creates an event once the language has been successfully changed.
+      var onTermLangChoice = new CustomEvent("onTermLangChoice", {
+        detail: {
+          lang: JSON.parse(selectedOption.options[selectedOption.options.selectedIndex].getAttribute('data-lang'))
+        }
+      });
+      document.dispatchEvent(onTermLangChoice);
+    });
+  });
+
+  // Listen to `onTermLangChoice` to perform actions after the language has been changed.
+  document.addEventListener('onTermLangChoice', function (e) {
+    // Modifies the text direction.
+    var dir = e.detail.lang.is_rtl ? 'rtl' : 'ltr';
+    $('body').removeClass('lmat-dir-rtl').removeClass('lmat-dir-ltr').addClass('lmat-dir-' + dir);
+  });
+});
 /******/ })()
 ;

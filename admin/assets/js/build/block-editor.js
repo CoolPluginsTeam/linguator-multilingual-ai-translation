@@ -1,116 +1,355 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
 
-/***/ "./Assets/js/src/block-editor.js":
-/*!***************************************!*\
-  !*** ./Assets/js/src/block-editor.js ***!
-  \***************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+;// ./Assets/js/src/lib/confirmation-modal.js
+/**
+ * @package Linguator
+ */
 
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _lib_confirmation_modal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/confirmation-modal.js */ \"./Assets/js/src/lib/confirmation-modal.js\");\n/* harmony import */ var _lib_metabox_autocomplete_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lib/metabox-autocomplete.js */ \"./Assets/js/src/lib/metabox-autocomplete.js\");\n/* harmony import */ var _lib_filter_path_middleware_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/filter-path-middleware.js */ \"./Assets/js/src/lib/filter-path-middleware.js\");\n/**\r\n * @package Linguator\r\n */\n\n\n\n\n\n/**\r\n * Filter REST API requests to add the language in the request\r\n *\r\n * @since 2.5\r\n */\nwp.apiFetch.use(function (options, next) {\n  /*\r\n   * If options.url is defined, this is not a REST request but a direct call to post.php for legacy metaboxes.\r\n   * If `filteredRoutes` is not defined, return early.\r\n   */\n  if ('undefined' !== typeof options.url || 'undefined' === typeof lmatFilteredRoutes) {\n    return next(options);\n  }\n  return next((0,_lib_filter_path_middleware_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(options, lmatFilteredRoutes, addLanguageParameter));\n});\n\n/**\r\n * Gets the language of the currently edited post, fallback to default language if none is found.\r\n *\r\n * @since 2.5\r\n *\r\n * @return {Element.value}\r\n */\nfunction getCurrentLanguage() {\n  var lang = document.querySelector('[name=post_lang_choice]');\n  if (null === lang) {\n    return lmatDefaultLanguage;\n  }\n  return lang.value;\n}\n\n/**\r\n * Adds language parameter according to the current one (query string for GET, body for PUT and POST).\r\n *\r\n * @since 3.5\r\n *\r\n * @param {APIFetchOptions} options\r\n * @returns {APIFetchOptions}\r\n */\nfunction addLanguageParameter(options) {\n  if ('undefined' === typeof options.data || null === options.data) {\n    // GET\n    options.path += (options.path.indexOf('?') >= 0 ? '&lang=' : '?lang=') + getCurrentLanguage();\n  } else {\n    // PUT, POST\n    options.data.lang = getCurrentLanguage();\n  }\n  return options;\n}\n\n/**\r\n * Handles internals of the metabox:\r\n * Language select, autocomplete input field.\r\n *\r\n * @since 1.5\r\n *\r\n * Save post after lang choice is done and redirect to the same page for refreshing all the data.\r\n *\r\n * @since 2.5\r\n *\r\n * Link post saving after refreshing the metabox.\r\n *\r\n * @since 3.0\r\n */\njQuery(function ($) {\n  // Initialize current language to be able to compare if it changes.\n  (0,_lib_confirmation_modal_js__WEBPACK_IMPORTED_MODULE_0__.initializeLanguageOldValue)();\n\n  // Ajax for changing the post's language in the languages metabox\n  $('.post_lang_choice').on('change', function (event) {\n    var _wp$data = wp.data,\n      select = _wp$data.select,\n      dispatch = _wp$data.dispatch,\n      subscribe = _wp$data.subscribe;\n    var emptyPost = isEmptyPost();\n    var addQueryArgs = wp.url.addQueryArgs;\n\n    // Initialize the confirmation dialog box.\n    var confirmationModal = (0,_lib_confirmation_modal_js__WEBPACK_IMPORTED_MODULE_0__.initializeConfirmationModal)();\n    var dialog = confirmationModal.dialogContainer;\n    var dialogResult = confirmationModal.dialogResult;\n    var selectedOption = event.target; // The selected option in the dropdown list.\n\n    // Specific case for empty posts.\n    // Place at the beginning because window.location change triggers automatically page reloading.\n    if (location.pathname.match(/post-new.php/gi) && emptyPost) {\n      reloadPageForEmptyPost(selectedOption.value);\n    }\n\n    // Otherwise send an ajax request to refresh the legacy metabox and set the post language with the new language.\n    // It needs a confirmation of the user before changing the language.\n    // Need to wait the ajax response before triggering the block editor post save action.\n    if ($(this).data('old-value') !== selectedOption.value && !emptyPost) {\n      dialog.dialog('open');\n    } else {\n      // Update the old language with the new one to be able to compare it in the next change.\n      // Because the page isn't reloaded in this case.\n      (0,_lib_confirmation_modal_js__WEBPACK_IMPORTED_MODULE_0__.initializeLanguageOldValue)();\n      dialogResult = Promise.resolve();\n    }\n    dialogResult.then(function () {\n      var data = {\n        // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent\n        action: 'lmat_post_lang_choice',\n        lang: selectedOption.value,\n        post_type: $('#post_type').val(),\n        post_id: $('#post_ID').val(),\n        _lmat_nonce: $('#_lmat_nonce').val()\n      };\n\n      // Update post language in database as soon as possible.\n      // Because, in addition of the block editor save process, the legacy metabox uses a post.php process to update the language and is too late compared to the page reload.\n      $.post(ajaxurl, data, function () {\n        blockEditorSavePostAndReloadPage();\n      });\n    }, function () {} // Do nothing when promise is rejected by clicking the Cancel dialog button.\n    );\n    function isEmptyPost() {\n      var _editor$getEditedPost, _editor$getEditedPost2;\n      var editor = select('core/editor');\n      return !((_editor$getEditedPost = editor.getEditedPostAttribute('title')) !== null && _editor$getEditedPost !== void 0 && _editor$getEditedPost.trim()) && !editor.getEditedPostContent() && !((_editor$getEditedPost2 = editor.getEditedPostAttribute('excerpt')) !== null && _editor$getEditedPost2 !== void 0 && _editor$getEditedPost2.trim());\n    }\n\n    /**\r\n     * Reload the block editor page for empty posts.\r\n     *\r\n     * @param {string} lang The target language code.\r\n     */\n    function reloadPageForEmptyPost(lang) {\n      // Change the new_lang parameter with the new language value for reloading the page\n      // WPCS location.search is never written in the page, just used to reload page with the right value of new_lang\n      // new_lang input is controlled server side in PHP. The value come from the dropdown list of language returned and escaped server side.\n      // Notice that window.location changing triggers automatically page reloading.\n      if (-1 != location.search.indexOf('new_lang')) {\n        // use regexp non capturing group to replace new_lang parameter no matter where it is and capture other parameters which can be behind it\n        window.location.search = window.location.search.replace(/(?:new_lang=[^&]*)(&)?(.*)/, 'new_lang=' + lang + '$1$2'); // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment\n      } else {\n        window.location.search = window.location.search + (-1 != window.location.search.indexOf('?') ? '&' : '?') + 'new_lang=' + lang; // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment\n      }\n    }\n    ;\n\n    /**\r\n     * Triggers block editor post save and reload the block editor page when everything is ok.\r\n     */\n    function blockEditorSavePostAndReloadPage() {\n      var unsubscribe = null;\n      var previousPost = select('core/editor').getCurrentPost();\n\n      // Listen if the savePost is completely done by subscribing to its events.\n      var savePostIsDone = new Promise(function (resolve, reject) {\n        unsubscribe = subscribe(function () {\n          var post = select('core/editor').getCurrentPost();\n          var id = post.id,\n            status = post.status,\n            type = post.type;\n          var error = select('core').getLastEntitySaveError('postType', type, id);\n          if (error) {\n            reject();\n          }\n          if (previousPost.modified !== post.modified) {\n            if (location.pathname.match(/post-new.php/gi) && status !== 'auto-draft' && id) {\n              window.history.replaceState({\n                id: id\n              }, 'Post ' + id, addQueryArgs('post.php', {\n                post: id,\n                action: 'edit'\n              }));\n            }\n            resolve();\n          }\n        });\n      });\n\n      // Triggers the post save.\n      dispatch('core/editor').savePost();\n\n      // Process\n      savePostIsDone.then(function () {\n        // If the post is well saved, we can reload the page\n        window.location.reload();\n      }, function () {\n        // If the post save failed\n        unsubscribe();\n      }).catch(function () {\n        // If an exception is thrown\n        unsubscribe();\n      });\n    }\n    ;\n  });\n  (0,_lib_metabox_autocomplete_js__WEBPACK_IMPORTED_MODULE_1__.initMetaboxAutoComplete)();\n});\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/block-editor.js?\n}");
+var languagesList = jQuery('.post_lang_choice');
 
-/***/ }),
+// Dialog box for alerting the user about a risky changing.
+var initializeConfirmationModal = function initializeConfirmationModal() {
+  // We can't use underscore or lodash in this common code because it depends of the context classic or block editor.
+  // Classic editor underscore is loaded, Block editor lodash is loaded.
+  var __ = wp.i18n.__;
 
-/***/ "./Assets/js/src/lib/confirmation-modal.js":
-/*!*************************************************!*\
-  !*** ./Assets/js/src/lib/confirmation-modal.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+  // Create dialog container.
+  var dialogContainer = jQuery('<div/>', {
+    id: 'lmat-dialog',
+    style: 'display:none;'
+  }).text(__('Are you sure you want to change the language of the current content?', 'linguator-multilingual-ai-translation'));
 
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   initializeConfirmationModal: () => (/* binding */ initializeConfirmationModal),\n/* harmony export */   initializeLanguageOldValue: () => (/* binding */ initializeLanguageOldValue)\n/* harmony export */ });\n/**\r\n * @package Linguator\r\n */\n\nvar languagesList = jQuery('.post_lang_choice');\n\n// Dialog box for alerting the user about a risky changing.\nvar initializeConfirmationModal = function initializeConfirmationModal() {\n  // We can't use underscore or lodash in this common code because it depends of the context classic or block editor.\n  // Classic editor underscore is loaded, Block editor lodash is loaded.\n  var __ = wp.i18n.__;\n\n  // Create dialog container.\n  var dialogContainer = jQuery('<div/>', {\n    id: 'lmat-dialog',\n    style: 'display:none;'\n  }).text(__('Are you sure you want to change the language of the current content?', 'linguator-multilingual-ai-translation'));\n\n  // Put it after languages list dropdown.\n  // PHPCS ignore dialogContainer is a new safe HTML code generated above.\n  languagesList.after(dialogContainer); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after\n\n  var dialogResult = new Promise(function (confirm, cancel) {\n    var confirmDialog = function confirmDialog(what) {\n      // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent\n      switch (what) {\n        // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent\n        case 'yes':\n          // Confirm the new language.\n          languagesList.data('old-value', languagesList.children(':selected').first().val());\n          confirm();\n          break;\n        case 'no':\n          // Revert to the old language.\n          languagesList.val(languagesList.data('old-value'));\n          cancel('Cancel');\n          break;\n      }\n      dialogContainer.dialog('close'); // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent\n    }; // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent\n\n    // Initialize dialog box in the case a language is selected but not added in the list.\n    var dialogOptions = {\n      autoOpen: false,\n      modal: true,\n      draggable: false,\n      resizable: false,\n      title: __('Change language', 'linguator-multilingual-ai-translation'),\n      minWidth: 600,\n      maxWidth: '100%',\n      open: function open(event, ui) {\n        // Change dialog box position for rtl language\n        if (jQuery('body').hasClass('rtl')) {\n          jQuery(this).parent().css({\n            right: jQuery(this).parent().css('left'),\n            left: 'auto'\n          });\n        }\n      },\n      close: function close(event, ui) {\n        // When we're closing the dialog box we need to cancel the language change as we click on Cancel button.\n        confirmDialog('no');\n      },\n      buttons: [{\n        text: __('OK', 'linguator-multilingual-ai-translation'),\n        click: function click(event) {\n          confirmDialog('yes');\n        }\n      }, {\n        text: __('Cancel', 'linguator-multilingual-ai-translation'),\n        click: function click(event) {\n          confirmDialog('no');\n        }\n      }]\n    };\n\n    // jQuery UI >= 1.12 is available in WP 6.2+ (our minimum version)\n    Object.assign(dialogOptions, {\n      classes: {\n        'ui-dialog': 'lmat-confirmation-modal'\n      }\n    });\n    dialogContainer.dialog(dialogOptions);\n  });\n  return {\n    dialogContainer: dialogContainer,\n    dialogResult: dialogResult\n  };\n};\nvar initializeLanguageOldValue = function initializeLanguageOldValue() {\n  // Keep the old language value to be able to compare to the new one and revert to it if necessary.\n  languagesList.attr('data-old-value', languagesList.children(':selected').first().val());\n};\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/lib/confirmation-modal.js?\n}");
+  // Put it after languages list dropdown.
+  // PHPCS ignore dialogContainer is a new safe HTML code generated above.
+  languagesList.after(dialogContainer); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after
 
-/***/ }),
+  var dialogResult = new Promise(function (confirm, cancel) {
+    var confirmDialog = function confirmDialog(what) {
+      // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent
+      switch (what) {
+        // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent
+        case 'yes':
+          // Confirm the new language.
+          languagesList.data('old-value', languagesList.children(':selected').first().val());
+          confirm();
+          break;
+        case 'no':
+          // Revert to the old language.
+          languagesList.val(languagesList.data('old-value'));
+          cancel('Cancel');
+          break;
+      }
+      dialogContainer.dialog('close'); // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent
+    }; // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent
 
-/***/ "./Assets/js/src/lib/filter-path-middleware.js":
-/*!*****************************************************!*\
-  !*** ./Assets/js/src/lib/filter-path-middleware.js ***!
-  \*****************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+    // Initialize dialog box in the case a language is selected but not added in the list.
+    var dialogOptions = {
+      autoOpen: false,
+      modal: true,
+      draggable: false,
+      resizable: false,
+      title: __('Change language', 'linguator-multilingual-ai-translation'),
+      minWidth: 600,
+      maxWidth: '100%',
+      open: function open(event, ui) {
+        // Change dialog box position for rtl language
+        if (jQuery('body').hasClass('rtl')) {
+          jQuery(this).parent().css({
+            right: jQuery(this).parent().css('left'),
+            left: 'auto'
+          });
+        }
+      },
+      close: function close(event, ui) {
+        // When we're closing the dialog box we need to cancel the language change as we click on Cancel button.
+        confirmDialog('no');
+      },
+      buttons: [{
+        text: __('OK', 'linguator-multilingual-ai-translation'),
+        click: function click(event) {
+          confirmDialog('yes');
+        }
+      }, {
+        text: __('Cancel', 'linguator-multilingual-ai-translation'),
+        click: function click(event) {
+          confirmDialog('no');
+        }
+      }]
+    };
 
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/**\r\n * @package Linguator\r\n */\n\n/**\r\n * Filters requests for translatable entities.\r\n * This logic is shared across all Linguator plugins.\r\n *\r\n * @since 3.5\r\n *\r\n * @param {APIFetchOptions} options\r\n * @param {Array} filteredRoutes\r\n * @param {CallableFunction} filter\r\n * @returns {APIFetchOptions}\r\n */\nvar filterPathMiddleware = function filterPathMiddleware(options, filteredRoutes, filter) {\n  var cleanPath = options.path.split('?')[0].replace(/^\\/+|\\/+$/g, ''); // Get path without query parameters and trim '/'.\n\n  return Object.values(filteredRoutes).find(function (path) {\n    return cleanPath === path;\n  }) ? filter(options) : options;\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (filterPathMiddleware);\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/lib/filter-path-middleware.js?\n}");
+    // jQuery UI >= 1.12 is available in WP 6.2+ (our minimum version)
+    Object.assign(dialogOptions, {
+      classes: {
+        'ui-dialog': 'lmat-confirmation-modal'
+      }
+    });
+    dialogContainer.dialog(dialogOptions);
+  });
+  return {
+    dialogContainer: dialogContainer,
+    dialogResult: dialogResult
+  };
+};
+var initializeLanguageOldValue = function initializeLanguageOldValue() {
+  // Keep the old language value to be able to compare to the new one and revert to it if necessary.
+  languagesList.attr('data-old-value', languagesList.children(':selected').first().val());
+};
+;// ./Assets/js/src/lib/metabox-autocomplete.js
+/**
+ * @package Linguator
+ */
 
-/***/ }),
+// Translations autocomplete input box.
+function initMetaboxAutoComplete() {
+  jQuery('.tr_lang').each(function () {
+    var tr_lang = jQuery(this).attr('id').substring(8);
+    var td = jQuery(this).parent().parent().siblings('.lmat-edit-column');
+    jQuery(this).autocomplete({
+      minLength: 0,
+      source: ajaxurl + '?action=lmat_posts_not_translated' + '&post_language=' + jQuery('.post_lang_choice').val() + '&translation_language=' + tr_lang + '&post_type=' + jQuery('#post_type').val() + '&_lmat_nonce=' + jQuery('#_lmat_nonce').val(),
+      select: function select(event, ui) {
+        jQuery('#htr_lang_' + tr_lang).val(ui.item.id);
+        // ui.item.link is built and come from server side and is well escaped when necessary
+        td.html(ui.item.link); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+      }
+    });
 
-/***/ "./Assets/js/src/lib/metabox-autocomplete.js":
-/*!***************************************************!*\
-  !*** ./Assets/js/src/lib/metabox-autocomplete.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+    // when the input box is emptied
+    jQuery(this).on('blur', function () {
+      if (!jQuery(this).val()) {
+        jQuery('#htr_lang_' + tr_lang).val(0);
+        // Value is retrieved from HTML already generated server side
+        td.html(td.siblings('.hidden').children().clone()); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+      }
+    });
+  });
+}
+;// ./Assets/js/src/lib/filter-path-middleware.js
+/**
+ * @package Linguator
+ */
 
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   initMetaboxAutoComplete: () => (/* binding */ initMetaboxAutoComplete)\n/* harmony export */ });\n/**\r\n * @package Linguator\r\n */\n\n// Translations autocomplete input box.\nfunction initMetaboxAutoComplete() {\n  jQuery('.tr_lang').each(function () {\n    var tr_lang = jQuery(this).attr('id').substring(8);\n    var td = jQuery(this).parent().parent().siblings('.lmat-edit-column');\n    jQuery(this).autocomplete({\n      minLength: 0,\n      source: ajaxurl + '?action=lmat_posts_not_translated' + '&post_language=' + jQuery('.post_lang_choice').val() + '&translation_language=' + tr_lang + '&post_type=' + jQuery('#post_type').val() + '&_lmat_nonce=' + jQuery('#_lmat_nonce').val(),\n      select: function select(event, ui) {\n        jQuery('#htr_lang_' + tr_lang).val(ui.item.id);\n        // ui.item.link is built and come from server side and is well escaped when necessary\n        td.html(ui.item.link); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n      }\n    });\n\n    // when the input box is emptied\n    jQuery(this).on('blur', function () {\n      if (!jQuery(this).val()) {\n        jQuery('#htr_lang_' + tr_lang).val(0);\n        // Value is retrieved from HTML already generated server side\n        td.html(td.siblings('.hidden').children().clone()); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html\n      }\n    });\n  });\n}\n\n//# sourceURL=webpack://linguator-multilingual-ai-translation/./Assets/js/src/lib/metabox-autocomplete.js?\n}");
+/**
+ * Filters requests for translatable entities.
+ * This logic is shared across all Linguator plugins.
+ *
+ * @since 3.5
+ *
+ * @param {APIFetchOptions} options
+ * @param {Array} filteredRoutes
+ * @param {CallableFunction} filter
+ * @returns {APIFetchOptions}
+ */
+var filterPathMiddleware = function filterPathMiddleware(options, filteredRoutes, filter) {
+  var cleanPath = options.path.split('?')[0].replace(/^\/+|\/+$/g, ''); // Get path without query parameters and trim '/'.
 
-/***/ })
+  return Object.values(filteredRoutes).find(function (path) {
+    return cleanPath === path;
+  }) ? filter(options) : options;
+};
+/* harmony default export */ const filter_path_middleware = (filterPathMiddleware);
+;// ./Assets/js/src/block-editor.js
+/**
+ * @package Linguator
+ */
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./Assets/js/src/block-editor.js");
-/******/ 	
+
+
+
+
+/**
+ * Filter REST API requests to add the language in the request
+ *
+ * @since 2.5
+ */
+wp.apiFetch.use(function (options, next) {
+  /*
+   * If options.url is defined, this is not a REST request but a direct call to post.php for legacy metaboxes.
+   * If `filteredRoutes` is not defined, return early.
+   */
+  if ('undefined' !== typeof options.url || 'undefined' === typeof lmatFilteredRoutes) {
+    return next(options);
+  }
+  return next(filter_path_middleware(options, lmatFilteredRoutes, addLanguageParameter));
+});
+
+/**
+ * Gets the language of the currently edited post, fallback to default language if none is found.
+ *
+ * @since 2.5
+ *
+ * @return {Element.value}
+ */
+function getCurrentLanguage() {
+  var lang = document.querySelector('[name=post_lang_choice]');
+  if (null === lang) {
+    return lmatDefaultLanguage;
+  }
+  return lang.value;
+}
+
+/**
+ * Adds language parameter according to the current one (query string for GET, body for PUT and POST).
+ *
+ * @since 3.5
+ *
+ * @param {APIFetchOptions} options
+ * @returns {APIFetchOptions}
+ */
+function addLanguageParameter(options) {
+  if ('undefined' === typeof options.data || null === options.data) {
+    // GET
+    options.path += (options.path.indexOf('?') >= 0 ? '&lang=' : '?lang=') + getCurrentLanguage();
+  } else {
+    // PUT, POST
+    options.data.lang = getCurrentLanguage();
+  }
+  return options;
+}
+
+/**
+ * Handles internals of the metabox:
+ * Language select, autocomplete input field.
+ *
+ * @since 1.5
+ *
+ * Save post after lang choice is done and redirect to the same page for refreshing all the data.
+ *
+ * @since 2.5
+ *
+ * Link post saving after refreshing the metabox.
+ *
+ * @since 3.0
+ */
+jQuery(function ($) {
+  // Initialize current language to be able to compare if it changes.
+  initializeLanguageOldValue();
+
+  // Ajax for changing the post's language in the languages metabox
+  $('.post_lang_choice').on('change', function (event) {
+    var _wp$data = wp.data,
+      select = _wp$data.select,
+      dispatch = _wp$data.dispatch,
+      subscribe = _wp$data.subscribe;
+    var emptyPost = isEmptyPost();
+    var addQueryArgs = wp.url.addQueryArgs;
+
+    // Initialize the confirmation dialog box.
+    var confirmationModal = initializeConfirmationModal();
+    var dialog = confirmationModal.dialogContainer;
+    var dialogResult = confirmationModal.dialogResult;
+    var selectedOption = event.target; // The selected option in the dropdown list.
+
+    // Specific case for empty posts.
+    // Place at the beginning because window.location change triggers automatically page reloading.
+    if (location.pathname.match(/post-new.php/gi) && emptyPost) {
+      reloadPageForEmptyPost(selectedOption.value);
+    }
+
+    // Otherwise send an ajax request to refresh the legacy metabox and set the post language with the new language.
+    // It needs a confirmation of the user before changing the language.
+    // Need to wait the ajax response before triggering the block editor post save action.
+    if ($(this).data('old-value') !== selectedOption.value && !emptyPost) {
+      dialog.dialog('open');
+    } else {
+      // Update the old language with the new one to be able to compare it in the next change.
+      // Because the page isn't reloaded in this case.
+      initializeLanguageOldValue();
+      dialogResult = Promise.resolve();
+    }
+    dialogResult.then(function () {
+      var data = {
+        // phpcs:ignore PEAR.Functions.FunctionCallSignature.Indent
+        action: 'lmat_post_lang_choice',
+        lang: selectedOption.value,
+        post_type: $('#post_type').val(),
+        post_id: $('#post_ID').val(),
+        _lmat_nonce: $('#_lmat_nonce').val()
+      };
+
+      // Update post language in database as soon as possible.
+      // Because, in addition of the block editor save process, the legacy metabox uses a post.php process to update the language and is too late compared to the page reload.
+      $.post(ajaxurl, data, function () {
+        blockEditorSavePostAndReloadPage();
+      });
+    }, function () {} // Do nothing when promise is rejected by clicking the Cancel dialog button.
+    );
+    function isEmptyPost() {
+      var _editor$getEditedPost, _editor$getEditedPost2;
+      var editor = select('core/editor');
+      return !((_editor$getEditedPost = editor.getEditedPostAttribute('title')) !== null && _editor$getEditedPost !== void 0 && _editor$getEditedPost.trim()) && !editor.getEditedPostContent() && !((_editor$getEditedPost2 = editor.getEditedPostAttribute('excerpt')) !== null && _editor$getEditedPost2 !== void 0 && _editor$getEditedPost2.trim());
+    }
+
+    /**
+     * Reload the block editor page for empty posts.
+     *
+     * @param {string} lang The target language code.
+     */
+    function reloadPageForEmptyPost(lang) {
+      // Change the new_lang parameter with the new language value for reloading the page
+      // WPCS location.search is never written in the page, just used to reload page with the right value of new_lang
+      // new_lang input is controlled server side in PHP. The value come from the dropdown list of language returned and escaped server side.
+      // Notice that window.location changing triggers automatically page reloading.
+      if (-1 != location.search.indexOf('new_lang')) {
+        // use regexp non capturing group to replace new_lang parameter no matter where it is and capture other parameters which can be behind it
+        window.location.search = window.location.search.replace(/(?:new_lang=[^&]*)(&)?(.*)/, 'new_lang=' + lang + '$1$2'); // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment
+      } else {
+        window.location.search = window.location.search + (-1 != window.location.search.indexOf('?') ? '&' : '?') + 'new_lang=' + lang; // phpcs:ignore WordPressVIPMinimum.JS.Window.location, WordPressVIPMinimum.JS.Window.VarAssignment
+      }
+    }
+    ;
+
+    /**
+     * Triggers block editor post save and reload the block editor page when everything is ok.
+     */
+    function blockEditorSavePostAndReloadPage() {
+      var unsubscribe = null;
+      var previousPost = select('core/editor').getCurrentPost();
+
+      // Listen if the savePost is completely done by subscribing to its events.
+      var savePostIsDone = new Promise(function (resolve, reject) {
+        unsubscribe = subscribe(function () {
+          var post = select('core/editor').getCurrentPost();
+          var id = post.id,
+            status = post.status,
+            type = post.type;
+          var error = select('core').getLastEntitySaveError('postType', type, id);
+          if (error) {
+            reject();
+          }
+          if (previousPost.modified !== post.modified) {
+            if (location.pathname.match(/post-new.php/gi) && status !== 'auto-draft' && id) {
+              window.history.replaceState({
+                id: id
+              }, 'Post ' + id, addQueryArgs('post.php', {
+                post: id,
+                action: 'edit'
+              }));
+            }
+            resolve();
+          }
+        });
+      });
+
+      // Triggers the post save.
+      dispatch('core/editor').savePost();
+
+      // Process
+      savePostIsDone.then(function () {
+        // If the post is well saved, we can reload the page
+        window.location.reload();
+      }, function () {
+        // If the post save failed
+        unsubscribe();
+      }).catch(function () {
+        // If an exception is thrown
+        unsubscribe();
+      });
+    }
+    ;
+  });
+  initMetaboxAutoComplete();
+});
 /******/ })()
 ;

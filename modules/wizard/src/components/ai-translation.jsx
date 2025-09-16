@@ -5,6 +5,7 @@ import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
 import { __, sprintf } from '@wordpress/i18n'
 import React from 'react'
+import { Earth, BrainCog} from 'lucide-react';
 import { Switch } from '@bsf/force-ui'
 
 const ChromeLocalAINotice = () => {
@@ -162,7 +163,10 @@ const AiTranslation = () => {
                 <p className='text-justify text-sm/6'>{__('Turn on AI translation if you need to translate the content of your website using AI. If not, you can leave it off.', 'linguator-multilingual-ai-translation')}</p>
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
-                    <p className="text-sm/6">{__('Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
+                    <div className="flex items-center  gap-2">
+                      <Earth className='size-5 text-button-primary' />
+                      <p className="text-sm/6">{__('Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
+                    </div>
                     <Switch
                         aria-label="Google Machine Translation"
                         id="google-machine-translation"
@@ -173,7 +177,10 @@ const AiTranslation = () => {
                 </div>
                 <div className='p-6 rounded-lg' style={{ border: "1px solid #e5e7eb" }}>
                     <div className='flex justify-between items-center'>
-                    <p className="text-sm/6">{__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
+                    <div className="flex items-center  gap-2">
+                      <BrainCog className='size-5 text-button-primary' />
+                      <p className="text-sm/6">{__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
+                    </div>
                     <Switch
                         aria-label="Chrome Local AI Translation"
                         id="chrome-local-ai-translation"

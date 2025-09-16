@@ -716,17 +716,18 @@ const General = ({ data, setData }) => {
                 {/* Synchronization section */}
                 <Container cols="1" containerType='grid' >
                     <Container.Item className='switcher'>
+                        <div>
                         <Label size='md' className='font-bold flex items-center gap-2'>
                             <RefreshCcw className="flex-shrink-0 size-5 text-icon-secondary" />
                             {__('Synchronization', 'linguator-multilingual-ai-translation')}
                         </Label>
+                        <p>{__('Choose synchronization options for translated content.', 'linguator-multilingual-ai-translation')}</p>
+                        </div>
                         <div className='flex items-center justify-end  gap-2' style={{paddingRight: '30%'}}>
-                        <div>
                             <Label size='sm' className='cursor-pointer' htmlFor="select-all-sync">
                                 {__('Select All', 'linguator-multilingual-ai-translation')}
                             </Label>
-                            <p>{__('Choose synchronization options for translated content.', 'linguator-multilingual-ai-translation')}</p>
-                        </div>
+
                             <Switch
                                         aria-label="Select All Synchronization"
                                         id="select-all-sync"

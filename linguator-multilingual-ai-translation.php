@@ -3,7 +3,7 @@
  * Plugin Name:       Linguator – Multilingual AI Translation
  * Plugin URI:        https://coolplugins.net/
  * Description:       A powerful multilingual plugin for WordPress that enables content synchronization, and seamless language management.
- * Version:           1.0.2
+ * Version:           0.0.3
  * Requires at least: 6.2
  * Requires PHP:      7.2
  * Author:            Cool Plugins

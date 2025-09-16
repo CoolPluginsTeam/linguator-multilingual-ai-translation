@@ -22,7 +22,7 @@ const Default = () => {
       }
       if (previousDefaultLanguage.current !== defaultLanguage) {
         const apiBody = {
-          default_lang: defaultLanguage.locale?.toLowerCase()
+          default_lang: defaultLanguage.slug
         }
         const response = await apiFetch({
           path: 'lmat/v1/settings',
