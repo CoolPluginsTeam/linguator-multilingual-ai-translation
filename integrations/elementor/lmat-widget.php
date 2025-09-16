@@ -53,7 +53,7 @@ class LMAT_Widget extends Widget_Base
             display: inline-block;
             width: 25px;
             height: 25px;
-            background-image: url('" . esc_url(LINGUATOR_URL . 'Assets/logo/lang_switcher.svg') . "');
+            background-image: url('" . esc_url(LINGUATOR_URL . 'assets/logo/lang_switcher.svg') . "');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
