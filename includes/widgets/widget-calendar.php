@@ -330,7 +330,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		$daysinmonth = (int) gmdate( 't', $unixmonth );
 
 		for ( $day = 1; $day <= $daysinmonth; ++$day ) {
-			if ( isset( $newrow ) && $newrow ) {
+			if ( $newrow ) {
 				$calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
 			}
 			$newrow = false;

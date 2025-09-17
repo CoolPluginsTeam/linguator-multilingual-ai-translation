@@ -19,7 +19,6 @@ use Linguator\Includes\Options\Options;
 /**
  * Class defining a single option.
  *
- * @since 1.0.0
  *
  * @phpstan-type SchemaType 'string'|'null'|'number'|'integer'|'boolean'|'array'|'object'
  * @phpstan-type Schema array{

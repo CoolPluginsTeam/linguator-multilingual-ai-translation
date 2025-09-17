@@ -24,7 +24,6 @@ use WP_Error;
  * - Options are always defined: it is not possible to unset them from the list, they are set to their default value instead.
  * - If an option is not registered but exists in database, its raw value will be kept and remain untouched.
  *
- * @since 1.0.0
  *
  * @implements ArrayAccess<non-falsy-string, mixed>
  * @implements IteratorAggregate<non-empty-string, mixed>
