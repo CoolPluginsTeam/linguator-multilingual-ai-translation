@@ -414,6 +414,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			// Check if this menu is assigned to any location for the selected language
 			if ( ! empty( $nav_menus[ $theme ] ) ) {
 				foreach ( $nav_menus[ $theme ] as $location => $languages ) {
+					if ( ! is_object( $menu ) || ! isset( $menu->term_id ) ) {
+						continue;
+					}
 					if ( isset( $languages[ $current_lang ] ) && $languages[ $current_lang ] == $menu->term_id ) {
 						$show_menu = true;
 						break;
@@ -427,6 +430,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				if ( ! empty( $nav_menus[ $theme ] ) ) {
 					foreach ( $nav_menus[ $theme ] as $location => $languages ) {
 						foreach ( $languages as $lang_slug => $menu_id ) {
+							if ( ! is_object( $menu ) || ! isset( $menu->term_id ) ) {
+								continue;
+							}
 							if ( $menu_id == $menu->term_id && $lang_slug !== $current_lang ) {
 								$is_assigned_to_other_lang = true;
 								break 2;
