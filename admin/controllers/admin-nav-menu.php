@@ -321,6 +321,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		// Get current language filter
 		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
 		$base_url = admin_url( 'nav-menus.php' );
+		
+		// Preserve other query parameters (like action=locations)
+		$current_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 
 		?>
 		<div class='lmat_subsubsub' style='display:none; clear:both;'>
@@ -328,7 +331,11 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				<?php
 				// All Languages link
 				$all_class = 'all' === $current_lang ? 'current' : '';
-				$all_url = 'all' !== $current_lang ? add_query_arg( 'lang', 'all', $base_url ) : '';
+				$all_url_args = array( 'lang' => 'all' );
+				if ( ! empty( $current_action ) ) {
+					$all_url_args['action'] = $current_action;
+				}
+				$all_url = 'all' !== $current_lang ? add_query_arg( $all_url_args, $base_url ) : '';
 				?>
 				<li class='lmat_lang_all'>
 					<a href="<?php echo esc_url( $all_url ); ?>" class="<?php echo esc_attr( $all_class ); ?>">
@@ -339,7 +346,11 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				<?php foreach ( $lmat_languages as $lang ) : ?>
 					<?php
 					$lang_class = $lang->slug === $current_lang ? 'current' : '';
-					$lang_url = $lang->slug !== $current_lang ? add_query_arg( 'lang', $lang->slug, $base_url ) : '';
+					$lang_url_args = array( 'lang' => $lang->slug );
+					if ( ! empty( $current_action ) ) {
+						$lang_url_args['action'] = $current_action;
+					}
+					$lang_url = $lang->slug !== $current_lang ? add_query_arg( $lang_url_args, $base_url ) : '';
 					$flag_url = isset( $lang->flag_url ) ? $lang->flag_url : '';
 					?>
 					<li class='lmat_lang_<?php echo esc_attr( $lang->slug ); ?>'>
