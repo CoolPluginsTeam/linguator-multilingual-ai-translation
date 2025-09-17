@@ -485,7 +485,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		if ( 'edit' === $action && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			// phpcs:ignore WordPress.Security.NonceVerification, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 			$edit_lang = $this->model->get_language( (int) $_GET['lang'] );
-		} else {
+		} elseif ( ! empty( $action ) ) {
 			$this->handle_actions( $action );
 		}
 
