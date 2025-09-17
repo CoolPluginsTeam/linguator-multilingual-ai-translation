@@ -101,7 +101,26 @@ class LMAT_Nav_Menu {
 
 		if ( isset( $_wp_registered_nav_menus ) && ! $once ) {
 			foreach ( $_wp_registered_nav_menus as $loc => $name ) {
-				foreach ( $this->model->get_languages_list() as $lang ) {
+				// Get languages to show - check if we're in admin with language filter
+				$languages_to_show = $this->model->get_languages_list();
+				
+				// Only apply language filtering when in admin nav menu context
+				if ( is_admin() ) {
+						// Get current language filter from admin
+						$current_lang_filter = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
+						
+						// Determine which languages to show based on filter
+						if ( 'all' !== $current_lang_filter ) {
+							// Show only the selected language
+							$selected_lang = $this->model->get_language( $current_lang_filter );
+							if ( $selected_lang ) {
+								$languages_to_show = array( $selected_lang );
+							}
+						}
+					}
+				
+
+				foreach ( $languages_to_show as $lang ) {
 					$arr[ $this->combine_location( $loc, $lang ) ] = $name . ' ' . $lang->name;
 				}
 			}

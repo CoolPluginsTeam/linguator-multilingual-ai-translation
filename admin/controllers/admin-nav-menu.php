@@ -56,7 +56,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		// Translation of menus based on chosen locations
 		add_filter( 'pre_update_option_theme_mods_' . $this->theme, array( $this, 'pre_update_option_theme_mods' ) );
 		add_action( 'delete_nav_menu', array( $this, 'delete_nav_menu' ) );
-
+		add_action( 'admin_footer', array( $this, 'lmat_nav_menu_language_controls' ), 10 );
 		// FIXME is it possible to choose the order ( after theme locations in WP3.5 and older ) ?
 		// FIXME not displayed if Linguator is activated before the first time the user goes to nav menus http://core.trac.wordpress.org/ticket/16828
 		add_meta_box( 'lmat_lang_switch_box', __( 'Language switcher', 'linguator-multilingual-ai-translation' ), array( $this, 'lang_switch' ), 'nav-menus', 'side', 'high' );
@@ -114,7 +114,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_script( 'lmat_nav_menu', plugins_url( "admin/assets/js/build/nav-menu{$suffix}.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
-
+		wp_enqueue_style( 'lmat_nav_menu_filter', plugins_url( "admin/assets/css/admin-nav-menu-filter.css", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+		wp_enqueue_script( 'lmat_nav_menu_filter_js', plugins_url( "admin/assets/js/admin-nav-menu-filter.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
 		$data = array(
 			'strings' => LMAT_Switcher::get_switcher_options( 'menu', 'string' ), // The strings for the options
 			'title'   => __( 'Languages', 'linguator-multilingual-ai-translation' ), // The title
@@ -295,5 +296,63 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		}
 
 		$this->options->set( 'nav_menus', $nav_menus );
+	}
+
+	/**
+	 * Adds language filter controls to the nav menu page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function lmat_nav_menu_language_controls() {
+		$screen = get_current_screen();
+		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
+			return;
+		}
+
+		// Get all available languages
+		$lmat_languages = $this->model->get_languages_list();
+		
+		if ( count( $lmat_languages ) <= 1 ) {
+			return; // No need for language filters if there's only one language
+		}
+
+		// Get current language filter
+		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
+		$base_url = admin_url( 'nav-menus.php' );
+
+		?>
+		<div class='lmat_subsubsub' style='display:none; clear:both;'>
+			<ul class='lmat_subsubsub_list'>
+				<?php
+				// All Languages link
+				$all_class = 'all' === $current_lang ? 'current' : '';
+				$all_url = 'all' !== $current_lang ? add_query_arg( 'lang', 'all', $base_url ) : '';
+				?>
+				<li class='lmat_lang_all'>
+					<a href="<?php echo esc_url( $all_url ); ?>" class="<?php echo esc_attr( $all_class ); ?>">
+						All Languages
+					</a>
+				</li>
+				
+				<?php foreach ( $lmat_languages as $lang ) : ?>
+					<?php
+					$lang_class = $lang->slug === $current_lang ? 'current' : '';
+					$lang_url = $lang->slug !== $current_lang ? add_query_arg( 'lang', $lang->slug, $base_url ) : '';
+					$flag_url = isset( $lang->flag_url ) ? $lang->flag_url : '';
+					?>
+					<li class='lmat_lang_<?php echo esc_attr( $lang->slug ); ?>'>
+						<a href="<?php echo esc_url( $lang_url ); ?>" class="<?php echo esc_attr( $lang_class ); ?>">
+							<?php if ( ! empty( $flag_url ) ) : ?>
+								<img src="<?php echo esc_url( $flag_url ); ?>" alt="<?php echo esc_attr( $lang->name ); ?>" width="16" style="margin-right: 5px;">
+							<?php endif; ?>
+							<?php echo esc_html( $lang->name ); ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php
 	}
 }
