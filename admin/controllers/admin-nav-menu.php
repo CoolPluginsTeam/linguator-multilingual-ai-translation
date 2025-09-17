@@ -57,6 +57,13 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		add_filter( 'pre_update_option_theme_mods_' . $this->theme, array( $this, 'pre_update_option_theme_mods' ) );
 		add_action( 'delete_nav_menu', array( $this, 'delete_nav_menu' ) );
 		add_action( 'admin_footer', array( $this, 'lmat_nav_menu_language_controls' ), 10 );
+		
+		// Filter menu dropdown list by language
+		add_filter( 'wp_get_nav_menus', array( $this, 'filter_nav_menus_by_language' ) );
+		
+		// Preserve language parameter during menu creation
+		add_filter( 'wp_redirect', array( $this, 'preserve_lang_param_on_redirect' ), 10, 2 );
+		
 		// FIXME is it possible to choose the order ( after theme locations in WP3.5 and older ) ?
 		// FIXME not displayed if Linguator is activated before the first time the user goes to nav menus http://core.trac.wordpress.org/ticket/16828
 		add_meta_box( 'lmat_lang_switch_box', __( 'Language switcher', 'linguator-multilingual-ai-translation' ), array( $this, 'lang_switch' ), 'nav-menus', 'side', 'high' );
@@ -365,5 +372,118 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			</ul>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Filters the nav menus list based on current language filter
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $menus Array of nav menu objects
+	 * @return array Filtered array of nav menus
+	 */
+	public function filter_nav_menus_by_language( $menus ) {
+		// Only filter on nav-menus page
+		$screen = get_current_screen();
+		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
+			return $menus;
+		}
+
+		// Get current language filter
+		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
+		
+		// If showing all languages, return all menus
+		if ( 'all' === $current_lang ) {
+			return $menus;
+		}
+
+		// Get the selected language object
+		$selected_lang = $this->model->get_language( $current_lang );
+		if ( ! $selected_lang ) {
+			return $menus;
+		}
+
+		// Filter menus based on language assignments
+		$filtered_menus = array();
+		$nav_menus = $this->options->get( 'nav_menus' );
+		$theme = get_option( 'stylesheet' );
+
+		foreach ( $menus as $menu ) {
+			$show_menu = false;
+			
+			// Check if this menu is assigned to any location for the selected language
+			if ( ! empty( $nav_menus[ $theme ] ) ) {
+				foreach ( $nav_menus[ $theme ] as $location => $languages ) {
+					if ( isset( $languages[ $current_lang ] ) && $languages[ $current_lang ] == $menu->term_id ) {
+						$show_menu = true;
+						break;
+					}
+				}
+			}
+
+			// For default language, also show menus that don't have specific language assignments
+			if ( $selected_lang->is_default && ! $show_menu ) {
+				$is_assigned_to_other_lang = false;
+				if ( ! empty( $nav_menus[ $theme ] ) ) {
+					foreach ( $nav_menus[ $theme ] as $location => $languages ) {
+						foreach ( $languages as $lang_slug => $menu_id ) {
+							if ( $menu_id == $menu->term_id && $lang_slug !== $current_lang ) {
+								$is_assigned_to_other_lang = true;
+								break 2;
+							}
+						}
+					}
+				}
+				
+				// Show unassigned menus for default language
+				if ( ! $is_assigned_to_other_lang ) {
+					$show_menu = true;
+				}
+			}
+
+			if ( $show_menu ) {
+				$filtered_menus[] = $menu;
+			}
+		}
+
+		return $filtered_menus;
+	}
+
+	/**
+	 * Preserves the language parameter during redirects on nav-menus page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $location The redirect location
+	 * @param int    $status   The redirect status code
+	 * @return string Modified redirect location
+	 */
+	public function preserve_lang_param_on_redirect( $location, $status ) {
+		// Only handle redirects on nav-menus admin page
+		$screen = get_current_screen();
+		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
+			return $location;
+		}
+
+		// Only handle nav-menus.php redirects
+		if ( false === strpos( $location, 'nav-menus.php' ) ) {
+			return $location;
+		}
+
+		// Get current language parameter
+		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : '';
+		if ( empty( $current_lang ) || 'all' === $current_lang ) {
+			return $location;
+		}
+
+		// Check if language parameter is already in the redirect URL
+		if ( false !== strpos( $location, 'lang=' ) ) {
+			return $location;
+		}
+
+		// Add language parameter to redirect URL
+		$location = add_query_arg( 'lang', $current_lang, $location );
+		
+		return $location;
 	}
 }

@@ -61,5 +61,46 @@ jQuery(document).ready(function($) {
                 }
             }
         });
+
+        // Handle language filter changes - reload page to update menu list
+        $('.lmat_subsubsub_list a').on('click', function(e) {
+            // Let the default navigation happen, which will reload the page with the new language filter
+            // This ensures the menu dropdown is updated with the filtered list
+        });
+
+        // Handle the "Select" button to preserve language parameter
+        $('input[name="action"][value="edit"]').closest('form').on('submit', function() {
+            const $form = $(this);
+            if (!$form.find('input[name="lang"]').length && currentLang && currentLang !== 'all') {
+                $form.append('<input type="hidden" name="lang" value="' + currentLang + '">');
+            }
+        });
+
+        // Handle "create a new menu" link to preserve language parameter
+        $('a[href*="nav-menus.php"][href*="action=edit"]').each(function() {
+            const $link = $(this);
+            const href = $link.attr('href');
+            
+            // Skip if this is already a language filter link
+            if ($link.closest('.lmat_subsubsub_list').length) {
+                return;
+            }
+            
+            // Skip if href already contains lang parameter
+            if (href && href.indexOf('lang=') === -1 && currentLang && currentLang !== 'all') {
+                const separator = href.indexOf('?') !== -1 ? '&' : '?';
+                $link.attr('href', href + separator + 'lang=' + encodeURIComponent(currentLang));
+            }
+        });
+
+        // Handle new menu creation form submission
+        $('#create-menu-form, form[action*="nav-menus.php"]').on('submit', function() {
+            const $form = $(this);
+            
+            // Only add language parameter if it's missing and we have a current language
+            if (!$form.find('input[name="lang"]').length && currentLang && currentLang !== 'all') {
+                $form.append('<input type="hidden" name="lang" value="' + currentLang + '">');
+            }
+        });
     }
 });
