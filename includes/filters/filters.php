@@ -165,7 +165,6 @@ class LMAT_Filters {
 	 * Filters the comments according to the current language.
 	 * Used by the recent comments widget and admin language filter.
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param string[]         $clauses SQL clauses.
 	 * @param WP_Comment_Query $query   WP_Comment_Query object.

@@ -180,7 +180,7 @@ if ( ! function_exists( 'icl_object_id' ) ) {
 		}
 
 		if ( empty( $ulanguage_code ) ) {
-			return null;
+			return $return_original_if_missing ? $element_id : null;
 		}
 
 		if ( 'nav_menu' === $element_type ) {
@@ -198,14 +198,16 @@ if ( ! function_exists( 'icl_object_id' ) ) {
 			$tr_id = LMAT()->model->post->get_translation( $element_id, $ulanguage_code );
 		} elseif ( lmat_is_translated_taxonomy( $element_type ) ) {
 			$tr_id = LMAT()->model->term->get_translation( $element_id, $ulanguage_code );
-		}
-
-		if ( ! isset( $tr_id ) ) {
-			return $element_id; // WPML doesn't honor $return_original_if_missing if the post type or taxonomy is not translated.
+		} else {
+			return $element_id; // WPML doesn't honor $return_original_if_missing if the post type or taxonomy is not translated, @see {SitePress::get_object_id()}.
 		}
 
 		if ( empty( $tr_id ) ) {
-			return $return_original_if_missing ? $element_id : null;
+			if ( $return_original_if_missing ) {
+				return $element_id;
+			}
+
+			return null;
 		}
 
 		return (int) $tr_id;
@@ -216,7 +218,6 @@ if ( ! function_exists( 'wpml_object_id_filter' ) ) {
 	/**
 	 * Undocumented alias of `icl_object_id` introduced in WPML 3.2, used by Yith WooCommerce compare
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param int    $id                         object id
 	 * @param string $type                       optional, post type or taxonomy name of the object, defaults to 'post'
@@ -240,15 +241,21 @@ if ( ! function_exists( 'wpml_get_language_information' ) ) {
 	 *
 	 * @param null $empty   optional, not used
 	 * @param int  $post_id optional, post id, defaults to current post
-	 * @return array
+	 *  @return array|WP_Error
 	 */
 	function wpml_get_language_information( $empty = null, $post_id = null ) {
-		if ( empty( $post_id ) ) {
+		if ( null === $post_id ) {
 			$post_id = get_the_ID();
 		}
 
 		if ( empty( $post_id ) ) {
-			return array();
+			return new WP_Error( 'missing_id', __( 'Missing post ID', 'polylang' ) );
+		}
+
+		$post = get_post( $post_id );
+		if ( empty( $post ) ) {
+			// translators: Post id.
+			return new WP_Error( 'missing_post', sprintf( __( 'No such post for ID = %d', 'polylang' ), $post_id ) );
 		}
 
 		$lang = LMAT()->model->post->get_language( $post_id );
@@ -398,12 +405,11 @@ if ( ! function_exists( 'wpml_get_default_language' ) ) {
 	 *
 	 * @see https://wordpress.org/support/topic/add-wpml-compatibility-function
 	 *
-	 * @since 1.0.0
 	 *
-	 * @return string default language code
+	 * @return string|false default language code
 	 */
 	function wpml_get_default_language() {
-		return (string) lmat_default_language();
+		return lmat_default_language();
 	}
 }
 
@@ -416,6 +422,6 @@ if ( ! function_exists( 'icl_get_current_language' ) ) {
 	 * @return string Current language code
 	 */
 	function icl_get_current_language() {
-		return (string) lmat_current_language();
+		return  lmat_current_language();
 	}
 }
