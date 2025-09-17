@@ -316,7 +316,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @param string $action The action name.
 	 * @return void
 	 */
-	public function handle_actions( $action ) {
+	public function handle_actions( string $action ): void {
 		switch ( $action ) {
 			case 'add':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
@@ -348,7 +348,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 						wp_clean_plugins_cache();
 					}
 				}
-				self::redirect(); // To refresh the page 
+		
 				break;
 
 			case 'delete':
@@ -358,7 +358,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					lmat_add_notice( new WP_Error( 'lmat_languages_deleted', __( 'Language deleted.', 'linguator-multilingual-ai-translation' ), 'success' ) );
 				}
 
-				self::redirect(); // To refresh the page 
+				
 				break;
 
 			case 'update':
@@ -380,7 +380,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					lmat_add_notice( new WP_Error( 'lmat_languages_updated', __( 'Language updated.', 'linguator-multilingual-ai-translation' ), 'success' ) );
 				}
 
-				self::redirect(); // To refresh the page 
+
 				break;
 
 			case 'default-lang':
@@ -390,7 +390,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					$this->model->update_default_lang( $lang->slug );
 				}
 
-				self::redirect(); // To refresh the page 
+
 				break;
 
 			case 'content-default-lang':
@@ -398,7 +398,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 				$this->model->set_language_in_mass();
 
-				self::redirect(); // To refresh the page 
+
 				break;
 
 			case 'activate':
@@ -409,7 +409,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 						$this->modules[ $module ]->activate();
 					}
 				}
-				self::redirect();
+
 				break;
 
 			case 'deactivate':
@@ -420,7 +420,6 @@ class LMAT_Settings extends LMAT_Admin_Base {
 						$this->modules[ $module ]->deactivate();
 					}
 				}
-				self::redirect();
 				break;
 
 			default:
@@ -432,6 +431,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				do_action( "lmat_action_$action" );
 				break;
 		}
+		self::redirect();
 	}
 
 	/**
@@ -453,7 +453,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		
 		if ( $is_settings_tab ) {
 			// Handle user input for legacy actions
-			$action = isset( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+			$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['pll_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			if ( ! empty( $action ) ) {
 				$this->handle_actions( $action );
 			}
@@ -668,7 +668,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @param array $args query arguments to add to the url
 	 * @return void
 	 */
-	public static function redirect( $args = array() ) {
+	public static function redirect( array $args = array() ): void {
 		$errors = get_settings_errors( 'linguator-multilingual-ai-translation' );
 		if ( ! empty( $errors ) ) {
 			set_transient( 'lmat_settings_errors', $errors, 30 );
