@@ -71,6 +71,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		// Filter menu dropdown list by language
 		add_filter( 'wp_get_nav_menus', array( $this, 'filter_nav_menus_by_language' ) );
 		
+		// Auto-update selected menu when language filter changes
+		add_action( 'load-nav-menus.php', array( $this, 'maybe_update_selected_menu' ) );
+		
 		// Preserve language parameter during menu creation
 		add_filter( 'wp_redirect', array( $this, 'preserve_lang_param_on_redirect' ), 10, 2 );
 		
@@ -369,10 +372,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				<?php foreach ( $lmat_languages as $lang ) : ?>
 					<?php
 					$lang_class = $lang->slug === $current_lang ? 'current' : '';
-					$all_menus = $this->get_menus_by_language($lang->slug);
 					$lang_url_args = array(
 						'lang' => $lang->slug,
-						'menu' => $all_menus[0]->term_id,
 					);
 					if ( ! empty( $current_action ) ) {
 						$lang_url_args['action'] = $current_action;
@@ -434,6 +435,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			// Check if this menu is assigned to any location for the selected language
 			if ( ! empty( $nav_menus[ $theme ] ) ) {
 				foreach ( $nav_menus[ $theme ] as $location => $languages ) {
+					
 					if ( ! is_object( $menu ) || ! isset( $menu->term_id ) ) {
 						continue;
 					}
@@ -471,7 +473,6 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				$filtered_menus[] = $menu;
 			}
 		}
-
 		return $filtered_menus;
 	}
 
@@ -514,41 +515,41 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	}
 
 	/**
-	 * Get all menus filtered by language
+	 * Maybe update the selected menu when language filter changes
 	 *
-	 * @param string $lang Language slug (e.g. 'en', 'hi', 'as')
-	 * @return array Array of WP_Term objects (menus)
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
-	public function get_menus_by_language( $lang = 'all' ) {
-		$menus = wp_get_nav_menus(); // all menus
-		$filtered_menus = array();
+	public function maybe_update_selected_menu() {
 
-		// If showing all, just return everything
-		if ( $lang === 'all' ) {
-			return $menus;
+		// Only run when language filter is set and no specific menu is requested
+		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
+			return;
 		}
 
-		$nav_menus = $this->options->get( 'nav_menus' );
-		$theme     = get_option( 'stylesheet' );
-
-		foreach ( $menus as $menu ) {
-			$show_menu = false;
-
-			// Check if this menu is assigned to any location for the selected language
-			if ( ! empty( $nav_menus[ $theme ] ) ) {
-				foreach ( $nav_menus[ $theme ] as $location => $languages ) {
-					if ( isset( $languages[ $lang ] ) && $languages[ $lang ] == $menu->term_id ) {
-						$show_menu = true;
-						break;
-					}
-				}
-			}
-
-			if ( $show_menu ) {
-				$filtered_menus[] = $menu;
-			}
+		// Get current language filter
+		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
+		if ( 'all' === $current_lang ) {
+			return; // Don't auto-select when showing all languages
 		}
 
-		return $filtered_menus;
+		// Get filtered menus for the current language
+		$filtered_menus = $this->filter_nav_menus_by_language( wp_get_nav_menus() );
+		
+		if ( ! empty( $filtered_menus ) ) {
+			// Get the first menu for this language
+			$first_menu = reset( $filtered_menus );
+			if ( isset( $first_menu->term_id ) ) {
+				// Redirect to include the menu parameter
+				$redirect_url = add_query_arg( array(
+					'menu' => $first_menu->term_id,
+					'lang' => $current_lang
+				), admin_url( 'nav-menus.php' ) );
+				
+				wp_safe_redirect( $redirect_url );
+				exit;
+			}
+		}
 	}
 }
