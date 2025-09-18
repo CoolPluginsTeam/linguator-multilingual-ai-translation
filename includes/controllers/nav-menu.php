@@ -96,30 +96,20 @@ class LMAT_Nav_Menu {
 	public function create_nav_menu_locations() {
 		static $once;
 		global $_wp_registered_nav_menus;
-
+		global $linguator;
 		$arr = array();
 
 		if ( isset( $_wp_registered_nav_menus ) && ! $once ) {
 			foreach ( $_wp_registered_nav_menus as $loc => $name ) {
 				// Get languages to show - check if we're in admin with language filter
 				$languages_to_show = $this->model->get_languages_list();
-				
-				// Only apply language filtering when in admin nav menu context
-				if ( is_admin() ) {
-						// Get current language filter from admin
-						$current_lang_filter = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
-						
-						// Determine which languages to show based on filter
-						if ( 'all' !== $current_lang_filter ) {
-							// Show only the selected language
-							$selected_lang = $this->model->get_language( $current_lang_filter );
-							if ( $selected_lang ) {
-								$languages_to_show = array( $selected_lang );
-							}
-						}
-					}
-				
-
+				$filter_lang = ! empty( $linguator->filter_lang ) ? $linguator->filter_lang : null;
+					
+				// Determine which languages to show based on filter
+				if ( $filter_lang ) {
+					// Show only the selected language
+					$languages_to_show = array( $filter_lang );
+				}
 				foreach ( $languages_to_show as $lang ) {
 					$arr[ $this->combine_location( $loc, $lang ) ] = $name . ' ' . $lang->name;
 				}

@@ -24,6 +24,13 @@ use Linguator\Includes\Controllers\LMAT_Switcher;
 class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 
 	/**
+	 * Current language (used to filter the content).
+	 *
+	 * @var LMAT_Language|null
+	 */
+	public $filter_lang;
+
+	/**
 	 * Constructor: setups filters and actions
 	 *
 	 * @since 1.0.0
@@ -32,6 +39,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 */
 	public function __construct( &$linguator ) {
 		parent::__construct( $linguator );
+		
+		// Reference to global filter language (same as posts/pages)
+		$this->filter_lang = &$linguator->filter_lang;
 
 		// Populates nav menus locations
 		// Since WP 4.4, must be done before customize_register is fired
@@ -123,6 +133,12 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		wp_enqueue_script( 'lmat_nav_menu', plugins_url( "admin/assets/js/build/nav-menu{$suffix}.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
 		wp_enqueue_style( 'lmat_nav_menu_filter', plugins_url( "admin/assets/css/admin-nav-menu-filter.css", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		wp_enqueue_script( 'lmat_nav_menu_filter_js', plugins_url( "admin/assets/js/admin-nav-menu-filter.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
+		
+		// Pass current language filter to JavaScript
+		$current_filter_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
+		wp_localize_script( 'lmat_nav_menu_filter_js', 'lmat_nav_menu_filter', array(
+			'current_lang' => $current_filter_lang
+		) );
 		$data = array(
 			'strings' => LMAT_Switcher::get_switcher_options( 'menu', 'string' ), // The strings for the options
 			'title'   => __( 'Languages', 'linguator-multilingual-ai-translation' ), // The title
@@ -325,8 +341,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			return; // No need for language filters if there's only one language
 		}
 
-		// Get current language filter
-		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
+		// Get current language filter from global filter_lang (same as posts/pages)
+		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
 		$base_url = admin_url( 'nav-menus.php' );
 		
 		// Preserve other query parameters (like action=locations)
@@ -353,7 +369,11 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				<?php foreach ( $lmat_languages as $lang ) : ?>
 					<?php
 					$lang_class = $lang->slug === $current_lang ? 'current' : '';
-					$lang_url_args = array( 'lang' => $lang->slug );
+					$all_menus = $this->get_menus_by_language($lang->slug);
+					$lang_url_args = array(
+						'lang' => $lang->slug,
+						'menu' => $all_menus[0]->term_id,
+					);
 					if ( ! empty( $current_action ) ) {
 						$lang_url_args['action'] = $current_action;
 					}
@@ -389,16 +409,16 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			return $menus;
 		}
 
-		// Get current language filter
-		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : 'all';
+		// Get current language filter from global filter_lang (same as posts/pages)
+		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
 		
 		// If showing all languages, return all menus
 		if ( 'all' === $current_lang ) {
 			return $menus;
 		}
 
-		// Get the selected language object
-		$selected_lang = $this->model->get_language( $current_lang );
+		// Use the global filter language object
+		$selected_lang = $this->filter_lang;
 		if ( ! $selected_lang ) {
 			return $menus;
 		}
@@ -476,8 +496,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			return $location;
 		}
 
-		// Get current language parameter
-		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : '';
+		// Get current language from global filter_lang (same as posts/pages)
+		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : '';
 		if ( empty( $current_lang ) || 'all' === $current_lang ) {
 			return $location;
 		}
@@ -491,5 +511,44 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		$location = add_query_arg( 'lang', $current_lang, $location );
 		
 		return $location;
+	}
+
+	/**
+	 * Get all menus filtered by language
+	 *
+	 * @param string $lang Language slug (e.g. 'en', 'hi', 'as')
+	 * @return array Array of WP_Term objects (menus)
+	 */
+	public function get_menus_by_language( $lang = 'all' ) {
+		$menus = wp_get_nav_menus(); // all menus
+		$filtered_menus = array();
+
+		// If showing all, just return everything
+		if ( $lang === 'all' ) {
+			return $menus;
+		}
+
+		$nav_menus = $this->options->get( 'nav_menus' );
+		$theme     = get_option( 'stylesheet' );
+
+		foreach ( $menus as $menu ) {
+			$show_menu = false;
+
+			// Check if this menu is assigned to any location for the selected language
+			if ( ! empty( $nav_menus[ $theme ] ) ) {
+				foreach ( $nav_menus[ $theme ] as $location => $languages ) {
+					if ( isset( $languages[ $lang ] ) && $languages[ $lang ] == $menu->term_id ) {
+						$show_menu = true;
+						break;
+					}
+				}
+			}
+
+			if ( $show_menu ) {
+				$filtered_menus[] = $menu;
+			}
+		}
+
+		return $filtered_menus;
 	}
 }
