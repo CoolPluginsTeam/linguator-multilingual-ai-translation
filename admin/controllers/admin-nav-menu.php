@@ -74,6 +74,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		// Auto-update selected menu when language filter changes
 		add_action( 'load-nav-menus.php', array( $this, 'maybe_update_selected_menu' ) );
 		
+		// Also try on admin_init for cases where load-nav-menus.php doesn't catch it
+		add_action( 'admin_init', array( $this, 'maybe_update_selected_menu_on_init' ) );
+		
 		// Preserve language parameter during menu creation
 		add_filter( 'wp_redirect', array( $this, 'preserve_lang_param_on_redirect' ), 10, 2 );
 		
@@ -522,6 +525,10 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @return void
 	 */
 	public function maybe_update_selected_menu() {
+		// Only run on Edit Menus tab, not Manage Locations
+		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
+			return;
+		}
 
 		// Only run when language filter is set and no specific menu is requested
 		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
@@ -549,6 +556,60 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				
 				wp_safe_redirect( $redirect_url );
 				exit;
+			}
+		}
+	}
+
+	/**
+	 * Alternative method to update selected menu on admin_init
+	 * Catches cases where load-nav-menus.php doesn't trigger
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function maybe_update_selected_menu_on_init() {
+		// Only run on nav-menus page
+		$screen = get_current_screen();
+		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
+			return;
+		}
+
+		// Only run on Edit Menus tab, not Manage Locations
+		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
+			return;
+		}
+
+		// Only run when language filter is set and no specific menu is requested
+		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
+			return;
+		}
+
+		// Get current language filter
+		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
+		if ( 'all' === $current_lang ) {
+			return; // Don't auto-select when showing all languages
+		}
+
+		// Get filtered menus for the current language
+		$filtered_menus = $this->filter_nav_menus_by_language( wp_get_nav_menus() );
+		
+		if ( ! empty( $filtered_menus ) ) {
+			// Get the first menu for this language
+			$first_menu = reset( $filtered_menus );
+			if ( isset( $first_menu->term_id ) ) {
+				// Check if we're not already on the right menu
+				global $nav_menu_selected_id;
+				if ( empty( $nav_menu_selected_id ) || $nav_menu_selected_id != $first_menu->term_id ) {
+					// Redirect to include the menu parameter
+					$redirect_url = add_query_arg( array(
+						'menu' => $first_menu->term_id,
+						'lang' => $current_lang
+					), admin_url( 'nav-menus.php' ) );
+					
+					wp_safe_redirect( $redirect_url );
+					exit;
+				}
 			}
 		}
 	}
