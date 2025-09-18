@@ -503,31 +503,36 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 			esc_html( $selected->name )
 		);
 
+		$all_items = array_merge( array( $all_item ), $this->model->get_languages_list() );
+		$items     = $all_items;
+
+		if ( $this->should_hide_admin_bar_menu() ) {
+			$items = array();
+		}
+
 		/**
 		 * Filters the admin languages filter submenu items
 		 *
-		 * @since 1.0.0
 		 *
 		 * @param array $items The admin languages filter submenu items.
 		 */
-		$items = apply_filters( 'lmat_admin_languages_filter', array_merge( array( $all_item ), $this->model->get_languages_list() ) );
+		$items = apply_filters( 'lmat_admin_languages_filter', $items, $all_items );
 
-		$menu = array(
-			'id'    => 'languages',
-			'title' => wp_kses( $selected->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ) ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) . $title,
-			'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
-			'meta'  => array(
-				'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
-			),
+		if ( empty( $items ) ) {
+			return;
+		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'id'    => 'languages',
+				'title' => $selected->flag . $title,
+				'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
+				'meta'  => array(
+					'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
+					'class' => 'all' === $selected->slug ? '' : 'lmat-filtered-languages',
+				),
+			)
 		);
-
-		if ( 'all' !== $selected->slug ) {
-			$menu['meta']['class'] = 'lmat-filtered-languages';
-		}
-
-		if ( ! empty( $items ) ) {
-			$wp_admin_bar->add_menu( $menu );
-		}
 
 		foreach ( $items as $lang ) {
 			if ( $selected->slug === $lang->slug ) {
@@ -571,5 +576,26 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 				}
 			}
 		}
+	}
+	/**
+	 * Tells if the Linguator's admin bar menu should be hidden for the current page.
+	 * Conventionally, it should be hidden on edition pages.
+	 *
+	 * @since 3.8
+	 *
+	 * @return bool
+	 */
+	public function should_hide_admin_bar_menu(): bool {
+		global $pagenow, $typenow, $taxnow;
+
+		if ( in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
+			return ! empty( $typenow );
+		}
+
+		if ( 'term.php' === $pagenow ) {
+			return ! empty( $taxnow );
+		}
+
+		return false;
 	}
 }
