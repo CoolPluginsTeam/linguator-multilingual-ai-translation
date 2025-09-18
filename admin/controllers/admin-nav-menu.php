@@ -69,15 +69,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		add_action( 'admin_footer', array( $this, 'lmat_nav_menu_language_controls' ), 10 );
 		
 		// Filter menu dropdown list by language
-		add_filter( 'wp_get_nav_menus', array( $this, 'filter_nav_menus_by_language' ) );
-		
-		// Auto-update selected menu when language filter changes
-		add_action( 'load-nav-menus.php', array( $this, 'maybe_update_selected_menu' ) );
-		
-		// Also try on admin_init for cases where load-nav-menus.php doesn't catch it
-		add_action( 'admin_init', array( $this, 'maybe_update_selected_menu_on_init' ) );
-		
-		// Preserve language parameter during menu creation
+		add_filter( 'wp_get_nav_menus', array( $this, 'filter_nav_menus_by_language' ), 10, 1 );
+		add_action( 'load-nav-menus.php', array( $this, 'maybe_update_selected_menu' ), 10 );
+		add_action( 'admin_init', array( $this, 'maybe_update_selected_menu_on_init' ), 10 );
 		add_filter( 'wp_redirect', array( $this, 'preserve_lang_param_on_redirect' ), 10, 2 );
 		
 		// FIXME is it possible to choose the order ( after theme locations in WP3.5 and older ) ?
@@ -412,218 +406,256 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	}
 
 	/**
-	 * Filters the nav menus list based on current language filter
+	 * Filters the nav menus list based on current language filter.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $menus Array of nav menu objects
-	 * @return array Filtered array of nav menus
+	 * @param array $menus Array of nav menu objects.
+	 * @return array Filtered array of nav menus.
 	 */
 	public function filter_nav_menus_by_language( $menus ) {
-		// Only filter on nav-menus page
+		// Only filter on nav-menus page.
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
 			return $menus;
 		}
 
-		// Get current language filter from global filter_lang (same as posts/pages)
+		// Early return if no menus to filter.
+		if ( empty( $menus ) || ! is_array( $menus ) ) {
+			return $menus;
+		}
+
+		// Get current language filter from global filter_lang (same as posts/pages).
 		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
 		
-		// If showing all languages, return all menus
+		// If showing all languages, return all menus.
 		if ( 'all' === $current_lang ) {
 			return $menus;
 		}
 
-		// Use the global filter language object
+		// Use the global filter language object.
 		$selected_lang = $this->filter_lang;
 		if ( ! $selected_lang ) {
 			return $menus;
 		}
 
-		// Filter menus based on language assignments
-		$filtered_menus = array();
+		// Get nav menu assignments.
 		$nav_menus = $this->options->get( 'nav_menus' );
 		$theme = get_option( 'stylesheet' );
 
+		// Early return if no nav menu assignments.
+		if ( empty( $nav_menus[ $theme ] ) ) {
+			return $menus;
+		}
+
+		// Filter menus based on language assignments.
+		$filtered_menus = array();
+
 		foreach ( $menus as $menu ) {
-			$show_menu = false;
-			
-			// Check if this menu is assigned to any location for the selected language
-			if ( ! empty( $nav_menus[ $theme ] ) ) {
-				foreach ( $nav_menus[ $theme ] as $location => $languages ) {
-					
-					if ( ! is_object( $menu ) || ! isset( $menu->term_id ) ) {
-						continue;
-					}
-					if ( isset( $languages[ $current_lang ] ) && $languages[ $current_lang ] == $menu->term_id ) {
-						$show_menu = true;
-						break;
-					}
-				}
+			// Skip invalid menu objects.
+			if ( ! is_object( $menu ) || ! isset( $menu->term_id ) ) {
+				continue;
 			}
 
-			// For default language, also show menus that don't have specific language assignments
-			if ( $selected_lang->is_default && ! $show_menu ) {
-				$is_assigned_to_other_lang = false;
-				if ( ! empty( $nav_menus[ $theme ] ) ) {
-					foreach ( $nav_menus[ $theme ] as $location => $languages ) {
-						foreach ( $languages as $lang_slug => $menu_id ) {
-							if ( ! is_object( $menu ) || ! isset( $menu->term_id ) ) {
-								continue;
-							}
-							if ( $menu_id == $menu->term_id && $lang_slug !== $current_lang ) {
-								$is_assigned_to_other_lang = true;
-								break 2;
-							}
-						}
-					}
-				}
-				
-				// Show unassigned menus for default language
-				if ( ! $is_assigned_to_other_lang ) {
-					$show_menu = true;
-				}
-			}
+			$show_menu = $this->should_show_menu_for_language( $menu, $current_lang, $selected_lang, $nav_menus[ $theme ] );
 
 			if ( $show_menu ) {
 				$filtered_menus[] = $menu;
 			}
 		}
+
 		return $filtered_menus;
 	}
 
 	/**
-	 * Preserves the language parameter during redirects on nav-menus page
+	 * Determines if a menu should be shown for the current language.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $location The redirect location
-	 * @param int    $status   The redirect status code
-	 * @return string Modified redirect location
+	 * @param object $menu           Menu object.
+	 * @param string $current_lang   Current language slug.
+	 * @param object $selected_lang  Selected language object.
+	 * @param array  $nav_menus      Nav menu assignments by location.
+	 * @return bool True if menu should be shown, false otherwise.
+	 */
+	private function should_show_menu_for_language( $menu, $current_lang, $selected_lang, $nav_menus ) {
+		// Check if this menu is assigned to any location for the selected language.
+		foreach ( $nav_menus as $location => $languages ) {
+			if ( isset( $languages[ $current_lang ] ) && $languages[ $current_lang ] === $menu->term_id ) {
+				return true;
+			}
+		}
+
+		// For default language, also show menus that don't have specific language assignments.
+		if ( $selected_lang->is_default ) {
+			return ! $this->is_menu_assigned_to_other_language( $menu, $current_lang, $nav_menus );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if a menu is assigned to any language other than the current one.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param object $menu         Menu object.
+	 * @param string $current_lang Current language slug.
+	 * @param array  $nav_menus    Nav menu assignments by location.
+	 * @return bool True if assigned to other language, false otherwise.
+	 */
+	private function is_menu_assigned_to_other_language( $menu, $current_lang, $nav_menus ) {
+		foreach ( $nav_menus as $location => $languages ) {
+			foreach ( $languages as $lang_slug => $menu_id ) {
+				if ( $menu_id === $menu->term_id && $lang_slug !== $current_lang ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Preserves the language parameter during redirects on nav-menus page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $location The redirect location.
+	 * @param int    $status   The redirect status code.
+	 * @return string Modified redirect location.
 	 */
 	public function preserve_lang_param_on_redirect( $location, $status ) {
-		// Only handle redirects on nav-menus admin page
+		// Only handle redirects on nav-menus admin page.
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
 			return $location;
 		}
 
-		// Only handle nav-menus.php redirects
+		// Only handle nav-menus.php redirects.
 		if ( false === strpos( $location, 'nav-menus.php' ) ) {
 			return $location;
 		}
 
-		// Get current language from global filter_lang (same as posts/pages)
+		// Get current language from global filter_lang (same as posts/pages).
 		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : '';
 		if ( empty( $current_lang ) || 'all' === $current_lang ) {
 			return $location;
 		}
 
-		// Check if language parameter is already in the redirect URL
+		// Check if language parameter is already in the redirect URL.
 		if ( false !== strpos( $location, 'lang=' ) ) {
 			return $location;
 		}
 
-		// Add language parameter to redirect URL
-		$location = add_query_arg( 'lang', $current_lang, $location );
-		
-		return $location;
+		// Add language parameter to redirect URL.
+		return add_query_arg( 'lang', $current_lang, $location );
 	}
 
 	/**
-	 * Maybe update the selected menu when language filter changes
+	 * Maybe update the selected menu when language filter changes.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	public function maybe_update_selected_menu() {
-		// Only run on Edit Menus tab, not Manage Locations
+		// Only run on Edit Menus tab, not Manage Locations.
 		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
 			return;
 		}
 
-		// Only run when language filter is set and no specific menu is requested
+		// Only run when language filter is set and no specific menu is requested.
 		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
 			return;
 		}
 
-		// Get current language filter
+		// Get current language filter.
 		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
 		if ( 'all' === $current_lang ) {
-			return; // Don't auto-select when showing all languages
+			return; // Don't auto-select when showing all languages.
 		}
 
-		// Get filtered menus for the current language
+		// Get filtered menus for the current language.
 		$filtered_menus = $this->filter_nav_menus_by_language( wp_get_nav_menus() );
 		
-		if ( ! empty( $filtered_menus ) ) {
-			// Get the first menu for this language
-			$first_menu = reset( $filtered_menus );
-			if ( isset( $first_menu->term_id ) ) {
-				// Redirect to include the menu parameter
-				$redirect_url = add_query_arg( array(
-					'menu' => $first_menu->term_id,
-					'lang' => $current_lang
-				), admin_url( 'nav-menus.php' ) );
-				
-				wp_safe_redirect( $redirect_url );
-				exit;
-			}
+		if ( empty( $filtered_menus ) ) {
+			return;
 		}
+
+		// Get the first menu for this language.
+		$first_menu = reset( $filtered_menus );
+		if ( ! isset( $first_menu->term_id ) ) {
+			return;
+		}
+
+		// Redirect to include the menu parameter.
+		$redirect_url = add_query_arg( array(
+			'menu' => $first_menu->term_id,
+			'lang' => $current_lang,
+		), admin_url( 'nav-menus.php' ) );
+		
+		wp_safe_redirect( $redirect_url );
+		exit;
 	}
 
 	/**
-	 * Alternative method to update selected menu on admin_init
-	 * Catches cases where load-nav-menus.php doesn't trigger
+	 * Alternative method to update selected menu on admin_init.
+	 * Catches cases where load-nav-menus.php doesn't trigger.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	public function maybe_update_selected_menu_on_init() {
-		// Only run on nav-menus page
+		// Only run on nav-menus page.
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
 			return;
 		}
 
-		// Only run on Edit Menus tab, not Manage Locations
+		// Only run on Edit Menus tab, not Manage Locations.
 		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
 			return;
 		}
 
-		// Only run when language filter is set and no specific menu is requested
+		// Only run when language filter is set and no specific menu is requested.
 		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
 			return;
 		}
 
-		// Get current language filter
+		// Get current language filter.
 		$current_lang = ! empty( $this->filter_lang ) ? $this->filter_lang->slug : 'all';
 		if ( 'all' === $current_lang ) {
-			return; // Don't auto-select when showing all languages
+			return; // Don't auto-select when showing all languages.
 		}
 
-		// Get filtered menus for the current language
+		// Get filtered menus for the current language.
 		$filtered_menus = $this->filter_nav_menus_by_language( wp_get_nav_menus() );
 		
-		if ( ! empty( $filtered_menus ) ) {
-			// Get the first menu for this language
-			$first_menu = reset( $filtered_menus );
-			if ( isset( $first_menu->term_id ) ) {
-				// Check if we're not already on the right menu
-				global $nav_menu_selected_id;
-				if ( empty( $nav_menu_selected_id ) || $nav_menu_selected_id != $first_menu->term_id ) {
-					// Redirect to include the menu parameter
-					$redirect_url = add_query_arg( array(
-						'menu' => $first_menu->term_id,
-						'lang' => $current_lang
-					), admin_url( 'nav-menus.php' ) );
-					
-					wp_safe_redirect( $redirect_url );
-					exit;
-				}
-			}
+		if ( empty( $filtered_menus ) ) {
+			return;
 		}
+
+		// Get the first menu for this language.
+		$first_menu = reset( $filtered_menus );
+		if ( ! isset( $first_menu->term_id ) ) {
+			return;
+		}
+
+		// Check if we're not already on the right menu.
+		global $nav_menu_selected_id;
+		if ( ! empty( $nav_menu_selected_id ) && $nav_menu_selected_id === $first_menu->term_id ) {
+			return;
+		}
+
+		// Redirect to include the menu parameter.
+		$redirect_url = add_query_arg( array(
+			'menu' => $first_menu->term_id,
+			'lang' => $current_lang,
+		), admin_url( 'nav-menus.php' ) );
+		
+		wp_safe_redirect( $redirect_url );
+		exit;
 	}
 }
