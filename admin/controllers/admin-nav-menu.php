@@ -365,10 +365,12 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 					$all_url_args['action'] = $current_action;
 				}
 				$all_url = 'all' !== $current_lang ? add_query_arg( $all_url_args, $base_url ) : '';
+				// Get total count directly from database - count nav menu terms
+				$total_menus = wp_count_terms( array( 'taxonomy' => 'nav_menu' ) );
 				?>
 				<li class='lmat_lang_all'>
 					<a href="<?php echo esc_url( $all_url ); ?>" class="<?php echo esc_attr( $all_class ); ?>">
-						All Languages
+						All Languages <span class="count">(<?php echo esc_html( $total_menus ); ?>)</span>
 					</a>
 				</li>
 				
@@ -383,13 +385,24 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 					}
 					$lang_url = $lang->slug !== $current_lang ? add_query_arg( $lang_url_args, $base_url ) : '';
 					$flag_url = isset( $lang->flag_url ) ? $lang->flag_url : '';
+					
+					$menu_count = 0;
+					$nav_menus = $this->options->get( 'nav_menus' );
+					$theme = get_option( 'stylesheet' );
+					if ( ! empty( $nav_menus[ $theme ] ) ) {
+						foreach ( $nav_menus[ $theme ] as $location => $languages ) {
+							if ( isset( $languages[ $lang->slug ] ) && $languages[ $lang->slug ] > 0 ) {
+								$menu_count++;
+							}
+						}
+					}
 					?>
 					<li class='lmat_lang_<?php echo esc_attr( $lang->slug ); ?>'>
 						<a href="<?php echo esc_url( $lang_url ); ?>" class="<?php echo esc_attr( $lang_class ); ?>">
 							<?php if ( ! empty( $flag_url ) ) : ?>
 								<img src="<?php echo esc_url( $flag_url ); ?>" alt="<?php echo esc_attr( $lang->name ); ?>" width="16" style="margin-right: 5px;">
 							<?php endif; ?>
-							<?php echo esc_html( $lang->name ); ?>
+							<?php echo esc_html( $lang->name ); ?> <span class="count">(<?php echo esc_html( $menu_count ); ?>)</span>
 						</a>
 					</li>
 				<?php endforeach; ?>
