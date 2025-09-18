@@ -6,6 +6,7 @@
 namespace Linguator\Includes\Base;
 
 
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -15,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-
+use Linguator\Modules\REST\Request;
 use Linguator\Includes\Core\Linguator;
 use Linguator\Includes\Services\Crud\LMAT_CRUD_Posts;
 use Linguator\Includes\Services\Crud\LMAT_CRUD_Terms;
@@ -62,6 +63,10 @@ abstract class LMAT_Base {
 	 * @var LMAT_CRUD_Terms|null
 	 */
 	public $terms;
+	/**
+	 * @var Request
+	 */
+	public $request;
 
 	/**
 	 * Navigation menu handler.
@@ -88,6 +93,7 @@ abstract class LMAT_Base {
 		$this->links_model = &$links_model;
 		$this->model = &$links_model->model;
 		$this->options = &$this->model->options;
+		$this->request     = new Request( $this->model );
 
 		$GLOBALS['l10n_unloaded']['lmat_string'] = true; // Short-circuit _load_textdomain_just_in_time() for 'lmat_string' domain in WP 4.6+
 
