@@ -19,13 +19,13 @@ use Linguator\Includes\Options\Options;
  * Class defining the "Detect browser language" boolean option.
  * /!\ Sanitization depends on `force_lang`: this option must be set AFTER `force_lang`.
  *
- * @since 1.0.0
+ *  
  */
 class Browser extends Abstract_Boolean {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -40,7 +40,7 @@ class Browser extends Abstract_Boolean {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool    $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -60,7 +60,7 @@ class Browser extends Abstract_Boolean {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

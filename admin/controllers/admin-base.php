@@ -20,7 +20,7 @@ use WP_Term;
 /**
  * Setup features available on all admin pages.
  *
- * @since 1.0.0
+
  */
 #[AllowDynamicProperties]
 abstract class LMAT_Admin_Base extends LMAT_Base {
@@ -73,7 +73,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Setups actions needed on all admin pages.
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -97,7 +96,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Setups filters and action needed on all admin pages and on plugins page
 	 * Loads the settings pages or the filters base on the request
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		parent::init();
@@ -129,7 +128,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Adds the link to the Linguator panel in the WordPress admin menu
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -150,7 +149,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		/**
 		 * Filter the list of tabs in Linguator settings
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $tabs list of tab names
 		 */
@@ -174,7 +173,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Dummy method to display the 3 tabs pages: languages, strings translations, settings.
 	 * Overwritten in `LMAT_Settings`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -183,7 +182,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Setup js scripts & css styles ( only on the relevant pages )
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -261,7 +260,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Adds JavaScript to redirect main menu click to settings page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -287,7 +286,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Tells whether or not the given screen is block editor kind.
 	 * e.g. widget, site or post editor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Screen $screen Screen object.
 	 * @return bool True if the screen is a block editor, false otherwise.
@@ -299,7 +298,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Enqueue scripts to the WP Customizer.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -315,7 +314,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Adds inline scripts to set the default language in JS
 	 * and localizes scripts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -346,7 +345,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * The final goal is to detect if an ajax request is made on admin or frontend.
 	 *
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -365,7 +364,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		/**
 		 * Filters the list of parameters to add to the admin ajax request.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $params List of parameters to add to the admin ajax request.
 		 */
@@ -375,7 +374,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Sets the admin current language, used to filter the content
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -412,7 +411,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		/**
 		 * Filters the current language used by Linguator in the admin context.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language|false|null $curlang  Instance of the current language.
 		 * @param LMAT_Admin_Base          $linguator Instance of the main Linguator's object.
@@ -432,7 +431,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Defines the backend language and the admin language filter based on user preferences
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -453,7 +452,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		 * Filters the preferred language on admin side.
 		 * The preferred language is used for example to determine the language of a new post.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language $pref_lang Preferred language.
 		 */
@@ -468,7 +467,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @see https://core.trac.wordpress.org/ticket/31246 the suggestion of @boonebgorges.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $qvars The array of requested query variables.
 	 * @return array
@@ -484,7 +483,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Adds the languages list in admin bar for the admin languages filter.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar global object.
 	 * @return void
@@ -560,7 +559,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * As Linguator interacts with the Customizer, we have to delete this menu ourselves in the case of a block theme,
 	 * unless another plugin than Linguator interacts with the Customizer.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -583,7 +582,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Tells if the Linguator's admin bar menu should be hidden for the current page.
 	 * Conventionally, it should be hidden on edition pages.
 	 *
-	 * @since 3.8
 	 *
 	 * @return bool
 	 */

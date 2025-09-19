@@ -16,7 +16,7 @@ use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
  * Manages filters and actions related to media on admin side
  * Capability to edit / create media is checked before loading this class
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	/**
@@ -27,7 +27,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Constructor: setups filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -50,7 +50,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	 * Adds the language field and translations tables in the 'Edit Media' panel.
 	 * Needs WP 3.5+
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array   $fields List of form fields.
 	 * @param WP_Post $post   The attachment being edited.
@@ -85,7 +85,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Maybe creates a media translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -112,7 +112,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	 * Called when a media is saved
 	 * Saves language and translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $post       An array of post data.
 	 * @param array $attachment An array of attachment metadata.

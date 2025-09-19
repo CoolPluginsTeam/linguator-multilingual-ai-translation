@@ -23,7 +23,7 @@ use WP_Error;
 /**
  * Sets the taxonomies languages and translations model up.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-import-type DBInfoWithType from LMAT_Translatable_Object_With_Types_Interface
  */
@@ -80,7 +80,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Instance of `LMAT_Model`.
 	 */
@@ -93,7 +93,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Adds hooks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return static
 	 */
@@ -106,8 +106,8 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Stores the term's language into the database.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Renamed the parameter $term_id into $id.
+	 *  
+	 *   Renamed the parameter $term_id into $id.
 	 *
 	 * @param int                     $id   Term ID.
 	 * @param LMAT_Language|string|int $lang Language (object, slug, or term ID).
@@ -136,7 +136,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Deletes a translation of a term.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Term ID.
 	 * @return void
@@ -177,7 +177,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * The taxonomies list is cached for better performance.
 	 * The method waits for 'after_setup_theme' to apply the cache to allow themes adding the filter in functions.php.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $filter True if we should return only valid registered object types.
 	 * @return string[] Object type names for which Linguator manages languages.
@@ -200,7 +200,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 			 * The filter must be added soon in the WordPress loading process:
 			 * in a function hooked to ‘plugins_loaded’ or directly in functions.php for themes.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string[] $taxonomies  List of taxonomy names (as array keys and values).
 			 * @param bool     $is_settings True when displaying the list of custom taxonomies in Linguator settings.
@@ -219,7 +219,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Caches the language and translations when terms are queried by get_terms().
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Term[]|int[] $terms      Queried terms.
 	 * @param string[]        $taxonomies Queried taxonomies.
@@ -247,7 +247,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * When the term cache is cleaned, cleans the object term cache too.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[] $ids An array of term IDs.
 	 * @return void
@@ -261,7 +261,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Tells whether a translation term must be updated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $id           Term ID.
 	 * @param int[] $translations An associative array of translations with language code as key and translation ID as
@@ -285,7 +285,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Assigns a language to terms in mass.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[]        $ids  Array of post ids or term ids.
 	 * @param LMAT_Language $lang Language to assign to the posts or terms.
@@ -308,7 +308,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Returns the description to use for the "language properties" in the REST API.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see Linguator\modules\REST\V2\Languages::get_item_schema()
 	 *
 	 * @return string
@@ -324,7 +324,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * @see LMAT_Translatable_Object::join_clause()
 	 * @see LMAT_Translatable_Object::get_raw_objects_with_no_lang()
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] {
 	 *     @type string $table         Name of the table.
@@ -346,7 +346,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Wraps `wp_insert_term` with language feature.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $term     The term name to add.
 	 * @param string       $taxonomy The taxonomy to which to add the term.
@@ -391,7 +391,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Wraps `wp_update_term` with language feature.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $term_id The ID of the term.
 	 * @param array $args {
@@ -446,7 +446,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * Toggles Linguator term slug filters management.
 	 * Must be used before and after any term slug modification or insertion.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language The language to use.
 	 * @param int          $parent   The parent term id to use.

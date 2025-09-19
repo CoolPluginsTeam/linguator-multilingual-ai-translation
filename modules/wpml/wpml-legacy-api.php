@@ -38,7 +38,7 @@ if ( ! function_exists( 'icl_get_languages' ) ) {
 	 * country_flag_url => the url of the flag
 	 * url              => the url of the translation
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|array $args optional
 	 * @return array array of arrays per language
@@ -90,8 +90,8 @@ if ( ! function_exists( 'icl_link_to_element' ) ) {
 	/**
 	 * Used for creating language dependent links in themes
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 add support for arguments 6 and 7
+	 *  
+	 *   add support for arguments 6 and 7
 	 *
 	 * @param int    $id                         object id
 	 * @param string $type                       optional, post type or taxonomy name of the object, defaults to 'post'
@@ -152,7 +152,7 @@ if ( ! function_exists( 'icl_object_id' ) ) {
 	/**
 	 * Returns an element’s ID in the current language or in another specified language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int         $element_id                 Object id.
 	 * @param string      $element_type               Optional, post type or taxonomy name of the object, defaults to 'post'.
@@ -237,7 +237,7 @@ if ( ! function_exists( 'wpml_get_language_information' ) ) {
 	 *
 	 * @see https://wpml.org/forums/topic/canonical-urls-for-wpml-duplicated-posts/#post-52198 for the original WPML code
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param null $empty   optional, not used
 	 * @param int  $post_id optional, post id, defaults to current post
@@ -278,7 +278,7 @@ if ( ! function_exists( 'icl_register_string' ) ) {
 	 *
 	 * The 4th and 5th parameters $allow_empty_value and $source_lang are not used by Linguator.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $context           the group in which the string is registered, defaults to 'linguator'
 	 * @param string $name              a unique name for the string
@@ -294,7 +294,7 @@ if ( ! function_exists( 'icl_unregister_string' ) ) {
 	/**
 	 * Removes a string from the "strings translation" panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $context the group in which the string is registered, defaults to 'linguator'
 	 * @param string $name    a unique name for the string
@@ -309,9 +309,9 @@ if ( ! function_exists( 'icl_t' ) ) {
 	/**
 	 * Gets the translated value of a string ( previously registered with icl_register_string or lmat_register_string )
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 argument 3 is optional
-	 * @since 1.0.0 add support for arguments 4 to 6
+	 *  
+	 *   argument 3 is optional
+	 *   add support for arguments 4 to 6
 	 *
 	 * @param string      $context         the group in which the string is registered
 	 * @param string      $name            a unique name for the string
@@ -331,8 +331,8 @@ if ( ! function_exists( 'icl_translate' ) ) {
 	 * Undocumented function used by NextGen Gallery
 	 * used in LMAT_Plugins_Compat for Jetpack with only 3 arguments
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 add support for arguments 5 and 6, strings are no more automatically registered
+	 *  
+	 *   add support for arguments 5 and 6, strings are no more automatically registered
 	 *
 	 * @param string      $context         the group in which the string is registered
 	 * @param string      $name            a unique name for the string
@@ -358,7 +358,7 @@ if ( ! function_exists( 'wpml_get_copied_fields_for_post_edit' ) ) {
 	 * probably incomplete as Types locks the custom fields for a new post, but not when edited
 	 * This is probably linked to the fact that WPML has always an original post in the default language and not Linguator :)
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -390,7 +390,7 @@ if ( ! function_exists( 'icl_get_default_language' ) ) {
 	/**
 	 * Undocumented function used by Warp 6 by Yootheme
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string default language code
 	 */
@@ -417,7 +417,7 @@ if ( ! function_exists( 'icl_get_current_language' ) ) {
 	/**
 	 * Undocumented function used by Ultimate Member
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Current language code
 	 */

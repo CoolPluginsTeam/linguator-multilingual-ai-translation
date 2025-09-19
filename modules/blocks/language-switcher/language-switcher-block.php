@@ -14,7 +14,6 @@ class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block
 	/**
 	 * Returns the language switcher block name with the Linguator's namespace.
 	 *
-	 * @since 3.2
 	 *
 	 * @return string The block name.
 	 */

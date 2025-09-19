@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with Aqua Resizer when used in themes.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Aqua_Resizer {
 	/**
 	 * Setups filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_filter( 'lmat_home_url_black_list', array( $this, 'home_url_black_list' ) );
@@ -26,7 +26,7 @@ class LMAT_Aqua_Resizer {
 	/**
 	 * Avoids filtering the home url for the function aq_resize().
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $arr Home url filter black list.
 	 * @return array

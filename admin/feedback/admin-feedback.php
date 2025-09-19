@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Admin Feedback class for Linguator
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Feedback {
 

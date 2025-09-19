@@ -16,7 +16,7 @@ use WP_Post;
 /**
  * Manages canonical redirect on frontend.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Canonical {
 	/**
@@ -48,7 +48,7 @@ class LMAT_Canonical {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator Main Linguator object.
 	 */
@@ -63,7 +63,7 @@ class LMAT_Canonical {
 	 * If the language code is not in agreement with the language of the content,
 	 * redirects incoming links to the proper URL to avoid duplicate content.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @global WP_Query $wp_query WordPress Query object.
 	 * @global bool     $is_IIS
@@ -147,7 +147,7 @@ class LMAT_Canonical {
 		/**
 		 * Filters the canonical url detected by Linguator.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string|false $redirect_url False or the url to redirect to.
 		 * @param LMAT_Language $language The language detected.
@@ -172,7 +172,7 @@ class LMAT_Canonical {
 	/**
 	 * Returns the term_id of the requested term.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Tax_Query $tax_query An instance of WP_Tax_Query.
 	 * @return int
@@ -232,7 +232,7 @@ class LMAT_Canonical {
 	/**
 	 * Find the taxonomy being queried.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Tax_Query $tax_query An instance of WP_Tax_Query.
 	 * @return string A taxonomy slug
@@ -247,7 +247,7 @@ class LMAT_Canonical {
 	/**
 	 * Evaluates the canonical redirect url through the deidcated WP function.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @global WP_Query $wp_query WordPress Query object.
 	 *

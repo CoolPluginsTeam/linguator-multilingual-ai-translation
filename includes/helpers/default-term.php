@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages filters and actions related to default terms.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Default_Term {
 
@@ -42,7 +42,7 @@ class LMAT_Default_Term {
 	/**
 	 * Constructor: setups properties.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -55,7 +55,7 @@ class LMAT_Default_Term {
 	/**
 	 * Setups filters and actions needed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -79,7 +79,7 @@ class LMAT_Default_Term {
 	/**
 	 * Filters the default term to return the one in the right language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  int $taxonomy_term_id The taxonomy term id.
 	 * @return int                   A taxonomy term id.
@@ -95,7 +95,7 @@ class LMAT_Default_Term {
 	 * Checks if the new default term is translated in all languages.
 	 * If not, create the translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  int $old_value The old option value.
 	 * @param  int $value     The new option value.
@@ -126,7 +126,7 @@ class LMAT_Default_Term {
 	/**
 	 * Creates a default term for a language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|string|int $lang     Language.
 	 * @param string                  $taxonomy The current taxonomy.
@@ -161,7 +161,7 @@ class LMAT_Default_Term {
 	/**
 	 * Manages the default term when new languages are created.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  array $args Argument used to create the language. @see LMAT_Admin_Model::add_language().
 	 * @return void
@@ -184,7 +184,7 @@ class LMAT_Default_Term {
 	/**
 	 * Prevents deleting all the translations of the default term.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  array  $caps    The user's actual capabilities.
 	 * @param  string $cap     Capability name.
@@ -203,7 +203,7 @@ class LMAT_Default_Term {
 	/**
 	 * Checks if the term is the default term.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  int $term_id The term ID.
 	 * @return bool         True if the term is the default term, false otherwise.
@@ -220,7 +220,7 @@ class LMAT_Default_Term {
 	/**
 	 * Updates the default term language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  string $slug Language slug.
 	 * @return void

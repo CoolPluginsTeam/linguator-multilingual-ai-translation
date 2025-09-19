@@ -18,7 +18,7 @@ use Linguator\Includes\Helpers\LMAT_Format_Util;
  * See http://wpml.org/documentation/support/language-configuration-files/
  * The language switcher configuration is not interpreted
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-type ParsedMetas array<
  *     non-falsy-string,
@@ -88,7 +88,7 @@ class LMAT_WPML_Config
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct()
 	{
@@ -100,7 +100,7 @@ class LMAT_WPML_Config
 	/**
 	 * Access to the single instance of the class
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_WPML_Config
 	 */
@@ -115,7 +115,7 @@ class LMAT_WPML_Config
 	/**
 	 * Finds the wpml-config.xml files to parse and setup filters
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -187,7 +187,7 @@ class LMAT_WPML_Config
 	/**
 	 * Returns all wpml-config.xml files in MU plugins, plugins, theme, child theme, and Linguator custom directory.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] A context identifier as array key, a file path as array value.
 	 *
@@ -216,7 +216,7 @@ class LMAT_WPML_Config
 	/**
 	 * Adds post metas to the list of metas to copy when creating a new translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $metas The list of post metas to copy or synchronize.
 	 * @param bool     $sync  True for sync, false for copy.
@@ -232,7 +232,7 @@ class LMAT_WPML_Config
 	/**
 	 * Adds term metas to the list of metas to copy when creating a new translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $metas The list of term metas to copy or synchronize.
 	 * @param bool     $sync  True for sync, false for copy.
@@ -248,7 +248,7 @@ class LMAT_WPML_Config
 	/**
 	 * Adds post meta keys to export.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see   LMAT_Export_Metas
 	 *
 	 * @param  array $keys {
@@ -307,7 +307,7 @@ class LMAT_WPML_Config
 	 * Adds term meta keys to export.
 	 * Note: sub-key translations are not currently supported by WPML.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see   LMAT_Export_Metas
 	 *
 	 * @param  array $keys {
@@ -332,7 +332,7 @@ class LMAT_WPML_Config
 	/**
 	 * Specifies the encoding for post metas.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $metas An array containing meta names as array keys, and their encoding as array values.
 	 * @return string[]
@@ -347,7 +347,7 @@ class LMAT_WPML_Config
 	/**
 	 * Specifies the encoding for term metas.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $metas An array containing meta names as array keys, and their encoding as array values.
 	 * @return string[]
@@ -362,7 +362,7 @@ class LMAT_WPML_Config
 	/**
 	 * Language and translation management for custom post types.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $types The list of post type names for which Linguator manages language and translations.
 	 * @param bool     $hide  True when displaying the list in Linguator settings.
@@ -394,7 +394,7 @@ class LMAT_WPML_Config
 	/**
 	 * Language and translation management for custom taxonomies.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $taxonomies The list of taxonomy names for which Linguator manages language and translations.
 	 * @param bool     $hide       True when displaying the list in Linguator settings.
@@ -426,7 +426,7 @@ class LMAT_WPML_Config
 	/**
 	 * Translation management for strings in blocks content.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[][] $parsing_rules Rules as Xpath expressions to evaluate in the blocks content.
 	 * @return string[][] Rules completed with ones from wpml-config file.
@@ -457,7 +457,6 @@ class LMAT_WPML_Config
 	/**
 	 * Encoding management for block attributes.
 	 *
-	 * @since 3.8
 	 *
 	 * @param string[][] $keys An array containing attribute names to encode/decode and their format(s), by block name.
 	 * @return string[][]
@@ -499,7 +498,7 @@ class LMAT_WPML_Config
 	/**
 	 * Extract all rules from WPML config file to translate strings for blocks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Rules completed with ones from wpml-config file.
 	 *
@@ -579,7 +578,7 @@ class LMAT_WPML_Config
 	 * Merges two arrays recursively.
 	 * Unlike `array_merge_recursive()`, this method doesn't change the type of the values.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $array1 Array to merge into.
 	 * @param array $array2 Array to merge.
@@ -601,7 +600,7 @@ class LMAT_WPML_Config
 	/**
 	 * Registers or translates the strings for an option
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string           $context The group in which the strings will be registered.
 	 * @param string           $name    Option name.
@@ -617,10 +616,10 @@ class LMAT_WPML_Config
 	/**
 	 * Recursively transforms xml nodes to an array, ready for LMAT_Translate_Option.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Type-hinted the parameters `$key` and `$arr`.
-	 * @since 1.0.0 `$arr` is not passed by reference anymore.
-	 * @since 1.0.0 Added the parameter `$fill_value`.
+	 *  
+	 *   Type-hinted the parameters `$key` and `$arr`.
+	 *   `$arr` is not passed by reference anymore.
+	 *   Added the parameter `$fill_value`.
 	 *
 	 * @param SimpleXMLElement $key        XML node.
 	 * @param array            $arr        Array of option keys to translate.
@@ -655,7 +654,7 @@ class LMAT_WPML_Config
 	/**
 	 * Get the value of an attribute.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  SimpleXMLElement $field          A XML node.
 	 * @param  string           $attribute_name Node of the attribute.
@@ -675,7 +674,7 @@ class LMAT_WPML_Config
 	/**
 	 * Gets attributes values recursively.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  SimpleXMLElement $field A XML node.
 	 * @return array An array of attributes.
@@ -714,7 +713,7 @@ class LMAT_WPML_Config
 	/**
 	 * Returns all wpml-config.xml files in MU plugins.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] A context identifier as array key, a file path as array value.
 	 *
@@ -754,7 +753,7 @@ class LMAT_WPML_Config
 	/**
 	 * Returns all wpml-config.xml files in plugins.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] A context identifier as array key, a file path as array value.
 	 *
@@ -802,7 +801,7 @@ class LMAT_WPML_Config
 	/**
 	 * Returns all wpml-config.xml files in theme and child theme.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] A context identifier as array key, a file path as array value.
 	 *
@@ -834,7 +833,7 @@ class LMAT_WPML_Config
 	/**
 	 * Returns the wpml-config.xml file in Linguator custom directory.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] A context identifier as array key, a file path as array value.
 	 *
@@ -860,7 +859,7 @@ class LMAT_WPML_Config
 	 *
 	 * @see https://wordpress.org/support/topic/fatal-error-open_basedir-restricton/
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param DirectoryIterator $file_info A "file info" object that we know its path (but maybe not its real path) is
 	 *                                     in `open_basedir`.
@@ -891,7 +890,7 @@ class LMAT_WPML_Config
 	 *
 	 * Inspired by `WP_Automatic_Updater::is_allowed_dir()` and `wp-includes/ID3/getid3.php`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $dir The directory to check.
 	 * @return bool True if access to the directory is allowed, false otherwise.
@@ -925,7 +924,7 @@ class LMAT_WPML_Config
 	 * Returns the list of paths in `open_basedir`. The purpose is to compare a formatted path to this list.
 	 * Note: all paths are suffixed by `DIRECTORY_SEPARATOR`, even paths to files.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] An array of formatted paths.
 	 */
@@ -964,7 +963,7 @@ class LMAT_WPML_Config
 	 * 1. Slashes and back-slashes are replaced by `DIRECTORY_SEPARATOR`.
 	 * 2. The path is suffixed by `DIRECTORY_SEPARATOR` (even non-directory elements).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $path A file path.
 	 * @return string
@@ -986,7 +985,7 @@ class LMAT_WPML_Config
 	/**
 	 * Adds (or removes) meta names to the list of metas to copy or synchronize.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $metas The list of meta names to copy or synchronize.
 	 * @param string   $xpath Xpath to the meta fields in the xml files.
@@ -1015,7 +1014,7 @@ class LMAT_WPML_Config
 	/**
 	 * Adds meta keys to export.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $metas {
 	 *     An array containing meta keys to translate.
@@ -1048,7 +1047,7 @@ class LMAT_WPML_Config
 	/**
 	 * Adds encoding of metas.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $metas The list of encodings for each metas. Meta names are array keys, encodings are array values.
 	 * @param string   $xpath Xpath to the meta fields in the xml files.
@@ -1074,7 +1073,7 @@ class LMAT_WPML_Config
 	 * Parses all xml files for metas.
 	 * Results are cached for each `$xpath`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $xpath Xpath to the meta fields in the xml files.
 	 * @return array

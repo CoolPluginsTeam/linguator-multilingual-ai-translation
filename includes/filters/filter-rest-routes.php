@@ -15,7 +15,7 @@ use Linguator\Includes\Other\LMAT_Model;
 /**
  * Class to manage REST routes filterable by language.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Filter_REST_Routes {
 	/**
@@ -34,7 +34,7 @@ class LMAT_Filter_REST_Routes {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Shared instance of the current LMAT_Model.
 	 */
@@ -45,7 +45,7 @@ class LMAT_Filter_REST_Routes {
 	/**
 	 * Adds query parameters to preload paths.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param (string|string[])[] $preload_paths Array of paths to preload.
 	 * @param array               $args Array of query strings to add paired by key/value.
@@ -99,7 +99,7 @@ class LMAT_Filter_REST_Routes {
 	/**
 	 * Adds inline script to declare filtered REST route on client side.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $script_handle Name of the script to add the inline script to.
 	 * @return void
@@ -113,7 +113,7 @@ class LMAT_Filter_REST_Routes {
 	/**
 	 * Returns filtered REST routes by entity type (e.g. post type or taxonomy).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] REST routes.
 	 * @phpstan-return array<string, string>
@@ -137,7 +137,7 @@ class LMAT_Filter_REST_Routes {
 		/**
 		 * Filters REST routes filterable by languages.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string[] $routes Array of filterable REST routes, with types as key.
 		 */
@@ -155,7 +155,7 @@ class LMAT_Filter_REST_Routes {
 	/**
 	 * Tells if a given route is fileterable by language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $rest_route Route to test.
 	 * @return bool Whether the route is filterable or not.
@@ -170,7 +170,7 @@ class LMAT_Filter_REST_Routes {
 	 * Extracts filterable REST route from an array of entity objects
 	 * from a list of translatable entities (e.g. post types or taxonomies).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object[] $rest_entities         Array of post type or taxonomy objects.
 	 * @param string[] $translatable_entities Array of translatable entity names.

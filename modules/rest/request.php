@@ -187,7 +187,6 @@ class Request {
 		/**
 		 * Filters the object type of the current request.
 		 *
-		 * @since 3.8
 		 *
 		 * @param string|null     $type    Object type of the current request, or null if not defined.
 		 * @param array           $handler Route handler used for the request.

@@ -23,7 +23,7 @@ use Linguator\Modules\REST\Abstract_Controller;
 /**
  * Settings REST controller.
  *
- * @since 1.0.0
+ *  
  */
 class Settings extends Abstract_Controller {
 	/**
@@ -75,7 +75,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Linguator's model.
 	 */
@@ -91,7 +91,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Registers the routes for options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -139,7 +139,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Updates video status option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -167,7 +167,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Retrieves all options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -240,7 +240,7 @@ class Settings extends Abstract_Controller {
 	 * Updates option(s).
 	 * This allows to update one or several options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -314,7 +314,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Handles cron job scheduling/removal based on CPFM opt-in choice and data usage sharing.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	private function handle_cron_scheduling() {
 		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
@@ -350,7 +350,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Validates domains before saving when force_lang is set to 3.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $options The options being updated.
 	 * @return WP_Error WP_Error object with validation errors, or empty if no errors.
@@ -469,7 +469,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to update the options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to update the option, WP_Error object otherwise.
@@ -499,7 +499,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Prepares the option value for the REST response.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array           $item    Option values.
 	 * @param WP_REST_Request $request Request object.
@@ -526,7 +526,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Process post types for saving, removing programmatically active ones.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $post_types Post types from frontend.
 	 * @return array Processed post types for saving.
@@ -547,7 +547,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Triggers mass language assignment for post types when they are updated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $previous_value Previous post types array.
 	 * @param array $new_value      New post types array.
@@ -574,7 +574,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Triggers mass language assignment for taxonomies when they are updated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $previous_value Previous taxonomies array.
 	 * @param array $new_value      New taxonomies array.
@@ -606,7 +606,7 @@ class Settings extends Abstract_Controller {
 	/**
 	 * Retrieves the options' schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Item schema data.
 	 */

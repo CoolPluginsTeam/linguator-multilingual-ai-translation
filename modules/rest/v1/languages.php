@@ -25,7 +25,7 @@ use Linguator\Includes\Models\Languages as Languages_Model;
 /**
  * Languages REST controller.
  *
- * @since 1.0.0
+ *  
  */
 class Languages extends Abstract_Controller {
 	/**
@@ -50,7 +50,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Linguator's model.
 	 */
@@ -65,7 +65,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Registers the routes for languages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -315,7 +315,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Retrieves all languages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -337,7 +337,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Creates one or multiple languages from the collection.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -398,7 +398,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Creates multiple languages efficiently without sub-requests.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array           $languages_data Array of language data objects.
 	 * @param WP_REST_Request $request       Full details about the request.
@@ -492,7 +492,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Gets a human-readable identifier for a language from the provided data.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $language_data Language data array.
 	 * @return string Language identifier for error reporting.
@@ -518,7 +518,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Retrieves one language from the collection.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -539,7 +539,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Updates one language from the collection.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -580,7 +580,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Deletes one language from the collection.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -612,7 +612,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Assigns a language to untranslated posts or pages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response|WP_Error
@@ -811,7 +811,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Creates a Home Page translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return array|WP_Error Response data or WP_Error object on failure.
@@ -909,7 +909,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if the user has permission to create a home page translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return true|WP_Error True if the request has access to create a home page translation, WP_Error object otherwise.
@@ -935,7 +935,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to get the languages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
@@ -957,7 +957,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to create a language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to create languages, WP_Error object otherwise.
@@ -987,7 +987,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to get a specific language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has read access for the language, WP_Error object otherwise.
@@ -1002,7 +1002,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to update a specific language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to update the language, WP_Error object otherwise.
@@ -1032,7 +1032,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to delete a specific language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to delete the language, WP_Error object otherwise.
@@ -1062,7 +1062,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Checks if a given request has access to assign language in mass.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to assign language, WP_Error object otherwise.
@@ -1092,7 +1092,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Prepares the language for the REST response.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language    $item    Language object.
 	 * @param WP_REST_Request $request Request object.
@@ -1122,7 +1122,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Retrieves the language's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Item schema data.
 	 */
@@ -1328,7 +1328,7 @@ class Languages extends Abstract_Controller {
 	 * Ensures that the `no_default_cat` property is returned only for `CREATABLE` requests.
 	 * Supports both single language objects and arrays of languages for bulk operations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $method Optional. HTTP method of the request. Default WP_REST_Server::CREATABLE.
 	 * @return array Endpoint arguments.
@@ -1364,7 +1364,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Prepares one language for create or update operation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return object|WP_Error The prepared language, or WP_Error object on failure.
@@ -1441,7 +1441,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Tells if languages can be edited.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -1452,7 +1452,7 @@ class Languages extends Abstract_Controller {
 	/**
 	 * Returns the language, if the ID is valid.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return LMAT_Language|WP_Error Language object if the ID or slug is valid, WP_Error otherwise.

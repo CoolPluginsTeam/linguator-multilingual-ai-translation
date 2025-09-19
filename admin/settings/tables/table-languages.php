@@ -20,14 +20,14 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * A class to create the languages table in Linguator settings
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Table_Languages extends WP_List_Table {
 
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		parent::__construct(
@@ -41,7 +41,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Generates content for a single row of the table.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $item The language item.
 	 * @return void
@@ -50,7 +50,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 		/**
 		 * Filter the list of classes assigned a row in the languages list table
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array        $classes The list of class names.
 		 * @param LMAT_Language $item    The language item.
@@ -64,7 +64,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Displays the item information in a column ( default case ).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $item        The language item.
 	 * @param string       $column_name The column name.
@@ -91,7 +91,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	 * Displays the item information in the column 'name'
 	 * Displays the edit and delete action links
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $item The language item.
 	 * @return string
@@ -109,7 +109,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	 * Displays the item information in the default language
 	 * Displays the 'make default' action link
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $item The language item.
 	 * @return string
@@ -129,7 +129,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 			/**
 			 * Filters the default language row action in the languages list table.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string       $s    The html markup of the action.
 			 * @param LMAT_Language $item The language item.
@@ -149,7 +149,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Gets the list of columns
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] The list of column titles.
 	 */
@@ -168,7 +168,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Gets the list of sortable columns
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -185,7 +185,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Gets the name of the default primary column.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Name of the default primary column, in this case, 'name'.
 	 */
@@ -196,7 +196,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Generates and display row actions links for the list table.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $item        The language item being acted upon.
 	 * @param string       $column_name Current column name.
@@ -227,7 +227,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 		/**
 		 * Filters the list of row actions in the languages list table.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array        $actions A list of html markup actions.
 		 * @param LMAT_Language $item    The language item.
@@ -240,7 +240,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Sorts language items.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $a The first language to compare.
 	 * @param LMAT_Language $b The second language to compare.
@@ -261,7 +261,7 @@ class LMAT_Table_Languages extends WP_List_Table {
 	/**
 	 * Prepares the list of languages for display.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language[] $data The list of languages.
 	 * @return void

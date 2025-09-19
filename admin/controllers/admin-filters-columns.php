@@ -18,7 +18,7 @@ use WP_Term;
  * Adds the language column in posts and terms list tables
  * Manages quick edit and bulk edit as well
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Filters_Columns {
 	/**
@@ -41,7 +41,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Constructor: setups filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -79,7 +79,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Adds languages and translations columns in posts, pages, media, categories and tags tables.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $columns List of table columns.
 	 * @param string   $before  The column before which we want to add our languages.
@@ -101,7 +101,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Returns the first language column in posts, pages, media, categories and tags tables.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string first language column name.
 	 */
@@ -116,7 +116,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Hides the column for the filtered language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $hidden Array of hidden columns.
 	 * @return string[]
@@ -131,7 +131,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Adds the language and translations columns ( before the comments column ) in the posts, pages and media library tables.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $columns List of posts table columns.
 	 * @return string[] Modified list of columns.
@@ -144,7 +144,7 @@ class LMAT_Admin_Filters_Columns {
 	 * Fills the language and translations columns in the posts, pages and media library tables
 	 * take care that when doing ajax inline edit, the post may not be updated in database yet
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $column  Column name.
 	 * @param int    $post_id Post ID.
@@ -216,7 +216,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Quick edit & bulk edit
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $column column name
 	 * @return string unmodified $column
@@ -253,7 +253,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Adds the language column ( before the posts column ) in the 'Categories' or 'Post Tags' table.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $columns List of terms table columns.
 	 * @return string[] modified List of columns.
@@ -272,7 +272,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Fills the language column in the taxonomy terms list table.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $out     Column output.
 	 * @param string $column  Column name.
@@ -357,7 +357,7 @@ class LMAT_Admin_Filters_Columns {
 			/**
 			 * Filters the output of the first language column in the terms list table.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string $output  First language column output.
 			 * @param int    $term_id Term ID.
@@ -372,7 +372,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Update rows of translated posts when the language is modified in quick edit
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -416,7 +416,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Update rows of translated terms when adding / deleting a translation or when the language is modified in quick edit
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -465,7 +465,7 @@ class LMAT_Admin_Filters_Columns {
 	/**
 	 * Returns the language flag or the language slug if there is no flag.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language LMAT_Language object.
 	 * @return string

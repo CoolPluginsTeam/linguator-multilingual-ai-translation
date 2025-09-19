@@ -16,7 +16,7 @@ use Linguator\Includes\Helpers\LMAT_Cache;
 /**
  * Manages links filters on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 
@@ -51,7 +51,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	 * Adds filters once the language is defined
 	 * Low priority on links filters to come after any other modification
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -90,7 +90,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	/**
 	 * Modifies the author and date links to add the language parameter (as well as feed link).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link The permalink to the archive.
 	 * @return string The modified link.
@@ -103,7 +103,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	 * Modifies page links
 	 * and caches the result
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link    The page link.
 	 * @param int    $post_id The post ID.
@@ -122,7 +122,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	 * Modifies attachment links
 	 * and caches the result
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link    The attachment link.
 	 * @param int    $post_id The attachment post ID.
@@ -141,7 +141,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	 * Modifies custom posts links
 	 * and caches the result.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $link The post link.
 	 * @param WP_Post $post The post object.
@@ -160,7 +160,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	 * Modifies filtered taxonomies ( post format like ) and translated taxonomies links
 	 * and caches the result.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $link The term link.
 	 * @param WP_Term $term The term object.
@@ -188,7 +188,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	/**
 	 * Modifies the post short link when using one domain or subdomain per language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link    Post permalink.
 	 * @param int    $post_id Post id.
@@ -202,7 +202,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	/**
 	 * Outputs references to translated pages ( if exists ) in the html head section
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -249,7 +249,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 			/**
 			 * Filters the list of rel hreflang attributes
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param array $hreflangs Array of urls with language codes as keys
 			 */
@@ -264,7 +264,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	/**
 	 * Filters the home url to get the right language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url  The home URL including scheme and path.
 	 * @param string $path Path relative to the home URL.
@@ -298,7 +298,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 			/**
 			 * Filters the white list of the Linguator 'home_url' filter.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string[][] $white_list An array of arrays each of them having a 'file' key
 			 *                               and/or a 'function' key to decide which functions in
@@ -317,7 +317,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 			/**
 			 * Filters the black list of the Linguator 'home_url' filter.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string[][] $black_list An array of arrays each of them having a 'file' key
 			 *                               and/or a 'function' key to decide which functions in
@@ -351,7 +351,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	/**
 	 * Rewrites the ajax url when using domains or subdomains.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url  The admin url with path evaluated by WordPress.
 	 * @param string $path Path relative to the admin URL.
@@ -363,7 +363,6 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	/**
 	 * Adds the current language to URL query.
 	 *
-	 * @since 3.7.4
 	 *
 	 * @param string $url The oEmbed endpoint URL.
 	 * @return string The oEmbed endpoint URL with the language.

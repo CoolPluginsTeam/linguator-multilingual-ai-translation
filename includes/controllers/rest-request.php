@@ -22,7 +22,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend_Nav_Menu;
 /**
  * Main Linguator class for REST API requests, accessible from @see LMAT().
  *
- * @since 1.0.0
+ *  
  */
 #[AllowDynamicProperties]
 class LMAT_REST_Request extends LMAT_Base {
@@ -119,7 +119,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -138,7 +138,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	/**
 	 * Setup filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -166,7 +166,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	/**
 	 * Sets the current language during a REST request if sent.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Remains untouched.
 	 * @param WP_REST_Server  $server  Server instance.

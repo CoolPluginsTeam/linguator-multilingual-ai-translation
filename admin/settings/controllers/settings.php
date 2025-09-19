@@ -24,7 +24,7 @@ use WP_Error;
 /**
  * A class for the Linguator settings pages, accessible from @see LMAT().
  *
- * @since 1.0.0
+ *  
  */
 #[AllowDynamicProperties]
 class LMAT_Settings extends LMAT_Admin_Base {
@@ -104,7 +104,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -163,7 +163,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * Note: Legacy settings modules are no longer needed since React handles settings.
 	 * Only external modules from filters are registered now.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -174,7 +174,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		 * Filter the list of setting modules
 		 * Allows external plugins/modules to add their own settings modules
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $modules the list of module classes
 		 */
@@ -202,7 +202,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Adds screen options and the about box in the languages admin panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -224,7 +224,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Adds screen options in the strings translations admin panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -242,7 +242,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Adds screen options in the localizations admin panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -278,7 +278,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Redirects to the loco page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -297,7 +297,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Saves the number of rows in the languages or strings table set by this user.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $screen_option False or value returned by a previous filter, not used.
 	 * @param string $option        The name of the option, not used.
@@ -311,7 +311,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Manages the user input for the languages pages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $action The action name.
 	 * @return void
@@ -426,7 +426,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				/**
 				 * Fires when a non default action has been sent to Linguator settings
 				 *
-				 * @since 1.0.0
+				 *  
 				 */
 				do_action( "lmat_action_$action" );
 				break;
@@ -438,7 +438,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * Displays the 3 tabs pages: languages, strings translations, settings
 	 * Also manages user input for these pages
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -499,7 +499,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Get synchronization options formatted for JavaScript
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Array of sync options with label and value
 	 */
@@ -527,7 +527,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Get language switcher options formatted for JavaScript
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Array of language switcher options with label and value
 	 */
@@ -644,7 +644,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Displays a notice when there are objects with no language assigned
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -663,7 +663,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * Redirects to language page ( current active tab )
 	 * saves error messages in a transient for reuse in redirected page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args query arguments to add to the url
 	 * @return void
@@ -682,7 +682,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Get the list of predefined languages
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[][] {
 	 *   An array of array of language properties.
@@ -714,8 +714,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		/**
 		 * Filter the list of predefined languages
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 The languages arrays use associative keys instead of numerical keys
+		 *  
+		 *   The languages arrays use associative keys instead of numerical keys
 		 *
 		 * @param array $languages
 		 */
@@ -734,7 +734,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Check LocoAI plugin installation and activation status.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Plugin status information
 	 */

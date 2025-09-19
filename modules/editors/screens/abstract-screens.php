@@ -104,7 +104,6 @@ abstract class Abstract_Screen {
 			/**
 			 * Filters settings required by the UI.
 			 *
-			 * @since 3.6
 			 *
 			 * @param array $settings.
 			 */

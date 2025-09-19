@@ -16,13 +16,13 @@ use Featured_Content;
 /**
  * Manages the compatibility with the Jetpack Twenty Fourteenn Featured content
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Featured_Content {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_filter( 'transient_featured_content_ids', array( $this, 'featured_content_ids' ) );
@@ -32,7 +32,7 @@ class LMAT_Featured_Content {
 	/**
 	 * Tell whether the theme supports the featured content
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -43,7 +43,7 @@ class LMAT_Featured_Content {
 	/**
 	 * Get the theme featured posts filter name
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -61,7 +61,7 @@ class LMAT_Featured_Content {
 	/**
 	 * Rewrites the function Featured_Content::get_featured_post_ids()
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $featured_ids Featured posts ids
 	 * @return array modified featured posts ids ( include all languages )
@@ -117,7 +117,7 @@ class LMAT_Featured_Content {
 	 * Mainly to allow hiding it when requested in featured content options
 	 * Acts only on frontend
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $settings featured content settings
 	 * @return array modified $settings

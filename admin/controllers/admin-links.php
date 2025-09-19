@@ -15,14 +15,14 @@ use Linguator\Includes\Services\Links\LMAT_Links;
 /**
  * Manages links related functions.
  *
- * @since 1.0.0	
+ *  	
  */
 class LMAT_Admin_Links extends LMAT_Links {
 
 	/**
 	 * Returns the html markup for a new translation link.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $link     The new translation link.
 	 * @param LMAT_Language $language The language of the new translation.
@@ -49,7 +49,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the html markup for a translation link.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $link     The translation link.
 	 * @param LMAT_Language $language The language of the translation.
@@ -67,7 +67,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Get the link to create a new post translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int          $post_id  The source post id.
 	 * @param LMAT_Language $language The language of the new translation.
@@ -124,7 +124,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 		/**
 		 * Filters the new post translation link.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string       $link     The new post translation link.
 		 * @param LMAT_Language $language The language of the new translation.
@@ -136,7 +136,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the html markup for a new post translation link.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int          $post_id  The source post id.
 	 * @param LMAT_Language $language The language of the new translation.
@@ -150,7 +150,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the html markup for a post translation link.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id The translation post id.
 	 * @return string
@@ -169,7 +169,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Get the link to create a new term translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int          $term_id   Source term id.
 	 * @param string       $taxonomy  Taxonomy name.
@@ -195,7 +195,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 		/**
 		 * Filters the new term translation link.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string       $link      The new term translation link.
 		 * @param LMAT_Language $language  The language of the new translation.
@@ -209,7 +209,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the html markup for a new term translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int          $term_id   Source term id.
 	 * @param string       $taxonomy  Taxonomy name.
@@ -225,7 +225,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the html markup for a term translation link.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id   Translation term id.
 	 * @param string $taxonomy  Taxonomy name.
@@ -247,7 +247,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns some data (`from_post` and `new_lang`) from the current request.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $post_type A post type.
 	 * @return array {
@@ -282,7 +282,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns some data (`from_post` and `new_lang`) from the current request.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array {
 	 *     @type WP_Post      $from_post The source media.
@@ -307,7 +307,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the objects given the post ID and language slug provided in the new post translation request.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $post_id   The original Post ID provided.
 	 * @param string $lang_slug The new translation language provided

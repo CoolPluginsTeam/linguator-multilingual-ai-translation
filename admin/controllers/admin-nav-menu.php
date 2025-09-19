@@ -19,14 +19,14 @@ use Linguator\Includes\Controllers\LMAT_Switcher;
 /**
  * Manages custom menus translations as well as the language switcher menu item on admin side
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 
 	/**
 	 * Constructor: setups filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -45,7 +45,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * Setups filters and terms
 	 * adds the language switcher metabox and create new nav menu locations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -68,7 +68,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * Language switcher metabox
 	 * The checkbox and all hidden fields are important
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -102,7 +102,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Prepares javascript to modify the language switcher menu item
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -137,7 +137,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Save our menu item options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $menu_id         ID of the updated menu.
 	 * @param int $menu_item_db_id ID of the updated menu item.
@@ -171,7 +171,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Assigns menu languages and translations based on (temporary) locations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $locations Nav menu locations.
 	 * @return array
@@ -197,7 +197,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Assigns menu languages and translations based on (temporary) locations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $mods Theme mods.
 	 * @return mixed
@@ -243,7 +243,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Fills temporary menu locations based on menus translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool|array $menus Associative array of registered navigation menu IDs keyed by their location name.
 	 * @return bool|array
@@ -272,7 +272,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Removes the nav menu term_id from the locations stored in Linguator options when a nav menu is deleted
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $term_id nav menu id
 	 * @return void

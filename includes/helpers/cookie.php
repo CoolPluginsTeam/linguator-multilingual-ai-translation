@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A class to manage manage the language cookie
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Cookie {
 	/**
 	 * Parses the cookie parameters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args {@see LMAT_Cookie::set()}
 	 * @return array
@@ -31,7 +31,7 @@ class LMAT_Cookie {
 		 * If a negative cookie duration is specified, the cookie is removed.
 		 * /!\ This filter may be fired *before* the theme is loaded.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param int $duration Cookie duration in seconds.
 		 */
@@ -52,7 +52,7 @@ class LMAT_Cookie {
 		 * Filters the Linguator cookie arguments.
 		 * /!\ This filter may be fired *before* the theme is loaded.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $args {
 		 *   Optional. Array of arguments for setting the cookie.
@@ -73,7 +73,7 @@ class LMAT_Cookie {
 	/**
 	 * Sets the cookie.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $lang Language cookie value.
 	 * @param array  $args {
@@ -103,7 +103,7 @@ class LMAT_Cookie {
 	/**
 	 * Returns the language cookie value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

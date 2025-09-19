@@ -16,7 +16,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
  * Defines some WPML constants
  * Registers strings in a persistent way as done by WPML
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_WPML_Compat {
 	/**
@@ -41,7 +41,7 @@ class LMAT_WPML_Compat {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	protected function __construct() {
 		// Load the WPML API.
@@ -62,7 +62,7 @@ class LMAT_WPML_Compat {
 	/**
 	 * Access to the single instance of the class
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_WPML_Compat
 	 */
@@ -78,7 +78,7 @@ class LMAT_WPML_Compat {
 	 * The compatibility with WPML is not perfect on admin side as the constants are defined
 	 * in 'setup_theme' by Linguator (based on user info) and 'plugins_loaded' by WPML (based on cookie).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -107,7 +107,7 @@ class LMAT_WPML_Compat {
 	 * so we need to do the same as some plugins or themes may expect this.
 	 * We use a serialized option to store these strings.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $context The group in which the string is registered.
 	 * @param string          $name    A unique name for the string.
@@ -159,7 +159,7 @@ class LMAT_WPML_Compat {
 	/**
 	 * Removes a string from the registered strings list
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $context The group in which the string is registered.
 	 * @param string $name    A unique name for the string.
@@ -176,7 +176,7 @@ class LMAT_WPML_Compat {
 	/**
 	 * Adds strings registered by icl_register_string to those registered by lmat_register_string
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $strings existing registered strings
 	 * @return array registered strings with added strings through WPML API
@@ -188,7 +188,7 @@ class LMAT_WPML_Compat {
 	/**
 	 * Get a registered string by its context and name
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $context The group in which the string is registered.
 	 * @param string $name    A unique name for the string.

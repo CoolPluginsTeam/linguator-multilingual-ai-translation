@@ -19,13 +19,13 @@ use Linguator\Includes\Options\Options;
 /**
  * Class defining the "Remove the page name or page id from the URL of the front page" boolean option.
  *
- * @since 1.0.0
+ *  
  */
 class Redirect_Lang extends Abstract_Boolean {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -38,7 +38,7 @@ class Redirect_Lang extends Abstract_Boolean {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

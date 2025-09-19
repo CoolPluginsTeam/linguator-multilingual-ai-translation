@@ -52,7 +52,7 @@ abstract class Abstract_Option {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $value Optional. Option value.
 	 */
@@ -76,7 +76,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -87,7 +87,7 @@ abstract class Abstract_Option {
 	/**
 	 * Sets option's value if valid, does nothing otherwise.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed   $value   Value to set.
 	 * @param Options $options All options.
@@ -119,7 +119,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns option's value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return mixed
 	 */
@@ -130,7 +130,7 @@ abstract class Abstract_Option {
 	/**
 	 * Sets default option value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return mixed The new value.
 	 */
@@ -142,7 +142,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns JSON schema of the option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array The schema.
 	 *
@@ -167,7 +167,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns non-blocking sanitization errors.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return WP_Error
 	 */
@@ -178,7 +178,7 @@ abstract class Abstract_Option {
 	/**
 	 * Prepares a value before validation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $value Value to format.
 	 * @return mixed
@@ -192,7 +192,7 @@ abstract class Abstract_Option {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed   $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -205,7 +205,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return mixed
 	 */
@@ -214,7 +214,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *
@@ -225,7 +225,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -234,7 +234,7 @@ abstract class Abstract_Option {
 	/**
 	 * Returns a list of language terms.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 *
@@ -253,7 +253,7 @@ abstract class Abstract_Option {
 	/**
 	 * Adds a non-blocking error warning about unknown language slugs.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $language_slugs List of language slugs.
 	 * @return void

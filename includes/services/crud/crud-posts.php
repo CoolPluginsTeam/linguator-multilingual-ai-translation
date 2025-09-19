@@ -18,7 +18,7 @@ use WP_Term;
  * Adds actions and filters related to languages when creating, updating or deleting posts.
  * Actions and filters triggered when reading posts are handled separately.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_CRUD_Posts {
 	/**
@@ -50,7 +50,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -107,7 +107,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * When a new post moves out of auto-draft, complete deferred translation linking.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $new_status Transition to this post status.
 	 * @param string  $old_status Previous post status.
@@ -123,7 +123,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Allows to set a language by default for posts if it has no language yet.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Post ID.
 	 * @return void
@@ -171,8 +171,8 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Called when a post ( or page ) is saved, published or updated.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Does not save the language and translations anymore, unless the post has no language yet.
+	 *  
+	 *   Does not save the language and translations anymore, unless the post has no language yet.
 	 *
 	 * @param int     $post_id Post id of the post being saved.
 	 * @param WP_Post $post    The post being saved.
@@ -213,7 +213,7 @@ class LMAT_CRUD_Posts {
 			/**
 			 * Fires after the post language and translations are saved.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param int     $post_id      Post id.
 			 * @param WP_Post $post         Post object.
@@ -227,7 +227,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Handles translation linking when a post is created with from_post parameter.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Post ID of the newly created post.
 	 * @return void
@@ -280,7 +280,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Creates a translation link between two posts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int           $from_post_id Original post ID.
 	 * @param int           $to_post_id   New translation post ID.
@@ -311,7 +311,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Makes sure that saved terms are in the right language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int            $object_id Object ID.
 	 * @param int[]|string[] $terms     An array of object term IDs or slugs.
@@ -387,7 +387,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Make sure that the post parent is in the correct language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_parent Post parent ID.
 	 * @param int $post_id     Post ID.
@@ -408,7 +408,7 @@ class LMAT_CRUD_Posts {
 	 * Called when a post, page or media is deleted
 	 * Don't delete translations if this is a post revision 
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Post ID.
 	 * @return void
@@ -422,7 +422,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Prevents WP deleting files when there are still media using them.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $file Path to the file to delete.
 	 * @return string Empty or unmodified path.
@@ -466,7 +466,7 @@ class LMAT_CRUD_Posts {
 	/**
 	 * Ensure that tags are in the correct language when a post is updated, due to `tags_input` parameter being removed in `wp_update_post()`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int     $post_id      Post ID, unused.
 	 * @param WP_Post $post_after   Post object following the update.
@@ -494,7 +494,7 @@ class LMAT_CRUD_Posts {
 	 * Makes sure that all terms in the given list are in the given language.
 	 * If not the case, the terms are translated or created (for a hierarchical taxonomy, terms are created recursively).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Term[]    $terms    List of terms to translate.
 	 * @param string       $taxonomy The terms' taxonomy.
@@ -517,7 +517,7 @@ class LMAT_CRUD_Posts {
 	 * Translates the given term into the given language.
 	 * If the translation doesn't exist, it is created (for a hierarchical taxonomy, terms are created recursively).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Term      $term     The term to translate.
 	 * @param string       $taxonomy The term's taxonomy.

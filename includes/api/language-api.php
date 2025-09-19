@@ -16,7 +16,7 @@ use Linguator\Includes\Helpers\LMAT_MO;
  * All API functions are loaded when 'lmat_init' action is fired.
  * You can check if Linguator is active by checking if the function 'lmat_the_languages' exists.
  *
- * @since 1.0.0
+ *  
  */
 
 
@@ -32,7 +32,7 @@ use Linguator\Includes\Helpers\LMAT_MO;
  * The function does nothing if used outside the frontend.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param array $args {
  *   Optional array of arguments.
@@ -66,8 +66,8 @@ function lmat_the_languages( $args = array() ) {
  * Returns the language set in admin language filter on backend (false if set to all languages).
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Accepts composite values.
+ *  
+ *   Accepts composite values.
  *
  * @param string $field Optional, the language field to return (@see LMAT_Language), defaults to `'slug'`.
  *                      Pass `\OBJECT` constant to get the language object. A composite value can be used for language
@@ -97,8 +97,8 @@ function lmat_current_language( $field = 'slug' ) {
  * Returns the default language.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Accepts composite values.
+ *  
+ *   Accepts composite values.
  *
  * @param string $field Optional, the language field to return (@see LMAT_Language), defaults to `'slug'`.
  *                      Pass `\OBJECT` constant to get the language object. A composite value can be used for language
@@ -130,9 +130,9 @@ function lmat_default_language( $field = 'slug' ) {
  * Among the post and its translations, returns the ID of the post which is in the language represented by $lang.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Returns `0` instead of `false` if not translated or if the post has no language.
- * @since 1.0.0 $lang accepts `LMAT_Language` or string.
+ *  
+ *   Returns `0` instead of `false` if not translated or if the post has no language.
+ *   $lang accepts `LMAT_Language` or string.
  *
  * @param int                 $post_id Post ID.
  * @param LMAT_Language|string $lang    Optional language (object or slug), defaults to the current language.
@@ -154,9 +154,9 @@ function lmat_get_post( $post_id, $lang = '' ) {
  * Among the term and its translations, returns the ID of the term which is in the language represented by $lang.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Returns `0` instead of `false` if not translated or if the term has no language.
- * @since 1.0.0 $lang accepts LMAT_Language or string.
+ *  
+ *   Returns `0` instead of `false` if not translated or if the term has no language.
+ *   $lang accepts LMAT_Language or string.
  *
  * @param int                 $term_id Term ID.
  * @param LMAT_Language|string $lang    Optional language (object or slug), defaults to the current language.
@@ -178,7 +178,7 @@ function lmat_get_term( $term_id, $lang = '' ) {
  * Returns the home url in a language.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $lang Optional language code, defaults to the current language.
  * @return string
@@ -199,7 +199,7 @@ function lmat_home_url( $lang = '' ) {
  * Registers a string for translation in the "strings translation" panel.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $name      A unique name for the string.
  * @param string $string    The string to register.
@@ -218,7 +218,7 @@ function lmat_register_string( $name, $string, $context = 'Linguator', $multilin
  * Translates a string ( previously registered with lmat_register_string ).
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @return string The string translated in the current language.
@@ -237,7 +237,7 @@ function lmat__( $string ) {
  * Translates a string ( previously registered with lmat_register_string ) and escapes it for safe use in HTML output.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @return string The string translated in the current language.
@@ -250,7 +250,7 @@ function lmat_esc_html__( $string ) {
  * Translates a string ( previously registered with lmat_register_string ) and escapes it for safe use in HTML attributes.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @return string The string translated in the current language.
@@ -264,7 +264,7 @@ function lmat_esc_attr__( $string ) {
  * It is an equivalent of _e() and is not escaped.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @return void
@@ -277,7 +277,7 @@ function lmat_e( $string ) {
  * Echoes a translated string ( previously registered with lmat_register_string ) and escapes it for safe use in HTML output.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @return void
@@ -290,7 +290,7 @@ function lmat_esc_html_e( $string ) {
  * Echoes a translated a string ( previously registered with lmat_register_string ) and escapes it for safe use in HTML attributes.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @return void
@@ -303,7 +303,7 @@ function lmat_esc_attr_e( $string ) {
  * Translates a string ( previously registered with lmat_register_string ).
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $string The string to translate.
  * @param string $lang   Language code.
@@ -334,7 +334,7 @@ function lmat_translate_string( $string, $lang ) {
  * Returns true if Linguator manages languages and translations for this post type.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $post_type Post type name.
  * @return bool
@@ -347,7 +347,7 @@ function lmat_is_translated_post_type( $post_type ) {
  * Returns true if Linguator manages languages and translations for this taxonomy.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $tax Taxonomy name.
  * @return bool
@@ -360,7 +360,7 @@ function lmat_is_translated_taxonomy( $tax ) {
  * Returns the list of available languages.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param array $args {
  *   Optional array of arguments.
@@ -379,9 +379,9 @@ function lmat_languages_list( $args = array() ) {
  * Sets the post language.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 $lang accepts LMAT_Language or string.
- * @since 1.0.0 Returns a boolean.
+ *  
+ *   $lang accepts LMAT_Language or string.
+ *   Returns a boolean.
  *
  * @param int                 $id   Post ID.
  * @param LMAT_Language|string $lang Language (object or slug).
@@ -396,9 +396,9 @@ function lmat_set_post_language( $id, $lang ) {
  * Sets the term language.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 $lang accepts LMAT_Language or string.
- * @since 1.0.0 Returns a boolean.
+ *  
+ *   $lang accepts LMAT_Language or string.
+ *   Returns a boolean.
  *
  * @param int                 $id   Term ID.
  * @param LMAT_Language|string $lang Language (object or slug).
@@ -413,8 +413,8 @@ function lmat_set_term_language( $id, $lang ) {
  * Save posts translations.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Returns an associative array of translations.
+ *  
+ *   Returns an associative array of translations.
  *
  * @param int[] $arr An associative array of translations with language code as key and post ID as value.
  * @return int[] An associative array with language codes as key and post IDs as values.
@@ -434,8 +434,8 @@ function lmat_save_post_translations( $arr ) {
  * Save terms translations
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Returns an associative array of translations.
+ *  
+ *   Returns an associative array of translations.
  *
  * @param int[] $arr An associative array of translations with language code as key and term ID as value.
  * @return int[] An associative array with language codes as key and term IDs as values.
@@ -455,8 +455,8 @@ function lmat_save_term_translations( $arr ) {
  * Returns the post language.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Accepts composite values for `$field`.
+ *  
+ *   Accepts composite values for `$field`.
  *
  * @param int    $post_id Post ID.
  * @param string $field Optional, the language field to return (@see LMAT_Language), defaults to `'slug'`.
@@ -485,8 +485,8 @@ function lmat_get_post_language( $post_id, $field = 'slug' ) {
  * Returns the term language.
  *
  * @api
- * @since 1.0.0
- * @since 1.0.0 Accepts composite values for `$field`.
+ *  
+ *   Accepts composite values for `$field`.
  *
  * @param int    $term_id Term ID.
  * @param string $field Optional, the language field to return (@see LMAT_Language), defaults to `'slug'`.
@@ -515,7 +515,7 @@ function lmat_get_term_language( $term_id, $field = 'slug' ) {
  * Returns an array of translations of a post.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param int $post_id Post ID.
  * @return int[] An associative array of translations with language code as key and translation post ID as value.
@@ -530,7 +530,7 @@ function lmat_get_post_translations( $post_id ) {
  * Returns an array of translations of a term.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param int $term_id Term ID.
  * @return int[] An associative array of translations with language code as key and translation term ID as value.
@@ -545,7 +545,7 @@ function lmat_get_term_translations( $term_id ) {
  * Counts posts in a language.
  *
  * @api
- * @since 1.0.0
+ *  
  *
  * @param string $lang Language code.
  * @param array  $args {
@@ -576,7 +576,7 @@ function lmat_count_posts( $lang, $args = array() ) {
 /**
  * Wraps `wp_insert_post` with language feature.
  *
- * @since 1.0.0
+ *  
  *
  * @param array               $postarr {
  *     An array of elements that make up a post to insert.
@@ -600,7 +600,7 @@ function lmat_insert_post( array $postarr, $language ) {
 /**
  * Wraps `wp_insert_term` with language feature.
  *
- * @since 1.0.0
+ *  
  *
  * @param string              $term     The term name to add.
  * @param string              $taxonomy The taxonomy to which to add the term.
@@ -635,7 +635,7 @@ function lmat_insert_term( string $term, string $taxonomy, $language, array $arg
 /**
  * Wraps `wp_update_post` with language feature.
  *
- * @since 1.0.0
+ *  
  *
  * @param array $postarr {
  *     Optional. An array of elements that make up a post to update.
@@ -653,7 +653,7 @@ function lmat_update_post( array $postarr ) {
 /**
  * Wraps `wp_update_term` with language feature.
  *
- * @since 1.0.0
+ *  
  *
  * @param int   $term_id The ID of the term.
  * @param array $args {
@@ -684,7 +684,7 @@ function lmat_update_term( int $term_id, array $args = array() ) {
  * However, it is always preferable to use API functions
  * as internal methods may be changed without prior notice.
  *
- * @since 1.0.0
+ *  
  *
  * @return LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request
  */
