@@ -96,12 +96,21 @@ class LMAT_Nav_Menu {
 	public function create_nav_menu_locations() {
 		static $once;
 		global $_wp_registered_nav_menus;
-
+		global $linguator;
 		$arr = array();
 
 		if ( isset( $_wp_registered_nav_menus ) && ! $once ) {
 			foreach ( $_wp_registered_nav_menus as $loc => $name ) {
-				foreach ( $this->model->get_languages_list() as $lang ) {
+				// Get languages to show - check if we're in admin with language filter
+				$languages_to_show = $this->model->get_languages_list();
+				$filter_lang = ! empty( $linguator->filter_lang ) ? $linguator->filter_lang : null;
+					
+				// Determine which languages to show based on filter
+				if ( $filter_lang ) {
+					// Show only the selected language
+					$languages_to_show = array( $filter_lang );
+				}
+				foreach ( $languages_to_show as $lang ) {
 					$arr[ $this->combine_location( $loc, $lang ) ] = $name . ' ' . $lang->name;
 				}
 			}

@@ -150,5 +150,6 @@ class LMAT_Install extends LMAT_Install_Base {
 	protected function _deactivate() {
 		delete_option( 'rewrite_rules' ); // Don't use flush_rewrite_rules at network activation. 
 		delete_option( 'lmat_elementor_templates_assigned' );
+		wp_clear_scheduled_hook('lmat_extra_data_update');
 	}
 }

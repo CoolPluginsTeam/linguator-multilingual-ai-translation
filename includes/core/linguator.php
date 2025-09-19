@@ -144,7 +144,9 @@ class Linguator {
 		$excluded_actions = array( 'upload-attachment', 'customize_save' );
 		
 		// Add Elementor-specific actions that should be treated as backend
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( isset( $_REQUEST['action'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 			$action = sanitize_key( $_REQUEST['action'] );
 			// Check for Elementor actions - these should be treated as admin operations
 			if ( strpos( $action, 'elementor' ) !== false || 
