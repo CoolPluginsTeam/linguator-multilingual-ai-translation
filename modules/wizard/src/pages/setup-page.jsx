@@ -7,6 +7,7 @@ import { Loader, Dialog, Button } from "@bsf/force-ui"
 import apiFetch from "@wordpress/api-fetch"
 import { __ } from '@wordpress/i18n'
 import { getNonce } from '../utils'
+import { IoIosWarning } from "react-icons/io";
 import { Toaster, toast } from 'sonner'
 export const setupContext = React.createContext(null)
 const SetupPage = () => {
@@ -272,11 +273,12 @@ const SetupPage = () => {
           trigger={<></>}
         >
           <Dialog.Backdrop />
-          <Dialog.Panel>
+          <Dialog.Panel className='justify-start gap-4'>
             <Dialog.Header>
               <div className="flex items-center justify-between">
-                <Dialog.Title>
-                  {__("A language wasn't added.", "linguator-multilingual-ai-translation")}
+                <Dialog.Title className='flex gap-2 items-center leading-[0px]'>
+                  <IoIosWarning className='size-10 text-yellow-500' />
+                  <h4 className='leading-[0px] text-lg'>{__("A language wasn't added.", "linguator-multilingual-ai-translation")}</h4>
                 </Dialog.Title>
                 <Dialog.CloseButton onClick={() => { setLanguageDialog(false); setLanguageLoader(false); setLanguageAddLoader(false) }} />
               </div>
@@ -285,12 +287,9 @@ const SetupPage = () => {
             </Dialog.Header>
             <Dialog.Body>
               <div className="m-0 text-text-secondary">
-                <p> {__("You selected", "linguator-multilingual-ai-translation")} {selectedLanguage && <RenderedLanguage languageName={selectedLanguage.name} languageFlag={selectedLanguage.flag} flagUrl={false} languageLocale={selectedLanguage.locale} />}{__(", but you didn't add it to the list before continuing to the next step.", "linguator-multilingual-ai-translation")}</p>
-                <p>{__("Do you want to add this language before continuing to the next step?", "linguator-multilingual-ai-translation")}</p>
+                <p className='text-base m-0'> {__("You selected", "linguator-multilingual-ai-translation")} {selectedLanguage && <RenderedLanguage languageName={selectedLanguage.name} languageFlag={selectedLanguage.flag} flagUrl={false} languageLocale={selectedLanguage.locale} />}{__(", but you didn't add it to the list before continuing to the next step.", "linguator-multilingual-ai-translation")}</p>
+                <p className='text-sm'>{__("Do you want to add this language before continuing to the next step?", "linguator-multilingual-ai-translation")}</p>
                 <ul>
-                  <li>{__("Yes: add this language and continue to the next step", "linguator-multilingual-ai-translation")}</li>
-                  {(selectedLanguageData.length > 0 || currentSelectedLanguage.length > 0) && <li>{__("No: don't add this language and continue to the next step", "linguator-multilingual-ai-translation")} </li>}
-                  <li>{__("Ignore: stay at this step", "linguator-multilingual-ai-translation")}</li>
                   {selectedLanguageData.length === 0 && currentSelectedLanguage.length === 0 && <li>{__("Note: You cannot continue this page without adding a language")} </li>}
                 </ul>
               </div>
@@ -305,18 +304,15 @@ const SetupPage = () => {
                     </svg>
                   </Button> :
                   <Button onClick={handleLanguageAdd}>
-                    {__("Yes", "linguator-multilingual-ai-translation")}
+                    {__("Add Language & continue", "linguator-multilingual-ai-translation")}
                   </Button>
               }
               {
                 (selectedLanguageData.length > 0 || currentSelectedLanguage.length > 0) &&
                 <Button variant='outline' onClick={handleLanguageDontAdd}>
-                  {__("No", "linguator-multilingual-ai-translation")}
+                  {__("Discard & Continue", "linguator-multilingual-ai-translation")}
                 </Button>
               }
-              <Button variant='secondary' onClick={() => { setLanguageDialog(false); setLanguageLoader(false); setLanguageAddLoader(false) }}>
-                {__("Ignore", "linguator-multilingual-ai-translation")}
-              </Button>
             </Dialog.Footer>
           </Dialog.Panel>
         </Dialog>

@@ -5,7 +5,8 @@ import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
 import { __, sprintf } from '@wordpress/i18n'
 import React from 'react'
-import { Earth, BrainCog} from 'lucide-react';
+import { FiChrome } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { Switch } from '@bsf/force-ui'
 
 const ChromeLocalAINotice = () => {
@@ -164,7 +165,7 @@ const AiTranslation = () => {
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
                     <div className="flex items-center  gap-2">
-                      <Earth className='size-5 text-button-primary' />
+                      <FcGoogle className='size-5' />
                       <p className="text-sm/6">{__('Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch
@@ -178,7 +179,7 @@ const AiTranslation = () => {
                 <div className='p-6 rounded-lg' style={{ border: "1px solid #e5e7eb" }}>
                     <div className='flex justify-between items-center'>
                     <div className="flex items-center  gap-2">
-                      <BrainCog className='size-5 text-button-primary' />
+                      <FiChrome className='size-5 ' />
                       <p className="text-sm/6">{__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch

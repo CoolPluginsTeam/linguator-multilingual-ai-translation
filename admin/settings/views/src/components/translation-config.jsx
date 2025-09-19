@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Button, Checkbox, Container, Input, Label, RadioButton, Switch } from '@bsf/force-ui'
 import { Languages } from 'lucide-react';
 import { __ } from '@wordpress/i18n'
+import { FiChrome } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { toast } from 'sonner'
@@ -230,6 +232,7 @@ const TranslationConfig = ({ data, setData }) => {
                     <div className='switcher p-6 rounded-lg'>
                         <Container.Item>
                             <h3 className='flex items-center gap-2'>
+                                <FcGoogle />
                                 {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
                             </h3>
                             <p>
@@ -253,6 +256,7 @@ const TranslationConfig = ({ data, setData }) => {
                         <div className='switcher p-6 rounded-lg'>
                             <Container.Item >
                                 <h3 className='flex items-center gap-2'>
+                                    <FiChrome />
                                     {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
                                 </h3>
                                 <p>

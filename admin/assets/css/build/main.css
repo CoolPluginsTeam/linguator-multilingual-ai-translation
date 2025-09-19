@@ -2548,6 +2548,10 @@
   line-height: 2.375rem;
 }
 
+.lmat-styles .leading-\[0px\] {
+  line-height: 0px;
+}
+
 .lmat-styles .leading-none {
   line-height: 1;
 }
@@ -2809,6 +2813,11 @@
 .lmat-styles .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.lmat-styles .text-yellow-500 {
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity, 1));
 }
 
 .lmat-styles .underline {
@@ -3141,10 +3150,6 @@
   background-color: #F3F4F6;
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
-}
-
-#wpcontent{
-  padding: 0;
 }
 
 #lmat-setup {
