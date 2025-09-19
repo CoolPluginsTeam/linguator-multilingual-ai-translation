@@ -14,6 +14,8 @@ use Linguator\Includes\Filters\LMAT_Filters_Links;
 use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
 use Linguator\Includes\Other\LMAT_Language;
 use Linguator\Admin\Controllers\LMAT_Admin_Links;
+use WP_Post;
+use WP_Term;
 
 /**
  * Setup features available on all admin pages.
@@ -349,15 +351,15 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @return array
 	 */
 	public function get_ajax_filter_data(): array {
-		global $post_ID, $tag_ID;
+		global $post, $tag;
 
 		$params = array( 'lmat_ajax_backend' => 1 );
-		if ( ! empty( $post_ID ) ) {
-			$params = array_merge( $params, array( 'lmat_post_id' => (int) $post_ID ) );
+		if ( $post instanceof WP_Post && $this->model->post_types->is_translated( $post->post_type ) ) {
+			$params['pll_post_id'] = $post->ID;
 		}
 
-		if ( ! empty( $tag_ID ) ) {
-			$params = array_merge( $params, array( 'lmat_term_id' => (int) $tag_ID ) );
+		if ( $tag instanceof WP_Term && $this->model->taxonomies->is_translated( $tag->taxonomy ) ) {
+			$params['pll_term_id'] = $tag->term_id;
 		}
 
 		/**
