@@ -15002,7 +15002,6 @@ var General = function General(_ref) {
                 return _objectSpread(_objectSpread({}, prev), response);
               });
               if (reloadCheck) {
-                console.log("reloadCheck", reloadCheck);
                 window.location.reload();
               }
             }).catch(function (error) {
@@ -15524,7 +15523,7 @@ var Sidebar = function Sidebar() {
     className: "text-sm text-gray-700 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Time Taken', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
-  }, "0"))))), locoaiStatus.status !== 'active' ? /*#__PURE__*/React.createElement("div", {
+  }, "0"))))), locoaiStatus.status === 'not_installed' ? /*#__PURE__*/React.createElement("div", {
     className: " p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"
@@ -15542,7 +15541,7 @@ var Sidebar = function Sidebar() {
     tag: "button",
     type: "button",
     variant: "primary"
-  }, (0,external_wp_i18n_namespaceObject.__)('INSTALL', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("div", {
+  }, (0,external_wp_i18n_namespaceObject.__)('Install', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("div", {
     className: "w-[30%] flex items-center object-contain p-2"
   }, /*#__PURE__*/React.createElement("a", {
     href: "plugin-install.php?s=locoai&tab=search&type=term",

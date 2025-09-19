@@ -36,7 +36,7 @@ const Sidebar = () => {
             </Container.Item>
           </Container>
           {
-            locoaiStatus.status !== 'active' ? (
+            locoaiStatus.status === 'not_installed' ? (
 
               <div className=' p-6 bg-white border border-gray-200 rounded-lg shadow-sm'>
                 <h2>{__('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')}</h2>
@@ -53,7 +53,7 @@ const Sidebar = () => {
                       type="button"
                       variant="primary"
                     >
-                      {__('INSTALL', 'linguator-multilingual-ai-translation')}
+                      {__('Install', 'linguator-multilingual-ai-translation')}
                     </Button>
                     </a>
                   </div>
