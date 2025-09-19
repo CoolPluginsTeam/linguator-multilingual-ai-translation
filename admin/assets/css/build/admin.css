@@ -344,8 +344,11 @@ td.column-default_lang .icon-default-lang:before,
 
 /* Notices */
 .lmat-notice.notice {
-	padding-right: 38px;
-	position: relative;
+    width: auto;
+	max-width: 100%;
+    clear: both;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .lmat-notice a.notice-dismiss {
