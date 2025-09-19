@@ -972,6 +972,10 @@
   width: 24rem;
 }
 
+.lmat-styles .w-\[100\%\] {
+  width: 100%;
+}
+
 .lmat-styles .w-\[18\.5rem\] {
   width: 18.5rem;
 }
