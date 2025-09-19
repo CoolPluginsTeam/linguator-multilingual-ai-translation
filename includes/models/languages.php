@@ -162,6 +162,21 @@ class Languages {
 	 * } $args
 	 */
 	public function add( $args ) {
+
+		$args['rtl']        = $args['rtl'] ?? $args['is_rtl'] ?? null;
+		$args['flag']       = $args['flag'] ?? $args['flag_code'] ?? null;
+		$args['term_group'] = $args['term_group'] ?? 0;
+
+		if ( ! empty( $args['locale'] ) && ( ! isset( $args['name'] ) || ! isset( $args['slug'] ) ) ) {
+			$languages = include LINGUATOR_DIR . 'admin/settings/controllers/languages.php';
+			if ( ! empty( $languages[ $args['locale'] ] ) ) {
+				$found        = $languages[ $args['locale'] ];
+				$args['name'] = $args['name'] ?? $found['name'];
+				$args['slug'] = $args['slug'] ?? $found['code'];
+				$args['rtl']  = $args['rtl'] ?? 'rtl' === $found['dir'];
+				$args['flag'] = $args['flag'] ?? $found['flag'];
+			}
+		}
 		$errors = $this->validate_lang( $args );
 		if ( $errors->has_errors() ) {
 			return $errors;
@@ -255,6 +270,13 @@ class Languages {
 		if ( empty( $lang ) ) {
 			return new WP_Error( 'lmat_invalid_language_id', __( 'The language does not seem to exist.', 'linguator-multilingual-ai-translation' ) );
 		}
+
+		$args['locale']     = $args['locale'] ?? $lang->locale;
+		$args['name']       = $args['name'] ?? $lang->name;
+		$args['slug']       = $args['slug'] ?? $lang->slug;
+		$args['rtl']        = $args['rtl'] ?? $args['is_rtl'] ?? $lang->is_rtl;
+		$args['flag']       = $args['flag'] ?? $args['flag_code'] ?? $lang->flag_code;
+		$args['term_group'] = $args['term_group'] ?? $lang->term_group;
 
 		$errors = $this->validate_lang( $args, $lang );
 		if ( $errors->has_errors() ) {
@@ -848,19 +870,19 @@ class Languages {
 		$errors = new WP_Error();
 
 		// Validate locale with the same pattern as WP 4.3. 
-		if ( ! preg_match( '#' . self::LOCALE_PATTERN . '#', $args['locale'], $matches ) ) {
+		if ( empty( $args['locale'] ) || ! preg_match( '#' . self::LOCALE_PATTERN . '#', $args['locale'], $matches ) ) {
 			$errors->add( 'lmat_invalid_locale', __( 'Enter a valid WordPress locale', 'linguator-multilingual-ai-translation' ) );
 		}
 
 		// Validate slug characters.
-		if ( ! preg_match( '#' . self::SLUG_PATTERN . '#', $args['slug'] ) ) {
+		if ( empty( $args['slug'] ) || ! preg_match( '#' . self::SLUG_PATTERN . '#', $args['slug'] ) ) {
 			$errors->add( 'lmat_invalid_slug', __( 'The language code contains invalid characters', 'linguator-multilingual-ai-translation' ) );
 		}
 
 		// Validate slug is unique.
 		foreach ( $this->get_list() as $language ) {
 			// Check if both slug and locale are the same (exact duplicate)
-			if ( $language->slug === $args['slug'] && $language->locale === $args['locale'] && ( null === $lang || $lang->term_id !== $language->term_id ) ) {
+			if ( ! empty( $args['slug'] ) && $language->slug === $args['slug'] && $language->locale === $args['locale'] && ( null === $lang || $lang->term_id !== $language->term_id ) ) {
 				$errors->add( 'lmat_non_unique_slug', __( 'This language with the same code and locale already exists', 'linguator-multilingual-ai-translation' ) );
 			}
 		}

@@ -379,7 +379,7 @@ class Languages extends Abstract_Controller {
 		 *    no_default_cat: bool
 		 * } $args
 		 */
-		$args   = (array) $prepared;
+		$args   = $request->get_params();
 		$result = $this->languages->add( $args );
 
 		if ( is_wp_error( $result ) ) {
@@ -548,11 +548,9 @@ class Languages extends Abstract_Controller {
 	 * @phpstan-param WP_REST_Request<T> $request
 	 */
 	public function update_item( $request ) {
-		$prepared = $this->prepare_item_for_database( $request );
-
-		if ( is_wp_error( $prepared ) ) {
-			// Should not happen, but if it does, it's our fault.
-			return $prepared;
+		$language = $this->get_language( $request );
+		if ( is_wp_error( $language ) ) {
+			return $language;
 		}
 
 		/**
@@ -566,7 +564,8 @@ class Languages extends Abstract_Controller {
 		 *     flag?: non-empty-string
 		 * } $args
 		 */
-		$args   = (array) $prepared;
+		$args            = $request->get_params();
+		$args['lang_id'] = $language->term_id;
 		$update = $this->languages->update( $args );
 
 		if ( is_wp_error( $update ) ) {
@@ -1338,25 +1337,28 @@ class Languages extends Abstract_Controller {
 		$schema = $this->get_item_schema();
 		if ( WP_REST_Server::CREATABLE !== $method ) {
 			unset( $schema['properties']['no_default_cat'] );
+			// Locale should not be mandatory for update/delete/read
+			if ( isset( $schema['properties']['locale'] ) ) {
+				$schema['properties']['locale']['required'] = false;
+			}
+			return rest_get_endpoint_args_for_schema( $schema, $method );
 		}
 		
-		// For CREATABLE method, support both single object and array of objects
-		if ( WP_REST_Server::CREATABLE === $method ) {
-			$single_schema = $schema;
-			$bulk_schema = array(
-				'type'  => 'array',
-				'items' => $single_schema,
-			);
-			
-			// Return a schema that accepts either a single object or an array
-			return array(
-				'type'       => array( 'object', 'array' ),
+		// For CREATABLE method, require locale and support both single object and array of objects
+		if ( isset( $schema['properties']['locale'] ) ) {
+			$schema['properties']['locale']['required'] = true;
+		}
+		$single_schema = $schema;
+		
+		// Return a schema-like structure that accepts either a single object or an array of objects
+		return array(
+			'type'       => array( 'object', 'array' ),
+			'properties' => $single_schema['properties'],
+			'items'      => array(
+				'type'       => 'object',
 				'properties' => $single_schema['properties'],
-				'items'      => $single_schema,
-			);
-		}
-		
-		return rest_get_endpoint_args_for_schema( $schema, $method );
+			),
+		);
 	}
 
 	/**
