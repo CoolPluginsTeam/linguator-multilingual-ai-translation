@@ -815,6 +815,10 @@
   height: 100vh;
 }
 
+.lmat-styles .max-h-24 {
+  max-height: 6rem;
+}
+
 .lmat-styles .max-h-\[10\.75rem\] {
   max-height: 10.75rem;
 }
@@ -1898,11 +1902,6 @@
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
 }
 
-.lmat-styles .border-gray-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
-}
-
 .lmat-styles .border-tab-border {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
@@ -2597,6 +2596,11 @@
 .lmat-styles .text-badge-color-yellow {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity, 1));
+}
+
+.lmat-styles .text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
 }
 
 .lmat-styles .text-blue-600 {

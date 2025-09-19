@@ -14895,11 +14895,15 @@ var General = function General(_ref) {
   } //label and descriptions of URL modifications
   function _SaveSettings() {
     _SaveSettings = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var apiBody, final_domain, used_hosts, _iterator6, _step6, domain, response, _t, _t2;
+      var reloadCheck, apiBody, final_domain, used_hosts, _iterator6, _step6, domain, response, _t, _t2;
       return _regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
             _context.p = 0;
+            reloadCheck = false;
+            if (staticStringsVisibility != data.static_strings_visibility) {
+              reloadCheck = true;
+            }
             if (!(forceLang === 3)) {
               _context.n = 10;
               break;
@@ -14997,6 +15001,10 @@ var General = function General(_ref) {
               setData(function (prev) {
                 return _objectSpread(_objectSpread({}, prev), response);
               });
+              if (reloadCheck) {
+                console.log("reloadCheck", reloadCheck);
+                window.location.reload();
+              }
             }).catch(function (error) {
               // Handle domain validation errors from backend
               if (error !== null && error !== void 0 && error.code && error !== null && error !== void 0 && error.code.includes('domain')) {
@@ -15470,7 +15478,6 @@ var General = function General(_ref) {
 };
 /* harmony default export */ const general = (General);
 ;// ./admin/Settings/Views/src/components/sidebar.jsx
-function sidebar_extends() { return sidebar_extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, sidebar_extends.apply(null, arguments); }
 
 
 var Sidebar = function Sidebar() {
@@ -15479,38 +15486,6 @@ var Sidebar = function Sidebar() {
   var locoaiStatus = ((_window$lmat_settings = window.lmat_settings) === null || _window$lmat_settings === void 0 ? void 0 : _window$lmat_settings.locoai_plugin_status) || {
     status: 'not_installed'
   };
-
-  // Determine button text and behavior based on plugin status
-  var getButtonConfig = function getButtonConfig() {
-    var _window$lmat_settings2;
-    switch (locoaiStatus.status) {
-      case 'active':
-        return {
-          text: (0,external_wp_i18n_namespaceObject.__)('ACTIVATED', 'linguator-multilingual-ai-translation'),
-          href: 'plugins.php',
-          className: 'button button-secondary',
-          disabled: false,
-          target: '_self'
-        };
-      case 'installed':
-        return {
-          text: (0,external_wp_i18n_namespaceObject.__)('ACTIVATE', 'linguator-multilingual-ai-translation'),
-          href: "plugins.php?_wpnonce=".concat(((_window$lmat_settings2 = window.lmat_settings) === null || _window$lmat_settings2 === void 0 ? void 0 : _window$lmat_settings2.activate_nonce) || '', "&action=activate&plugin=automatic-translator-addon-for-loco-translate/automatic-translator-addon-for-loco-translate.php"),
-          className: 'button button-primary',
-          disabled: false,
-          target: '_self'
-        };
-      default:
-        return {
-          text: (0,external_wp_i18n_namespaceObject.__)('INSTALL', 'linguator-multilingual-ai-translation'),
-          href: 'plugin-install.php?s=locoai&tab=search&type=term',
-          className: 'button button-primary',
-          disabled: false,
-          target: '_blank'
-        };
-    }
-  };
-  var buttonConfig = getButtonConfig();
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "w-full"
   }, /*#__PURE__*/React.createElement("div", {
@@ -15526,7 +15501,7 @@ var Sidebar = function Sidebar() {
   }, "0"), /*#__PURE__*/React.createElement("p", {
     className: "text-sm text-gray-600 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Total Characters Translated!', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"
   }), /*#__PURE__*/React.createElement(S.Item, {
     className: "w-full"
   }, /*#__PURE__*/React.createElement(S.Item, {
@@ -15552,31 +15527,39 @@ var Sidebar = function Sidebar() {
   }, "0"))))), locoaiStatus.status !== 'active' ? /*#__PURE__*/React.createElement("div", {
     className: " p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"
   }), /*#__PURE__*/React.createElement(S.Item, {
     className: "flex"
   }, /*#__PURE__*/React.createElement("div", {
     className: "w-[70%]"
-  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Loco Addon to translate plugins and themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", sidebar_extends({
-    href: buttonConfig.href,
-    target: buttonConfig.target,
-    className: buttonConfig.className
-  }, buttonConfig.disabled && {
-    disabled: true
-  }), buttonConfig.text)), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+    target: "_blank",
+    href: "plugin-install.php?s=locoai&tab=search&type=term"
+  }, /*#__PURE__*/React.createElement(R, {
+    className: "",
+    iconPosition: "left",
+    size: "md",
+    tag: "button",
+    type: "button",
+    variant: "primary"
+  }, (0,external_wp_i18n_namespaceObject.__)('INSTALL', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("div", {
     className: "w-[30%] flex items-center object-contain p-2"
   }, /*#__PURE__*/React.createElement("a", {
     href: "plugin-install.php?s=locoai&tab=search&type=term",
     target: "_blank"
   }, /*#__PURE__*/React.createElement("img", {
-    className: "w-full h-auto  ",
+    className: "w-auto max-h-24  ",
     src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
     alt: "Loco translate logo"
   }))), /*#__PURE__*/React.createElement("div", null))) : null, /*#__PURE__*/React.createElement(S, {
     className: "bg-white flex flex-col gap-4 p-6 shadow-sm rounded-lg"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("a", {
+    className: "no-underline text-black",
     target: "_blank",
-    href: "https://wordpress.org/support/plugin/automatic-translations-for-polylang/reviews/#new-post"
+    href: "https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post"
+  }, (0,external_wp_i18n_namespaceObject.__)('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+    target: "_blank",
+    href: "https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post"
   }, (0,external_wp_i18n_namespaceObject.__)('Submit a Review →', 'linguator-multilingual-ai-translation')))))));
 };
 /* harmony default export */ const sidebar = (Sidebar);

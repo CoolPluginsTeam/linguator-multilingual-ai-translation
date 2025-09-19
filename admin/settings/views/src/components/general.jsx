@@ -311,6 +311,10 @@ const General = ({ data, setData }) => {
     //Save Setting Function 
     async function SaveSettings() {
         try {
+            let reloadCheck = false;
+            if(staticStringsVisibility != data.static_strings_visibility){
+                reloadCheck = true
+            }
             let apiBody;
             if (forceLang === 3) {
                 let final_domain = {};
@@ -343,6 +347,8 @@ const General = ({ data, setData }) => {
                     taxonomies: selectedTaxonomies,
                     static_strings_visibility: staticStringsVisibility,
                 }
+                
+                
                 
                 // Only include lmat_feedback_data if the setting is available
                 if (data.lmat_feedback_data !== undefined) {
@@ -382,6 +388,9 @@ const General = ({ data, setData }) => {
             })
                 .then((response) => {
                     setData(prev => ({ ...prev, ...response }))
+                    if(reloadCheck){
+                        window.location.reload();
+                    }
                 })
                 .catch(error => {
                     // Handle domain validation errors from backend
@@ -409,7 +418,7 @@ const General = ({ data, setData }) => {
                 error: (error) => error.message
             })
             setHandleButtonDisabled(true)
-
+            
         } catch (error) {
             // Handle domain validation errors
             if (error.message.includes(__("Please enter valid URLs", "linguator-multilingual-ai-translation")) ||
