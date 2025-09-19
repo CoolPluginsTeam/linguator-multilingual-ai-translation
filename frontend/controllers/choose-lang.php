@@ -19,7 +19,7 @@ use Linguator\Includes\Other\LMAT_Query;
 /**
  * Base class to choose the language
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Choose_Lang {
 	/**
@@ -51,7 +51,7 @@ abstract class LMAT_Choose_Lang {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -68,7 +68,7 @@ abstract class LMAT_Choose_Lang {
 	 * and setup actions
 	 * Any child class must call this method if it overrides it
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -86,7 +86,7 @@ abstract class LMAT_Choose_Lang {
 	 * Sets the current language
 	 * and fires the action 'lmat_language_defined'.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|false $curlang Current language.
 	 * @return void
@@ -117,7 +117,7 @@ abstract class LMAT_Choose_Lang {
 		/**
 		 * Fires when the current language is defined.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string       $slug    Current language code.
 		 * @param LMAT_Language $curlang Current language object.
@@ -129,7 +129,7 @@ abstract class LMAT_Choose_Lang {
 	 * Set a cookie to remember the language.
 	 * Setting LMAT_COOKIE to false will disable cookie although it will break some functionalities
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -147,7 +147,7 @@ abstract class LMAT_Choose_Lang {
 	/**
 	 * Get the preferred language according to the browser preferences.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string|bool The preferred language slug or false.
 	 */
@@ -162,7 +162,7 @@ abstract class LMAT_Choose_Lang {
 			/**
 			 * Filters the list of languages to use to match the browser preferences.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param array $languages Array of LMAT_Language objects.
 			 */
@@ -180,7 +180,7 @@ abstract class LMAT_Choose_Lang {
 	 * or according to browser preference
 	 * or the default language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Language|false browser preferred language or default language
 	 */
@@ -202,8 +202,8 @@ abstract class LMAT_Choose_Lang {
 		 * If no preferred language has been found or set by this filter,
 		 * Linguator fallbacks to the default language
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 Added $cookie parameter.
+		 *  
+		 *   Added $cookie parameter.
 		 *
 		 * @param string|bool $language Preferred language code, false if none has been found.
 		 * @param bool        $cookie   Whether the preferred language has been defined by the cookie.
@@ -217,7 +217,7 @@ abstract class LMAT_Choose_Lang {
 	/**
 	 * Sets the language when home page is requested
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -234,7 +234,7 @@ abstract class LMAT_Choose_Lang {
 	 * Make sure to call this after 'setup_theme' has been fired as we need $wp_query
 	 * Performs a redirection to the home page in the current language if needed
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -250,7 +250,7 @@ abstract class LMAT_Choose_Lang {
 			/**
 			 * Fires when the site root page is requested
 			 *
-			 * @since 1.0.0
+			 *  
 			 */
 			do_action( 'lmat_home_requested' );
 		}
@@ -270,7 +270,7 @@ abstract class LMAT_Choose_Lang {
 			 * This filter allows plugins to modify the redirected url or prevent this redirection
 			 * /!\ this filter may be fired *before* the theme is loaded
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string $redirect the url the visitor will be redirected to
 			 */
@@ -287,7 +287,7 @@ abstract class LMAT_Choose_Lang {
 	/**
 	 * Set the language when posting a comment
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id the post being commented
 	 * @return void
@@ -300,7 +300,7 @@ abstract class LMAT_Choose_Lang {
 	 * Modifies some main query vars for the home page and the page for posts
 	 * to enable one home page (and one page for posts) per language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query Instance of WP_Query.
 	 * @return void
@@ -313,7 +313,7 @@ abstract class LMAT_Choose_Lang {
 		/**
 		 * This filter allows to set the language based on information contained in the main query
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language|false $lang  Language object or false.
 		 * @param WP_Query           $query WP_Query object.
@@ -349,7 +349,7 @@ abstract class LMAT_Choose_Lang {
 	/**
 	 * Sets the current language in the query.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query Instance of WP_Query.
 	 * @return void

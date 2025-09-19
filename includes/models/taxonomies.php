@@ -18,7 +18,7 @@ use Linguator\Includes\Models\Translated\LMAT_Translated_Term;
 /**
  * Model for taxonomies filtered/translated by Linguator.
  *
- * @since 1.0.0
+ *  
  */
 class Taxonomies {
 	/**
@@ -31,7 +31,7 @@ class Taxonomies {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Translated_Term $translated_object Terms model.
 	 */
@@ -45,7 +45,7 @@ class Taxonomies {
 	 * The method waits for 'after_setup_theme' to apply the cache
 	 * to allow themes adding the filter in functions.php.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $filter True if we should return only valid registered taxonomies.
 	 * @return string[] Array of registered taxonomy names for which Linguator manages languages and translations.
@@ -57,7 +57,7 @@ class Taxonomies {
 	/**
 	 * Returns true if Linguator manages languages and translations for this taxonomy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $tax Taxonomy name or array of taxonomy names.
 	 * @return bool
@@ -74,7 +74,7 @@ class Taxonomies {
 	/**
 	 * Return taxonomies that need to be filtered (post_format like).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $filter True if we should return only valid registered taxonomies.
 	 * @return string[] Array of registered taxonomy names.
@@ -93,7 +93,7 @@ class Taxonomies {
 			 * The filter must be added soon in the WordPress loading process:
 			 * in a function hooked to ‘plugins_loaded’ or directly in functions.php for themes.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string[] $taxonomies  List of taxonomy names.
 			 * @param bool     $is_settings True when displaying the list of custom taxonomies in Linguator settings.
@@ -107,7 +107,7 @@ class Taxonomies {
 	/**
 	 * Returns true if Linguator filters this taxonomy per language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $tax Taxonomy name or array of taxonomy names.
 	 * @return bool

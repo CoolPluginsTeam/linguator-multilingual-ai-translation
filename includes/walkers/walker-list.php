@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Displays a language list
  *
- * @since 1.0.0
- * @since 1.0.0 Extends `LMAT_Walker` now.
+ *  
+ *   Extends `LMAT_Walker` now.
  */
 class LMAT_Walker_List extends LMAT_Walker {
 	/**
@@ -27,7 +27,7 @@ class LMAT_Walker_List extends LMAT_Walker {
 	/**
 	 * Outputs one element
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string   $output            Passed by reference. Used to append additional content.
 	 * @param stdClass $element           The data object.
@@ -79,8 +79,8 @@ class LMAT_Walker_List extends LMAT_Walker {
 	/**
 	 * Overrides Walker:walk to set depth argument
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Use $max_depth and ...$args parameters to follow the move of WP 5.3
+	 *  
+	 *   Use $max_depth and ...$args parameters to follow the move of WP 5.3
 	 *
 	 * @param array $elements  An array of elements.
 	 * @param int   $max_depth The maximum hierarchical depth.

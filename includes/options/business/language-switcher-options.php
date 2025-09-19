@@ -14,13 +14,13 @@ use Linguator\Includes\Options\Primitive\Abstract_List;
 /**
  * Class defining language switcher options list.
  *
- * @since 1.0.0
+ *  
  */
 class Language_Switcher_Options extends Abstract_List {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -33,7 +33,7 @@ class Language_Switcher_Options extends Abstract_List {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -44,7 +44,7 @@ class Language_Switcher_Options extends Abstract_List {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

@@ -20,7 +20,7 @@ use Linguator\Includes\Helpers\LMAT_Term_Slug;
  * Adds actions and filters related to languages when creating, reading, updating or deleting posts
  * Acts both on frontend and backend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_CRUD_Terms {
 	/**
@@ -73,7 +73,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -105,7 +105,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Allows to set a language by default for terms if it has no language yet.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term ID.
 	 * @param string $taxonomy Taxonomy name.
@@ -136,7 +136,7 @@ class LMAT_CRUD_Terms {
 	 * Called when a category or post tag is created or edited.
 	 * Does nothing except on taxonomies which are filterable.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term id of the term being saved.
 	 * @param int    $tt_id    Term taxonomy id.
@@ -155,7 +155,7 @@ class LMAT_CRUD_Terms {
 			/**
 			 * Fires after the term language and translations are saved.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param int    $term_id      Term id.
 			 * @param string $taxonomy     Taxonomy name.
@@ -168,7 +168,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Get the language(s) to filter WP_Term_Query.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $taxonomies Queried taxonomies.
 	 * @param array    $args       WP_Term_Query arguments.
@@ -200,7 +200,7 @@ class LMAT_CRUD_Terms {
 	 * Adds language dependent cache domain when querying terms.
 	 * Useful as the 'lang' parameter is not included in cache key by WordPress.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array    $args       WP_Term_Query arguments.
 	 * @param string[] $taxonomies Queried taxonomies.
@@ -227,7 +227,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Filters categories and post tags by language(s) when needed on admin side
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $clauses    List of sql clauses.
 	 * @param string[] $taxonomies List of taxonomies.
@@ -243,7 +243,7 @@ class LMAT_CRUD_Terms {
 	 * Sets the WP_Term_Query language when doing a WP_Query.
 	 * Needed since WP 4.9.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query WP_Query object.
 	 * @return void
@@ -256,7 +256,7 @@ class LMAT_CRUD_Terms {
 	 * Removes the WP_Term_Query language filter for WP_Query.
 	 * Needed since WP 4.9.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -268,7 +268,7 @@ class LMAT_CRUD_Terms {
 	 * Called when a category or post tag is deleted
 	 * Deletes language and translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Id of the term to delete.
 	 * @param string $taxonomy Name of the taxonomy.
@@ -287,7 +287,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Stores the term name for use in pre_term_slug
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name term name
 	 * @return string unmodified term name
@@ -301,7 +301,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Appends language slug to the term slug if needed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $slug     Term slug.
 	 * @param string $taxonomy Term taxonomy.

@@ -269,7 +269,7 @@ $flags = array(
 /**
  * Filter the list of predefined flags
  *
- * @since 1.0.0
+ *  
  *
  * @param array $flags
  */

@@ -8,7 +8,6 @@ namespace Linguator\Modules\Blocks;
 /**
  * Language switcher block for navigation.
  *
- * @since 3.2
  */
 class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block {
 	/**
@@ -21,7 +20,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	/**
 	 * Adds the required hooks specific to the navigation language switcher.
 	 *
-	 * @since 3.2
 	 *
 	 * @return self
 	 */
@@ -39,7 +37,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	/**
 	 * Returns the navigation language switcher block name with the Linguator's namespace.
 	 *
-	 * @since 3.2
 	 *
 	 * @return string The block name.
 	 */
@@ -51,7 +48,6 @@ class LMAT_Navigation_Language_Switcher_Block extends LMAT_Abstract_Language_Swi
 	 * Returns the supported pieces of context for the 'linguator/navigation-language-switcher' block.
 	 * This context will be inherited from the 'core/navigation' block.
 	 *
-	 * @since 3.3
 	 *
 	 * @return string[]
 	 */

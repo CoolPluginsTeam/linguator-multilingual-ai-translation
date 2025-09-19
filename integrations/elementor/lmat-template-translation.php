@@ -31,7 +31,7 @@ class LMAT_Template_Translation {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		add_filter('lmat_get_post_types', [$this, 'lmat_register_supported_post_types'], 10, 2);
@@ -52,7 +52,7 @@ class LMAT_Template_Translation {
     /**
      * Registers supported post types for Linguator translation.
      *
-     * @since 1.0.0
+     *  
      *
      * @param array $types        Array of post types.
      * @param bool  $is_settings  Whether this is called from settings page.
@@ -68,7 +68,7 @@ class LMAT_Template_Translation {
      * Uses the built-in set_language_in_mass method for efficient bulk processing.
      * Runs only once to avoid duplicate assignments.
      *
-     * @since 1.0.0
+     *  
      *
      * @return void
      */
@@ -100,7 +100,7 @@ class LMAT_Template_Translation {
     /**
      * Translates template ID based on current language.
      *
-     * @since 1.0.0
+     *  
      *
      * @param int $post_id The template post ID.
      * @return int Translated template ID.
@@ -134,7 +134,7 @@ class LMAT_Template_Translation {
     /**
      * Translates condition sub ID based on current language.
      *
-     * @since 1.0.0
+     *  
      *
      * @param int   $sub_id     The sub ID to translate.
      * @param array $condition  The condition data.
@@ -164,7 +164,7 @@ class LMAT_Template_Translation {
     /**
      * Handles translation of Elementor template shortcodes.
      *
-     * @since 1.0.0
+     *  
      *
      * @param bool   $false  Whether to skip shortcode processing.
      * @param string $tag    Shortcode tag.
@@ -190,7 +190,7 @@ class LMAT_Template_Translation {
     /**
      * Updates conditions when translations change.
      *
-     * @since 1.0.0
+     *  
      *
      * @param int    $post_id  Post ID.
      * @param array  $terms    Terms.
@@ -209,7 +209,7 @@ class LMAT_Template_Translation {
     /**
      * Translates widget template ID.
      *
-     * @since 1.0.0
+     *  
      *
      * @param \Elementor\Element_Base $element Element instance.
      */
@@ -225,7 +225,7 @@ class LMAT_Template_Translation {
     /**
      * Adds language panel controls to Elementor document.
      *
-     * @since 1.0.0
+     *  
      *
      * @param \Elementor\Core\Base\Document $document Document instance.
      */

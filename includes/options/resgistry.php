@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Linguator's options registry.
  *
- * @since 1.0.0
+ *  
  */
 class Registry {
 	protected const OPTIONS = array(
@@ -52,7 +52,7 @@ class Registry {
 	/**
 	 * Registers Linguator's options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param Options $options Instance of the options.
 	 * @return void

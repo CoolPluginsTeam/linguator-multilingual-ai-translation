@@ -8,7 +8,7 @@ use Linguator\Includes\Other\LMAT_Language;
 /**
  * Smart copy of post content
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sync_Post {
 	/**
@@ -59,7 +59,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request $linguator Linguator object.
 	 */
@@ -71,7 +71,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Copy the content from one post to the other
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Post             $from_post       The post to copy from.
 	 * @param WP_Post             $target_post     The post to copy to.
@@ -113,8 +113,8 @@ class LMAT_Sync_Post {
 	/**
 	 * Translate shortcodes and <img> attributes in a given text
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Requires $target_post, $from_language and $target_language parameters.
+	 *  
+	 *   Requires $target_post, $from_language and $target_language parameters.
 	 * @global array $shortcode_tags
 	 *
 	 * @param string       $content         Text to translate.
@@ -160,7 +160,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Duplicates the feature image if the translation does not exist yet.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $id   Thumbnail ID.
 	 * @param string $key  Meta key.
@@ -177,7 +177,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Duplicates a term if the translation does not exist yet.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $tr_term_id Translated term id.
 	 * @param int    $term_id    Source term id.
@@ -227,7 +227,7 @@ class LMAT_Sync_Post {
 						/**
 						 * Fires after a term translation is automatically created when duplicating a post.
 						 *
-						 * @since 1.0.0
+						 *  
 						 *
 						 * @param int    $from Term ID of the source term.
 						 * @param int    $to   Term ID of the new term translation.
@@ -246,7 +246,7 @@ class LMAT_Sync_Post {
 	 * Create the translation if it does not exist
 	 * Attach the media to the parent post
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Media ID.
 	 * @return int Translated media ID.
@@ -276,7 +276,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Translates the 'gallery' and 'playlist' shortcodes
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $attr Shortcode attributes.
 	 * @param null   $null Shortcode content, not used.
@@ -305,7 +305,7 @@ class LMAT_Sync_Post {
 	 * Translates the caption shortcode
 	 * Compatible only with the new style introduced in WP 3.4
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $attr    Shortcode attrbute.
 	 * @param string $content Shortcode content.
@@ -389,8 +389,8 @@ class LMAT_Sync_Post {
 	/**
 	 * Translates <img> 'class' and 'alt' attributes.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 The html is passed by reference and the return value is the image ID.
+	 *  
+	 *   The html is passed by reference and the return value is the image ID.
 	 *
 	 * @param string $text Reference to <img> html with attributes.
 	 * @return null|int Translated image id if exist.
@@ -513,7 +513,7 @@ class LMAT_Sync_Post {
 		/**
 		 * Filters parsed blocks after core blocks have been translated.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array[] $blocks    List of blocks.
 		 * @param string  $lang      Language of target.
@@ -525,7 +525,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Translates media ids in blocks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $block A representative array of a block.
 	 * @return array The translated block.
@@ -599,7 +599,7 @@ class LMAT_Sync_Post {
 	/**
 	 * Updates the block properties with a translation if it is found.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $block An array mimicking the structure of {@see https://github.com/WordPress/WordPress/blob/5.5.1/wp-includes/class-wp-block-parser.php WP_Block_Parser_Block}.
 	 * @return array The updated array formatted block.

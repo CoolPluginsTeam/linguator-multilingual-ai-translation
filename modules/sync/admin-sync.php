@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages copy and synchronization of terms and post metas
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
@@ -20,7 +20,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -37,7 +37,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
 	 * Translates the post parent if it exists when using "Add new" (translation).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $post_parent Post parent ID.
 	 * @param int   $post_id     Post ID, unused.
@@ -70,7 +70,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
 	 * Copies menu order, comment, ping status and optionally the date when creating a new translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $data An array of slashed post data.
 	 * @return array
@@ -98,8 +98,8 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
 	 * Copies post metas and taxonomies when using "Add new" (translation).
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Use of use_block_editor_for_post filter instead of rest_api_init which is triggered too early in WP 5.8.
+	 *  
+	 *   Use of use_block_editor_for_post filter instead of rest_api_init which is triggered too early in WP 5.8.
 	 *
 	 * @param bool $is_block_editor Whether the post can be edited or not.
 	 * @return bool
@@ -139,7 +139,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
 	 * Get post fields to synchronize.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Post $post Post object.
 	 * @return array Fields to synchronize.
@@ -183,7 +183,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	/**
 	 * Synchronizes post fields in translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int     $post_id      Post id.
 	 * @param WP_Post $post         Post object.

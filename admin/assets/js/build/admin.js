@@ -9,7 +9,6 @@
 /**
  * Adds data to all ajax requests made with jQuery.
  *
- * @since 3.7
  *
  * @param {Object} data The data to add.
  * @returns {void}

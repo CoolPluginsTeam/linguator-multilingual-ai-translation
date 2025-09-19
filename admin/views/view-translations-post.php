@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 * Fires before the translation column is outputted in the language metabox.
 			 * The dynamic portion of the hook name, `$lang`, refers to the language code.
 			 *
-			 * @since 1.0.0
+			 *  
 			 */
 			do_action( 'lmat_before_post_translation_' . $language->slug );
 			?>

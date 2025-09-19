@@ -972,6 +972,10 @@
   width: 24rem;
 }
 
+.lmat-styles .w-\[100\%\] {
+  width: 100%;
+}
+
 .lmat-styles .w-\[18\.5rem\] {
   width: 18.5rem;
 }
@@ -2548,6 +2552,10 @@
   line-height: 2.375rem;
 }
 
+.lmat-styles .leading-\[0px\] {
+  line-height: 0px;
+}
+
 .lmat-styles .leading-none {
   line-height: 1;
 }
@@ -2809,6 +2817,11 @@
 .lmat-styles .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.lmat-styles .text-yellow-500 {
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity, 1));
 }
 
 .lmat-styles .underline {

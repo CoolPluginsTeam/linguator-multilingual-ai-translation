@@ -314,14 +314,12 @@ jQuery(function ($) {
 });
 
 /**
- * @since 3.0
  *
  * @namespace lmat
  */
 var lmat = window.lmat || {};
 
 /**
- * @since 3.0
  *
  * @namespace lmat.media
  */
@@ -330,7 +328,6 @@ _.extend(lmat, {
 });
 
 /**
- * @since 3.0
  *
  * @alias lmat.media
  * @memberOf lmat
@@ -373,7 +370,6 @@ var media = _.extend(lmat.media, /** @lends lmat.media.prototype */
 });
 if ('undefined' !== typeof wp && 'undefined' !== typeof wp.media) {
   /**
-   * @since 3.0
    *
    * @memberOf lmat.media
    */

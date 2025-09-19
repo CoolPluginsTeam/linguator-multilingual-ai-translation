@@ -16,13 +16,13 @@ use Linguator\Includes\Other\LMAT_Model;
 /**
  * Manages the compatibility with Elementor
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Elementor {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		self::elementor_compatibility();
@@ -33,7 +33,7 @@ class LMAT_Elementor {
 	 *
 	 * Fix Elementor compatibility with Linguator.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @access private
 	 * @static
 	 */
@@ -49,7 +49,7 @@ class LMAT_Elementor {
 	 *
 	 * Fired by `lmat_copy_post_metas` filter.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @access public
 	 * @static
 	 *
@@ -76,7 +76,7 @@ class LMAT_Elementor {
 	 *
 	 * Consider using `safe_copy_elementor_meta()` method instead.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @access public
 	 *
 	 * @param int $from_post_id Original post ID.

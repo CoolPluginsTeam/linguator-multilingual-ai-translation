@@ -25,7 +25,7 @@ require ABSPATH . 'wp-admin/options-head.php'; // Displays the errors messages a
 			 * Fires when loading the active Linguator settings tab
 			 * Allows plugins to add their own tab
 			 *
-			 * @since 1.0.0
+			 *  
 			 */
 			do_action( 'lmat_settings_active_tab_' . $active_tab );
 			break;

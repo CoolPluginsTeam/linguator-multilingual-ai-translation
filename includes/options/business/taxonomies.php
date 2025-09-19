@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class defining taxonomies list option.
  *
- * @since 1.0.0
+ *  
  */
 class Taxonomies extends Abstract_Object_Types {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -31,7 +31,7 @@ class Taxonomies extends Abstract_Object_Types {
 	/**
 	 * Returns non-core taxonomies.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Object type names list.
 	 *
@@ -46,7 +46,7 @@ class Taxonomies extends Abstract_Object_Types {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

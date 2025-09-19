@@ -15,7 +15,7 @@ use Linguator\Includes\Controllers\LMAT_Static_Pages;
 /**
  * Manages the static front page and the page for posts on admin side
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	/**
@@ -26,7 +26,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator An array of attachment metadata.
 	 */
@@ -50,7 +50,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Adds post state for translations of the front page and posts page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $post_states An array of post display states.
 	 * @param WP_Post  $post        The current post object.
@@ -71,7 +71,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Refreshes the language cache when a static front page or page for for posts has been translated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int     $post_id      Not used.
 	 * @param WP_Post $post         Not used.
@@ -87,7 +87,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Prevents WP resetting the option if the admin language filter is active for a language with no pages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $value     The new, unserialized option value.
 	 * @param string $old_value The old option value.
@@ -105,7 +105,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	 * This is especially useful after a new language is created.
 	 * The notice is not dismissible and displayed on the Languages pages and the list of pages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -127,7 +127,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Returns the message asking to translate the static front page in all languages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

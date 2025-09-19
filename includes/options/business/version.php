@@ -17,13 +17,13 @@ use Linguator\Includes\Options\Primitive\Abstract_String;
 /**
  * Class defining the "version" option.
  *
- * @since 1.0.0
+ *  
  */
 class Version extends Abstract_String {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -36,7 +36,7 @@ class Version extends Abstract_String {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -47,7 +47,7 @@ class Version extends Abstract_String {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *

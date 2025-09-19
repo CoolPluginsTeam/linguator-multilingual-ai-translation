@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with Jetpack.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Jetpack {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'jetpack_init' ) );
@@ -35,7 +35,7 @@ class LMAT_Jetpack {
 	/**
 	 * Add filters
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function jetpack_init() {
 		if ( ! defined( 'JETPACK__VERSION' ) ) {
@@ -53,7 +53,7 @@ class LMAT_Jetpack {
 	 * Filter the Top Posts and Pages by language.
 	 * Adapted from the same function in jetpack-3.0.2/3rd-party/wpml.php
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $posts Array of the most popular posts.
 	 * @return array
@@ -73,7 +73,7 @@ class LMAT_Jetpack {
 	 * Adapted from the same function in jetpack-3.0.2/3rd-party/wpml.php
 	 * Keeps using 'icl_translate' as the function registers the string.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $r           Contact Form HTML output.
 	 * @param string $field_label Field label.
@@ -93,7 +93,7 @@ class LMAT_Jetpack {
 	/**
 	 * Adds opengraph support for locale and translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $tags Opengraph tags to output.
 	 * @return array
@@ -115,7 +115,7 @@ class LMAT_Jetpack {
 	/**
 	 * Allows to make sure that related posts are in the correct language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $filters Array of ElasticSearch filters based on the post_id and args.
 	 * @param string $post_id Post ID of the post for which we are retrieving Related Posts.
@@ -130,7 +130,7 @@ class LMAT_Jetpack {
 	/**
 	 * Fixes the settings history host for infinite scroll when using subdomains or multiple domains.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $settings Infinite scroll JS settings outputted in the head.
 	 * @return array

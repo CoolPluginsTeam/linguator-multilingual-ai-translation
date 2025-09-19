@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * displayed only to admin, based on 'manage_options' capability
  * and only on dashboard, plugins and Linguator admin pages
  *
- * @since 1.0.0
- * @since 1.0.0 Dismissed notices are stored in an option instead of a user meta
+ *  
+ *   Dismissed notices are stored in an option instead of a user meta
  */
 class LMAT_Admin_Notices {
 	/**
@@ -35,7 +35,7 @@ class LMAT_Admin_Notices {
 	 * Constructor
 	 * Setup actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -52,7 +52,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Add a custom notice
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name Notice name
 	 * @param string $html Content of the notice
@@ -65,7 +65,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Get custom notices.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[]
 	 */
@@ -76,7 +76,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Has a notice been dismissed?
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $notice Notice name
 	 * @return bool
@@ -103,7 +103,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Should we display notices on this screen?
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $notice          The notice name.
 	 * @param array  $allowed_screens The screens allowed to display the notice.
@@ -130,7 +130,7 @@ class LMAT_Admin_Notices {
 		/**
 		 * Filters admin notices which can be displayed.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param bool   $display Whether the notice should be displayed or not.
 		 * @param string $notice  The notice name.
@@ -141,7 +141,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Stores a dismissed notice in the database.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $notice Notice name.
 	 * @return void
@@ -158,7 +158,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Handle a click on the dismiss button
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -180,7 +180,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Displays notices
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -215,7 +215,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Displays a dismiss button
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name Notice name
 	 * @return void
@@ -307,7 +307,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Displays a notice asking for a review
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

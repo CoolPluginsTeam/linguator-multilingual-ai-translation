@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Links model for use when using one domain or subdomain per language.
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Links_Abstract_Domain extends LMAT_Links_Permalinks {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Instance of LMAT_Model.
 	 */
@@ -40,8 +40,8 @@ abstract class LMAT_Links_Abstract_Domain extends LMAT_Links_Permalinks {
 	/**
 	 * Returns the language based on the language code in url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Add the $url argument.
+	 *  
+	 *   Add the $url argument.
 	 *
 	 * @param string $url Optional, defaults to the current url.
 	 * @return string Language slug.
@@ -60,7 +60,7 @@ abstract class LMAT_Links_Abstract_Domain extends LMAT_Links_Permalinks {
 	/**
 	 * Modifies an url to use the domain associated to the current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -76,7 +76,7 @@ abstract class LMAT_Links_Abstract_Domain extends LMAT_Links_Permalinks {
 	/**
 	 * Fixes the domain for the upload directory.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $uploads Array of information about the upload directory. @see wp_upload_dir().
 	 * @return array
@@ -92,7 +92,7 @@ abstract class LMAT_Links_Abstract_Domain extends LMAT_Links_Permalinks {
 	/**
 	 * Adds home and search URLs to language data before the object is created.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $additional_data Array of language additional data.
 	 * @param array $language        Language data.
@@ -108,7 +108,7 @@ abstract class LMAT_Links_Abstract_Domain extends LMAT_Links_Permalinks {
 	/**
 	 * Returns language home URL property according to the current domain.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url      Home URL.
 	 * @param array  $language Array of language props.

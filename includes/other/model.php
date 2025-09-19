@@ -32,7 +32,7 @@ use Linguator\Includes\Models\Translated\LMAT_Translated_Term;
 /**
  * Setups the language and translations model based on WordPress taxonomies.
  *
- * @since 1.0.0
+ *  
  *
  * @method bool               has_languages()                                     Checks if there are languages or not. See `Model\Languages::has()`.
  * @method array              get_languages_list(array $args = array())           Returns the list of available languages. See `Model\Languages::get_list()`.
@@ -71,7 +71,7 @@ class LMAT_Model {
 	/**
 	 * Translatable objects registry.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Translatable_Objects
 	 */
@@ -117,8 +117,8 @@ class LMAT_Model {
 	 * Setups translated objects sub models.
 	 * Setups filters and actions.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Type of parameter `$options` changed from `array` to `Options`.
+	 *  
+	 *   Type of parameter `$options` changed from `array` to `Options`.
 	 *
 	 * @param Options $options Linguator options.
 	 */
@@ -148,7 +148,7 @@ class LMAT_Model {
 
 	/**
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name      Name of the method being called.
 	 * @param array  $arguments Enumerated array containing the parameters passed to the method.
@@ -200,7 +200,7 @@ class LMAT_Model {
 	 * can be called directly with no parameter
 	 * called by the 'edited_term_taxonomy' filter with 2 parameters when count needs to be updated
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term     not used
 	 * @param string $taxonomy taxonomy name
@@ -215,7 +215,7 @@ class LMAT_Model {
 	/**
 	 * Don't query term metas when only our taxonomies are queried
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args WP_Term_Query arguments
 	 * @return array
@@ -232,7 +232,7 @@ class LMAT_Model {
 	/**
 	 * Adds terms clauses to the term query to filter them by languages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[]           $clauses The list of sql clauses in terms query.
 	 * @param LMAT_Language|false $lang    LMAT_Language object.
@@ -251,7 +251,7 @@ class LMAT_Model {
 	 * but the native term_exists() will return true even if only one exists.
 	 * So here the function adds the language parameter.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string              $term_name The term name.
 	 * @param string              $taxonomy  Taxonomy name.
@@ -305,7 +305,7 @@ class LMAT_Model {
 	/**
 	 * Checks if a term slug exists in a given language, taxonomy, hierarchy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string              $slug     The term slug to test.
 	 * @param string|LMAT_Language $language The language slug or object.
@@ -357,7 +357,7 @@ class LMAT_Model {
 	/**
 	 * Returns the number of posts per language in a date, author or post type archive.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $lang LMAT_Language instance.
 	 * @param array        $q    {
@@ -499,7 +499,7 @@ class LMAT_Model {
 	/**
 	 * Setup the links model based on options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Links_Model
 	 */
@@ -511,7 +511,7 @@ class LMAT_Model {
 		 * Filters the links model class to use.
 		 * /!\ this filter is fired *before* the $linguator object is available.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $class A class name: LMAT_Links_Default, LMAT_Links_Directory, LMAT_Links_Subdomain, LMAT_Links_Domain.
 		 */
@@ -539,9 +539,9 @@ class LMAT_Model {
 	/**
 	 * Returns a list of object IDs without language (used in settings and wizard).
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Added the `$limit` parameter.
-	 * @since 1.0.0 Added the `$types` parameter.
+	 *  
+	 *   Added the `$limit` parameter.
+	 *   Added the `$types` parameter.
 	 *
 	 * @param int      $limit Optional. Max number of IDs to return. Defaults to -1 (no limit).
 	 * @param string[] $types Optional. Types to handle (@see LMAT_Translatable_Object::get_type()). Defaults to
@@ -561,8 +561,8 @@ class LMAT_Model {
 		 * This filter can be used to decrease the memory usage in case the number of objects
 		 * without language is too big. Using a negative value is equivalent to have no limit.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 Added the `$types` parameter.
+		 *  
+		 *   Added the `$types` parameter.
 		 *
 		 * @param int      $limit Max number of IDs to retrieve from the database.
 		 * @param string[] $types Types to handle (@see LMAT_Translatable_Object::get_type()). An empty array means all
@@ -591,8 +591,8 @@ class LMAT_Model {
 		/**
 		 * Filters the list of IDs of untranslated objects.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 Added the `$limit` and `$types` parameters.
+		 *  
+		 *   Added the `$limit` and `$types` parameters.
 		 *
 		 * @param int[][]|false $objects List of lists of object IDs, `false` if no IDs found.
 		 * @param int           $limit   Max number of IDs to retrieve from the database.
@@ -605,7 +605,7 @@ class LMAT_Model {
 	/**
 	 * Returns ids of post without language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $post_types A translated post type or an array of translated post types.
 	 * @param int             $limit      Max number of objects to return. `-1` to return all of them.
@@ -621,7 +621,7 @@ class LMAT_Model {
 	/**
 	 * Returns ids of terms without language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $taxonomies A translated taxonomy or an array of taxonomies post types.
 	 * @param int             $limit      Max number of objects to return. `-1` to return all of them.
@@ -637,7 +637,7 @@ class LMAT_Model {
 	/**
 	 * Assigns the default language to objects in mass.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|null $lang  Optional. The language to assign to objects. Defaults to `null` (default language).
 	 * @param string[]          $types Optional. Types to handle (@see LMAT_Translatable_Object::get_type()). Defaults

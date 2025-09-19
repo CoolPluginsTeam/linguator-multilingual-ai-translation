@@ -14,14 +14,12 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) { // If uninstall not called from Word
  * Manages Linguator uninstallation.
  * The goal is to remove **all** Linguator related data in db.
  *
- * @since 1.0.0
  */
 class LMAT_Uninstall {
 
 	/**
 	 * Constructor: manages uninstall for multisite.
 	 *
-	 * @since 1.0.0
 	 */
 	public function __construct() {
 		global $wpdb;
@@ -47,7 +45,6 @@ class LMAT_Uninstall {
 	/**
 	 * Removes **all** plugin data.
 	 *
-	 * @since 1.0.0
 	 */
 	public function uninstall() {
 		global $wpdb;

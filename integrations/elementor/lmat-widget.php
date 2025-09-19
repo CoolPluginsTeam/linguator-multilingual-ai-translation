@@ -3,7 +3,7 @@
  * Language Switcher Linguator Elementor Widget
  *
  * @package LanguageSwitcherLinguatorElementorWidget
- * @since 1.0.0
+ *  
  */
 
 namespace Linguator\Integrations\elementor;
@@ -20,7 +20,7 @@ if (! defined('ABSPATH')) {
  *
  * Main widget class for the Language Switcher Linguator Elementor widget.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Widget extends Widget_Base
 {

@@ -15,7 +15,7 @@ use Linguator\Includes\Options\Abstract_Option;
 /**
  * Class defining single list option, default value type to mixed.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-import-type SchemaType from Abstract_Option
  */
@@ -24,7 +24,7 @@ abstract class Abstract_List extends Abstract_Option {
 	 * Prepares a value before validation.
 	 * Allows to receive a string-keyed array but returns an integer-keyed array.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $value Value to format.
 	 * @return mixed
@@ -41,7 +41,7 @@ abstract class Abstract_List extends Abstract_Option {
 	 * Possible values are `'string'`, `'null'`, `'number'` (float), `'integer'`, `'boolean'`,
 	 * `'array'` (array with integer keys), and `'object'` (array with string keys).
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#primitive-types
 	 *
 	 * @return string
@@ -55,7 +55,7 @@ abstract class Abstract_List extends Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -66,7 +66,7 @@ abstract class Abstract_List extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *

@@ -134,7 +134,6 @@ function initMetaboxAutoComplete() {
  * Filters requests for translatable entities.
  * This logic is shared across all Linguator plugins.
  *
- * @since 3.5
  *
  * @param {APIFetchOptions} options
  * @param {Array} filteredRoutes
@@ -161,7 +160,6 @@ var filterPathMiddleware = function filterPathMiddleware(options, filteredRoutes
 /**
  * Filter REST API requests to add the language in the request
  *
- * @since 2.5
  */
 wp.apiFetch.use(function (options, next) {
   /*
@@ -177,7 +175,6 @@ wp.apiFetch.use(function (options, next) {
 /**
  * Gets the language of the currently edited post, fallback to default language if none is found.
  *
- * @since 2.5
  *
  * @return {Element.value}
  */
@@ -192,7 +189,6 @@ function getCurrentLanguage() {
 /**
  * Adds language parameter according to the current one (query string for GET, body for PUT and POST).
  *
- * @since 3.5
  *
  * @param {APIFetchOptions} options
  * @returns {APIFetchOptions}
@@ -212,15 +208,12 @@ function addLanguageParameter(options) {
  * Handles internals of the metabox:
  * Language select, autocomplete input field.
  *
- * @since 1.5
  *
  * Save post after lang choice is done and redirect to the same page for refreshing all the data.
  *
- * @since 2.5
  *
  * Link post saving after refreshing the metabox.
  *
- * @since 3.0
  */
 jQuery(function ($) {
   // Initialize current language to be able to compare if it changes.

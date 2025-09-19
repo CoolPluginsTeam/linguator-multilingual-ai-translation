@@ -17,7 +17,7 @@ use Linguator\Includes\Models\Translated\LMAT_Translated_Object;
 /**
  * Registry for all translatable objects.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-implements IteratorAggregate<non-empty-string, LMAT_Translatable_Object>
  * @phpstan-type TranslatedObjectWithTypes LMAT_Translated_Object&LMAT_Translatable_Object_With_Types_Interface
@@ -44,7 +44,7 @@ class LMAT_Translatable_Objects implements \IteratorAggregate {
 	/**
 	 * Registers a translatable object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Translatable_Object $object The translatable object to register.
 	 * @return LMAT_Translatable_Object
@@ -72,7 +72,7 @@ class LMAT_Translatable_Objects implements \IteratorAggregate {
 	/**
 	 * Returns all registered translatable objects.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return ArrayIterator Iterator on $objects array property. Keys are the type of translated content (post, term, etc).
 	 *
@@ -86,7 +86,7 @@ class LMAT_Translatable_Objects implements \IteratorAggregate {
 	/**
 	 * Returns a translatable object, given an object type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $object_type The object type.
 	 * @return LMAT_Translatable_Object|null
@@ -110,7 +110,7 @@ class LMAT_Translatable_Objects implements \IteratorAggregate {
 	/**
 	 * Returns all translatable objects except post one.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Translatable_Object[] An array of secondary translatable objects. Array keys are the type of translated content (post, term, etc).
 	 *
@@ -123,7 +123,7 @@ class LMAT_Translatable_Objects implements \IteratorAggregate {
 	/**
 	 * Returns taxonomy names to manage language and translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $filter An array on value to filter taxonomy names to return.
 	 * @return string[] Taxonomy names.

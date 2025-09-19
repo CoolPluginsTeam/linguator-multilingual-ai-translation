@@ -22,7 +22,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend_Nav_Menu;
 /**
  * Main Linguator class for REST API requests, accessible from @see LMAT().
  *
- * @since 1.0.0
+ *  
  */
 #[AllowDynamicProperties]
 class LMAT_REST_Request extends LMAT_Base {
@@ -66,6 +66,12 @@ class LMAT_REST_Request extends LMAT_Base {
 	 * @var LMAT_Filters_Widgets_Options|null
 	 */
 	public $filters_widgets_options;
+
+	/**
+	 * @var LMAT_Filters_Sanitization|null
+	 */
+	public $filters_sanitization;
+
 
 	// Module properties
 	/**
@@ -113,7 +119,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -132,7 +138,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	/**
 	 * Setup filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -147,6 +153,7 @@ class LMAT_REST_Request extends LMAT_Base {
 		}
 
 		add_filter( 'rest_pre_dispatch', array( $this, 'set_language' ), 10, 3 );
+		add_filter( 'rest_request_before_callbacks', array( $this, 'set_filters_sanitization' ) );
 
 		$this->filters_links           = new LMAT_Filters_Links( $this );
 		$this->filters                 = new LMAT_Filters( $this );
@@ -159,7 +166,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	/**
 	 * Sets the current language during a REST request if sent.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Remains untouched.
 	 * @param WP_REST_Server  $server  Server instance.
@@ -189,5 +196,28 @@ class LMAT_REST_Request extends LMAT_Base {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Initialize sanitization filters with the correct language locale.
+	 *
+	 * @see WP_REST_Server::dispatch()
+	 *
+	 *
+	 * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
+	 * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed
+	 */
+	public function set_filters_sanitization( $response ) {
+		$language = $this->request->get_language();
+		if ( empty( $language ) ) {
+			$type     = $this->request->get_object_type();
+			$language = $type ? $this->model->$type->get_language( $this->request->get_id() ) : null;
+		}
+
+		if ( ! empty( $language ) ) {
+			$this->filters_sanitization = new LMAT_Filters_Sanitization( $language->locale );
+		}
+
+		return $response;
 	}
 }

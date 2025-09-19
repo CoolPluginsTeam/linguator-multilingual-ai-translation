@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Trait to use for objects that can have one or more types.
  * This must be used with {@see LMAT_Translatable_Object_With_Types_Interface}.
  *
- * @since 1.0.0
+ *  
  */
 trait LMAT_Translatable_Object_With_Types_Trait {
 
 	/**
 	 * Fetches the IDs of the objects without language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[] $language_ids List of language `term_taxonomy_id`.
 	 * @param int   $limit        Max number of objects to return. `-1` to return all of them.
@@ -89,7 +89,7 @@ trait LMAT_Translatable_Object_With_Types_Trait {
 	/**
 	 * Returns true if Linguator manages languages for this object type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $object_type Object type (taxonomy name) name or array of object type names.
 	 * @return bool

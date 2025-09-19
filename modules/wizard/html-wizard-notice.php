@@ -4,7 +4,7 @@
  *
  * @package Linguator
  *
- * @since 1.0.0
+ *  
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly.

@@ -14,13 +14,13 @@ use Linguator\Includes\Options\Abstract_Option;
 /**
  * Class defining static strings visibility option.
  *
- * @since 1.0.0
+ *  
  */
 class Static_Strings_Visibility extends Abstract_Option {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -33,7 +33,7 @@ class Static_Strings_Visibility extends Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -44,7 +44,7 @@ class Static_Strings_Visibility extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 */
@@ -59,7 +59,7 @@ class Static_Strings_Visibility extends Abstract_Option {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed   $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -72,7 +72,7 @@ class Static_Strings_Visibility extends Abstract_Option {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
