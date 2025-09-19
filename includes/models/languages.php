@@ -135,29 +135,32 @@ class Languages {
 	/**
 	 * Adds a new language and creates a default category for this language.
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param array $args {
 	 *   Arguments used to create the language.
 	 *
-	 *   @type string $name           Language name (used only for display).
-	 *   @type string $slug           Language code (ideally 2-letters ISO 639-1 language code).
 	 *   @type string $locale         WordPress locale. If something wrong is used for the locale, the .mo files will
 	 *                                not be loaded...
-	 *   @type bool   $rtl            True if rtl language, false otherwise.
-	 *   @type int    $term_group     Language order when displayed.
+	 *    @type string $name           Optional. Language name (used only for display). Default to the language name from {@see settings/languages.php}.
+	 *   @type string $slug           Optional. Language code (ideally 2-letters ISO 639-1 language code). Default to the language code from {@see settings/languages.php}.
+	 *   @type bool   $rtl            Optional. True if rtl language, false otherwise. Default is false.
+	 *   @type bool   $is_rtl         Optional. True if rtl language, false otherwise. Will be converted to rtl. Default is false.
+	 *   @type int    $term_group     Optional. Language order when displayed. Default is 0.
 	 *   @type string $flag           Optional. Country code, {@see settings/flags.php}.
-	 *   @type bool   $no_default_cat Optional. If set, no default category will be created for this language.
+	 *    @type string $flag_code      Optional. Country code, {@see settings/flags.php}. Will be converted to flag.
+	 *   @type bool   $no_default_cat Optional. If set, no default category will be created for this language. Default is false.
 	 * }
 	 * @return true|WP_Error True success, a `WP_Error` otherwise.
 	 *
 	 * @phpstan-param array{
-	 *     name: non-empty-string,
-	 *     slug:  non-empty-string,
-	 *     locale:  non-empty-string,
-	 *     rtl: bool,
-	 *     term_group: int|numeric-string,
-	 *     flag?:  non-empty-string,
+	 *     name?: string,
+	 *     slug?: string,
+	 *     locale?: string,
+	 *      rtl?: bool,
+	 *     is_rtl?: bool,
+	 *     term_group?: int|numeric-string,
+	 *     flag?: string,
+	 *     flag_code?: string,
 	 *     no_default_cat?: bool
 	 * } $args
 	 */
@@ -244,24 +247,28 @@ class Languages {
 	 *   Arguments used to modify the language.
 	 *
 	 *   @type int    $lang_id    ID of the language to modify.
-	 *   @type string $name       Language name (used only for display).
-	 *   @type string $slug       Language code (ideally 2-letters ISO 639-1 language code).
-	 *   @type string $locale     WordPress locale. If something wrong is used for the locale, the .mo files will
+	 *   @type string $name       Optional. Language name (used only for display).
+	 *   @type string $slug       Optional. Language code (ideally 2-letters ISO 639-1 language code).
+	 *   @type string $locale     Optional. WordPress locale. If something wrong is used for the locale, the .mo files will
 	 *                            not be loaded...
-	 *   @type bool   $rtl        True if rtl language, false otherwise.
-	 *   @type int    $term_group Language order when displayed.
+	 *   @type bool   $rtl        Optional. True if rtl language, false otherwise.
+	 *   @type bool   $is_rtl     Optional. True if rtl language, false otherwise. Will be converted to rtl.
+	 *   @type int    $term_group Optional. Language order when displayed.
 	 *   @type string $flag       Optional, country code, {@see settings/flags.php}.
+	 *   @type string $flag_code  Optional. Country code, {@see settings/flags.php}. Will be converted to flag.
 	 * }
 	 * @return true|WP_Error True success, a `WP_Error` otherwise.
 	 *
 	 * @phpstan-param array{
 	 *     lang_id: int|numeric-string,
-	 *     name: string,
-	 *     slug: string,
-	 *     locale: string,
-	 *     rtl: bool,
-	 *     term_group: int|numeric-string,
-	 *     flag?: string
+	 *     name?: string,
+	 *     slug?: string,
+	 *     locale?: string,
+	 *     rtl?: bool,
+	 *     is_rtl?: bool,
+	 *     term_group?: int|numeric-string,
+	 *     flag?: string,
+	 *     flag_code?: string
 	 * } $args
 	 */
 	public function update( $args ) {
@@ -860,9 +867,9 @@ class Languages {
 	 * @return WP_Error
 	 *
 	 * @phpstan-param array{
-	 *     locale: string,
-	 *     slug: string,
-	 *     name: string,
+	 *     locale?: string,
+	 *     slug?: string,
+	 *     name?: string,
 	 *     flag?: string
 	 * } $args
 	 */
