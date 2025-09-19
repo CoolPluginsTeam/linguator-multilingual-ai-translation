@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// ./Assets/js/src/lib/confirmation-modal.js
+;// ./assets/js/src/lib/confirmation-modal.js
 /**
  * @package Linguator
  */
@@ -95,7 +95,7 @@ var initializeLanguageOldValue = function initializeLanguageOldValue() {
   // Keep the old language value to be able to compare to the new one and revert to it if necessary.
   languagesList.attr('data-old-value', languagesList.children(':selected').first().val());
 };
-;// ./Assets/js/src/lib/metabox-autocomplete.js
+;// ./assets/js/src/lib/metabox-autocomplete.js
 /**
  * @package Linguator
  */
@@ -125,7 +125,7 @@ function initMetaboxAutoComplete() {
     });
   });
 }
-;// ./Assets/js/src/classic-editor.js
+;// ./assets/js/src/classic-editor.js
 /**
  * @package Linguator
  */

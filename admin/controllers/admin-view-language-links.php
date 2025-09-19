@@ -67,6 +67,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$taxonomy=isset($current_screen->taxonomy) ? $current_screen->taxonomy : '';
 			
 			$post_type=isset($current_screen->post_type) ? $current_screen->post_type : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 			$post_status=(isset($_GET['post_status']) && 'trash' === sanitize_text_field(wp_unslash($_GET['post_status']))) ? 'trash' : 'publish';
 			$all_translated_post_count=0;
 			$list_html='';

@@ -110,10 +110,10 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
-
-		$selected_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : '';
-		$loco=isset($_GET['loco']) ? sanitize_text_field($_GET['loco']) : '';
-		
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
+		$selected_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
+		$loco=isset($_GET['loco']) ? sanitize_text_field(wp_unslash($_GET['loco'])) : '';
 		
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->active_tab = 'lmat' === $_GET['page'] ? 'lang' : substr( sanitize_key( $_GET['page'] ), 5 ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -564,7 +564,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
-		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
+		$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : false;
 
 		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab)) {
 			// Enqueue React-based settings for settings tabs

@@ -346,6 +346,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		$base_url = admin_url( 'nav-menus.php' );
 		
 		// Preserve other query parameters (like action=locations)
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		$current_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 
 		?>
@@ -561,11 +562,13 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 */
 	public function maybe_update_selected_menu() {
 		// Only run on Edit Menus tab, not Manage Locations.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
 			return;
 		}
 
 		// Only run when language filter is set and no specific menu is requested.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
 			return;
 		}
@@ -615,13 +618,15 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		}
 
 		// Only run on Edit Menus tab, not Manage Locations.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
 			return;
 		}
 
 		// Only run when language filter is set and no specific menu is requested.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( ! isset( $_GET['lang'] ) || isset( $_GET['menu'] ) ) {
-			return;
+			return;	
 		}
 
 		// Get current language filter.

@@ -127,9 +127,9 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				$redirect     = isset( $value['redirect'] ) ? $value['redirect'] : false;
 				$redirect_url = $redirect && isset( $value['redirect_url'] ) ? $value['redirect_url'] : false;
 				if ( $redirect && $redirect_url && $this->active_tab !== $key ) {
-					echo '<a href="' . admin_url( 'admin.php?page=' . esc_attr( $redirect_url ) ) . '"><div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '" data-link="true">' . strtoupper( esc_html( $title ) ) . '</div></a>';
+					echo '<a href="' . esc_url( admin_url( 'admin.php?page=' . esc_attr( $redirect_url ) ) ) . '"><div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '" data-link="true">' . esc_html( strtoupper( $title ) ) . '</div></a>';
 				} else {
-					echo '<div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '">' . strtoupper( esc_html( $title ) ) . '</div>';
+					echo '<div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '">' . esc_html( strtoupper( $title ) ) . '</div>';
 				}
 			}
 			echo '</div>';
