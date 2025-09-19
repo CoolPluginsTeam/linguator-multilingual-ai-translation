@@ -18,7 +18,7 @@ use WP_Term;
 /**
  * Class for handling term slugs.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Term_Slug {
 
@@ -60,7 +60,7 @@ class LMAT_Term_Slug {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model    Instance of LMAT_Model.
 	 * @param string    $slug     The term slug.
@@ -79,7 +79,7 @@ class LMAT_Term_Slug {
 	/**
 	 * Tells if the suffix can be added or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool True if the suffix can be added, false otherwise.
 	 */
@@ -87,7 +87,7 @@ class LMAT_Term_Slug {
 		/**
 		 * Filters the subsequently inserted term language.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language|null $lang     Found language object, null otherwise.
 		 * @param string            $taxonomy Term taxonomy.
@@ -104,7 +104,7 @@ class LMAT_Term_Slug {
 			/**
 			 * Filters the subsequently inserted term parent.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param int          $parent   Parent term ID, 0 if none.
 			 * @param string       $taxonomy Term taxonomy.
@@ -136,7 +136,7 @@ class LMAT_Term_Slug {
 	 * Returns the parent suffix for the slug only if parent slug is the same as the given one.
 	 * Recursively appends the parents slugs like WordPress does.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Parents slugs if they are the same as the child slug, empty string otherwise.
 	 */
@@ -169,7 +169,7 @@ class LMAT_Term_Slug {
 	/**
 	 * Returns the term slug, suffixed or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $separator The separator for the slug suffix.
 	 * @return string The suffixed slug, or not if the lang isn't defined.

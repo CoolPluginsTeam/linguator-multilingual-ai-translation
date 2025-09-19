@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles the core sitemaps for sites using a single domain.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	/**
@@ -33,7 +33,7 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator Main Linguator object.
 	 */
@@ -46,7 +46,7 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Setups actions and filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -62,7 +62,7 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	 * Assigns the current language to the default language when the sitemap url
 	 * doesn't include any language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|bool $lang  Current language code, false if not set yet.
 	 * @param WP_Query    $query Main WP query object.
@@ -78,7 +78,7 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Filters the sitemaps rewrite rules to take the languages into account.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $rules Rewrite rules.
 	 * @return string[] Modified rewrite rules.
@@ -118,7 +118,7 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Replaces a sitemap provider by our decorator.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Sitemaps_Provider $provider Instance of a WP_Sitemaps_Provider.
 	 * @return WP_Sitemaps_Provider

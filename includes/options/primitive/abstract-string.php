@@ -16,13 +16,13 @@ use Linguator\Includes\Options\Abstract_Option;
 /**
  * Class defining single string option.
  *
- * @since 1.0.0
+ *  
  */
 abstract class Abstract_String extends Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -33,7 +33,7 @@ abstract class Abstract_String extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *

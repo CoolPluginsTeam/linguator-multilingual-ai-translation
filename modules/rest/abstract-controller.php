@@ -18,13 +18,13 @@ use WP_REST_Request;
 /**
  * Abstract REST controller.
  *
- * @since 1.0.0
+ *  
  */
 abstract class Abstract_Controller extends WP_REST_Controller {
 	/**
 	 * Adds a status code to the given error and returns the error.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Error $error       A `WP_Error` object.
 	 * @param int      $status_code Optional. A status code. Default is 400.
@@ -38,7 +38,7 @@ abstract class Abstract_Controller extends WP_REST_Controller {
 	/**
 	 * Verifies nonce for REST API requests.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if nonce is valid, WP_Error object otherwise.

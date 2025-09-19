@@ -18,7 +18,7 @@ use WP_Ajax_Response;
 /**
  * Manages filters and actions related to terms on admin side
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Filters_Term {
 	/**
@@ -55,7 +55,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * A reference to the LMAT_Admin_Default_Term instance.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Admin_Default_Term|null
 	 */
@@ -64,7 +64,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -104,7 +104,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Adds the language field in the 'Categories' and 'Post Tags' panels
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -200,7 +200,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Term $tag The term being edited.
 	 * @return void
@@ -296,7 +296,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Translates term parent if exists when using "Add new" ( translation )
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $output html markup for dropdown list of categories
 	 * @return string modified html
@@ -322,7 +322,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Stores the current post_id when bulk editing posts for use in save_language and get_inserted_term_language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Post ID.
 	 * @return void
@@ -336,7 +336,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Saves the language of a term.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term ID.
 	 * @param string $taxonomy Taxonomy name.
@@ -442,7 +442,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Save translations from our form.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $term_id The term id of the term being saved.
 	 * @return int[] The array of translated term ids.
@@ -470,7 +470,7 @@ class LMAT_Admin_Filters_Term {
 	 * Called when a category or post tag is created or edited
 	 * Saves language and translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term ID.
 	 * @param int    $tt_id    Term taxonomy ID.
@@ -504,7 +504,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Ajax response for edit term form
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -574,7 +574,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Ajax response for input in translation autocomplete input box.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -651,7 +651,7 @@ class LMAT_Admin_Filters_Term {
 	 * Updates the translations term ids when splitting a shared term
 	 * Splits translations if these are shared terms too
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id          ID of the formerly shared term.
 	 * @param int    $new_term_id      ID of the new term created for the $term_taxonomy_id.
@@ -713,7 +713,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Returns the language for subsequently inserted term in admin.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|null $lang     Term language object if found, null otherwise.
 	 * @return LMAT_Language|null Language object, null if none found.
@@ -771,7 +771,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Filters the subsequently inserted term parent in admin.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $parent   Parent term ID, 0 if none found.
 	 * @param string $taxonomy Term taxonomy.
@@ -794,7 +794,7 @@ class LMAT_Admin_Filters_Term {
 	/**
 	 * Adds lang parameter to WordPress default edit term links
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link     The edit term link.
 	 * @param int    $term_id  The term ID.

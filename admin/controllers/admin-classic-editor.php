@@ -16,7 +16,7 @@ use WP_Ajax_Response;
 /**
  * Manages filters and actions related to the classic editor
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Classic_Editor {
 	/**
@@ -46,7 +46,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -73,7 +73,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Adds the Language box in the 'Edit Post' and 'Edit Page' panels ( as well as in custom post types panels )
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $post_type Current post type
 	 * @return void
@@ -97,7 +97,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Displays the Languages metabox in the 'Edit Post' and 'Edit Page' panels
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -173,7 +173,7 @@ class LMAT_Admin_Classic_Editor {
 		/**
 		 * Fires before displaying the list of translations in the Languages metabox for posts
 		 *
-		 * @since 1.0.0
+		 *  
 		 */
 		do_action( 'lmat_before_post_translations', $post_type );
 
@@ -191,7 +191,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Ajax response for changing the language in the post metabox
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -308,7 +308,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Ajax response for input in translation autocomplete input box
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -365,7 +365,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Filters the pages by language in the parent dropdown list in the page attributes metabox.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array   $dropdown_args Arguments passed to wp_dropdown_pages().
 	 * @param WP_Post $post          The page being edited.
@@ -388,7 +388,7 @@ class LMAT_Admin_Classic_Editor {
 	/**
 	 * Displays a notice if the user has not sufficient rights to overwrite synchronized taxonomies and metas.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Post $post the post currently being edited.
 	 * @return void

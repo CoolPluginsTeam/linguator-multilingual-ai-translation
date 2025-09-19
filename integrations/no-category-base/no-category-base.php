@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Manages the compatibility with No Category Base.
  * Works for Yoast SEO too.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_No_Category_Base {
 	/**
 	 * Setups actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_filter( 'get_terms_args', array( $this, 'no_category_base_get_terms_args' ), 5 ); // Before adding our cache domain.
@@ -27,7 +27,7 @@ class LMAT_No_Category_Base {
 	/**
 	 * Make sure No category base plugins get all the categories when flushing rules.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args WP_Term_Query arguments.
 	 * @return array

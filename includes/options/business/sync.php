@@ -19,7 +19,7 @@ use Linguator\Includes\Options\Primitive\Abstract_List;
 /**
  * Class defining synchronization settings list option.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-import-type SchemaType from Linguator\Includes\Options\Abstract_Option
  */
@@ -27,7 +27,7 @@ class Sync extends Abstract_List {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -40,7 +40,7 @@ class Sync extends Abstract_List {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *
@@ -63,7 +63,7 @@ class Sync extends Abstract_List {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

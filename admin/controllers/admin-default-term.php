@@ -15,15 +15,15 @@ use Linguator\Includes\Helpers\LMAT_Default_Term;
 /**
  * Manages filters and actions related to default terms.
  *
- * @since 1.0.0
- * @since 1.0.0 Extends `LMAT_Default_Term`, most of the code is moved to it.
+ *  
+ *   Extends `LMAT_Default_Term`, most of the code is moved to it.
  */
 class LMAT_Admin_Default_Term extends LMAT_Default_Term {
 
 	/**
 	 * Setups filters and actions needed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -41,7 +41,7 @@ class LMAT_Admin_Default_Term extends LMAT_Default_Term {
 	/**
 	 * Identifies the default term in the terms list table to disable the language dropdown in JS.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  string $out     The output.
 	 * @param  int    $term_id The term id.

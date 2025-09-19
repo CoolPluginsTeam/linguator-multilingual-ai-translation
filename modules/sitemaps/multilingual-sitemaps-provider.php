@@ -10,13 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Decorator to add multilingual capability to sitemaps providers
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * The decorated sitemaps provider.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var WP_Sitemaps_Provider
 	 */
@@ -25,7 +25,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * The LMAT_Links_Model instance.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Links_Model
 	 */
@@ -34,7 +34,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * The LMAT_Model instance.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Model
 	 */
@@ -44,7 +44,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Language used to filter queries for the sitemap index.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var string
 	 */
@@ -53,7 +53,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Sitemaps_Provider $provider    An instance of a WP_Sitemaps_Provider child class.
 	 * @param LMAT_Links_Model      $links_model The LMAT_Links_Model instance.
@@ -70,7 +70,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Gets a URL list for a sitemap.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $page_num       Page of results.
 	 * @param string $object_subtype Optional. Object subtype name. Default empty.
@@ -83,7 +83,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Gets the max number of pages available for the object type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $object_subtype Optional. Object subtype. Default empty.
 	 * @return int Total number of pages.
@@ -95,7 +95,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Filters the query arguments to add the language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args Sitemap provider WP_Query or WP_Term_Query arguments.
 	 * @return array
@@ -110,7 +110,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Gets data for a given sitemap type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $object_subtype_name Object subtype name if any.
 	 * @param string $lang                Optional language name.
@@ -135,7 +135,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Gets data about each sitemap type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array[] Array of sitemap types including object subtype name and number of pages.
 	 */
@@ -180,7 +180,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Gets the URL of a sitemap entry.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name The name of the sitemap.
 	 * @param int    $page The page of the sitemap.
@@ -212,7 +212,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * Returns the list of supported object subtypes exposed by the provider.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array List of object subtypes objects keyed by their name.
 	 */

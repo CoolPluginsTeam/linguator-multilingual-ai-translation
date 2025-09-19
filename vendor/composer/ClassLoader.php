@@ -310,7 +310,7 @@ class ClassLoader
     }
 
     /**
-     * Turns on searching the  path for class files.
+     * Turns on searching the include path for class files.
      *
      * @param bool $useIncludePath
      *

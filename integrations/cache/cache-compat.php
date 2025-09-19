@@ -13,13 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * A class to manage specific compatibility issue with cache plugins
  * Tested with WP Rocket 2.10.7
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Cache_Compat {
 	/**
 	 * Setups actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		if ( LMAT_COOKIE ) {
@@ -39,7 +39,7 @@ class LMAT_Cache_Compat {
 	 * This makes us impossible to know the language of the last browsed page.
 	 * This functions allows to create the cookie in javascript as a workaround.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -86,7 +86,7 @@ class LMAT_Cache_Compat {
 	 * Informs cache plugins not to cache the home in the default language
 	 * When the detection of the browser preferred language is active
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function do_not_cache_site_home() {
 		if ( ! defined( 'DONOTCACHEPAGE' ) && LMAT()->options['browser'] && LMAT()->options['hide_default'] && is_front_page() && lmat_current_language() === lmat_default_language() ) {
@@ -97,7 +97,7 @@ class LMAT_Cache_Compat {
 	/**
 	 * Allows cache plugins to clean the right post type archive cache when cleaning a post cache.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Post id.
 	 */

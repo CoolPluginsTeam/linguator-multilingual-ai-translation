@@ -38,7 +38,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Tells if the query is a template request that is translated by Linguator.
 	 *
-	 * @since 3.2
 	 *
 	 * @param WP_Query $query Instance of `WP_Query`.
 	 * @return bool
@@ -69,7 +68,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Returns the template post object currently being edited.
 	 *
-	 * @since 3.2
 	 *
 	 * @global WP_Post $post
 	 *
@@ -104,7 +102,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Returns a post associated with the given template ID from the database.
 	 *
-	 * @since 3.2
 	 *
 	 * @param string $template_id   Template ID, in the form of `{themeSlug}//{templateSlug}`.
 	 * @param string $template_type Template type, either 'wp_template' or 'wp_template_part'.
@@ -123,7 +120,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Converts a template ID into an array containing the theme name and the template name.
 	 *
-	 * @since 3.2
 	 *
 	 * @param string $template_id Template ID, in the form of `{themeSlug}//{templateSlug}`.
 	 * @return string[] {
@@ -155,7 +151,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Returns a template post from the database.
 	 *
-	 * @since 3.2
 	 *
 	 * @param string $post_name  Post name (slug).
 	 * @param string $theme_name Theme name (slug).
@@ -190,7 +185,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Tells if we're in the site editor.
 	 *
-	 * @since 3.2
 	 *
 	 * @global string $pagenow
 	 *
@@ -203,7 +197,6 @@ class LMAT_FSE_Tools {
 	/**
 	 * Returns translatable post types supporting automatic translations deletion.
 	 *
-	 * @since 3.4.5
 	 *
 	 * @return string[] Array of post types.
 	 */

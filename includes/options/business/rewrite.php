@@ -19,13 +19,13 @@ use Linguator\Includes\Options\Options;
 /**
  * Class defining the "Remove /language/ in pretty permalinks" boolean option.
  *
- * @since 1.0.0
+ *  
  */
 class Rewrite extends Abstract_Boolean {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -38,7 +38,7 @@ class Rewrite extends Abstract_Boolean {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -49,7 +49,7 @@ class Rewrite extends Abstract_Boolean {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

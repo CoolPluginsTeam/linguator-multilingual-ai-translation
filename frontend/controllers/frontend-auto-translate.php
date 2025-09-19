@@ -17,7 +17,7 @@ use WP_Term;
  * Auto translates the posts and terms ids
  * Useful for example for themes querying a specific cat
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Auto_Translate {
 	/**
@@ -35,7 +35,7 @@ class LMAT_Frontend_Auto_Translate {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -50,7 +50,7 @@ class LMAT_Frontend_Auto_Translate {
 	/**
 	 * Helper function to get the translated post in the current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id The ID of the post to translate.
 	 * @return int
@@ -64,7 +64,7 @@ class LMAT_Frontend_Auto_Translate {
 	/**
 	 * Helper function to get the translated term in the current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $term_id The ID of the term to translate.
 	 * @return int
@@ -78,7 +78,7 @@ class LMAT_Frontend_Auto_Translate {
 	/**
 	 * Filters posts query to automatically translate included ids
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query WP_Query object
 	 * @return void
@@ -223,7 +223,7 @@ class LMAT_Frontend_Auto_Translate {
 	/**
 	 * Filters the terms query to automatically translate included ids.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args       An array of get_terms() arguments.
 	 * @param array $taxonomies An array of taxonomy names.
@@ -246,7 +246,7 @@ class LMAT_Frontend_Auto_Translate {
 	 * Translates tax queries
 	 * Compatible with nested tax queries introduced in WP 4.1
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $tax_queries An array of tax queries.
 	 * @return array Translated tax queries.
@@ -277,7 +277,7 @@ class LMAT_Frontend_Auto_Translate {
 	/**
 	 * Translates a term given one field.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string     $field    Either 'slug', 'name', 'term_id', or 'term_taxonomy_id'
 	 * @param string|int $term     Search for this term value
@@ -311,7 +311,7 @@ class LMAT_Frontend_Auto_Translate {
 	 * Translates a list of term slugs provided either as an array or a string
 	 * with slugs separated by a comma or a '+'.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $query_var The list of term slugs.
 	 * @param string          $taxonomy  The taxonomy for terms.

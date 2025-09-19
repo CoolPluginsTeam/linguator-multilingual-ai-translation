@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Filters search forms when using permalinks
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Filters_Search {
 	/**
@@ -31,7 +31,7 @@ class LMAT_Frontend_Filters_Search {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -56,7 +56,7 @@ class LMAT_Frontend_Filters_Search {
 	 *
 	 * Does not work if searchform.php ( prior to WP 3.6 ) is used or if the search form is hardcoded in another template file
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $form The search form HTML.
 	 * @return string Modified search form.
@@ -89,7 +89,7 @@ class LMAT_Frontend_Filters_Search {
 	/**
 	 * Adds the language information in the admin bar search form.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -102,7 +102,7 @@ class LMAT_Frontend_Filters_Search {
 	 * Rewrites the admin bar search form to pass our get_search_form filter.
 	 * Code last checked: WP 5.4.1.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Admin_Bar $wp_admin_bar The WP_Admin_Bar instance, passed by reference.
 	 * @return void

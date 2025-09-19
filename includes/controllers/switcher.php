@@ -22,7 +22,7 @@ use WP_Post;
 /**
  * A class to display a language switcher on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Switcher {
 	public const DEFAULTS = array(
@@ -51,7 +51,7 @@ class LMAT_Switcher {
 	 * Returns options available for the language switcher - menu or widget
 	 * either strings to display the options or default values
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $type optional either 'menu', 'widget' or 'block', defaults to 'widget'
 	 * @param string $key  optional either 'string' or 'default', defaults to 'string'
@@ -72,7 +72,7 @@ class LMAT_Switcher {
 	/**
 	 * Returns the current language code.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args Arguments passed to {@see LMAT_Switcher::the_languages()}.
 	 * @return string
@@ -92,7 +92,7 @@ class LMAT_Switcher {
 	/**
 	 * Returns the link for a given language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language Language.
 	 * @param array        $args     Arguments passed to {@see LMAT_Switcher::the_languages()}.
@@ -128,7 +128,7 @@ class LMAT_Switcher {
 	/**
 	 * Get the language elements for use in a walker
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args  Arguments passed to {@see LMAT_Switcher::the_languages()}.
 	 * @return array Language switcher elements.
@@ -170,7 +170,7 @@ class LMAT_Switcher {
 			/**
 			 * Filter the link in the language switcher
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string|null $url    The link, null if no translation was found.
 			 * @param string      $slug   The language code.
@@ -210,7 +210,7 @@ class LMAT_Switcher {
 	 * Displays a language switcher
 	 * or returns the raw elements to build a custom language switcher.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links $links Instance of LMAT_Links.
 	 * @param array     $args {
@@ -243,7 +243,7 @@ class LMAT_Switcher {
 		/**
 		 * Filter the arguments of the 'lmat_the_languages' template tag
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $args
 		 */
@@ -283,7 +283,7 @@ class LMAT_Switcher {
 		/**
 		 * Filter the whole html markup returned by the 'lmat_the_languages' template tag
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $html html returned/outputted by the template tag
 		 * @param array  $args arguments passed to the template tag

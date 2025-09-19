@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// ./Assets/js/src/lib/ajax-filter/index.js
+;// ./assets/js/src/lib/ajax-filter/index.js
 /**
  * @package Linguator
  */
@@ -9,7 +9,6 @@
 /**
  * Adds data to all ajax requests made with jQuery.
  *
- * @since 3.7
  *
  * @param {Object} data The data to add.
  * @returns {void}
@@ -40,7 +39,7 @@ function ajaxFilter(data) {
     }
   });
 }
-;// ./Assets/js/src/admin.js
+;// ./assets/js/src/admin.js
 var _lmat_admin;
 /**
  * @package Linguator

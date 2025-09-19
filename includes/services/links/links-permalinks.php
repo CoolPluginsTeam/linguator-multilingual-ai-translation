@@ -18,7 +18,7 @@ use Linguator\Includes\Other\LMAT_Language;
 /**
  * Links model base class when using pretty permalinks.
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
@@ -61,7 +61,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model LMAT_Model instance.
 	 */
@@ -77,7 +77,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Initializes permalinks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -95,7 +95,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	 * Fires our own action telling Linguator plugins
 	 * and third parties are able to prepare rewrite rules.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -106,7 +106,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 		 * Tells when Linguator is able to prepare rewrite rules filters.
 		 * Action fired right after `wp_loaded` and just before WordPress `WP_Rewrite::flush_rules()` callback.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Links_Permalinks $links Current links object.
 		 */
@@ -116,7 +116,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Returns the link to the first page when using pretty permalinks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -125,7 +125,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 		/**
 		 * Filters an url after the paged part has been removed.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $modified_url The link to the first page.
 		 * @param string $original_url The link to the original paged page.
@@ -136,7 +136,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Returns the link to the paged page when using pretty permalinks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url  The url to modify.
 	 * @param int    $page The page number.
@@ -146,7 +146,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 		/**
 		 * Filters an url after the paged part has been added.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $modified_url The link to the paged page.
 		 * @param string $original_url The link to the original first page.
@@ -158,8 +158,8 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Returns the home url in a given language.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param LMAT_Language|string $language Language object or slug.
 	 * @return string
@@ -175,8 +175,8 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Returns the static front page url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now an array of language properties.
+	 *  
+	 *   Accepts now an array of language properties.
 	 *
 	 * @param LMAT_Language|array $language Language object or array of language properties.
 	 * @return string The static front page url.
@@ -197,7 +197,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Prepares rewrite rules filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[]
 	 */
@@ -209,7 +209,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 		/**
 		 * Filters the list of rewrite rules filters to be used by Linguator.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $types The list of filters (without '_rewrite_rules' at the end).
 		 */
@@ -219,7 +219,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	/**
 	 * Removes hooks to filter rewrite rules, called when switching blog @see {LMAT_Base::switch_blog()}.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @see https://make.wordpress.org/core/2019/04/25/site-health-check-in-5-2/ since WordPress 5.2
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Site_Health {
 	/**
 	 * A reference to the LMAT_Model instance.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Model
 	 */
@@ -27,7 +27,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * A reference to the LMAT_Admin_Static_Pages instance.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Admin_Static_Pages|null
 	 */
@@ -36,7 +36,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * LMAT_Admin_Site_Health constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -57,7 +57,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Returns a list of keys to exclude from the site health information.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] List of option keys to ignore.
 	 */
@@ -71,7 +71,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Returns a list of keys to exclude from the site health information.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] List of language keys to ignore.
 	 */
@@ -90,7 +90,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Formats an array to display in options information.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $array An array of formatted data.
 	 * @return string
@@ -113,7 +113,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Transforms the option value to readable human sentence.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key   Option name.
 	 * @param mixed  $value Option value.
@@ -195,7 +195,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Add Linguator Options to Site Health Information tab.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $debug_info The debug information to be added to the core information page.
 	 * @return array
@@ -270,7 +270,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Adds Linguator Languages settings to Site Health Information tab.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $debug_info The debug information to be added to the core information page.
 	 * @return array
@@ -316,7 +316,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Adds term props data to the info languages array.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $value The term props data.
 	 * @return array The term props data formatted for the info languages tab.
@@ -346,7 +346,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Returns the flag used in the language switcher.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language Language object.
 	 * @return string
@@ -359,7 +359,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Add a Site Health test on homepage translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $tests Array with tests declaration data.
 	 * @return array
@@ -378,7 +378,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Test if the home page is translated or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array $result Array with test results.
 	 */
@@ -411,7 +411,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Add Linguator Warnings to Site Health Information tab.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $debug_info The debug information to be added to the core information page.
 	 * @return array
@@ -461,7 +461,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Get an array with post_type as key and post ids as value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $limit Max number of posts to show per post type. `-1` to return all of them. Default is 5.
 	 * @return int[][] Array containing an array of post ids.
@@ -487,7 +487,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Get an array with taxonomy as key and term ids as value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $limit Max number of terms to show per post type. `-1` to return all of them. Default is 5.
 	 * @return int[][] Array containing an array of term ids.
@@ -513,7 +513,7 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Requires the simplexml PHP module when a wpml-config.xml has been found.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $modules An associative array of modules to test for.
 	 * @return array

@@ -18,7 +18,7 @@ use Linguator\Includes\Other\LMAT_Language;
  * Links model for the default permalinks
  * for example mysite.com/?somevar=something&lmat_lang=en.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
@@ -31,8 +31,8 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
 	 * Adds the language code in a url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url      The url to modify.
 	 * @param LMAT_Language|string|false $language Language object or slug.
@@ -49,7 +49,7 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
 	 * Removes the language information from an url.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -61,7 +61,7 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
 	 * Returns the link to the first page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -73,7 +73,7 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
 	 * Returns the link to the paged page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url  The url to modify.
 	 * @param int    $page The page number.
@@ -86,8 +86,8 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
 	 * Gets the language slug from the url if present.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Add the $url argument.
+	 *  
+	 *   Add the $url argument.
 	 *
 	 * @param string $url Optional, defaults to the current url.
 	 * @return string Language slug.
@@ -107,8 +107,8 @@ class LMAT_Links_Default extends LMAT_Links_Model {
 	/**
 	 * Returns the static front page url in the given language.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now an array of language properties.
+	 *  
+	 *   Accepts now an array of language properties.
 	 *
 	 * @param LMAT_Language|array $language Language object or array of language properties.
 	 * @return string The static front page url.

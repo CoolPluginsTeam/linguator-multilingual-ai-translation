@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Displays languages in a dropdown list
  *
- * @since 1.0.0
- * @since 1.0.0 Extends `LMAT_Walker` now.
+ *  
+ *   Extends `LMAT_Walker` now.
  */
 class LMAT_Walker_Dropdown extends LMAT_Walker {
 	/**
@@ -27,7 +27,7 @@ class LMAT_Walker_Dropdown extends LMAT_Walker {
 	/**
 	 * Outputs one element.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string   $output            Passed by reference. Used to append additional content.
 	 * @param stdClass $element           The data object.
@@ -60,8 +60,8 @@ class LMAT_Walker_Dropdown extends LMAT_Walker {
 	/**
 	 * Starts the output of the dropdown list
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Use $max_depth and ...$args parameters to follow the move of WP 5.3
+	 *  
+	 *   Use $max_depth and ...$args parameters to follow the move of WP 5.3
 	 *
 	 * List of parameters accepted in $args:
 	 *

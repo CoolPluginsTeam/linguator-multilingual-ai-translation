@@ -18,13 +18,13 @@ use Linguator\Includes\Options\Abstract_Option;
 /**
  * Class defining the first activation option.
  *
- * @since 1.0.0
+ *  
  */
 class First_Activation extends Abstract_Option {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -37,7 +37,7 @@ class First_Activation extends Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return int
 	 *
@@ -50,7 +50,7 @@ class First_Activation extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *
@@ -68,7 +68,7 @@ class First_Activation extends Abstract_Option {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

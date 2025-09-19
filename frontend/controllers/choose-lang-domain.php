@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Choose the language when the language is managed by different domains
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Choose_Lang_Domain extends LMAT_Choose_Lang_Url {
 
 	/**
 	 * Don't set any language cookie
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -27,7 +27,7 @@ class LMAT_Choose_Lang_Domain extends LMAT_Choose_Lang_Url {
 	/**
 	 * Don't redirect according to browser preferences
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Language
 	 */
@@ -38,7 +38,7 @@ class LMAT_Choose_Lang_Domain extends LMAT_Choose_Lang_Url {
 	/**
 	 * Adds query vars to query for home pages in all languages
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

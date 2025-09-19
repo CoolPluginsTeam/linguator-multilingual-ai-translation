@@ -19,7 +19,7 @@ use Linguator\Includes\Models\Languages;
 /**
  * Class defining navigation menus array option.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-type NavMenusValue array<
  *     non-falsy-string,
@@ -33,7 +33,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -46,7 +46,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -57,7 +57,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 */
@@ -91,7 +91,7 @@ class Nav_Menus extends Abstract_Option {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array   $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -148,7 +148,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
