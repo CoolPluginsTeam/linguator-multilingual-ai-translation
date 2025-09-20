@@ -131,7 +131,7 @@ const SetupProgress = ({lmat_setup_data}) => {
             </div>
             {setupProgress != "ready" &&
                 <div className='text-center text-sm' style={{marginTop:"14px"}}>
-                    <a style={{ color: "gray" }} className='' onClick={()=>localStorage.removeItem("setupProgress")} href={currentDomain}>{__("Not Right Now","linguator-multilingual-ai-translation")}</a>
+                    <a style={{ color: "gray" }} className='' onClick={()=>localStorage.removeItem("setupProgress")} href={`${currentDomain}/admin.php?page=lmat`}>{__("Skip","linguator-multilingual-ai-translation")}</a>
                 </div>
             }
         </div>

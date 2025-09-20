@@ -326,7 +326,7 @@ class LMAT_Admin_Notices {
 								<p>Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net/?utm_source=ectbe_plugin&utm_medium=inside&utm_campaign=coolplugins&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!</p>
 							</div>
 							<ul class="callto_action_buttons">
-								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">%3$s</a></li>
+								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">%3$s</a></li>
 								<li class="already_rated" style="float: left;"><a href="%1$s" class="already_rated_btn button" title="Already Rewiewed">%4$s</a></li>    
 								<li class="not_interested"><a href="%2$s" class="not_interested_btn button" title="Not interested">%5$s</a></li>
 							</ul>
