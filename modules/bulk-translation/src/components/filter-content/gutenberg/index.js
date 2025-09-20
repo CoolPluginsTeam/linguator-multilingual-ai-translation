@@ -136,7 +136,7 @@ const FilterGutenbergContent = async ({content, service, blockParseRules, postId
             const blockRuleKeys=Object.keys(blockRule);
 
             const runLoopAsyncInner=async(key, index)=>{
-                if(typeof blockRule[key] === 'boolean' && true === blockRule[key] && currentBlock[key]){
+                if(typeof blockRule[key] === 'boolean' && true === blockRule[key] && currentBlock && currentBlock[key]){
                     const uniqueKey=[...keys, key].join('_lmat_bulk_content_temp_');
                     const stringContent=await getStringContent(currentBlock[key], uniqueKey);
 

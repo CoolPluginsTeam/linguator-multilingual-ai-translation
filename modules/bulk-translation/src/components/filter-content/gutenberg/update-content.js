@@ -1,5 +1,6 @@
 import {selectTranslatedContent, selectBlockParseRules, selectSourceEntries, selectSourceContent} from '../../../redux-store/features/selectors.js';
 import {store} from '../../../redux-store/store.js';
+import updateMetaFields from '../metaFields/update-meta-fields.js';
 
 /**
  * @param {Object} source
@@ -18,7 +19,7 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
      * @returns {boolean}
      */
     const replaceValue=(Object, key, translateValue)=>{
-        if(Object && Object[key] && Object[key].trim() !== ''){
+        if(Object && Object[key] && typeof Object[key] === 'string' && Object[key].trim() !== ''){
             Object[key]=translateValue;
             return true;
         }
@@ -102,6 +103,26 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
     }
 
     /**
+    * @param {Object} source
+    * @param {string} value
+    */
+    const updatePostName=(source, value)=>{
+        if(value && '' !== value){
+            source.post_name=getTransaltedValue('post_name');
+        }
+    }
+
+    /**
+     * @param {Object} source
+     * @param {string} value
+     */
+    const updateExcerpt=(source, value)=>{
+        if(value && '' !== value){
+            source.excerpt=getTransaltedValue('excerpt');
+        }
+    }
+
+    /**
      * @param {Object} source
      * @param {Object} translation
      */
@@ -110,9 +131,12 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
 
         Object.keys(translation).forEach(key=>{
             const keys=key.split('_lmat_bulk_content_temp_');
-
             if(keys[0] === 'title'){
                 updateTitle(source, translation[keys[0]]);
+            }else if(keys[0] === 'post_name'){
+                updatePostName(source, translation[keys[0]]);
+            }else if(keys[0] === 'excerpt'){
+                updateExcerpt(source, translation[keys[0]]);
             }else if(keys[0] === 'content'){
                 let keyArray=keys;
 
@@ -270,6 +294,10 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
     }
 
     updateContent(source, translatedContent);
+
+    if("false" === lmatBulkTranslationGlobal.postMetaSync && source.metaFields && Object.keys(source.metaFields).length > 0){
+      source.metaFields=updateMetaFields(source.metaFields, lang, serviceProvider, postId);
+    }
     
     return source;
 }

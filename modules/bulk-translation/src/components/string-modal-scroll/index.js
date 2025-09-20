@@ -45,7 +45,9 @@ const ScrollAnimation = (props) => {
             return; // Stop animate scroll
         }
 
-        element.scrollTop = scrollPosition;
+        if(scrollPosition || 0 === scrollPosition){
+            element.scrollTop = scrollPosition;
+        }
 
         if (scrollPosition < scrollHeight) {
             requestAnimationFrame(animateScroll);
@@ -134,9 +136,12 @@ const ModalStringScroll = async ({provider, prefix, postId, lang, storeDispatch,
     let translateComplete = false;
     
     const stringContainer = document.querySelector(`#${prefix}-${provider}-table-container[data-render-id="${postId}"]`);
-    
-    stringContainer.scrollTop = 0;
-    const scrollHeight = stringContainer.scrollHeight;
+    let scrollHeight=false;
+
+    if(stringContainer){
+        stringContainer.scrollTop = 0;
+        scrollHeight = stringContainer.scrollHeight;
+    }
     
     await new Promise((resolve) => {
         // Defensive: check for valid container

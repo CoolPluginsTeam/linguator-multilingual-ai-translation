@@ -1,12 +1,13 @@
 import {selectTranslatedContent} from '../../../redux-store/features/selectors.js';
 import {store} from '../../../redux-store/store.js';
+import updateMetaFields from '../metaFields/update-meta-fields.js';
 
 /**
  * @param {Object} source
  * @param {Object} translation
  * @returns {Object}
  */
-const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
+const updateClassicContent=async ({source, lang, translatedContent, serviceProvider, postId})=>{
 
     const getTransaltedValue=(key)=>{
         const stateValue=selectTranslatedContent(store.getState(), postId, key, lang, serviceProvider);
@@ -55,11 +56,26 @@ const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
 
     /**
      * @param {Object} source
-     * @param {Object} translation
+     * @param {string} value
      */
     const updateTitle=async (source, value)=>{
         if(value && '' !== value){
             source.title=await getTransaltedValue('title');
+        }
+    }
+    /**
+     * @param {Object} source
+     * @param {string} value
+     */
+    const updatePostName=async (source, value)=>{
+        if(value && '' !== value){
+            source.post_name=await getTransaltedValue('post_name');
+        }
+    }
+
+    const updateExcerpt=async (source, value)=>{
+        if(value && '' !== value){
+            source.excerpt=await getTransaltedValue('excerpt');
         }
     }
 
@@ -100,7 +116,13 @@ const updateClassicContent=async ({source, lang, serviceProvider, postId})=>{
     }
 
     await updateTitle(source, source.title);
+    await updatePostName(source, source.post_name);
+    await updateExcerpt(source, source.excerpt);
     await updatePostContent({content: source.content});
+
+    if("false" === lmatBulkTranslationGlobal.postMetaSync && source.metaFields && Object.keys(source.metaFields).length > 0){
+        source.metaFields=updateMetaFields(source.metaFields, lang, serviceProvider, postId);
+      }
 
     return source;
 }

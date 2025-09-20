@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import StatusModal from './status-modal/index.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetStore, updateServiceProvider } from './redux-store/features/actions.js';
 import { selectCountInfo } from './redux-store/features/selectors.js';
-import ChromeAiTranslator from './components/translate-provider/localAi/local-ai-translate.js';
+import ChromeAiTranslator from './components/translate-provider/local-ai/local-ai-translate.js';
 import ErrorModalBox from './components/error-modal-box/index.js';
 import SettingModal from './setting-modal/index.js';
 import DOMPurify from 'dompurify';
+import Notice from './components/notice/index.js';
 
 const App = ({ onDestory, prefix, postIds }) => {
     const dispatch = useDispatch();
     const { languageObject = {} } = lmatBulkTranslationGlobal || {};
-    const emptyPostIdsErrorMessage = __('Please select at least one post for translation.', 'linguator-multilingual-ai-translation');
+    const emptyPostIdsErrorMessage = sprintf(__('Please select at least one %s for translation.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label);
     const [selectedLanguages, setSelectedLanguages] = useState([]);
     const [errorMessage, setErrorMessage] = useState(postIds.length === 0 ? emptyPostIdsErrorMessage : '');
     const [settingModalVisibility, setSettingModalVisibility] = useState(false);
@@ -105,6 +106,37 @@ const App = ({ onDestory, prefix, postIds }) => {
         return cls.join(' ');
     }
 
+    const SelectLanguageNotice = () => {
+
+        const notices = [];
+      
+        const postMetaSync = lmatBulkTranslationGlobal.postMetaSync === 'true' && lmatBulkTranslationGlobal.taxonomy_page !== 'taxonomy';
+
+          if (postMetaSync) {
+            notices.push({
+              className: `${prefix}-notice ${prefix}-notice-error`, message: <p>
+                {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'linguator-multilingual-ai-translation')}
+                <a
+                  href={`${lmatBulkTranslationGlobal.admin_url}admin.php?page=mlang_settings`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {__('Polylang settings', 'linguator-multilingual-ai-translation')}
+                </a>
+                {sprintf(__('. This may affect linked %s.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
+              </p>
+            });
+          }
+      
+        const noticeLength = notices.length;
+      
+        if (notices.length > 0) {
+          return notices.map((notice, index) => <Notice className={notice.className} key={index} lastNotice={index === noticeLength - 1}>{notice.message}</Notice>);
+        }
+      
+        return;
+      }
+
     return <div
         id={`${prefix}-container`}
         className={containerCls()}>
@@ -150,6 +182,7 @@ const App = ({ onDestory, prefix, postIds }) => {
                     <>
                         <div
                             className={`${prefix}-body`}>
+                            <SelectLanguageNotice />
                             <div
                                 className={`${prefix}-languages`}>
                                 {Object.keys(languageObject).map((language) => {

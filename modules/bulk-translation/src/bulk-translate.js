@@ -1,5 +1,5 @@
 import {filterContent, updateFilterContent} from './components/filter-content/index.js';
-import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules } from './redux-store/features/actions.js';
+import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules, updateProgressStatus, updateAllowedMetaFields } from './redux-store/features/actions.js';
 import { store } from './redux-store/store.js';
 import { __ } from '@wordpress/i18n';
 import Provider from './components/translate-provider/index.js';
@@ -31,14 +31,14 @@ const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, update
         const postContent=store.getState().parentPostsInfo[postId];
      
         if(postContent){
-            const {originalContent: {title, content}, languages, editorType, sourceLanguage} = postContent;
+            const {originalContent: {title, content, post_name, excerpt, metaFields}, languages, editorType, sourceLanguage} = postContent;
             
             if(!languages || languages.length === 0){
                 console.log(`All target languages for post ${postId} already exist. Skipping translation.`);
                 return;
             }
         
-            if(!['classic', 'block', 'elementor'].includes(editorType)){
+            if(!['classic', 'block', 'elementor', 'taxonomy'].includes(editorType)){
                 for(const lang of languages){   
                     storeDispatch(unsetPendingPost(postId+'_'+lang));
                     storeDispatch(updateProgressStatus(100 / pendingPosts.length));
@@ -47,7 +47,7 @@ const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, update
             }
 
             // Deep clone the content object to avoid mutating the original reference
-            const source = { title: title, content: JSON.parse(JSON.stringify(content)) };
+            const source = { title: title, content: JSON.parse(JSON.stringify(content)), post_name: post_name, excerpt: excerpt, metaFields: metaFields && Object.keys(metaFields).length > 0 ? JSON.parse(JSON.stringify(metaFields)) : {} };
 
              await translateContent({sourceLang: sourceLanguage, targetLangs: languages, totalPosts: pendingPosts.length,storeDispatch,prefix, postId, source, editorType, createTranslatePostNonce: nonce, updateDestoryHandler});
         }
@@ -82,25 +82,45 @@ export const updateContent=async ({source, postId, sourceLang, lang, editorType,
     const service=store.getState().serviceProvider;
 
     const deepCloneSource=JSON.parse(JSON.stringify(source));
+
     const updateContent=await updateFilterContent({source: deepCloneSource,postId, lang, editorType, service});
 
     const bulkTranslateRouteUrl = lmatBulkTranslationGlobal.bulkTranslateRouteUrl;
     const nonce = lmatBulkTranslationGlobal.nonce;
 
     storeDispatch(updateTranslatePostInfo({[postId+'_'+lang]: { status: 'in-progress', messageClass: 'in-progress'}}));
+
+    let endPoint='create-translate-post';
+
+    let body={
+        target_language: lang,
+        editor_type: editorType,
+        privateKey: createTranslatePostNonce,
+        source_language: sourceLang,
+    }
+
+    if(editorType === 'taxonomy'){
+        endPoint='create-translate-taxonomy';
+        body.term_id=postId;
+        body.taxonomy_name=updateContent.title || '';
+        body.taxonomy_description=updateContent.content || '';
+        body.taxonomy=lmatBulkTranslationGlobal.taxonomy_page;
+
+        if(updateContent.post_name && updateContent.post_name.trim() !== ''){
+            body.taxonomy_slug=updateContent.post_name;
+        }   
+    }else{
+        body.post_id=postId;
+        body.post_title= updateContent.title || '';
+        body.post_name= updateContent.post_name || '';
+        body.post_content=updateContent.content ? JSON.stringify(updateContent.content) : '';
+        body.post_meta_fields=updateContent.metaFields ? JSON.stringify(updateContent.metaFields) : '';
+        body.post_excerpt=updateContent.excerpt || '';
+    }
     
-    await fetch(bulkTranslateRouteUrl + `/${postId}:create-translate-post`, {
+    await fetch(bulkTranslateRouteUrl + `/${postId}:${endPoint}`, {
         method: 'POST',
-        body: new URLSearchParams({
-            post_id: postId,
-            target_language: lang,
-            editor_type: editorType,
-            post_title: updateContent.title || '',
-            post_content: updateContent.content ? JSON.stringify(updateContent.content) : '',
-            post_meta_fields: updateContent.metaFields ? JSON.stringify(updateContent.metaFields) : '',
-            privateKey: createTranslatePostNonce,
-            source_language: sourceLang,
-        }),
+        body: new URLSearchParams(body),
         headers: {
             'X-WP-Nonce': nonce,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -113,7 +133,13 @@ export const updateContent=async ({source, postId, sourceLang, lang, editorType,
         
         if(data.success && data.data.post_id){
 
-            updateTranslateData({provider: service, sourceLang, targetLang: lang, currentPostId: data.data.post_id, parentPostId: postId, editorType, updateTranslateDataNonce: data?.data?.update_translate_data_nonce});
+            const extraData={};
+
+            if(editorType === 'taxonomy'){
+                extraData.taxonomy=lmatBulkTranslationGlobal.taxonomy_page;
+            }
+
+            updateTranslateData({provider: service, sourceLang, targetLang: lang, currentPostId: data.data.post_id, parentPostId: postId, editorType, updateTranslateDataNonce: data?.data?.update_translate_data_nonce, extraData});
 
             data.data.post_title = '' === data.data.post_title ? __('N/A', 'linguator-multilingual-ai-translation') : data.data.post_title;
             updateData={targetPostId: data.data.post_id, targetPostTitle: data.data.post_title, targetLanguage: lang, postLink: data.data.post_link, postEditLink: data.data.post_edit_link, status: 'completed', messageClass: 'success'};
@@ -179,13 +205,22 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
     const nonce = lmatBulkTranslationGlobal.nonce;
     let storeParseBlockRules=false;
 
-    const untranslatedPosts=await fetch(bulkTranslateRouteUrl + '/local-ai:bulk-translate-entries', {
+    const body={
+        ids: JSON.stringify(ids),
+        lang: JSON.stringify(langs),
+        privateKey: bulkTranslatePrivateKey,
+    }
+
+    let postUrl='lmat:bulk-translate-entries';
+
+    if(lmatBulkTranslationGlobal.taxonomy_page && '' !== lmatBulkTranslationGlobal.taxonomy_page){
+        body.taxonomy=lmatBulkTranslationGlobal.taxonomy_page;
+        postUrl='lmat:bulk-translate-taxonomy-entries';
+    }
+
+    const untranslatedPosts=await fetch(bulkTranslateRouteUrl + '/' + postUrl, {
         method: 'POST',
-        body: new URLSearchParams({
-            ids: JSON.stringify(ids),
-            lang: JSON.stringify(langs),
-            privateKey: bulkTranslatePrivateKey,
-        }),
+        body: new URLSearchParams(body),
         headers: {
             'X-WP-Nonce': nonce,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -193,8 +228,9 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
         }
     })
 
+    
     const untranslatedPostsData=await untranslatedPosts.json();
-
+    
     if(!untranslatedPostsData.success && !untranslatedPostsData.code && untranslatedPostsData.data && untranslatedPostsData.data.message){
         return {success: false, message: untranslatedPostsData.data.message};
     }else if(!untranslatedPostsData.success && !untranslatedPostsData.message && untranslatedPostsData.data.error){
@@ -209,8 +245,24 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
         return {success: false, message: untranslatedPostsData.message};
     }
 
-    if(!untranslatedPostsData || !untranslatedPostsData.success || !untranslatedPostsData.data || !untranslatedPostsData.data.posts || !untranslatedPostsData.data.CreateTranslatePostNonce){   
-        return;
+    if(!untranslatedPostsData){
+        return {success: false, message: __('No posts to translate data undefined', 'linguator-multilingual-ai-translation')};
+    }
+
+    if(!untranslatedPostsData.success){
+        return {success: false, message: untranslatedPostsData.message};
+    }
+
+    if(!untranslatedPostsData.data){
+        return {success: false, message: __('No posts to translate untranslated data not found', 'linguator-multilingual-ai-translation')};
+    }
+
+    if(!untranslatedPostsData.data.posts){
+        return {success: false, message: __('No posts to translate untranslated posts data not found', 'linguator-multilingual-ai-translation')};
+    }
+
+    if(!untranslatedPostsData.data.CreateTranslatePostNonce){
+        return {success: false, message: __('No create translate post nonce', 'linguator-multilingual-ai-translation')};
     }
 
     const posts=untranslatedPostsData.data.posts;
@@ -252,12 +304,17 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
             const postId=postKeys[index];
             const activeProvider=store.getState().serviceProvider;
 
-            const {title, content, languages, editor_type , metaFields=null, sourceLanguage} = posts[postId];
+            const {title, content,post_name, languages, editor_type , metaFields=null, sourceLanguage, excerpt=null} = posts[postId];
             
             if(languages && languages.length > 0){
                 storeDispatch(updateTargetLanguages({lang: languages}));
 
                 const data={content, editorType:editor_type, metaFields, service: activeProvider, postId, storeDispatch};
+
+                if(untranslatedPostsData?.data?.allowedMetaFields && metaFields){
+                    data.allowedMetaFields=JSON.parse(untranslatedPostsData?.data?.allowedMetaFields);
+                }
+                
                 if(editor_type === 'block'){
                     data.blockParseRules=JSON.parse(untranslatedPostsData?.data?.blockParseRules);
 
@@ -266,13 +323,26 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
                         storeParseBlockRules=true;
                     }
                 }
+
+                if((content && content !== '') || (metaFields && Object.keys(metaFields).length > 0)){
+                    await filterContent(data);
+                }
             
-                await filterContent(data);
-            
-                if(['classic', 'block', 'elementor'].includes(editor_type)){
+                if(['classic', 'block', 'elementor', 'taxonomy'].includes(editor_type)){
+
                     if(title && title.trim() !== ''){
                         storeDispatch(updateSourceContent({postId, uniqueKey: 'title', value: title}));
                         storeDispatch(updateTargetContent({postId, uniqueKey: 'title', value: title}));
+                    }
+
+                    if(post_name && post_name.trim() !== ''){
+                        storeDispatch(updateSourceContent({postId, uniqueKey: 'post_name', value: post_name}));
+                        storeDispatch(updateTargetContent({postId, uniqueKey: 'post_name', value: post_name}));
+                    }
+
+                    if(excerpt && excerpt.trim() !== ''){
+                        storeDispatch(updateSourceContent({postId, uniqueKey: 'excerpt', value: excerpt}));
+                        storeDispatch(updateTargetContent({postId, uniqueKey: 'excerpt', value: excerpt}));
                     }
 
                     const previousParentPostsInfo=store.getState().parentPostsInfo[postId];
@@ -280,12 +350,34 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
                     const charactersCount=(previousParentPostsInfo?.charactersCount || 0) + title.length;
                     const wordsCount=(previousParentPostsInfo?.wordsCount || 0) + title.split(/\s+/).filter(word => /[^\p{L}\p{N}]/.test(word)).length;
                     const stringsCount=(previousParentPostsInfo?.stringsCount || 0) + title.split(/(?<=[.!?]+)\s+/).length;
-                                   
-                    storeDispatch(updateParentPostsInfo({postId, data: {editorType: editor_type, originalContent: {title, content}, languages, sourceLanguage, charactersCount, wordsCount, stringsCount}}));
+
+                    const originalContent={};
+
+                    if(title && title.trim() !== ''){
+                        originalContent.title=title;
+                    }
+
+                    if(content){
+                        originalContent.content=content;
+                    }else{
+                        originalContent.content={};
+                    }
+
+                    if(post_name && post_name.trim() !== ''){
+                        originalContent.post_name=post_name;
+                    }
+
+                    if(excerpt && excerpt.trim() !== ''){
+                        originalContent.excerpt=excerpt;
+                    }
+
+                    if(metaFields && Object.keys(metaFields).length > 0){
+                        originalContent.metaFields=metaFields;
+                    }
+
+                    storeDispatch(updateParentPostsInfo({postId, data: {editorType: editor_type, originalContent, languages, sourceLanguage, charactersCount, wordsCount, stringsCount}}));
                     storeDispatch(updateCountInfo({totalPosts: store.getState().countInfo.totalPosts+languages.length}));
                 }
-            
-
             }else{
                 console.log(`All target languages for post ${postId} already exist. Skipping translation.`);
             }
@@ -301,6 +393,10 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
         const translatePostsCount=store.getState().pendingPosts.length;
 
         await storeSourceContent(0, translatePostsCount);
+
+        if(untranslatedPostsData?.data?.allowedMetaFields){
+            storeDispatch(updateAllowedMetaFields(JSON.parse(untranslatedPostsData?.data?.allowedMetaFields)));
+        }
 
         return {postKeys, nonce: untranslatedPostsData.data.CreateTranslatePostNonce};
     }
