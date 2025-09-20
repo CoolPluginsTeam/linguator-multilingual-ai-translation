@@ -13,6 +13,7 @@ use Linguator\Includes\Base\LMAT_Base;
 use Linguator\Includes\Helpers\LMAT_Default_Term;
 use Linguator\Includes\Filters\LMAT_Filters;
 use Linguator\Includes\Filters\LMAT_Filters_Links;
+use Linguator\Includes\Filters\LMAT_Filters_Sanitization;
 use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
 use Linguator\Admin\Controllers\LMAT_Admin_Links;
 use Linguator\Frontend\Controllers\LMAT_Frontend_Nav_Menu;
