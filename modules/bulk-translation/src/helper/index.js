@@ -25,9 +25,7 @@ export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPo
             'Accept': 'application/json',
         },
         body: new URLSearchParams(data)
-    }).then(response => response.json()).then(data => {
-        console.log(data.data.message);
-    }).catch(error => {
+    }).then().catch(error => {
         console.error(error);
     });
 }
