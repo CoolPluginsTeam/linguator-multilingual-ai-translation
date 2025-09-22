@@ -5,7 +5,7 @@ import { dispatch, select } from '@wordpress/data';
  * @param {Object} translateData - The data containing translation information.
  */
 const SaveTranslation = ({type, key, translateContent, source, provider, AllowedMetaFields}) => {
-    if (['title', 'excerpt'].includes(type)) {
+    if (['title', 'excerpt', 'slug'].includes(type)) {
         const action = `${type}SaveTranslate`;
         dispatch('block-lmatPageTranslation/translate')[action](translateContent, provider);
     } else if (['metaFields'].includes(type)) {

@@ -39,6 +39,16 @@ export const getTranslationEntry = (state) => {
         });
     }
 
+    if (state.slug && state.slug.source) {
+        // Push the slug translation entry into the array
+        translateEntry.push({
+            id: 'slug', // Identifier for the entry
+            source: state.slug.source, // Source text for the slug
+            type: 'slug', // Type of the entry
+            translatedData: (state.slug.translatedData || {}), // translated text for the slug, defaulting to an empty string if not provided
+        });
+    }
+
     // Iterate over the metaFields object keys and push each translation entry into the array
     Object.keys(state.metaFields).map(key => {
         translateEntry.push({
@@ -91,6 +101,9 @@ export const getTranslatedString = (state, type, source, id = null, provider = n
     if (['title', 'excerpt'].includes(type) && state[type].source === source && state[type].translatedData && state[type].translatedData[provider]) {
         return state[type]?.translatedData[provider] || state[type]?.source; // Return the translatedData if it matches
     }
+    else if (type === 'slug' && state.slug.source === source && state.slug.translatedData && state.slug.translatedData[provider]) {
+        return undefined !== state.slug?.translatedData[provider] ? state.slug?.translatedData[provider] : state.slug?.source; // Return the translatedData if it matches
+    }
     // Check if the type is 'metaFields' and if the source matches
     else if (type === 'metaFields' && state.metaFields && state.metaFields[id] && state.metaFields[id].source === source && state.metaFields[id].translatedData && state.metaFields[id].translatedData[provider]) {
         // Return the target text if it exists, otherwise return the source text
@@ -126,4 +139,8 @@ export const getTranslationInfo = (state) => {
  */
 export const getAllowedMetaFields = (state) => {
     return state.allowedMetaFields || {};
+}
+
+export const contentFetchStatus = (state) => {
+    return state.contentFetchStatus;
 }

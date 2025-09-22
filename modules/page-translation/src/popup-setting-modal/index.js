@@ -6,7 +6,7 @@ import ChromeLocalAiTranslator from "../component/translate-provider/local-ai-tr
 import SettingModalHeader from "./header.js";
 import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
-import { __, sprintf } from "@wordpress/i18n";
+import { __ , sprintf } from "@wordpress/i18n";
 import ErrorModalBox from "../component/error-modal-box/index.js";
 import TranslateService from "../component/translate-provider/index.js";
 
@@ -74,6 +74,7 @@ const SettingModal = (props) => {
     useEffect(() => {
         const firstRenderBtns = document.querySelectorAll('#lmat-page-translation-modal-open-warning-wrapper .modal-content div[data-value]');
         const metaFieldBtn = document.querySelector(props.translateWrpSelector);
+
         if (metaFieldBtn) {
             metaFieldBtn.removeEventListener('click', handleMetaFieldBtnClick);
             metaFieldBtn.addEventListener('click', handleMetaFieldBtnClick);
@@ -84,7 +85,6 @@ const SettingModal = (props) => {
                 ele.addEventListener('click', openModalOnLoadHandler);
             }
         })
-
         return () => {
             metaFieldBtn.removeEventListener('click', handleMetaFieldBtnClick);
         }
@@ -97,24 +97,27 @@ const SettingModal = (props) => {
         const providerErrors = async () => {
             let errors = {};
             const localAiSupportStatus = async () => {
-                const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
+            const localAiTranslatorSupport = await ChromeLocalAiTranslator.languageSupportedStatus(sourceLang, targetLang, targetLangName, sourceLangName);
+
 
                 if (localAiTranslatorSupport !== true && typeof localAiTranslatorSupport === 'object') {
-                    setChromeAiBtnDisabled(true);
-
+                setChromeAiBtnDisabled(true);
+    
                     errors.localAiTranslator = { message: localAiTranslatorSupport, Title: __("Chrome AI Translator", 'linguator-multilingual-ai-translation') };
 
                     setServiceModalErrors(prev => ({ ...prev, localAiTranslator: errors.localAiTranslator }));
-                }
-            };
+            }
+        };
 
             const googleSupportStatus = async () => {
-                if (!googleSupport) {
+            if(!googleSupport){
                     errors.google = {
-                        message: "<p style={{ fontSize: '1rem', color: '#ff4646' }}>" + sprintf(
+
+
+                        message: "<p style={{ fontSize: '1rem', color: '#ff4646' }}>"+sprintf(
                             __("Google Translate does not support the target language: %s.", 'linguator-multilingual-ai-translation'),
                             "<strong>" + targetLangName + "</strong>"
-                        ) + "</p>",
+                        )+"</p>",
                         Title: __("Google Translate", 'linguator-multilingual-ai-translation')
                     };
 
@@ -122,7 +125,8 @@ const SettingModal = (props) => {
                         ...prev,
                         google: errors.google
                     }));
-                }
+                    }
+
             }
 
             if (providers.includes('localAiTranslator')) {
@@ -168,6 +172,7 @@ const SettingModal = (props) => {
 
         const service = activeService;
         const serviceLabel = activeServiceObject && activeServiceObject.ServiceLabel;
+
         const postId = props.postId;
 
         const parentWrp = document.getElementById("lmat_page_translation_strings_model");
@@ -220,7 +225,7 @@ const SettingModal = (props) => {
                 return;
             }
         }
-
+        
         setModalRender(prev => prev + 1);
         setActiveService(dataService);
     };
@@ -232,7 +237,7 @@ const SettingModal = (props) => {
     return (
         <>
             {errorModalVisibility && serviceModalErrors[errorModalVisibility] &&
-                <ErrorModalBox onClose={closeErrorModal} {...serviceModalErrors[errorModalVisibility]} />
+                <ErrorModalBox onClose={closeErrorModal} {...serviceModalErrors[errorModalVisibility]}/>
             }
             {settingVisibility && providers.length > 1 &&
                 <div className="modal-container" style={{ display: settingVisibility ? 'flex' : 'none' }}>

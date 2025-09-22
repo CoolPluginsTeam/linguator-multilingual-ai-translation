@@ -1,11 +1,9 @@
-import GutenbergBlockSaveSource from "../../store-source-string/gutenberg/index.js";
-import { dispatch, select } from "@wordpress/data";
-import { parse } from "@wordpress/blocks";
+import { select, dispatch } from "@wordpress/data";
 import { __ } from "@wordpress/i18n";
+import ClassicSaveSource from "../../store-source-string/classic/index.js";
 
-const GutenbergPostFetch = async (props) => {
+const ClassicPostFetch = async (props) => {
     const apiUrl = lmatPageTranslationGlobal.ajax_url;
-    let blockRules = wp.data.select('block-lmatPageTranslation/translate').getBlockRules() || {};
     const apiController = [];
 
     const destroyHandler = () => {
@@ -18,44 +16,8 @@ const GutenbergPostFetch = async (props) => {
         destroyHandler();
     });
 
-    const BlockParseFetch = async () => {
-
-        if (blockRules && blockRules.LmatBlockParseRules && Object.keys(blockRules.LmatBlockParseRules).length > 0) {
-            return;
-        }
-
-        const blockRulesApiSendData = {
-            lmat_fetch_block_rules_key: lmatPageTranslationGlobal.fetchBlockRulesNonce,
-            action: lmatPageTranslationGlobal.action_block_rules
-        };
-
-
-        const rulesController = new AbortController();
-        apiController.push(rulesController);
-        await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Accept': 'application/json',
-            },
-            body: new URLSearchParams(blockRulesApiSendData),
-            signal: rulesController.signal,
-        })
-            .then(response => response.json())
-            .then(data => {
-                blockRules = JSON.parse(data.data.blockRules);
-                dispatch('block-lmatPageTranslation/translate').setBlockRules(blockRules);
-
-            })
-            .catch(error => {
-                console.error('Error fetching post content:', error);
-            });
-    }
-
-    await BlockParseFetch();
-
     const ContentFetch = async () => {
-        
+
         const contentFetchStatus = select('block-lmatPageTranslation/translate').contentFetchStatus();
         if (contentFetchStatus) {
             return;
@@ -99,12 +61,7 @@ const GutenbergPostFetch = async (props) => {
                 }
 
                 const post_data = data.data;
-
-                if (post_data.content && post_data.content.trim() !== '') {
-                    post_data.content = parse(post_data.content);
-                }
-
-                GutenbergBlockSaveSource(post_data, blockRules);
+                ClassicSaveSource(post_data);
                 props.refPostData(post_data);
                 props.updatePostDataFetch(true);
                 dispatch('block-lmatPageTranslation/translate').contentFetchStatus(true);
@@ -117,4 +74,4 @@ const GutenbergPostFetch = async (props) => {
     await ContentFetch();
 };
 
-export default GutenbergPostFetch;
+export default ClassicPostFetch;

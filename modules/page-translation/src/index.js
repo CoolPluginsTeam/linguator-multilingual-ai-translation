@@ -3,6 +3,8 @@ import './global-store/index.js';
 import { useEffect, useState } from 'react';
 import GutenbergPostFetch from './fetch-post/gutenberg/index.js';
 import UpdateGutenbergPage from './create-translated-post/gutenberg/index.js';
+import ClassicPostFetch from './fetch-post/classic/index.js';
+import UpdateClassicPage from './create-translated-post/classic/index.js';
 import Notice from './component/notice/index.js';
 import { select } from '@wordpress/data';
 import { sprintf, __ } from '@wordpress/i18n';
@@ -12,6 +14,7 @@ import ElementorPostFetch from './fetch-post/elementor/index.js';
 import ElementorUpdatePage from './create-translated-post/elementor/index.js';
 
 import ReactDOM from "react-dom/client";
+import MetaFieldsFetch from './fetch-post/meta-fields/index.js';
 
 import './index.scss';
 
@@ -33,30 +36,38 @@ const StringModalBodyNotice = () => {
 
   const notices = [];
 
+  const postMetaSync = lmatPageTranslationGlobal.postMetaSync === 'true';
+
+  if (postMetaSync) {
+    notices.push({
+      className: 'lmat-page-translation-notice lmat-page-translation-notice-error', message: <p>
+        {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'linguator-multilingual-ai-translation')}
+        <a
+          href={`${lmatPageTranslationGlobal.admin_url}admin.php?page=lmat_settings`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {__('Linguator settings', 'linguator-multilingual-ai-translation')}
+        </a>
+        {__('. This may affect linked posts or pages.', 'linguator-multilingual-ai-translation')}
+      </p>
+    });
+  }
+
   if (editorType === 'gutenberg') {
-
-    const postMetaSync = lmatPageTranslationGlobal.postMetaSync === 'true';
-
-    if (postMetaSync) {
-      notices.push({
-        className: 'lmat-page-translation-notice lmat-page-translation-notice-warning', message: <p>
-          {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'linguator-multilingual-ai-translation')}
-          <a
-            href={`${lmatPageTranslationGlobal.admin_url}admin.php?page=lmat_settings`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {__('Linguator settings', 'linguator-multilingual-ai-translation')}
-          </a>
-          {__('. This may affect linked posts or pages.', 'linguator-multilingual-ai-translation')}
-        </p>
-      });
-    }
 
     const blockRules = select('block-lmatPageTranslation/translate').getBlockRules();
 
     if (!blockRules.LmatBlockParseRules || Object.keys(blockRules.LmatBlockParseRules).length === 0) {
       notices.push({ className: 'lmat-page-translation-notice lmat-page-translation-notice-error', message: <p>{__('No block rules were found. It appears that the block-rules.JSON file could not be fetched, possibly because it is blocked by your server settings. Please check your server configuration to resolve this issue.', 'linguator-multilingual-ai-translation')}</p> });
+    }
+  }
+
+  if (editorType === 'classic') {
+    const blockCommentTag = lmatPageTranslationGlobal.blockCommentTag === 'true';
+
+    if (blockCommentTag) {
+      notices.push({ className: 'lmat-page-translation-notice lmat-page-translation-notice-error', message: <p>{__('This page may contain Gutenberg block content. After the translation, please review the updated content before finalizing the page update.', 'linguator-multilingual-ai-translation')}</p> });
     }
   }
 
@@ -88,6 +99,10 @@ const App = () => {
     translateWrpSelector = 'input#lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]';
     translatePost = UpdateGutenbergPage;
     fetchPost = GutenbergPostFetch;
+  } else if (editorType === 'classic') {
+    translateWrpSelector = 'button#lmat-page-translation-classic-editor-translate-button';
+    translatePost = UpdateClassicPage;
+    fetchPost = ClassicPostFetch;
   }
 
   const [postDataFetchStatus, setPostDataFetchStatus] = useState(false);
@@ -95,6 +110,7 @@ const App = () => {
 
 
   const fetchPostData = async (data) => {
+    await MetaFieldsFetch(data);
     await fetchPost(data);
 
     const allEntries = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
@@ -203,7 +219,6 @@ const appendElementorTranslateBtn = () => {
       buttonElement.attr('title', 'Translation is not available because there is no Elementor data.');
       return;
     }
-    
     // Append app root wrapper in body
     init();
 
@@ -214,6 +229,26 @@ const appendElementorTranslateBtn = () => {
 }
 
 if (editorType === 'gutenberg') {
+  // Render App
+  window.addEventListener('load', () => {
+
+    // Append app root wrapper in body
+    init();
+
+    const sourceLang = window.lmatPageTranslationGlobal.source_lang
+    const providers = window.lmatPageTranslationGlobal.providers;
+
+    if (sourceLang && '' !== sourceLang && providers.length > 0) {
+      insertMessagePopup();
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('lmat-page-translation-setting-modal'));
+    root.render(<App />);
+  });
+}
+
+// Classic editor translate button append
+if (editorType === 'classic') {
   // Render App
   window.addEventListener('load', () => {
 

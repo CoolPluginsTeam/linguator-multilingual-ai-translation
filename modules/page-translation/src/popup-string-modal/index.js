@@ -53,7 +53,7 @@ const popStringModal = (props) => {
      */
     useEffect(() => {
         if (!props.postDataFetchStatus) {
-                props.fetchPostData({ postId: props.postId, sourceLang: props.sourceLang, targetLang: props.targetLang, updatePostDataFetch: props.updatePostDataFetch, refPostData: data => setRefPostData(data), updateDestroyHandler: updateDestroyHandler });
+                props.fetchPostData({ postId: props.postId, sourceLang: props.sourceLang, targetLang: props.targetLang, updatePostDataFetch: props.updatePostDataFetch, refPostData: data => setRefPostData((prev) => ({ ...prev, ...data })), updateDestroyHandler: updateDestroyHandler });
         }
     }, [props.postDataFetchStatus, props.modalRender])
 
@@ -69,7 +69,7 @@ const popStringModal = (props) => {
      * Updates the fetch state.
      * @param {boolean} state - The state to update the fetch with.
      */
-    const setPopupVisibilityHandler = (state) => {
+    const setPopupVisibilityHandler = () => {
         if(props.service === 'google'){
             const iframe = document.querySelector('.skiptranslate iframe[id=":1.container"]');
             if (iframe) {

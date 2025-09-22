@@ -1,26 +1,19 @@
-import { dispatch } from "@wordpress/data";
-import AllowedMetaFields from "../../allowed-meta-fields.js";
 import ElementorSaveSource from "../../store-source-string/elementor/index.js";
-
-// Update allowed meta fields
-const updateAllowedMetaFields = (data) => {
-    dispatch('block-lmatPageTranslation/translate').allowedMetaFields(data);
-}
 
 const fetchPostContent = async (props) => {
     const elementorPostData = lmatPageTranslationGlobal.elementorData && typeof lmatPageTranslationGlobal.elementorData === 'string' ? JSON.parse(lmatPageTranslationGlobal.elementorData) : lmatPageTranslationGlobal.elementorData;
-    const metaFields=lmatPageTranslationGlobal?.metaFields;
 
     const content={
         widgetsContent:elementorPostData,
-        metaFields:metaFields
     }
 
-    
-    // Update allowed meta fields
-    Object.keys(AllowedMetaFields).forEach(key => {
-        updateAllowedMetaFields({id: key, type: AllowedMetaFields[key].type});
-    });
+    if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+        content.slug_name=lmatPageTranslationGlobal.slug_name;
+    }
+
+    if(lmatPageTranslationGlobal.parent_post_title && '' !== lmatPageTranslationGlobal.parent_post_title){
+        content.title=lmatPageTranslationGlobal.parent_post_title;
+    }
     
     ElementorSaveSource(content);
     

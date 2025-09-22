@@ -30,7 +30,7 @@ const filterTranslateAttr = (blockId, blockAttr, filterAttr) => {
             newIdArr.forEach(key => {
                 childIdArr.push(key);
                 uniqueId += `lmat_page_translation_${key}`;
-                dynamicBlockAttr = dynamicBlockAttr[key];
+                dynamicBlockAttr = dynamicBlockAttr ? dynamicBlockAttr[key] : dynamicBlockAttr;
             });
 
             let blockAttrContent = dynamicBlockAttr;
@@ -38,9 +38,10 @@ const filterTranslateAttr = (blockId, blockAttr, filterAttr) => {
             if(blockAttrContent instanceof wp.richText.RichTextData) {
                 blockAttrContent=blockAttrContent.originalHTML;
             }
+
           
-            if (undefined !== blockAttrContent && blockAttrContent.trim() !== '') {
-                
+            if (undefined !== blockAttrContent && typeof blockAttrContent === 'string' && blockAttrContent.trim() !== '') {
+
                 let filterKey = uniqueId.replace(/[^\p{L}\p{N}]/gu, '');
 
                 if (!/[\p{L}\p{N}]/gu.test(blockAttrContent)) {
@@ -117,59 +118,19 @@ const blockAttributeContent = (parseBlock, blockRules) => {
  */
 const GutenbergBlockSaveSource = (block, blockRules) => {
 
-    const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
-
     Object.keys(block).forEach(key => {
         if (key === 'content') {
             blockAttributeContent(block[key], blockRules);
-        }else if(key === 'metaFields'){
-            Object.keys(block[key]).forEach(metaKey => {
-                // Store meta fields
-                if(Object.keys(AllowedMetaFields).includes(metaKey) && AllowedMetaFields[metaKey].inputType === 'string'){
-                    if('' !== block[key][metaKey][0] && undefined !== block[key][metaKey][0]){
-                        dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(metaKey, block[key][metaKey][0]);
-                    }
-                }
-            });
-
-            // Store ACF fields
-            if(window.acf){
-                acf.getFields().forEach(field => {
-                    const fieldData=JSON.parse(JSON.stringify({key: field.data.key, type: field.data.type, name: field.data.name}));
-
-                    if(field.$el && field.$el.closest('.acf-field.acf-field-repeater') && field.$el.closest('.acf-field.acf-field-repeater').length > 0){
-                        const rowId=field.$el.closest('.acf-row').data('id');
-                        const repeaterItemName=field.$el.closest('.acf-field.acf-field-repeater').data('name');
-
-                        if(rowId && '' !== rowId){
-                            const index=rowId.replace('row-', '');
-                        
-                            fieldData.key=fieldData.key+'_'+index;
-
-                            fieldData.name=repeaterItemName+'_'+index+'_'+fieldData.name;
-                        }
-
-                    }
-
-                    if(field.data && AllowedMetaFields[fieldData.key]){
-                        const name = fieldData.name;
-
-                        const currentValue=acf.getField(fieldData.key)?.val();
-
-                        if(block[key] && block[key][name]){
-                            if('' !== block[key][name] && undefined !== block[key][name]){
-                                dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(fieldData.key, block[key][name][0]);
-                            }
-                        }else if(currentValue && '' !== currentValue && undefined !== currentValue){
-                            dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(fieldData.key, currentValue);
-                        }
-                    }
-                });
-            }
-        } else if(['title', 'excerpt'].includes(key)){
+        }else if(['title', 'excerpt'].includes(key)){
             if(block[key] && block[key].trim() !== ''){
                 const action = `${key}SaveSource`;
                 dispatch('block-lmatPageTranslation/translate')[action](block[key]);
+            }
+        }
+
+        if(key === 'slug_name' && lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+            if(block[key] && block[key].trim() !== ''){
+                dispatch('block-lmatPageTranslation/translate').slugSaveSource(block[key]);
             }
         }
     });

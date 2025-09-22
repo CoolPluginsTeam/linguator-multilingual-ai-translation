@@ -1,6 +1,7 @@
 import { select } from '@wordpress/data';
 import YoastSeoFields from '../../component/translate-seo-fields/yoast-seo-fields.js';
-import RankMathSeo from '../../component/translate-seo-fields/rank-math-seo.js';    
+import RankMathSeo from '../../component/translate-seo-fields/rank-math-seo.js';
+import translatedMetaFields from '../meta-fields/index.js';
 
 // Update widget content with translations
 const lmatUpdateWidgetContent = (translations) => {
@@ -53,6 +54,16 @@ const lmatUpdateMetaFields = (metaFields, service) => {
                 }
             };
         });
+}
+
+const lmatUpdateTitle = (title, service) => {
+    if(title && '' !== title){
+        const translatedTitle = select('block-lmatPageTranslation/translate').getTranslatedString('title', title, null, service);
+
+        if(translatedTitle && '' !== translatedTitle){
+            elementor?.settings?.page?.model?.setExternalChange('post_title', translatedTitle);
+        }
+    }
 }
 
 // Find Elementor model by ID
@@ -162,6 +173,9 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
     // Update Meta Fields
     lmatUpdateMetaFields(postContent.metaFields, service);
 
+    // Update Title
+    lmatUpdateTitle(postContent.title, service);
+
     const replaceSourceString=()=>{
         const elementorData = lmatPageTranslationGlobal.elementorData;
         const translateStrings=wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
@@ -201,20 +215,34 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
     
     const elementorData = replaceSourceString();
 
+    const requestBody={
+        action: lmatPageTranslationGlobal.update_elementor_data,
+        post_id: postID,
+        elementor_data: JSON.stringify(elementorData),
+        lmat_page_translation_nonce: lmatPageTranslationGlobal.ajax_nonce,
+        parent_post_id: lmatPageTranslationGlobal.parent_post_id
+    }
+
+    if(postContent.slug_name && '' !== postContent.slug_name && lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+        const slug_name=postContent.slug_name;
+        const translatedSlug=select('block-lmatPageTranslation/translate').getTranslatedString('slug', slug_name, null, service);
+
+        if(translatedSlug && '' !== translatedSlug){
+            requestBody.post_name=translatedSlug;
+        }
+    }
+
+    if("false" === lmatPageTranslationGlobal.postMetaSync){
+        requestBody.meta_fields=JSON.stringify(translatedMetaFields(postContent.metaFields, service));
+    }
+
     fetch(lmatPageTranslationGlobal.ajax_url, {
         method: 'POST',
         headers: {
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
             'Accept': 'application/json',
         },
-        body: new URLSearchParams(
-            {
-                action: lmatPageTranslationGlobal.update_elementor_data,
-                post_id: postID,
-                elementor_data: JSON.stringify(elementorData),
-                lmat_page_translation_nonce: lmatPageTranslationGlobal.ajax_nonce
-            }
-        )
+        body: new URLSearchParams(requestBody)
     })
         .then(response => response.json())
         .then(data => {
