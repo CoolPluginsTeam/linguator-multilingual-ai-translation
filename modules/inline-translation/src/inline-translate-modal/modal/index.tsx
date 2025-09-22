@@ -13,6 +13,7 @@ import {
 } from "@wordpress/components";
 
 import { createElement } from "@wordpress/element";
+import DOMPurify from 'dompurify';
 
 export const ModalCompat = (props: any) =>
   createElement(Modal as any, props);
@@ -154,7 +155,6 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
 
   return (isModalOpen &&
     <>
-      <ModalStyle modalContainer={styles.modalContainer} />
       <ModalCompat
         title="Lingauator Inline Translator"
         onRequestClose={HandlerCloseModal}
@@ -163,9 +163,10 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
         isDismissible={false}
         bodyOpenClassName={'body-class'}
       >
+        <ModalStyle modalContainer={styles.modalContainer} />
         <div className={styles.modalCloseButton} onClick={HandlerCloseModal}>&times;</div>
         {langError && langError !== "" ? (
-          <div className={styles.error}><p dangerouslySetInnerHTML={{ __html: langError }} />{errorBtns.length > 0 && <ButtonGroupCompat className={styles.errorBtnGroup} buttons={errorBtns} />}</div>
+          <div className={styles.error}><p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(langError) }} />{errorBtns.length > 0 && <ButtonGroupCompat className={styles.errorBtnGroup} buttons={errorBtns} />}</div>
         ) : (
           <div className={styles.modal}>
             <div className={styles.controls}>

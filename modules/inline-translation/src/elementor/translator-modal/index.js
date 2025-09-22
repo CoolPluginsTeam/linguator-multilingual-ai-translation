@@ -4,8 +4,7 @@ import TranslatorModal from '../../inline-translate-modal/modal/index.tsx';
 const ElementorWidgetTranslator = (props) => {
   const value = props.getControlValue();
   const activePageLanguage = window.lmatElementorInlineTranslation?.pageLanguage || 'en';
-  
-  console.log(activePageLanguage)
+
   const onUpdateHandler = (value) => {
     props.activeController(value);
   }

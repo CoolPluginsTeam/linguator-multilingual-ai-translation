@@ -33,6 +33,7 @@ class LMAT_Inline_Translation {
 	 */
 	public function __construct() {
 		add_action( 'enqueue_block_assets', array( $this, 'block_inline_translation_assets' ) );
+		add_action('admin_enqueue_scripts', array($this, 'classic_inline_translation_assets'));
 		add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'elementor_inline_translation_assets' ) );
 	}
 
@@ -43,6 +44,15 @@ class LMAT_Inline_Translation {
 
 		if ( defined( 'LINGUATOR_VERSION' ) ) {
 			$this->enqueue_inline_translation_assets( 'gutenberg' );
+		}
+	}
+
+	/**
+	 * Enqueue the classic inline translation assets.
+	 */
+	public function classic_inline_translation_assets() {
+		if ( defined( 'LINGUATOR_VERSION' ) ) {
+			$this->enqueue_inline_translation_assets( 'classic' );
 		}
 	}
 

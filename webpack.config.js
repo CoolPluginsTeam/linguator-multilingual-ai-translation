@@ -187,12 +187,20 @@ const machineTranslationConfigs = [
     ext: '.js',
   },
   {
-    srcDir: 'modules/inline-translation/src/gutenberg/editorAssets',
+    srcDir: 'modules/inline-translation/src/gutenberg/editor-assets',
     outDir: 'admin/assets/gutenberg-inline-translate',
     sourceFiles: ['index'],
     styleLoader: true,
     generateAssets: false,
     ext: '.ts',
+  },
+  {
+    srcDir: 'modules/inline-translation/src/classic',
+    outDir: 'admin/assets/classic-inline-translate',
+    sourceFiles: ['index'],
+    styleLoader: true,
+    generateAssets: false,
+    ext: '.js',
   },
 ];
 
