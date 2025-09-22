@@ -169,7 +169,7 @@ class LMAT_Wizard
 	 */
 	public function settings_tabs($tabs)
 	{
-		$tabs['wizard'] = esc_html__('Setup', 'linguator-multilingual-ai-translation');
+		$tabs['wizard'] = esc_html__('Setup Guide', 'linguator-multilingual-ai-translation');
 		return $tabs;
 	}
 

@@ -316,7 +316,7 @@ class LMAT_Admin_Notices {
 				$already_rated_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'already-rated' ), 'already-rated', '_lmat_notice_nonce' ) );
 				$not_interested_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'not-interested' ), 'not-interested', '_lmat_notice_nonce' ) );
 				$like_it_text   = esc_html__( 'Rate Now! ★★★★★', 'linguator-multilingual-ai-translation' );
-				$already_rated_text = esc_html__( 'Already Rewiewed', 'linguator-multilingual-ai-translation' );
+				$already_rated_text = esc_html__( 'Already Reviewed', 'linguator-multilingual-ai-translation' );
 				$not_like_it_text   = esc_html__( 'Not Interested', 'linguator-multilingual-ai-translation' );
 				$html = sprintf(
 						/* translators: %1$s: Already rated URL, %2$s: Dismiss URL */
