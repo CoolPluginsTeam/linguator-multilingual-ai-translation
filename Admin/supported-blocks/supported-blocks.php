@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'LMAT_Supported_Blocks' ) ) {
+if ( ! class_exists( 'Supported_Blocks' ) ) {
 	/**
-	 * Class LMAT_Supported_Blocks
+	 * Class Supported_Blocks
 	 *
 	 * This class handles the supported blocks for the AutoPoly - AI Translation For Polylang plugin.
 	 *
 	 * @package LMATP
 	 */
-	class LMAT_Supported_Blocks {
+	class Supported_Blocks {
 		/**
 		 * Singleton instance.
 		 *
-		 * @var LMAT_Supported_Blocks
+		 * @var Supported_Blocks
 		 */
 		private static $instance = null;
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'LMAT_Supported_Blocks' ) ) {
 		/**
 		 * Get the singleton instance of the class.
 		 *
-		 * @return LMAT_Supported_Blocks
+		 * @return Supported_Blocks
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {

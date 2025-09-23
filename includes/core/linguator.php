@@ -22,7 +22,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
 use Linguator\Includes\Controllers\LMAT_REST_Request;
 use Linguator\Integrations\LMAT_Integrations;
 use Linguator\Settings\Controllers\LMAT_Settings;
-use Linguator\Supported_Blocks\LMAT_Custom_Block_Post;
+use Linguator\Supported_Blocks\Custom_Block_Post;
 
 // Default directory to store user data such as custom flags
 if ( ! defined( 'LMAT_LOCAL_DIR' ) ) {
@@ -91,8 +91,8 @@ class Linguator {
 		}
 
 		// Register the custom post type for the supported blocks
-		if(class_exists(LMAT_Custom_Block_Post::class)){
-			LMAT_Custom_Block_Post::get_instance();
+		if(class_exists(Custom_Block_Post::class)){
+			Custom_Block_Post::get_instance();
 		}
 
 		// Initialize feedback functionality

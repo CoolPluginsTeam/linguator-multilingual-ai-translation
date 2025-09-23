@@ -242,8 +242,8 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Settings\\Header\\Header' => __DIR__ . '/../..' . '/admin/settings/header/header.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => __DIR__ . '/../..' . '/admin/settings/tables/table-languages.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_String' => __DIR__ . '/../..' . '/admin/settings/tables/table-string.php',
-        'Linguator\\Supported_Blocks\\LMAT_Custom_Block_Post' => __DIR__ . '/../..' . '/admin/supported-blocks/custom-blocks-post.php',
-        'Linguator\\Supported_Blocks\\LMAT_Supported_Blocks' => __DIR__ . '/../..' . '/admin/supported-blocks/supported-blocks.php',
+        'Linguator\\Supported_Blocks\\Custom_Block_Post' => __DIR__ . '/../..' . '/admin/supported-blocks/custom-blocks-post.php',
+        'Linguator\\Supported_Blocks\\Supported_Blocks' => __DIR__ . '/../..' . '/admin/supported-blocks/supported-blocks.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -187,6 +187,6 @@ return array(
     'Linguator\\Settings\\Header\\Header' => $baseDir . '/admin/settings/header/header.php',
     'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => $baseDir . '/admin/settings/tables/table-languages.php',
     'Linguator\\Settings\\Tables\\LMAT_Table_String' => $baseDir . '/admin/settings/tables/table-string.php',
-    'Linguator\\Supported_Blocks\\LMAT_Custom_Block_Post' => $baseDir . '/admin/supported-blocks/custom-blocks-post.php',
-    'Linguator\\Supported_Blocks\\LMAT_Supported_Blocks' => $baseDir . '/admin/supported-blocks/supported-blocks.php',
+    'Linguator\\Supported_Blocks\\Custom_Block_Post' => $baseDir . '/admin/supported-blocks/custom-blocks-post.php',
+    'Linguator\\Supported_Blocks\\Supported_Blocks' => $baseDir . '/admin/supported-blocks/supported-blocks.php',
 );

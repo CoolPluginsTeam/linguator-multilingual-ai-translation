@@ -2,7 +2,7 @@
 namespace Linguator\Modules\Page_Translation;
 
 use Linguator\Admin\Controllers\LMAT_Admin;
-use Linguator\Supported_Blocks\LMAT_Supported_Blocks;
+use Linguator\Supported_Blocks\Supported_Blocks;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -365,14 +365,14 @@ class LMAT_Page_Translation {
 			exit;
 		}
 
-		if ( ! method_exists( LMAT_Supported_Blocks::class, 'block_parsing_rules' ) ) {
+		if ( ! method_exists( Supported_Blocks::class, 'block_parsing_rules' ) ) {
 			wp_send_json_error( array( 
-				'message' => __( 'The method block_parsing_rules() does not exist in LMAT_Supported_Blocks.', 'linguator-multilingual-ai-translation' ) 
+				'message' => __( 'The method block_parsing_rules() does not exist in Supported_Blocks.', 'linguator-multilingual-ai-translation' ) 
 			) );
 			exit;
 		}
 
-		$data = LMAT_Supported_Blocks::get_instance()->block_parsing_rules();
+		$data = Supported_Blocks::get_instance()->block_parsing_rules();
 		wp_send_json_success( array( 'blockRules' => json_encode( $data ) ) );
 		exit;
 	}

@@ -16,7 +16,7 @@ use Linguator\Settings\Controllers\LMAT_Settings_Module;
 use Linguator\Settings\Tables\LMAT_Table_Languages;
 use Linguator\Settings\Tables\LMAT_Table_String;
 use Linguator\Settings\Header\Header;
-use Linguator\Supported_Blocks\LMAT_Supported_Blocks;
+use Linguator\Supported_Blocks\Supported_Blocks;
 
 use WP_Error;
 
@@ -446,7 +446,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		// Support Blocks
 		if($this->selected_tab === 'supported-blocks'){
 			$this->header->header();
-			LMAT_Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
+			Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
 			return;
 		}
 

@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'LMAT_Custom_Block_Post' ) ) {
+if ( ! class_exists( 'Custom_Block_Post' ) ) {
 	/**
-	 * Class LMAT_Custom_Block_Post
+	 * Class Custom_Block_Post
 	 *
 	 * This class handles the custom block post type for the AutoPoly - AI Translation For Polylang plugin.
 	 * It manages the registration of the custom post type, adds submenu pages under the Polylang menu,
@@ -19,11 +19,11 @@ if ( ! class_exists( 'LMAT_Custom_Block_Post' ) ) {
 	 *
 	 * @package LMAT
 	 */
-	class LMAT_Custom_Block_Post {
+	class Custom_Block_Post {
 		/**
 		 * Singleton instance.
 		 *
-		 * @var Lmat_Custom_Block_Post
+		 * @var Custom_Block_Post
 		 */
 		private static $instance = null;
 
@@ -103,7 +103,7 @@ if ( ! class_exists( 'LMAT_Custom_Block_Post' ) ) {
 		/**
 		 * Get the singleton instance.
 		 *
-		 * @return Lmat_Custom_Block_Post
+		 * @return Custom_Block_Post
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {
@@ -200,8 +200,8 @@ if ( ! class_exists( 'LMAT_Custom_Block_Post' ) ) {
 				wp_die( '0', 400 );
 			}
 
-			if($updated_blocks_data && class_exists(LMAT_Supported_Blocks::class)){
-				LMAT_Supported_Blocks::get_instance()->update_custom_blocks_content($updated_blocks_data);
+			if($updated_blocks_data && class_exists(Supported_Blocks::class)){
+				Supported_Blocks::get_instance()->update_custom_blocks_content($updated_blocks_data);
 			}
 
 			return wp_send_json_success( array( 'message' => __( 'Linguator Multilingual AI Translation: Custom Blocks data updated successfully', 'linguator-multilingual-ai-translation' ) ) );

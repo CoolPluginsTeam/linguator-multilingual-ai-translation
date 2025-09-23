@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Services\Translation\Translation_Term_Model;
-use Linguator\Supported_Blocks\LMAT_Supported_Blocks;
+use Linguator\Supported_Blocks\Supported_Blocks;
 use Translation_Entry;
 use Translations;
 use WP_Error;
@@ -368,7 +368,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			}
 
 			if ( $gutenberg_block ) {
-				$block_parse_rules       = LMAT_Supported_Blocks::get_instance()->block_parsing_rules();
+				$block_parse_rules       = Supported_Blocks::get_instance()->block_parsing_rules();
 				$data['blockParseRules'] = json_encode( $block_parse_rules );
 			}
 
