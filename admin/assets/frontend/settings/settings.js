@@ -16930,6 +16930,76 @@ function FcWorkflow (props) {
   return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"rect","attr":{"x":"7","y":"31","fill":"#00BCD4","width":"10","height":"10"},"child":[]},{"tag":"path","attr":{"fill":"#00BCD4","d":"M35.3,19.3l-5.6-5.6c-0.4-0.4-0.4-1,0-1.4l5.6-5.6c0.4-0.4,1-0.4,1.4,0l5.6,5.6c0.4,0.4,0.4,1,0,1.4 l-5.6,5.6C36.3,19.7,35.7,19.7,35.3,19.3z"},"child":[]},{"tag":"circle","attr":{"fill":"#3F51B5","cx":"12","cy":"13","r":"6"},"child":[]},{"tag":"circle","attr":{"fill":"#448AFF","cx":"36","cy":"36","r":"6"},"child":[]},{"tag":"g","attr":{"fill":"#90A4AE"},"child":[{"tag":"rect","attr":{"x":"11","y":"24","width":"2","height":"5"},"child":[]},{"tag":"polygon","attr":{"points":"12,21 9,25 15,25"},"child":[]}]},{"tag":"g","attr":{"fill":"#90A4AE"},"child":[{"tag":"rect","attr":{"x":"20","y":"12","width":"5","height":"2"},"child":[]},{"tag":"polygon","attr":{"points":"28,13 24,10 24,16"},"child":[]}]},{"tag":"g","attr":{"fill":"#90A4AE"},"child":[{"tag":"rect","attr":{"x":"35","y":"21","width":"2","height":"5"},"child":[]},{"tag":"polygon","attr":{"points":"36,29 39,25 33,25"},"child":[]}]}]})(props);
 };
 
+;// ./assets/logo/chrome.js
+var ChromeIcon = function ChromeIcon(_ref) {
+  var className = _ref.className;
+  return /*#__PURE__*/React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 48 48",
+    className: className
+  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+    id: "chrome-a",
+    x1: "3.2173",
+    y1: "15",
+    x2: "44.7812",
+    y2: "15",
+    gradientUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0",
+    stopColor: "#d93025"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "1",
+    stopColor: "#ea4335"
+  })), /*#__PURE__*/React.createElement("linearGradient", {
+    id: "chrome-b",
+    x1: "20.7219",
+    y1: "47.6791",
+    x2: "41.5039",
+    y2: "11.6837",
+    gradientUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0",
+    stopColor: "#fcc934"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "1",
+    stopColor: "#fbbc04"
+  })), /*#__PURE__*/React.createElement("linearGradient", {
+    id: "chrome-c",
+    x1: "26.5981",
+    y1: "46.5015",
+    x2: "5.8161",
+    y2: "10.506",
+    gradientUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0",
+    stopColor: "#1e8e3e"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "1",
+    stopColor: "#34a853"
+  }))), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "23.9947",
+    r: "12",
+    fill: "#fff"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M3.2154,36A24,24,0,1,0,12,3.2154,24,24,0,0,0,3.2154,36ZM34.3923,18A12,12,0,1,1,18,13.6077,12,12,0,0,1,34.3923,18Z",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M24,12H44.7812a23.9939,23.9939,0,0,0-41.5639.0029L13.6079,30l.0093-.0024A11.9852,11.9852,0,0,1,24,12Z",
+    fill: "url(#chrome-a)"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "24",
+    r: "9.5",
+    fill: "#1a73e8"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M34.3913,30.0029,24.0007,48A23.994,23.994,0,0,0,44.78,12.0031H23.9989l-.0025.0093A11.985,11.985,0,0,1,34.3913,30.0029Z",
+    fill: "url(#chrome-b)"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.6086,30.0031,3.218,12.006A23.994,23.994,0,0,0,24.0025,48L34.3931,30.0029l-.0067-.0068a11.9852,11.9852,0,0,1-20.7778.007Z",
+    fill: "url(#chrome-c)"
+  }));
+};
 ;// ./admin/Settings/Views/src/components/translation-config.jsx
 function translation_config_typeof(o) { "@babel/helpers - typeof"; return translation_config_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, translation_config_typeof(o); }
 function translation_config_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return translation_config_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (translation_config_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), translation_config_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", translation_config_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), translation_config_regeneratorDefine2(u), translation_config_regeneratorDefine2(u, o, "Generator"), translation_config_regeneratorDefine2(u, n, function () { return this; }), translation_config_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (translation_config_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
@@ -16955,74 +17025,7 @@ function translation_config_arrayWithHoles(r) { if (Array.isArray(r)) return r; 
 
 
 
-var ChromeIcon = function ChromeIcon() {
-  return /*#__PURE__*/external_React_default().createElement("svg", {
-    xmlns: "http://www.w3.org/2000/svg",
-    viewBox: "0 0 48 48",
-    className: "w-5 h-5"
-  }, /*#__PURE__*/external_React_default().createElement("defs", null, /*#__PURE__*/external_React_default().createElement("linearGradient", {
-    id: "chrome-a",
-    x1: "3.2173",
-    y1: "15",
-    x2: "44.7812",
-    y2: "15",
-    gradientUnits: "userSpaceOnUse"
-  }, /*#__PURE__*/external_React_default().createElement("stop", {
-    offset: "0",
-    stopColor: "#d93025"
-  }), /*#__PURE__*/external_React_default().createElement("stop", {
-    offset: "1",
-    stopColor: "#ea4335"
-  })), /*#__PURE__*/external_React_default().createElement("linearGradient", {
-    id: "chrome-b",
-    x1: "20.7219",
-    y1: "47.6791",
-    x2: "41.5039",
-    y2: "11.6837",
-    gradientUnits: "userSpaceOnUse"
-  }, /*#__PURE__*/external_React_default().createElement("stop", {
-    offset: "0",
-    stopColor: "#fcc934"
-  }), /*#__PURE__*/external_React_default().createElement("stop", {
-    offset: "1",
-    stopColor: "#fbbc04"
-  })), /*#__PURE__*/external_React_default().createElement("linearGradient", {
-    id: "chrome-c",
-    x1: "26.5981",
-    y1: "46.5015",
-    x2: "5.8161",
-    y2: "10.506",
-    gradientUnits: "userSpaceOnUse"
-  }, /*#__PURE__*/external_React_default().createElement("stop", {
-    offset: "0",
-    stopColor: "#1e8e3e"
-  }), /*#__PURE__*/external_React_default().createElement("stop", {
-    offset: "1",
-    stopColor: "#34a853"
-  }))), /*#__PURE__*/external_React_default().createElement("circle", {
-    cx: "24",
-    cy: "23.9947",
-    r: "12",
-    fill: "#fff"
-  }), /*#__PURE__*/external_React_default().createElement("path", {
-    d: "M3.2154,36A24,24,0,1,0,12,3.2154,24,24,0,0,0,3.2154,36ZM34.3923,18A12,12,0,1,1,18,13.6077,12,12,0,0,1,34.3923,18Z",
-    fill: "none"
-  }), /*#__PURE__*/external_React_default().createElement("path", {
-    d: "M24,12H44.7812a23.9939,23.9939,0,0,0-41.5639.0029L13.6079,30l.0093-.0024A11.9852,11.9852,0,0,1,24,12Z",
-    fill: "url(#chrome-a)"
-  }), /*#__PURE__*/external_React_default().createElement("circle", {
-    cx: "24",
-    cy: "24",
-    r: "9.5",
-    fill: "#1a73e8"
-  }), /*#__PURE__*/external_React_default().createElement("path", {
-    d: "M34.3913,30.0029,24.0007,48A23.994,23.994,0,0,0,44.78,12.0031H23.9989l-.0025.0093A11.985,11.985,0,0,1,34.3913,30.0029Z",
-    fill: "url(#chrome-b)"
-  }), /*#__PURE__*/external_React_default().createElement("path", {
-    d: "M13.6086,30.0031,3.218,12.006A23.994,23.994,0,0,0,24.0025,48L34.3931,30.0029l-.0067-.0068a11.9852,11.9852,0,0,1-20.7778.007Z",
-    fill: "url(#chrome-c)"
-  }));
-};
+
 var ChromeLocalAINotice = function ChromeLocalAINotice() {
   var _React$useState = external_React_default().useState(false),
     _React$useState2 = translation_config_slicedToArray(_React$useState, 2),
@@ -17272,7 +17275,9 @@ var TranslationConfig = function TranslationConfig(_ref) {
     className: "switcher p-6 rounded-lg"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
     className: "flex items-center gap-2"
-  }, /*#__PURE__*/external_React_default().createElement(ChromeIcon, null), (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+  }, /*#__PURE__*/external_React_default().createElement(ChromeIcon, {
+    className: "w-5 h-5"
+  }), (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "flex items-center justify-end",
     style: {
       paddingRight: '30%'
