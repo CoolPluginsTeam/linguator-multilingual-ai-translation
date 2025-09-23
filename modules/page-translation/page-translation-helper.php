@@ -57,22 +57,10 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 		 */
 		public function __construct() {
 			if ( is_admin() ) {
-				// add_action( 'wp_ajax_lmat_get_custom_blocks_content', array( $this, 'get_custom_blocks_content' ) );
-				// add_action( 'wp_ajax_lmat_update_custom_blocks_content', array( $this, 'update_custom_blocks_content' ) );
 				add_action( 'wp_ajax_lmat_update_translate_data', array( $this, 'lmat_update_translate_data' ) );
 			}
 		}
 
-		/**
-		 * Block Parsing Rules
-		 *
-		 * Handles the block parsing rules AJAX request.
-		 */
-		public function block_parsing_rules() {
-			$block_parse_rules = $this->get_block_parse_rules();
-
-			return $block_parse_rules;
-		}
 
 		/**
 		 * Fetches post content via AJAX request.
@@ -128,93 +116,6 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 
 			exit;
 		}
-
-		// public function get_custom_blocks_content() {
-		// if ( ! check_ajax_referer( 'lmat_block_update_nonce', 'lmat_page_translation_nonce', false ) ) {
-		// wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
-		// wp_die( '0', 400 );
-		// exit();
-		// }
-
-		// $custom_content = get_option( 'lmat_custom_block_data', false ) ? get_option( 'lmat_custom_block_data', false ) : false;
-
-		// if ( $custom_content && is_string( $custom_content ) && ! empty( trim( $custom_content ) ) ) {
-		// return wp_send_json_success( array( 'block_data' => $custom_content ) );
-		// } else {
-		// return wp_send_json_success( array( 'message' => __( 'No custom blocks found.', 'linguator-multilingual-ai-translation' ) ) );
-		// }
-		// exit();
-		// }
-
-		// public function update_custom_blocks_content() {
-		// if ( ! check_ajax_referer( 'lmat_block_update_nonce', 'lmat_page_translation_nonce', false ) ) {
-		// wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
-		// wp_die( '0', 400 );
-		// exit();
-		// }
-		// $updated_blocks_data = isset( $_POST['save_block_data'] ) ? json_decode( wp_unslash( $_POST['save_block_data'] ) ) : false;
-
-		// if ( $updated_blocks_data ) {
-		// $block_parse_rules = $this->get_block_parse_rules();
-
-		// if ( isset( $block_parse_rules['LmatBlockParseRules'] ) ) {
-		// $previous_translate_data = get_option( 'lmat_custom_block_translation', false );
-		// if ( $previous_translate_data && ! empty( $previous_translate_data ) ) {
-		// $this->custom_block_data_array = $previous_translate_data;
-		// }
-
-		// foreach ( $updated_blocks_data as $key => $block_data ) {
-		// $this->verify_block_data( array( $key ), $block_data, $block_parse_rules['LmatBlockParseRules'][ $key ] );
-		// }
-
-		// if ( count( $this->custom_block_data_array ) > 0 ) {
-		// update_option( 'lmat_custom_block_translation', $this->custom_block_data_array );
-		// }
-
-		// delete_option( 'lmat_custom_block_data' );
-		// update_option( 'lmat_custom_block_status', 'false' );
-
-		// }
-		// }
-
-		// return wp_send_json_success( array( 'message' => __( 'Linguator Multilingual AI Translation: Custom Blocks data updated successfully', 'linguator-multilingual-ai-translation' ) ) );
-		// }
-
-		// private function verify_block_data( $id_keys, $value, $block_rules ) {
-		// $block_rules = is_object( $block_rules ) ? json_decode( json_encode( $block_rules ) ) : $block_rules;
-
-		// if ( ! isset( $block_rules ) ) {
-		// return $this->create_nested_attribute( $value,$id_keys );
-		// }
-		// if ( is_object( $value ) && isset( $block_rules ) ) {
-		// foreach ( $value as $key => $item ) {
-		// if ( isset( $block_rules[ $key ] ) && is_object( $item ) ) {
-		// $this->verify_block_data( array_merge( $id_keys, array( $key ) ), $item, $block_rules[ $key ], false );
-		// continue;
-		// } elseif ( ! isset( $block_rules[ $key ] ) && true === $item ) {
-		// $this->create_nested_attribute(  true,array_merge( $id_keys, array( $key ) ) );
-		// continue;
-		// } elseif ( ! isset( $block_rules[ $key ] ) && is_object( $item ) ) {
-		// $this->create_nested_attribute(  $item,array_merge( $id_keys, array( $key ) ) );
-		// continue;
-		// }
-		// }
-		// }
-		// }
-
-		// private function create_nested_attribute( $value,$id_keys = array() ) {
-		// $value = is_object( $value ) ? json_decode( json_encode( $value ), true ) : $value;
-
-		// $current_array = &$this->custom_block_data_array;
-
-		// foreach ( $id_keys as $index => $id ) {
-		// if ( ! isset( $current_array[ $id ] ) ) {
-		// $current_array[ $id ] = array();
-		// }
-		// $current_array = &$current_array[ $id ];
-		// }
-		// $current_array = $value;
-		// }
 
 		public function lmat_update_translate_data() {
 			if ( ! check_ajax_referer( 'lmat_update_translate_data_nonce', 'update_translation_key', false ) ) {
@@ -382,94 +283,6 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 
 			wp_send_json_success( 'Elementor data updated.' );
 			exit;
-		}
-
-		public function get_block_parse_rules() {
-			$path_url = plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
-			$response = wp_remote_get(
-				esc_url_raw( $path_url ),
-				array(
-					'timeout' => 15,
-				)
-			);
-
-			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
-				global $wp_filesystem;
-
-				// Initialize the WordPress filesystem
-				if ( ! function_exists( 'WP_Filesystem' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/file.php';
-				}
-
-				WP_Filesystem();
-
-				$local_path = esc_url_raw( $path_url );
-				if ( $wp_filesystem->exists( $local_path ) && $wp_filesystem->is_readable( $local_path ) ) {
-					$block_rules = $wp_filesystem->get_contents( $local_path );
-				} else {
-					$block_rules = array();
-				}
-			} else {
-				$block_rules = wp_remote_retrieve_body( $response );
-			}
-
-			if ( empty( $block_rules ) ) {
-				return array();
-			}
-
-			$block_translation_rules = json_decode( $block_rules, true );
-
-			$this->custom_block_data_array = isset( $block_translation_rules['LmatBlockParseRules'] ) ? $block_translation_rules['LmatBlockParseRules'] : null;
-
-			$custom_block_translation = get_option( 'lmat_custom_block_translation', false );
-
-			if ( ! empty( $custom_block_translation ) && is_array( $custom_block_translation ) ) {
-				foreach ( $custom_block_translation as $key => $block_data ) {
-					$block_rules = isset( $block_translation_rules['LmatBlockParseRules'][ $key ] ) ? $block_translation_rules['LmatBlockParseRules'][ $key ] : null;
-					$this->filter_custom_block_rules( array( $key ), $block_data, $block_rules );
-				}
-			}
-
-			$block_translation_rules['LmatBlockParseRules'] = $this->custom_block_data_array ? $this->custom_block_data_array : array();
-
-			return $block_translation_rules;
-		}
-
-		private function filter_custom_block_rules( array $id_keys, $value, $block_rules, $attr_key = false ) {
-			$block_rules = is_object( $block_rules ) ? json_decode( json_encode( $block_rules ) ) : $block_rules;
-
-			if ( ! isset( $block_rules ) ) {
-				return $this->merge_nested_attribute( $id_keys, $value );
-			}
-			if ( is_object( $value ) && isset( $block_rules ) ) {
-				foreach ( $value as $key => $item ) {
-					if ( isset( $block_rules[ $key ] ) && is_object( $item ) ) {
-						$this->filter_custom_block_rules( array_merge( $id_keys, array( $key ) ), $item, $block_rules[ $key ], false );
-						continue;
-					} elseif ( ! isset( $block_rules[ $key ] ) && true === $item ) {
-						$this->merge_nested_attribute( array_merge( $id_keys, array( $key ) ), true );
-						continue;
-					} elseif ( ! isset( $block_rules[ $key ] ) && is_object( $item ) ) {
-						$this->merge_nested_attribute( array_merge( $id_keys, array( $key ) ), $item );
-						continue;
-					}
-				}
-			}
-		}
-
-		private function merge_nested_attribute( array $id_keys, $value ) {
-			$value = is_object( $value ) ? json_decode( json_encode( $value ), true ) : $value;
-
-			$current_array = &$this->custom_block_data_array;
-
-			foreach ( $id_keys as $index => $id ) {
-				if ( ! isset( $current_array[ $id ] ) ) {
-					$current_array[ $id ] = array();
-				}
-				$current_array = &$current_array[ $id ];
-			}
-
-			$current_array = $value;
 		}
 	}
 }
