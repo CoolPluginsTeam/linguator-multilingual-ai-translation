@@ -27,7 +27,6 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_bulk_translate_assets' ) );
 			}
 			
-			new LMAT_Bulk_Translate_Rest_Routes( 'lmat-bulk-translate' );
 		}
 
 		public function bulk_translate_btn( $screen ) {
@@ -185,17 +184,25 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
 		}
 
+		$extra_data = array();
+
+        if(!$taxonomy_page || empty($taxonomy_page)){
+            if (!isset(LMAT()->options['sync']) || (isset(LMAT()->options['sync']) && !in_array('post_meta', LMAT()->options['sync']))) {
+                $extra_data['postMetaSync'] = 'false';
+            } else {
+                $extra_data['postMetaSync'] = 'true';
+            }
+        }
 
         wp_localize_script(
             'lmat-bulk-translate',
             'lmatBulkTranslationGlobal',
-            array(
+            array_merge(array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'languageObject' => $lang_object,
                 'nonce' => wp_create_nonce('wp_rest'),
-                'bulkTranslateRouteUrl' =>  get_rest_url( null, 'lmat-bulk-translate' ),
+                'bulkTranslateRouteUrl' =>  get_rest_url( null, 'lmat/v1/bulk-translate' ),
                 'bulkTranslatePrivateKey' => wp_create_nonce('lmat_bulk_translate_entries_nonce'),
-				'fetchBlockRulesNonce'    => wp_create_nonce( 'lmat_fetch_block_rules_nonce' ),
                 'lmat_url'                => plugins_url( '', LINGUATOR_ROOT_FILE ) . '/',
                 'admin_url' => admin_url(),
                 'post_label' => $post_label,
@@ -203,7 +210,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
                 'slug_translation_option' => $slug_translation_option,
                 'taxonomy_page' => $taxonomy_page,
 				'providers'                => $active_providers,
-            )
+            ), $extra_data)
         );
 		}
 	}

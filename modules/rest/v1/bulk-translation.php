@@ -1,23 +1,24 @@
 <?php
-namespace Linguator\Modules\Bulk_Translation;
+
+namespace Linguator\Modules\REST\V1;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Linguator\Modules\Page_Translation\LMAT_Page_Translation_Helper;
 use Linguator\Includes\Services\Translation\Translation_Term_Model;
+use Linguator\Supported_Blocks\LMAT_Supported_Blocks;
 use Translation_Entry;
 use Translations;
 use WP_Error;
 
-if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
+if ( ! class_exists( 'Bulk_Translation' ) ) :
 	/**
-	 * LMAT_Bulk_Translate_Rest_Routes
+	 * Bulk_Translation
 	 *
 	 * @package Linguator\Modules\Bulk_Translation
 	 */
-	class LMAT_Bulk_Translate_Rest_Routes {
+	class Bulk_Translation {
 
 
 		/**
@@ -25,15 +26,23 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 		 *
 		 * @var string
 		 */
-		private $base_name;
+		private $namespace;
+
+        /**
+         * The base name of the route.
+         *
+         * @var string
+         */
+        private $rest_base;
 
 		/**
 		 * Constructor
 		 *
 		 * @param string $base_name The base name of the route.
 		 */
-		public function __construct( $base_name ) {
-			$this->base_name = $base_name;
+		public function __construct( $model ) {
+			$this->namespace = 'lmat/v1';
+			$this->rest_base = 'bulk-translate';
 			add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		}
 
@@ -42,8 +51,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 		 */
 		public function register_routes() {
 			register_rest_route(
-				$this->base_name,
-				'/(?P<slug>[\w-]+):bulk-translate-entries',
+				$this->namespace,
+				$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-entries',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_entries' ),
@@ -68,7 +77,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 			);
 
 			register_rest_route(
-				$this->base_name,
+				$this->namespace,
+				$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
 				'/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
 				array(
 					'methods'             => 'POST',
@@ -98,7 +108,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 			);
 
 			register_rest_route(
-				$this->base_name,
+				$this->namespace,
+				$this->rest_base.'/(?P<post_id>[\w-]+):create-translate-post',
 				'/(?P<post_id>[\w-]+):create-translate-post',
 				array(
 					'methods'             => 'POST',
@@ -145,7 +156,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 			);
 
 			register_rest_route(
-				$this->base_name,
+				$this->namespace,
+				$this->rest_base.'/(?P<term_id>[\w-]+):create-translate-taxonomy',
 				'/(?P<term_id>[\w-]+):create-translate-taxonomy',
 				array(
 					'methods'             => 'POST',
@@ -243,6 +255,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
 
+			global $linguator;
+
 			// check language exists or not
 			$translate_lang = json_decode( $params['lang'] );
 
@@ -255,10 +269,16 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
 			}
 
+			$post_meta_sync = true;
+			if ( ! isset( LMAT()->options['sync'] ) || ( isset( LMAT()->options['sync'] ) && ! in_array( 'post_meta', LMAT()->options['sync'] ) ) ) {
+				$post_meta_sync = false;
+			}
+
 			if ( count( $translate_lang ) > 0 && ! ( count( $post_ids ) < 1 ) ) {
-				global $linguator;
-				$lmat_langs       = $linguator->model->get_languages_list();
-				$lmat_langs_slugs = array_column( $lmat_langs, 'slug' );
+				$lmat_langs           = $linguator->model->get_languages_list();
+				$lmat_langs_slugs     = array_column( $lmat_langs, 'slug' );
+				$allowed_meta_fields = ATFPP_Helper::get_instance()->get_allowed_custom_fields();
+
 				foreach ( $post_ids as $postId ) {
 
 					if ( ! current_user_can( 'edit_post', $postId ) ) {
@@ -288,8 +308,20 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 					}
 
 					$posts_translate[ $postId ]['sourceLanguage'] = ! isset( $posts_translate[ $postId ]['sourceLanguage'] ) ? lmat_default_language() : $posts_translate[ $postId ]['sourceLanguage'];
-					$posts_translate[ $postId ]['metaFields']     = get_post_meta( $postId );
-					$posts_translate[ $postId ]['post_link']      = get_the_permalink( $postId );
+
+					if ( ! $post_meta_sync ) {
+						$post_meta_fields    = get_post_meta( $postId );
+						$existed_meta_fields = array_intersect( array_keys( $post_meta_fields ), array_keys( $allowed_meta_fields ) );
+
+						foreach ( $existed_meta_fields as $key ) {
+							if ( isset( $post_meta_fields[ $key ] ) && ! empty( $post_meta_fields[ $key ] ) && isset( $allowed_meta_fields[ $key ]['status'] ) && true === $allowed_meta_fields[ $key ]['status'] ) {
+								$value = $allowed_meta_fields[ $key ]['type'] && is_array( $post_meta_fields[ $key ] ) ? maybe_unserialize( $post_meta_fields[ $key ][0] ) : maybe_unserialize( $post_meta_fields[ $key ] );
+								$posts_translate[ $postId ]['metaFields'][ $key ] = $value;
+							}
+						}
+					}
+
+					$posts_translate[ $postId ]['post_link'] = get_the_permalink( $postId );
 
 					if ( $elementor_enabled && 'builder' === $elementor_enabled && defined( 'ELEMENTOR_VERSION' ) ) {
 						$elementor_data = get_post_meta( $postId, '_elementor_data', true );
@@ -301,8 +333,6 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 							if ( class_exists( '\Elementor\Plugin' ) && property_exists( '\Elementor\Plugin', 'instance' ) ) {
 								$elementor_data = \Elementor\Plugin::$instance->documents->get( $postId )->get_elements_data();
 							}
-
-							$posts_translate[ $postId ]['metaFields']['_elementor_data'] = $elementor_data;
 
 							$posts_translate[ $postId ]['content'] = $elementor_data;
 							unset( $posts_translate[ $postId ]['metaFields']['_elementor_data'] );
@@ -333,9 +363,12 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				'posts'                    => $posts_translate,
 				'CreateTranslatePostNonce' => wp_create_nonce( 'lmat_create_translate_post_nonce' ),
 			);
+			if ( ! $post_meta_sync ) {
+				$data['allowedMetaFields'] = json_encode( $allowed_meta_fields );
+			}
 
 			if ( $gutenberg_block ) {
-				$block_parse_rules       = LMAT_Page_Translation_Helper::get_instance()->block_parsing_rules();
+				$block_parse_rules       = LMAT_Supported_Blocks::get_instance()->block_parsing_rules();
 				$data['blockParseRules'] = json_encode( $block_parse_rules );
 			}
 
@@ -384,6 +417,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
 			}
 
+			$meta_fields = isset( $params['post_meta_fields'] ) ? $params['post_meta_fields'] : '';
+
 			if ( ! current_user_can( 'edit_post', $post_id ) ) {
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
@@ -397,6 +432,9 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$post_data['post_excerpt'] = sanitize_text_field( $excerpt );
 			}
 
+			if ( $meta_fields && ! empty( $meta_fields ) ) {
+				$post_data['post_meta_fields'] = json_decode( $meta_fields, true );
+			}
 
 			if ( $slug_translation_option === 'slug_translate' && $slug && ! empty( $slug ) ) {
 				$post_data['post_name'] = sanitize_title( $slug );
@@ -434,8 +472,6 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				$post_title     = html_entity_decode( get_the_title( $post_id ) );
 				$post_edit_link = html_entity_decode( get_edit_post_link( $post_id ) );
 
-				wp_delete_post($post_id, true);
-
 				wp_send_json_success(
 					array(
 						'post_id'                     => $post_id,
@@ -471,17 +507,17 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
 
-			$params = $params->get_params();
+			$params                  = $params->get_params();
 
 			// Verify the nonce
 			if ( ! wp_verify_nonce( $params['privateKey'], 'lmat_bulk_translate_entries_nonce' ) ) {
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
-			
+
 			$translate_lang = json_decode( $params['lang'] );
-			
+
 			$taxonomy_translate = array();
-			
+
 			$slug_translation_option = 'title_translate';
 			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
 				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
@@ -574,12 +610,10 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 			$taxonomy_name           = isset( $params['taxonomy_name'] ) ? sanitize_text_field( $params['taxonomy_name'] ) : '';
 			$taxonomy_slug           = isset( $params['taxonomy_slug'] ) ? sanitize_title( $params['taxonomy_slug'] ) : '';
 			$taxonomy_description    = isset( $params['taxonomy_description'] ) ? wp_kses_post( $params['taxonomy_description'] ) : '';
-			
 			$slug_translation_option = 'title_translate';
 			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
 				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
 			}
-
 			if ( ! $target_language ) {
 				wp_send_json_error( 'Invalid target language' );
 			}
@@ -632,9 +666,10 @@ if ( ! class_exists( 'LMAT_Bulk_Translate_Rest_Routes' ) ) :
 				exit;
 			}
 
+			$term_url       = get_term_link( $term_id, $taxonomy );
 			$term           = get_term( $term_id, $taxonomy );
 			$term_title     = html_entity_decode( $term->name );
-			$term_link      = html_entity_decode( get_term_link( $term_id, $taxonomy ) );
+			$term_link      = $term_url && is_string( $term_url ) ? html_entity_decode( $term_url ) : '';
 			$term_edit_link = html_entity_decode( get_edit_term_link( $term_id, $taxonomy ) );
 
 			wp_send_json_success(

@@ -34,6 +34,13 @@ class API {
 	public $settings;
 
 	/**
+	 * REST bulk translate.
+	 *
+	 * @var V1\Bulk_Translate|null
+	 */
+	public $bulk_translate;
+
+	/**
 	 * @var LMAT_Model
 	 */
 	private $model;
@@ -62,5 +69,8 @@ class API {
 
 		$this->settings = new V1\Settings( $this->model );
 		$this->settings->register_routes();
+
+		$this->bulk_translate = new V1\Bulk_Translation( $this->model );
+		$this->bulk_translate->register_routes();
 	}
 }
