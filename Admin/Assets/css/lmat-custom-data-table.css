@@ -1,0 +1,416 @@
+.lmat-custom-data-table-wrapper {
+  width: calc(100% - 4rem);
+  margin-top: 25px;
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-inline: 2rem;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  /* Keyframes: subtle pop + fade */
+  /* Accessibility: honor reduced motion */
+}
+
+.lmat-custom-data-table-wrapper .saving-text {
+  margin-left: 8px;
+  font-size: 13px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.lmat-custom-data-table-wrapper .saving-text .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #ffffff;
+  margin-left: 1px;
+  margin-top: 6px;
+  opacity: 0.25;
+  -webkit-animation: savingBlink 1.05s infinite ease-in-out;
+          animation: savingBlink 1.05s infinite ease-in-out;
+  -webkit-animation-delay: calc(var(--i) * 0.18s - 1.05s);
+          animation-delay: calc(var(--i) * 0.18s - 1.05s);
+  will-change: opacity, transform;
+}
+
+.lmat-custom-data-table-wrapper h3 {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  margin: 5px 0 20px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.lmat-custom-data-table-wrapper h3 p {
+  margin-bottom: 0;
+}
+
+.lmat-custom-data-table-wrapper.lmat-custom-fields .lmat-save-custom-fields {
+  float: right;
+  height: 30px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-item-align: center;
+      align-self: center;
+}
+
+.lmat-custom-data-table-wrapper.lmat-custom-fields .lmat-save-custom-fields:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-column-gap: 1rem;
+          column-gap: 1rem;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters .lmat-search-tab {
+  margin-left: auto;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters .lmat-search-tab #lmat-blocks-search {
+  min-width: 220px;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters .lmat-filter-tab,
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters .lmat-search-tab {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-column-gap: 1rem;
+          column-gap: 1rem;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters .lmat-filter-tab label,
+.lmat-custom-data-table-wrapper .lmat-custom-data-table-filters .lmat-search-tab label {
+  margin: 0 0.5rem 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists {
+  margin: 20px 0px;
+  font-family: Arial, sans-serif;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table thead {
+  background-color: #f2f2f2;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table thead th {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table thead th:last-child {
+  text-align: center;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr .lmat-search-highlight {
+  background-color: orange;
+  color: black;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr td:last-child {
+  text-align: center;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr td.dt-empty {
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr td a {
+  color: #0073aa;
+  text-decoration: none;
+}
+
+.lmat-custom-data-table-wrapper .lmat-custom-table-lists .lmat-custom-data-table-table tbody tr td a:hover {
+  text-decoration: underline;
+}
+
+.lmat-custom-data-table-wrapper .lmat-pagination {
+  margin: 20px 0px;
+  font-size: 14px;
+  text-align: end;
+}
+
+.lmat-custom-data-table-wrapper .lmat-pagination .page-numbers {
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin: 0 0.2em;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  color: #0073aa;
+  text-decoration: none;
+  background-color: #fff;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.lmat-custom-data-table-wrapper .lmat-pagination .page-numbers.current {
+  background-color: #0073aa;
+  color: #fff;
+  border: 1px solid #0073aa;
+}
+
+.lmat-custom-data-table-wrapper .lmat-pagination .page-numbers:hover:not(.current) {
+  background-color: #f0f0f0;
+}
+
+.lmat-custom-data-table-wrapper .lmat-pagination .page-numbers.dots {
+  padding: 0;
+  color: #555;
+}
+
+.lmat-custom-data-table-wrapper .lmat-pagination .page-numbers.next {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+@-webkit-keyframes savingBlink {
+  0%,
+  20% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+  }
+  60% {
+    opacity: 0.9;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes savingBlink {
+  0%,
+  20% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+  }
+  60% {
+    opacity: 0.9;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lmat-custom-data-table-wrapper .saving-dot {
+    -webkit-animation: none;
+            animation: none;
+    opacity: 1;
+  }
+}
+
+#lmat-custom-datatable_wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 1rem;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row.dt-layout-table {
+  width: 100%;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child {
+  margin-left: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  -webkit-column-gap: 1rem;
+          column-gap: 1rem;
+  padding: 0;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-layout-start {
+  font-size: 15px;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging {
+  margin: 1rem 0;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button {
+  padding: 0.5em 1em;
+  margin: 0 0.2em;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  color: #0073aa;
+  text-decoration: none;
+  background-color: #fff;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.current {
+  background-color: #0073aa;
+  color: #fff;
+  border: 1px solid #0073aa;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button:hover:not(.current) {
+  background-color: #f0f0f0;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.dots {
+  padding: 0;
+  color: #555;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.next {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .ellipsis {
+  padding: 0 1em;
+  color: #555;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:nth-child(2) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:nth-child(2) .dt-length {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#lmat-custom-datatable_wrapper .dt-layout-row:nth-child(2) label {
+  margin: 0 0.5rem 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+#lmat-copy-btn {
+  z-index: 999999;
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  position: fixed;
+  top: 50%;
+  -webkit-transform: translateY(-50%) scale(0.9);
+          transform: translateY(-50%) scale(0.9);
+  left: 0px;
+}
+
+#lmat-copy-btn:hover {
+  font-weight: 600;
+  -webkit-transform: translateY(-50%) scale(1);
+          transform: translateY(-50%) scale(1);
+  -webkit-box-shadow: 0 0 10px #949494, 0 0 30px #898787;
+          box-shadow: 0 0 10px #949494, 0 0 30px #898787;
+}
+
+#lmat-copy-text {
+  display: fixed;
+  bottom: -50%;
+  left: -50%;
+}
+/*# sourceMappingURL=lmat-custom-data-table.css.map */
