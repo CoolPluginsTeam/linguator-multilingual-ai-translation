@@ -290,6 +290,10 @@ if(!class_exists('Custom_Fields')) {
 		private static function get_allowed_custom_fields_data(){			
 			$allowed_fields=get_option('lmat_allowed_custom_fields', false);
 
+            if(!$allowed_fields){
+                $allowed_fields=array();
+            }
+
 			if($allowed_fields && is_array($allowed_fields) && count($allowed_fields) > 0){
 				return $allowed_fields;
 			}
