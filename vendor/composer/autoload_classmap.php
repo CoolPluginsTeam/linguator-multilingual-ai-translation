@@ -165,7 +165,6 @@ return array(
     'Linguator\\Modules\\Blocks\\LMAT_Abstract_Language_Switcher_Block' => $baseDir . '/modules/blocks/language-switcher/abstract-language-switcher-block.php',
     'Linguator\\Modules\\Blocks\\LMAT_Language_Switcher_Block' => $baseDir . '/modules/blocks/language-switcher/language-switcher-block.php',
     'Linguator\\Modules\\Blocks\\LMAT_Navigation_Language_Switcher_Block' => $baseDir . '/modules/blocks/language-switcher/navigation-language-switcher-block.php',
-    'Linguator\\Modules\\Bulk_Translation\\LMAT_Bulk_Translate_Rest_Routes' => $baseDir . '/modules/bulk-translation/bulk-translate-rest-routes.php',
     'Linguator\\Modules\\Bulk_Translation\\LMAT_Bulk_Translation' => $baseDir . '/modules/bulk-translation/bulk-translation.php',
     'Linguator\\Modules\\Editors\\Filter_Preload_Paths' => $baseDir . '/modules/editors/filter-preload-paths.php',
     'Linguator\\Modules\\Editors\\Screens\\Abstract_Screen' => $baseDir . '/modules/editors/screens/abstract-screens.php',
@@ -178,6 +177,7 @@ return array(
     'Linguator\\Modules\\Page_Translation\\LMAT_Page_Translation_Helper' => $baseDir . '/modules/page-translation/page-translation-helper.php',
     'Linguator\\Modules\\REST\\API' => $baseDir . '/modules/rest/api.php',
     'Linguator\\Modules\\REST\\Abstract_Controller' => $baseDir . '/modules/rest/abstract-controller.php',
+    'Linguator\\Modules\\REST\\V1\\Bulk_Translation' => $baseDir . '/modules/rest/v1/bulk-translation.php',
     'Linguator\\Modules\\REST\\V1\\Languages' => $baseDir . '/modules/rest/v1/languages.php',
     'Linguator\\Modules\\REST\\V1\\Settings' => $baseDir . '/modules/rest/v1/settings.php',
     'Linguator\\Modules\\Wizard\\LMAT_Wizard' => $baseDir . '/modules/wizard/wizard.php',
@@ -187,4 +187,6 @@ return array(
     'Linguator\\Settings\\Header\\Header' => $baseDir . '/admin/settings/header/header.php',
     'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => $baseDir . '/admin/settings/tables/table-languages.php',
     'Linguator\\Settings\\Tables\\LMAT_Table_String' => $baseDir . '/admin/settings/tables/table-string.php',
+    'Linguator\\Supported_Blocks\\LMAT_Custom_Block_Post' => $baseDir . '/admin/supported-blocks/custom-blocks-post.php',
+    'Linguator\\Supported_Blocks\\LMAT_Supported_Blocks' => $baseDir . '/admin/supported-blocks/supported-blocks.php',
 );

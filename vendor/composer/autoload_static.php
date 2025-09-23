@@ -220,7 +220,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\Blocks\\LMAT_Abstract_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/abstract-language-switcher-block.php',
         'Linguator\\Modules\\Blocks\\LMAT_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/language-switcher-block.php',
         'Linguator\\Modules\\Blocks\\LMAT_Navigation_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/navigation-language-switcher-block.php',
-        'Linguator\\Modules\\Bulk_Translation\\LMAT_Bulk_Translate_Rest_Routes' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translate-rest-routes.php',
         'Linguator\\Modules\\Bulk_Translation\\LMAT_Bulk_Translation' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translation.php',
         'Linguator\\Modules\\Editors\\Filter_Preload_Paths' => __DIR__ . '/../..' . '/modules/editors/filter-preload-paths.php',
         'Linguator\\Modules\\Editors\\Screens\\Abstract_Screen' => __DIR__ . '/../..' . '/modules/editors/screens/abstract-screens.php',
@@ -233,6 +232,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\Page_Translation\\LMAT_Page_Translation_Helper' => __DIR__ . '/../..' . '/modules/page-translation/page-translation-helper.php',
         'Linguator\\Modules\\REST\\API' => __DIR__ . '/../..' . '/modules/rest/api.php',
         'Linguator\\Modules\\REST\\Abstract_Controller' => __DIR__ . '/../..' . '/modules/rest/abstract-controller.php',
+        'Linguator\\Modules\\REST\\V1\\Bulk_Translation' => __DIR__ . '/../..' . '/modules/rest/v1/bulk-translation.php',
         'Linguator\\Modules\\REST\\V1\\Languages' => __DIR__ . '/../..' . '/modules/rest/v1/languages.php',
         'Linguator\\Modules\\REST\\V1\\Settings' => __DIR__ . '/../..' . '/modules/rest/v1/settings.php',
         'Linguator\\Modules\\Wizard\\LMAT_Wizard' => __DIR__ . '/../..' . '/modules/wizard/wizard.php',
@@ -242,6 +242,8 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Settings\\Header\\Header' => __DIR__ . '/../..' . '/admin/settings/header/header.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => __DIR__ . '/../..' . '/admin/settings/tables/table-languages.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_String' => __DIR__ . '/../..' . '/admin/settings/tables/table-string.php',
+        'Linguator\\Supported_Blocks\\LMAT_Custom_Block_Post' => __DIR__ . '/../..' . '/admin/supported-blocks/custom-blocks-post.php',
+        'Linguator\\Supported_Blocks\\LMAT_Supported_Blocks' => __DIR__ . '/../..' . '/admin/supported-blocks/supported-blocks.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
