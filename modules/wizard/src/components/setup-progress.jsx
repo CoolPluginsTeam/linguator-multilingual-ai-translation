@@ -118,7 +118,7 @@ const SetupProgress = ({lmat_setup_data}) => {
                         >
                             {
                                 setupSteps.map((step, index) => (
-                                        step.visible && <ProgressSteps.Step labelText={step.label} key={index} onClick={()=>{if(setupSteps.find((steps)=>steps.value===setupProgress)?.step>index+1){setSetupProgress(step.value);localStorage.setItem("setupProgress",step.value)}}}  completedVariant="icon" completedIcon={<BadgeCheck />} />
+                                        step.visible && <ProgressSteps.Step className="z-0" labelText={step.label} key={index} onClick={()=>{if(setupSteps.find((steps)=>steps.value===setupProgress)?.step>index+1){setSetupProgress(step.value);localStorage.setItem("setupProgress",step.value)}}}  completedVariant="icon" completedIcon={<BadgeCheck />} />
 
                                 ))
                             }

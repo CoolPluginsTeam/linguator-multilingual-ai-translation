@@ -294,6 +294,10 @@
   z-index: -10;
 }
 
+.lmat-styles .z-0 {
+  z-index: 0;
+}
+
 .lmat-styles .z-10 {
   z-index: 10;
 }
