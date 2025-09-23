@@ -14152,7 +14152,7 @@ const Toaster = /*#__PURE__*/ external_React_namespaceObject.forwardRef(function
 
 ;// external ["wp","i18n"]
 const external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// ./Admin/Settings/Views/src/utils.js
+;// ./admin/Settings/Views/src/utils.js
 var _window$lmat_settings, _window$lmat_settings2;
 
 
@@ -14449,7 +14449,7 @@ const Share2 = createLucideIcon_createLucideIcon("share-2", share_2_iconNode);
 
 //# sourceMappingURL=share-2.js.map
 
-;// ./Admin/Settings/Views/src/components/general.jsx
+;// ./admin/Settings/Views/src/components/general.jsx
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -15469,7 +15469,7 @@ var General = function General(_ref) {
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation'))))));
 };
 /* harmony default export */ const general = (General);
-;// ./Admin/Settings/Views/src/components/sidebar.jsx
+;// ./admin/Settings/Views/src/components/sidebar.jsx
 function sidebar_extends() { return sidebar_extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, sidebar_extends.apply(null, arguments); }
 
 
@@ -15673,7 +15673,7 @@ const Languages = createLucideIcon_createLucideIcon("languages", languages_iconN
 
 //# sourceMappingURL=languages.js.map
 
-;// ./Admin/Settings/Views/src/components/translation-config.jsx
+;// ./admin/Settings/Views/src/components/translation-config.jsx
 function translation_config_typeof(o) { "@babel/helpers - typeof"; return translation_config_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, translation_config_typeof(o); }
 function translation_config_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return translation_config_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (translation_config_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), translation_config_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", translation_config_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), translation_config_regeneratorDefine2(u), translation_config_regeneratorDefine2(u, o, "Generator"), translation_config_regeneratorDefine2(u, n, function () { return this; }), translation_config_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (translation_config_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function translation_config_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } translation_config_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { translation_config_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, translation_config_regeneratorDefine2(e, r, n, t); }
@@ -15778,20 +15778,36 @@ var TranslationConfig = function TranslationConfig(_ref) {
     _useState6 = translation_config_slicedToArray(_useState5, 2),
     lastUpdatedValue = _useState6[0],
     setLastUpdatedValue = _useState6[1];
-  var _useState7 = (0,external_React_namespaceObject.useState)(true),
+  var _useState7 = (0,external_React_namespaceObject.useState)((aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.bulk_translation_post_status) || 'draft'),
     _useState8 = translation_config_slicedToArray(_useState7, 2),
-    handleButtonDisabled = _useState8[0],
-    setHandleButtonDisabled = _useState8[1];
+    bulkTranslationPostStatus = _useState8[0],
+    setBulkTranslationPostStatus = _useState8[1];
+  var _useState9 = (0,external_React_namespaceObject.useState)((aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.slug_translation_option) || 'title_translate'),
+    _useState0 = translation_config_slicedToArray(_useState9, 2),
+    slugTranslationOption = _useState0[0],
+    setSlugTranslationOption = _useState0[1];
+  var _useState1 = (0,external_React_namespaceObject.useState)(true),
+    _useState10 = translation_config_slicedToArray(_useState1, 2),
+    handleButtonDisabled = _useState10[0],
+    setHandleButtonDisabled = _useState10[1];
   (0,external_React_namespaceObject.useEffect)(function () {
     var sameChecker = {
       googleMachineTranslation: true,
-      chromeLocalAITranslation: true
+      chromeLocalAITranslation: true,
+      bulkTranslationPostStatus: true,
+      slugTranslationOption: true
     };
     if (googleMachineTranslation !== (provider === null || provider === void 0 ? void 0 : provider.google)) {
       sameChecker.googleMachineTranslation = false;
     }
     if (chromeLocalAITranslation !== (provider === null || provider === void 0 ? void 0 : provider.chrome_local_ai)) {
       sameChecker.chromeLocalAITranslation = false;
+    }
+    if (bulkTranslationPostStatus !== (aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.bulk_translation_post_status)) {
+      sameChecker.bulkTranslationPostStatus = false;
+    }
+    if (slugTranslationOption !== (aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.slug_translation_option)) {
+      sameChecker.slugTranslationOption = false;
     }
     var flag = true;
     for (var key in sameChecker) {
@@ -15804,7 +15820,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     if (flag) {
       setHandleButtonDisabled(true);
     }
-  }, [chromeLocalAITranslation, googleMachineTranslation]);
+  }, [chromeLocalAITranslation, googleMachineTranslation, bulkTranslationPostStatus, slugTranslationOption]);
 
   //Save Setting Function 
   function SaveSettings() {
@@ -15822,14 +15838,18 @@ var TranslationConfig = function TranslationConfig(_ref) {
                   provider: {
                     google: googleMachineTranslation,
                     chrome_local_ai: chromeLocalAITranslation
-                  }
+                  },
+                  bulk_translation_post_status: bulkTranslationPostStatus,
+                  slug_translation_option: slugTranslationOption
                 }
               };
               setLastUpdatedValue({
                 googleMachineTranslation: googleMachineTranslation,
-                chromeLocalAITranslation: chromeLocalAITranslation
+                chromeLocalAITranslation: chromeLocalAITranslation,
+                bulkTranslationPostStatus: bulkTranslationPostStatus,
+                slugTranslationOption: slugTranslationOption
               });
-              if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation)) {
+              if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation || lastUpdatedValue.bulkTranslationPostStatus !== bulkTranslationPostStatus || lastUpdatedValue.slugTranslationOption !== slugTranslationOption)) {
                 setData(function (prev) {
                   return translation_config_objectSpread(translation_config_objectSpread({}, prev), apiBody);
                 });
@@ -15877,6 +15897,23 @@ var TranslationConfig = function TranslationConfig(_ref) {
     }));
     return _SaveSettings.apply(this, arguments);
   }
+  var postStatusOptions = [{
+    heading: (0,external_wp_i18n_namespaceObject.__)('Published', 'linguator-multilingual-ai-translation'),
+    value: 'publish'
+  }, {
+    heading: (0,external_wp_i18n_namespaceObject.__)('Draft', 'linguator-multilingual-ai-translation'),
+    value: 'draft'
+  }];
+  var slugTranslationOptions = [{
+    heading: (0,external_wp_i18n_namespaceObject.__)('Title Translate', 'linguator-multilingual-ai-translation'),
+    value: 'title_translate'
+  }, {
+    heading: (0,external_wp_i18n_namespaceObject.__)('Slug Translate', 'linguator-multilingual-ai-translation'),
+    value: 'slug_translate'
+  }, {
+    heading: (0,external_wp_i18n_namespaceObject.__)('Keep Slug Original', 'linguator-multilingual-ai-translation'),
+    value: 'slug_keep'
+  }];
   return /*#__PURE__*/external_React_default().createElement(S, {
     className: "bg-white p-10 rounded-lg",
     cols: "1",
@@ -15959,6 +15996,86 @@ var TranslationConfig = function TranslationConfig(_ref) {
     size: "sm"
   }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null)))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Bulk Translation default Post Status', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    variant: "help"
+  }, (0,external_wp_i18n_namespaceObject.__)('This is the default post status for bulk translation.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      marginTop: "20px"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center gap-0 flex-wrap"
+  }, postStatusOptions.map(function (postStatus) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      key: postStatus.value,
+      className: "flex items-center gap-2 m-width-1/2 align-middle mr-7"
+    }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+      className: "text-sm pr-12 align-middle relative",
+      htmlFor: postStatus.value
+    }, /*#__PURE__*/external_React_default().createElement("p", null, postStatus.heading), /*#__PURE__*/external_React_default().createElement("label", {
+      className: "absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2",
+      htmlFor: postStatus.value
+    }, /*#__PURE__*/external_React_default().createElement("span", {
+      className: "relative p-0.5"
+    }, /*#__PURE__*/external_React_default().createElement("input", {
+      type: "radio",
+      className: "peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4",
+      name: "bulkTranslationPostStatus",
+      value: postStatus.value,
+      id: postStatus.value,
+      onChange: function onChange() {
+        setBulkTranslationPostStatus(postStatus.value);
+      },
+      checked: bulkTranslationPostStatus === postStatus.value
+    }), /*#__PURE__*/external_React_default().createElement("span", {
+      className: "inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"
+    }, /*#__PURE__*/external_React_default().createElement("div", {
+      className: "rounded-full bg-current size-1.5"
+    }))))));
+  })))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Slug Translation Option', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    variant: "help"
+  }, (0,external_wp_i18n_namespaceObject.__)('This is the option for slug translation.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      marginTop: "20px"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center gap-0 flex-wrap"
+  }, slugTranslationOptions.map(function (slugOption) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      key: slugOption.value,
+      className: "flex items-center gap-2 m-width-1/2 align-middle mr-7"
+    }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+      className: "text-sm pr-12 align-middle relative",
+      htmlFor: slugOption.value
+    }, /*#__PURE__*/external_React_default().createElement("p", null, slugOption.heading), /*#__PURE__*/external_React_default().createElement("label", {
+      className: "absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2",
+      htmlFor: slugOption.value
+    }, /*#__PURE__*/external_React_default().createElement("span", {
+      className: "relative p-0.5"
+    }, /*#__PURE__*/external_React_default().createElement("input", {
+      type: "radio",
+      className: "peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4",
+      name: "slugTranslationOption",
+      value: slugOption.value,
+      id: slugOption.value,
+      onChange: function onChange() {
+        setSlugTranslationOption(slugOption.value);
+      },
+      checked: slugTranslationOption === slugOption.value
+    }), /*#__PURE__*/external_React_default().createElement("span", {
+      className: "inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"
+    }, /*#__PURE__*/external_React_default().createElement("div", {
+      className: "rounded-full bg-current size-1.5"
+    }))))));
+  })))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S, {
     className: "flex items-center justify-end"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, {
@@ -16000,7 +16117,7 @@ const Settings = createLucideIcon_createLucideIcon("settings", settings_iconNode
 
 //# sourceMappingURL=settings.js.map
 
-;// ./Admin/Settings/Views/src/components/switcher.jsx
+;// ./admin/Settings/Views/src/components/switcher.jsx
 function switcher_typeof(o) { "@babel/helpers - typeof"; return switcher_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, switcher_typeof(o); }
 function switcher_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function switcher_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? switcher_ownKeys(Object(t), !0).forEach(function (r) { switcher_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : switcher_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -16166,7 +16283,7 @@ var Switcher = function Switcher(_ref) {
   }, (0,external_wp_i18n_namespaceObject.__)('Save Settings', 'linguator-multilingual-ai-translation')))));
 };
 /* harmony default export */ const switcher = (Switcher);
-;// ./Admin/Settings/Views/src/components/main-component.jsx
+;// ./admin/Settings/Views/src/components/main-component.jsx
 function main_component_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return main_component_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (main_component_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, main_component_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, main_component_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), main_component_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", main_component_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), main_component_regeneratorDefine2(u), main_component_regeneratorDefine2(u, o, "Generator"), main_component_regeneratorDefine2(u, n, function () { return this; }), main_component_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (main_component_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function main_component_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } main_component_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { main_component_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, main_component_regeneratorDefine2(e, r, n, t); }
 function main_component_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
@@ -16272,7 +16389,7 @@ var MainComponent = function MainComponent(_ref2) {
   }, /*#__PURE__*/external_React_default().createElement(sidebar, null)));
 };
 /* harmony default export */ const main_component = (MainComponent);
-;// ./Admin/Settings/Views/src/pages/setting-page.jsx
+;// ./admin/Settings/Views/src/pages/setting-page.jsx
 function setting_page_slicedToArray(r, e) { return setting_page_arrayWithHoles(r) || setting_page_iterableToArrayLimit(r, e) || setting_page_unsupportedIterableToArray(r, e) || setting_page_nonIterableRest(); }
 function setting_page_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function setting_page_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return setting_page_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? setting_page_arrayLikeToArray(r, a) : void 0; } }
@@ -16345,7 +16462,7 @@ var SettingPage = function SettingPage() {
 const external_wp_domReady_namespaceObject = window["wp"]["domReady"];
 // EXTERNAL MODULE: ./node_modules/react-dom/client.js
 var client = __webpack_require__(338);
-;// ./Admin/Settings/Views/src/settings.js
+;// ./admin/Settings/Views/src/settings.js
 
 
 
