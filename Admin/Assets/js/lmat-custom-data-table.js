@@ -174,9 +174,9 @@ class BlockFilterSorter {
       jQuery('#lmat-custom-fields-message-notice').remove();
     }, 10000);
 
-    let messageNotice = jQuery('<div id="lmat-custom-fields-message-notice"><p>' + message + '</p></div>');
+    let messageNotice = jQuery('<div id="lmat-custom-fields-message-notice" style="margin-bottom: 10px;"><p>' + message + '</p></div>');
     messageNotice.addClass('is-dismissible notice notice-' + type);
-    jQuery('.lmatp-dashboard-wrapper').before(messageNotice);
+    jQuery('#lmat-settings-header').before(messageNotice);
   }
 
   appendSaveButton() {

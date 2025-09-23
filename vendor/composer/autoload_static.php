@@ -101,6 +101,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Admin\\Feedback\\LMAT_Admin_Feedback' => __DIR__ . '/../..' . '/admin/feedback/admin-feedback.php',
         'Linguator\\Admin\\cpfm_feedback\\CPFM_Feedback_Notice' => __DIR__ . '/../..' . '/admin/cpfm-feedback/cpfm-feedback-notice.php',
         'Linguator\\Admin\\cpfm_feedback\\cron\\LMAT_cronjob' => __DIR__ . '/../..' . '/admin/cpfm-feedback/cron/class-cron.php',
+        'Linguator\\Custom_Fields\\Custom_Fields' => __DIR__ . '/../..' . '/admin/custom-fields/custom-fields.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang' => __DIR__ . '/../..' . '/frontend/controllers/choose-lang.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Content' => __DIR__ . '/../..' . '/frontend/controllers/choose-lang-content.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Domain' => __DIR__ . '/../..' . '/frontend/controllers/choose-lang-domain.php',

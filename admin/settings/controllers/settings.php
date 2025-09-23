@@ -17,6 +17,7 @@ use Linguator\Settings\Tables\LMAT_Table_Languages;
 use Linguator\Settings\Tables\LMAT_Table_String;
 use Linguator\Settings\Header\Header;
 use Linguator\Supported_Blocks\Supported_Blocks;
+use Linguator\Custom_Fields\Custom_Fields;
 
 use WP_Error;
 
@@ -443,8 +444,15 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 */
 	public function languages_page() {
 
+		// Custom Fields
+		if($this->selected_tab === 'custom-fields' && class_exists(Custom_Fields::class)){
+			$this->header->header();
+			Custom_Fields::get_instance()->lmat_render_custom_fields_page();
+			return;
+		}
+
 		// Support Blocks
-		if($this->selected_tab === 'supported-blocks'){
+		if($this->selected_tab === 'supported-blocks' && class_exists(Supported_Blocks::class)){
 			$this->header->header();
 			Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
 			return;
@@ -573,8 +581,9 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
 		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
 		$supported_blocks_tab = $is_settings_tab && $active_tab === 'supported-blocks';
+		$custom_fields_tab = $is_settings_tab && $active_tab === 'custom-fields';
 		
-		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && !$supported_blocks_tab) {
+		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && !$supported_blocks_tab && !$custom_fields_tab) {
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'admin/assets/frontend/settings/settings.asset.php';
 
@@ -636,12 +645,16 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			
 		} else if($supported_blocks_tab){
 			$this->header->header_assets();
-
-			wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-			wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-			wp_enqueue_style( 'lmat-custom-data-table', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
-			wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
-		}else {
+			if(class_exists(Supported_Blocks::class)){
+				Supported_Blocks::enqueue_editor_assets();
+			}
+		}else if($custom_fields_tab){
+			$this->header->header_assets();
+			if(class_exists(Custom_Fields::class)){
+				Custom_Fields::enqueue_editor_assets();
+			}
+		}
+		else {
 			$this->header->header_assets();
 
 			// Original scripts for lang and strings tabs

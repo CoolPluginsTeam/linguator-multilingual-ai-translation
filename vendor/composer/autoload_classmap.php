@@ -46,6 +46,7 @@ return array(
     'Linguator\\Admin\\Feedback\\LMAT_Admin_Feedback' => $baseDir . '/admin/feedback/admin-feedback.php',
     'Linguator\\Admin\\cpfm_feedback\\CPFM_Feedback_Notice' => $baseDir . '/admin/cpfm-feedback/cpfm-feedback-notice.php',
     'Linguator\\Admin\\cpfm_feedback\\cron\\LMAT_cronjob' => $baseDir . '/admin/cpfm-feedback/cron/class-cron.php',
+    'Linguator\\Custom_Fields\\Custom_Fields' => $baseDir . '/admin/custom-fields/custom-fields.php',
     'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang' => $baseDir . '/frontend/controllers/choose-lang.php',
     'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Content' => $baseDir . '/frontend/controllers/choose-lang-content.php',
     'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Domain' => $baseDir . '/frontend/controllers/choose-lang-domain.php',

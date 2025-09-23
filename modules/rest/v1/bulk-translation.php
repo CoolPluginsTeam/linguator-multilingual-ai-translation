@@ -275,7 +275,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			if ( count( $translate_lang ) > 0 && ! ( count( $post_ids ) < 1 ) ) {
 				$lmat_langs           = $linguator->model->get_languages_list();
 				$lmat_langs_slugs     = array_column( $lmat_langs, 'slug' );
-				$allowed_meta_fields = Custom_Fields::get_instance()->get_allowed_custom_fields();
+				$allowed_meta_fields = Custom_Fields::get_allowed_custom_fields();
 
 				foreach ( $post_ids as $postId ) {
 

@@ -55,6 +55,13 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			return self::$instance;
 		}
 
+		public static function enqueue_editor_assets() {
+			wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+			wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+			wp_enqueue_style( 'lmat-custom-data-table', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+			wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
+		}
+
 		/**
 		 * Render the support blocks page.
 		 */
@@ -157,7 +164,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 					$block_title = esc_html( $block->title );
 
 					$status      = ! in_array( $block_name, $lmat_supported_blocks_names ) ? 'Unsupported' : 'Supported'; // You can modify this logic based on your requirements
-					$modify_text = ! in_array( $block_name, $lmat_supported_blocks_names ) ? esc_html__( 'Add', 'autopoly-ai-translation-for-polylang-pro' ) : esc_html__( 'Edit', 'autopoly-ai-translation-for-polylang-pro' );
+					$modify_text = ! in_array( $block_name, $lmat_supported_blocks_names ) ? esc_html__( 'Add', 'linguator-multilingual-ai-translation' ) : esc_html__( 'Edit', 'linguator-multilingual-ai-translation' );
 					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $lmat_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
 					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $lmat_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
 
