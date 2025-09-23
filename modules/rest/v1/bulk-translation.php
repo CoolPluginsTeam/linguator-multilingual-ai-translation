@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Linguator\Includes\Services\Translation\Translation_Term_Model;
 use Linguator\Supported_Blocks\Supported_Blocks;
+use Linguator\Custom_Fields\Custom_Fields;
 use Translation_Entry;
 use Translations;
 use WP_Error;
@@ -52,7 +53,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		public function register_routes() {
 			register_rest_route(
 				$this->namespace,
-				$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-entries',
+				'/'.$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-entries',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_entries' ),
@@ -78,8 +79,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			register_rest_route(
 				$this->namespace,
-				$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
-				'/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
+				'/'.$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_taxonomy_entries' ),
@@ -109,8 +109,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			register_rest_route(
 				$this->namespace,
-				$this->rest_base.'/(?P<post_id>[\w-]+):create-translate-post',
-				'/(?P<post_id>[\w-]+):create-translate-post',
+				'/'.$this->rest_base.'/(?P<post_id>[\w-]+):create-translate-post',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_translate_post' ),
@@ -157,8 +156,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			register_rest_route(
 				$this->namespace,
-				$this->rest_base.'/(?P<term_id>[\w-]+):create-translate-taxonomy',
-				'/(?P<term_id>[\w-]+):create-translate-taxonomy',
+				'/'.$this->rest_base.'/(?P<term_id>[\w-]+):create-translate-taxonomy',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_translate_taxonomy' ),
@@ -277,7 +275,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			if ( count( $translate_lang ) > 0 && ! ( count( $post_ids ) < 1 ) ) {
 				$lmat_langs           = $linguator->model->get_languages_list();
 				$lmat_langs_slugs     = array_column( $lmat_langs, 'slug' );
-				$allowed_meta_fields = ATFPP_Helper::get_instance()->get_allowed_custom_fields();
+				$allowed_meta_fields = Custom_Fields::get_instance()->get_allowed_custom_fields();
 
 				foreach ( $post_ids as $postId ) {
 
