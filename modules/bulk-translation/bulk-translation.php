@@ -131,7 +131,6 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			wp_enqueue_script( 'lmat-bulk-translate', plugins_url( 'admin/assets/bulk-translate/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], array( 'lmat-google-api' ) ), $editor_script_asset['version'], true );
 
 			wp_enqueue_style( 'lmat-bulk-translate', plugins_url( 'admin/assets/bulk-translate/index.css', LINGUATOR_ROOT_FILE ), array(), $editor_script_asset['version'] );
-
 			$languages = LMAT()->model->get_languages_list();
 
 			$lang_object = array();

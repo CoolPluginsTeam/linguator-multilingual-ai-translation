@@ -7,6 +7,7 @@ import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { toast } from 'sonner'
 import { ChromeIcon } from '../../../../../assets/logo/chrome';
+import { GoogleIcon } from '../../../../../assets/logo/google';
 
 
 
@@ -234,7 +235,7 @@ const TranslationConfig = ({ data, setData }) => {
                     <div className='switcher p-6 rounded-lg'>
                         <Container.Item>
                             <h3 className='flex items-center gap-2'>
-                                <FcGoogle className='w-5 h-5'/>
+                                <GoogleIcon className='w-5 h-5'/>
                                 {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
                             </h3>
                             <p>

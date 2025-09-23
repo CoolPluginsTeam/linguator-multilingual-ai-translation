@@ -5,9 +5,9 @@ import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
 import { __, sprintf } from '@wordpress/i18n'
 import React from 'react'
-import { FcGoogle } from "react-icons/fc";
 import { Switch } from '@bsf/force-ui'
 import {ChromeIcon} from "../../../../assets/logo/chrome"
+import {GoogleIcon} from "../../../../assets/logo/google"
 
 
 
@@ -167,7 +167,7 @@ const AiTranslation = () => {
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
                     <div className="flex items-center  gap-2">
-                      <FcGoogle className='size-5' />
+                      <GoogleIcon className="w-4 h-4" />
                       <p className="text-sm/6">{__('Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch
