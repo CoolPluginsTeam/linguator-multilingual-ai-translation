@@ -16,10 +16,9 @@ use Linguator\Settings\Controllers\LMAT_Settings_Module;
 use Linguator\Settings\Tables\LMAT_Table_Languages;
 use Linguator\Settings\Tables\LMAT_Table_String;
 use Linguator\Settings\Header\Header;
+use Linguator\Supported_Blocks\LMAT_Supported_Blocks;
 
 use WP_Error;
-
-
 
 /**
  * A class for the Linguator settings pages, accessible from @see LMAT().
@@ -443,6 +442,14 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function languages_page() {
+
+		// Support Blocks
+		if($this->selected_tab === 'supported-blocks'){
+			$this->header->header();
+			LMAT_Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
+			return;
+		}
+
 		// return if the active tab is localizations
 		if($this->active_tab === 'localizations'){
 			return;
@@ -565,8 +572,9 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
 		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
-
-		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab)) {
+		$supported_blocks_tab = $is_settings_tab && $active_tab === 'supported-blocks';
+		
+		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && !$supported_blocks_tab) {
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'admin/assets/frontend/settings/settings.asset.php';
 
@@ -626,7 +634,14 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			);
 
 			
-		} else {
+		} else if($supported_blocks_tab){
+			$this->header->header_assets();
+
+			wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+			wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+			wp_enqueue_style( 'lmat-custom-data-table', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+			wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
+		}else {
 			$this->header->header_assets();
 
 			// Original scripts for lang and strings tabs
