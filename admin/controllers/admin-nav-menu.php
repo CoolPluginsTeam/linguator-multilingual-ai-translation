@@ -397,7 +397,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 							<?php if ( ! empty( $flag_url ) ) : ?>
 								<img src="<?php echo esc_url( $flag_url ); ?>" alt="<?php echo esc_attr( $lang->name ); ?>" width="16" style="margin-right: 5px;">
 							<?php endif; ?>
-							<?php echo esc_html( $lang->name ); ?> <span class="count">(<?php echo esc_html( $menu_count ); ?>)</span>
+                            <?php echo esc_html( $lang->name ); ?>
+                            <?php if ( ! empty( $lang->is_default ) ) : ?> <span class="icon-default-lang" aria-hidden="true"></span><?php endif; ?><span class="count">(<?php echo esc_html( $menu_count ); ?>)</span>
 						</a>
 					</li>
 				<?php endforeach; ?>

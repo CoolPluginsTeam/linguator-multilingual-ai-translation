@@ -81,7 +81,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 						),
 						'ul' => array('class' => array()),
 					));
-					foreach($lmat_languages as $lang){
+                    foreach($lmat_languages as $lang){
 	
 						$flag=isset($lang->flag) ? $lang->flag : '';
 						$language_slug=isset($lang->slug) ? $lang->slug : '';
@@ -96,10 +96,12 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 							$translated_post_count+=$pending_post_count;
 						}
 
-						$flag_url=isset($lang->flag_url) ? $lang->flag_url : '';
+                        $flag_url=isset($lang->flag_url) ? $lang->flag_url : '';
+                        $is_default = !empty($lang->is_default);
+                        $icon = $is_default ? " <span class='icon-default-lang' aria-hidden='true'></span>" : '';
 
-						$all_translated_post_count+=$translated_post_count;
-						$list_html.="<li class='lmat_lang_".esc_attr($language_slug)."'><a href='edit.php?post_type=".esc_attr($post_type)."&lang=".esc_attr($language_slug)."' class='".esc_attr($current_class)."'><img src='".esc_url($flag_url)."' alt='".esc_attr($lang->name)."' width='16' style='margin-right: 5px;'>".esc_html($lang->name)." <span class='count'>(".esc_html($translated_post_count).")</span></a></li>";
+                        $all_translated_post_count+=$translated_post_count;
+                        $list_html.="<li class='lmat_lang_".esc_attr($language_slug)."'><a href='edit.php?post_type=".esc_attr($post_type)."&lang=".esc_attr($language_slug)."' class='".esc_attr($current_class)."'><img src='".esc_url($flag_url)."' alt='".esc_attr($lang->name)."' width='16' style='margin-right: 5px;'>".esc_html($lang->name).$icon." <span class='count'>(".esc_html($translated_post_count).")</span></a></li>";
 						$index++;
 					}
 
