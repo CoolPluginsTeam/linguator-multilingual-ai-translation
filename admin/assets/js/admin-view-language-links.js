@@ -6,7 +6,7 @@ jQuery(document).ready(function(){
         const $defaultSubsubsub = jQuery('ul.subsubsub:not(.lmat_subsubsub_list)');
 
         if($defaultSubsubsub.length){
-            $defaultSubsubsub.after(lmatSubsubsubList);
+            $defaultSubsubsub.before(lmatSubsubsubList);
             lmatSubsubsubList.show();
         }
     }
