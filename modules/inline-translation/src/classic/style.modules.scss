@@ -1,0 +1,50 @@
+.lmatClassicInlineTranslation{
+    &-wrapper{
+        position: absolute;
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 2px;
+        white-space: nowrap;
+        font-weight: bold;
+        gap: .3rem;
+        width: auto;
+        transform: translate3d(0, -10px, 0);
+        transition: all .15s ease-in-out;
+        opacity: 0;
+        animation: showTooltip 0.2s ease-in-out 0.2s forwards;
+        padding: .2rem .3rem;
+        z-index: 99999;
+
+        &::after{
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 7px solid transparent;
+            border-top: 7px solid rgba(0, 0, 0, 0.75);
+            content: '';
+            height: 0;
+            top: 100%;
+            left: calc(50% - 7px);
+            width: 0;
+            position: absolute;
+        }
+
+        svg{
+            font-size: 1rem;
+        }
+    }
+
+    @keyframes showTooltip {
+        0% {
+            opacity: 0;
+            transform: translate3d(0,-10px,0);
+        }
+        100% {
+            opacity: 1;
+            transform: translate3d(0,0,0);
+        }
+    }
+}

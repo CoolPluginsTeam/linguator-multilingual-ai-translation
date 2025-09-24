@@ -1,4 +1,3 @@
-composer.json
 composer.lock
 vendor/dealerdirect
 vendor/doctrine
@@ -17,3 +16,4 @@ vendor/**/LICENSE
 vendor/**/README.md
 vendor/*/installed.php
 node_modules
+*.js*LICENSE.txt 

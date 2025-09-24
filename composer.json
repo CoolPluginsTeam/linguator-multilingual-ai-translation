@@ -1,0 +1,57 @@
+{
+    "name": "linguator/linguator",
+    "require": {
+        "php": ">=7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0|^9.0",
+        "wp-coding-standards/wpcs": "^2.3",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Linguator\\Admin\\": "admin/",
+            "Linguator\\Frontend\\": "frontend/",
+            "Linguator\\includes\\": "includes/",
+            "Linguator\\Settings\\": "admin/settings/",
+            "Linguator\\Modules\\": "modules/",
+            "Linguator\\Integrations\\": "integrations/",
+            "Linguator\\Install\\": "install/"
+        },
+        "classmap": [
+            "includes/",
+            "admin/",
+            "frontend/",
+            "integrations/",
+            "modules/",
+            "admin/settings/",
+            "install/"
+        ],
+        "files": [
+            "includes/helpers/functions.php",
+            "includes/api/language-api.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Linguator\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .",
+        "phpcs:fix": "phpcbf --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .",
+        "test": "phpunit",
+        "lint": "find . -name '*.php' -not -path './vendor/*' -not -path './node_modules/*' -exec php -l {} \\;"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "process-timeout": 0
+    }
+} 

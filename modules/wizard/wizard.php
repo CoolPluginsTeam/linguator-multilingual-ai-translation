@@ -74,14 +74,39 @@ class LMAT_Wizard
 		$this->options = &$linguator->options;
 		$this->model   = &$linguator->model;
 
-		// Display Wizard page before any other action to ensure displaying it outside the WordPress admin context.
-		// Hooked on admin_init with priority 40 to ensure LMAT_Wizard_Pro is correctly initialized.
+		// Add admin menu for wizard page
+		add_action('admin_menu', array($this, 'add_admin_menu'));
+		
+		// Setup wizard page handling 
 		add_action('admin_init', array($this, 'setup_wizard_page'), 40);
 
 		// Add Wizard submenu.
 		add_filter('lmat_settings_tabs', array($this, 'settings_tabs'), 10, 1);
 		// Add filter to select screens where to display the notice.
 		add_filter('lmat_can_display_notice', array($this, 'can_display_notice'), 10, 2);
+	}
+
+	/**
+	 * Add admin menu item for the wizard
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function add_admin_menu()
+	{
+		// Add the wizard page as a top-level admin menu item (hidden from menu)
+		add_menu_page(
+			esc_html__('Linguator Setup Wizard', 'linguator-multilingual-ai-translation'),
+			esc_html__('Linguator Setup', 'linguator-multilingual-ai-translation'),
+			'manage_options',
+			'lmat_wizard',
+			array($this, 'display_wizard_page'),
+			'dashicons-translation',
+			null
+		);
+		
+		// Remove from admin menu to hide it (we only want it accessible via direct URL)
+		remove_menu_page('lmat_wizard');
 	}
 
 	/**
@@ -194,16 +219,9 @@ class LMAT_Wizard
 		if (! Linguator::is_wizard()) {
 			return;
 		}
-		if (! current_user_can('manage_options')) {
-			wp_die(esc_html__('Sorry, you are not allowed to manage options for this site.', 'linguator-multilingual-ai-translation'));
-		}
 
 		// Enqueue scripts and styles especially for the wizard.
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
-
-		$this->display_wizard_page();
-		// Ensure nothing is done after including the page.
-		exit;
 	}
 
 	/**
@@ -245,6 +263,37 @@ class LMAT_Wizard
 		return ob_get_clean();
 	}
 
+
+	/**
+	 * Get language switcher options formatted for JavaScript
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Array of language switcher options with label and value
+	 */
+	private function get_language_switcher_options() {
+		$language_switcher_options = array(
+            array(
+                'label' => __( 'Classic (Menu, Widgets) Based', 'linguator-multilingual-ai-translation' ),
+                'value' => 'default',
+				'subheading' => 'Standard language switcher widget that can be added to widget areas and sidebars.'
+            ),
+            array(
+                'label' => __( 'Block Based', 'linguator-multilingual-ai-translation' ),
+                'value' => 'block',
+				'subheading' => 'Gutenberg block widget for the block editor, compatible with modern WordPress themes.'
+            )
+        );
+        if(lmat_is_plugin_active('elementor/elementor.php')){
+            $language_switcher_options[] = array(
+                'label' => __( 'Elementor Widget Based', 'linguator-multilingual-ai-translation' ),
+                'value' => 'elementor',
+				'subheading' => 'Specialized widget for Elementor page builder with enhanced styling and customization options.'
+            );
+        }
+        return $language_switcher_options;
+    } 
+
 	/**
 	 * Display the wizard page
 	 *
@@ -254,8 +303,11 @@ class LMAT_Wizard
 	 */
 	public function display_wizard_page()
 	{
-		set_current_screen('lmat-wizard');
-		do_action('admin_enqueue_scripts');
+		// Check permissions
+		if (! current_user_can('manage_options')) {
+			wp_die(esc_html__('Sorry, you are not allowed to manage options for this site.', 'linguator-multilingual-ai-translation'));
+		}
+
 		$steps          = $this->steps;
 		$current_step   = $this->current_step;
 		$styles         = $this->styles;
@@ -273,7 +325,7 @@ class LMAT_Wizard
 	{
 		if (Linguator::is_wizard()) {
 			// Enqueue React-based settings for settings tabs
-			$asset_file = plugin_dir_path(LINGUATOR_ROOT_FILE) . 'Admin/Assets/frontend/setup/setup.asset.php';
+			$asset_file = plugin_dir_path(LINGUATOR_ROOT_FILE) . 'admin/assets/frontend/setup/setup.asset.php';
 			$asset = require $asset_file;
 			$languages = $this->model->get_languages_list();
 			$home_page_id = get_option('page_on_front');
@@ -300,7 +352,7 @@ class LMAT_Wizard
 			// Enqueue React-based settings script
 			wp_enqueue_script(
 				'lmat_setup',
-				plugins_url('Admin/Assets/frontend/setup/setup.js', LINGUATOR_ROOT_FILE),
+				plugins_url('admin/assets/frontend/setup/setup.js', LINGUATOR_ROOT_FILE),
 				$asset['dependencies'],
 				$asset['version'],
 				true
@@ -329,6 +381,7 @@ class LMAT_Wizard
 					'admin_url' => get_admin_url(),
 					'home_url'       => get_home_url(),
 					'home_page_data' => $home_page_data,
+					'language_switcher_options' => $this->get_language_switcher_options(),
 				)
 			);
 
@@ -336,7 +389,7 @@ class LMAT_Wizard
 				'lmat_setup',
 				'lmat_setup_flag_data',
 				[
-					'flagsUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . 'flags/',
+					'flagsUrl' => plugin_dir_url(LINGUATOR_ROOT_FILE) . '/assets/flags/',
 					'nonce' => wp_create_nonce('wp_rest'),
 					'restUrl' => rest_url('lmat/v1/'),
 				]
@@ -344,7 +397,7 @@ class LMAT_Wizard
 			// Enqueue styles
 			wp_enqueue_style(
 				'lmat_setup',
-				plugins_url('Admin/Assets/css/build/main.css', LINGUATOR_ROOT_FILE),
+				plugins_url('admin/assets/css/build/main.css', LINGUATOR_ROOT_FILE),
 				array(),
 				LINGUATOR_VERSION
 			);

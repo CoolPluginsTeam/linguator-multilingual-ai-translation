@@ -4,7 +4,7 @@ Tags: translation, multilingual, language, localization
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.2
-Stable tag: 1.0.2
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,7 @@ Just install the plugin and start translating right inside your WordPress dashbo
 4. Use the **Linguator > Settings** screen to configure the plugin.
 
 **Development Resources**
-To access the source code, there are three main locations to consider. The primary jQuery source code can be found in the linguator/js/src directory. For the React-based settings tab, please navigate to linguator/Settings/View/src, and for the setup tab, you can find the React source in linguator/modules/wizard/src. All build files generated from these sources are located in the linguator/Admin/Assets directory.
+To access the source code, there are three main locations to consider. The primary jQuery source code can be found in the linguator/assets/js/src directory. For the React-based settings tab, please navigate to linguator/admin/settings/view/src, and for the setup tab, you can find the React source in linguator/modules/wizard/src. All build files generated from these sources are located in the linguator/admin/assets directory.
 
 
 == Frequently Asked Questions ==
