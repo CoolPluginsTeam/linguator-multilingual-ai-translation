@@ -92,8 +92,8 @@ const FilterTargetContent = (props) => {
                     element.textContent = textContent;
                 }
                 else if(element.nodeType === 8){
-                    let textContent = `<!--${element.textContent}-->`;
-                    element.textContent = textContent;
+                     // let textContent = `<!--${element.textContent}-->`;
+                     element.textContent = element.textContent;
                 }
                 else{
                     let filterContent = wrapFirstAndMatchingClosingTag(element.outerHTML);
