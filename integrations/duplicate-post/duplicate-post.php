@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with Duplicate Post.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Duplicate_Post {
 	/**
 	 * Setups actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_filter( 'option_duplicate_post_taxonomies_blacklist', array( $this, 'taxonomies_blacklist' ) );
@@ -26,7 +26,7 @@ class LMAT_Duplicate_Post {
 	/**
 	 * Avoid duplicating the 'lmat_post_translations' taxonomy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array|string $taxonomies The list of taxonomies not to duplicate.
 	 * @return array

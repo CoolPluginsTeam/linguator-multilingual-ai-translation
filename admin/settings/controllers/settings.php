@@ -24,7 +24,7 @@ use WP_Error;
 /**
  * A class for the Linguator settings pages, accessible from @see LMAT().
  *
- * @since 1.0.0
+ *  
  */
 #[AllowDynamicProperties]
 class LMAT_Settings extends LMAT_Admin_Base {
@@ -104,16 +104,16 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
-
-		$selected_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : '';
-		$loco=isset($_GET['loco']) ? sanitize_text_field($_GET['loco']) : '';
-		
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
+		$selected_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
+		$loco=isset($_GET['loco']) ? sanitize_text_field(wp_unslash($_GET['loco'])) : '';
 		
 		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->active_tab = 'lmat' === $_GET['page'] ? 'lang' : substr( sanitize_key( $_GET['page'] ), 5 ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -163,7 +163,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * Note: Legacy settings modules are no longer needed since React handles settings.
 	 * Only external modules from filters are registered now.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -174,7 +174,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		 * Filter the list of setting modules
 		 * Allows external plugins/modules to add their own settings modules
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $modules the list of module classes
 		 */
@@ -202,7 +202,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Adds screen options and the about box in the languages admin panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -224,7 +224,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Adds screen options in the strings translations admin panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -242,7 +242,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Adds screen options in the localizations admin panel
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -278,7 +278,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Redirects to the loco page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -297,7 +297,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Saves the number of rows in the languages or strings table set by this user.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $screen_option False or value returned by a previous filter, not used.
 	 * @param string $option        The name of the option, not used.
@@ -311,12 +311,12 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Manages the user input for the languages pages.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $action The action name.
 	 * @return void
 	 */
-	public function handle_actions( $action ) {
+	public function handle_actions( string $action ): void {
 		switch ( $action ) {
 			case 'add':
 				check_admin_referer( 'add-lang', '_wpnonce_add-lang' );
@@ -348,7 +348,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 						wp_clean_plugins_cache();
 					}
 				}
-				self::redirect(); // To refresh the page 
+		
 				break;
 
 			case 'delete':
@@ -358,7 +358,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					lmat_add_notice( new WP_Error( 'lmat_languages_deleted', __( 'Language deleted.', 'linguator-multilingual-ai-translation' ), 'success' ) );
 				}
 
-				self::redirect(); // To refresh the page 
+				
 				break;
 
 			case 'update':
@@ -380,7 +380,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					lmat_add_notice( new WP_Error( 'lmat_languages_updated', __( 'Language updated.', 'linguator-multilingual-ai-translation' ), 'success' ) );
 				}
 
-				self::redirect(); // To refresh the page 
+
 				break;
 
 			case 'default-lang':
@@ -390,7 +390,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					$this->model->update_default_lang( $lang->slug );
 				}
 
-				self::redirect(); // To refresh the page 
+
 				break;
 
 			case 'content-default-lang':
@@ -398,7 +398,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 				$this->model->set_language_in_mass();
 
-				self::redirect(); // To refresh the page 
+
 				break;
 
 			case 'activate':
@@ -409,7 +409,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 						$this->modules[ $module ]->activate();
 					}
 				}
-				self::redirect();
+
 				break;
 
 			case 'deactivate':
@@ -420,25 +420,25 @@ class LMAT_Settings extends LMAT_Admin_Base {
 						$this->modules[ $module ]->deactivate();
 					}
 				}
-				self::redirect();
 				break;
 
 			default:
 				/**
 				 * Fires when a non default action has been sent to Linguator settings
 				 *
-				 * @since 1.0.0
+				 *  
 				 */
 				do_action( "lmat_action_$action" );
 				break;
 		}
+		self::redirect();
 	}
 
 	/**
 	 * Displays the 3 tabs pages: languages, strings translations, settings
 	 * Also manages user input for these pages
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -468,7 +468,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		
 		if ( $is_settings_tab ) {
 			// Handle user input for legacy actions
-			$action = isset( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+			$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['pll_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			if ( ! empty( $action ) ) {
 				$this->handle_actions( $action );
 			}
@@ -500,7 +500,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		if ( 'edit' === $action && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			// phpcs:ignore WordPress.Security.NonceVerification, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 			$edit_lang = $this->model->get_language( (int) $_GET['lang'] );
-		} else {
+		} elseif ( ! empty( $action ) ) {
 			$this->handle_actions( $action );
 		}
 
@@ -514,7 +514,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Get synchronization options formatted for JavaScript
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Array of sync options with label and value
 	 */
@@ -542,7 +542,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Get language switcher options formatted for JavaScript
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Array of language switcher options with label and value
 	 */
@@ -579,7 +579,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
-		$active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : false;
+		$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : false;
 		$supported_blocks_tab = $is_settings_tab && $active_tab === 'supported-blocks';
 		$custom_fields_tab = $is_settings_tab && $active_tab === 'custom-fields';
 		
@@ -672,7 +672,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Displays a notice when there are objects with no language assigned
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -691,12 +691,12 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * Redirects to language page ( current active tab )
 	 * saves error messages in a transient for reuse in redirected page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args query arguments to add to the url
 	 * @return void
 	 */
-	public static function redirect( $args = array() ) {
+	public static function redirect( array $args = array() ): void {
 		$errors = get_settings_errors( 'linguator-multilingual-ai-translation' );
 		if ( ! empty( $errors ) ) {
 			set_transient( 'lmat_settings_errors', $errors, 30 );
@@ -710,7 +710,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Get the list of predefined languages
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[][] {
 	 *   An array of array of language properties.
@@ -742,8 +742,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		/**
 		 * Filter the list of predefined languages
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 The languages arrays use associative keys instead of numerical keys
+		 *  
+		 *   The languages arrays use associative keys instead of numerical keys
 		 *
 		 * @param array $languages
 		 */
@@ -762,7 +762,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	/**
 	 * Check LocoAI plugin installation and activation status.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Plugin status information
 	 */

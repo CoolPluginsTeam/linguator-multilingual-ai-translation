@@ -6,6 +6,7 @@
 namespace Linguator\Includes\Base;
 
 
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -13,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Base class for both admin and frontend
  *
- * @since 1.0.0
+ *  
  */
-
+use Linguator\Modules\REST\Request;
 use Linguator\Includes\Core\Linguator;
 use Linguator\Includes\Services\Crud\LMAT_CRUD_Posts;
 use Linguator\Includes\Services\Crud\LMAT_CRUD_Terms;
@@ -62,6 +63,10 @@ abstract class LMAT_Base {
 	 * @var LMAT_CRUD_Terms|null
 	 */
 	public $terms;
+	/**
+	 * @var Request
+	 */
+	public $request;
 
 	/**
 	 * Navigation menu handler.
@@ -80,7 +85,7 @@ abstract class LMAT_Base {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Links Model.
 	 */
@@ -88,6 +93,7 @@ abstract class LMAT_Base {
 		$this->links_model = &$links_model;
 		$this->model = &$links_model->model;
 		$this->options = &$this->model->options;
+		$this->request     = new Request( $this->model );
 
 		$GLOBALS['l10n_unloaded']['lmat_string'] = true; // Short-circuit _load_textdomain_just_in_time() for 'lmat_string' domain in WP 4.6+
 
@@ -106,7 +112,7 @@ abstract class LMAT_Base {
 	 * Instantiates classes reacting to CRUD operations on posts and terms,
 	 * only when at least one language is defined.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -126,7 +132,7 @@ abstract class LMAT_Base {
 	/**
 	 * Registers our widgets
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -145,8 +151,8 @@ abstract class LMAT_Base {
 	/**
 	 * Loads user defined strings translations
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 $locale parameter added.
+	 *  
+	 *   $locale parameter added.
 	 *
 	 * @param string $locale Language locale or slug. Defaults to current locale.
 	 * @return void
@@ -171,7 +177,7 @@ abstract class LMAT_Base {
 	 * Resets some variables when the blog is switched.
 	 * Applied only if Linguator is active on the new blog.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $new_blog_id  New blog ID.
 	 * @param int $prev_blog_id Previous blog ID.
@@ -193,7 +199,7 @@ abstract class LMAT_Base {
 	/**
 	 * Checks if Linguator is active on the current blog (useful when the blog is switched).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -204,7 +210,7 @@ abstract class LMAT_Base {
 	/**
 	 * Check if the customize menu should be removed or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool True if it should be removed, false otherwise.
 	 */
@@ -220,7 +226,7 @@ abstract class LMAT_Base {
 	/**
 	 * Tells whether or not Linguator or third party callbacks are hooked to `customize_register`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @global $wp_filter
 	 *

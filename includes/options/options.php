@@ -24,7 +24,6 @@ use WP_Error;
  * - Options are always defined: it is not possible to unset them from the list, they are set to their default value instead.
  * - If an option is not registered but exists in database, its raw value will be kept and remain untouched.
  *
- * @since 1.0.0
  *
  * @implements ArrayAccess<non-falsy-string, mixed>
  * @implements IteratorAggregate<non-empty-string, mixed>
@@ -73,7 +72,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		// Keep track of the blog ID.
@@ -92,7 +91,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * Registers an option.
 	 * Options must be registered in the right order: some options depend on other options' value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $class_name  Option class to register.
 	 * @return self
@@ -125,7 +124,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Prevents storing an instance of `Options` into the database.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array|Options $value The options to store.
 	 * @return array
@@ -140,7 +139,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Initializes options for the newly switched blog if applicable.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $blog_id The blog ID.
 	 * @return void
@@ -163,7 +162,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * Stores the options into the database for all blogs.
 	 * Hooked to `shutdown`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -199,7 +198,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Stores the options into the database.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool True if the options were updated, false otherwise.
 	 */
@@ -230,7 +229,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Returns all options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return mixed[] All options values.
 	 */
@@ -256,7 +255,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Merges a subset of options into the current blog ones.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $values Array of raw options.
 	 * @return WP_Error
@@ -314,7 +313,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Returns JSON schema for all options of the current blog.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array The schema.
 	 */
@@ -350,7 +349,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Tells if an option exists.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key The name of the option to check for.
 	 * @return bool
@@ -362,7 +361,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Returns the value of the specified option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key The name of the option to retrieve.
 	 * @return mixed
@@ -384,7 +383,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * This doesn't allow to set an unknown option.
 	 * When doing multiple `set()`, options must be set in the right order: some options depend on other options' value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key   The name of the option to assign the value to.
 	 * @param mixed  $value The value to set.
@@ -412,7 +411,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Resets an option to its default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key The name of the option to reset.
 	 * @return mixed The new value.
@@ -436,7 +435,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * Tells if an option exists.
 	 * Required by interface `ArrayAccess`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $offset The name of the option to check for.
 	 * @return bool
@@ -449,7 +448,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * Returns the value of the specified option.
 	 * Required by interface `ArrayAccess`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $offset The name of the option to retrieve.
 	 * @return mixed
@@ -464,7 +463,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * This doesn't allow to set an unknown option.
 	 * Required by interface `ArrayAccess`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $offset The name of the option to assign the value to.
 	 * @param mixed  $value  The value to set.
@@ -479,7 +478,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * This doesn't allow to unset an option, this resets it to its default value instead.
 	 * Required by interface `ArrayAccess`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $offset The name of the option to unset.
 	 * @return void
@@ -492,7 +491,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * Returns all current site's option values.
 	 * Required by interface `IteratorAggregate`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return ArrayIterator
 	 *
@@ -507,7 +506,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * On multisite, sites are cached.
 	 * /!\ At this point, some sites may have been deleted. They are removed from `$this->modified` here.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool[]
 	 * @phpstan-return array<int, true>
@@ -544,7 +543,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Initializes options for the current blog.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -562,7 +561,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 		 * Fires after the options have been init for the current blog.
 		 * This is the best place to register options.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param Options $options         Instance of the options.
 		 * @param int     $current_blog_id Current blog ID.

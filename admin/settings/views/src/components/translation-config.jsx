@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Button, Checkbox, Container, Input, Label, RadioButton, Switch, Badge } from '@bsf/force-ui'
 import { Languages, Post } from 'lucide-react';
 import { __ } from '@wordpress/i18n'
+import { FcGoogle } from "react-icons/fc";
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { toast } from 'sonner'
+import { ChromeIcon } from '../../../../../assets/logo/chrome';
+import { GoogleIcon } from '../../../../../assets/logo/google';
+
+
 
 const ChromeLocalAINotice = () => {
     const [showBrowserNotice, setShowBrowserNotice] = React.useState(false);
@@ -266,33 +271,34 @@ const TranslationConfig = ({ data, setData }) => {
                     {__('Select at least one translation service provider below. You can enable multiple providers and choose the one that best fits your needs.', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <div className='flex flex-col gap-2' style={{ marginTop: "20px" }}>
-                    <div style={{ backgroundColor: "#fbfbfb" }}>
-                        <div className='switcher p-6 rounded-lg'>
-                            <Container.Item>
-                                <h3 className='flex items-center gap-2'>
-                                    {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
-                                </h3>
-                                <p>
-                                    {__('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation')}
-                                </p>
-                            </Container.Item>
-                            <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
-                                <Switch
-                                    aria-label="Switch Element"
-                                    id="google-machine-translation"
-                                    onChange={() => {
-                                        setGoogleMachineTranslation(!googleMachineTranslation)
-                                    }}
-                                    value={googleMachineTranslation}
-                                    size="sm"
-                                />
-                            </Container.Item>
-                        </div>
+                    <div style={{backgroundColor: "#fbfbfb"}}>
+                    <div className='switcher p-6 rounded-lg'>
+                        <Container.Item>
+                            <h3 className='flex items-center gap-2'>
+                                <GoogleIcon className='w-5 h-5'/>
+                                {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
+                            </h3>
+                            <p>
+                                {__('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation')}
+                            </p>
+                        </Container.Item>
+                        <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
+                            <Switch
+                                aria-label="Switch Element"
+                                id="google-machine-translation"
+                                onChange={() => {
+                                    setGoogleMachineTranslation(!googleMachineTranslation)
+                                }}
+                                value={googleMachineTranslation}
+                                size="sm"
+                            />
+                        </Container.Item>
                     </div>
                     <div style={{ backgroundColor: "#fbfbfb" }}>
                         <div className='switcher p-6 rounded-lg'>
                             <Container.Item >
                                 <h3 className='flex items-center gap-2'>
+                                    <ChromeIcon className="w-5 h-5"/>
                                     {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
                                 </h3>
                                 <p>
@@ -313,6 +319,7 @@ const TranslationConfig = ({ data, setData }) => {
                         </div>
                         {chromeLocalAITranslation && <ChromeLocalAINotice />}
                     </div>
+                </div>
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />

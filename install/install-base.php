@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A generic activation / de-activation class compatible with multisite
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Install_Base {
 	/**
@@ -23,7 +23,7 @@ class LMAT_Install_Base {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $plugin_basename Plugin basename
 	 */
@@ -37,7 +37,7 @@ class LMAT_Install_Base {
 	/**
 	 * Activation or deactivation for all blogs.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $what        Either 'activate' or 'deactivate'.
 	 * @param bool   $networkwide Whether the plugin is (de)activated for all sites in the network or just the current site.
@@ -65,7 +65,7 @@ class LMAT_Install_Base {
 	/**
 	 * Plugin activation for multisite.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $networkwide Whether the plugin is activated for all sites in the network or just the current site.
 	 * @return void
@@ -77,7 +77,7 @@ class LMAT_Install_Base {
 	/**
 	 * Plugin activation
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -88,7 +88,7 @@ class LMAT_Install_Base {
 	/**
 	 * Plugin deactivation for multisite.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $networkwide Whether the plugin is deactivated for all sites in the network or just the current site.
 	 * @return void
@@ -100,7 +100,7 @@ class LMAT_Install_Base {
 	/**
 	 * Plugin deactivation
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -111,7 +111,7 @@ class LMAT_Install_Base {
 	/**
 	 * Site creation on multisite ( to set default options )
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Site $new_site New site object.
 	 * @return void

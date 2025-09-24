@@ -18,7 +18,7 @@ use Linguator\Includes\Options\Options;
  * Manages custom menus translations
  * Common to admin and frontend for the customizer
  *
- * @since 1.0.0	
+ *  	
  */
 class LMAT_Nav_Menu {
 	/**
@@ -50,7 +50,7 @@ class LMAT_Nav_Menu {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -72,7 +72,7 @@ class LMAT_Nav_Menu {
 	/**
 	 * Assigns the title and label to the language switcher menu items
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param stdClass $item Menu item.
 	 * @return stdClass
@@ -89,19 +89,28 @@ class LMAT_Nav_Menu {
 	 * Create temporary nav menu locations ( one per location and per language ) for all non-default language
 	 * to do only one time
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
 	public function create_nav_menu_locations() {
 		static $once;
 		global $_wp_registered_nav_menus;
-
+		global $linguator;
 		$arr = array();
 
 		if ( isset( $_wp_registered_nav_menus ) && ! $once ) {
 			foreach ( $_wp_registered_nav_menus as $loc => $name ) {
-				foreach ( $this->model->get_languages_list() as $lang ) {
+				// Get languages to show - check if we're in admin with language filter
+				$languages_to_show = $this->model->get_languages_list();
+				$filter_lang = ! empty( $linguator->filter_lang ) ? $linguator->filter_lang : null;
+					
+				// Determine which languages to show based on filter
+				if ( $filter_lang ) {
+					// Show only the selected language
+					$languages_to_show = array( $filter_lang );
+				}
+				foreach ( $languages_to_show as $lang ) {
 					$arr[ $this->combine_location( $loc, $lang ) ] = $name . ' ' . $lang->name;
 				}
 			}
@@ -114,7 +123,7 @@ class LMAT_Nav_Menu {
 	/**
 	 * Creates a temporary nav menu location from a location and a language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $loc  Nav menu location.
 	 * @param LMAT_Language $lang Language object.
@@ -127,7 +136,7 @@ class LMAT_Nav_Menu {
 	/**
 	 * Get nav menu locations and language from a temporary location.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $loc Temporary location.
 	 * @return string[] {
@@ -146,7 +155,7 @@ class LMAT_Nav_Menu {
 	/**
 	 * Filters the option nav_menu_options for auto added pages to menu.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $options Options stored in the option nav_menu_options.
 	 * @return array Modified options.
@@ -159,7 +168,7 @@ class LMAT_Nav_Menu {
 	/**
 	 * Filters _wp_auto_add_pages_to_menu by language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $new_status Transition to this post status.
 	 * @param string  $old_status Previous post status.

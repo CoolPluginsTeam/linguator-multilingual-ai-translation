@@ -22,7 +22,7 @@ use Linguator\Includes\Helpers\LMAT_Format_Util;
  * Registers and translates strings in an option.
  * When a string is updated in an original option, the translations of the old string are assigned to the new original string.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Translate_Option {
 
@@ -76,7 +76,7 @@ class LMAT_Translate_Option {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name Option name.
 	 * @param array  $keys Recursive array of option keys to translate in the form:
@@ -122,7 +122,7 @@ class LMAT_Translate_Option {
 	/**
 	 * Translates the strings registered for an option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $value Either a string to translate or a list of strings to translate.
 	 * @return mixed Translated string(s).
@@ -154,7 +154,7 @@ class LMAT_Translate_Option {
 	/**
 	 * Recursively translates the strings registered for an option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed      $values Either a string to translate or a list of strings to translate.
 	 * @param array|bool $key    Array of option keys to translate.
@@ -202,8 +202,8 @@ class LMAT_Translate_Option {
 	/**
 	 * Recursively registers strings for an option.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Signature modified
+	 *  
+	 *   Signature modified
 	 *
 	 * @param string     $context The group in which the strings will be registered.
 	 * @param string     $option  Option name.
@@ -257,7 +257,7 @@ class LMAT_Translate_Option {
 	 * A static property is used to make sure that the option is not filtered
 	 * whatever the number of instances of this class filtering the option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $option_name Option name.
 	 * @return mixed
@@ -277,7 +277,7 @@ class LMAT_Translate_Option {
 	 * strings to their translations by filtering them out, and we store the updated strings
 	 * for the next step.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $value     The new, unserialized option value.
 	 * @param mixed  $old_value The old (filtered) option value.
@@ -322,7 +322,7 @@ class LMAT_Translate_Option {
 	 * we remove the old strings from the strings translations and replace them by
 	 * the new strings with the old translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -360,8 +360,8 @@ class LMAT_Translate_Option {
 	 * the updated string is stored in {@see LMAT_Translate_Option::updated_strings} to be able to
 	 * later assign the translations to the new value in {@see LMAT_Translate_Option::update_option()}.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Added $mo parameter.
+	 *  
+	 *   Added $mo parameter.
 	 *
 	 * @param mixed      $old_values The old option value.
 	 * @param mixed      $values     The new option value.
@@ -427,8 +427,8 @@ class LMAT_Translate_Option {
 	/**
 	 * Sanitizes the string translation.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Add $context and $original parameters.
+	 *  
+	 *   Add $context and $original parameters.
 	 *
 	 * @param string $value    The unsanitised string translation value.
 	 * @param string $name     The name registered for the string.

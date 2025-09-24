@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles the core sitemaps for subdomains and multiple domains.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
 	/**
@@ -21,7 +21,7 @@ class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator Main Linguator object.
 	 */
@@ -32,7 +32,7 @@ class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Setups actions and filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -48,7 +48,7 @@ class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Filters the sitemap index entries for subdomains and multiple domains.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $sitemap_entry Sitemap entry for the post.
 	 * @return array
@@ -61,7 +61,7 @@ class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
 	/**
 	 * Makes sure that the sitemap urls are always evaluated on the current domain.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url A sitemap url.
 	 * @return string

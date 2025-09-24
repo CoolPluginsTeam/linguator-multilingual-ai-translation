@@ -23,7 +23,7 @@ use Linguator\Includes\Options\Options;
 /**
  * Main class for Linguator wizard.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Wizard
 {
@@ -67,7 +67,7 @@ class LMAT_Wizard
 	 * Constructor
 	 *
 	 * @param object $linguator Reference to Linguator global object.
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct(&$linguator)
 	{
@@ -89,7 +89,7 @@ class LMAT_Wizard
 	/**
 	 * Add admin menu item for the wizard
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @return void
 	 */
 	public function add_admin_menu()
@@ -112,7 +112,7 @@ class LMAT_Wizard
 	/**
 	 * Save an activation transient when Linguator is activating to redirect to the wizard
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $network_wide if activated for all sites in the network.
 	 * @return void
@@ -130,7 +130,7 @@ class LMAT_Wizard
 	/**
 	 * Redirect to the wizard depending on the context
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -162,21 +162,21 @@ class LMAT_Wizard
 	/**
 	 * Add an admin Linguator submenu to access the wizard
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $tabs Submenus list.
 	 * @return string[] Submenus list updated.
 	 */
 	public function settings_tabs($tabs)
 	{
-		$tabs['wizard'] = esc_html__('Setup', 'linguator-multilingual-ai-translation');
+		$tabs['wizard'] = esc_html__('Setup Guide', 'linguator-multilingual-ai-translation');
 		return $tabs;
 	}
 
 	/**
 	 * Returns true if the media step is displayable, false otherwise.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language[] $languages List of language objects.
 	 * @return bool
@@ -204,7 +204,7 @@ class LMAT_Wizard
 	/**
 	 * Setup the wizard page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -227,7 +227,7 @@ class LMAT_Wizard
 	/**
 	 * Adds some admin screens where to display the wizard notice
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool   $can_display_notice Whether the notice can be displayed.
 	 * @param string $notice             The notice name.
@@ -252,7 +252,7 @@ class LMAT_Wizard
 	/**
 	 * Return html code of the wizard notice
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -267,7 +267,7 @@ class LMAT_Wizard
 	/**
 	 * Get language switcher options formatted for JavaScript
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Array of language switcher options with label and value
 	 */
@@ -297,7 +297,7 @@ class LMAT_Wizard
 	/**
 	 * Display the wizard page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -317,7 +317,7 @@ class LMAT_Wizard
 	/**
 	 * Enqueue scripts and styles for the wizard
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -407,7 +407,7 @@ class LMAT_Wizard
 	/**
 	 * Get the suffix to enqueue non minified files in a Debug context
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Empty when SCRIPT_DEBUG equal to true
 	 *                otherwise .min
@@ -432,7 +432,7 @@ class LMAT_Wizard
 	/**
 	 * Create home page translations for each language defined.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string   $default_language       Slug of the default language; null if no default language is defined.
 	 * @param int      $home_page              Post ID of the home page if it's defined, false otherwise.

@@ -12,8 +12,8 @@ const Providers = (props) => {
 
     return (
         <tr>
-        <td className={`${prefix}-provider-name`}>
-          <img src={`${props.imgFolder}${ActiveService.Logo}`} alt={ActiveService.title} />
+        <td className={`${prefix}-provider-name`} style={{display: "flex", gap: "3px", alignItems: "center"}}>
+          {ActiveService.Logo}
           <span>{ActiveService.title}</span>
         </td>
         <td>

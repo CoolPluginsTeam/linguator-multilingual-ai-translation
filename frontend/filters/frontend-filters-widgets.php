@@ -16,7 +16,7 @@ use Linguator\Includes\Helpers\LMAT_Cache;
 /**
  * Filters widgets by language on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Filters_Widgets {
 	/**
@@ -36,7 +36,7 @@ class LMAT_Frontend_Filters_Widgets {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -51,8 +51,8 @@ class LMAT_Frontend_Filters_Widgets {
 	 * Remove widgets from sidebars if they are not visible in the current language
 	 * Needed to allow is_active_sidebar() to return false if all widgets are not for the current language. 
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 The result is cached as the function can be very expensive in case there are a lot of widgets
+	 *  
+	 *   The result is cached as the function can be very expensive in case there are a lot of widgets
 	 *
 	 * @param array $sidebars_widgets An associative array of sidebars and their widgets
 	 * @return array
@@ -79,7 +79,7 @@ class LMAT_Frontend_Filters_Widgets {
 	/**
 	 * Method that handles the removal of widgets in the sidebars depending on their display language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $widget_data      An array containing the widget data
 	 * @param array  $sidebars_widgets An associative array of sidebars and their widgets
@@ -98,7 +98,7 @@ class LMAT_Frontend_Filters_Widgets {
 	/**
 	 * Browse the widgets sidebars and sort the ones that should be displayed or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  array $sidebars_widgets       An associative array of sidebars and their widgets
 	 * @param  array $wp_registered_widgets  Array of all registered widgets.
@@ -126,7 +126,7 @@ class LMAT_Frontend_Filters_Widgets {
 	/**
 	 * Test if the widget is an object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  array  $wp_registered_widgets Array of all registered widgets.
 	 * @param  string $widget                String that identifies the widget.
@@ -145,7 +145,7 @@ class LMAT_Frontend_Filters_Widgets {
 	/**
 	 * Get widgets settings and number.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $wp_registered_widgets Array of all registered widgets.
 	 * @param string $widget                String that identifies the widget.

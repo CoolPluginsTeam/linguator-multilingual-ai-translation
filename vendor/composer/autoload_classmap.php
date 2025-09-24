@@ -178,6 +178,7 @@ return array(
     'Linguator\\Modules\\Page_Translation\\LMAT_Page_Translation_Helper' => $baseDir . '/modules/page-translation/page-translation-helper.php',
     'Linguator\\Modules\\REST\\API' => $baseDir . '/modules/rest/api.php',
     'Linguator\\Modules\\REST\\Abstract_Controller' => $baseDir . '/modules/rest/abstract-controller.php',
+    'Linguator\\Modules\\REST\\Request' => $baseDir . '/modules/rest/request.php',
     'Linguator\\Modules\\REST\\V1\\Bulk_Translation' => $baseDir . '/modules/rest/v1/bulk-translation.php',
     'Linguator\\Modules\\REST\\V1\\Languages' => $baseDir . '/modules/rest/v1/languages.php',
     'Linguator\\Modules\\REST\\V1\\Settings' => $baseDir . '/modules/rest/v1/settings.php',

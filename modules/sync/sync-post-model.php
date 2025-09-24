@@ -8,7 +8,7 @@ use Linguator\Custom_Fields\Custom_Fields;
 /**
  * Model for synchronizing posts
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sync_Post_Model {
 	/**
@@ -43,7 +43,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator Linguator object.
 	 */
@@ -60,7 +60,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Copies all taxonomies.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $taxonomies List of taxonomy names.
 	 * @param bool     $sync       True for a synchronization, false for a simple copy.
@@ -78,7 +78,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Copies all custom fields.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $keys List of custom fields names.
 	 * @param bool     $sync True if it is synchronization, false if it is a copy.
@@ -100,7 +100,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Duplicates the post to one language and optionally saves the synchronization group
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $post_id    Post id of the source post.
 	 * @param string $source_language Source language slug.
@@ -168,7 +168,7 @@ class LMAT_Sync_Post_Model {
 			/**
 			 * Fires after a synchronized post has been created
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param int    $post_id Id of the source post.
 			 * @param int    $tr_id   Id of the newly created post.
@@ -221,7 +221,7 @@ class LMAT_Sync_Post_Model {
 		/**
 		 * Filters the post fields to synchronize when synchronizing posts
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array  $fields     WP_Post fields to synchronize.
 		 * @param int    $post_id    Post id of the source post.
@@ -248,7 +248,7 @@ class LMAT_Sync_Post_Model {
 		/**
 		 * Fires after a post has been synchronized.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param int    $post_id Id of the source post.
 		 * @param int    $tr_id   Id of the target post.
@@ -341,7 +341,7 @@ class LMAT_Sync_Post_Model {
 	 * Saves the synchronization group
 	 * This is stored as an array beside the translations in the post_translations term description
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $post_id   ID of the post currently being saved.
 	 * @param array $sync_post Array of languages to sync with this post.
@@ -378,7 +378,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Get all posts synchronized with a given post
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id The id of the post.
 	 * @return array An associative array of arrays with language code as key and post id as value.
@@ -406,7 +406,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Checks whether two posts are synchronized
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id  The id of a first post to compare.
 	 * @param int $other_id The id of the other post to compare.
@@ -419,7 +419,7 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Check if the current user can synchronize a post in other language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $post_id Post to synchronize.
 	 * @param string $lang    Language code.

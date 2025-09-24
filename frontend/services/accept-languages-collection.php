@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Represents a collection of values parsed from an Accept-Language HTTP header.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Accept_Languages_Collection {
 	/**
@@ -24,7 +24,7 @@ class LMAT_Accept_Languages_Collection {
 	/**
 	 * Parse Accept-Language HTTP header according to IETF BCP 47.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $http_header Value of the Accept-Language HTTP Header. Formatted as stated BCP 47 for language tags {@see https://tools.ietf.org/html/bcp47}.
 	 * @return LMAT_Accept_Languages_Collection
@@ -54,7 +54,7 @@ class LMAT_Accept_Languages_Collection {
 	/**
 	 * LMAT_Accept_Languages_Collection constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Accept_Language[] $accept_languages Objects representing Accept-Language HTTP headers.
 	 */
@@ -65,7 +65,7 @@ class LMAT_Accept_Languages_Collection {
 	/**
 	 * Bubble sort (need a stable sort for Android, so can't use a PHP sort function).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -108,7 +108,7 @@ class LMAT_Accept_Languages_Collection {
 	/**
 	 * Looks through sorted list and use first one that matches our language list.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language[] $languages The language list.
 	 * @return string|false A language slug if there's a match, false otherwise.

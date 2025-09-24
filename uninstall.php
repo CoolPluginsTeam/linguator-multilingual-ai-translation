@@ -14,14 +14,12 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) { // If uninstall not called from Word
  * Manages Linguator uninstallation.
  * The goal is to remove **all** Linguator related data in db.
  *
- * @since 1.0.0
  */
 class LMAT_Uninstall {
 
 	/**
 	 * Constructor: manages uninstall for multisite.
 	 *
-	 * @since 1.0.0
 	 */
 	public function __construct() {
 		global $wpdb;
@@ -47,7 +45,6 @@ class LMAT_Uninstall {
 	/**
 	 * Removes **all** plugin data.
 	 *
-	 * @since 1.0.0
 	 */
 	public function uninstall() {
 		global $wpdb;
@@ -169,9 +166,8 @@ class LMAT_Uninstall {
 		delete_option( 'linguator_licenses' );
 		delete_option( 'lmat_dismissed_notices' );
 		delete_option( 'lmat_language_from_content_available' );
-		if (wp_next_scheduled('lmat_extra_data_update')) {
-			wp_clear_scheduled_hook('lmat_extra_data_update');
-		}
+		wp_clear_scheduled_hook('lmat_extra_data_update');
+		
 		// Delete transients.
 		delete_transient( 'lmat_languages_list' );
 	}

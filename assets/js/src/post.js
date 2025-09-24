@@ -64,7 +64,7 @@ jQuery(
 											$.each(
 												terms,
 												function ( i ) {
-													id = '#' + tax + '-' + lmat_term_languages[ lg ][ tax ][ i ];
+									const id = '#' + tax + '-' + lmat_term_languages[ lg ][ tax ][ i ];
 													lang == lg ? $( id ).show() : $( id ).hide();
 												}
 											);
@@ -86,7 +86,7 @@ jQuery(
 									$.each(
 										pages,
 										function ( i ) {
-											v = $( '#post_parent option[value="' + lmat_page_languages[ lg ][ i ] + '"]' );
+									const v = $( '#post_parent option[value="' + lmat_page_languages[ lg ][ i ] + '"]' );
 											lang == lg ? v.show() : v.hide();
 										}
 									);

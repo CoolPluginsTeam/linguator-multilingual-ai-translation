@@ -17,13 +17,13 @@ use Linguator\Includes\Options\Primitive\Abstract_Boolean;
 /**
  * Class defining the "Usage Data Sharing" boolean option.
  *
- * @since 1.0.0
+ *  
  */
 class Feedback_Data extends Abstract_Boolean {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -36,7 +36,7 @@ class Feedback_Data extends Abstract_Boolean {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

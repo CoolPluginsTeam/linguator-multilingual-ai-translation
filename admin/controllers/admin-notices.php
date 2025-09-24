@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * displayed only to admin, based on 'manage_options' capability
  * and only on dashboard, plugins and Linguator admin pages
  *
- * @since 1.0.0
- * @since 1.0.0 Dismissed notices are stored in an option instead of a user meta
+ *  
+ *   Dismissed notices are stored in an option instead of a user meta
  */
 class LMAT_Admin_Notices {
 	/**
@@ -35,7 +35,7 @@ class LMAT_Admin_Notices {
 	 * Constructor
 	 * Setup actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -44,12 +44,15 @@ class LMAT_Admin_Notices {
 
 		add_action( 'admin_init', array( $this, 'hide_notice' ) );
 		add_action( 'admin_notices', array( $this, 'display_notices' ) );
+		
+		// Add inline CSS and JS for notice positioning on ?page=lmat
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_notice_positioning_inline' ) );
 	}
 
 	/**
 	 * Add a custom notice
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name Notice name
 	 * @param string $html Content of the notice
@@ -62,7 +65,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Get custom notices.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[]
 	 */
@@ -73,7 +76,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Has a notice been dismissed?
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $notice Notice name
 	 * @return bool
@@ -100,7 +103,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Should we display notices on this screen?
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $notice          The notice name.
 	 * @param array  $allowed_screens The screens allowed to display the notice.
@@ -127,7 +130,7 @@ class LMAT_Admin_Notices {
 		/**
 		 * Filters admin notices which can be displayed.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param bool   $display Whether the notice should be displayed or not.
 		 * @param string $notice  The notice name.
@@ -138,7 +141,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Stores a dismissed notice in the database.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $notice Notice name.
 	 * @return void
@@ -155,7 +158,7 @@ class LMAT_Admin_Notices {
 	/**
 	 * Handle a click on the dismiss button
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -177,11 +180,12 @@ class LMAT_Admin_Notices {
 	/**
 	 * Displays notices
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
 	public function display_notices() {
+		// Check if we're on the specific ?page=lmat page and should suppress notices
 		if ( current_user_can( 'manage_options' ) ) {
 			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
 				$html = $this->review_notice();
@@ -202,12 +206,16 @@ class LMAT_Admin_Notices {
 				}
 			}
 		}
+		if ( $this->is_lmat_page() ) {
+			// Don't display notices here, they will be captured and displayed later
+			return;
+		}
 	}
 
 	/**
 	 * Displays a dismiss button
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name Notice name
 	 * @return void
@@ -222,9 +230,84 @@ class LMAT_Admin_Notices {
 	}
 
 	/**
-	 * Displays a notice asking for a review
+	 * Check if we're on the specific ?page=lmat page
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	private function is_lmat_page() {
+		$screen = get_current_screen();
+		if ( empty( $screen ) ) {
+			return false;
+		}
+		
+		// Check if we're specifically on the ?page=lmat page
+		return $screen->id === 'toplevel_page_lmat' || $screen->id === 'languages_page_lmat_settings';
+	}
+	/**
+	 * Add inline CSS and JavaScript for notice positioning on ?page=lmat
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function add_notice_positioning_inline() {
+		if ( ! $this->is_lmat_page() ) {
+			return;
+		}
+
+		// Add inline CSS
+		$css = "
+		/* Notice positioning for ?page=lmat */
+		body.toplevel_page_lmat .notice,
+		body.toplevel_page_lmat .error,
+		body.toplevel_page_lmat .updated,
+		body.toplevel_page_lmat .notice-error,
+		body.toplevel_page_lmat .notice-warning,
+		body.toplevel_page_lmat .notice-info,
+		body.toplevel_page_lmat .notice-success {
+			display: none !important;
+			margin-left: 2rem;
+		}
+
+		/* Show notices after they are moved */
+		body.toplevel_page_lmat .lmat-moved-notice {
+			display: block !important;
+			margin-left: 2rem;
+			margin-right: 2rem;
+			width: auto;
+		}
+		";
+		wp_add_inline_style( 'linguator_admin', $css );
+
+		// Add inline JavaScript
+		$js = "
+		jQuery(document).ready(function($) {
+			// Wait for the page to load
+			setTimeout(function() {
+				// Find all notices including error, updated, and other notice classes
+				var notices = $('.notice, .error, .updated, .notice-error, .notice-warning, .notice-info, .notice-success');
+				if (notices.length > 0) {
+					// Find the header container
+					var headerContainer = $('#lmat-settings-header');
+					if (headerContainer.length > 0) {
+						// Move notices after the header
+						notices.detach().insertAfter(headerContainer);
+						// Add class to make notices visible
+						notices.addClass('lmat-moved-notice');
+					}
+				}
+			}, 100);
+		});
+		";
+		wp_add_inline_script( 'lmat_admin', $js );
+	}
+
+	/**
+	 * Displays a notice asking for a review
+	 *
+	 *  
 	 *
 	 * @return string
 	 */
@@ -233,21 +316,18 @@ class LMAT_Admin_Notices {
 				$already_rated_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'already-rated' ), 'already-rated', '_lmat_notice_nonce' ) );
 				$not_interested_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'not-interested' ), 'not-interested', '_lmat_notice_nonce' ) );
 				$like_it_text   = esc_html__( 'Rate Now! ★★★★★', 'linguator-multilingual-ai-translation' );
-				$already_rated_text = esc_html__( 'I already rated it', 'linguator-multilingual-ai-translation' );
+				$already_rated_text = esc_html__( 'Already Reviewed', 'linguator-multilingual-ai-translation' );
 				$not_like_it_text   = esc_html__( 'Not Interested', 'linguator-multilingual-ai-translation' );
-				$logo_url = plugins_url( 'assets/logo/linguator_icon.svg', LINGUATOR_ROOT_FILE );
 				$html = sprintf(
 						/* translators: %1$s: Already rated URL, %2$s: Dismiss URL */
-						__('<div class="logo_container">
-							<img src="%6$s" alt="Linguator Logo" style="width: 60px; height: 80px; margin-right: 15px; flex-shrink: 0; margin-top: 5px;">
-						</div>
+						__('
 						<div class="callto_action">
 							<div class="callto_action_text">
-								<p style="margin: 0;">Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net/?utm_source=ectbe_plugin&utm_medium=inside&utm_campaign=coolplugins&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!</p>
+								<p>Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net/?utm_source=ectbe_plugin&utm_medium=inside&utm_campaign=coolplugins&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!</p>
 							</div>
 							<ul class="callto_action_buttons">
-								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">%3$s</a></li>
-								<li class="already_rated" style="float: left;"><a href="%1$s" class="already_rated_btn button" title="I already rated it">%4$s</a></li>    
+								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">%3$s</a></li>
+								<li class="already_rated" style="float: left;"><a href="%1$s" class="already_rated_btn button" title="Already Rewiewed">%4$s</a></li>    
 								<li class="not_interested"><a href="%2$s" class="not_interested_btn button" title="Not interested">%5$s</a></li>
 							</ul>
 						</div>', 'linguator-multilingual-ai-translation' ),
@@ -255,8 +335,7 @@ class LMAT_Admin_Notices {
 						$not_interested_url,
 						$like_it_text,
 						$already_rated_text,
-						$not_like_it_text,
-						$logo_url
+						$not_like_it_text
 						);
 		return $html;
 	}

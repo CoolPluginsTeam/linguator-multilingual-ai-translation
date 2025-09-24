@@ -18,14 +18,14 @@ use Linguator\Install\LMAT_Install_Base;
 /**
  * Linguator activation / de-activation class
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Install extends LMAT_Install_Base {
 
 	/**
 	 * Checks min PHP and WP version, displays a notice if a requirement is not met.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -48,7 +48,7 @@ class LMAT_Install extends LMAT_Install_Base {
 	/**
 	 * Displays a notice if PHP min version is not met.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -69,7 +69,7 @@ class LMAT_Install extends LMAT_Install_Base {
 	/**
 	 * Displays a notice if WP min version is not met.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -91,7 +91,7 @@ class LMAT_Install extends LMAT_Install_Base {
 	/**
 	 * Plugin activation
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -143,12 +143,13 @@ class LMAT_Install extends LMAT_Install_Base {
 	/**
 	 * Plugin deactivation
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
 	protected function _deactivate() {
 		delete_option( 'rewrite_rules' ); // Don't use flush_rewrite_rules at network activation. 
 		delete_option( 'lmat_elementor_templates_assigned' );
+		wp_clear_scheduled_hook('lmat_extra_data_update');
 	}
 }

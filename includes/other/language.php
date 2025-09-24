@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * A language object is made of two terms in 'lmat_language' and 'lmat_term_language' taxonomies.
  * Manipulating only one object per language instead of two terms should make things easier.
  *
- * @since 1.0.0
+ *  
  * @immutable
  *
  * @phpstan-type LanguagePropData array{
@@ -243,8 +243,8 @@ class LMAT_Language {
 	/**
 	 * Constructor: builds a language object given the corresponding data.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Only accepts one argument.
+	 *  
+	 *   Only accepts one argument.
 	 *
 	 * @param array $language_data {
 	 *     Language object properties stored as an array.
@@ -287,7 +287,7 @@ class LMAT_Language {
 	/**
 	 * Returns a language term property value (term ID, term taxonomy ID, or count).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $taxonomy_name Name of the taxonomy.
 	 * @param string $prop_name     Name of the property: 'term_taxonomy_id', 'term_id', 'count'.
@@ -304,7 +304,7 @@ class LMAT_Language {
 	/**
 	 * Returns the language term props for all content types.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $property Name of the field to return. An empty string to return them all.
 	 * @return (int[]|int)[] Array keys are taxonomy names, array values depend of `$property`.
@@ -337,7 +337,7 @@ class LMAT_Language {
 	/**
 	 * Returns the flag information.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $code Flag code.
 	 * @return array {
@@ -381,7 +381,7 @@ class LMAT_Language {
 		/**
 		 * Filters flag information:
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array  $flag {
 		 *   Information about the flag.
@@ -407,7 +407,7 @@ class LMAT_Language {
 	/**
 	 * Returns HTML code for flag.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $flag  Flag properties: src, width and height.
 	 * @param string $title Optional title attribute.
@@ -456,8 +456,8 @@ class LMAT_Language {
 	/**
 	 * Returns the html of the custom flag if any, or the default flag otherwise.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Added the `$alt` parameter.
+	 *  
+	 *   Added the `$alt` parameter.
 	 *
 	 * @param string $alt Whether or not the alternative text should be set. Accepts 'alt' and 'no-alt'.
 	 *
@@ -478,7 +478,7 @@ class LMAT_Language {
 	/**
 	 * Returns the url of the custom flag if any, or the default flag otherwise.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -488,7 +488,7 @@ class LMAT_Language {
 		/**
 		 * Filters `flag_url` property.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string       $flag_url Flag URL.
 		 * @param LMAT_Language $language Current `LMAT_language` instance.
@@ -499,7 +499,7 @@ class LMAT_Language {
 	/**
 	 * Updates post and term count.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -513,7 +513,7 @@ class LMAT_Language {
 	 * Returns the language locale.
 	 * Converts WP locales to W3C valid locales for display.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $filter Either 'display' or 'raw', defaults to raw.
 	 * @return string
@@ -528,7 +528,7 @@ class LMAT_Language {
 	/**
 	 * Returns the values of this instance's properties, which can be filtered if required.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $context Whether or not properties should be filtered. Accepts `db` or `display`.
 	 *                        Default to `display` which filters some properties.
@@ -552,7 +552,7 @@ class LMAT_Language {
 	/**
 	 * Converts current `LMAT_language` into a `stdClass` object. Mostly used to allow dynamic properties.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return stdClass Converted `LMAT_Language` object.
 	 */
@@ -563,7 +563,7 @@ class LMAT_Language {
 	/**
 	 * Returns a predefined HTML flag.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $flag_code Flag code to render.
 	 * @return string HTML code for the flag.
@@ -577,7 +577,7 @@ class LMAT_Language {
 	/**
 	 * Returns language's home URL. Takes care to render it dynamically if no cache is allowed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Language home URL.
 	 */
@@ -586,7 +586,7 @@ class LMAT_Language {
 			/**
 			 * Filters current `LMAT_Language` instance `home_url` property.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string $home_url         The `home_url` prop.
 			 * @param array  $language Current Array of `LMAT_Language` properties.
@@ -600,7 +600,7 @@ class LMAT_Language {
 	/**
 	 * Returns language's search URL. Takes care to render it dynamically if no cache is allowed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Language search URL.
 	 */
@@ -609,7 +609,7 @@ class LMAT_Language {
 			/**
 			 * Filters current `LMAT_Language` instance `search_url` property.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string $search_url        The `search_url` prop.
 			 * @param array  $language Current Array of `LMAT_Language` properties.
@@ -624,7 +624,7 @@ class LMAT_Language {
 	 * Returns the value of a language property.
 	 * This is handy to get a property's value without worrying about triggering a deprecation warning or anything.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $property A property name. A composite value can be used for language term property values, in the
 	 *                         form of `{language_taxonomy_name}:{property_name}` (see {@see LMAT_Language::get_tax_prop()}

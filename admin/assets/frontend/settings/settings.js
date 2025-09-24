@@ -14895,11 +14895,15 @@ var General = function General(_ref) {
   } //label and descriptions of URL modifications
   function _SaveSettings() {
     _SaveSettings = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var apiBody, final_domain, used_hosts, _iterator6, _step6, domain, response, _t, _t2;
+      var reloadCheck, apiBody, final_domain, used_hosts, _iterator6, _step6, domain, response, _t, _t2;
       return _regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
             _context.p = 0;
+            reloadCheck = false;
+            if (staticStringsVisibility != data.static_strings_visibility) {
+              reloadCheck = true;
+            }
             if (!(forceLang === 3)) {
               _context.n = 10;
               break;
@@ -14997,6 +15001,9 @@ var General = function General(_ref) {
               setData(function (prev) {
                 return _objectSpread(_objectSpread({}, prev), response);
               });
+              if (reloadCheck) {
+                window.location.reload();
+              }
             }).catch(function (error) {
               // Handle domain validation errors from backend
               if (error !== null && error !== void 0 && error.code && error !== null && error !== void 0 && error.code.includes('domain')) {
@@ -15470,7 +15477,6 @@ var General = function General(_ref) {
 };
 /* harmony default export */ const general = (General);
 ;// ./admin/Settings/Views/src/components/sidebar.jsx
-function sidebar_extends() { return sidebar_extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, sidebar_extends.apply(null, arguments); }
 
 
 var Sidebar = function Sidebar() {
@@ -15479,38 +15485,6 @@ var Sidebar = function Sidebar() {
   var locoaiStatus = ((_window$lmat_settings = window.lmat_settings) === null || _window$lmat_settings === void 0 ? void 0 : _window$lmat_settings.locoai_plugin_status) || {
     status: 'not_installed'
   };
-
-  // Determine button text and behavior based on plugin status
-  var getButtonConfig = function getButtonConfig() {
-    var _window$lmat_settings2;
-    switch (locoaiStatus.status) {
-      case 'active':
-        return {
-          text: (0,external_wp_i18n_namespaceObject.__)('ACTIVATED', 'linguator-multilingual-ai-translation'),
-          href: 'plugins.php',
-          className: 'button button-secondary',
-          disabled: false,
-          target: '_self'
-        };
-      case 'installed':
-        return {
-          text: (0,external_wp_i18n_namespaceObject.__)('ACTIVATE', 'linguator-multilingual-ai-translation'),
-          href: "plugins.php?_wpnonce=".concat(((_window$lmat_settings2 = window.lmat_settings) === null || _window$lmat_settings2 === void 0 ? void 0 : _window$lmat_settings2.activate_nonce) || '', "&action=activate&plugin=automatic-translator-addon-for-loco-translate/automatic-translator-addon-for-loco-translate.php"),
-          className: 'button button-primary',
-          disabled: false,
-          target: '_self'
-        };
-      default:
-        return {
-          text: (0,external_wp_i18n_namespaceObject.__)('INSTALL', 'linguator-multilingual-ai-translation'),
-          href: 'plugin-install.php?s=locoai&tab=search&type=term',
-          className: 'button button-primary',
-          disabled: false,
-          target: '_blank'
-        };
-    }
-  };
-  var buttonConfig = getButtonConfig();
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "w-full"
   }, /*#__PURE__*/React.createElement("div", {
@@ -15526,7 +15500,7 @@ var Sidebar = function Sidebar() {
   }, "0"), /*#__PURE__*/React.createElement("p", {
     className: "text-sm text-gray-600 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Total Characters Translated!', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"
   }), /*#__PURE__*/React.createElement(S.Item, {
     className: "w-full"
   }, /*#__PURE__*/React.createElement(S.Item, {
@@ -15549,34 +15523,42 @@ var Sidebar = function Sidebar() {
     className: "text-sm text-gray-700 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Time Taken', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
-  }, "0"))))), locoaiStatus.status !== 'active' ? /*#__PURE__*/React.createElement("div", {
+  }, "0"))))), locoaiStatus.status === 'not_installed' ? /*#__PURE__*/React.createElement("div", {
     className: " p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
-    className: "w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1"
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"
   }), /*#__PURE__*/React.createElement(S.Item, {
     className: "flex"
   }, /*#__PURE__*/React.createElement("div", {
     className: "w-[70%]"
-  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Loco Addon to translate plugins and themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", sidebar_extends({
-    href: buttonConfig.href,
-    target: buttonConfig.target,
-    className: buttonConfig.className
-  }, buttonConfig.disabled && {
-    disabled: true
-  }), buttonConfig.text)), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h4", null, (0,external_wp_i18n_namespaceObject.__)('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+    target: "_blank",
+    href: "plugin-install.php?s=locoai&tab=search&type=term"
+  }, /*#__PURE__*/React.createElement(R, {
+    className: "",
+    iconPosition: "left",
+    size: "md",
+    tag: "button",
+    type: "button",
+    variant: "primary"
+  }, (0,external_wp_i18n_namespaceObject.__)('Install', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("div", {
     className: "w-[30%] flex items-center object-contain p-2"
   }, /*#__PURE__*/React.createElement("a", {
     href: "plugin-install.php?s=locoai&tab=search&type=term",
     target: "_blank"
   }, /*#__PURE__*/React.createElement("img", {
-    className: "w-full h-auto  ",
+    className: "w-auto max-h-24  ",
     src: "".concat(window.lmat_settings_logo_data.logoUrl, "loco.png"),
     alt: "Loco translate logo"
   }))), /*#__PURE__*/React.createElement("div", null))) : null, /*#__PURE__*/React.createElement(S, {
     className: "bg-white flex flex-col gap-4 p-6 shadow-sm rounded-lg"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, /*#__PURE__*/React.createElement("a", {
+    className: "no-underline text-black",
     target: "_blank",
-    href: "https://wordpress.org/support/plugin/automatic-translations-for-polylang/reviews/#new-post"
+    href: "https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post"
+  }, (0,external_wp_i18n_namespaceObject.__)('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("a", {
+    target: "_blank",
+    href: "https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post"
   }, (0,external_wp_i18n_namespaceObject.__)('Submit a Review →', 'linguator-multilingual-ai-translation')))))));
 };
 /* harmony default export */ const sidebar = (Sidebar);
@@ -15673,6 +15655,98 @@ const Languages = createLucideIcon_createLucideIcon("languages", languages_iconN
 
 //# sourceMappingURL=languages.js.map
 
+;// ./assets/logo/chrome.js
+var ChromeIcon = function ChromeIcon(_ref) {
+  var className = _ref.className;
+  return /*#__PURE__*/React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 48 48",
+    className: className
+  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+    id: "chrome-a",
+    x1: "3.2173",
+    y1: "15",
+    x2: "44.7812",
+    y2: "15",
+    gradientUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0",
+    stopColor: "#d93025"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "1",
+    stopColor: "#ea4335"
+  })), /*#__PURE__*/React.createElement("linearGradient", {
+    id: "chrome-b",
+    x1: "20.7219",
+    y1: "47.6791",
+    x2: "41.5039",
+    y2: "11.6837",
+    gradientUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0",
+    stopColor: "#fcc934"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "1",
+    stopColor: "#fbbc04"
+  })), /*#__PURE__*/React.createElement("linearGradient", {
+    id: "chrome-c",
+    x1: "26.5981",
+    y1: "46.5015",
+    x2: "5.8161",
+    y2: "10.506",
+    gradientUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0",
+    stopColor: "#1e8e3e"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "1",
+    stopColor: "#34a853"
+  }))), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "23.9947",
+    r: "12",
+    fill: "#fff"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M3.2154,36A24,24,0,1,0,12,3.2154,24,24,0,0,0,3.2154,36ZM34.3923,18A12,12,0,1,1,18,13.6077,12,12,0,0,1,34.3923,18Z",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M24,12H44.7812a23.9939,23.9939,0,0,0-41.5639.0029L13.6079,30l.0093-.0024A11.9852,11.9852,0,0,1,24,12Z",
+    fill: "url(#chrome-a)"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "24",
+    r: "9.5",
+    fill: "#1a73e8"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M34.3913,30.0029,24.0007,48A23.994,23.994,0,0,0,44.78,12.0031H23.9989l-.0025.0093A11.985,11.985,0,0,1,34.3913,30.0029Z",
+    fill: "url(#chrome-b)"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.6086,30.0031,3.218,12.006A23.994,23.994,0,0,0,24.0025,48L34.3931,30.0029l-.0067-.0068a11.9852,11.9852,0,0,1-20.7778.007Z",
+    fill: "url(#chrome-c)"
+  }));
+};
+;// ./assets/logo/google.js
+var GoogleIcon = function GoogleIcon(_ref) {
+  var className = _ref.className;
+  return /*#__PURE__*/React.createElement("svg", {
+    className: className,
+    viewBox: "-3 0 262 262",
+    xmlns: "http://www.w3.org/2000/svg",
+    preserveAspectRatio: "xMidYMid"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027",
+    fill: "#4285F4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1",
+    fill: "#34A853"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782",
+    fill: "#FBBC05"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251",
+    fill: "#EB4335"
+  }));
+};
 ;// ./admin/Settings/Views/src/components/translation-config.jsx
 function translation_config_typeof(o) { "@babel/helpers - typeof"; return translation_config_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, translation_config_typeof(o); }
 function translation_config_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return translation_config_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (translation_config_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, translation_config_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), translation_config_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", translation_config_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), translation_config_regeneratorDefine2(u), translation_config_regeneratorDefine2(u, o, "Generator"), translation_config_regeneratorDefine2(u, n, function () { return this; }), translation_config_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (translation_config_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
@@ -15690,6 +15764,9 @@ function translation_config_unsupportedIterableToArray(r, a) { if (r) { if ("str
 function translation_config_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function translation_config_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function translation_config_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+
+
+
 
 
 
@@ -15960,7 +16037,9 @@ var TranslationConfig = function TranslationConfig(_ref) {
     className: "switcher p-6 rounded-lg"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
     className: "flex items-center gap-2"
-  }, (0,external_wp_i18n_namespaceObject.__)('Google Machine Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+  }, /*#__PURE__*/external_React_default().createElement(GoogleIcon, {
+    className: "w-5 h-5"
+  }), (0,external_wp_i18n_namespaceObject.__)('Google Machine Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "flex items-center justify-end",
     style: {
       paddingRight: '30%'
@@ -15973,7 +16052,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     },
     value: googleMachineTranslation,
     size: "sm"
-  })))), /*#__PURE__*/external_React_default().createElement("div", {
+  }))), /*#__PURE__*/external_React_default().createElement("div", {
     style: {
       backgroundColor: "#fbfbfb"
     }
@@ -15981,7 +16060,9 @@ var TranslationConfig = function TranslationConfig(_ref) {
     className: "switcher p-6 rounded-lg"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement("h3", {
     className: "flex items-center gap-2"
-  }, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+  }, /*#__PURE__*/external_React_default().createElement(ChromeIcon, {
+    className: "w-5 h-5"
+  }), (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "flex items-center justify-end",
     style: {
       paddingRight: '30%'
@@ -15994,7 +16075,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     },
     value: chromeLocalAITranslation,
     size: "sm"
-  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null)))), /*#__PURE__*/external_React_default().createElement("hr", {
+  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null))))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "md",

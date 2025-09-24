@@ -19,7 +19,7 @@ use Linguator\Includes\Other\LMAT_Query;
 /**
  * Manages filters and actions related to posts on admin side
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
@@ -32,7 +32,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Constructor: setups filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -63,7 +63,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	 * Outputs a javascript list of pages ordered by language
 	 * to filter the parent dropdown per post language in quick edit
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -127,7 +127,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Filters posts, pages and media by language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query WP_Query object.
 	 * @return void
@@ -140,7 +140,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Save language and translation when editing a post (post.php)
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -183,7 +183,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Save language when bulk editing a post
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -205,7 +205,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Save language when inline editing a post
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -224,7 +224,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Sets the language attribute and text direction for Tiny MCE
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $mce_init TinyMCE config
 	 * @return array
@@ -240,7 +240,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Adds lang parameter to WordPress default edit post links
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link    The edit post link.
 	 * @param int    $post_id The post ID.

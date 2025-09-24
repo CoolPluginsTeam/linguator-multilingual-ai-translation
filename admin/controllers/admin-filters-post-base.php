@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Some common code for LMAT_Admin_Filters_Post and LMAT_Admin_Filters_Media
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Admin_Filters_Post_Base {
 	/**
@@ -41,7 +41,7 @@ abstract class LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Constructor: setups filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -54,7 +54,7 @@ abstract class LMAT_Admin_Filters_Post_Base {
 	/**
 	 * Save translations from the languages metabox.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $post_id Post id of the post being saved.
 	 * @param int[] $arr     An array with language codes as key and post id as value.

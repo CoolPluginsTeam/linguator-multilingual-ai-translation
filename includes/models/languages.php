@@ -24,7 +24,7 @@ use WP_Error;
 /**
  * Model for the languages.
  *
- * @since 1.0.0
+ *  
  */
 class Languages {
 	public const INNER_LOCALE_PATTERN = '[a-z]{2,3}(?:_[A-Z]{2})?(?:_[a-z0-9]+)?';
@@ -74,7 +74,7 @@ class Languages {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0	
+	 *  	
 	 *
 	 * @param Options                  $options              Linguator's options.
 	 * @param LMAT_Translatable_Objects $translatable_objects Translatable objects registry.
@@ -91,8 +91,8 @@ class Languages {
 	/**
 	 * Returns the language by its term_id, tl_term_id, slug or locale.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Allow to get a language by `term_taxonomy_id`.
+	 *  
+	 *   Allow to get a language by `term_taxonomy_id`.
 	 *
 	 * @param mixed $value `term_id`, `term_taxonomy_id`, `slug`, `locale`, or `w3c` of the queried language.
 	 *                     `term_id` and `term_taxonomy_id` can be fetched for any language taxonomy.
@@ -135,33 +135,51 @@ class Languages {
 	/**
 	 * Adds a new language and creates a default category for this language.
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param array $args {
 	 *   Arguments used to create the language.
 	 *
-	 *   @type string $name           Language name (used only for display).
-	 *   @type string $slug           Language code (ideally 2-letters ISO 639-1 language code).
 	 *   @type string $locale         WordPress locale. If something wrong is used for the locale, the .mo files will
 	 *                                not be loaded...
-	 *   @type bool   $rtl            True if rtl language, false otherwise.
-	 *   @type int    $term_group     Language order when displayed.
+	 *    @type string $name           Optional. Language name (used only for display). Default to the language name from {@see settings/languages.php}.
+	 *   @type string $slug           Optional. Language code (ideally 2-letters ISO 639-1 language code). Default to the language code from {@see settings/languages.php}.
+	 *   @type bool   $rtl            Optional. True if rtl language, false otherwise. Default is false.
+	 *   @type bool   $is_rtl         Optional. True if rtl language, false otherwise. Will be converted to rtl. Default is false.
+	 *   @type int    $term_group     Optional. Language order when displayed. Default is 0.
 	 *   @type string $flag           Optional. Country code, {@see settings/flags.php}.
-	 *   @type bool   $no_default_cat Optional. If set, no default category will be created for this language.
+	 *    @type string $flag_code      Optional. Country code, {@see settings/flags.php}. Will be converted to flag.
+	 *   @type bool   $no_default_cat Optional. If set, no default category will be created for this language. Default is false.
 	 * }
 	 * @return true|WP_Error True success, a `WP_Error` otherwise.
 	 *
 	 * @phpstan-param array{
-	 *     name: non-empty-string,
-	 *     slug:  non-empty-string,
-	 *     locale:  non-empty-string,
-	 *     rtl: bool,
-	 *     term_group: int|numeric-string,
-	 *     flag?:  non-empty-string,
+	 *     name?: string,
+	 *     slug?: string,
+	 *     locale?: string,
+	 *      rtl?: bool,
+	 *     is_rtl?: bool,
+	 *     term_group?: int|numeric-string,
+	 *     flag?: string,
+	 *     flag_code?: string,
 	 *     no_default_cat?: bool
 	 * } $args
 	 */
 	public function add( $args ) {
+
+		$args['rtl']        = $args['rtl'] ?? $args['is_rtl'] ?? null;
+		$args['flag']       = $args['flag'] ?? $args['flag_code'] ?? null;
+		$args['term_group'] = $args['term_group'] ?? 0;
+
+		if ( ! empty( $args['locale'] ) && ( ! isset( $args['name'] ) || ! isset( $args['slug'] ) ) ) {
+			$languages = include LINGUATOR_DIR . 'admin/settings/controllers/languages.php';
+			if ( ! empty( $languages[ $args['locale'] ] ) ) {
+				$found        = $languages[ $args['locale'] ];
+				$args['name'] = $args['name'] ?? $found['name'];
+				$args['slug'] = $args['slug'] ?? $found['code'];
+				$args['rtl']  = $args['rtl'] ?? 'rtl' === $found['dir'];
+				$args['flag'] = $args['flag'] ?? $found['flag'];
+			}
+		}
 		$errors = $this->validate_lang( $args );
 		if ( $errors->has_errors() ) {
 			return $errors;
@@ -223,30 +241,34 @@ class Languages {
 	/**
 	 * Updates language properties.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args {
 	 *   Arguments used to modify the language.
 	 *
 	 *   @type int    $lang_id    ID of the language to modify.
-	 *   @type string $name       Language name (used only for display).
-	 *   @type string $slug       Language code (ideally 2-letters ISO 639-1 language code).
-	 *   @type string $locale     WordPress locale. If something wrong is used for the locale, the .mo files will
+	 *   @type string $name       Optional. Language name (used only for display).
+	 *   @type string $slug       Optional. Language code (ideally 2-letters ISO 639-1 language code).
+	 *   @type string $locale     Optional. WordPress locale. If something wrong is used for the locale, the .mo files will
 	 *                            not be loaded...
-	 *   @type bool   $rtl        True if rtl language, false otherwise.
-	 *   @type int    $term_group Language order when displayed.
+	 *   @type bool   $rtl        Optional. True if rtl language, false otherwise.
+	 *   @type bool   $is_rtl     Optional. True if rtl language, false otherwise. Will be converted to rtl.
+	 *   @type int    $term_group Optional. Language order when displayed.
 	 *   @type string $flag       Optional, country code, {@see settings/flags.php}.
+	 *   @type string $flag_code  Optional. Country code, {@see settings/flags.php}. Will be converted to flag.
 	 * }
 	 * @return true|WP_Error True success, a `WP_Error` otherwise.
 	 *
 	 * @phpstan-param array{
 	 *     lang_id: int|numeric-string,
-	 *     name: string,
-	 *     slug: string,
-	 *     locale: string,
-	 *     rtl: bool,
-	 *     term_group: int|numeric-string,
-	 *     flag?: string
+	 *     name?: string,
+	 *     slug?: string,
+	 *     locale?: string,
+	 *     rtl?: bool,
+	 *     is_rtl?: bool,
+	 *     term_group?: int|numeric-string,
+	 *     flag?: string,
+	 *     flag_code?: string
 	 * } $args
 	 */
 	public function update( $args ) {
@@ -255,6 +277,13 @@ class Languages {
 		if ( empty( $lang ) ) {
 			return new WP_Error( 'lmat_invalid_language_id', __( 'The language does not seem to exist.', 'linguator-multilingual-ai-translation' ) );
 		}
+
+		$args['locale']     = $args['locale'] ?? $lang->locale;
+		$args['name']       = $args['name'] ?? $lang->name;
+		$args['slug']       = $args['slug'] ?? $lang->slug;
+		$args['rtl']        = $args['rtl'] ?? $args['is_rtl'] ?? $lang->is_rtl;
+		$args['flag']       = $args['flag'] ?? $args['flag_code'] ?? $lang->flag_code;
+		$args['term_group'] = $args['term_group'] ?? $lang->term_group;
 
 		$errors = $this->validate_lang( $args, $lang );
 		if ( $errors->has_errors() ) {
@@ -356,8 +385,8 @@ class Languages {
 		/**
 		 * Fires after a language is updated.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 Added $lang parameter.
+		 *  
+		 *   Added $lang parameter.
 		 *
 		 * @param array $args {
 		 *   Arguments used to modify the language. @see Linguator\Includes\Models\Languages::update().
@@ -380,7 +409,7 @@ class Languages {
 	/**
 	 * Deletes a language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $lang_id Language term_id.
 	 * @return bool
@@ -393,7 +422,7 @@ class Languages {
 		}
 
 		// Oops! We are deleting the default language...
-		// Need to do this before loosing the information for default category translations.
+		// Need to do this before losing the information for default category translations.
 		if ( $lang->is_default ) {
 			$slugs = $this->get_list( array( 'fields' => 'slug' ) );
 			$slugs = array_diff( $slugs, array( $lang->slug ) );
@@ -468,7 +497,7 @@ class Languages {
 	/**
 	 * Checks if there are languages or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool True if there are, false otherwise.
 	 */
@@ -489,7 +518,7 @@ class Languages {
 	 * - Stores the list in a db transient (except flags), unless `LMAT_CACHE_LANGUAGES` is set to false.
 	 * - Caches the list (with flags) in a `LMAT_Cache` object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args {
 	 *   @type bool   $hide_empty   Hides languages with no posts if set to `true` (defaults to `false`).
@@ -566,7 +595,7 @@ class Languages {
 	/**
 	 * Tells if {@see Linguator\Includes\Models\Languages::get_list()} can be used.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -577,7 +606,7 @@ class Languages {
 	/**
 	 * Sets the internal property `$languages_ready` to `true`, telling that {@see Linguator\Includes\Models\Languages::get_list()} can be used.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -588,7 +617,7 @@ class Languages {
 	/**
 	 * Returns the default language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Language|false Default language object, `false` if no language found.
 	 */
@@ -604,7 +633,7 @@ class Languages {
 	 * Updates the default language.
 	 * Takes care to update default category, nav menu locations, and flushes cache and rewrite rules.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $slug New language slug.
 	 * @return WP_Error A `WP_Error` object containing possible errors during slug validation/sanitization.
@@ -636,8 +665,8 @@ class Languages {
 		/**
 		 * Fires when a default language is updated.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 The previous default language's slug is passed as 2nd param.
+		 *  
+		 *   The previous default language's slug is passed as 2nd param.
 		 *            The default language is updated before this hook is fired.
 		 *
 		 * @param string $slug              New default language's slug.
@@ -656,7 +685,7 @@ class Languages {
 	/**
 	 * Maybe adds the missing language terms for 3rd party language taxonomies.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -699,7 +728,7 @@ class Languages {
 	/**
 	 * Cleans language cache.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -711,7 +740,7 @@ class Languages {
 	/**
 	 * Checks if the cached language data is stale by comparing with actual taxonomy terms.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool True if cache is stale, false otherwise.
 	 */
@@ -744,7 +773,7 @@ class Languages {
 	/**
 	 * Builds the language metas into an array and serializes it, to be stored in the term description.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args {
 	 *   Arguments used to build the language metas.
@@ -794,7 +823,7 @@ class Languages {
 		 * Allow to add data to store for a language.
 		 * `$locale`, `$rtl`, and `$flag_code` cannot be overwritten.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param mixed[] $add_data Data to add.
 		 * @param mixed[] $args     {
@@ -831,16 +860,16 @@ class Languages {
 	/**
 	 * Validates data entered when creating or updating a language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array             $args Parameters of {@see Linguator\Includes\Models\Languages::add() or @see Linguator\Includes\Models\Languages::update()}.
 	 * @param LMAT_Language|null $lang Optional the language currently updated, the language is created if not set.
 	 * @return WP_Error
 	 *
 	 * @phpstan-param array{
-	 *     locale: string,
-	 *     slug: string,
-	 *     name: string,
+	 *     locale?: string,
+	 *     slug?: string,
+	 *     name?: string,
 	 *     flag?: string
 	 * } $args
 	 */
@@ -848,19 +877,19 @@ class Languages {
 		$errors = new WP_Error();
 
 		// Validate locale with the same pattern as WP 4.3. 
-		if ( ! preg_match( '#' . self::LOCALE_PATTERN . '#', $args['locale'], $matches ) ) {
+		if ( empty( $args['locale'] ) || ! preg_match( '#' . self::LOCALE_PATTERN . '#', $args['locale'], $matches ) ) {
 			$errors->add( 'lmat_invalid_locale', __( 'Enter a valid WordPress locale', 'linguator-multilingual-ai-translation' ) );
 		}
 
 		// Validate slug characters.
-		if ( ! preg_match( '#' . self::SLUG_PATTERN . '#', $args['slug'] ) ) {
+		if ( empty( $args['slug'] ) || ! preg_match( '#' . self::SLUG_PATTERN . '#', $args['slug'] ) ) {
 			$errors->add( 'lmat_invalid_slug', __( 'The language code contains invalid characters', 'linguator-multilingual-ai-translation' ) );
 		}
 
 		// Validate slug is unique.
 		foreach ( $this->get_list() as $language ) {
 			// Check if both slug and locale are the same (exact duplicate)
-			if ( $language->slug === $args['slug'] && $language->locale === $args['locale'] && ( null === $lang || $lang->term_id !== $language->term_id ) ) {
+			if ( ! empty( $args['slug'] ) && $language->slug === $args['slug'] && $language->locale === $args['locale'] && ( null === $lang || $lang->term_id !== $language->term_id ) ) {
 				$errors->add( 'lmat_non_unique_slug', __( 'This language with the same code and locale already exists', 'linguator-multilingual-ai-translation' ) );
 			}
 		}
@@ -890,7 +919,7 @@ class Languages {
 	/**
 	 * Updates the translations when a language slug has been modified in settings or deletes them when a language is removed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $old_slug The old language slug.
 	 * @param string $new_slug Optional, the new language slug, if not set it means that the language has been deleted.
@@ -919,7 +948,7 @@ class Languages {
 				 * Filters the unserialized translation group description before it is
 				 * updated when a language is deleted or a language slug is changed.
 				 *
-				 * @since 1.0.0
+				 *  
 				 *
 				 * @param (int|string[])[] $tr {
 				 *     List of translations with lang codes as array keys and IDs as array values.
@@ -997,7 +1026,7 @@ class Languages {
 	/**
 	 * Updates or adds new terms for a secondary language taxonomy (aka not 'language').
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string            $slug       Language term slug (with or without the `lmat_` prefix).
 	 * @param string            $name       Language name (label).
@@ -1043,7 +1072,7 @@ class Languages {
 	 * Returns the list of available languages, based on the language taxonomy terms.
 	 * Stores the list in a db transient and in a `LMAT_Cache` object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Language[] An array of `LMAT_Language` objects, array keys are the type.
 	 *
@@ -1103,7 +1132,7 @@ class Languages {
 	 * - Returns all terms, that are or not assigned to posts.
 	 * - Terms are ordered by `term_group` and `term_id` (see `Linguator\Includes\Models\Languages::filter_terms_orderby()`).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return WP_Term[]
 	 */
@@ -1129,7 +1158,7 @@ class Languages {
 	 * Ordering terms by taxonomy allows not to mix terms between all language taxomonomies.
 	 * Having the "lmat_language' taxonomy first is important for {@see LMAT_Admin_Model:delete_language()}.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  string   $orderby    `ORDERBY` clause of the terms query.
 	 * @param  array    $args       An array of term query arguments.

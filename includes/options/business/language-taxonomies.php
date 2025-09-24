@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class defining post types list option.
  *
- * @since 1.0.0
+ *  
  */
 class Language_Taxonomies extends Abstract_Object_Types {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -31,7 +31,7 @@ class Language_Taxonomies extends Abstract_Object_Types {
 	/**
 	 * Returns language taxonomies, except the ones for posts and taxonomies.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Object type names list.
 	 *
@@ -49,7 +49,7 @@ class Language_Taxonomies extends Abstract_Object_Types {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

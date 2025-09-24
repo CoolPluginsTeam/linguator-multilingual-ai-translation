@@ -60,7 +60,7 @@ jQuery(function ($) {
             $.each(lmat_term_languages, function (lg, term_tax) {
               $.each(term_tax, function (tax, terms) {
                 $.each(terms, function (i) {
-                  id = '#' + tax + '-' + lmat_term_languages[lg][tax][i];
+                  var id = '#' + tax + '-' + lmat_term_languages[lg][tax][i];
                   lang == lg ? $(id).show() : $(id).hide();
                 });
               });
@@ -75,7 +75,7 @@ jQuery(function ($) {
           if ("undefined" != typeof lmat_page_languages) {
             $.each(lmat_page_languages, function (lg, pages) {
               $.each(pages, function (i) {
-                v = $('#post_parent option[value="' + lmat_page_languages[lg][i] + '"]');
+                var v = $('#post_parent option[value="' + lmat_page_languages[lg][i] + '"]');
                 lang == lg ? v.show() : v.hide();
               });
             });

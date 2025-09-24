@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A class to match values against a given format.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Format_Util {
 	/**
@@ -28,8 +28,8 @@ class LMAT_Format_Util {
 	/**
 	 * Filters the given list to return only the values whose the key or value matches the given format.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Only accepts arrays as first parameter.
+	 *  
+	 *   Only accepts arrays as first parameter.
 	 *
 	 * @param array  $list   A list with keys or values to match against `$format`.
 	 * @param string $format A format, where `*` means "any characters" (`.*`), unless escaped.
@@ -57,7 +57,7 @@ class LMAT_Format_Util {
 	/**
 	 * Tells if the given string matches the given format.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key    A string to test.
 	 * @param string $format A format, where `*` means "any characters" (`.*`), unless escaped.
@@ -99,7 +99,7 @@ class LMAT_Format_Util {
 	/**
 	 * Tells if the given string is a format (that includes a `*`).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $format Format to test.
 	 * @return bool

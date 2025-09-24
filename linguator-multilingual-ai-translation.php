@@ -21,7 +21,7 @@ use Linguator\Includes\Core\Linguator;
 
 
 
-define( 'LINGUATOR_VERSION', '1.0.2' );
+define( 'LINGUATOR_VERSION', '0.0.3' );
 define( 'LMAT_MIN_WP_VERSION', '6.2' );
 define( 'LMAT_MIN_PHP_VERSION', '7.2' );
 define( 'LINGUATOR_FILE', __FILE__ ); 

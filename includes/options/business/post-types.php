@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class defining post types list option.
  *
- * @since 1.0.0
+ *  
  */
 class Post_Types extends Abstract_Object_Types {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -31,7 +31,7 @@ class Post_Types extends Abstract_Object_Types {
 	/**
 	 * Returns non-core post types.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Object type names list.
 	 *
@@ -45,7 +45,7 @@ class Post_Types extends Abstract_Object_Types {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

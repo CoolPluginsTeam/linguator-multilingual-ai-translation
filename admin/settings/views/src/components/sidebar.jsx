@@ -1,41 +1,9 @@
-import { Container } from "@bsf/force-ui"
+import { Container, Button } from "@bsf/force-ui"
 import { __ } from '@wordpress/i18n';
 
 const Sidebar = () => {
   // Get LocoAI plugin status from localized script data
   const locoaiStatus = window.lmat_settings?.locoai_plugin_status || { status: 'not_installed' };
-
-  // Determine button text and behavior based on plugin status
-  const getButtonConfig = () => {
-    switch (locoaiStatus.status) {
-      case 'active':
-        return {
-          text: __('ACTIVATED', 'linguator-multilingual-ai-translation'),
-          href: 'plugins.php',
-          className: 'button button-secondary',
-          disabled: false,
-          target: '_self'
-        };
-      case 'installed':
-        return {
-          text: __('ACTIVATE', 'linguator-multilingual-ai-translation'),
-          href: `plugins.php?_wpnonce=${window.lmat_settings?.activate_nonce || ''}&action=activate&plugin=automatic-translator-addon-for-loco-translate/automatic-translator-addon-for-loco-translate.php`,
-          className: 'button button-primary',
-          disabled: false,
-          target: '_self'
-        };
-      default:
-        return {
-          text: __('INSTALL', 'linguator-multilingual-ai-translation'),
-          href: 'plugin-install.php?s=locoai&tab=search&type=term',
-          className: 'button button-primary',
-          disabled: false,
-          target: '_blank'
-        };
-    }
-  };
-
-  const buttonConfig = getButtonConfig();
 
   return (
     <>
@@ -49,7 +17,7 @@ const Sidebar = () => {
                 <p className='text-sm text-gray-600 m-0'>{__('Total Characters Translated!', 'linguator-multilingual-ai-translation')}</p>
               </Container.Item>
             </Container.Item>
-            <hr className="w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1" />
+            <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1" />
             <Container.Item className='w-full'>
               <Container.Item className='flex flex-col gap-1'>
                 <div className='flex justify-between items-center'>
@@ -68,26 +36,29 @@ const Sidebar = () => {
             </Container.Item>
           </Container>
           {
-            locoaiStatus.status !== 'active' ? (
+            locoaiStatus.status === 'not_installed' ? (
 
               <div className=' p-6 bg-white border border-gray-200 rounded-lg shadow-sm'>
                 <h2>{__('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')}</h2>
-                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-gray-400 my-1" />
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1" />
                 <Container.Item className='flex'>
                   <div className='w-[70%]'>
                     <h4>{__('LocoAI - Auto Translation for Loco Translate', 'linguator-multilingual-ai-translation')}</h4>
-                    <p>{__('Loco Addon to translate plugins and themes', 'linguator-multilingual-ai-translation')}</p>
-                    <a
-                      href={buttonConfig.href}
-                      target={buttonConfig.target}
-                      className={buttonConfig.className}
-                      {...(buttonConfig.disabled && { disabled: true })}
+                    <a target="_blank" href="plugin-install.php?s=locoai&tab=search&type=term">
+                    <Button
+                      className=""
+                      iconPosition="left"
+                      size="md"
+                      tag="button"
+                      type="button"
+                      variant="primary"
                     >
-                      {buttonConfig.text}
+                      {__('Install', 'linguator-multilingual-ai-translation')}
+                    </Button>
                     </a>
                   </div>
                   <div className='w-[30%] flex items-center object-contain p-2'>
-                    <a href='plugin-install.php?s=locoai&tab=search&type=term' target="_blank"><img className="w-full h-auto  " src={`${window.lmat_settings_logo_data.logoUrl}loco.png`} alt="Loco translate logo" /></a>
+                    <a href='plugin-install.php?s=locoai&tab=search&type=term' target="_blank"><img className="w-auto max-h-24  " src={`${window.lmat_settings_logo_data.logoUrl}loco.png`} alt="Loco translate logo" /></a>
                   </div>
                   <div></div>
                 </Container.Item>
@@ -97,13 +68,13 @@ const Sidebar = () => {
           }
           <Container className='bg-white flex flex-col gap-4 p-6 shadow-sm rounded-lg'>
             <div>
-              <h2>{__('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation')}</h2>
+              <h2><a className="no-underline text-black" target="_blank" href="https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post">{__('Rate Us ⭐⭐⭐⭐⭐', 'linguator-multilingual-ai-translation')}</a></h2>
               <p>{__("We'd love your feedback! Hope this addon made auto-translations easier for you.", 'linguator-multilingual-ai-translation')}</p>
-              <a target="_blank" href="https://wordpress.org/support/plugin/automatic-translations-for-polylang/reviews/#new-post">{__('Submit a Review →', 'linguator-multilingual-ai-translation')}</a>
+              <a target="_blank" href="https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post">{__('Submit a Review →', 'linguator-multilingual-ai-translation')}</a>
             </div>
           </Container>
         </div>
-        
+
       </div>
     </>
   )

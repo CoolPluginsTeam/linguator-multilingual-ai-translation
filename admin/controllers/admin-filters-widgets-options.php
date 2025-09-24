@@ -14,7 +14,7 @@ use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
 /**
  * Class LMAT_Widgets_Filters
  *
- * @since 1.0.0
+ *  
  *
  * Adds new options to {@see https://developer.wordpress.org/reference/classes/wp_widget/ WP_Widget} and saves them.
  */
@@ -22,7 +22,7 @@ class LMAT_Admin_Filters_Widgets_Options extends LMAT_Filters_Widgets_Options {
 	/**
 	 * Modifies the widgets forms to add our language dropdown list.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Widget $widget Widget instance.
 	 * @param null      $return Not used.

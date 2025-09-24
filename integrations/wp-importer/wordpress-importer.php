@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with WordPress Importer.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_WordPress_Importer {
 
 	/**
 	 * Setups filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'maybe_wordpress_importer' ) );
@@ -28,7 +28,7 @@ class LMAT_WordPress_Importer {
 	/**
 	 * If WordPress Importer is active, replace the wordpress_importer_init function.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function maybe_wordpress_importer() {
 		if ( defined( 'WP_LOAD_IMPORTERS' ) && class_exists( 'WP_Import' ) ) {
@@ -40,7 +40,7 @@ class LMAT_WordPress_Importer {
 	/**
 	 * Loads our child class LMAT_WP_Import instead of WP_Import.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function wordpress_importer_init() {
 		$class = new \ReflectionClass( 'WP_Import' );
@@ -52,7 +52,7 @@ class LMAT_WordPress_Importer {
 	/**
 	 * Handles imported terms.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $terms An array of arrays containing terms information from the WXR file.
 	 * @return array

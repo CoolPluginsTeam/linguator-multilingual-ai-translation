@@ -19,7 +19,7 @@ use Linguator\Includes\Other\LMAT_Language;
  * Links model for use when using one domain per language
  * for example mysite.com/something and mysite.fr/quelquechose.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Links_Domain extends LMAT_Links_Abstract_Domain {
 
@@ -33,7 +33,7 @@ class LMAT_Links_Domain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $model LMAT_Model instance.
 	 */
@@ -50,8 +50,8 @@ class LMAT_Links_Domain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Switches the primary domain to a secondary domain in the url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url      The url to modify.
 	 * @param LMAT_Language|string|false $language Language object or slug.
@@ -71,7 +71,7 @@ class LMAT_Links_Domain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Returns the url with the primary domain.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -86,8 +86,8 @@ class LMAT_Links_Domain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Returns the home url in a given language.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param LMAT_Language|string $language Language object or slug.
 	 * @return string
@@ -103,7 +103,7 @@ class LMAT_Links_Domain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Get the hosts managed on the website.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] List of hosts.
 	 */

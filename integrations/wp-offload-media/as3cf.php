@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * A class to manage the integration with WP Offload Media Lite.
  * Version tested: 2.1.1
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_AS3CF {
 	/**
@@ -25,7 +25,7 @@ class LMAT_AS3CF {
 	/**
 	 * Initializes filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_filter( 'lmat_copy_post_metas', array( $this, 'copy_post_metas' ) );
@@ -36,7 +36,7 @@ class LMAT_AS3CF {
 	/**
 	 * Synchronizes post metas
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $metas List of custom fields names.
 	 * @return array
@@ -50,7 +50,7 @@ class LMAT_AS3CF {
 	/**
 	 * Checks if the deleted attachment was translated and stores the information.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Id of the attachment being deleted.
 	 */
@@ -64,7 +64,7 @@ class LMAT_AS3CF {
 	 * Done after Linguator has deleted the translations information, to avoid the synchronization of the deletion
 	 * and of course before WP Offload Media deletes the file, normally at priority 20.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id Id of the attachment being deleted.
 	 */

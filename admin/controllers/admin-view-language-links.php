@@ -75,6 +75,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$taxonomy=isset($current_screen->taxonomy) ? $current_screen->taxonomy : '';
 			
 			$post_type=isset($current_screen->post_type) ? $current_screen->post_type : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 			$post_status=(isset($_GET['post_status']) && 'trash' === sanitize_text_field(wp_unslash($_GET['post_status']))) ? 'trash' : 'publish';
 			$all_translated_post_count=0;
 			$list_html='';
@@ -88,12 +89,13 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 						),
 						'ul' => array('class' => array()),
 					));
-					foreach($lmat_languages as $lang){
+                    foreach($lmat_languages as $lang){
 	
 						$flag=isset($lang->flag) ? $lang->flag : '';
 						$language_slug=isset($lang->slug) ? $lang->slug : '';
 						$current_class=$lmat_active_languages && $lmat_active_languages == $language_slug ? 'current' : '';
 						$translated_post_count=lmat_count_posts($language_slug, array('post_type'=>$post_type, 'post_status'=>$post_status));
+						$url=function_exists('add_query_arg') ? add_query_arg('lang', $language_slug) : 'edit.php?post_type='.esc_attr($post_type).'&lang='.esc_attr($language_slug);
 
 						if('publish' === $post_status){
 							$draft_post_count=lmat_count_posts($language_slug, array('post_type'=>$post_type, 'post_status'=>'draft'));
@@ -103,14 +105,17 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 							$translated_post_count+=$pending_post_count;
 						}
 
-						$flag_url=isset($lang->flag_url) ? $lang->flag_url : '';
+                        $flag_url=isset($lang->flag_url) ? $lang->flag_url : '';
+                        $is_default = !empty($lang->is_default);
+                        $icon = $is_default ? " <span class='icon-default-lang' aria-hidden='true'></span>" : '';
 
-						$all_translated_post_count+=$translated_post_count;
-						$list_html.="<li class='lmat_lang_".esc_attr($language_slug)."'><a href='edit.php?post_type=".esc_attr($post_type)."&lang=".esc_attr($language_slug)."' class='".esc_attr($current_class)."'><img src='".esc_url($flag_url)."' alt='".esc_attr($lang->name)."' width='16' style='margin-right: 5px;'>".esc_html($lang->name)." <span class='count'>(".esc_html($translated_post_count).")</span></a></li>";
+                        $all_translated_post_count+=$translated_post_count;
+                        $list_html.="<li class='lmat_lang_".esc_attr($language_slug)."'><a href='".esc_url($url)."' class='".esc_attr($current_class)."'><img src='".esc_url($flag_url)."' alt='".esc_attr($lang->name)."' width='16' style='margin-right: 5px;'>".esc_html($lang->name).$icon." <span class='count'>(".esc_html($translated_post_count).")</span></a></li>";
 						$index++;
 					}
 
-					$current_lang_link='all' !== $lmat_active_languages ? "edit.php?post_type=".esc_attr($post_type)."&lang=all" : '';
+					$all_url=function_exists('add_query_arg') ? add_query_arg('lang', 'all') : 'edit.php?post_type='.esc_attr($post_type).'&lang=all';
+					$current_lang_link='all' !== $lmat_active_languages ? esc_url($all_url) : '';
 
 					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($lmat_active_languages == 'all' ? 'current' : '')."	'>All Languages <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";
 					

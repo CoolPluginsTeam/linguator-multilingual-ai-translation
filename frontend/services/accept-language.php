@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Represents an Accept-Language HTTP Header, as defined in RFC 2616 Section 14.4 {@see https://tools.ietf.org/html/rfc2616.html#section-14.4}.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Accept_Language {
 	public const SUBTAG_PATTERNS = array(
@@ -48,7 +48,7 @@ class LMAT_Accept_Language {
 	/**
 	 * LMAT_Accept_Language constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $subtags With subtag name as keys and subtag values as names.
 	 * @param mixed    $quality Floating point value from 0.0 to 1.0. Higher values indicates a user's preference.
@@ -61,7 +61,7 @@ class LMAT_Accept_Language {
 	/**
 	 * Creates a new instance from an array resulting of a PHP {@see preg_match()} or {@see preg_match_all()} call.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $matches Expects first entry to be full match, following entries to be subtags and last entry to be quality factor.
 	 * @return LMAT_Accept_Language
@@ -79,7 +79,7 @@ class LMAT_Accept_Language {
 	/**
 	 * Returns the full language tag.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -96,7 +96,7 @@ class LMAT_Accept_Language {
 	/**
 	 * Returns the quality factor as negotiated by the browser agent.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return float
 	 */
@@ -107,7 +107,7 @@ class LMAT_Accept_Language {
 	/**
 	 * Returns a subtag from the language tag.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name A valid subtag name, {@see LMAT_Accept_Language::SUBTAG_PATTERNS} for available subtag names.
 	 * @return string

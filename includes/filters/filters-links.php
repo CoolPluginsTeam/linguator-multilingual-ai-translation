@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages links filters needed on both frontend and admin
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Filters_Links {
 	/**
@@ -49,7 +49,7 @@ class LMAT_Filters_Links {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -85,7 +85,7 @@ class LMAT_Filters_Links {
 	/**
 	 * Modifies page links
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link    post link
 	 * @param int    $post_id post ID
@@ -99,7 +99,7 @@ class LMAT_Filters_Links {
 	/**
 	 * Modifies attachment links
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link    attachment link
 	 * @param int    $post_id attachment link
@@ -112,7 +112,7 @@ class LMAT_Filters_Links {
 	/**
 	 * Modifies custom posts links.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $link Post link.
 	 * @param WP_Post $post Post object.
@@ -127,7 +127,7 @@ class LMAT_Filters_Links {
 			/**
 			 * Filters a post or custom post type link.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string       $link The post link.
 			 * @param LMAT_Language $lang The current language.
@@ -142,7 +142,7 @@ class LMAT_Filters_Links {
 	/**
 	 * Modifies term links.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $link Term link.
 	 * @param WP_Term $term Term object.
@@ -157,7 +157,7 @@ class LMAT_Filters_Links {
 			/**
 			 * Filter a term link
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string       $link The term link.
 			 * @param LMAT_Language $lang The current language.
@@ -180,7 +180,7 @@ class LMAT_Filters_Links {
 	/**
 	 * Keeps the preview post link on default domain when using multiple domains.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url URL used for the post preview.
 	 * @return string The modified url.
@@ -196,7 +196,7 @@ class LMAT_Filters_Links {
 	 * The filter was originally only on frontend but is needed on admin too for
 	 * compatibility with the archive link of the ACF link field since ACF 5.4.0.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link      The post type archive permalink.
 	 * @param string $post_type Post type name.

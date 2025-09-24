@@ -8,7 +8,6 @@ namespace Linguator\Modules\Blocks;
 /**
  * Abstract class for language switcher block.
  *
- * @since 3.2
  */
 abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
@@ -24,7 +23,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Current lang to render the language switcher block in an admin context.
 	 *
-	 * @since 2.8
 	 *
 	 * @var string|null
 	 */
@@ -40,7 +38,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Constructor
 	 *
-	 * @since 2.8
 	 *
 	 * @param LMAT_Base $linguator Linguator object.
 	 */
@@ -52,7 +49,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Adds the required hooks.
 	 *
-	 * @since 3.2
 	 *
 	 * @return self
 	 */
@@ -69,7 +65,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Returns the block name with the Linguator's namespace.
 	 *
-	 * @since 3.2
 	 *
 	 * @return string The block name.
 	 */
@@ -78,8 +73,7 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Renders the Linguator's block on server.
 	 *
-	 * @since 3.2
-	 * @since 3.3 Accepts two new parameters, $content and $block.
+	 *  Accepts two new parameters, $content and $block.
 	 *
 	 * @param array    $attributes The block attributes.
 	 * @param string   $content    The saved content.
@@ -91,8 +85,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Returns the supported pieces of inherited context for the block, by default none are supported..
 	 *
-	 * @since 3.3
-	 *
 	 * @return array An array with context subject, default to empty.
 	 */
 	protected function get_context() {
@@ -102,8 +94,7 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	/**
 	 * Registers the Linguator's block.
 	 *
-	 * @since 2.8
-	 * @since 3.2 Renamed and now handle any type of block registration based on a dynamic name.
+	 *  Renamed and now handle any type of block registration based on a dynamic name.
 	 *
 	 * @return void
 	 */
@@ -186,7 +177,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	 *
 	 * @see WP_REST_Server::dispatch()
 	 *
-	 * @since 2.8
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Can be anything
 	 *                                 a normal endpoint can return, or null to not hijack the request.
@@ -212,7 +202,6 @@ abstract class LMAT_Abstract_Language_Switcher_Block {
 	 * Adds the attributes to render the block correctly.
 	 * Also specifies not to echo the switcher in any case.
 	 *
-	 * @since 3.2
 	 *
 	 * @param array $attributes The attributes of the currently rendered block.
 	 * @return array The modified attributes.

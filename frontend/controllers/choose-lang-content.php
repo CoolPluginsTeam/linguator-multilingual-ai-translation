@@ -16,14 +16,14 @@ use WP_Term;
  * Choose the language when it is set from content
  * The language is set either in parse_query with priority 2 or in wp with priority 5
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 
 	/**
 	 * Defers the language choice to the 'wp' action (when the content is known)
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -42,7 +42,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	/**
 	 * Overwrites parent::set_language to remove the 'wp' action if the language is set before.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $curlang Current language.
 	 * @return void
@@ -55,7 +55,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	/**
 	 * Returns the language based on the queried content
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_Language|false detected language, false if none was found
 	 */
@@ -101,7 +101,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 		/**
 		 * Filters the language before it is set from the content.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language|false $lang Language object or false if none was found.
 		 */
@@ -112,7 +112,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	 * Sets the language for the home page.
 	 * Adds the lang query var when querying archives with no language code.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query Instance of WP_Query.
 	 * @return void
@@ -150,7 +150,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	/**
 	 * Sets the language from content
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -164,7 +164,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	/**
 	 * If no language is found by {@see LMAT_Choose_Lang_Content::get_language_from_content()}, returns the preferred one.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|false $lang Language found by {@see LMAT_Choose_Lang_Content::get_language_from_content()}.
 	 * @return LMAT_Language|false

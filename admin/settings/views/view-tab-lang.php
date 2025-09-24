@@ -175,7 +175,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 						/**
 						 * Fires after the Edit Language form fields are displayed.
 						 *
-						 * @since 1.0.0
+						 *  
 						 *
 						 * @param LMAT_Language $lang language being edited.
 						 */
@@ -184,7 +184,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 						/**
 						 * Fires after the Add Language form fields are displayed.
 						 *
-						 * @since 1.0.0
+						 *  
 						 */
 						do_action( 'lmat_language_add_form_fields' );
 					}

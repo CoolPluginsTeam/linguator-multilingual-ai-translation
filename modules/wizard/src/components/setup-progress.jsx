@@ -118,7 +118,7 @@ const SetupProgress = ({lmat_setup_data}) => {
                         >
                             {
                                 setupSteps.map((step, index) => (
-                                        step.visible && <ProgressSteps.Step labelText={step.label} key={index} onClick={()=>{if(setupSteps.find((steps)=>steps.value===setupProgress)?.step>index+1){setSetupProgress(step.value);localStorage.setItem("setupProgress",step.value)}}}  completedVariant="icon" completedIcon={<BadgeCheck />} />
+                                        step.visible && <ProgressSteps.Step className="z-0" labelText={step.label} key={index} onClick={()=>{if(setupSteps.find((steps)=>steps.value===setupProgress)?.step>index+1){setSetupProgress(step.value);localStorage.setItem("setupProgress",step.value)}}}  completedVariant="icon" completedIcon={<BadgeCheck />} />
 
                                 ))
                             }
@@ -131,7 +131,7 @@ const SetupProgress = ({lmat_setup_data}) => {
             </div>
             {setupProgress != "ready" &&
                 <div className='text-center text-sm' style={{marginTop:"14px"}}>
-                    <a style={{ color: "gray" }} className='' onClick={()=>localStorage.removeItem("setupProgress")} href={currentDomain}>{__("Not Right Now","linguator-multilingual-ai-translation")}</a>
+                    <a style={{ color: "gray" }} className='' onClick={()=>localStorage.removeItem("setupProgress")} href={`${currentDomain}/admin.php?page=lmat`}>{__("Skip","linguator-multilingual-ai-translation")}</a>
                 </div>
             }
         </div>

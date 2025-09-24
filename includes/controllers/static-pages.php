@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Base class to manage the static front page and the page for posts.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Static_Pages {
 	/**
@@ -44,7 +44,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -77,7 +77,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Stores the page on front and page for posts ids.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -103,7 +103,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Returns the ID of the static page translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $static_page Static page option name; `page_on_front` or `page_for_posts`.
 	 * @param array  $language    Language data.
@@ -131,7 +131,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Adds `page_on_front` and `page_for_posts` properties to language data before the object is created.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $additional_data Array of language additional data.
 	 * @param array $language        Language data.
@@ -147,7 +147,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Cleans the language cache and resets the internal properties when options are updated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -159,7 +159,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Init the hooks that filter the "page on front" and "page for posts" options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -172,7 +172,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Translates the page on front or page for posts option.
 	 *
-	 * @since 1.0.0 Replaces `translate_page_on_front()` and `translate_page_for_posts()` methods.
+	 *   Replaces `translate_page_on_front()` and `translate_page_for_posts()` methods.
 	 *
 	 * @param  int    $page_id ID of the page on front or page for posts.
 	 * @param  string $option Option name: `page_on_front` or `page_for_posts`.
@@ -199,7 +199,7 @@ class LMAT_Static_Pages {
 	/**
 	 * Modifies the page link in case the front page is not in the default language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link The link to the page.
 	 * @param int    $id   The post ID of the page.
@@ -218,7 +218,7 @@ class LMAT_Static_Pages {
 	 * Fixes the oembed for the translated static front page
 	 * when the language page is redirected to the front page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $post_id The post ID.
 	 * @param string $url     The requested URL.

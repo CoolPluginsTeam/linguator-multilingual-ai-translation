@@ -16,7 +16,7 @@ use Linguator\Includes\Controllers\LMAT_Switcher;
 /**
  * Manages custom menus translations as well as the language switcher menu item on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
@@ -29,7 +29,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -57,7 +57,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Sorts menu items by menu order.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param stdClass $a The first object to compare.
 	 * @param stdClass $b The second object to compare.
@@ -70,7 +70,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Format a language switcher menu item title based on options
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $flag    Formatted flag
 	 * @param string $name    Language name
@@ -94,7 +94,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * Splits the one language switcher menu item of backend in several menu items on frontend.
 	 * Takes care to menu_order as it is used later in wp_nav_menu().
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param stdClass[] $items Menu items.
 	 * @return stdClass[] Modified menu items.
@@ -169,7 +169,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Returns the ancestors of a menu item.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param stdClass $item Menu item.
 	 * @return int[] Ancestors ids.
@@ -186,7 +186,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Removes current-menu and current-menu-ancestor classes to lang switcher when not on the home page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param stdClass[] $items An array of menu items.
 	 * @return stdClass[]
@@ -221,7 +221,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * Adds hreflang attribute for the language switcher menu items.
 	 * available since WP 3.6.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $atts HTML attributes applied to the menu item's `<a>` element.
 	 * @param stdClass $item Menu item.
@@ -238,7 +238,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * Fills the theme nav menus locations with the right menu in the right language
 	 * Needs to wait for the language to be defined
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array|bool $menus list of nav menus locations, false if menu locations have not been filled yet
 	 * @return array|bool modified list of nav menus locations
@@ -274,7 +274,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Attempts to translate the nav menu when it is hardcoded or when no location is defined in wp_nav_menu().
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args Array of `wp_nav_menu()` arguments.
 	 * @return array
@@ -321,7 +321,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Filters the nav menu location before the customizer so that it matches the temporary location in the customizer
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args wp_nav_menu $args
 	 * @return array modified $args
@@ -336,7 +336,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	/**
 	 * Filters the nav menu location after the customizer to get back the true nav menu location for the theme
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args wp_nav_menu $args
 	 * @return array modified $args

@@ -5,8 +5,11 @@ import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
 import { __, sprintf } from '@wordpress/i18n'
 import React from 'react'
-import { Earth, BrainCog} from 'lucide-react';
 import { Switch } from '@bsf/force-ui'
+import {ChromeIcon} from "../../../../assets/logo/chrome"
+import {GoogleIcon} from "../../../../assets/logo/google"
+
+
 
 const ChromeLocalAINotice = () => {
     const [showBrowserNotice, setShowBrowserNotice] = React.useState(false);
@@ -164,7 +167,7 @@ const AiTranslation = () => {
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
                     <div className="flex items-center  gap-2">
-                      <Earth className='size-5 text-button-primary' />
+                      <GoogleIcon className="w-4 h-4" />
                       <p className="text-sm/6">{__('Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch
@@ -178,7 +181,7 @@ const AiTranslation = () => {
                 <div className='p-6 rounded-lg' style={{ border: "1px solid #e5e7eb" }}>
                     <div className='flex justify-between items-center'>
                     <div className="flex items-center  gap-2">
-                      <BrainCog className='size-5 text-button-primary' />
+                      <ChromeIcon className="w-4 h-4" />
                       <p className="text-sm/6">{__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch
