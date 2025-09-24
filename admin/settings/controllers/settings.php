@@ -16,10 +16,10 @@ use Linguator\Settings\Controllers\LMAT_Settings_Module;
 use Linguator\Settings\Tables\LMAT_Table_Languages;
 use Linguator\Settings\Tables\LMAT_Table_String;
 use Linguator\Settings\Header\Header;
+use Linguator\Supported_Blocks\Supported_Blocks;
+use Linguator\Custom_Fields\Custom_Fields;
 
 use WP_Error;
-
-
 
 /**
  * A class for the Linguator settings pages, accessible from @see LMAT().
@@ -443,6 +443,21 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function languages_page() {
+
+		// Custom Fields
+		if($this->selected_tab === 'custom-fields' && class_exists(Custom_Fields::class)){
+			$this->header->header();
+			Custom_Fields::get_instance()->lmat_render_custom_fields_page();
+			return;
+		}
+
+		// Support Blocks
+		if($this->selected_tab === 'supported-blocks' && class_exists(Supported_Blocks::class)){
+			$this->header->header();
+			Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
+			return;
+		}
+
 		// return if the active tab is localizations
 		if($this->active_tab === 'localizations'){
 			return;
@@ -564,10 +579,11 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : false;
-
-		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab)) {
+		$supported_blocks_tab = $is_settings_tab && $active_tab === 'supported-blocks';
+		$custom_fields_tab = $is_settings_tab && $active_tab === 'custom-fields';
+		
+		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && !$supported_blocks_tab && !$custom_fields_tab) {
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'admin/assets/frontend/settings/settings.asset.php';
 
@@ -627,7 +643,18 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			);
 
 			
-		} else {
+		} else if($supported_blocks_tab){
+			$this->header->header_assets();
+			if(class_exists(Supported_Blocks::class)){
+				Supported_Blocks::enqueue_editor_assets();
+			}
+		}else if($custom_fields_tab){
+			$this->header->header_assets();
+			if(class_exists(Custom_Fields::class)){
+				Custom_Fields::enqueue_editor_assets();
+			}
+		}
+		else {
 			$this->header->header_assets();
 
 			// Original scripts for lang and strings tabs

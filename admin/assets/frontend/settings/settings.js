@@ -15855,20 +15855,36 @@ var TranslationConfig = function TranslationConfig(_ref) {
     _useState6 = translation_config_slicedToArray(_useState5, 2),
     lastUpdatedValue = _useState6[0],
     setLastUpdatedValue = _useState6[1];
-  var _useState7 = (0,external_React_namespaceObject.useState)(true),
+  var _useState7 = (0,external_React_namespaceObject.useState)((aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.bulk_translation_post_status) || 'draft'),
     _useState8 = translation_config_slicedToArray(_useState7, 2),
-    handleButtonDisabled = _useState8[0],
-    setHandleButtonDisabled = _useState8[1];
+    bulkTranslationPostStatus = _useState8[0],
+    setBulkTranslationPostStatus = _useState8[1];
+  var _useState9 = (0,external_React_namespaceObject.useState)((aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.slug_translation_option) || 'title_translate'),
+    _useState0 = translation_config_slicedToArray(_useState9, 2),
+    slugTranslationOption = _useState0[0],
+    setSlugTranslationOption = _useState0[1];
+  var _useState1 = (0,external_React_namespaceObject.useState)(true),
+    _useState10 = translation_config_slicedToArray(_useState1, 2),
+    handleButtonDisabled = _useState10[0],
+    setHandleButtonDisabled = _useState10[1];
   (0,external_React_namespaceObject.useEffect)(function () {
     var sameChecker = {
       googleMachineTranslation: true,
-      chromeLocalAITranslation: true
+      chromeLocalAITranslation: true,
+      bulkTranslationPostStatus: true,
+      slugTranslationOption: true
     };
     if (googleMachineTranslation !== (provider === null || provider === void 0 ? void 0 : provider.google)) {
       sameChecker.googleMachineTranslation = false;
     }
     if (chromeLocalAITranslation !== (provider === null || provider === void 0 ? void 0 : provider.chrome_local_ai)) {
       sameChecker.chromeLocalAITranslation = false;
+    }
+    if (bulkTranslationPostStatus !== (aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.bulk_translation_post_status)) {
+      sameChecker.bulkTranslationPostStatus = false;
+    }
+    if (slugTranslationOption !== (aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.slug_translation_option)) {
+      sameChecker.slugTranslationOption = false;
     }
     var flag = true;
     for (var key in sameChecker) {
@@ -15881,7 +15897,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     if (flag) {
       setHandleButtonDisabled(true);
     }
-  }, [chromeLocalAITranslation, googleMachineTranslation]);
+  }, [chromeLocalAITranslation, googleMachineTranslation, bulkTranslationPostStatus, slugTranslationOption]);
 
   //Save Setting Function 
   function SaveSettings() {
@@ -15899,14 +15915,18 @@ var TranslationConfig = function TranslationConfig(_ref) {
                   provider: {
                     google: googleMachineTranslation,
                     chrome_local_ai: chromeLocalAITranslation
-                  }
+                  },
+                  bulk_translation_post_status: bulkTranslationPostStatus,
+                  slug_translation_option: slugTranslationOption
                 }
               };
               setLastUpdatedValue({
                 googleMachineTranslation: googleMachineTranslation,
-                chromeLocalAITranslation: chromeLocalAITranslation
+                chromeLocalAITranslation: chromeLocalAITranslation,
+                bulkTranslationPostStatus: bulkTranslationPostStatus,
+                slugTranslationOption: slugTranslationOption
               });
-              if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation)) {
+              if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation || lastUpdatedValue.bulkTranslationPostStatus !== bulkTranslationPostStatus || lastUpdatedValue.slugTranslationOption !== slugTranslationOption)) {
                 setData(function (prev) {
                   return translation_config_objectSpread(translation_config_objectSpread({}, prev), apiBody);
                 });
@@ -15954,6 +15974,23 @@ var TranslationConfig = function TranslationConfig(_ref) {
     }));
     return _SaveSettings.apply(this, arguments);
   }
+  var postStatusOptions = [{
+    heading: (0,external_wp_i18n_namespaceObject.__)('Published', 'linguator-multilingual-ai-translation'),
+    value: 'publish'
+  }, {
+    heading: (0,external_wp_i18n_namespaceObject.__)('Draft', 'linguator-multilingual-ai-translation'),
+    value: 'draft'
+  }];
+  var slugTranslationOptions = [{
+    heading: (0,external_wp_i18n_namespaceObject.__)('Title Translate', 'linguator-multilingual-ai-translation'),
+    value: 'title_translate'
+  }, {
+    heading: (0,external_wp_i18n_namespaceObject.__)('Slug Translate', 'linguator-multilingual-ai-translation'),
+    value: 'slug_translate'
+  }, {
+    heading: (0,external_wp_i18n_namespaceObject.__)('Keep Slug Original', 'linguator-multilingual-ai-translation'),
+    value: 'slug_keep'
+  }];
   return /*#__PURE__*/external_React_default().createElement(S, {
     className: "bg-white p-10 rounded-lg",
     cols: "1",
@@ -16015,7 +16052,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     },
     value: googleMachineTranslation,
     size: "sm"
-  })))), /*#__PURE__*/external_React_default().createElement("div", {
+  }))), /*#__PURE__*/external_React_default().createElement("div", {
     style: {
       backgroundColor: "#fbfbfb"
     }
@@ -16038,7 +16075,87 @@ var TranslationConfig = function TranslationConfig(_ref) {
     },
     value: chromeLocalAITranslation,
     size: "sm"
-  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null)))), /*#__PURE__*/external_React_default().createElement("hr", {
+  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null))))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Bulk Translation default Post Status', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    variant: "help"
+  }, (0,external_wp_i18n_namespaceObject.__)('This is the default post status for bulk translation.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      marginTop: "20px"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center gap-0 flex-wrap"
+  }, postStatusOptions.map(function (postStatus) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      key: postStatus.value,
+      className: "flex items-center gap-2 m-width-1/2 align-middle mr-7"
+    }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+      className: "text-sm pr-12 align-middle relative",
+      htmlFor: postStatus.value
+    }, /*#__PURE__*/external_React_default().createElement("p", null, postStatus.heading), /*#__PURE__*/external_React_default().createElement("label", {
+      className: "absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2",
+      htmlFor: postStatus.value
+    }, /*#__PURE__*/external_React_default().createElement("span", {
+      className: "relative p-0.5"
+    }, /*#__PURE__*/external_React_default().createElement("input", {
+      type: "radio",
+      className: "peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4",
+      name: "bulkTranslationPostStatus",
+      value: postStatus.value,
+      id: postStatus.value,
+      onChange: function onChange() {
+        setBulkTranslationPostStatus(postStatus.value);
+      },
+      checked: bulkTranslationPostStatus === postStatus.value
+    }), /*#__PURE__*/external_React_default().createElement("span", {
+      className: "inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"
+    }, /*#__PURE__*/external_React_default().createElement("div", {
+      className: "rounded-full bg-current size-1.5"
+    }))))));
+  })))), /*#__PURE__*/external_React_default().createElement("hr", {
+    className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
+  }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    size: "md",
+    className: "font-bold flex items-center gap-2"
+  }, (0,external_wp_i18n_namespaceObject.__)('Slug Translation Option', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
+    variant: "help"
+  }, (0,external_wp_i18n_namespaceObject.__)('This is the option for slug translation.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
+    style: {
+      marginTop: "20px"
+    }
+  }, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex items-center gap-0 flex-wrap"
+  }, slugTranslationOptions.map(function (slugOption) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      key: slugOption.value,
+      className: "flex items-center gap-2 m-width-1/2 align-middle mr-7"
+    }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
+      className: "text-sm pr-12 align-middle relative",
+      htmlFor: slugOption.value
+    }, /*#__PURE__*/external_React_default().createElement("p", null, slugOption.heading), /*#__PURE__*/external_React_default().createElement("label", {
+      className: "absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2",
+      htmlFor: slugOption.value
+    }, /*#__PURE__*/external_React_default().createElement("span", {
+      className: "relative p-0.5"
+    }, /*#__PURE__*/external_React_default().createElement("input", {
+      type: "radio",
+      className: "peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4",
+      name: "slugTranslationOption",
+      value: slugOption.value,
+      id: slugOption.value,
+      onChange: function onChange() {
+        setSlugTranslationOption(slugOption.value);
+      },
+      checked: slugTranslationOption === slugOption.value
+    }), /*#__PURE__*/external_React_default().createElement("span", {
+      className: "inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"
+    }, /*#__PURE__*/external_React_default().createElement("div", {
+      className: "rounded-full bg-current size-1.5"
+    }))))));
+  })))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S, {
     className: "flex items-center justify-end"

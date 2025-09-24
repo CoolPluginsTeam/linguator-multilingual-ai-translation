@@ -18,6 +18,7 @@ const bulkTranslateStore = createSlice({
     translatedContent: {},
     serviceProvider: '',
     blockParseRules: {},
+    allowedMetaFields: {},
   },
   reducers: {
     updateCompletedPosts: (state, action) => {
@@ -97,6 +98,10 @@ const bulkTranslateStore = createSlice({
       state.blockParseRules = action.payload;
     },
 
+    updateAllowedMetaFields: (state, action) => {
+      state.allowedMetaFields = action.payload;
+    },
+
     resetStore: (state)=>{
       state.pendingPosts = [];
       state.progressStatus = 0;
@@ -113,11 +118,12 @@ const bulkTranslateStore = createSlice({
       };
       state.translatedContent = {};
       state.blockParseRules = {};
+      state.allowedMetaFields = {};
     }
   },
 });
 
-export const { updateTranslationsLanguages, updateCompletedPosts, updatePendingPosts, unsetPendingPost, updateTranslatePostInfo, updateProgressStatus, updateCountInfo, updateSourceContent, updateTranslatedContent, resetStore, updateTargetContent, updateParentPostsInfo, updateServiceProvider, updateTargetLanguages, updateBlockParseRules } = bulkTranslateStore.actions;
+export const { updateTranslationsLanguages, updateCompletedPosts, updatePendingPosts, unsetPendingPost, updateTranslatePostInfo, updateProgressStatus, updateCountInfo, updateSourceContent, updateTranslatedContent, resetStore, updateTargetContent, updateParentPostsInfo, updateServiceProvider, updateTargetLanguages, updateBlockParseRules, updateAllowedMetaFields } = bulkTranslateStore.actions;
 
 // Export reducer
 export default bulkTranslateStore.reducer;

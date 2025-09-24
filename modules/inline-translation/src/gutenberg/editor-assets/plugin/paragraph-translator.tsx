@@ -6,7 +6,7 @@ import {
   ToolbarGroup
 } from "@wordpress/components";
 import { useState, useEffect } from "@wordpress/element";
-import * as styles from "./ParagraphTranslator.module.css";
+import * as styles from "./paragraph-translator.module.css";
 import TranslatorModal from "../../../inline-translate-modal/modal";
 import { createElement } from "@wordpress/element";
 

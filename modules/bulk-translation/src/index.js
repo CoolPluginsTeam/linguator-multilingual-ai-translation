@@ -26,10 +26,17 @@ import { __, sprintf } from '@wordpress/i18n';
 
         const handleModalVisibility = (e) => {
             e.preventDefault();
-            const selectedPostIds=document.querySelectorAll('table.widefat input[name="post[]"]:checked');
-            const postIds=Array.from(selectedPostIds).map(postId=>postId.value);
-            setPostIds(postIds);
+            let checkboxClass='table.widefat input[name="post[]"]:checked';
 
+            if(lmatBulkTranslationGlobal.taxonomy_page && '' !== lmatBulkTranslationGlobal.taxonomy_page){
+                checkboxClass='table.widefat input[name="delete_tags[]"]:checked';
+            }
+
+            const selectedPostIds=document.querySelectorAll(checkboxClass);
+            const postIds=Array.from(selectedPostIds).map(postId=>postId.value);
+
+            setPostIds(postIds);
+            
             if(providers.length < 1){
                 setProviderConfigError(prev => !prev);
                 return;
@@ -78,7 +85,7 @@ import { __, sprintf } from '@wordpress/i18n';
         return (
             modalVisible ? (
                 <App onDestory={handleModalVisibility} prefix={prefix} postIds={postIds} />
-            ) : providerConfigError ? <div id={`${prefix}-container`}><ErrorModalBox message={providerConfigMsg} onDestroy={handleModalVisibility} onClose={handleModalVisibility} Title='Translation Provider Not Configured' prefix={prefix} /></div> : null
+             ) : providerConfigError ? <div id={`${prefix}-container`}><ErrorModalBox message={providerConfigMsg} onDestroy={handleModalVisibility} onClose={handleModalVisibility} Title='Translation Provider Not Configured' prefix={prefix} /></div> : null
         );
     }
     

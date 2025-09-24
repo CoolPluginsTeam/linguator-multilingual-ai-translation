@@ -3,8 +3,6 @@ import { dispatch, select } from "@wordpress/data";
 import { parse } from "@wordpress/blocks";
 import { __ } from "@wordpress/i18n";
 
-import AllowedMetaFields from "../../allowed-meta-fields.js";
-
 const GutenbergPostFetch = async (props) => {
     const apiUrl = lmatPageTranslationGlobal.ajax_url;
     let blockRules = wp.data.select('block-lmatPageTranslation/translate').getBlockRules() || {};
@@ -19,46 +17,6 @@ const GutenbergPostFetch = async (props) => {
     props.updateDestroyHandler(() => {
         destroyHandler();
     });
-
-    // Update allowed meta fields
-    const updateAllowedMetaFields = (data) => {
-        dispatch('block-lmatPageTranslation/translate').allowedMetaFields(data);
-    }
-
-    // Update ACF fields allowed meta fields
-    const AcfFields = () =>{
-        const postMetaSync = lmatPageTranslationGlobal.postMetaSync === 'true';
-
-        if(window.acf && !postMetaSync){
-            const allowedTypes = ['text', 'textarea', 'wysiwyg'];
-            acf.getFields().forEach(field => {
-                if(field.data && allowedTypes.includes(field.data.type)){
-
-                    const fieldData=JSON.parse(JSON.stringify({key: field.data.key, type: field.data.type}));
-
-                    if(field.$el && field.$el.closest('.acf-field.acf-field-repeater') && field.$el.closest('.acf-field.acf-field-repeater').length > 0){
-                        const rowId=field.$el.closest('.acf-row').data('id');
-
-                        if(rowId && '' !== rowId){
-                            const index=rowId.replace('row-', '');
-                        
-                            fieldData.key=fieldData.key+'_'+index;
-                        }
-                    }
-
-                    updateAllowedMetaFields({id: fieldData.key, type: fieldData.type});
-                }
-            });
-        }
-    }
-
-    // Update allowed meta fields
-    Object.keys(AllowedMetaFields).forEach(key => {
-        updateAllowedMetaFields({ id: key, type: AllowedMetaFields[key].type });
-    });
-
-    // Update ACF fields allowed meta fields
-    AcfFields();
 
     const BlockParseFetch = async () => {
 
@@ -97,9 +55,9 @@ const GutenbergPostFetch = async (props) => {
     await BlockParseFetch();
 
     const ContentFetch = async () => {
-        const contentExists = select('block-lmatPageTranslation/translate').getTranslationEntry();
-
-        if ((contentExists && contentExists.length > 0) || Object.keys(blockRules).length === 0) {
+        
+        const contentFetchStatus = select('block-lmatPageTranslation/translate').contentFetchStatus();
+        if (contentFetchStatus) {
             return;
         }
 
@@ -134,6 +92,12 @@ const GutenbergPostFetch = async (props) => {
             .then(response => response.json())
             .then(data => {
 
+                const contentFetchStatus = select('block-lmatPageTranslation/translate').contentFetchStatus();
+                
+                if (contentFetchStatus) {
+                    return;
+                }
+
                 const post_data = data.data;
 
                 if (post_data.content && post_data.content.trim() !== '') {
@@ -143,6 +107,7 @@ const GutenbergPostFetch = async (props) => {
                 GutenbergBlockSaveSource(post_data, blockRules);
                 props.refPostData(post_data);
                 props.updatePostDataFetch(true);
+                dispatch('block-lmatPageTranslation/translate').contentFetchStatus(true);
             })
             .catch(error => {
                 console.error('Error fetching post content:', error);

@@ -60,7 +60,7 @@ export default class ElementorTranslator extends Marionette.Behavior {
         let iconElement = document.createElement('div');
         iconElement.className=styles.lmatEtTranslatorContainer;
         iconElement.title="Chrome built-in translator AI";
-        ReactDom.createRoot(iconElement).render(<RiTranslateAi2Compat size={20} className={styles.lmatEtTranslatorIcon} />);
+        ReactDom.createRoot(iconElement).render(<RiTranslateAi2Compat className={styles.lmatEtTranslatorIcon} />);
         $button.html(iconElement);
 
         iconElement=null;

@@ -15,6 +15,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'L' => 
         array (
             'Linguator\\includes\\' => 19,
+            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -28,6 +29,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
+        ),
+        'Linguator\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
         ),
         'Linguator\\Settings\\' => 
         array (
@@ -96,6 +101,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Admin\\Feedback\\LMAT_Admin_Feedback' => __DIR__ . '/../..' . '/admin/feedback/admin-feedback.php',
         'Linguator\\Admin\\cpfm_feedback\\CPFM_Feedback_Notice' => __DIR__ . '/../..' . '/admin/cpfm-feedback/cpfm-feedback-notice.php',
         'Linguator\\Admin\\cpfm_feedback\\cron\\LMAT_cronjob' => __DIR__ . '/../..' . '/admin/cpfm-feedback/cron/class-cron.php',
+        'Linguator\\Custom_Fields\\Custom_Fields' => __DIR__ . '/../..' . '/admin/custom-fields/custom-fields.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang' => __DIR__ . '/../..' . '/frontend/controllers/choose-lang.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Content' => __DIR__ . '/../..' . '/frontend/controllers/choose-lang-content.php',
         'Linguator\\Frontend\\Controllers\\LMAT_Choose_Lang_Domain' => __DIR__ . '/../..' . '/frontend/controllers/choose-lang-domain.php',
@@ -173,6 +179,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Other\\LMAT_Model' => __DIR__ . '/../..' . '/includes/other/model.php',
         'Linguator\\Includes\\Other\\LMAT_OLT_Manager' => __DIR__ . '/../..' . '/includes/other/olt-manager.php',
         'Linguator\\Includes\\Other\\LMAT_Query' => __DIR__ . '/../..' . '/includes/other/query.php',
+        'Linguator\\Includes\\Other\\LMAT_Translation_Dashboard' => __DIR__ . '/../..' . '/includes/other/lmat-translation-dashboard.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Posts' => __DIR__ . '/../..' . '/includes/services/crud/crud-posts.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Terms' => __DIR__ . '/../..' . '/includes/services/crud/crud-terms.php',
         'Linguator\\Includes\\Services\\Links\\LMAT_Links' => __DIR__ . '/../..' . '/includes/services/links/links.php',
@@ -183,6 +190,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Services\\Links\\LMAT_Links_Model' => __DIR__ . '/../..' . '/includes/services/links/links-model.php',
         'Linguator\\Includes\\Services\\Links\\LMAT_Links_Permalinks' => __DIR__ . '/../..' . '/includes/services/links/links-permalinks.php',
         'Linguator\\Includes\\Services\\Links\\LMAT_Links_Subdomain' => __DIR__ . '/../..' . '/includes/services/links/links-subdomain.php',
+        'Linguator\\Includes\\Services\\Translation\\Translation_Term_Model' => __DIR__ . '/../..' . '/includes/services/translation/translation-term-translate.php',
         'Linguator\\Includes\\Walkers\\LMAT_Walker' => __DIR__ . '/../..' . '/includes/walkers/walker.php',
         'Linguator\\Includes\\Walkers\\LMAT_Walker_Dropdown' => __DIR__ . '/../..' . '/includes/walkers/walker-dropdown.php',
         'Linguator\\Includes\\Walkers\\LMAT_Walker_List' => __DIR__ . '/../..' . '/includes/walkers/walker-list.php',
@@ -213,7 +221,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\Blocks\\LMAT_Abstract_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/abstract-language-switcher-block.php',
         'Linguator\\Modules\\Blocks\\LMAT_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/language-switcher-block.php',
         'Linguator\\Modules\\Blocks\\LMAT_Navigation_Language_Switcher_Block' => __DIR__ . '/../..' . '/modules/blocks/language-switcher/navigation-language-switcher-block.php',
-        'Linguator\\Modules\\Bulk_Translation\\LMAT_Bulk_Translate_Rest_Routes' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translate-rest-routes.php',
         'Linguator\\Modules\\Bulk_Translation\\LMAT_Bulk_Translation' => __DIR__ . '/../..' . '/modules/bulk-translation/bulk-translation.php',
         'Linguator\\Modules\\Editors\\Filter_Preload_Paths' => __DIR__ . '/../..' . '/modules/editors/filter-preload-paths.php',
         'Linguator\\Modules\\Editors\\Screens\\Abstract_Screen' => __DIR__ . '/../..' . '/modules/editors/screens/abstract-screens.php',
@@ -227,6 +234,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\REST\\API' => __DIR__ . '/../..' . '/modules/rest/api.php',
         'Linguator\\Modules\\REST\\Abstract_Controller' => __DIR__ . '/../..' . '/modules/rest/abstract-controller.php',
         'Linguator\\Modules\\REST\\Request' => __DIR__ . '/../..' . '/modules/rest/request.php',
+        'Linguator\\Modules\\REST\\V1\\Bulk_Translation' => __DIR__ . '/../..' . '/modules/rest/v1/bulk-translation.php',
         'Linguator\\Modules\\REST\\V1\\Languages' => __DIR__ . '/../..' . '/modules/rest/v1/languages.php',
         'Linguator\\Modules\\REST\\V1\\Settings' => __DIR__ . '/../..' . '/modules/rest/v1/settings.php',
         'Linguator\\Modules\\Wizard\\LMAT_Wizard' => __DIR__ . '/../..' . '/modules/wizard/wizard.php',
@@ -236,6 +244,8 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Settings\\Header\\Header' => __DIR__ . '/../..' . '/admin/settings/header/header.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_Languages' => __DIR__ . '/../..' . '/admin/settings/tables/table-languages.php',
         'Linguator\\Settings\\Tables\\LMAT_Table_String' => __DIR__ . '/../..' . '/admin/settings/tables/table-string.php',
+        'Linguator\\Supported_Blocks\\Custom_Block_Post' => __DIR__ . '/../..' . '/admin/supported-blocks/custom-blocks-post.php',
+        'Linguator\\Supported_Blocks\\Supported_Blocks' => __DIR__ . '/../..' . '/admin/supported-blocks/supported-blocks.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

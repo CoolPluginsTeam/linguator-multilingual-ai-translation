@@ -2,7 +2,8 @@ import CopyClipboard from "../copy-clipboard/index";
 import { useEffect, FC } from 'react';
 import * as styles from '../modal/style.modules.css';
 import { Modal } from '@wordpress/components';
-import ModalStyle from "./modalStyle";
+import ModalStyle from "./modal-style";
+import DOMPurify from 'dompurify';
 import { createElement } from "@wordpress/element";
 
 export const ModalCompat = (props: any) =>
@@ -76,7 +77,6 @@ const ErrorModalBox: FC<ErrorModalBoxProps> = ({ message, onClose, Title, childr
 
     return (
         <>
-        <ModalStyle modalContainer={styles.ErrorModalContainer} />
         <ModalCompat
           title={Title}
           onRequestClose={onClose}
@@ -85,7 +85,8 @@ const ErrorModalBox: FC<ErrorModalBoxProps> = ({ message, onClose, Title, childr
           isDismissible={true}
           bodyOpenClassName={'body-class'}
           >
-            <div className={styles.errorModalBoxBody}><p dangerouslySetInnerHTML={{ __html: stringifiedMessage }} />
+            <ModalStyle modalContainer={styles.ErrorModalContainer} />
+            <div className={styles.errorModalBoxBody}><p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(stringifiedMessage) }} />
             {children}
             </div>
             <div className={styles.errorModalBoxFooter}>

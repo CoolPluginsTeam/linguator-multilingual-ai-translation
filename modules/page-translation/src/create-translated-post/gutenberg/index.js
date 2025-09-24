@@ -3,6 +3,7 @@ import { dispatch, select } from '@wordpress/data';
 import YoastSeoFields from '../../component/translate-seo-fields/yoast-seo-fields.js';
 import RankMathSeo from '../../component/translate-seo-fields/rank-math-seo.js';
 import SeoPressFields from '../../component/translate-seo-fields/seo-press.js';
+import translatedMetaFields from '../meta-fields/index.js';
 
 /**
  * Translates the post content and updates the post title, excerpt, and content.
@@ -30,6 +31,19 @@ const translatePost = (props) => {
         });
 
         editPost(data);
+
+        if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+            const slugData = select('block-lmatPageTranslation/translate').getTranslatedString('slug', postContent.slug_name, null, service);
+
+            editPost({ slug: slugData });
+        }
+
+        if(lmatPageTranslationGlobal.slug_translation_option === 'slug_keep'){
+            const slugData=lmatPageTranslationGlobal.slug_name;
+            setTimeout(() => {
+                editPost({ slug: slugData });
+            }, 500);
+        }
     }
 
     /**
@@ -49,8 +63,6 @@ const translatePost = (props) => {
                     RankMathSeo({ key: key, value: translatedMetaFields });
                 } else if (key.startsWith('_seopress_') && AllowedMetaFields[key].inputType === 'string') {
                     SeoPressFields({ key: key, value: translatedMetaFields });
-                } else {
-                    editPost({ meta: { [key]: translatedMetaFields } });
                 }
             };
         });
@@ -77,22 +89,19 @@ const translatePost = (props) => {
                     if(rowId && '' !== rowId){
                         const index=rowId.replace('row-', '');
                     
-                        fieldData.key=fieldData.key+'_'+index;
-
                         fieldData.name=repeaterItemName+'_'+index+'_'+fieldData.name;
                         repeaterField = true;
                     }
 
                 }
 
-               if(field.data && field.data.key && Object.keys(AllowedMetaFields).includes(fieldData.key)){
-                   const fieldKey = fieldData.key;
+               if(field.data && field.data.key && Object.keys(AllowedMetaFields).includes(fieldData.name)){
                    const fieldName = field.data.name;
                    const inputType = field.data.type;
 
-                   const sourceValue = metaFieldsData[fieldName]? metaFieldsData[fieldName][0] : field?.val();
+                   const sourceValue = metaFieldsData[fieldName]? metaFieldsData[fieldName] : field?.val();
 
-                    const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', sourceValue, fieldKey, service);
+                    const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', sourceValue, fieldData.name, service);
 
                     if('wysiwyg' === inputType && tinymce){
                         const editorId = field.data.id;
@@ -103,6 +112,38 @@ const translatePost = (props) => {
                }
             });
         }
+    }
+
+    const updatePostMetaFields = () => {
+        const ajaxUrl=window.lmatPageTranslationGlobal.ajax_url;
+        const postId=window.lmatPageTranslationGlobal.current_post_id;
+        const nonce=window.lmatPageTranslationGlobal.post_meta_fields_key;
+        const action=window.lmatPageTranslationGlobal.update_post_meta_fields;
+        
+        if(!postId || !nonce || !action){
+            return;
+        }
+
+        const requestBody={
+            action: action,
+            post_id: postId,
+            meta_fields: JSON.stringify(translatedMetaFields(postContent.metaFields, service)),
+            post_meta_fields_key: nonce
+        }
+        
+        fetch(ajaxUrl, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Accept': 'application/json',
+            },
+            body: new URLSearchParams(requestBody)
+        })
+        .then(response => response.json())
+        .then()
+        .catch(error => {
+            console.error('Error:', error); 
+        });
     }
 
     /**
@@ -128,6 +169,12 @@ const translatePost = (props) => {
     postAcfFieldsUpdate();
     // Update post content
     postContentUpdate();
+
+    // Update all translation supported post meta fields using ajax request
+    if(lmatPageTranslationGlobal.postMetaSync === 'false'){
+        updatePostMetaFields();
+    }
+
     // Close string modal box
     modalClose();
 }

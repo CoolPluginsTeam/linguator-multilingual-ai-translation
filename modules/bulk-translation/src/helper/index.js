@@ -1,7 +1,6 @@
 import { store } from '../redux-store/store.js';
 
-export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPostId, currentPostId, editorType, updateTranslateDataNonce }) => {
-
+export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPostId, currentPostId, editorType, updateTranslateDataNonce, extraData={} }) => {
     if(!updateTranslateDataNonce || !currentPostId || !parentPostId || !provider || !sourceLang || !targetLang || !editorType) return;
 
     const parentPostInfo = store.getState().parentPostsInfo[parentPostId];
@@ -17,7 +16,7 @@ export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPo
     const sourceStringCount = parentPostInfo.stringsCount || 0;
     const date = new Date().toISOString();
 
-    const data = { provider, totalStringCount, totalWordCount, totalCharacterCount, editorType, date, sourceStringCount, sourceWordCount, sourceCharacterCount, sourceLang, targetLang, timeTaken, action: lmatBulkTranslationGlobal.update_translate_data, update_translation_key: updateTranslateDataNonce, post_id: currentPostId, ajax_url: lmatBulkTranslationGlobal.ajax_url };
+    const data = { provider, totalStringCount, totalWordCount, totalCharacterCount, editorType, date, sourceStringCount, sourceWordCount, sourceCharacterCount, sourceLang, targetLang, timeTaken, action: lmatBulkTranslationGlobal.update_translate_data, update_translation_key: updateTranslateDataNonce, post_id: currentPostId, ajax_url: lmatBulkTranslationGlobal.ajax_url, extraData: JSON.stringify(extraData) };
 
     fetch(lmatBulkTranslationGlobal.ajax_url, {
         method: 'POST',
@@ -26,9 +25,7 @@ export const updateTranslateData = ({ provider, sourceLang, targetLang, parentPo
             'Accept': 'application/json',
         },
         body: new URLSearchParams(data)
-    }).then(response => response.json()).then(data => {
-        console.log(data.data.message);
-    }).catch(error => {
+    }).then().catch(error => {
         console.error(error);
     });
 }

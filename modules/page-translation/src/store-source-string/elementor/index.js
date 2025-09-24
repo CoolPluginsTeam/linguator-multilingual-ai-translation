@@ -2,18 +2,6 @@ import { select, dispatch } from "@wordpress/data";
 
 const ElementorSaveSource = (content) => {
 
-    const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
-
-    const storeMetaFields = (metaFields) => {
-        Object.keys(metaFields).forEach(metaKey => {
-            if(Object.keys(AllowedMetaFields).includes(metaKey) && AllowedMetaFields[metaKey].inputType === 'string'){
-                if('' !== metaFields[metaKey][0] && undefined !== metaFields[metaKey][0]){
-                    dispatch('block-lmatPageTranslation/translate').metaFieldsSaveSource(metaKey, metaFields[metaKey][0]);
-                }
-            }
-        });
-    }
-
     const loopCallback=(callback, loop, index)=>{
         callback(loop[index], index);
 
@@ -105,7 +93,21 @@ const ElementorSaveSource = (content) => {
         loopCallback(runLoop, content.widgetsContent, 0);
     }
 
-    storeMetaFields(content.metaFields);
+    if(content.title && '' !== content.title){
+        const currentPostId=lmatPageTranslationGlobal.current_post_id;
+
+        if(currentPostId){
+            const existingTitle=elementor?.settings?.page?.model?.get('post_title');
+
+            if(existingTitle && '' !== existingTitle && existingTitle === `Elementor #${currentPostId}`){
+                dispatch('block-lmatPageTranslation/translate').titleSaveSource(content.title);
+            }
+        }
+    }
+
+    if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+        dispatch('block-lmatPageTranslation/translate').slugSaveSource(content.slug_name);
+    }
 }
 
 export default ElementorSaveSource;

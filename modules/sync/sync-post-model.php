@@ -3,6 +3,8 @@
  * @package Linguator
  */
 
+use Linguator\Custom_Fields\Custom_Fields;
+
 /**
  * Model for synchronizing posts
  *
@@ -119,23 +121,25 @@ class LMAT_Sync_Post_Model {
 		}
 
 		foreach($tr_post as $key => $value){
-			if(isset($post_data[$key]) && $key !== 'meta_fields'){
+			if(isset($post_data[$key]) && $key !== 'post_meta_fields'){
 				$tr_post->$key = $post_data[$key];
 			}
-		}
-
-		if(isset($post_data['post_title'])){
-			$tr_post->post_name = sanitize_title($post_data['post_title']);
 		}
 
 		if(isset($tr_post->post_content)){
 			$tr_post->post_content=wp_kses_post(lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language));
 		}
 
+		$post_status='draft';
+
+		if(isset($this->options['ai_translation_configuration']['bulk_translation_post_status'])){
+			$post_status=$this->options['ai_translation_configuration']['bulk_translation_post_status'];
+		}
+
 		// If it does not exist, create it.
 		if ( ! $tr_id ) {
 			$tr_post->ID = 0;
-			$tr_post->post_status = get_option('lmat_bulk_post_status', 'draft');
+			$tr_post->post_status = $post_status;
 		
 			$tr_id       = wp_insert_post( wp_slash( $tr_post->to_array() ) );
 			$this->model->post->set_language( $tr_id, $target_language ); // Necessary to do it now to share slug.
@@ -174,14 +178,14 @@ class LMAT_Sync_Post_Model {
 
 			$post=get_post($post_id);
 			do_action( 'lmat_save_post', $post_id, $post, $translations ); // Fire again as we just updated $translations.
-			
+
 			unset( $this->temp_synchronized[ $post_id ][ $tr_id ] );
 		}
-		
+
 		if ( $save_group ) {
 			$this->save_group( $post_id, $languages );
 		}
-		
+
 		$tr_post->ID = $tr_id;
 		$post=get_post($post_id);
 
@@ -227,9 +231,19 @@ class LMAT_Sync_Post_Model {
 		$columns = apply_filters( 'lmat_sync_post_fields', array_combine( $columns, $columns ), $post_id, $target_language, $save_group );
 		
 		$tr_post = array_intersect_key( (array) $tr_post, $columns );
-
+		
 		$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => (int) $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
 		clean_post_cache( $tr_id );
+
+		$post_meta_sync=true;
+
+		if (!isset($this->options['sync']) || (isset($this->options['sync']) && !in_array('post_meta', $this->options['sync']))) {
+			$post_meta_sync = false;
+		}
+
+		if(!$post_meta_sync && isset($post_data['post_meta_fields']) && count($post_data['post_meta_fields']) > 0){
+			$this->update_post_custom_fields($post_data['post_meta_fields'], $tr_id);
+		}
 
 		/**
 		 * Fires after a post has been synchronized.
@@ -249,6 +263,41 @@ class LMAT_Sync_Post_Model {
 		return $tr_id;
 	}
 
+	private function update_post_custom_fields($fields, $post_id){
+		$post_meta_sync = true;
+
+		if (!isset($this->options['sync']) || (isset($this->options['sync']) && !in_array('post_meta', $this->options['sync']))) {
+			$post_meta_sync = false;
+		}
+
+		if($post_meta_sync){
+			return;
+		}
+
+		$allowed_meta_fields=Custom_Fields::get_allowed_custom_fields();
+
+		if($fields && is_array($fields) && count($fields) > 0){
+			$valid_meta_fields=array_intersect(array_keys($fields), array_keys($allowed_meta_fields));
+			if(count($valid_meta_fields) > 0){
+				foreach($valid_meta_fields as $key){
+					if(isset($allowed_meta_fields[$key]) && $allowed_meta_fields[$key]['status']){
+						$value=is_array($fields[$key]) ? $this->sanitize_array_value($fields[$key], array()) : sanitize_text_field($fields[$key]);
+
+						update_post_meta(absint($post_id), sanitize_text_field($key), $value);
+					}
+				}
+			}
+		}
+	}
+
+	private function sanitize_array_value($value, $arr){
+		foreach($value as $key => $item){
+			$arr[sanitize_text_field($key)]=is_array($item) ? $this->sanitize_array_value($item, array()) : sanitize_text_field($item);
+		}
+
+		return $arr;
+	}
+
 	/**
 	 * Update Elementor data
 	 *
@@ -256,8 +305,13 @@ class LMAT_Sync_Post_Model {
 	 * @param string $elementor_data The Elementor data to update.
 	 * @return void
 	 */
-	private function update_elementor_data($tr_id, $post_data){
+	private function update_elementor_data($tr_id, $post_data, $parent_post_id = 0){
 		$current_post_elementor_data = get_post_meta($tr_id, '_elementor_data', true);
+
+		if(!isset($post_data['meta_fields']['_elementor_data'])){
+			return;
+		}
+
 		$elementor_data=$post_data['meta_fields']['_elementor_data'];
 
 		// Check if the current post has Elementor data
@@ -272,9 +326,13 @@ class LMAT_Sync_Post_Model {
 
 				$plugin->files_manager->clear_cache();
 			}else{
-				// $elementor_data = sanitize_textarea_field( wp_unslash( $post_data['meta_fields']['_elementor_data']));
-				$elementor_data=preg_replace('#(?<!\\\\)/#', '\\/', $elementor_data);
-				update_post_meta($tr_id, '_elementor_data', $elementor_data);
+
+				if($parent_post_id > 0){
+					$elementor_data=\Elementor\Plugin::$instance->documents->get($parent_post_id)->get_elements_data();
+					$elementor_data=wp_json_encode($elementor_data);
+					$elementor_data=preg_replace('#(?<!\\\\)/#', '\\/', $elementor_data);
+					update_post_meta($tr_id, '_elementor_data', $elementor_data);
+				}
 			}
 		}
 	}

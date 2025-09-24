@@ -1,4 +1,5 @@
-import localAiTranslator from "./localAi/index.js";
+// import YandexTranslater from "./yandex";
+import localAiTranslator from "./local-ai/index.js";
 import GoogleTranslater from "./google/index.js";
 import { sprintf, __ } from "@wordpress/i18n";
 import { ChromeIcon } from "../../../../../assets/logo/chrome.js";
@@ -45,7 +46,6 @@ export default (props) => {
         }
     };
 
-   
     const validServices={};
 
     providers.forEach(provider=>{
