@@ -15480,7 +15480,7 @@ var General = function General(_ref) {
 
 
 var Sidebar = function Sidebar() {
-  var _window$lmat_settings;
+  var _window$lmat_settings, _window$lmat_settings2, _window$lmat_settings3, _window$lmat_settings4, _window$lmat_settings5, _window$lmat_settings6;
   // Get LocoAI plugin status from localized script data
   var locoaiStatus = ((_window$lmat_settings = window.lmat_settings) === null || _window$lmat_settings === void 0 ? void 0 : _window$lmat_settings.locoai_plugin_status) || {
     status: 'not_installed'
@@ -15497,7 +15497,7 @@ var Sidebar = function Sidebar() {
     className: ""
   }, /*#__PURE__*/React.createElement("h1", {
     className: "text-3xl font-bold text-gray-900 m-0"
-  }, "0"), /*#__PURE__*/React.createElement("p", {
+  }, ((_window$lmat_settings2 = window.lmat_settings) === null || _window$lmat_settings2 === void 0 || (_window$lmat_settings2 = _window$lmat_settings2.translations_data) === null || _window$lmat_settings2 === void 0 ? void 0 : _window$lmat_settings2.total_character) || 0), /*#__PURE__*/React.createElement("p", {
     className: "text-sm text-gray-600 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Total Characters Translated!', 'linguator-multilingual-ai-translation')))), /*#__PURE__*/React.createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"
@@ -15511,19 +15511,32 @@ var Sidebar = function Sidebar() {
     className: "text-sm text-gray-700 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Total Strings', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
-  }, "0")), /*#__PURE__*/React.createElement("div", {
+  }, ((_window$lmat_settings3 = window.lmat_settings) === null || _window$lmat_settings3 === void 0 || (_window$lmat_settings3 = _window$lmat_settings3.translations_data) === null || _window$lmat_settings3 === void 0 ? void 0 : _window$lmat_settings3.total_string) || 0)), /*#__PURE__*/React.createElement("div", {
     className: "flex justify-between items-center"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-sm text-gray-700 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Total Pages / Posts', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
-  }, "0")), /*#__PURE__*/React.createElement("div", {
+  }, ((_window$lmat_settings4 = window.lmat_settings) === null || _window$lmat_settings4 === void 0 || (_window$lmat_settings4 = _window$lmat_settings4.translations_data) === null || _window$lmat_settings4 === void 0 ? void 0 : _window$lmat_settings4.total_pages) || 0)), /*#__PURE__*/React.createElement("div", {
     className: "flex justify-between items-center"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-sm text-gray-700 m-0"
   }, (0,external_wp_i18n_namespaceObject.__)('Time Taken', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-medium text-gray-900 m-0"
-  }, "0"))))), locoaiStatus.status === 'not_installed' ? /*#__PURE__*/React.createElement("div", {
+  }, ((_window$lmat_settings5 = window.lmat_settings) === null || _window$lmat_settings5 === void 0 || (_window$lmat_settings5 = _window$lmat_settings5.translations_data) === null || _window$lmat_settings5 === void 0 ? void 0 : _window$lmat_settings5.total_time) || 0)), /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-between gap-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col gap-1"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-sm text-gray-700 m-0 text-nowrap"
+  }, (0,external_wp_i18n_namespaceObject.__)('Service Providers', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap gap-2"
+  }, (_window$lmat_settings6 = window.lmat_settings) === null || _window$lmat_settings6 === void 0 || (_window$lmat_settings6 = _window$lmat_settings6.translations_data) === null || _window$lmat_settings6 === void 0 || (_window$lmat_settings6 = _window$lmat_settings6.service_providers) === null || _window$lmat_settings6 === void 0 ? void 0 : _window$lmat_settings6.map(function (provider, index) {
+    return /*#__PURE__*/React.createElement("span", {
+      className: "text-sm font-medium text-gray-900 m-0 bg-gray-200 px-2 py-1 rounded-md",
+      key: index
+    }, provider);
+  })))))), locoaiStatus.status === 'not_installed' ? /*#__PURE__*/React.createElement("div", {
     className: " p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
   }, /*#__PURE__*/React.createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Automatically Translate Plugins & Themes', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle my-1"

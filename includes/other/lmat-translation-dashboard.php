@@ -174,10 +174,12 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             $prefix = sanitize_key($prefix);
             $all_data = get_option('cpt_dashboard_data', array());
             $data = array();
+            $used_service_providers = array();
 
             if(isset($all_data[$prefix])){
                 $total_string_count = 0;
                 $total_character_count = 0;
+                $total_time_taken = 0;
 
                 foreach($all_data[$prefix] as $key => $value){
 
@@ -195,6 +197,10 @@ if(!class_exists('LMAT_Translation_Dashboard')){
 
                     $total_string_count += isset($value['string_count']) ? absint($value['string_count']) : 0;
                     $total_character_count += isset($value['character_count']) ? absint($value['character_count']) : 0;
+                    $total_time_taken += isset($value['time_taken']) ? absint($value['time_taken']) : 0;
+                    if(!in_array(sanitize_text_field($value['service_provider']), $used_service_providers)){
+                        $used_service_providers[] = isset($value['service_provider']) ? sanitize_text_field($value['service_provider']) : '';
+                    }
                 }
 
                 $data = array(
@@ -204,12 +210,15 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                     }, $all_data[$prefix]),
                     'total_string_count' => $total_string_count,
                     'total_character_count' => $total_character_count,
+                    'total_time_taken' => $total_time_taken,
+                    'service_providers' => $used_service_providers,
                 );
             }else{
                 $data = array(
                     'prefix' => $prefix,
                     'total_string_count' => 0,
                     'total_character_count' => 0,
+                    'total_time_taken' => 0,
                 );
             }
 
