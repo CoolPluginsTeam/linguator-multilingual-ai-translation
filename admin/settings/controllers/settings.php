@@ -18,6 +18,7 @@ use Linguator\Settings\Tables\LMAT_Table_String;
 use Linguator\Settings\Header\Header;
 use Linguator\Supported_Blocks\Supported_Blocks;
 use Linguator\Custom_Fields\Custom_Fields;
+use Linguator\Includes\Other\LMAT_Translation_Dashboard;
 
 use WP_Error;
 
@@ -596,6 +597,16 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			$this->header->header_assets();
 			// Enqueue header assets
 
+			$translations_data=array('total_string_count' => 0, 'total_character_count' => 0, 'total_time_taken' => 0, 'service_providers' => array());
+			if(LMAT_Translation_Dashboard::class){
+				$cpt_dashboard_data=LMAT_Translation_Dashboard::get_translation_data('lmat');
+				$translations_data['total_string']=isset($cpt_dashboard_data['total_string_count']) ? $this->lmat_format_number($cpt_dashboard_data['total_string_count'], 'linguator-multilingual-ai-translation') : 0;
+				$translations_data['total_character']=isset($cpt_dashboard_data['total_character_count']) ? $this->lmat_format_number($cpt_dashboard_data['total_character_count'], 'linguator-multilingual-ai-translation') : 0;
+				$translations_data['total_time']=isset($cpt_dashboard_data['total_time_taken']) ? $cpt_dashboard_data['total_time_taken'] : 0;
+				$translations_data['service_providers']=(isset($cpt_dashboard_data['service_providers']) && is_array($cpt_dashboard_data['service_providers'])) ? $cpt_dashboard_data['service_providers'] : array();
+				$translations_data['total_pages']=isset($cpt_dashboard_data['data']) ? count($cpt_dashboard_data['data']) : 0;
+			}
+
 			// Enqueue React-based settings script
 			wp_enqueue_script(
 				'lmat_settings',
@@ -622,6 +633,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					'locoai_plugin_status' => $this->get_locoai_plugin_status(),
 					'sync_options'   => $this->get_sync_options(),
 					'language_switcher_options' => $this->get_language_switcher_options(),
+					'translations_data' => $translations_data,
 				)
 			);
 			wp_localize_script(
@@ -667,6 +679,17 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		}
 
 		$this->loco_page_assets();
+	}
+
+	public function lmat_format_number($number, $text_domain) {
+		if ($number >= 1000000000) {
+			return round($number / 1000000000, 1) . esc_html__('B', $text_domain);
+		} elseif ($number >= 1000000) {
+			return round($number / 1000000, 1) . esc_html__('M', $text_domain);
+		} elseif ($number >= 1000) {
+			return round($number / 1000, 1) . esc_html__('K', $text_domain);
+		}
+		return $number;
 	}
 
 	/**
