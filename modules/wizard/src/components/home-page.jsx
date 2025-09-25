@@ -104,7 +104,7 @@ const HomePage = () => {
                 {
                   isCurrentlySelectedDefault &&
                   <span className='flex items-center'>
-                    ★
+                    ★ (Default Language)
                   </span>
                 }
               </p>
@@ -122,16 +122,13 @@ const HomePage = () => {
                 {
                   language.is_default &&
                   <span className='flex items-center'>
-                    ★
+                    ★ (Default Language)
                   </span>
                 }
               </div>
             ))
           }
         </div>
-        <p className='flex justify-end'><span className='flex items-center text-xs'>
-          ★ Default Language
-        </span></p>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
       <div className='flex justify-between' style={{ marginTop: "14px" }}>

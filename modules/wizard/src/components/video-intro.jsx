@@ -4,7 +4,7 @@ import { Button } from '@bsf/force-ui'
 
 const VideoIntro = ({ onGetStarted }) => {
   return (
-    <div className="mx-auto max-w-[600px] p-10 min-h-[40vh] bg-white shadow-sm flex flex-col" style={{marginTop: "8px"}}>
+    <div className="mx-auto max-w-[600px] p-10 min-h-[38vh] bg-white shadow-sm flex flex-col" style={{marginTop: "12px"}}>
       <div className="text-center mb-6">
         <h3 className="text-2xl font-semibold text-text-primary mb-3">
           {__("Watch Setup Guide", "linguator-multilingual-ai-translation")}

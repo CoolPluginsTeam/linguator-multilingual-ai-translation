@@ -28,7 +28,7 @@ export default (props) => {
             BetaEnabled: false,
             ButtonDisabled: props.googleButtonDisabled,
             ErrorMessage: props.googleButtonDisabled ? <div className={`${prefix}-provider-error button button-primary`} onClick={() => openErrorModalHandler(props.googleButtonDisabled)}><img src={errorIcon} alt="error" /> {__('View Error.', 'linguator-multilingual-ai-translation')}</div> : <></>,
-            Logo: <GoogleIcon />,
+            Logo: <GoogleIcon className="icon-size" />,
             filterHtmlContent: true
         },
         localAiTranslator: {
@@ -41,7 +41,7 @@ export default (props) => {
             BetaEnabled: true,
             ButtonDisabled: props.localAiTranslatorButtonDisabled,
             ErrorMessage: props.localAiTranslatorButtonDisabled ? <div className={`${prefix}-provider-error button button-primary`} onClick={() => openErrorModalHandler(props.localAiTranslatorButtonDisabled)}><img src={errorIcon} alt="error" /> {__('View Error', 'linguator-multilingual-ai-translation')}</div> : <></>,
-            Logo: <ChromeIcon  />,
+            Logo: <ChromeIcon className="icon-size"  />,
             filterHtmlContent: true
         }
     };

@@ -377,7 +377,7 @@ const SetupPage = () => {
                 /></h1> <h1 className='m-0'>{__("Loading", "linguator-multilingual-ai-translation")}</h1>
             </div> :
             <>
-            <h1 style={{paddingTop: "30px"}} className='bg-background-secondary text-center m-0'>{__("Linguator - AI Multilingual Translation", "linguator-multilingual-ai-translation")}</h1>
+            <h1 style={{paddingTop: "30px"}} className='bg-background-secondary text-center m-0'>{__("Linguator – Multilingual AI Translation ", "linguator-multilingual-ai-translation")}</h1>
               {data.lmat_video_status === false ? (
                 <VideoIntro onGetStarted={handleGetStarted} />
               ) : (
