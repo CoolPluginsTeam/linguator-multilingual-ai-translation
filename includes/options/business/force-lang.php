@@ -34,6 +34,37 @@ class Force_Lang extends Abstract_Option {
 	}
 
 	/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		switch ( $this->get() ) {
+			case '0':
+				$value = '0: ' . __( 'The language is set from content', 'linguator-multilingual-ai-translation' );
+				break;
+			case '1':
+				$value = '1: ' . __( 'The language is set from the directory name in pretty permalinks', 'linguator-multilingual-ai-translation' );
+				break;
+			case '2':
+				$value = '2: ' . __( 'The language is set from the subdomain name in pretty permalinks', 'linguator-multilingual-ai-translation' );
+				break;
+			case '3':
+				$value = '3: ' . __( 'The language is set from different domains', 'linguator-multilingual-ai-translation' );
+				break;
+			default:
+				$value = '';
+				break;
+		}
+
+		return $this->get_site_health_info( $info, $value, self::key() );
+	}
+
+	/**
 	 * Returns the default value.
 	 *
 	 *  
