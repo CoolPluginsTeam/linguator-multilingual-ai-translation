@@ -200,10 +200,7 @@ class LMAT_Frontend extends LMAT_Base {
 		$this->choose_lang->init();
 
 		// Need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
-		// Only load nav menu if 'default' switcher is enabled
-		if ( lmat_is_switcher_type_enabled( 'default' ) ) {
-			$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
-		}
+		$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
 	}
 
 	/**
