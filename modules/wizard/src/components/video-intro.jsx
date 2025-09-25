@@ -1,27 +1,32 @@
 import React from 'react'
-import { Play } from 'lucide-react'
 import { __ } from '@wordpress/i18n'
 import { Button } from '@bsf/force-ui'
 
 const VideoIntro = ({ onGetStarted }) => {
   return (
     <div className="mx-auto max-w-[600px] p-10 min-h-[40vh] bg-white shadow-sm flex flex-col" style={{marginTop: "8px"}}>
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:bg-primary-dark transition-colors">
-            <Play className="w-8 h-8 text-white ml-1" />
-          </div>
-          <h3 className="text-xl font-semibold text-text-primary mb-2">
-            {__("Watch Setup Guide", "linguator-multilingual-ai-translation")}
-          </h3>
-          <p className="text-text-secondary mb-6">
-            {__("Learn how to configure Linguator in just a few minutes", "linguator-multilingual-ai-translation")}
-          </p>
-        </div>
+      <div className="text-center mb-6">
+        <h3 className="text-2xl font-semibold text-text-primary mb-3">
+          {__("Watch Setup Guide", "linguator-multilingual-ai-translation")}
+        </h3>
+        <p className="text-text-secondary mb-6">
+          {__("Learn how to configure Linguator for your Multilingual Website", "linguator-multilingual-ai-translation")}
+        </p>
       </div>
       
-      <div className="flex justify-end pt-5">
-        <Button onClick={onGetStarted}>
+      <div className="relative w-full mb-6" style={{paddingBottom: '56.25%'}}>
+        <iframe
+          className="absolute top-0 left-0 w-full h-full rounded-lg shadow-md"
+          src="https://www.youtube.com/embed/VW2wKkJAo1c"
+          title="Linguator Setup Guide"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+      
+      <div className="flex justify-center pt-4">
+        <Button onClick={onGetStarted} className="px-8 py-3">
           {__("Get Started", "linguator-multilingual-ai-translation")}
         </Button>
       </div>
