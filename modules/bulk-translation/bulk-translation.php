@@ -29,34 +29,35 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			
 		}
 
-		public function bulk_translate_btn( $screen ) {
+		public function bulk_translate_btn( $current_screen ) {
 			global $linguator;
 
 			if ( ! $linguator || ! property_exists( $linguator, 'model' ) ) {
 				return;
 			}
 
-
 			$translated_post_types = $linguator->model->get_translated_post_types();
-			$translated_post_types = array_values( $translated_post_types );
+			$translated_taxonomies = $linguator->model->get_translated_taxonomies();
+
+			$translated_post_types = array_keys($translated_post_types);
+			$translated_taxonomies = array_keys($translated_taxonomies);
 
 			$translated_post_types=array_filter($translated_post_types, function($post_type){
 				return is_string($post_type);
 			});
+		
+			$translated_taxonomies=array_filter($translated_taxonomies, function($taxonomy){
+				return is_string($taxonomy);
+			});
 
-			if(!isset($screen->id) || empty($screen->post_type) ||'attachment' === $screen->post_type){
-                return;
-            }
-
-			if ( ( isset( $_GET['post_status'] ) && 'trash' === $_GET['post_status'] ) ) {
+			$valid_post_type=(isset($current_screen->post_type) && !empty($current_screen->post_type)) && in_array($current_screen->post_type, $translated_post_types) && $current_screen->post_type !== 'attachment' ? $current_screen->post_type : false;
+			$valid_taxonomy=(isset($current_screen->taxonomy) && !empty($current_screen->taxonomy)) && in_array($current_screen->taxonomy, $translated_taxonomies) ? $current_screen->taxonomy : false;
+			
+			if((!$valid_post_type && !$valid_taxonomy) || ((!$valid_post_type || empty($valid_post_type)) && !isset($valid_taxonomy)) || (isset($current_screen->taxonomy) && !empty($current_screen->taxonomy) && !$valid_taxonomy)){
 				return;
 			}
 
-			if ( ! in_array( $screen->post_type, $translated_post_types ) ) {
-				return;
-			}
-
-			add_filter( "views_{$screen->id}", array( $this, 'lmat_bulk_translate_button' ) );
+			add_filter( "views_{$current_screen->id}", array( $this, 'lmat_bulk_translate_button' ) );
 
 			add_action( 'admin_footer', array( $this, 'bulk_translate_container' ) );
 		}
@@ -91,27 +92,36 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
             return;
         }
         
-        $translated_post_types = $linguator->model->get_translated_post_types();
-        $translated_post_types = array_values($translated_post_types);
+        $current_screen = function_exists('get_current_screen') ? get_current_screen() : false;
+
+		if(!$current_screen){
+			return;
+		}
+
+		$translated_post_types = $linguator->model->get_translated_post_types();
+		$translated_taxonomies = $linguator->model->get_translated_taxonomies();
+
+		$translated_post_types = array_keys($translated_post_types);
+		$translated_taxonomies = array_keys($translated_taxonomies);
 
 		$translated_post_types=array_filter($translated_post_types, function($post_type){
 			return is_string($post_type);
 		});
-        
-        $current_screen = get_current_screen();
-        
-        if(!isset($current_screen->id) || empty($current_screen->post_type) ||'attachment' === $current_screen->post_type){
+		
+		$translated_taxonomies=array_filter($translated_taxonomies, function($taxonomy){
+			return is_string($taxonomy);
+		});
+
+		$valid_post_type=(isset($current_screen->post_type) && !empty($current_screen->post_type)) && in_array($current_screen->post_type, $translated_post_types) && $current_screen->post_type !== 'attachment' ? $current_screen->post_type : false;
+		$valid_taxonomy=(isset($current_screen->taxonomy) && !empty($current_screen->taxonomy)) && in_array($current_screen->taxonomy, $translated_taxonomies) ? $current_screen->taxonomy : false;
+				
+		if((!$valid_post_type && !$valid_taxonomy) || ((!$valid_post_type || empty($valid_post_type)) && !isset($valid_taxonomy)) || (isset($current_screen->taxonomy) && !empty($current_screen->taxonomy) && !$valid_taxonomy)){
 			return;
 		}
 
         $post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
-        $taxonomy=isset($_GET['taxonomy']) ? sanitize_text_field(wp_unslash($_GET['taxonomy'])) : '';
 
         if('trash' === $post_status){
-            return;
-        }
-        
-        if(!in_array($current_screen->post_type, $translated_post_types)){
             return;
         }
 

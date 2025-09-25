@@ -18,16 +18,26 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			global $linguator;
 			if(function_exists('get_current_screen') && property_exists(get_current_screen(), 'post_type') && $linguator && property_exists($linguator, 'model')){
 				$current_screen=get_current_screen();
+
 				$translated_post_types = $linguator->model->get_translated_post_types();
+				$translated_taxonomies = $linguator->model->get_translated_taxonomies();
+
 				$translated_post_types = array_keys($translated_post_types);
+				$translated_taxonomies = array_keys($translated_taxonomies);
+
+				$translated_post_types=array_filter($translated_post_types, function($post_type){
+					return is_string($post_type);
+				});
+		
+				$translated_taxonomies=array_filter($translated_taxonomies, function($taxonomy){
+					return is_string($taxonomy);
+				});
+
+				$valid_post_type=(isset($current_screen->post_type) && !empty($current_screen->post_type)) && in_array($current_screen->post_type, $translated_post_types) && $current_screen->post_type !== 'attachment' ? $current_screen->post_type : false;
+
+				$valid_taxonomy=(isset($current_screen->taxonomy) && !empty($current_screen->taxonomy)) && in_array($current_screen->taxonomy, $translated_taxonomies) ? $current_screen->taxonomy : false;
 				
-				$post_type=$current_screen->post_type;
-
-				if(!isset($current_screen->id) || empty($post_type) ||'attachment' === $post_type){
-					return;
-				}
-
-				if(!in_array($post_type, $translated_post_types)){
+				if((!$valid_post_type && !$valid_taxonomy) || ((!$valid_post_type || empty($valid_post_type)) && !isset($valid_taxonomy)) || (isset($current_screen->taxonomy) && !empty($current_screen->taxonomy) && !$valid_taxonomy)){
 					return;
 				}
 
@@ -47,13 +57,23 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 				}
 
 				$translated_post_types = $linguator->model->get_translated_post_types();
+				$translated_taxonomies = $linguator->model->get_translated_taxonomies();
+
 				$translated_post_types = array_keys($translated_post_types);
+				$translated_taxonomies = array_keys($translated_taxonomies);
 
-				if(!isset($current_screen->id) || empty($current_screen->post_type) ||'attachment' === $current_screen->post_type){
-					return;
-				}
+				$translated_post_types=array_filter($translated_post_types, function($post_type){
+					return is_string($post_type);
+				});
+		
+				$translated_taxonomies=array_filter($translated_taxonomies, function($taxonomy){
+					return is_string($taxonomy);
+				});
 
-				if(!in_array($current_screen->post_type, $translated_post_types)){
+				$valid_post_type=(isset($current_screen->post_type) && !empty($current_screen->post_type)) && in_array($current_screen->post_type, $translated_post_types) && $current_screen->post_type !== 'attachment' ? $current_screen->post_type : false;
+				$valid_taxonomy=(isset($current_screen->taxonomy) && !empty($current_screen->taxonomy)) && in_array($current_screen->taxonomy, $translated_taxonomies) ? $current_screen->taxonomy : false;
+				
+				if((!$valid_post_type && !$valid_taxonomy) || ((!$valid_post_type || empty($valid_post_type)) && !isset($valid_taxonomy)) || (isset($current_screen->taxonomy) && !empty($current_screen->taxonomy) && !$valid_taxonomy)){
 					return;
 				}
 
