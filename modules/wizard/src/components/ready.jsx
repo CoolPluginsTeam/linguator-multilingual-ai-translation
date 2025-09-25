@@ -53,7 +53,7 @@ const Ready = () => {
             ))
           }
           <tr className="ready-table-data">
-            <td >
+            <td  className="flex justify-center items-center">
               <iframe 
                 width="560" 
                 height="315" 

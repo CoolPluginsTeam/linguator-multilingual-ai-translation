@@ -81,10 +81,10 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			}
 
 			$tabs = array(
-				'general'     => array( 'title' => __( 'General', 'linguator-multilingual-ai-translation' ) ),
+				'general'     => array( 'title' => __( 'General Settings', 'linguator-multilingual-ai-translation' ) ),
 				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
 				'translation' => array( 'title' => __( 'AI Translation', 'linguator-multilingual-ai-translation' ) ),
-				'switcher'    => array( 'title' => __( 'Switcher', 'linguator-multilingual-ai-translation' ) ),
+				'switcher'    => array( 'title' => __( 'Language Switcher', 'linguator-multilingual-ai-translation' ) ),
 				'supported-blocks' => array( 'title' => __( 'Supported Blocks', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=supported-blocks' ),
 				'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
 			);

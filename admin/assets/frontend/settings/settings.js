@@ -16099,35 +16099,25 @@ var TranslationConfig = function TranslationConfig(_ref) {
     style: {
       marginTop: "20px"
     }
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex items-center gap-0 flex-wrap"
-  }, postStatusOptions.map(function (postStatus) {
-    return /*#__PURE__*/external_React_default().createElement("div", {
-      key: postStatus.value,
-      className: "flex items-center gap-2 m-width-1/2 align-middle mr-7"
-    }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
-      className: "text-sm pr-12 align-middle relative",
-      htmlFor: postStatus.value
-    }, /*#__PURE__*/external_React_default().createElement("p", null, postStatus.heading), /*#__PURE__*/external_React_default().createElement("label", {
-      className: "absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2",
-      htmlFor: postStatus.value
-    }, /*#__PURE__*/external_React_default().createElement("span", {
-      className: "relative p-0.5"
-    }, /*#__PURE__*/external_React_default().createElement("input", {
-      type: "radio",
-      className: "peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4",
-      name: "bulkTranslationPostStatus",
+  }, /*#__PURE__*/external_React_default().createElement(Ae.Group, null, postStatusOptions.map(function (postStatus, index) {
+    return /*#__PURE__*/external_React_default().createElement(Ae.Button, {
+      badgeItem: /*#__PURE__*/external_React_default().createElement(j, {
+        className: "mr-2",
+        size: "sm",
+        type: "rounded",
+        variant: "green"
+      }),
+      label: {
+        heading: postStatus.heading
+      },
+      reversePosition: true,
       value: postStatus.value,
-      id: postStatus.value,
+      key: index,
+      checked: bulkTranslationPostStatus === postStatus.value,
       onChange: function onChange() {
         setBulkTranslationPostStatus(postStatus.value);
-      },
-      checked: bulkTranslationPostStatus === postStatus.value
-    }), /*#__PURE__*/external_React_default().createElement("span", {
-      className: "inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"
-    }, /*#__PURE__*/external_React_default().createElement("div", {
-      className: "rounded-full bg-current size-1.5"
-    }))))));
+      }
+    });
   })))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
@@ -16139,35 +16129,25 @@ var TranslationConfig = function TranslationConfig(_ref) {
     style: {
       marginTop: "20px"
     }
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex items-center gap-0 flex-wrap"
-  }, slugTranslationOptions.map(function (slugOption) {
-    return /*#__PURE__*/external_React_default().createElement("div", {
-      key: slugOption.value,
-      className: "flex items-center gap-2 m-width-1/2 align-middle mr-7"
-    }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
-      className: "text-sm pr-12 align-middle relative",
-      htmlFor: slugOption.value
-    }, /*#__PURE__*/external_React_default().createElement("p", null, slugOption.heading), /*#__PURE__*/external_React_default().createElement("label", {
-      className: "absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2",
-      htmlFor: slugOption.value
-    }, /*#__PURE__*/external_React_default().createElement("span", {
-      className: "relative p-0.5"
-    }, /*#__PURE__*/external_React_default().createElement("input", {
-      type: "radio",
-      className: "peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4",
-      name: "slugTranslationOption",
+  }, /*#__PURE__*/external_React_default().createElement(Ae.Group, null, slugTranslationOptions.map(function (slugOption, index) {
+    return /*#__PURE__*/external_React_default().createElement(Ae.Button, {
+      badgeItem: /*#__PURE__*/external_React_default().createElement(j, {
+        className: "mr-2",
+        size: "sm",
+        type: "rounded",
+        variant: "green"
+      }),
+      label: {
+        heading: slugOption.heading
+      },
+      reversePosition: true,
       value: slugOption.value,
-      id: slugOption.value,
+      key: index,
+      checked: slugTranslationOption === slugOption.value,
       onChange: function onChange() {
         setSlugTranslationOption(slugOption.value);
-      },
-      checked: slugTranslationOption === slugOption.value
-    }), /*#__PURE__*/external_React_default().createElement("span", {
-      className: "inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"
-    }, /*#__PURE__*/external_React_default().createElement("div", {
-      className: "rounded-full bg-current size-1.5"
-    }))))));
+      }
+    });
   })))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S, {

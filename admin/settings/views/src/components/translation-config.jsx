@@ -271,55 +271,55 @@ const TranslationConfig = ({ data, setData }) => {
                     {__('Select at least one translation service provider below. You can enable multiple providers and choose the one that best fits your needs.', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <div className='flex flex-col gap-2' style={{ marginTop: "20px" }}>
-                    <div style={{backgroundColor: "#fbfbfb"}}>
-                    <div className='switcher p-6 rounded-lg'>
-                        <Container.Item>
-                            <h3 className='flex items-center gap-2'>
-                                <GoogleIcon className='w-5 h-5'/>
-                                {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
-                            </h3>
-                            <p>
-                                {__('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation')}
-                            </p>
-                        </Container.Item>
-                        <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
-                            <Switch
-                                aria-label="Switch Element"
-                                id="google-machine-translation"
-                                onChange={() => {
-                                    setGoogleMachineTranslation(!googleMachineTranslation)
-                                }}
-                                value={googleMachineTranslation}
-                                size="sm"
-                            />
-                        </Container.Item>
-                    </div>
                     <div style={{ backgroundColor: "#fbfbfb" }}>
                         <div className='switcher p-6 rounded-lg'>
-                            <Container.Item >
+                            <Container.Item>
                                 <h3 className='flex items-center gap-2'>
-                                    <ChromeIcon className="w-5 h-5"/>
-                                    {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
+                                    <GoogleIcon className='w-5 h-5' />
+                                    {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
                                 </h3>
                                 <p>
-                                    {__('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation')}
+                                    {__('Google Machine Translation uses the Google Translate API to translate text.', 'linguator-multilingual-ai-translation')}
                                 </p>
                             </Container.Item>
                             <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
                                 <Switch
                                     aria-label="Switch Element"
-                                    id="chrome-local-ai-translation"
+                                    id="google-machine-translation"
                                     onChange={() => {
-                                        setChromeLocalAITranslation(!chromeLocalAITranslation)
+                                        setGoogleMachineTranslation(!googleMachineTranslation)
                                     }}
-                                    value={chromeLocalAITranslation}
+                                    value={googleMachineTranslation}
                                     size="sm"
                                 />
                             </Container.Item>
                         </div>
-                        {chromeLocalAITranslation && <ChromeLocalAINotice />}
+                        <div style={{ backgroundColor: "#fbfbfb" }}>
+                            <div className='switcher p-6 rounded-lg'>
+                                <Container.Item >
+                                    <h3 className='flex items-center gap-2'>
+                                        <ChromeIcon className="w-5 h-5" />
+                                        {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
+                                    </h3>
+                                    <p>
+                                        {__('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation')}
+                                    </p>
+                                </Container.Item>
+                                <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
+                                    <Switch
+                                        aria-label="Switch Element"
+                                        id="chrome-local-ai-translation"
+                                        onChange={() => {
+                                            setChromeLocalAITranslation(!chromeLocalAITranslation)
+                                        }}
+                                        value={chromeLocalAITranslation}
+                                        size="sm"
+                                    />
+                                </Container.Item>
+                            </div>
+                            {chromeLocalAITranslation && <ChromeLocalAINotice />}
+                        </div>
                     </div>
-                </div>
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
@@ -332,22 +332,24 @@ const TranslationConfig = ({ data, setData }) => {
                     {__('This is the default post status for bulk translation.', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <div style={{ marginTop: "20px" }}>
-                    <div className='flex items-center gap-0 flex-wrap'>
-                        {postStatusOptions.map((postStatus) => (
-                            <div key={postStatus.value} className='flex items-center gap-2 m-width-1/2 align-middle mr-7'>
-                                <Label className='text-sm pr-12 align-middle relative' htmlFor={postStatus.value}><p>{postStatus.heading}</p>
-                                <label className='absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2' htmlFor={postStatus.value}>
-                                    <span className='relative p-0.5'>
-                                        <input type="radio" className="peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4" name="bulkTranslationPostStatus" value={postStatus.value} id={postStatus.value} onChange={() => {
-                                            setBulkTranslationPostStatus(postStatus.value)
-                                        }} checked={bulkTranslationPostStatus === postStatus.value} />
-                                        <span className="inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"><div className="rounded-full bg-current size-1.5"></div></span>
-                                    </span>
-                                </label>
-                                </Label>
-                            </div>
+                    <RadioButton.Group>
+                        {postStatusOptions.map((postStatus, index) => (
+                            <RadioButton.Button
+                                badgeItem={<Badge className="mr-2" size="sm" type="rounded" variant="green" />}
+                                label={{
+                                    heading: postStatus.heading,
+                                }}
+                                reversePosition={true}
+                                value={postStatus.value}
+                                key={index}
+                                checked={bulkTranslationPostStatus === postStatus.value}
+                                onChange={() => {
+                                    setBulkTranslationPostStatus(postStatus.value);
+                                }}
+                            />
+
                         ))}
-                    </div>
+                    </RadioButton.Group>
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
@@ -357,23 +359,24 @@ const TranslationConfig = ({ data, setData }) => {
                 </Label>
                 <Label variant='help'>{__('This is the option for slug translation.', 'linguator-multilingual-ai-translation')}</Label>
                 <div style={{ marginTop: "20px" }}>
-                    <div className='flex items-center gap-0 flex-wrap'>
-                    {slugTranslationOptions.map((slugOption) => (
-                            <div key={slugOption.value} className='flex items-center gap-2 m-width-1/2 align-middle mr-7'>
-                                <Label className='text-sm pr-12 align-middle relative' htmlFor={slugOption.value}><p>{slugOption.heading}</p>
-                                <label className='absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2' htmlFor={slugOption.value}>
-                                    <span className='relative p-0.5'>
-                                        <input type="radio" className="peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4" name="slugTranslationOption" value={slugOption.value} id={slugOption.value} onChange={() => {
-                                            setSlugTranslationOption(slugOption.value)
-                                        }} checked={slugTranslationOption === slugOption.value} />
-                                        <span className="inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"><div className="rounded-full bg-current size-1.5"></div></span>
-                                    </span>
-                                </label>
-                                </Label>
-                            </div>
+                    <RadioButton.Group>
+                        {slugTranslationOptions.map((slugOption,index) => (
+                            <RadioButton.Button
+                                badgeItem={<Badge className="mr-2" size="sm" type="rounded" variant="green" />}
+                                label={{
+                                    heading: slugOption.heading,
+                                }}
+                                reversePosition={true}
+                                value={slugOption.value}
+                                key={index}
+                                checked={slugTranslationOption === slugOption.value}
+                                onChange={() => {
+                                    setSlugTranslationOption(slugOption.value)
+                                }}
+                            />
                         ))}
-                        
-                    </div>
+
+                    </RadioButton.Group>
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
