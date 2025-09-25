@@ -25,6 +25,7 @@ use Linguator\Includes\Helpers\LMAT_MO;
 use Linguator\Includes\Widgets\LMAT_Widget_Languages;
 use Linguator\Includes\Widgets\LMAT_Widget_Calendar;
 use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Other\LMAT_Switch_Language;
 use WP_Hook;
 
 
@@ -94,6 +95,8 @@ abstract class LMAT_Base {
 		$this->model = &$links_model->model;
 		$this->options = &$this->model->options;
 		$this->request     = new Request( $this->model );
+
+		LMAT_Switch_Language::init( $this->model );
 
 		$GLOBALS['l10n_unloaded']['lmat_string'] = true; // Short-circuit _load_textdomain_just_in_time() for 'lmat_string' domain in WP 4.6+
 

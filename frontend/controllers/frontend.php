@@ -24,6 +24,7 @@ use Linguator\Frontend\Services\LMAT_Frontend_Links;
 use Linguator\Includes\Helpers\LMAT_Default_Term;
 use Linguator\Includes\Other\LMAT_Query;
 use Linguator\Frontend\Services\LMAT_Canonical;
+use Linguator\Includes\Other\LMAT_Switch_Language;
 
 
 
@@ -345,7 +346,7 @@ class LMAT_Frontend extends LMAT_Base {
 		}
 
 		// Send the slug instead of the locale here to avoid conflicts with same locales.
-		$this->load_strings_translations( $this->curlang->slug );
+		LMAT_Switch_Language::load_strings_translations( $this->curlang->slug );
 	}
 
 	/**

@@ -124,6 +124,7 @@ return array(
     'Linguator\\Includes\\Other\\LMAT_Model' => $baseDir . '/includes/other/model.php',
     'Linguator\\Includes\\Other\\LMAT_OLT_Manager' => $baseDir . '/includes/other/olt-manager.php',
     'Linguator\\Includes\\Other\\LMAT_Query' => $baseDir . '/includes/other/query.php',
+    'Linguator\\Includes\\Other\\LMAT_Switch_Language' => $baseDir . '/includes/other/switch-language.php',
     'Linguator\\Includes\\Other\\LMAT_Translation_Dashboard' => $baseDir . '/includes/other/lmat-translation-dashboard.php',
     'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Posts' => $baseDir . '/includes/services/crud/crud-posts.php',
     'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Terms' => $baseDir . '/includes/services/crud/crud-terms.php',
