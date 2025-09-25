@@ -171,7 +171,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		$translations = $this->validate_translations( $translations, $id );
 
 		// Unlink removed translations.
-		$old_translations = $this->get_translations( $id );
+		$old_translations = $this->get_objects_translations( $translations );
 
 		foreach ( array_diff_assoc( $old_translations, $translations ) as $tr_id ) {
 			$this->delete_translation( $tr_id );
@@ -182,7 +182,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return $translations;
 		}
 
-		$terms = wp_get_object_terms( $translations, $this->tax_translations );
+		$terms = $this->get_object_terms( $translations, $this->tax_translations );
 		$term  = is_array( $terms ) && ! empty( $terms ) ? reset( $terms ) : false;
 
 		if ( empty( $term ) ) {
@@ -208,6 +208,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		}
 
 		// Clean now unused translation groups.
+		$terms = array_filter( $terms );
 		foreach ( $terms as $term ) {
 			// Get fresh count value.
 			$term = get_term( $term->term_id, $this->tax_translations );
@@ -275,9 +276,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return array();
 		}
 
-		$translations = $this->get_raw_translations( $id );
-
-		return $this->validate_translations( $translations, $id, 'display' );
+		return $this->get_objects_translations( array( $id ) );
 	}
 
 	/**
@@ -298,16 +297,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return array();
 		}
 
-		$term = $this->get_object_term( $id, $this->tax_translations );
-
-		if ( empty( $term->description ) ) {
-			return array();
-		}
-
-		$translations = maybe_unserialize( $term->description );
-		$translations = is_array( $translations ) ? $translations : array();
-
-		return $translations;
+		return $this->get_raw_objects_translations( array( $id ) )[ $id ] ?? array();
 	}
 
 	/**
@@ -428,6 +418,53 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		// Don't do anything if no translations have been added to the group.
 		$old_translations = $this->get_translations( $id ); // Includes at least $id itself.
 		return ! empty( array_diff_assoc( $translations, $old_translations ) );
+	}
+
+	/**
+	 * Returns an array of valid translations for multiple objects.
+	 *
+	 *
+	 * @param int[] $object_ids Array of object IDs.
+	 * @return int[] An associative array of translations with language code as key and translation ID as value.
+	 *
+	 * @phpstan-return array<non-empty-string, positive-int>
+	 */
+	protected function get_objects_translations( array $object_ids ) {
+		$translations_arrays = $this->get_raw_objects_translations( $object_ids );
+
+		$validated = array();
+		foreach ( $translations_arrays as $id => $translations ) {
+			$validated = array_merge( $validated, $this->validate_translations( $translations, $id, 'display' ) );
+		}
+		return $validated;
+	}
+
+	/**
+	 * Returns an unvalidated array of translations for multiple objects.
+	 * It is generally preferable to use `get_objects_translations()`.
+	 *
+	 *
+	 * @param int[] $object_ids Array of object IDs.
+	 * @return int[][] An array of an associative array of translations with language code as key and translation ID as value.
+	 *                 First level key is the id of the object that translations are related to.
+	 *
+	 * @phpstan-return array<int,array<non-empty-string, positive-int>>
+	 */
+	protected function get_raw_objects_translations( array $object_ids ) {
+		$terms = $this->get_object_terms( $object_ids, $this->tax_translations );
+
+		$translations = array();
+		foreach ( $object_ids as $id ) {
+			if ( empty( $terms[ $id ] ) || empty( $terms[ $id ]->description ) ) {
+				$translations[ $id ] = array();
+				continue;
+			}
+
+			$trans = maybe_unserialize( $terms[ $id ]->description );
+			$translations[ $id ] = is_array( $trans ) ? $trans : array();
+		}
+
+		return $translations;
 	}
 
 	/**
