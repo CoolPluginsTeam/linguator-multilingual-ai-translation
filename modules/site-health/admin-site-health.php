@@ -3,22 +3,17 @@
  * @package Linguator
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
-
 /**
  * Class LMAT_Admin_Site_Health to add debug info in WP Site Health.
  *
  * @see https://make.wordpress.org/core/2019/04/25/site-health-check-in-5-2/ since WordPress 5.2
  *
- *  
+ * @since 2.8
  */
 class LMAT_Admin_Site_Health {
 	/**
 	 * A reference to the LMAT_Model instance.
 	 *
-	 *  
 	 *
 	 * @var LMAT_Model
 	 */
@@ -27,7 +22,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * A reference to the LMAT_Admin_Static_Pages instance.
 	 *
-	 *  
 	 *
 	 * @var LMAT_Admin_Static_Pages|null
 	 */
@@ -36,7 +30,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * LMAT_Admin_Site_Health constructor.
 	 *
-	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -57,7 +50,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Returns a list of keys to exclude from the site health information.
 	 *
-	 *  
 	 *
 	 * @return string[] List of option keys to ignore.
 	 */
@@ -71,7 +63,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Returns a list of keys to exclude from the site health information.
 	 *
-	 *  
 	 *
 	 * @return string[] List of language keys to ignore.
 	 */
@@ -88,174 +79,23 @@ class LMAT_Admin_Site_Health {
 	}
 
 	/**
-	 * Formats an array to display in options information.
-	 *
-	 *  
-	 *
-	 * @param array $array An array of formatted data.
-	 * @return string
-	 */
-	protected function format_array( $array ) {
-		array_walk(
-			$array,
-			function ( &$value, $key ) {
-				if ( is_array( $value ) ) {
-					$ids = implode( ' , ', $value );
-					$value = "$key => $ids";
-				} else {
-					$value = "$key => $value";
-				}
-			}
-		);
-		return implode( ' | ', $array );
-	}
-
-	/**
-	 * Transforms the option value to readable human sentence.
-	 *
-	 *  
-	 *
-	 * @param string $key   Option name.
-	 * @param mixed  $value Option value.
-	 * @return mixed Option value.
-	 */
-	public function format_value( $key, $value ) {
-		switch ( $key ) {
-			case 'browser':
-				if ( ! $value ) {
-					$value = '0: ' . __( 'Detect browser language deactivated', 'linguator-multilingual-ai-translation' );
-					break;
-				}
-				$value = '1: ' . __( 'Detect browser language activated', 'linguator-multilingual-ai-translation' );
-				break;
-			case 'rewrite':
-				if ( $value ) {
-					$value = '1: ' . sprintf(
-						/* translators: %s is a URL slug: `/language/`. */
-						__( 'Remove %s in pretty permalinks', 'linguator-multilingual-ai-translation' ),
-						'`/language/`'
-					);
-					break;
-				}
-				$value = '0: ' . sprintf(
-					/* translators: %s is a URL slug: `/language/`. */
-					__( 'Keep %s in pretty permalinks', 'linguator-multilingual-ai-translation' ),
-					'`/language/`'
-				);
-				break;
-			case 'hide_default':
-				if ( $value ) {
-					$value = '1: ' . __( 'Hide URL language information for default language', 'linguator-multilingual-ai-translation' );
-					break;
-				}
-				$value = '0: ' . __( 'Display URL language information for default language', 'linguator-multilingual-ai-translation' );
-				break;
-			case 'force_lang':
-				switch ( $value ) {
-					case '0':
-						$value = '0: ' . __( 'The language is set from content', 'linguator-multilingual-ai-translation' );
-						break;
-					case '1':
-						$value = '1: ' . __( 'The language is set from the directory name in pretty permalinks', 'linguator-multilingual-ai-translation' );
-						break;
-					case '2':
-						$value = '2: ' . __( 'The language is set from the subdomain name in pretty permalinks', 'linguator-multilingual-ai-translation' );
-						break;
-					case '3':
-						$value = '3: ' . __( 'The language is set from different domains', 'linguator-multilingual-ai-translation' );
-						break;
-				}
-				break;
-			case 'redirect_lang':
-				if ( $value ) {
-					$value = '1: ' . __( 'The front page URL contains the language code instead of the page name or page id', 'linguator-multilingual-ai-translation' );
-					break;
-				}
-				$value = '0: ' . __( 'The front page URL contains the page name or page id instead of the language code', 'linguator-multilingual-ai-translation' );
-
-				break;
-			case 'media_support':
-				if ( ! $value ) {
-					$value = '0: ' . __( 'The media are not translated', 'linguator-multilingual-ai-translation' );
-					break;
-				}
-				$value = '1: ' . __( 'The media are translated', 'linguator-multilingual-ai-translation' );
-				break;
-
-			case 'sync':
-				if ( empty( $value ) ) {
-					$value = '0: ' . __( 'Synchronization disabled', 'linguator-multilingual-ai-translation' );
-				}
-				break;
-		}
-
-		return $value;
-	}
-
-	/**
 	 * Add Linguator Options to Site Health Information tab.
 	 *
-	 *  
-	 *
 	 * @param array $debug_info The debug information to be added to the core information page.
+	 *
 	 * @return array
 	 */
 	public function info_options( $debug_info ) {
-		$fields = array();
+		$fields = $this->model->options->get_site_health_info();
 
-		foreach ( $this->model->options as $key => $value ) {
-			if ( in_array( $key, $this->exclude_options_keys() ) ) {
-				continue;
-			}
-
-			$value = $this->format_value( $key, $value );
-
-			switch ( $key ) {
-				case 'domains':
-					if ( 3 === $this->model->options['force_lang'] ) {
-						$value = is_array( $value ) ? $value : array();
-						$value = $this->format_array( $value );
-
-						$fields[ $key ]['label'] = $key;
-						$fields[ $key ]['value'] = $value;
-					}
-					break;
-
-				case 'nav_menus':
-					$current_theme = get_stylesheet();
-					if ( is_array( $value ) && isset( $value[ $current_theme ] ) ) {
-						foreach ( $value[ $current_theme ] as $location => $lang ) {
-							$lang = is_array( $lang ) ? $lang : array();
-
-							$fields[ $location ]['label'] = sprintf( 'menu: %s', $location );
-							$fields[ $location ]['value'] = $this->format_array( $lang );
-						}
-					}
-					break;
-
-				case 'media':
-					$value = is_array( $value ) ? $value : array();
-					foreach ( $value as $sub_key => $sub_value ) {
-						$fields[ "$key-$sub_key" ]['label'] = "$key $sub_key";
-						$fields[ "$key-$sub_key" ]['value'] = $sub_value;
-					}
-					break;
-
-				case 'post_types':
-					$fields[ $key ]['label'] = $key;
-					$fields[ $key ]['value'] = implode( ', ', $this->model->get_translated_post_types() );
-					break;
-
-				case 'taxonomies':
-					$fields[ $key ]['label'] = $key;
-					$fields[ $key ]['value'] = implode( ', ', $this->model->get_translated_taxonomies() );
-					break;
-
-				default:
-					$fields[ $key ]['label'] = $key;
-					$fields[ $key ]['value'] = empty( $value ) ? '0' : $value;
-					break;
-			}
+		// Get effective translated post types and taxonomies. The options doesn't show all translated ones.
+		if ( ! empty( $this->model->get_translated_post_types() ) ) {
+			$fields['cpt']['label'] = __( 'Post Types', 'linguator-multilingual-ai-translation' );
+			$fields['cpt']['value'] = implode( ', ', $this->model->get_translated_post_types() );
+		}
+		if ( ! empty( $this->model->get_translated_taxonomies() ) ) {
+			$fields['taxonomies']['label'] = __( 'Custom Taxonomies', 'linguator-multilingual-ai-translation' );
+			$fields['taxonomies']['value'] = implode( ', ', $this->model->get_translated_taxonomies() );
 		}
 
 		$debug_info['lmat_options'] = array(
@@ -270,7 +110,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Adds Linguator Languages settings to Site Health Information tab.
 	 *
-	 *  
 	 *
 	 * @param array $debug_info The debug information to be added to the core information page.
 	 * @return array
@@ -316,8 +155,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Adds term props data to the info languages array.
 	 *
-	 *  
-	 *
 	 * @param array $value The term props data.
 	 * @return array The term props data formatted for the info languages tab.
 	 */
@@ -346,7 +183,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Returns the flag used in the language switcher.
 	 *
-	 *  
 	 *
 	 * @param LMAT_Language $language Language object.
 	 * @return string
@@ -359,7 +195,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Add a Site Health test on homepage translation.
 	 *
-	 *  
 	 *
 	 * @param array $tests Array with tests declaration data.
 	 * @return array
@@ -378,7 +213,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Test if the home page is translated or not.
 	 *
-	 *  
 	 *
 	 * @return array $result Array with test results.
 	 */
@@ -411,7 +245,6 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Add Linguator Warnings to Site Health Information tab.
 	 *
-	 *  
 	 *
 	 * @param array $debug_info The debug information to be added to the core information page.
 	 * @return array
@@ -424,14 +257,14 @@ class LMAT_Admin_Site_Health {
 
 		if ( ! empty( $posts_no_lang ) ) {
 			$fields['post-no-lang']['label'] = __( 'Posts without language', 'linguator-multilingual-ai-translation' );
-			$fields['post-no-lang']['value'] = $this->format_array( $posts_no_lang );
+			$fields['post-no-lang']['value'] = $posts_no_lang;
 		}
 
 		$terms_no_lang = $this->get_term_ids_without_lang();
 
 		if ( ! empty( $terms_no_lang ) ) {
 			$fields['term-no-lang']['label'] = __( 'Terms without language', 'linguator-multilingual-ai-translation' );
-			$fields['term-no-lang']['value'] = $this->format_array( $terms_no_lang );
+			$fields['term-no-lang']['value'] = $terms_no_lang;
 		}
 
 		// Add WPML files.
@@ -461,12 +294,13 @@ class LMAT_Admin_Site_Health {
 	/**
 	 * Get an array with post_type as key and post ids as value.
 	 *
-	 *  
 	 *
 	 * @param int $limit Max number of posts to show per post type. `-1` to return all of them. Default is 5.
-	 * @return int[][] Array containing an array of post ids.
 	 *
-	 * @phpstan-param -1|positive-int $limit
+	 * @return array An associative array where the keys are post types and the values
+	 *                are comma-separated strings of post IDs without a language.
+	 *
+	 * @phpstan-param -1|positive-int $limit     *
 	 */
 	public function get_post_ids_without_lang( $limit = 5 ) {
 		$posts = array();
@@ -481,17 +315,22 @@ class LMAT_Admin_Site_Health {
 			}
 		}
 
+		if ( ! empty( $posts ) ) {
+			foreach ( $posts as $post_type => $post_ids ) {
+				$posts[ $post_type ] = implode( ', ', $post_ids );
+			}
+		}
+
 		return $posts;
 	}
 
 	/**
 	 * Get an array with taxonomy as key and term ids as value.
 	 *
-	 *  
-	 *
 	 * @param int $limit Max number of terms to show per post type. `-1` to return all of them. Default is 5.
-	 * @return int[][] Array containing an array of term ids.
 	 *
+	 * @return array An associative array where the keys are post types and the values
+	 *                 are comma-separated strings of post IDs without a language.
 	 * @phpstan-param -1|positive-int $limit
 	 */
 	public function get_term_ids_without_lang( $limit = 5 ) {
@@ -507,13 +346,18 @@ class LMAT_Admin_Site_Health {
 			}
 		}
 
+		if ( ! empty( $terms ) ) {
+			foreach ( $terms as $taxonomy => $term_ids ) {
+				$terms[ $taxonomy ] = implode( ', ', $term_ids );
+			}
+		}
+
 		return $terms;
 	}
 
 	/**
 	 * Requires the simplexml PHP module when a wpml-config.xml has been found.
 	 *
-	 *  
 	 *
 	 * @param array $modules An associative array of modules to test for.
 	 * @return array

@@ -174,6 +174,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Other\\LMAT_Model' => __DIR__ . '/../..' . '/includes/other/model.php',
         'Linguator\\Includes\\Other\\LMAT_OLT_Manager' => __DIR__ . '/../..' . '/includes/other/olt-manager.php',
         'Linguator\\Includes\\Other\\LMAT_Query' => __DIR__ . '/../..' . '/includes/other/query.php',
+        'Linguator\\Includes\\Other\\LMAT_Switch_Language' => __DIR__ . '/../..' . '/includes/other/switch-language.php',
         'Linguator\\Includes\\Other\\LMAT_Translation_Dashboard' => __DIR__ . '/../..' . '/includes/other/lmat-translation-dashboard.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Posts' => __DIR__ . '/../..' . '/includes/services/crud/crud-posts.php',
         'Linguator\\Includes\\Services\\Crud\\LMAT_CRUD_Terms' => __DIR__ . '/../..' . '/includes/services/crud/crud-terms.php',

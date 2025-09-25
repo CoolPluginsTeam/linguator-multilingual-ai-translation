@@ -16,6 +16,7 @@ use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object_With_Types_I
 use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object_With_Types_Trait;
 use Linguator\Includes\Other\LMAT_Model;
 use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\LMAT_Switch_Language;
 use WP_Error;
 use WP_Post;
 
@@ -385,6 +386,9 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 		$translations = $this->get_translations( $post_id );
 		$translations[ $lang->slug ] = $tr_id;
 		$this->save_translations( $tr_id, $translations );
+
+		$switch_language = new LMAT_Switch_Language();
+		$switch_language->switch_language( $lang );
 
 		/**
 		 * Fires after a media translation is created
