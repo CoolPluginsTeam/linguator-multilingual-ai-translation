@@ -278,13 +278,15 @@ abstract class LMAT_Translatable_Object {
 		// Flatten the array to prime the terms cache.
 		$all_term_ids = array();
 		foreach ( $cached_values as $term_ids ) {
-			$all_term_ids = array_merge( $all_term_ids, $term_ids );
+			if ( is_array( $term_ids ) ) {
+				$all_term_ids = array_merge( $all_term_ids, $term_ids );
+			}
 		}
 		_prime_term_caches( $all_term_ids, false );
 
 		$terms = array();
 		foreach ( $cached_values as $object_id => $term_ids ) {
-			if ( ! empty( $term_ids ) ) {
+			if ( is_array( $term_ids ) && ! empty( $term_ids ) ) {
 				$term_id = reset( $term_ids ); // There is only one term for language or translation groups.
 
 				/** @var WP_Term $term */
