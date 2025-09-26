@@ -224,7 +224,7 @@ class LMAT_Admin_Feedback {
 			$admin_email       = sanitize_email( get_option( 'admin_email' ) );
 			$site_url          = esc_url( site_url() );
 			$install_date 		= get_option('lmat_install_date');
-			$unique_key     	= '24';  // Ensure this key is unique per plugin to prevent collisions when site URL and install date are the same across plugins
+			$unique_key     	= '53';  // Ensure this key is unique per plugin to prevent collisions when site URL and install date are the same across plugins
             $site_id        	= $site_url . '-' . $install_date . '-' . $unique_key;
 			$feedback_url      = LINGUATOR_FEEDBACK_API .'wp-json/coolplugins-feedback/v1/feedback';
 			$response          = wp_remote_post(
@@ -234,7 +234,7 @@ class LMAT_Admin_Feedback {
 					'body'    => array(
 						'server_info' => serialize($this->cpfm_get_user_info()['server_info']), 
 						'extra_details' => serialize($this->cpfm_get_user_info()['extra_details']),
-						'plugin_initial'  => isset($plugin_initial) ? sanitize_text_field($plugin_initial) : 'N/A',
+						'plugin_initial'  => sanitize_text_field($this->plugin_version),
 						'plugin_version' => sanitize_text_field($this->plugin_version),
 						'plugin_name'    => sanitize_text_field($this->plugin_name),
 						'reason'         => sanitize_text_field($deativation_reason),
