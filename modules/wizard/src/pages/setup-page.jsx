@@ -20,11 +20,9 @@ const SetupPage = () => {
   const [data, setData] = React.useState([]) // General Settings Data
   const [setupProgress, setSetupProgress] = React.useState("languages") //Track Setup Progress
   const [languageDialog, setLanguageDialog] = React.useState(false) // handle open and close of Language Dialog
-  const [homePageLanguage, setHomePageLangauge] = React.useState([]) //carry the home page language
   const [LanguageLoader, setLanguageLoader] = React.useState(false) // Loader in the continue button on languages tab
   const lmat_setup_data = window.lmat_setup; //get the localized setup data
   const [showUntranslatedContent, setShowUntranslatedContent] = React.useState(lmat_setup_data.untranslated_contents) // state for the condotion weather to show or not the content without language in the Languages tab
-  const [showHomePage,setShowHomePage] = React.useState(lmat_setup_data.home_page) //state for the condition weather to show home_page data or not
   const [languageDeleteConfirmer, setLanguageDeleteConfirmer] = React.useState(false)
   const [languageToDelete, setLanguageToDelete] = React.useState({ id: 'none', name: 'None', flag: null, locale: null })
   const [contentSelectedLanguage, setContentSelectedLanguage] = React.useState(null) // Add missing content selected language state
@@ -263,7 +261,7 @@ const SetupPage = () => {
 
   }
   return (
-    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, homePageLanguage, setHomePageLangauge, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage,showHomePage,setShowHomePage, showWizard, setShowWizard }}>
+    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage, showWizard, setShowWizard }}>
       <div className='bg-background-secondary m-0 pt-4 setup-body'>
         <Dialog
           design="simple"

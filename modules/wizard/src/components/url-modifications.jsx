@@ -7,7 +7,7 @@ import apiFetch from '@wordpress/api-fetch'
 import { getNonce } from '../utils'
 import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 const URLModifications = () => {
-  const { loading, setupProgress, setSetupProgress,showHomePage, data, setData } = React.useContext(setupContext) // get the context
+  const { loading, setupProgress, setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
   const [forceLang, setForceLang] = React.useState(data.force_lang)
   const [hideDefault, setHideDefault] = React.useState(data.hide_default)
   const [rewrite, setRewrite] = React.useState(data.rewrite)
@@ -92,10 +92,6 @@ const URLModifications = () => {
     if (window.lmat_setup.media == "1") {
       setSetupProgress("media")
       localStorage.setItem("setupProgress", "media");
-    }
-    else if (showHomePage == "1") {
-      setSetupProgress("home_page")
-      localStorage.setItem("setupProgress", "home_page");
     } else {
       setSetupProgress("translation_configuration")
       localStorage.setItem("setupProgress", "translation_configuration");
