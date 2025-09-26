@@ -599,12 +599,16 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 			$translations_data=array('total_string_count' => 0, 'total_character_count' => 0, 'total_time_taken' => 0, 'service_providers' => array());
 			if(LMAT_Translation_Dashboard::class){
+				$avilable_service_providers = array('google'=>'Google', 'localAiTranslator'=>'Chrome AI Translator');
 				$cpt_dashboard_data=LMAT_Translation_Dashboard::get_translation_data('lmat');
+				$translation_providers=(isset($cpt_dashboard_data['service_providers']) && is_array($cpt_dashboard_data['service_providers'])) ? $cpt_dashboard_data['service_providers'] : array();
 				$translations_data['total_string']=isset($cpt_dashboard_data['total_string_count']) ? $this->lmat_format_number($cpt_dashboard_data['total_string_count'], 'linguator-multilingual-ai-translation') : 0;
 				$translations_data['total_character']=isset($cpt_dashboard_data['total_character_count']) ? $this->lmat_format_number($cpt_dashboard_data['total_character_count'], 'linguator-multilingual-ai-translation') : 0;
 				$translations_data['total_time']=isset($cpt_dashboard_data['total_time_taken']) ? $this->lmat_format_time_taken($cpt_dashboard_data['total_time_taken'], 'linguator-multilingual-ai-translation') : 0;
-				$translations_data['service_providers']=(isset($cpt_dashboard_data['service_providers']) && is_array($cpt_dashboard_data['service_providers'])) ? $cpt_dashboard_data['service_providers'] : array();
 				$translations_data['total_pages']=isset($cpt_dashboard_data['data']) ? count($cpt_dashboard_data['data']) : 0;
+				$translations_data['service_providers']=array_map(function($item) use ($avilable_service_providers){
+					return $avilable_service_providers[$item];
+				}, $translation_providers);
 			}
 
 			// Enqueue React-based settings script
