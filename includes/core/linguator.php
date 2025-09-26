@@ -24,6 +24,7 @@ use Linguator\Integrations\LMAT_Integrations;
 use Linguator\Settings\Controllers\LMAT_Settings;
 use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
+use Linguator\Includes\Other\LMAT_Translation_Dashboard;
 
 // Default directory to store user data such as custom flags
 if ( ! defined( 'LMAT_LOCAL_DIR' ) ) {
@@ -99,6 +100,11 @@ class Linguator {
 		// Register the custom fields
 		if(class_exists(Custom_Fields::class)){
 			Custom_Fields::get_instance();
+		}
+
+		// Register the translation dashboard
+		if(class_exists(LMAT_Translation_Dashboard::class)){
+			LMAT_Translation_Dashboard::get_instance();
 		}
 
 		// Initialize feedback functionality

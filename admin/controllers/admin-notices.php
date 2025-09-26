@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use Linguator\Includes\Other\LMAT_Translation_Dashboard;
+
 /**
  * A class to manage admin notices
  * displayed only to admin, based on 'manage_options' capability
@@ -47,6 +49,10 @@ class LMAT_Admin_Notices {
 		
 		// Add inline CSS and JS for notice positioning on ?page=lmat
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_notice_positioning_inline' ) );
+
+		if ( ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
+			$this->review_notice();
+		}
 	}
 
 	/**
@@ -187,11 +193,6 @@ class LMAT_Admin_Notices {
 	public function display_notices() {
 		// Check if we're on the specific ?page=lmat page and should suppress notices
 		if ( current_user_can( 'manage_options' ) ) {
-			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
-				$html = $this->review_notice();
-				printf('<div class="lmat-notice notice notice-info is-dismissible" style="display: flex;">%s</div>', wp_kses_post( $html ) );
-				
-			}
 			// Custom notices
 			foreach ( static::get_notices() as $notice => $html ) {
 				if ( $this->can_display_notice( $notice ) && ! static::is_dismissed( $notice ) ) {
@@ -312,32 +313,11 @@ class LMAT_Admin_Notices {
 	 * @return string
 	 */
 	private function review_notice() {
+		$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?rate=5#new-post';
 		
-				$already_rated_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'already-rated' ), 'already-rated', '_lmat_notice_nonce' ) );
-				$not_interested_url = esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', 'not-interested' ), 'not-interested', '_lmat_notice_nonce' ) );
-				$like_it_text   = esc_html__( 'Rate Now! ★★★★★', 'linguator-multilingual-ai-translation' );
-				$already_rated_text = esc_html__( 'Already Reviewed', 'linguator-multilingual-ai-translation' );
-				$not_like_it_text   = esc_html__( 'Not Interested', 'linguator-multilingual-ai-translation' );
-				$html = sprintf(
-						/* translators: %1$s: Already rated URL, %2$s: Dismiss URL */
-						__('
-						<div class="callto_action">
-							<div class="callto_action_text">
-								<p>Thanks for using <b>Linguator – Multilingual AI Translation</b> - WordPress plugin. We hope you liked it ! <br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net/?utm_source=ectbe_plugin&utm_medium=inside&utm_campaign=coolplugins&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!</p>
-							</div>
-							<ul class="callto_action_buttons">
-								<li class="love_it" style="float: left;"><a href="https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?rate=5#new-post" class="like_it_btn button button-primary" target="_new" title="Rate it 5 stars">%3$s</a></li>
-								<li class="already_rated" style="float: left;"><a href="%1$s" class="already_rated_btn button" title="Already Rewiewed">%4$s</a></li>    
-								<li class="not_interested"><a href="%2$s" class="not_interested_btn button" title="Not interested">%5$s</a></li>
-							</ul>
-						</div>', 'linguator-multilingual-ai-translation' ),
-						$already_rated_url,
-						$not_interested_url,
-						$like_it_text,
-						$already_rated_text,
-						$not_like_it_text
-						);
-		return $html;
+		if(class_exists(LMAT_Translation_Dashboard::class)){	
+			LMAT_Translation_Dashboard::review_notice('lmat', 'Linguator', esc_url($review_url));
+		}
 	}
 
 
