@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { bulkTranslateEntries, initBulkTranslate } from '../bulk-translate.js';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider } from '../redux-store/features/selectors.js';
+import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider, selectErrorPostsInfo } from '../redux-store/features/selectors.js';
 import { __ } from '@wordpress/i18n';
 import ErrorModalBox from '../components/error-modal-box/index.js';
+import DOMPurify from 'dompurify';
 
 const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
 
@@ -13,6 +14,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
     const [errorModalData, setErrorModalData] = useState(false);
     const translatePostInfo = useSelector(selectTranslatePostInfo);
     const [destroyHandlers, setDestroyHandlers] = useState([]);
+    const errorPostsInfo = useSelector(selectErrorPostsInfo);
     const pendingPosts=useSelector(selectPendingPosts);
     const serviceProvider = useSelector(selectServiceProvider);
     const [progressBarVisibility, setProgressBarVisibility] = useState(true);
@@ -183,11 +185,11 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
         <div id={`${prefix}-status-modal-container`}>
             <h2 className={`${prefix}-bulk-status-heading ${bulkStatus}`}>{sprintf(__('Bulk Translation %s', 'linguator-multilingual-ai-translation'), getBulkStatus())}{bulkStatus === 'running' && <span className={`${prefix}-bulk-status-running`}></span>}</h2>
             <div className={`${prefix}-status-modal-close`} onClick={onModalClose}>&times;</div>
-            {countInfo.totalPosts < 1 && !isLoading ?
+            {(countInfo.totalPosts < 1 && countInfo.errorPosts < 1) && !isLoading ?
                     <p>{emptyPostMessage}</p> :
                     <>
                         {isLoading && <div className={`${prefix}-progress-skeleton`}></div>}
-                        {progressBarVisibility && !isLoading ?
+                        {(countInfo.totalPosts > 1) && progressBarVisibility && !isLoading ?
                         <>
                             <div className={`${prefix}-overall-progress`}>
                                 <div className={`${prefix}-progress-bar`}>
@@ -266,6 +268,22 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                 </td>
                                             </tr>
                                         </>
+                                    }
+                                    {!isLoading && Object.keys(errorPostsInfo).length > 0 &&
+                                        Object.keys(errorPostsInfo).map((key, index)=>{
+                                            return (
+                                                <React.Fragment key={key}>
+                                                <tr key={`group-title-${key}`} className={`${prefix}-group-title`}>
+                                                    <td colSpan="5">
+                                                        {errorPostsInfo[key].title || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                                    </td>
+                                                </tr>
+                                                <tr key={key}>
+                                                    <td colSpan="4" style={{textAlign: 'center' , width: '100%'}} className={`${prefix}-error-message`} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(errorPostsInfo[key].errorMessage)}}></td>
+                                                </tr>
+                                                </React.Fragment>
+                                            );
+                                        })
                                     }
                                     {!isLoading && Object.keys(translatePostInfo).map((key, index)=>{
                                         const info = translatePostInfo[key];

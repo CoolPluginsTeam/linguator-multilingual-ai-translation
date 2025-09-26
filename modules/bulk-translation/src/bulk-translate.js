@@ -1,5 +1,5 @@
 import {filterContent, updateFilterContent} from './components/filter-content/index.js';
-import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules, updateProgressStatus, updateAllowedMetaFields } from './redux-store/features/actions.js';
+import { updatePendingPosts, unsetPendingPost, updateCompletedPosts, updateTranslatePostInfo, updateCountInfo, updateSourceContent, updateParentPostsInfo, updateTargetContent, updateTargetLanguages, updateBlockParseRules, updateProgressStatus, updateAllowedMetaFields, updateErrorPostsInfo } from './redux-store/features/actions.js';
 import { store } from './redux-store/store.js';
 import { __ } from '@wordpress/i18n';
 import Provider from './components/translate-provider/index.js';
@@ -306,6 +306,47 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
 
             const {title, content,post_name, languages, editor_type , metaFields=null, sourceLanguage, excerpt=null} = posts[postId];
             
+            if(!sourceLanguage){
+                const postTitle=title || 'N/A';
+                let titleLink=false;
+                let postLink=false;
+                if(posts[postId]?.post_link){
+                    postLink=posts[postId].post_link;
+                    titleLink=postLink;
+                }
+
+                const errorInfo={
+                    title: title,
+                    editorType: editor_type,
+                    sourceLanguage,
+                    errorMessage: sprintf(
+                        __('Set source language for this %s %s before translating.', 'linguator-multilingual-ai-translation'),
+                        titleLink ? '<a href="'+titleLink+'" target="_blank" rel="noopener noreferrer">'+postTitle+'</a>' : postTitle,
+                        window?.lmatBulkTranslationGlobal?.taxonomy_page || window?.lmatBulkTranslationGlobal?.post_label
+                    )
+                }
+
+                if(posts[postId]?.post_link){
+                    errorInfo.postLink=postLink;
+                }
+
+                storeDispatch(updateErrorPostsInfo({
+                    postId,
+                    data: errorInfo
+                }));
+
+                storeDispatch(updateCountInfo({errorPosts: store.getState().countInfo.errorPosts+1}));
+
+                index++;
+                if(index > postKeys.length-1){
+                    return;
+                }
+
+                await storeSourceContent(index, translatePostsCount);
+
+                return;
+            }
+
             if(languages && languages.length > 0){
                 storeDispatch(updateTargetLanguages({lang: languages}));
 
