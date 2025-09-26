@@ -102,7 +102,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public function __construct(){
-            add_action('wp_ajax_atfpp_hide_review_notice', array($this, 'atfpp_hide_review_notice'));
+            add_action('wp_ajax_lmat_hide_review_notice', array($this, 'lmat_hide_review_notice'));
         }
 
         /**
@@ -226,10 +226,10 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public static function ctp_enqueue_assets(){
-            if(function_exists('wp_style_is') && !wp_style_is('atfpp-review-style', 'enqueued')){
+            if(function_exists('wp_style_is') && !wp_style_is('lmat-review-style', 'enqueued')){
                 $plugin_url = plugin_dir_url(__FILE__);
-                wp_enqueue_style('atfpp-review-style', esc_url($plugin_url.'assets/css/cpt-dashboard.css'), array(), '1.0.0', 'all');
-                wp_enqueue_script('atfpp-review-script', esc_url($plugin_url.'assets/js/cpt-dashboard.js'), array('jquery'), '1.0.0', true);
+                wp_enqueue_style('lmat-review-style', esc_url($plugin_url.'assets/css/cpt-dashboard.css'), array(), '1.0.0', 'all');
+                wp_enqueue_script('lmat-review-script', esc_url($plugin_url.'assets/js/cpt-dashboard.js'), array('jquery'), '1.0.0', true);
             }
         }
 
@@ -243,7 +243,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public static function review_notice($prefix, $plugin_name, $url, $icon=''){
-            if(self::atfpp_hide_review_notice_status($prefix)){
+            if(self::lmat_hide_review_notice_status($prefix)){
                 return;
             }
             
@@ -290,34 +290,34 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                 if($icon){
                     $html .= '<img class="cpt-review-notice-icon" src="'.$icon.'" alt="'.$plugin_name.'">';
                 }
-                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="atfpp-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('atfpp_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
+                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
                 
                 echo wp_kses($html, $allowed);
             });
 
-            add_action('atfpp_display_admin_notices', function() use ($message, $prefix, $url, $icon, $plugin_name, $allowed){
+            add_action('lmat_display_admin_notices', function() use ($message, $prefix, $url, $icon, $plugin_name, $allowed){
                 $html= '<div class="notice notice-info cpt-review-notice">';
                 if($icon){
                     $html .= '<img class="cpt-review-notice-icon" src="'.$icon.'" alt="'.$plugin_name.'">';
                 }
-                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="atfpp-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('atfpp_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
+                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
                 
                 echo wp_kses($html, $allowed);
             });
         }
 
-        public static function atfpp_hide_review_notice_status($prefix){
+        public static function lmat_hide_review_notice_status($prefix){
             $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
             return isset($review_notice_dismissed[$prefix]) ? $review_notice_dismissed[$prefix] : false;
         }
 
-        public function atfpp_hide_review_notice(){
+        public function lmat_hide_review_notice(){
             if(!current_user_can('manage_options')){
                 wp_send_json_error( __( 'Unauthorized', 'autopoly-ai-translation-for-polylang-pro' ), 403 );
                 wp_die( '0', 403 );
             }
 
-            if(wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'atfpp_hide_review_notice')){
+            if(wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'lmat_hide_review_notice')){
                 $prefix = sanitize_key(wp_unslash($_POST['prefix']));
                 $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
                 $review_notice_dismissed[$prefix] = true;
