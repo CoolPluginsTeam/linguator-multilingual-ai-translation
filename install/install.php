@@ -98,12 +98,11 @@ class LMAT_Install extends LMAT_Install_Base {
 	protected function _activate() {
 		add_action( 'lmat_init_options_for_blog', array( Options_Registry::class, 'register' ) );
 		$options = new Options();
-
 		// Check and store first installation date
 		$install_date = get_option('lmat_install_date');
 		if (empty($install_date)) {
 			// Store the first installation date
-			update_option('lmat_install_date', current_time('timestamp'));
+			update_option('lmat_install_date', gmdate('Y-m-d h:i:s'));
 			// Set flag for redirection
 			update_option('lmat_needs_setup', 'yes');
 		}

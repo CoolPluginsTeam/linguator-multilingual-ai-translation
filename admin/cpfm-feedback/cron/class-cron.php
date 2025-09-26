@@ -14,9 +14,7 @@ if (!class_exists('LMAT_cronjob')) {
         }
         
         function lmat_cron_extra_data_autoupdater() {
-            if (class_exists('LMAT_cronjob')) {
-                LMAT_cronjob::lmat_send_data();
-            }
+            self::lmat_send_data();
         }
            
         static public function lmat_send_data() {
