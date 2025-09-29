@@ -57,6 +57,12 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				return;
 			}
 
+			$post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
+            
+            if('trash' === $post_status){
+                return;
+            }
+
 			add_filter( "views_{$current_screen->id}", array( $this, 'lmat_bulk_translate_button' ) );
 
 			add_action( 'admin_footer', array( $this, 'bulk_translate_container' ) );
