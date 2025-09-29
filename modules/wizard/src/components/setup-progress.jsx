@@ -7,7 +7,6 @@ import { sprintf,__ } from '@wordpress/i18n'
 import { BadgeCheck } from 'lucide-react'
 import { setupContext } from '../pages/setup-page'
 import Media from './media'
-import HomePage from "./home-page"
 import Default from "./default"
 import URLModifications from "./url-modifications"
 import AiTranslation from "./ai-translation"
@@ -22,13 +21,12 @@ const SetupFileRouting = () => {
     else if(setupProgress === "default") return <Default/>
     else if(setupProgress === "url") return <URLModifications/>
     else if (setupProgress === "media") return <Media  />
-    else if (setupProgress === "home_page") return <HomePage/>
     else if (setupProgress === "ready") return <Ready />
     else if (setupProgress === "translation_configuration") return <AiTranslation />
     else if(setupProgress === "language_switcher") return <LanguageSwitcher/>
 }
 const SetupProgress = ({lmat_setup_data}) => {
-    const {setupProgress,setSetupProgress,showHomePage,setupSteps, setSetupSteps} = React.useContext(setupContext) //get the context
+    const {setupProgress,setSetupProgress,setupSteps, setSetupSteps} = React.useContext(setupContext) //get the context
 
     //creating steps according to scenerios to show and hide which tabs of setup
     React.useEffect(()=>{
@@ -70,14 +68,7 @@ const SetupProgress = ({lmat_setup_data}) => {
         //         step: step++
         //     })
         // }
-        if(showHomePage == "1"){
-            temp_setupSetups.push({
-                label: __("HomePage","linguator-multilingual-ai-translation"),
-                value: "home_page",
-                visible: true,
-                step: step++
-            })
-        }
+        
         temp_setupSetups.push({
             label: __("AI Translation","linguator-multilingual-ai-translation"),
             value: "translation_configuration",

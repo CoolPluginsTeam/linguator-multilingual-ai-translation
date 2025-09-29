@@ -78,7 +78,7 @@ if ( empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Securi
 	new Linguator();
 }
 
-// Handle redirect after activation
+// Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
 	// Only proceed if we need setup and are in admin
 	if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
@@ -86,9 +86,12 @@ add_action('admin_init', function() {
 		$install_date = get_option('lmat_install_date');
 		$current_time = current_time('timestamp');
 			
+		// Convert install date to timestamp if it's in string format
+		$install_timestamp = is_numeric($install_date) ? $install_date : strtotime($install_date);
+			
 		// Only redirect if we're within 30 minutes of installation
 		// This prevents redirect loops and unwanted redirects after the initial setup
-		if ($install_date && ($current_time - $install_date) <= 1800) { // 1800 seconds = 30 minutes
+		if ($install_timestamp && ($current_time - $install_timestamp) <= 1800) { // 1800 seconds = 30 minutes
 			// Make sure this only runs on the admin side
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress activation parameter, nonce not needed
 			if (!is_network_admin() && !isset($_GET['activate-multi'])) {
@@ -101,6 +104,35 @@ add_action('admin_init', function() {
 		} else {
 			// If more than 30 minutes have passed, just remove the setup flag
 			delete_option('lmat_needs_setup');
+		}
+	}
+	
+	// Check if first activation and install time are the same
+	$first_activation = gmdate('Y-m-d h:i:s');
+	$install_date = get_option('lmat_install_date');
+	
+	if ($first_activation && $install_date) {
+		// Convert both to timestamps for comparison
+		$activation_timestamp = is_numeric($first_activation) ? $first_activation : strtotime($first_activation);
+		$install_timestamp = is_numeric($install_date) ? $install_date : strtotime($install_date);
+		
+		// If activation and install times are the same (within 30 seconds tolerance)
+		if (abs($activation_timestamp - $install_timestamp) <= 30) {
+			// Remove language switcher from hidden meta boxes
+			add_action('admin_head', function() {
+				// Get current user ID
+				$user_id = get_current_user_id();
+				
+				// Get hidden meta boxes for current user
+				$hidden_meta_boxes = get_user_meta($user_id, 'metaboxhidden_nav-menus', true);
+				if (is_array($hidden_meta_boxes)) {
+					// Remove language switcher from hidden meta boxes
+					$hidden_meta_boxes = array_diff($hidden_meta_boxes, array('lmat_lang_switch_box'));
+					
+					// Update user meta
+					update_user_meta($user_id, 'metaboxhidden_nav-menus', $hidden_meta_boxes);
+				}
+			});
 		}
 	}
 });

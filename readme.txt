@@ -119,20 +119,20 @@ Yes. Linguator includes an option to automatically detect the visitor's browser 
 * **Performance Optimization:** Enhanced caching and speed
 
 
-= 1.0.2 =
+= 0.0.3 =
 * Fixed escaping and sanitization issues.
 * Minor bug fixes.
 
-= 1.0.1 =
+= 0.0.2 =
 * Fixed issue with translated strings.
 * Fixed Minor issues.
 
-= 1.0.0 =
+= 0.0.1 =
 * Initial release with core multilingual features
 
 == Upgrade Notice ==
 = 0.0.3 =
 Major update with AI translation capabilities, bulk translation features, and enhanced user experience.
 
-= 1.0.0 =
+= 0.0.1 =
 Initial release of Linguator – Multilingual AI Translation plugin.

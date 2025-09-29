@@ -24,6 +24,7 @@ use Linguator\Frontend\Services\LMAT_Frontend_Links;
 use Linguator\Includes\Helpers\LMAT_Default_Term;
 use Linguator\Includes\Other\LMAT_Query;
 use Linguator\Frontend\Services\LMAT_Canonical;
+use Linguator\Includes\Other\LMAT_Switch_Language;
 
 
 
@@ -200,10 +201,7 @@ class LMAT_Frontend extends LMAT_Base {
 		$this->choose_lang->init();
 
 		// Need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
-		// Only load nav menu if 'default' switcher is enabled
-		if ( lmat_is_switcher_type_enabled( 'default' ) ) {
-			$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
-		}
+		$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
 	}
 
 	/**
@@ -345,7 +343,7 @@ class LMAT_Frontend extends LMAT_Base {
 		}
 
 		// Send the slug instead of the locale here to avoid conflicts with same locales.
-		$this->load_strings_translations( $this->curlang->slug );
+		LMAT_Switch_Language::load_strings_translations( $this->curlang->slug );
 	}
 
 	/**

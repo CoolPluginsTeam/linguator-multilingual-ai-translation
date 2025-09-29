@@ -550,7 +550,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	private function get_language_switcher_options() {
         $language_switcher_options = array(
             array(
-                'label' => __( 'Classic (Menu, Widgets) Based', 'linguator-multilingual-ai-translation' ),
+                'label' => __( 'Classic (Widgets) Based', 'linguator-multilingual-ai-translation' ),
                 'value' => 'default',
 				'subheading' => 'Standard language switcher widget that can be added to widget areas and sidebars.'
             ),

@@ -204,12 +204,8 @@ class LMAT_Admin extends LMAT_Admin_Base {
 		$this->filters_widgets_options = new LMAT_Admin_Filters_Widgets_Options( $this );
 
 		// All these are separated just for convenience and maintainability
-		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Classic_Editor', 'Block_Editor' );
+		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Classic_Editor', 'Block_Editor', 'Nav_Menu' );
 		
-		// Only load Nav_Menu if 'default' switcher is enabled
-		if ( lmat_is_switcher_type_enabled( 'default' ) ) {
-			$classes[] = 'Nav_Menu';
-		}
 
 		// Don't load media filters if option is disabled or if user has no right
 		if ( $this->options['media_support'] && ( $obj = get_post_type_object( 'attachment' ) ) && ( current_user_can( $obj->cap->edit_posts ) || current_user_can( $obj->cap->create_posts ) ) ) {

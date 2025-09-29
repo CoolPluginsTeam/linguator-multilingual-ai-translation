@@ -35,6 +35,25 @@ class Browser extends Abstract_Boolean {
 		return 'browser';
 	}
 
+		/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( ! $this->get() ) {
+			$value = '0: ' . __( 'Detect browser language deactivated', 'linguator-multilingual-ai-translation' );
+		} else {
+			$value = '1: ' . __( 'Detect browser language activated', 'linguator-multilingual-ai-translation' );
+		}
+
+		return $this->get_site_health_info( $info, $value, self::key() );
+	}
+
 	/**
 	 * Sanitizes option's value.
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,

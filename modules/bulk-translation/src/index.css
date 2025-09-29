@@ -1226,6 +1226,10 @@ body > div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibilit
 body.lmat-bulk-translate-google-translate {
   top: 0px !important;
 }
+.icon-size{
+  width: 45px;
+  height:45px;
+}
 
 /* Google Translate CSS End */
 /*# sourceMappingURL=index.css.map */

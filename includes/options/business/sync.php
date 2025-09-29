@@ -38,6 +38,25 @@ class Sync extends Abstract_List {
 	}
 
 	/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( empty( $this->get() ) ) {
+			$value = '0: ' . __( 'Synchronization disabled', 'linguator-multilingual-ai-translation' );
+		} else {
+			$value = implode( ', ', $this->get() );
+			}
+
+		return $this->get_site_health_info( $info, $value, self::key() );
+	}
+
+	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
 	 *  

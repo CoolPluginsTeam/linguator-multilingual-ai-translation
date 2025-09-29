@@ -155,16 +155,16 @@ Yes! Linguator is fully compatible with WooCommerce and other e-commerce plugins
 - **Menu Filter:** Advanced menu filtering and management
 - **Performance Optimization:** Enhanced caching and speed
 
-### 1.0.1
+### 0.0.2
 - Fixed issue with translated strings
 - Minor fixes
 
-### 1.0.0
+### 0.0.1
 - Initial release
 
 ---
 
 ## Upgrade Notice
 
-### 1.0.0
+### 0.0.1
 Initial release of Linguator – Multilingual AI Translation plugin.

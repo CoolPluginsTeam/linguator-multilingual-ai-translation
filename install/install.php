@@ -98,12 +98,11 @@ class LMAT_Install extends LMAT_Install_Base {
 	protected function _activate() {
 		add_action( 'lmat_init_options_for_blog', array( Options_Registry::class, 'register' ) );
 		$options = new Options();
-
 		// Check and store first installation date
 		$install_date = get_option('lmat_install_date');
 		if (empty($install_date)) {
 			// Store the first installation date
-			update_option('lmat_install_date', current_time('timestamp'));
+			update_option('lmat_install_date', gmdate('Y-m-d h:i:s'));
 			// Set flag for redirection
 			update_option('lmat_needs_setup', 'yes');
 		}
@@ -138,6 +137,11 @@ class LMAT_Install extends LMAT_Install_Base {
 
 		// Don't use flush_rewrite_rules at network activation. 
 		delete_option( 'rewrite_rules' );
+		$options = get_option( 'linguator' );
+		$lmat_feedback_data = $options['lmat_feedback_data'];
+		if ( $lmat_feedback_data === true && ! wp_next_scheduled( 'lmat_extra_data_update' ) ) {
+			wp_schedule_event( time(), 'every_30_days', 'lmat_extra_data_update' );
+		}
 	}
 
 	/**

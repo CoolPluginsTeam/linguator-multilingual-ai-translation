@@ -31863,8 +31863,6 @@ var Languages = function Languages() {
     lmat_all_languages = _React$useContext2.lmat_all_languages,
     currentSelectedLanguage = _React$useContext2.currentSelectedLanguage,
     setCurrentSelectedLanguage = _React$useContext2.setCurrentSelectedLanguage,
-    homePageLanguage = _React$useContext2.homePageLanguage,
-    setHomePageLangauge = _React$useContext2.setHomePageLangauge,
     contentSelectedLanguage = _React$useContext2.contentSelectedLanguage,
     setContentSelectedLanguage = _React$useContext2.setContentSelectedLanguage,
     LanguageLoader = _React$useContext2.LanguageLoader,
@@ -32275,7 +32273,9 @@ var Ready = function Ready() {
     }, step.button))))));
   }), /*#__PURE__*/external_React_default().createElement("tr", {
     className: "ready-table-data"
-  }, /*#__PURE__*/external_React_default().createElement("td", null, /*#__PURE__*/external_React_default().createElement("iframe", {
+  }, /*#__PURE__*/external_React_default().createElement("td", {
+    className: "flex justify-center items-center"
+  }, /*#__PURE__*/external_React_default().createElement("iframe", {
     width: "560",
     height: "315",
     src: "https://www.youtube-nocookie.com/embed/PnI49VIB48w?si=UPOQ45CbbE6-pm2t",
@@ -32602,8 +32602,7 @@ var Media = function Media() {
     setupProgress = _React$useContext.setupProgress,
     setSetupProgress = _React$useContext.setSetupProgress,
     data = _React$useContext.data,
-    setData = _React$useContext.setData,
-    showHomePage = _React$useContext.showHomePage; // get the context
+    setData = _React$useContext.setData; // get the context
   var _React$useState = external_React_default().useState(data.media_support),
     _React$useState2 = media_slicedToArray(_React$useState, 2),
     media = _React$useState2[0],
@@ -32641,13 +32640,9 @@ var Media = function Media() {
             setData(mediaResponse);
           case 2:
             //Dynamically move to next page
-            if (showHomePage == "1") {
-              setSetupProgress("home_page");
-              localStorage.setItem("setupProgress", "home_page");
-            } else {
-              setSetupProgress("translation_configuration");
-              localStorage.setItem("setupProgress", "translation_configuration");
-            }
+
+            setSetupProgress("translation_configuration");
+            localStorage.setItem("setupProgress", "translation_configuration");
             _context.n = 4;
             break;
           case 3:
@@ -32699,253 +32694,6 @@ var Media = function Media() {
   })));
 };
 /* harmony default export */ const media = (Media);
-;// ./modules/wizard/src/components/home-page.jsx
-function home_page_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return home_page_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (home_page_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, home_page_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, home_page_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), home_page_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", home_page_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), home_page_regeneratorDefine2(u), home_page_regeneratorDefine2(u, o, "Generator"), home_page_regeneratorDefine2(u, n, function () { return this; }), home_page_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (home_page_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function home_page_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } home_page_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { home_page_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, home_page_regeneratorDefine2(e, r, n, t); }
-function home_page_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function home_page_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { home_page_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { home_page_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function home_page_slicedToArray(r, e) { return home_page_arrayWithHoles(r) || home_page_iterableToArrayLimit(r, e) || home_page_unsupportedIterableToArray(r, e) || home_page_nonIterableRest(); }
-function home_page_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function home_page_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return home_page_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? home_page_arrayLikeToArray(r, a) : void 0; } }
-function home_page_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function home_page_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function home_page_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
-
-
-
-
-
-
-
-var HomePage = function HomePage() {
-  var _lmat_setup_data$home;
-  var _React$useContext = external_React_default().useContext(setupContext),
-    setSetupProgress = _React$useContext.setSetupProgress,
-    selectedLanguageData = _React$useContext.selectedLanguageData,
-    homePageLanguage = _React$useContext.homePageLanguage,
-    setHomePageLangauge = _React$useContext.setHomePageLangauge,
-    showHomePage = _React$useContext.showHomePage,
-    setShowHomePage = _React$useContext.setShowHomePage,
-    setupSteps = _React$useContext.setupSteps,
-    setSetupSteps = _React$useContext.setSetupSteps; //getting the context 
-  var lmat_setup_data = window.lmat_setup; //get the localized setup data
-  var home_page_language = lmat_setup_data.home_page_data.static_page_language ? lmat_setup_data.home_page_data.static_page_language : homePageLanguage[0];
-  //conditional select if the user have not translated the static home page then the selected language of untranslated content on the languages page will show up or the user selected language
-  var homePageShowLanguage = lmat_setup_data.home_page_data.static_page_languages && ((_lmat_setup_data$home = lmat_setup_data.home_page_data.static_page_languages) === null || _lmat_setup_data$home === void 0 ? void 0 : _lmat_setup_data$home.length) > 0 ? lmat_setup_data.home_page_data.static_page_languages : homePageLanguage;
-  var _useState = (0,external_React_namespaceObject.useState)(false),
-    _useState2 = home_page_slicedToArray(_useState, 2),
-    isLoading = _useState2[0],
-    setIsLoading = _useState2[1]; //loading state
-  var _useState3 = (0,external_React_namespaceObject.useState)(null),
-    _useState4 = home_page_slicedToArray(_useState3, 2),
-    error = _useState4[0],
-    setError = _useState4[1]; //error state
-  var _useState5 = (0,external_React_namespaceObject.useState)(false),
-    _useState6 = home_page_slicedToArray(_useState5, 2),
-    continueLoader = _useState6[0],
-    setContinueLoader = _useState6[1]; //continue button
-
-  //function to make api call to translate the static page to all languages
-  var createHomePageTranslations = /*#__PURE__*/function () {
-    var _ref = home_page_asyncToGenerator(/*#__PURE__*/home_page_regenerator().m(function _callee() {
-      var languagesToTranslate, response, _t;
-      return home_page_regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
-          case 0:
-            setIsLoading(true);
-            setError(null);
-            _context.p = 1;
-            // Filter languages that need translation
-            languagesToTranslate = selectedLanguageData.filter(function (lang) {
-              return !lmat_setup_data.home_page_data.static_page_languages.find(function (existingLang) {
-                return existingLang.locale === lang.locale;
-              });
-            });
-            if (!(languagesToTranslate.length === 0)) {
-              _context.n = 2;
-              break;
-            }
-            return _context.a(2, true);
-          case 2:
-            _context.n = 3;
-            return external_wp_apiFetch_default()({
-              path: '/lmat/v1/languages/create-home-page-translation',
-              method: 'POST',
-              data: {
-                source_id: lmat_setup_data.home_page_data.static_page.ID,
-                languages: languagesToTranslate,
-                title: lmat_setup_data.home_page_data.static_page.post_title
-              }
-            });
-          case 3:
-            response = _context.v;
-            if (response.success) {
-              _context.n = 4;
-              break;
-            }
-            throw new Error('Failed to create translations');
-          case 4:
-            setShowHomePage("");
-            setSetupSteps(setupSteps.filter(function (steps) {
-              return steps.value !== "home_page";
-            }));
-            return _context.a(2, true);
-          case 5:
-            _context.p = 5;
-            _t = _context.v;
-            setError(_t.message || 'Failed to create translations');
-            return _context.a(2, false);
-          case 6:
-            _context.p = 6;
-            setIsLoading(false);
-            return _context.f(6);
-          case 7:
-            return _context.a(2);
-        }
-      }, _callee, null, [[1, 5, 6, 7]]);
-    }));
-    return function createHomePageTranslations() {
-      return _ref.apply(this, arguments);
-    };
-  }();
-
-  //handle back button dynamically
-  var handleBack = function handleBack() {
-    if (lmat_setup_data.media == "1") {
-      setSetupProgress("media");
-      localStorage.setItem("setupProgress", "media");
-    } else {
-      setSetupProgress("url");
-      localStorage.setItem("setupProgress", "url");
-    }
-  };
-
-  //handle the save button
-  var handleSave = /*#__PURE__*/function () {
-    var _ref2 = home_page_asyncToGenerator(/*#__PURE__*/home_page_regenerator().m(function _callee2() {
-      var success;
-      return home_page_regenerator().w(function (_context2) {
-        while (1) switch (_context2.n) {
-          case 0:
-            setContinueLoader(true);
-            _context2.n = 1;
-            return createHomePageTranslations();
-          case 1:
-            success = _context2.v;
-            if (success) {
-              setSetupProgress("translation_configuration");
-              localStorage.setItem("setupProgress", "translation_configuration");
-            }
-            setContinueLoader(false);
-          case 2:
-            return _context2.a(2);
-        }
-      }, _callee2);
-    }));
-    return function handleSave() {
-      return _ref2.apply(this, arguments);
-    };
-  }();
-  return /*#__PURE__*/external_React_default().createElement("div", {
-    className: "mx-auto max-w-[600px] p-10 min-h-[40vh] bg-white shadow-sm flex flex-col"
-  }, /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Home Page', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "m-0 text-sm/6"
-  }, (0,external_wp_i18n_namespaceObject.__)('You defined this page as your static homepage: ', 'linguator-multilingual-ai-translation'), lmat_setup_data.home_page_data.static_page.post_title), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "m-0 text-sm/6 flex items-center gap-2"
-  }, (0,external_wp_i18n_namespaceObject.__)('Its language is : ', 'linguator-multilingual-ai-translation'), /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
-    languageName: home_page_language === null || home_page_language === void 0 ? void 0 : home_page_language.name,
-    languageFlag: home_page_language === null || home_page_language === void 0 ? void 0 : home_page_language.flag,
-    flagUrl: true,
-    languageLocale: home_page_language === null || home_page_language === void 0 ? void 0 : home_page_language.locale
-  })), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "m-0 text-sm/6"
-  }, (0,external_wp_i18n_namespaceObject.__)('For your site to work correctly, this page must be translated in all available languages.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "text-sm/6"
-  }, (0,external_wp_i18n_namespaceObject.__)('After the pages is created, it is up to you to put the translated content in each page linked to each language.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("h4", {
-    className: "mb-0 mt-5",
-    style: {
-      paddingBottom: "6px"
-    }
-  }, (0,external_wp_i18n_namespaceObject.__)('Your static homepage is already translated in', 'linguator-multilingual-ai-translation')), homePageShowLanguage.map(function (language, index) {
-    // Check if this language is also selected as default in current setup
-    var isCurrentlySelectedDefault = selectedLanguageData.find(function (selected) {
-      return selected.locale === language.locale && selected.is_default;
-    });
-    return /*#__PURE__*/external_React_default().createElement("p", {
-      className: "m-0 flex items-center gap-2",
-      key: index,
-      style: {
-        paddingBottom: "4px"
-      }
-    }, /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
-      languageName: language === null || language === void 0 ? void 0 : language.name,
-      languageFlag: language === null || language === void 0 ? void 0 : language.flag,
-      flagUrl: true,
-      languageLocale: language === null || language === void 0 ? void 0 : language.locale
-    }), isCurrentlySelectedDefault && /*#__PURE__*/external_React_default().createElement("span", {
-      className: "flex items-center"
-    }, "\u2605"));
-  }), /*#__PURE__*/external_React_default().createElement("h4", {
-    className: "mb-0 mt-5",
-    style: {
-      paddingBottom: "6px"
-    }
-  }, (0,external_wp_i18n_namespaceObject.__)('We are going to prepare this page in', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "mb-5"
-  }, selectedLanguageData.map(function (language, index) {
-    return !homePageShowLanguage.find(function (language) {
-      var _selectedLanguageData;
-      return (language === null || language === void 0 ? void 0 : language.locale) === ((_selectedLanguageData = selectedLanguageData[index]) === null || _selectedLanguageData === void 0 ? void 0 : _selectedLanguageData.locale);
-    }) && /*#__PURE__*/external_React_default().createElement("div", {
-      className: "flex gap-6 items-center",
-      key: index,
-      style: {
-        paddingBottom: "6px"
-      }
-    }, /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
-      languageName: language === null || language === void 0 ? void 0 : language.name,
-      languageFlag: language === null || language === void 0 ? void 0 : language.flag,
-      flagUrl: true,
-      languageLocale: language === null || language === void 0 ? void 0 : language.locale
-    }), language.is_default && /*#__PURE__*/external_React_default().createElement("span", {
-      className: "flex items-center"
-    }, "\u2605"));
-  })), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "flex justify-end"
-  }, /*#__PURE__*/external_React_default().createElement("span", {
-    className: "flex items-center text-xs"
-  }, "\u2605 Default Language")), error && /*#__PURE__*/external_React_default().createElement("p", {
-    className: "text-red-500 mt-2"
-  }, error)), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex justify-between",
-    style: {
-      marginTop: "14px"
-    }
-  }, /*#__PURE__*/external_React_default().createElement(SetupBackButton, {
-    handleClick: handleBack,
-    disabled: isLoading
-  }), continueLoader ? /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
-    SaveSettings: function SaveSettings() {}
-  }, /*#__PURE__*/external_React_default().createElement("svg", {
-    "aria-hidden": "true",
-    role: "status",
-    className: "inline w-4 h-4 me-3 text-white animate-spin",
-    viewBox: "0 0 100 101",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg"
-  }, /*#__PURE__*/external_React_default().createElement("path", {
-    d: "M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z",
-    fill: "#E5E7EB"
-  }), /*#__PURE__*/external_React_default().createElement("path", {
-    d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",
-    fill: "currentColor"
-  })), "Loading...") : /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
-    SaveSettings: handleSave,
-    disabled: isLoading,
-    loading: isLoading
-  })));
-};
-/* harmony default export */ const home_page = (HomePage);
 ;// ./modules/wizard/src/components/default.jsx
 function default_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return default_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (default_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, default_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, default_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), default_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", default_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), default_regeneratorDefine2(u), default_regeneratorDefine2(u, o, "Generator"), default_regeneratorDefine2(u, n, function () { return this; }), default_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (default_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function default_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } default_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { default_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, default_regeneratorDefine2(e, r, n, t); }
@@ -32975,7 +32723,6 @@ var Default = function Default() {
     setSelectedLanguageData = _React$useContext.setSelectedLanguageData,
     data = _React$useContext.data,
     setData = _React$useContext.setData,
-    setHomePageLangauge = _React$useContext.setHomePageLangauge,
     showUntranslatedContent = _React$useContext.showUntranslatedContent,
     setShowUntranslatedContent = _React$useContext.setShowUntranslatedContent; //get context
   var _React$useState = external_React_default().useState(selectedLanguageData.find(function (lang) {
@@ -33003,7 +32750,7 @@ var Default = function Default() {
   }
   function _saveDefault() {
     _saveDefault = default_asyncToGenerator(/*#__PURE__*/default_regenerator().m(function _callee() {
-      var apiBody, response, languageResponse, homePageResponse, _t;
+      var apiBody, response, languageResponse, _t;
       return default_regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
@@ -33049,7 +32796,7 @@ var Default = function Default() {
             setData(response);
           case 5:
             if (!(showUntranslatedContent == "1")) {
-              _context.n = 7;
+              _context.n = 6;
               break;
             }
             _context.n = 6;
@@ -33063,25 +32810,22 @@ var Default = function Default() {
               body: JSON.stringify(contentSelectedLanguage)
             });
           case 6:
-            homePageResponse = _context.v;
-            setHomePageLangauge([homePageResponse.language]);
-          case 7:
             handleNavigate();
             setShowUntranslatedContent("");
-            _context.n = 9;
+            _context.n = 8;
             break;
-          case 8:
-            _context.p = 8;
+          case 7:
+            _context.p = 7;
             _t = _context.v;
             toast.error(_t.message);
-          case 9:
-            _context.p = 9;
+          case 8:
+            _context.p = 8;
             setDefaultLoader(false);
-            return _context.f(9);
-          case 10:
+            return _context.f(8);
+          case 9:
             return _context.a(2);
         }
-      }, _callee, null, [[1, 8, 9, 10]]);
+      }, _callee, null, [[1, 7, 8, 9]]);
     }));
     return _saveDefault.apply(this, arguments);
   }
@@ -34880,7 +34624,6 @@ var URLModifications = function URLModifications() {
     loading = _React$useContext.loading,
     setupProgress = _React$useContext.setupProgress,
     setSetupProgress = _React$useContext.setSetupProgress,
-    showHomePage = _React$useContext.showHomePage,
     data = _React$useContext.data,
     setData = _React$useContext.setData; // get the context
   var _React$useState = external_React_default().useState(data.force_lang),
@@ -35005,9 +34748,6 @@ var URLModifications = function URLModifications() {
     if (window.lmat_setup.media == "1") {
       setSetupProgress("media");
       localStorage.setItem("setupProgress", "media");
-    } else if (showHomePage == "1") {
-      setSetupProgress("home_page");
-      localStorage.setItem("setupProgress", "home_page");
     } else {
       setSetupProgress("translation_configuration");
       localStorage.setItem("setupProgress", "translation_configuration");
@@ -35397,8 +35137,7 @@ var AiTranslation = function AiTranslation() {
   var _React$useContext = external_React_default().useContext(setupContext),
     setSetupProgress = _React$useContext.setSetupProgress,
     data = _React$useContext.data,
-    setData = _React$useContext.setData,
-    showHomePage = _React$useContext.showHomePage; // get the context
+    setData = _React$useContext.setData; // get the context
   var aiTranslation = data === null || data === void 0 ? void 0 : data.ai_translation_configuration; //store the media option
   var provider = aiTranslation === null || aiTranslation === void 0 ? void 0 : aiTranslation.provider;
   var _React$useState7 = external_React_default().useState(provider === null || provider === void 0 ? void 0 : provider.google),
@@ -35417,10 +35156,7 @@ var AiTranslation = function AiTranslation() {
     lastUpdatedValue = _React$useState10[0],
     setLastUpdatedValue = _React$useState10[1];
   var handleBack = function handleBack() {
-    if (showHomePage == "1") {
-      setSetupProgress("home_page");
-      localStorage.setItem("setupProgress", "home_page");
-    } else if (window.lmat_setup.media == "1") {
+    if (window.lmat_setup.media == "1") {
       setSetupProgress("media");
       localStorage.setItem("setupProgress", "media");
     } else {
@@ -35676,12 +35412,11 @@ var LanguageSwitcher = function LanguageSwitcher() {
 
 
 
-
 //Component router for setup 
 var SetupFileRouting = function SetupFileRouting() {
   var _React$useContext = external_React_default().useContext(setupContext),
     setupProgress = _React$useContext.setupProgress;
-  if (setupProgress === "languages") return /*#__PURE__*/external_React_default().createElement(languages, null);else if (setupProgress === "default") return /*#__PURE__*/external_React_default().createElement(components_default, null);else if (setupProgress === "url") return /*#__PURE__*/external_React_default().createElement(url_modifications, null);else if (setupProgress === "media") return /*#__PURE__*/external_React_default().createElement(media, null);else if (setupProgress === "home_page") return /*#__PURE__*/external_React_default().createElement(home_page, null);else if (setupProgress === "ready") return /*#__PURE__*/external_React_default().createElement(ready, null);else if (setupProgress === "translation_configuration") return /*#__PURE__*/external_React_default().createElement(ai_translation, null);else if (setupProgress === "language_switcher") return /*#__PURE__*/external_React_default().createElement(language_switcher, null);
+  if (setupProgress === "languages") return /*#__PURE__*/external_React_default().createElement(languages, null);else if (setupProgress === "default") return /*#__PURE__*/external_React_default().createElement(components_default, null);else if (setupProgress === "url") return /*#__PURE__*/external_React_default().createElement(url_modifications, null);else if (setupProgress === "media") return /*#__PURE__*/external_React_default().createElement(media, null);else if (setupProgress === "ready") return /*#__PURE__*/external_React_default().createElement(ready, null);else if (setupProgress === "translation_configuration") return /*#__PURE__*/external_React_default().createElement(ai_translation, null);else if (setupProgress === "language_switcher") return /*#__PURE__*/external_React_default().createElement(language_switcher, null);
 };
 var SetupProgress = function SetupProgress(_ref) {
   var _setupSteps$find;
@@ -35689,7 +35424,6 @@ var SetupProgress = function SetupProgress(_ref) {
   var _React$useContext2 = external_React_default().useContext(setupContext),
     setupProgress = _React$useContext2.setupProgress,
     setSetupProgress = _React$useContext2.setSetupProgress,
-    showHomePage = _React$useContext2.showHomePage,
     setupSteps = _React$useContext2.setupSteps,
     setSetupSteps = _React$useContext2.setSetupSteps; //get the context
 
@@ -35730,14 +35464,7 @@ var SetupProgress = function SetupProgress(_ref) {
     //         step: step++
     //     })
     // }
-    if (showHomePage == "1") {
-      temp_setupSetups.push({
-        label: (0,external_wp_i18n_namespaceObject.__)("HomePage", "linguator-multilingual-ai-translation"),
-        value: "home_page",
-        visible: true,
-        step: step++
-      });
-    }
+
     temp_setupSetups.push({
       label: (0,external_wp_i18n_namespaceObject.__)("AI Translation", "linguator-multilingual-ai-translation"),
       value: "translation_configuration",
@@ -35809,50 +35536,40 @@ var SetupProgress = function SetupProgress(_ref) {
   }, (0,external_wp_i18n_namespaceObject.__)("Skip", "linguator-multilingual-ai-translation"))));
 };
 /* harmony default export */ const setup_progress = (SetupProgress);
-;// ./node_modules/lucide-react/dist/esm/icons/play.js
-/**
- * @license lucide-react v0.524.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const play_iconNode = [["polygon", { points: "6 3 20 12 6 21 6 3", key: "1oa8hb" }]];
-const Play = createLucideIcon_createLucideIcon("play", play_iconNode);
-
-
-//# sourceMappingURL=play.js.map
-
 ;// ./modules/wizard/src/components/video-intro.jsx
-
 
 
 
 var VideoIntro = function VideoIntro(_ref) {
   var onGetStarted = _ref.onGetStarted;
   return /*#__PURE__*/external_React_default().createElement("div", {
-    className: "mx-auto max-w-[600px] p-10 min-h-[40vh] bg-white shadow-sm flex flex-col",
+    className: "mx-auto max-w-[600px] p-10 min-h-[38vh] bg-white shadow-sm flex flex-col",
     style: {
-      marginTop: "8px"
+      marginTop: "12px"
     }
   }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex-1 flex items-center justify-center"
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "text-center"
-  }, /*#__PURE__*/external_React_default().createElement("div", {
-    className: "w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:bg-primary-dark transition-colors"
-  }, /*#__PURE__*/external_React_default().createElement(Play, {
-    className: "w-8 h-8 text-white ml-1"
-  })), /*#__PURE__*/external_React_default().createElement("h3", {
-    className: "text-xl font-semibold text-text-primary mb-2"
+    className: "text-center mb-6"
+  }, /*#__PURE__*/external_React_default().createElement("h3", {
+    className: "text-2xl font-semibold text-text-primary mb-3"
   }, (0,external_wp_i18n_namespaceObject.__)("Watch Setup Guide", "linguator-multilingual-ai-translation")), /*#__PURE__*/external_React_default().createElement("p", {
     className: "text-text-secondary mb-6"
-  }, (0,external_wp_i18n_namespaceObject.__)("Learn how to configure Linguator in just a few minutes", "linguator-multilingual-ai-translation")))), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex justify-end pt-5"
+  }, (0,external_wp_i18n_namespaceObject.__)("Learn how to configure Linguator for your Multilingual Website", "linguator-multilingual-ai-translation"))), /*#__PURE__*/external_React_default().createElement("div", {
+    className: "relative w-full mb-6",
+    style: {
+      paddingBottom: '56.25%'
+    }
+  }, /*#__PURE__*/external_React_default().createElement("iframe", {
+    className: "absolute top-0 left-0 w-full h-full rounded-lg shadow-md",
+    src: "https://www.youtube.com/embed/VW2wKkJAo1c",
+    title: "Linguator Setup Guide",
+    frameBorder: "0",
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+    allowFullScreen: true
+  })), /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex justify-center pt-4"
   }, /*#__PURE__*/external_React_default().createElement(R, {
-    onClick: onGetStarted
+    onClick: onGetStarted,
+    className: "px-8 py-3"
   }, (0,external_wp_i18n_namespaceObject.__)("Get Started", "linguator-multilingual-ai-translation"))));
 };
 /* harmony default export */ const video_intro = (VideoIntro);
@@ -51248,52 +50965,44 @@ var SetupPage = function SetupPage() {
     _React$useState14 = setup_page_slicedToArray(_React$useState13, 2),
     languageDialog = _React$useState14[0],
     setLanguageDialog = _React$useState14[1]; // handle open and close of Language Dialog
-  var _React$useState15 = external_React_default().useState([]),
+  var _React$useState15 = external_React_default().useState(false),
     _React$useState16 = setup_page_slicedToArray(_React$useState15, 2),
-    homePageLanguage = _React$useState16[0],
-    setHomePageLangauge = _React$useState16[1]; //carry the home page language
-  var _React$useState17 = external_React_default().useState(false),
-    _React$useState18 = setup_page_slicedToArray(_React$useState17, 2),
-    LanguageLoader = _React$useState18[0],
-    setLanguageLoader = _React$useState18[1]; // Loader in the continue button on languages tab
+    LanguageLoader = _React$useState16[0],
+    setLanguageLoader = _React$useState16[1]; // Loader in the continue button on languages tab
   var lmat_setup_data = window.lmat_setup; //get the localized setup data
-  var _React$useState19 = external_React_default().useState(lmat_setup_data.untranslated_contents),
+  var _React$useState17 = external_React_default().useState(lmat_setup_data.untranslated_contents),
+    _React$useState18 = setup_page_slicedToArray(_React$useState17, 2),
+    showUntranslatedContent = _React$useState18[0],
+    setShowUntranslatedContent = _React$useState18[1]; // state for the condotion weather to show or not the content without language in the Languages tab
+  var _React$useState19 = external_React_default().useState(false),
     _React$useState20 = setup_page_slicedToArray(_React$useState19, 2),
-    showUntranslatedContent = _React$useState20[0],
-    setShowUntranslatedContent = _React$useState20[1]; // state for the condotion weather to show or not the content without language in the Languages tab
-  var _React$useState21 = external_React_default().useState(lmat_setup_data.home_page),
-    _React$useState22 = setup_page_slicedToArray(_React$useState21, 2),
-    showHomePage = _React$useState22[0],
-    setShowHomePage = _React$useState22[1]; //state for the condition weather to show home_page data or not
-  var _React$useState23 = external_React_default().useState(false),
-    _React$useState24 = setup_page_slicedToArray(_React$useState23, 2),
-    languageDeleteConfirmer = _React$useState24[0],
-    setLanguageDeleteConfirmer = _React$useState24[1];
-  var _React$useState25 = external_React_default().useState({
+    languageDeleteConfirmer = _React$useState20[0],
+    setLanguageDeleteConfirmer = _React$useState20[1];
+  var _React$useState21 = external_React_default().useState({
       id: 'none',
       name: 'None',
       flag: null,
       locale: null
     }),
+    _React$useState22 = setup_page_slicedToArray(_React$useState21, 2),
+    languageToDelete = _React$useState22[0],
+    setLanguageToDelete = _React$useState22[1];
+  var _React$useState23 = external_React_default().useState(null),
+    _React$useState24 = setup_page_slicedToArray(_React$useState23, 2),
+    contentSelectedLanguage = _React$useState24[0],
+    setContentSelectedLanguage = _React$useState24[1]; // Add missing content selected language state
+  var _React$useState25 = external_React_default().useState(false),
     _React$useState26 = setup_page_slicedToArray(_React$useState25, 2),
-    languageToDelete = _React$useState26[0],
-    setLanguageToDelete = _React$useState26[1];
-  var _React$useState27 = external_React_default().useState(null),
+    languageAddLoader = _React$useState26[0],
+    setLanguageAddLoader = _React$useState26[1];
+  var _React$useState27 = external_React_default().useState(false),
     _React$useState28 = setup_page_slicedToArray(_React$useState27, 2),
-    contentSelectedLanguage = _React$useState28[0],
-    setContentSelectedLanguage = _React$useState28[1]; // Add missing content selected language state
+    languageDeleteLoader = _React$useState28[0],
+    setLanguageDeleteLoader = _React$useState28[1];
   var _React$useState29 = external_React_default().useState(false),
     _React$useState30 = setup_page_slicedToArray(_React$useState29, 2),
-    languageAddLoader = _React$useState30[0],
-    setLanguageAddLoader = _React$useState30[1];
-  var _React$useState31 = external_React_default().useState(false),
-    _React$useState32 = setup_page_slicedToArray(_React$useState31, 2),
-    languageDeleteLoader = _React$useState32[0],
-    setLanguageDeleteLoader = _React$useState32[1];
-  var _React$useState33 = external_React_default().useState(false),
-    _React$useState34 = setup_page_slicedToArray(_React$useState33, 2),
-    showWizard = _React$useState34[0],
-    setShowWizard = _React$useState34[1]; // Track if user clicked "Get Started"
+    showWizard = _React$useState30[0],
+    setShowWizard = _React$useState30[1]; // Track if user clicked "Get Started"
 
   //turning all languages into array format from object format
   var lmat_all_languages = [];
@@ -51648,8 +51357,6 @@ var SetupPage = function SetupPage() {
       lmat_all_languages: lmat_all_languages,
       currentSelectedLanguage: currentSelectedLanguage,
       setCurrentSelectedLanguage: setCurrentSelectedLanguage,
-      homePageLanguage: homePageLanguage,
-      setHomePageLangauge: setHomePageLangauge,
       LanguageLoader: LanguageLoader,
       setLanguageLoader: setLanguageLoader,
       showUntranslatedContent: showUntranslatedContent,
@@ -51660,8 +51367,6 @@ var SetupPage = function SetupPage() {
       setLanguageToDelete: setLanguageToDelete,
       contentSelectedLanguage: contentSelectedLanguage,
       setContentSelectedLanguage: setContentSelectedLanguage,
-      showHomePage: showHomePage,
-      setShowHomePage: setShowHomePage,
       showWizard: showWizard,
       setShowWizard: setShowWizard
     }
@@ -51794,7 +51499,7 @@ var SetupPage = function SetupPage() {
       paddingTop: "30px"
     },
     className: "bg-background-secondary text-center m-0"
-  }, (0,external_wp_i18n_namespaceObject.__)("Linguator - AI Multilingual Translation", "linguator-multilingual-ai-translation")), data.lmat_video_status === false ? /*#__PURE__*/external_React_default().createElement(video_intro, {
+  }, (0,external_wp_i18n_namespaceObject.__)("Linguator – Multilingual AI Translation ", "linguator-multilingual-ai-translation")), data.lmat_video_status === false ? /*#__PURE__*/external_React_default().createElement(video_intro, {
     onGetStarted: handleGetStarted
   }) : /*#__PURE__*/external_React_default().createElement(setup_progress, {
     lmat_setup_data: lmat_setup_data
