@@ -462,7 +462,7 @@ class LMAT_Page_Translation {
 		$source_lang_name = LMAT()->model->get_language( $source_lang_name );
 		$target_lang_name = LMAT()->model->get_language( $target_lang_name );
 
-		wp_enqueue_script( 'lmat-elementor-confirm-box', ATFPP_URL . 'assets/js/lmat-elementor-translate-confirm-box.js', array( 'jquery', 'wp-i18n' ), ATFPP_V, true );
+		wp_enqueue_script( 'lmat-elementor-confirm-box', plugins_url('admin/assets/js/lmat-elementor-translate-confirm-box.js', LINGUATOR_ROOT_FILE), array( 'jquery', 'wp-i18n' ), LINGUATOR_VERSION, true );
 
 		wp_localize_script(
 			'lmat-elementor-confirm-box',
@@ -477,7 +477,7 @@ class LMAT_Page_Translation {
 			)
 		);
 
-		wp_enqueue_style( 'lmat-elementor-confirm-box', ATFPP_URL . 'assets/css/lmat-elementor-translate-confirm-box.css', array(), ATFPP_V );
+		wp_enqueue_style( 'lmat-elementor-confirm-box', plugins_url('admin/assets/css/lmat-elementor-translate-confirm-box.css', LINGUATOR_ROOT_FILE), array(), LINGUATOR_VERSION );
 	}
 
 	public function lmat_save_elementor_post_meta() {
