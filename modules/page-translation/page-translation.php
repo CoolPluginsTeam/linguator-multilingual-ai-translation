@@ -3,6 +3,7 @@ namespace Linguator\Modules\Page_Translation;
 
 use Linguator\Admin\Controllers\LMAT_Admin;
 use Linguator\Supported_Blocks\Supported_Blocks;
+use Linguator\Custom_Fields\Custom_Fields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -74,12 +75,12 @@ class LMAT_Page_Translation {
 			}
 
 			$editor = '';
-            if ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) && defined('ELEMENTOR_VERSION') ) {
-                $editor = 'Elementor';
-            }
-            if ( 'on' === get_post_meta( $post_id, '_et_pb_use_builder', true ) && defined('ET_CORE') ) {
-                $editor = 'Divi';
-            }
+			if ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) && defined( 'ELEMENTOR_VERSION' ) ) {
+				$editor = 'Elementor';
+			}
+			if ( 'on' === get_post_meta( $post_id, '_et_pb_use_builder', true ) && defined( 'ET_CORE' ) ) {
+				$editor = 'Divi';
+			}
 
 			$current_screen = get_current_screen();
 			if ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() && ! in_array( $editor, array( 'Elementor', 'Divi' ), true ) ) {
@@ -100,43 +101,43 @@ class LMAT_Page_Translation {
 	}
 
 	public function lmat_classic_translate_button() {
-        
-        global $linguator;
+
+		global $linguator;
 		global $post;
-        
+
 		$lmat_linguator        = $linguator;
 		$post_translate_status = get_post_meta( $post->ID, '_lmat_translate_status', true );
 		$post_parent_post_id   = get_post_meta( $post->ID, '_lmat_parent_post_id', true );
-        
+
 		if ( isset( $lmat_linguator ) && is_admin() ) {
-            if ( ( isset( $_GET['from_post'], $_GET['new_lang'], $_GET['_wpnonce'] ) &&
+			if ( ( isset( $_GET['from_post'], $_GET['new_lang'], $_GET['_wpnonce'] ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'new-post-translation' ) ) ) {
-                
-                $post_id = isset( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
+
+				$post_id = isset( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
 				$post_id = ! empty( $post_parent_post_id ) ? $post_parent_post_id : $post_id;
-                
+
 				if ( 0 === $post_id ) {
-                    return;
+					return;
 				}
-                
+
 				$editor = '';
 				if ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) && defined( 'ELEMENTOR_VERSION' ) ) {
-                    $editor = 'Elementor';
+					$editor = 'Elementor';
 				}
 				if ( 'on' === get_post_meta( $post_id, '_et_pb_use_builder', true ) && defined( 'ET_CORE' ) ) {
-                    $editor = 'Divi';
+					$editor = 'Divi';
 				}
-                
+
 				$current_screen = get_current_screen();
 				if ( method_exists( $current_screen, 'is_block_editor' ) && ! $current_screen->is_block_editor() && ! in_array( $editor, array( 'Elementor', 'Divi' ), true ) ) {
-                    if ( ( 'post-new.php' === $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['new_lang'] ) ) || ( ! empty( $post_translate_status ) && $post_translate_status === 'pending' && ! empty( $post_parent_post_id ) ) ) {
-                        
-                        if ( ! ( $post instanceof \WP_Post ) ) {
-                            return;
+					if ( ( 'post-new.php' === $GLOBALS['pagenow'] && isset( $_GET['from_post'], $_GET['new_lang'] ) ) || ( ! empty( $post_translate_status ) && $post_translate_status === 'pending' && ! empty( $post_parent_post_id ) ) ) {
+
+						if ( ! ( $post instanceof \WP_Post ) ) {
+							return;
 						}
-                        
+
 						if ( ! function_exists( 'LMAT' ) || ! LMAT()->model->is_translated_post_type( $post->post_type ) ) {
-                            return;
+							return;
 						}
 
 						if ( empty( $post_translate_status ) && empty( $post_parent_post_id ) ) {
@@ -538,35 +539,35 @@ class LMAT_Page_Translation {
 	}
 
 	public function update_post_meta_fields() {
-        if ( ! check_ajax_referer( 'lmat_update_post_meta_fields', 'post_meta_fields_key', false ) ) {
-            wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
-            wp_die( '0', 400 );
-        }
-        
-        $post_id = isset( $_POST['post_id']) ? absint(sanitize_text_field($_POST['post_id'])) : false;
+		if ( ! check_ajax_referer( 'lmat_update_post_meta_fields', 'post_meta_fields_key', false ) ) {
+			wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
+			wp_die( '0', 400 );
+		}
 
-        if(!isset($post_id) || false === $post_id){
-            wp_send_json_error( __( 'Invalid Post ID.', 'linguator-multilingual-ai-translation' ) );
-            wp_die( '0', 400 );
-        }
+		$post_id = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( $_POST['post_id'] ) ) : false;
 
-        if(!current_user_can('edit_post', $post_id)){
-            wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
-            wp_die( '0', 403 );
-        }
+		if ( ! isset( $post_id ) || false === $post_id ) {
+			wp_send_json_error( __( 'Invalid Post ID.', 'linguator-multilingual-ai-translation' ) );
+			wp_die( '0', 400 );
+		}
 
-        $meta_fields = isset( $_POST['meta_fields']) ? json_decode(wp_unslash($_POST['meta_fields']), true) : false;
-        
-        if(!$meta_fields || !is_array($meta_fields) || count($meta_fields) < 1){
-            wp_send_json_success( __( 'No Meta Fields to update.', 'linguator-multilingual-ai-translation' ) );
-            wp_die( '0', 200 );
-        }
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
+			wp_die( '0', 403 );
+		}
 
-        $this->page_translate_helper->update_post_meta_fields($meta_fields, $post_id);
+		$meta_fields = isset( $_POST['meta_fields'] ) ? json_decode( wp_unslash( $_POST['meta_fields'] ), true ) : false;
+
+		if ( ! $meta_fields || ! is_array( $meta_fields ) || count( $meta_fields ) < 1 ) {
+			wp_send_json_success( __( 'No Meta Fields to update.', 'linguator-multilingual-ai-translation' ) );
+			wp_die( '0', 200 );
+		}
+
+		$this->update_post_custom_fields( $meta_fields, $post_id );
 
         wp_send_json_success( __( 'Meta Fields updated successfully.', 'linguator-multilingual-ai-translation' ) );
-        exit;
-    }
+		exit;
+	}
 
 	public function block_parsing_rules() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -629,5 +630,41 @@ class LMAT_Page_Translation {
 
 		update_post_meta( $post_id, '_lmat_classic_translate_status', $status );
 		wp_send_json_success( 'Classic translate status updated.' );
+	}
+
+
+	private function update_post_custom_fields( $fields, $post_id ) {
+		$post_meta_sync = true;
+
+		if ( ! isset( LMAT()->options['sync'] ) || ( isset( LMAT()->options['sync'] ) && ! in_array( 'post_meta', LMAT()->options['sync'] ) ) ) {
+			$post_meta_sync = false;
+		}
+
+		if ( $post_meta_sync ) {
+			return;
+		}
+
+		$allowed_meta_fields = Custom_Fields::get_allowed_custom_fields();
+
+		if ( $fields && is_array( $fields ) && count( $fields ) > 0 ) {
+			$valid_meta_fields = array_intersect( array_keys( $fields ), array_keys( $allowed_meta_fields ) );
+			if ( count( $valid_meta_fields ) > 0 ) {
+				foreach ( $valid_meta_fields as $key ) {
+					if ( isset( $allowed_meta_fields[ $key ] ) && $allowed_meta_fields[ $key ]['status'] ) {
+						$value = is_array( $fields[ $key ] ) ? $this->sanitize_array_value( $fields[ $key ], array() ) : sanitize_text_field( $fields[ $key ] );
+
+						update_post_meta( absint( $post_id ), sanitize_text_field( $key ), $value );
+					}
+				}
+			}
+		}
+	}
+
+	private function sanitize_array_value( $value, $arr ) {
+		foreach ( $value as $key => $item ) {
+			$arr[ sanitize_text_field( $key ) ] = is_array( $item ) ? $this->sanitize_array_value( $item, array() ) : sanitize_text_field( $item );
+		}
+
+		return $arr;
 	}
 }
