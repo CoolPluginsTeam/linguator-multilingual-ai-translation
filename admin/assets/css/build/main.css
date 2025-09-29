@@ -530,6 +530,10 @@
   margin-bottom: 0.5rem;
 }
 
+.lmat-styles .mb-3 {
+  margin-bottom: 0.75rem;
+}
+
 .lmat-styles .mb-4 {
   margin-bottom: 1rem;
 }
@@ -628,10 +632,6 @@
 
 .lmat-styles .mt-2\.5 {
   margin-top: 0.625rem;
-}
-
-.lmat-styles .mt-5 {
-  margin-top: 1.25rem;
 }
 
 .lmat-styles .mt-8 {
@@ -770,10 +770,6 @@
   height: 0.625rem;
 }
 
-.lmat-styles .h-20 {
-  height: 5rem;
-}
-
 .lmat-styles .h-3 {
   height: 0.75rem;
 }
@@ -853,6 +849,10 @@
 
 .lmat-styles .min-h-\[2rem\] {
   min-height: 2rem;
+}
+
+.lmat-styles .min-h-\[38vh\] {
+  min-height: 38vh;
 }
 
 .lmat-styles .min-h-\[3rem\] {
@@ -948,10 +948,6 @@
   width: 0.625rem;
 }
 
-.lmat-styles .w-20 {
-  width: 5rem;
-}
-
 .lmat-styles .w-3 {
   width: 0.75rem;
 }
@@ -1002,10 +998,6 @@
 
 .lmat-styles .w-\[4\.375rem\] {
   width: 4.375rem;
-}
-
-.lmat-styles .w-\[60\%\] {
-  width: 60%;
 }
 
 .lmat-styles .w-\[70\%\] {
@@ -2732,11 +2724,6 @@
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
 }
 
-.lmat-styles .text-red-500 {
-  --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity, 1));
-}
-
 .lmat-styles .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1));
@@ -3211,7 +3198,9 @@
 }
 
 .ready-table-data:last-child {
-  border: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  border-left: 1px solid #d1d5db;
+  border-right: 1px solid #d1d5db;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }

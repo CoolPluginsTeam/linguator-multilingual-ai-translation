@@ -10,11 +10,11 @@ const Ready = () => {
     href: `${currentDomain}admin.php?page=lmat_settings`,
     variant: 'outline'
   },{
-    button: __('Watch Video Tutorial', 'linguator-multilingual-ai-translation'),
+    button: __('Video Tutorial', 'linguator-multilingual-ai-translation'),
     href: "",
     variant: 'outline'
   },{
-    button: __('Read Documentations', 'linguator-multilingual-ai-translation'),
+    button: __('Docs', 'linguator-multilingual-ai-translation'),
     href: "",
     variant: 'outline'
   },{

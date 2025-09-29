@@ -32229,11 +32229,11 @@ var Ready = function Ready() {
     href: "".concat(currentDomain, "admin.php?page=lmat_settings"),
     variant: 'outline'
   }, {
-    button: (0,external_wp_i18n_namespaceObject.__)('Watch Video Tutorial', 'linguator-multilingual-ai-translation'),
+    button: (0,external_wp_i18n_namespaceObject.__)('Video Tutorial', 'linguator-multilingual-ai-translation'),
     href: "",
     variant: 'outline'
   }, {
-    button: (0,external_wp_i18n_namespaceObject.__)('Read Documentations', 'linguator-multilingual-ai-translation'),
+    button: (0,external_wp_i18n_namespaceObject.__)('Docs', 'linguator-multilingual-ai-translation'),
     href: "",
     variant: 'outline'
   }, {
