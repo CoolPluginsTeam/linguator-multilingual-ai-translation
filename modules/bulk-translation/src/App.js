@@ -121,7 +121,7 @@ const App = ({ onDestory, prefix, postIds }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {__('Polylang settings', 'linguator-multilingual-ai-translation')}
+                  {__('Linguator settings', 'linguator-multilingual-ai-translation')}
                 </a>
                 {sprintf(__('. This may affect linked %s.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
               </p>

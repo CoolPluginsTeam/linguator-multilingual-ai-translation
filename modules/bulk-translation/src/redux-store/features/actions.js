@@ -14,11 +14,13 @@ const bulkTranslateStore = createSlice({
       postsTranslated: 0,
       stringsTranslated: 0,
       charactersTranslated: 0,
+      errorPosts: 0,
     },
     translatedContent: {},
     serviceProvider: '',
     blockParseRules: {},
     allowedMetaFields: {},
+    errorPostsInfo: {},
   },
   reducers: {
     updateCompletedPosts: (state, action) => {
@@ -102,6 +104,10 @@ const bulkTranslateStore = createSlice({
       state.allowedMetaFields = action.payload;
     },
 
+    updateErrorPostsInfo: (state, action) => {
+      state.errorPostsInfo = {...state.errorPostsInfo, ...{[action.payload.postId]: action.payload.data}};
+    },
+
     resetStore: (state)=>{
       state.pendingPosts = [];
       state.progressStatus = 0;
@@ -115,15 +121,17 @@ const bulkTranslateStore = createSlice({
         postsTranslated: 0,
         stringsTranslated: 0,
         charactersTranslated: 0,
+        errorPosts: 0,
       };
       state.translatedContent = {};
       state.blockParseRules = {};
       state.allowedMetaFields = {};
+      state.errorPostsInfo = {};
     }
   },
 });
 
-export const { updateTranslationsLanguages, updateCompletedPosts, updatePendingPosts, unsetPendingPost, updateTranslatePostInfo, updateProgressStatus, updateCountInfo, updateSourceContent, updateTranslatedContent, resetStore, updateTargetContent, updateParentPostsInfo, updateServiceProvider, updateTargetLanguages, updateBlockParseRules, updateAllowedMetaFields } = bulkTranslateStore.actions;
+export const { updateTranslationsLanguages, updateCompletedPosts, updatePendingPosts, unsetPendingPost, updateTranslatePostInfo, updateProgressStatus, updateCountInfo, updateSourceContent, updateTranslatedContent, resetStore, updateTargetContent, updateParentPostsInfo, updateServiceProvider, updateTargetLanguages, updateBlockParseRules, updateAllowedMetaFields, updateErrorPostsInfo } = bulkTranslateStore.actions;
 
 // Export reducer
 export default bulkTranslateStore.reducer;

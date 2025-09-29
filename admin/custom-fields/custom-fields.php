@@ -45,7 +45,7 @@ if(!class_exists('Custom_Fields')) {
                 <div class="lmat-custom-data-table-wrapper lmat-custom-fields">
                     <h3><?php echo __('Custom Fields Translation Settings', 'linguator-multilingual-ai-translation'); ?>
                     <br>
-                    <p><?php echo sprintf(esc_html__('Select which custom fields will be translated by %s.', 'linguator-multilingual-ai-translation'), 'AutoPoly'); ?></p>
+                    <p><?php echo sprintf(esc_html__('Select which custom fields will be translated by %s.', 'linguator-multilingual-ai-translation'), 'Linguator'); ?></p>
                     </h3>
                     <button class="button button-primary lmat-save-custom-fields"><?php esc_html_e( 'Save Fields', 'linguator-multilingual-ai-translation' ); ?></button>
                     <div class="lmat-custom-data-table-filters">

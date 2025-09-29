@@ -94,7 +94,7 @@ const popStringModal = (props) => {
 
     const updatePostDataHandler = () => {
         const postContent = refPostData;
-        const modalClose = () => setPopupVisibility(false);
+        const modalClose = () => {setPopupVisibility(false); setPopupVisibilityHandler(false)};
         let service=props.service;
 
         props.translatePost({ postContent: postContent, modalClose: modalClose, service: service });
