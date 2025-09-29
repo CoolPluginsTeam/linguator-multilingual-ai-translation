@@ -138,6 +138,7 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 				'publicly_queryable' => true,
 				'show_ui'            => true,
 				'show_in_menu'       => false, // Ensure it shows in the menu
+				'show_in_nav_menus'  => false,
 				'query_var'          => true,
 				'rewrite'            => array( 'slug' => 'automatic-translation' ),
 				'capability_type'    => 'page',
