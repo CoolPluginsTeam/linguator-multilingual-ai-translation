@@ -100,7 +100,7 @@ const App = () => {
     translatePost = UpdateGutenbergPage;
     fetchPost = GutenbergPostFetch;
   } else if (editorType === 'classic') {
-    translateWrpSelector = 'button#lmat-page-translation-classic-editor-translate-button';
+    translateWrpSelector = 'button#lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]';
     translatePost = UpdateClassicPage;
     fetchPost = ClassicPostFetch;
   }
@@ -210,11 +210,29 @@ const appendElementorTranslateBtn = () => {
   if (translateButtonGroup.length > 0 && buttonElement.length === 0) {
     const buttonHtml = '<button class="elementor-button lmat-page-translation-button" name="lmat_page_translation_meta_box_translate">Translate</button>';
     const buttonElement = jQuery(buttonHtml);
+    let confirmBox=false;
+    const postId=window.lmatPageTranslationGlobal.current_post_id;
+    const targetLang=window.lmatPageTranslationGlobal.target_lang;
+    const oldData=localStorage.getItem('lmatElementorConfirmBox');
+    if(oldData && 'string' === typeof oldData && '' !== oldData) {
+      confirmBox=JSON.parse(oldData);
+    }
 
     translateButtonGroup.prepend(buttonElement);
     $e.internal('document/save/set-is-modified', { status: true });
 
     if (!window.lmatPageTranslationGlobal.elementorData || '' === window.lmatPageTranslationGlobal.elementorData || window.lmatPageTranslationGlobal.elementorData.length < 1 || elementor.elements.length < 1) {
+
+      if(confirmBox && confirmBox[postId+'_'+targetLang]) {
+        delete confirmBox[postId+'_'+targetLang];
+        if(Object.keys(confirmBox).length === 0) {
+          localStorage.removeItem('lmatElementorConfirmBox');
+        }
+        else {
+          localStorage.setItem('lmatElementorConfirmBox', JSON.stringify(confirmBox));
+        }
+      }
+
       buttonElement.attr('disabled', 'disabled');
       buttonElement.attr('title', 'Translation is not available because there is no Elementor data.');
       return;
@@ -224,8 +242,23 @@ const appendElementorTranslateBtn = () => {
 
     const root = ReactDOM.createRoot(document.getElementById('lmat-page-translation-setting-modal'));
     root.render(<App />);
-  }
 
+    if(confirmBox && confirmBox[postId+'_'+targetLang]) {
+      setTimeout(() => {
+        buttonElement.click();
+
+        delete confirmBox[postId+'_'+targetLang];
+
+        if(Object.keys(confirmBox).length === 0) {
+          localStorage.removeItem('lmatElementorConfirmBox');
+        }
+        else {
+          localStorage.setItem('lmatElementorConfirmBox', JSON.stringify(confirmBox));
+        }
+      }, 100);
+    }
+  }
+  
 }
 
 if (editorType === 'gutenberg') {
@@ -236,6 +269,7 @@ if (editorType === 'gutenberg') {
     init();
 
     const sourceLang = window.lmatPageTranslationGlobal.source_lang
+
     const providers = window.lmatPageTranslationGlobal.providers;
 
     if (sourceLang && '' !== sourceLang && providers.length > 0) {
@@ -256,6 +290,7 @@ if (editorType === 'classic') {
     init();
 
     const sourceLang = window.lmatPageTranslationGlobal.source_lang
+
     const providers = window.lmatPageTranslationGlobal.providers;
 
     if (sourceLang && '' !== sourceLang && providers.length > 0) {
