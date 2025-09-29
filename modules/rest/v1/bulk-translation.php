@@ -29,12 +29,12 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		 */
 		private $namespace;
 
-        /**
-         * The base name of the route.
-         *
-         * @var string
-         */
-        private $rest_base;
+		/**
+		 * The base name of the route.
+		 *
+		 * @var string
+		 */
+		private $rest_base;
 
 		/**
 		 * Constructor
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		public function register_routes() {
 			register_rest_route(
 				$this->namespace,
-				'/'.$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-entries',
+				'/' . $this->rest_base . '/(?P<slug>[\w-]+):bulk-translate-entries',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_entries' ),
@@ -79,7 +79,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			register_rest_route(
 				$this->namespace,
-				'/'.$this->rest_base.'/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
+				'/' . $this->rest_base . '/(?P<slug>[\w-]+):bulk-translate-taxonomy-entries',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_taxonomy_entries' ),
@@ -109,7 +109,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			register_rest_route(
 				$this->namespace,
-				'/'.$this->rest_base.'/(?P<post_id>[\w-]+):create-translate-post',
+				'/' . $this->rest_base . '/(?P<post_id>[\w-]+):create-translate-post',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_translate_post' ),
@@ -156,7 +156,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			register_rest_route(
 				$this->namespace,
-				'/'.$this->rest_base.'/(?P<term_id>[\w-]+):create-translate-taxonomy',
+				'/' . $this->rest_base . '/(?P<term_id>[\w-]+):create-translate-taxonomy',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_translate_taxonomy' ),
@@ -276,14 +276,23 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				$lmat_langs           = $linguator->model->get_languages_list();
 				$lmat_langs_slugs     = array_column( $lmat_langs, 'slug' );
 				$allowed_meta_fields = Custom_Fields::get_allowed_custom_fields();
-
+				
 				foreach ( $post_ids as $postId ) {
 
 					if ( ! current_user_can( 'edit_post', $postId ) ) {
 						continue;
 					}
 
-					$post_data = get_post( $postId );
+					$posts_translate[ $postId ]['sourceLanguage'] = $linguator->model->post->get_language( $postId )->slug;
+					$post_data                                    = get_post( $postId );
+
+					if ( ! $posts_translate[ $postId ]['sourceLanguage'] ) {
+						$posts_translate[ $postId ]['sourceLanguage'] = false;
+						$posts_translate[ $postId ]['title']          = $post_data->post_title;
+						$posts_translate[ $postId ]['editor_type']    = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
+						$posts_translate[ $postId ]['post_link']      = html_entity_decode( get_edit_post_link( $postId ) );
+						continue;
+					}
 
 					$elementor_enabled = get_post_meta( $postId, '_elementor_edit_mode', true );
 
@@ -295,11 +304,10 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 						$posts_translate[ $postId ]['post_name'] = urldecode( get_post_field( 'post_name', $postId ) );
 					}
 
-					$posts_translate[ $postId ]['title']          = $post_data->post_title;
-					$posts_translate[ $postId ]['content']        = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
-					$posts_translate[ $postId ]['content']        = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
-					$posts_translate[ $postId ]['editor_type']    = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
-					$posts_translate[ $postId ]['sourceLanguage'] = $linguator->model->post->get_language( $postId )->slug;
+					$posts_translate[ $postId ]['title']       = $post_data->post_title;
+					$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
+					$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
+					$posts_translate[ $postId ]['editor_type'] = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
 
 					if ( isset( $post_data->post_excerpt ) && ! empty( $post_data->post_excerpt ) ) {
 						$posts_translate[ $postId ]['excerpt'] = $post_data->post_excerpt;
@@ -423,7 +431,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			$post_data = array(
 				'post_title'   => sanitize_text_field( $title ),
-				'post_content' => $editor_type === 'block' ? $content : wp_kses_post( $content ),
+				'post_content' => $content,
 			);
 
 			if ( $excerpt && ! empty( $excerpt ) ) {
@@ -444,18 +452,13 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 			if ( $editor_type === 'elementor' ) {
 				$post_data['meta_fields']['_elementor_data'] = $content;
-
 				unset( $post_data['post_content'] );
-			}
-
-			if ( $editor_type === 'block' ) {
+			} elseif ( $editor_type === 'block' ) {
 				$post_data['post_content'] = serialize_blocks( json_decode( $post_data['post_content'], true ) );
-
+			} elseif ( $editor_type === 'classic' ) {
+				$post_data['post_content'] = wp_kses_post( json_decode( $params['post_content'], true ) );
+			} else {
 				$post_data['post_content'] = wp_kses_post( $post_data['post_content'] );
-			}
-
-			if ( $editor_type === 'classic' ) {
-				$post_data['post_content'] = json_decode( $post_data['post_content'], true );
 			}
 
 			global $linguator;
@@ -530,7 +533,16 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				$taxonomy_ids = json_decode( $params['ids'] );
 
 				foreach ( $taxonomy_ids as $taxonomy_id ) {
-					$taxonomy_data = get_term( $taxonomy_id, $taxonomy );
+					$taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] = lmat_get_term_language( $taxonomy_id );
+					$taxonomy_data                                        = get_term( $taxonomy_id, $taxonomy );
+
+					if ( ! $taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] ) {
+						$taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] = false;
+						$taxonomy_translate[ $taxonomy_id ]['title']          = $taxonomy_data->name;
+						$taxonomy_translate[ $taxonomy_id ]['editor_type']    = 'taxonomy';
+						$taxonomy_translate[ $taxonomy_id ]['post_link']      = html_entity_decode( get_edit_term_link( $taxonomy_data->term_id, $taxonomy_data->taxonomy ) );
+						continue;
+					}
 
 					$taxonomy_translate[ $taxonomy_id ]['title'] = $taxonomy_data->name;
 
@@ -538,8 +550,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 						$taxonomy_translate[ $taxonomy_id ]['post_name'] = urldecode( $taxonomy_data->slug );
 					}
 
-					$taxonomy_translate[ $taxonomy_id ]['editor_type']    = 'taxonomy';
-					$taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] = lmat_get_term_language( $taxonomy_id );
+					$taxonomy_translate[ $taxonomy_id ]['editor_type'] = 'taxonomy';
 
 					if ( $taxonomy_data->description && ! empty( $taxonomy_data->description ) ) {
 						$taxonomy_translate[ $taxonomy_id ]['content'] = $taxonomy_data->description;
@@ -608,7 +619,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			$taxonomy_name           = isset( $params['taxonomy_name'] ) ? sanitize_text_field( $params['taxonomy_name'] ) : '';
 			$taxonomy_slug           = isset( $params['taxonomy_slug'] ) ? sanitize_title( $params['taxonomy_slug'] ) : '';
 			$taxonomy_description    = isset( $params['taxonomy_description'] ) ? wp_kses_post( $params['taxonomy_description'] ) : '';
-			$slug_translation_option = 'title_translate';
+					$slug_translation_option = 'title_translate';
 			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['slug_translation_option'])){
 				$slug_translation_option = LMAT()->options['ai_translation_configuration']['slug_translation_option'];
 			}

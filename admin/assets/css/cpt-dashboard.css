@@ -1,0 +1,44 @@
+.cpt-review-notice{
+  position: relative;
+  margin: 10px 20px 10px 0 !important;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+      max-width: 790px;
+    padding-left: 11px;
+    padding-bottom: 11px;
+}
+
+.cpt-review-notice .cpt-review-notice-icon{
+  max-width: 80px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.cpt-review-notice div p{
+  margin: 0;
+  margin-bottom: .5rem;
+}
+
+.cpt-review-notice .lmat-review-notice-dismiss {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 10px;
+}
+
+body.rtl .cpt-review-notice .cpt-not-interested {
+  right: auto;
+  left: 5px;
+}
+
+.cpt-review-notice :where(.cpt-not-interested, .cpt-already-reviewed)::before {
+  color: #cc0000;
+  content: "\f153";
+  font: normal 16px/20px dashicons;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  height: 22px;
+}
