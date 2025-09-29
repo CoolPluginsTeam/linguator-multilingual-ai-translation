@@ -220,7 +220,6 @@ class LMAT_WPSEO {
 
 		// Prevent repeated invocations throughout the request, which can explode get_terms calls.
 		remove_filter( 'get_terms_args', array( $this, 'wpseo_remove_terms_filter' ) );
-
 		return $args;
 	}
 

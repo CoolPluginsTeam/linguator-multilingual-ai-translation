@@ -32225,10 +32225,28 @@ var Languages = function Languages() {
 var Ready = function Ready() {
   //content for page
   var nextSteps = [{
-    title: (0,external_wp_i18n_namespaceObject.__)('NEXT STEP', 'linguator-multilingual-ai-translation'),
-    header: (0,external_wp_i18n_namespaceObject.__)('Translate some pages', 'linguator-multilingual-ai-translation'),
-    body: (0,external_wp_i18n_namespaceObject.__)("You're ready to translate the posts on your website.", 'linguator-multilingual-ai-translation'),
+    button: (0,external_wp_i18n_namespaceObject.__)('Settings', 'linguator-multilingual-ai-translation'),
+    href: "".concat(currentDomain, "admin.php?page=lmat_settings"),
+    variant: 'outline'
+  }, {
+    button: (0,external_wp_i18n_namespaceObject.__)('Watch Video Tutorial', 'linguator-multilingual-ai-translation'),
+    href: "",
+    variant: 'outline'
+  }, {
+    button: (0,external_wp_i18n_namespaceObject.__)('Read Documentations', 'linguator-multilingual-ai-translation'),
+    href: "",
+    variant: 'outline'
+  }, {
     button: (0,external_wp_i18n_namespaceObject.__)('View Pages', 'linguator-multilingual-ai-translation'),
+    href: "".concat(currentDomain, "edit.php?post_type=page"),
+    variant: 'outline'
+  }, {
+    button: (0,external_wp_i18n_namespaceObject.__)('View Posts', 'linguator-multilingual-ai-translation'),
+    href: "".concat(currentDomain, "edit.php"),
+    variant: 'outline'
+  }, {
+    button: (0,external_wp_i18n_namespaceObject.__)('FAQs', 'linguator-multilingual-ai-translation'),
+    href: "",
     variant: 'outline'
   }];
 
@@ -32245,33 +32263,7 @@ var Ready = function Ready() {
     }
   }, (0,external_wp_i18n_namespaceObject.__)("You're now able to translate your contents such as posts, pages, categories and tags. You can learn how to use Linguator by reading the documentation.", 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement("table", {
     className: "ready-table"
-  }, /*#__PURE__*/external_React_default().createElement("tbody", null, nextSteps.map(function (step, index) {
-    return /*#__PURE__*/external_React_default().createElement("tr", {
-      key: index,
-      className: "ready-table-data"
-    }, /*#__PURE__*/external_React_default().createElement("td", null, /*#__PURE__*/external_React_default().createElement("h6", {
-      className: "m-0"
-    }, step.title), /*#__PURE__*/external_React_default().createElement("h3", {
-      className: "m-0"
-    }, step.header), /*#__PURE__*/external_React_default().createElement("div", {
-      className: "flex gap-4 items-center justify-between"
-    }, /*#__PURE__*/external_React_default().createElement("p", {
-      style: {
-        color: "#6b7280"
-      },
-      className: "text-justify w-[60%] text-sm/6"
-    }, step.body), /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("a", {
-      href: "".concat(currentDomain, "edit.php?post_type=page")
-    }, /*#__PURE__*/external_React_default().createElement(R, {
-      className: "",
-      iconPosition: "left",
-      size: "sm",
-      tag: "button",
-      type: "button",
-      onClick: function onClick() {},
-      variant: step.variant
-    }, step.button))))));
-  }), /*#__PURE__*/external_React_default().createElement("tr", {
+  }, /*#__PURE__*/external_React_default().createElement("tbody", null, /*#__PURE__*/external_React_default().createElement("tr", {
     className: "ready-table-data"
   }, /*#__PURE__*/external_React_default().createElement("td", {
     className: "flex justify-center items-center"
@@ -32286,6 +32278,24 @@ var Ready = function Ready() {
     referrerPolicy: "strict-origin-when-cross-origin",
     allowFullScreen: true
   }))), /*#__PURE__*/external_React_default().createElement("tr", {
+    className: "ready-table-data"
+  }, /*#__PURE__*/external_React_default().createElement("td", null, /*#__PURE__*/external_React_default().createElement("div", {
+    className: "flex gap-4 flex-wrap items-center "
+  }, nextSteps.map(function (step, index) {
+    return /*#__PURE__*/external_React_default().createElement("div", {
+      key: index
+    }, /*#__PURE__*/external_React_default().createElement("a", {
+      href: step.href
+    }, /*#__PURE__*/external_React_default().createElement(R, {
+      className: "",
+      iconPosition: "left",
+      size: "sm",
+      tag: "button",
+      type: "button",
+      onClick: function onClick() {},
+      variant: step.variant
+    }, step.button)));
+  })))), /*#__PURE__*/external_React_default().createElement("tr", {
     className: "ready-table-data"
   }, /*#__PURE__*/external_React_default().createElement("td", null, /*#__PURE__*/external_React_default().createElement("a", {
     style: {
