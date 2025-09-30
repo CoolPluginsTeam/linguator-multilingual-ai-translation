@@ -29,9 +29,15 @@
     margin-top:65px;
     margin-right:0;
 }
+.toplevel_page_lmat #wpbody{
+    background-color: #FFF;
+}
 
 .toplevel_page_lmat .wrap{
     margin-top:95px;
+}
+.languages_page_lmat_settings #wpbody{
+    background-color: #F3F4F6;
 }
 #wpcontent{
     padding: 0;
