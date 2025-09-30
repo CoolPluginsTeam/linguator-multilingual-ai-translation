@@ -31,7 +31,7 @@ class BlockFilterSorter {
         this.ajaxUrl = lmatCustomTableDataObject.admin_url;
       }
 
-      const inputFields = tableWrp.querySelectorAll('#lmat-custom-datatable tbody input[name="lmat_fields_status"]');
+      const inputFields = document.querySelectorAll('#lmat-custom-datatable tbody input[name="lmat_fields_status"]');
       inputFields.forEach(input => {
         input.addEventListener('change', this.updateStatusHandler.bind(this));
       });
