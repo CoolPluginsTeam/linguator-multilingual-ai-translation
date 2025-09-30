@@ -365,7 +365,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				?>
 				<li class='lmat_lang_all'>
 					<a href="<?php echo esc_url( $all_url ); ?>" class="<?php echo esc_attr( $all_class ); ?>">
-						All Languages <span class="count">(<?php echo esc_html( $total_menus ); ?>)</span>
+						All <span class="count">(<?php echo esc_html( $total_menus ); ?>)</span>
 					</a>
 				</li>
 				
