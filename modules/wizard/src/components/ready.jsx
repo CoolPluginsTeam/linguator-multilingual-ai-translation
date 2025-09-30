@@ -4,6 +4,9 @@ import { __, sprintf } from '@wordpress/i18n'
 
 const Ready = () => {
 
+   //get admin url
+   let currentDomain = window.lmat_setup.admin_url;
+   
   //content for page
   let nextSteps = [ {
     button: __('Settings', 'linguator-multilingual-ai-translation'),
@@ -31,8 +34,7 @@ const Ready = () => {
     variant: 'outline'
   }]
 
-  //get admin url
-  let currentDomain = window.lmat_setup.admin_url;
+ 
   return (
     <div className='mx-auto max-w-[600px] min-h-[40vh] bg-white shadow-lg p-10 flex flex-col gap-6'>
       <h2 className='m-0'>{__("You're ready to translate your contents!", 'linguator-multilingual-ai-translation')}</h2>

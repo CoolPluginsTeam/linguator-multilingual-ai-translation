@@ -32223,6 +32223,9 @@ var Languages = function Languages() {
 
 
 var Ready = function Ready() {
+  //get admin url
+  var currentDomain = window.lmat_setup.admin_url;
+
   //content for page
   var nextSteps = [{
     button: (0,external_wp_i18n_namespaceObject.__)('Settings', 'linguator-multilingual-ai-translation'),
@@ -32249,9 +32252,6 @@ var Ready = function Ready() {
     href: "",
     variant: 'outline'
   }];
-
-  //get admin url
-  var currentDomain = window.lmat_setup.admin_url;
   return /*#__PURE__*/external_React_default().createElement("div", {
     className: "mx-auto max-w-[600px] min-h-[40vh] bg-white shadow-lg p-10 flex flex-col gap-6"
   }, /*#__PURE__*/external_React_default().createElement("h2", {
