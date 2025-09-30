@@ -76,7 +76,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		public function tabs() {
 			$default_url = '';
 
-			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang', 'supported-blocks']) ) {
+			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang', 'supported-blocks','custom-fields']) ) {
 				$default_url = 'lmat_settings';
 			}
 
@@ -120,7 +120,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			echo '<div id="lmat-settings-header-tabs">';
 			echo '<div class="lmat-settings-header-tab-container">';
 			echo '<div class="lmat-settings-header-logo">';
-			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'assets/logo/linguator_icon.svg' ) . '" alt="Linguator" />';
+			echo '<a href="' . esc_url( admin_url( 'admin.php?page=lmat_settings&tab=general' ) ) . '"><img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'assets/logo/linguator_icon.svg' ) . '" alt="Linguator" /></a>';
 			echo '</div>';
 			echo '<div class="lmat-settings-header-tab-list">';
 			foreach ( $this->tabs() as $key => $value ) {
