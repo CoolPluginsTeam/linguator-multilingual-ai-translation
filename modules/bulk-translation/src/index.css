@@ -236,8 +236,9 @@
   margin-block: .5rem;
 }
 
-#lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-setting-modal-container .lmat-bulk-translate-setting-modal-content .lmat-bulk-translate-setting-modal-body tbody td.lmat-bulk-translate-provider-name img {
+#lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-setting-modal-container .lmat-bulk-translate-setting-modal-content .lmat-bulk-translate-setting-modal-body tbody td.lmat-bulk-translate-provider-name svg {
   width: 45px;
+  height: auto;
   margin-right: 15px;
 }
 
@@ -1225,11 +1226,6 @@ body > div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibilit
 
 body.lmat-bulk-translate-google-translate {
   top: 0px !important;
-}
-
-.icon-size {
-  width: 40px;
-  height: 40px;
 }
 
 /* Google Translate CSS End */

@@ -364,8 +364,9 @@ button.lmat-page-translation-error-reload-btn:hover {
     margin-block: .5rem;
 }
 
-.lmat-page-translation-setting-modal-body tbody td img {
+.lmat-page-translation-setting-modal-body tbody td>svg {
     width: 45px;
+    height: auto;
     margin-right: 15px;
 }
 
