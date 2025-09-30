@@ -6,7 +6,7 @@ const Ready = () => {
 
    //get admin url
    let currentDomain = window.lmat_setup.admin_url;
-   
+
   //content for page
   let nextSteps = [ {
     button: __('Settings', 'linguator-multilingual-ai-translation'),
@@ -89,7 +89,7 @@ const Ready = () => {
             
           <tr className="ready-table-data">
             <td >
-              <a style={{ color: "gray" }} className='' href={currentDomain}>
+              <a style={{ color: "gray" }} className='' href={`${currentDomain}admin.php?page=lmat`}>
                 <Button
                   className=""
                   iconPosition="left"

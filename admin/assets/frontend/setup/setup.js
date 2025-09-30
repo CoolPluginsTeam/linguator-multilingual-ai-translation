@@ -32302,7 +32302,7 @@ var Ready = function Ready() {
       color: "gray"
     },
     className: "",
-    href: currentDomain
+    href: "".concat(currentDomain, "admin.php?page=lmat")
   }, /*#__PURE__*/external_React_default().createElement(R, {
     className: "",
     iconPosition: "left",

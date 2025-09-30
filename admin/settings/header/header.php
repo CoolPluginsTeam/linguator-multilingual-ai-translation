@@ -135,6 +135,11 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				}
 			}
 			echo '</div>';
+			echo '<div class="lmat-settings-header-actions">';
+			echo '<a href="https://linguator.com/documentation/" target="_blank" class="lmat-header-action-link">' . esc_html__( 'Documentation', 'linguator-multilingual-ai-translation' ) . '</a>';
+			echo '<a href="https://linguator.com/video-tutorials/" target="_blank" class="lmat-header-action-link">' . esc_html__( 'Video Tutorial', 'linguator-multilingual-ai-translation' ) . '</a>';
+			echo '<a href="https://linguator.com/support/" target="_blank" class="lmat-header-action-link">' . esc_html__( 'Support', 'linguator-multilingual-ai-translation' ) . '</a>';
+			echo '</div>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';
