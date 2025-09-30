@@ -90,7 +90,7 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
             }
 
 			if($post_meta_sync){
-				wp_send_json_success( __( 'Post meta sync is enabled. Please disable post meta sync in Polylang settings.', 'linguator-multilingual-ai-translation' ) );
+				wp_send_json_success( __( 'Post meta sync is enabled. Please disable post meta sync in Linguator settings.', 'linguator-multilingual-ai-translation' ) );
 			}
 
 			$allowed_meta_fields=Custom_Fields::get_allowed_custom_fields();
