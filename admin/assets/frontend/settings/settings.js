@@ -15103,7 +15103,7 @@ var General = function General(_ref) {
     className: "flex-shrink-0 size-5 text-icon-secondary"
   }), (0,external_wp_i18n_namespaceObject.__)('Language URL format', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(label_es_c, {
     variant: "help"
-  }, (0,external_wp_i18n_namespaceObject.__)('Choose how to decide which language your visitors will see.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S, {
+  }, (0,external_wp_i18n_namespaceObject.__)('Decide how your website’s URLs will display different languages for visitors.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S, {
     cols: "2",
     containerType: "grid"
   }, /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(Ae.Group, {
@@ -15205,13 +15205,13 @@ var General = function General(_ref) {
   }, /*#__PURE__*/external_React_default().createElement(Milestone, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
   }), (0,external_wp_i18n_namespaceObject.__)('Custom Post Types', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)("Choose the custom post types you want to enable for translation.For example, if you have a 'Portfolio' post type, check the box to enable it for translation.", 'linguator-multilingual-ai-translation'))), AvailablePostTypes.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex items-center justify-end gap-2",
+    className: "flex justify-end gap-2",
     style: {
       paddingRight: '30%'
     }
   }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "sm",
-    className: "cursor-pointer",
+    className: "cursor-pointer items-start",
     htmlFor: "select-all-post-types"
   }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
     "aria-label": "Select All Post Types",
@@ -15261,13 +15261,13 @@ var General = function General(_ref) {
   }, /*#__PURE__*/external_React_default().createElement(Milestone, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
   }), (0,external_wp_i18n_namespaceObject.__)('Custom Taxonomies', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Choose the Custom Taxonomies you want to enable for translation', 'linguator-multilingual-ai-translation'))), AvailableTaxonomies.length > 0 && /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex items-center justify-end gap-2",
+    className: "flex justify-end gap-2",
     style: {
       paddingRight: '30%'
     }
   }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "sm",
-    className: "cursor-pointer",
+    className: "cursor-pointer items-start",
     htmlFor: "select-all-taxonomies"
   }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
     "aria-label": "Select All Taxonomies",
@@ -15311,13 +15311,13 @@ var General = function General(_ref) {
   }, /*#__PURE__*/external_React_default().createElement(RefreshCcw, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
   }), (0,external_wp_i18n_namespaceObject.__)('Synchronization', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Choose synchronization options for translated content.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex items-center justify-end  gap-2",
+    className: "flex  justify-end  gap-2",
     style: {
       paddingRight: '30%'
     }
   }, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "sm",
-    className: "cursor-pointer",
+    className: "cursor-pointer items-start",
     htmlFor: "select-all-sync"
   }, (0,external_wp_i18n_namespaceObject.__)('Select All', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(switch_es_$, {
     "aria-label": "Select All Synchronization",
@@ -15350,7 +15350,7 @@ var General = function General(_ref) {
     className: "flex items-center gap-2"
   }, /*#__PURE__*/external_React_default().createElement(Globe, {
     className: "flex-shrink-0 size-5 text-icon-secondary"
-  }), (0,external_wp_i18n_namespaceObject.__)('Detect Browser Language', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('When visitors open your homepage, Linguator sends them to their preferred language. To avoid issues, homepage caching is turned off for supported cache plugins.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
+  }), (0,external_wp_i18n_namespaceObject.__)('Detect Browser Language', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('When visitors open your homepage, Linguator displays it in their preferred language. To avoid issues, homepage caching is turned off for supported cache plugins.', 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement(S.Item, {
     className: "flex items-center justify-end",
     style: {
       paddingRight: '30%'

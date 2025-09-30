@@ -32067,7 +32067,7 @@ var Languages = function Languages() {
     className: "flex-grow mb-5"
   }, /*#__PURE__*/external_React_default().createElement("p", {
     className: "text-sm"
-  }, (0,external_wp_i18n_namespaceObject.__)('This wizard will help you set up Linguator and start using your multilingual website quickly.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
+  }, (0,external_wp_i18n_namespaceObject.__)('This wizard will help you set up Linguator to translate your website into multiple languages', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
     className: "text-sm"
   }, (0,external_wp_i18n_namespaceObject.__)('First, let’s choose the languages for your website.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Translation Languages', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", {
     className: "flex items-end gap-2"
