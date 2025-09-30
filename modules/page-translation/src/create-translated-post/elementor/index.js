@@ -11,10 +11,11 @@ const lmatUpdateWidgetContent = (translations) => {
         const model = lmatFindModelById(elementor.elements.models, translation.ID);
         if (model) {
             const settings = model.get('settings');
-
+            
             // Check for normal fields (title, text, editor, etc.)
             if (settings.get(translation.key)) {
                 settings.set(translation.key, translation.translatedContent);  // Set the translated content
+                model?.renderRemoteServer();
             }
 
             // Handle repeater fields (if any)
@@ -23,13 +24,16 @@ const lmatUpdateWidgetContent = (translations) => {
 
                 const [_, repeaterKey, index, subKey] = repeaterMatch;
                 const repeaterArray = settings.get(repeaterKey);
+
                 if (Array.isArray(repeaterArray.models) && repeaterArray.models[index]) {
                     let repeaterModel = repeaterArray.models[index]
                     let repeaterAttribute = repeaterModel.attributes
                     repeaterAttribute[subKey] = translation.translatedContent;
 
                     settings.set(repeaterKey, repeaterArray); // Set the updated array back to settings
+                    model?.renderRemoteServer();
                 }
+
             }
         }
     });
@@ -251,7 +255,6 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                 if(translateButton){
                     translateButton.setAttribute('title', 'Translation process completed successfully.');
                 }
-                elementor.reloadPreview();
             } else {
                 console.error('Failed to update Elementor data:', data.data);
             }
