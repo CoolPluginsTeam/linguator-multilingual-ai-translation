@@ -137,7 +137,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 					$all_url=function_exists('add_query_arg') ? add_query_arg('lang', 'all') : 'edit.php?post_type='.esc_attr($post_type).'&lang=all';
 					$current_lang_link='all' !== $lmat_active_languages ? esc_url($all_url) : '';
 
-					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($lmat_active_languages == 'all' ? 'current' : '')."	'>All Languages <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";
+					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($lmat_active_languages == 'all' ? 'current' : '')."	'>All <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";
 					
 					$allowed = [
 						'ul'   => [ 'class' => true ],
