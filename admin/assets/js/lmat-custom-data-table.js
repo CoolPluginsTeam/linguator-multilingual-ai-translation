@@ -75,6 +75,11 @@ class BlockFilterSorter {
         const lastRow = tableWrp.querySelector('.dt-layout-row:last-child');
         lastRow.before(saveButton);
 
+        const inputFields = tableWrp.querySelectorAll('input[name="lmat_fields_status"]');
+        inputFields.forEach(input => {
+          input.addEventListener('change', this.updateStatusHandler.bind(this));
+        });
+
         jQuery(`.${this.saveButtonClass}`).on('click', this.saveButtonHandler.bind(this));
       }
     }
@@ -91,6 +96,27 @@ class BlockFilterSorter {
     }
   }
 
+  updateStatusHandler(e) {
+    const table = jQuery('#lmat-custom-datatable').DataTable();
+
+    if (!table) return; // DataTable not initialized
+  
+    const $tr = jQuery(e.target).closest('tr');
+    if (!$tr.length) return; // no row found
+  
+    const dtRow = table.row($tr);
+    if (!dtRow.node()) return; // row doesn’t exist in DataTable
+  
+    const checked = e.target.checked;
+    const status = checked ? 'Supported' : 'Unsupported';
+  
+    // Make sure cell exists
+    const cell = dtRow.cell(dtRow.index(), 3);
+    if (!cell) return;
+  
+    // Update via DataTables API
+    cell.data(status);
+  }
 
   saveButtonHandler(e) {
     e.preventDefault();
@@ -176,7 +202,7 @@ class BlockFilterSorter {
 
     let messageNotice = jQuery('<div id="lmat-custom-fields-message-notice" style="margin-bottom: 10px;"><p>' + message + '</p></div>');
     messageNotice.addClass('is-dismissible notice notice-' + type);
-    jQuery('#lmat-settings-header').before(messageNotice);
+    jQuery('#lmat-settings-header').after(messageNotice);
   }
 
   appendSaveButton() {
