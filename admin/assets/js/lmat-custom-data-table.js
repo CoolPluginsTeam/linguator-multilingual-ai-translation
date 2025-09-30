@@ -30,6 +30,11 @@ class BlockFilterSorter {
       if (lmatCustomTableDataObject.admin_url && '' !== lmatCustomTableDataObject.admin_url) {
         this.ajaxUrl = lmatCustomTableDataObject.admin_url;
       }
+
+      const inputFields = tableWrp.querySelectorAll('#lmat-custom-datatable tbody input[name="lmat_fields_status"]');
+      inputFields.forEach(input => {
+        input.addEventListener('change', this.updateStatusHandler.bind(this));
+      });
     }
 
     if (this.tableBody) {
@@ -74,11 +79,6 @@ class BlockFilterSorter {
         const saveButton = this.appendSaveButton();
         const lastRow = tableWrp.querySelector('.dt-layout-row:last-child');
         lastRow.before(saveButton);
-
-        const inputFields = tableWrp.querySelectorAll('input[name="lmat_fields_status"]');
-        inputFields.forEach(input => {
-          input.addEventListener('change', this.updateStatusHandler.bind(this));
-        });
 
         jQuery(`.${this.saveButtonClass}`).on('click', this.saveButtonHandler.bind(this));
       }
@@ -169,12 +169,6 @@ class BlockFilterSorter {
         if (data.success) {
           if (data.data.message) {
             this.appendMessageNotice(data.data.message, 'success');
-          }
-
-          if(data.data.updated_fields){
-            Object.keys(data.data.updated_fields).forEach(field => {
-              // this.lmatDataTableObj.column(1).search(field);
-            });
           }
         }
       })
