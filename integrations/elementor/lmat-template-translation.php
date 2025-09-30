@@ -239,6 +239,7 @@ class LMAT_Template_Translation {
         $post_id = $document->get_main_id();
         $languages = lmat_languages_list(['fields' => '']);
         $translations = lmat_get_post_translations($post_id);
+        $current_lang_slug = lmat_get_post_language($post_id);
         $current_lang_name = lmat_get_post_language($post_id, 'name');
 
         $document->start_controls_section(
@@ -251,6 +252,11 @@ class LMAT_Template_Translation {
 
         foreach ($languages as $lang) {
             $lang_slug = $lang->slug;
+            
+            // Skip the current page's language
+            if ($lang_slug === $current_lang_slug) {
+                continue;
+            }
             if (isset($translations[$lang_slug])) {
                 $translated_post_id = $translations[$lang_slug];
                 $edit_link = get_edit_post_link($translated_post_id, 'edit');
