@@ -87,7 +87,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 							}
 							?>
 						</select>
-						<p><?php esc_html_e( 'You can choose a language in the list or directly edit it below.', 'linguator-multilingual-ai-translation' ); ?></p>
+						<p><?php esc_html_e( 'You can choose a language from the list or directly edit it below.', 'linguator-multilingual-ai-translation' ); ?></p>
 					</div>
 
 					<div class="form-field form-required">
@@ -98,7 +98,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 							! empty( $edit_lang ) ? esc_attr( $edit_lang->name ) : ''
 						);
 						?>
-						<p><?php esc_html_e( 'The name is how it is displayed on your site (for example: English).', 'linguator-multilingual-ai-translation' ); ?></p>
+						<p><?php esc_html_e( 'The name of language will display on your site (for example: English).', 'linguator-multilingual-ai-translation' ); ?></p>
 					</div>
 
 					<div class="form-field form-required">
@@ -109,7 +109,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 							! empty( $edit_lang ) ? esc_attr( $edit_lang->locale ) : ''
 						);
 						?>
-						<p><?php esc_html_e( 'WordPress Locale for the language (for example: en_US). You will need to install the .mo file for this language.', 'linguator-multilingual-ai-translation' ); ?></p>
+						<p><?php esc_html_e( "WordPress Locale for the language (for example: en_US). You'll have to install the .mo file for this language.", 'linguator-multilingual-ai-translation' ); ?></p>
 					</div>
 
 					<div class="form-field">

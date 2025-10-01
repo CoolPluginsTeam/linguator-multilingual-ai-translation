@@ -4,17 +4,37 @@ import { __, sprintf } from '@wordpress/i18n'
 
 const Ready = () => {
 
+   //get admin url
+   let currentDomain = window.lmat_setup.admin_url;
+
   //content for page
   let nextSteps = [ {
-    title: __('NEXT STEP', 'linguator-multilingual-ai-translation'),
-    header: __('Translate some pages', 'linguator-multilingual-ai-translation'),
-    body: __("You're ready to translate the posts on your website.", 'linguator-multilingual-ai-translation'),
+    button: __('Settings', 'linguator-multilingual-ai-translation'),
+    href: `${currentDomain}admin.php?page=lmat_settings`,
+    variant: 'outline'
+  },{
+    button: __('Video Tutorial', 'linguator-multilingual-ai-translation'),
+    href: "",
+    variant: 'outline'
+  },{
+    button: __('Docs', 'linguator-multilingual-ai-translation'),
+    href: "",
+    variant: 'outline'
+  },{
     button: __('View Pages', 'linguator-multilingual-ai-translation'),
+    href: `${currentDomain}edit.php?post_type=page`,
+    variant: 'outline'
+  },{
+    button: __('View Posts', 'linguator-multilingual-ai-translation'),
+    href: `${currentDomain}edit.php`,
+    variant: 'outline'
+  },{
+    button: __('FAQs', 'linguator-multilingual-ai-translation'),
+    href: "",
     variant: 'outline'
   }]
 
-  //get admin url
-  let currentDomain = window.lmat_setup.admin_url;
+ 
   return (
     <div className='mx-auto max-w-[600px] min-h-[40vh] bg-white shadow-lg p-10 flex flex-col gap-6'>
       <h2 className='m-0'>{__("You're ready to translate your contents!", 'linguator-multilingual-ai-translation')}</h2>
@@ -23,35 +43,7 @@ const Ready = () => {
       </div>
       <table className='ready-table'>
         <tbody>
-          {
-            nextSteps.map((step, index) => (
-              <tr key={index} className="ready-table-data">
-                <td >
-                  <h6 className='m-0'>{step.title}</h6>
-                  <h3 className='m-0'>{step.header}</h3>
-                  <div className='flex gap-4 items-center justify-between'>
-                    <p style={{ color: "#6b7280" }} className='text-justify w-[60%] text-sm/6'>{step.body}</p>
-                    <div>
-                      <a href={`${currentDomain}edit.php?post_type=page`}>
-                        <Button
-                          className=""
-                          iconPosition="left"
-                          size="sm"
-                          tag="button"
-                          type="button"
-                          onClick={() => { }}
-                          variant={step.variant}
-                        >
-                          {step.button}
-                        </Button>
-                      </a>
-
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            ))
-          }
+          
           <tr className="ready-table-data">
             <td  className="flex justify-center items-center">
               <iframe 
@@ -67,9 +59,37 @@ const Ready = () => {
               </iframe>
             </td>
           </tr>
+          
+              <tr className="ready-table-data">
+                <td >
+                  <div className='flex gap-4 flex-wrap items-center '>
+                  {
+            nextSteps.map((step, index) => (
+                    <div key={index}>
+                      <a href={step.href}>
+                        <Button
+                          className=""
+                          iconPosition="left"
+                          size="sm"
+                          tag="button"
+                          type="button"
+                          onClick={() => { }}
+                          variant={step.variant}
+                        >
+                          {step.button}
+                        </Button>
+                      </a>
+
+                    </div>
+                    ))
+                  }
+                  </div>
+                </td>
+              </tr>
+            
           <tr className="ready-table-data">
             <td >
-              <a style={{ color: "gray" }} className='' href={currentDomain}>
+              <a style={{ color: "gray" }} className='' href={`${currentDomain}admin.php?page=lmat`}>
                 <Button
                   className=""
                   iconPosition="left"

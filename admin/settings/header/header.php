@@ -76,7 +76,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		public function tabs() {
 			$default_url = '';
 
-			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang', 'supported-blocks']) ) {
+			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang', 'supported-blocks','custom-fields']) ) {
 				$default_url = 'lmat_settings';
 			}
 
@@ -120,7 +120,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			echo '<div id="lmat-settings-header-tabs">';
 			echo '<div class="lmat-settings-header-tab-container">';
 			echo '<div class="lmat-settings-header-logo">';
-			echo '<img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'assets/logo/linguator_icon.svg' ) . '" alt="Linguator" />';
+			echo '<a href="' . esc_url( admin_url( 'admin.php?page=lmat_settings&tab=general' ) ) . '"><img src="' . esc_url( plugin_dir_url( LINGUATOR_ROOT_FILE ) . 'assets/logo/linguator_icon.svg' ) . '" alt="Linguator" /></a>';
 			echo '</div>';
 			echo '<div class="lmat-settings-header-tab-list">';
 			foreach ( $this->tabs() as $key => $value ) {
@@ -129,11 +129,16 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				$redirect     = isset( $value['redirect'] ) ? $value['redirect'] : false;
 				$redirect_url = $redirect && isset( $value['redirect_url'] ) ? $value['redirect_url'] : false;
 				if ( $redirect && $redirect_url && $this->active_tab !== $key ) {
-					echo '<a href="' . esc_url( admin_url( 'admin.php?page=' . esc_attr( $redirect_url ) ) ) . '"><div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '" data-link="true">' . esc_html( strtoupper( $title ) ) . '</div></a>';
+					echo '<a href="' . esc_url( admin_url( 'admin.php?page=' . esc_attr( $redirect_url ) ) ) . '"><div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '" data-link="true">' . esc_html(  $title  ) . '</div></a>';
 				} else {
-					echo '<div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '">' . esc_html( strtoupper( $title ) ) . '</div>';
+					echo '<div class="lmat-settings-header-tab ' . esc_attr( $active_class ) . '" data-tab="' . esc_attr( $key ) . '" title="' . esc_attr( $title ) . '">' . esc_html(  $title  ) . '</div>';
 				}
 			}
+			echo '</div>';
+			echo '<div class="lmat-settings-header-actions">';
+			echo '<a href="https://linguator.com/documentation/" target="_blank" class="lmat-header-action-link">' . esc_html__( 'Documentation', 'linguator-multilingual-ai-translation' ) . '</a>';
+			echo '<a href="https://linguator.com/video-tutorials/" target="_blank" class="lmat-header-action-link">' . esc_html__( 'Video Tutorial', 'linguator-multilingual-ai-translation' ) . '</a>';
+			echo '<a href="https://linguator.com/support/" target="_blank" class="lmat-header-action-link">' . esc_html__( 'Support', 'linguator-multilingual-ai-translation' ) . '</a>';
 			echo '</div>';
 			echo '</div>';
 			echo '</div>';

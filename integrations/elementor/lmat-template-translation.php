@@ -239,6 +239,7 @@ class LMAT_Template_Translation {
         $post_id = $document->get_main_id();
         $languages = lmat_languages_list(['fields' => '']);
         $translations = lmat_get_post_translations($post_id);
+        $current_lang_slug = lmat_get_post_language($post_id);
         $current_lang_name = lmat_get_post_language($post_id, 'name');
 
         $document->start_controls_section(
@@ -251,6 +252,11 @@ class LMAT_Template_Translation {
 
         foreach ($languages as $lang) {
             $lang_slug = $lang->slug;
+            
+            // Skip the current page's language
+            if ($lang_slug === $current_lang_slug) {
+                continue;
+            }
             if (isset($translations[$lang_slug])) {
                 $translated_post_id = $translations[$lang_slug];
                 $edit_link = get_edit_post_link($translated_post_id, 'edit');
@@ -261,13 +267,17 @@ class LMAT_Template_Translation {
                     $edit_link = add_query_arg('action', 'elementor', $edit_link);
                 }
 
+                // Get the flag HTML for the language
+                $flag_html = method_exists($lang, 'get_display_flag') ? $lang->get_display_flag('no-alt') : '';
+
                 $document->add_control(
                     "lmat_elementor_edit_lang_{$lang_slug}",
                     [
                         'type'            => \Elementor\Controls_Manager::RAW_HTML,
                         'raw'             => sprintf(
-                            '<a href="%s" target="_blank"><i class="eicon-pencil"></i> %s — %s</a>',
+                            '<a href="%s" target="_blank" style="display: flex; align-items: center; gap: 8px;"><i class="eicon-pencil"></i>%s %s — %s</a>',
                             esc_url($edit_link),
+                            $flag_html,
                             esc_html(get_the_title($translated_post_id)),
                             esc_html($lang->name)
                         ),
@@ -282,13 +292,17 @@ class LMAT_Template_Translation {
                     '_wpnonce'  => wp_create_nonce('new-post-translation'),
                 ], admin_url('post-new.php'));
 
+                // Get the flag HTML for the language
+                $flag_html = method_exists($lang, 'get_display_flag') ? $lang->get_display_flag('no-alt') : '';
+
                 $document->add_control(
                     "lmat_elementor_add_lang_{$lang_slug}",
                     [
                         'type'            => \Elementor\Controls_Manager::RAW_HTML,
                         'raw'             => sprintf(
-                            '<a href="%s" target="_blank"><i class="eicon-plus"></i> %s</a>',
+                            '<a href="%s" target="_blank" style="display: flex; align-items: center; gap: 8px;"><i class="eicon-plus"></i>%s %s</a>',
                             esc_url($create_link),
+                            $flag_html,
                             sprintf(
                                 /* translators: %s: Language name */
                                 __('Add translation — %s', 'linguator-multilingual-ai-translation'),

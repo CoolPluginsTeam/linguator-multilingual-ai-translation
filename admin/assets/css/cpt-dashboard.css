@@ -1,6 +1,6 @@
 .cpt-review-notice{
   position: relative;
-  margin: 10px 20px 10px 0 !important;
+  margin: 10px 20px 10px 0;
   padding: 5px;
   display: flex;
   align-items: center;
@@ -21,6 +21,10 @@
   margin-bottom: .5rem;
 }
 
+.languages_page_lmat_settings .cpt-review-notice{
+  margin-left: 2.5rem;
+  margin-right:2.5rem;
+}
 .cpt-review-notice .lmat-review-notice-dismiss {
   display: -webkit-box;
   display: -ms-flexbox;

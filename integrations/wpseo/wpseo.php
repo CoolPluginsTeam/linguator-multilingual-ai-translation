@@ -192,9 +192,34 @@ class LMAT_WPSEO {
 	 * @return array modified list of arguments
 	 */
 	public function wpseo_remove_terms_filter( $args ) {
-		if ( isset( $GLOBALS['wp_query']->query['sitemap'] ) ) {
-			$args['lang'] = implode( ',', $this->wpseo_get_active_languages() );
+		// Only affect Yoast sitemap requests.
+		if ( empty( $GLOBALS['wp_query'] ) || empty( $GLOBALS['wp_query']->query['sitemap'] ) ) {
+			return $args;
 		}
+
+		// Ensure we only act on translated taxonomies to avoid side effects.
+		if ( ! empty( $args['taxonomy'] ) ) {
+			$taxonomies = (array) $args['taxonomy'];
+			$has_translated_tax = false;
+			foreach ( $taxonomies as $tx ) {
+				if ( function_exists( 'lmat_is_translated_taxonomy' ) && lmat_is_translated_taxonomy( $tx ) ) {
+					$has_translated_tax = true;
+					break;
+				}
+			}
+			if ( ! $has_translated_tax ) {
+				return $args;
+			}
+		}
+
+		$languages = $this->wpseo_get_active_languages();
+		// If all languages are active, don't set the lang param to avoid extra term queries.
+		if ( ! empty( $languages ) ) {
+			$args['lang'] = implode( ',', $languages );
+		}
+
+		// Prevent repeated invocations throughout the request, which can explode get_terms calls.
+		remove_filter( 'get_terms_args', array( $this, 'wpseo_remove_terms_filter' ) );
 		return $args;
 	}
 

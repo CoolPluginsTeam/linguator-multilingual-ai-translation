@@ -493,7 +493,7 @@ const General = ({ data, setData }) => {
                             <Link className="flex-shrink-0 size-5 text-icon-secondary" />
                             {__('Language URL format', 'linguator-multilingual-ai-translation')}
                         </Label>
-                        <Label variant='help'>{__('Choose how to decide which language your visitors will see.', 'linguator-multilingual-ai-translation')}</Label>
+                        <Label variant='help'>{__('Decide how your website’s URLs will display different languages for visitors.', 'linguator-multilingual-ai-translation')}</Label>
                     </Container.Item>
                     <Container cols="2" containerType='grid'>
                         <Container.Item >
@@ -619,8 +619,8 @@ const General = ({ data, setData }) => {
                         <p>{__("Choose the custom post types you want to enable for translation.For example, if you have a 'Portfolio' post type, check the box to enable it for translation.", 'linguator-multilingual-ai-translation')}</p>
                        </div>
                         {AvailablePostTypes.length > 0 && (
-                            <div className='flex items-center justify-end gap-2' style={{paddingRight: '30%'}}>
-                                <Label size='sm' className='cursor-pointer' htmlFor="select-all-post-types">
+                            <div className='flex justify-end gap-2' style={{paddingRight: '30%'}}>
+                                <Label size='sm' className='cursor-pointer items-start' htmlFor="select-all-post-types">
                                     {__('Select All', 'linguator-multilingual-ai-translation')}
                                 </Label>
                                 <Switch
@@ -680,8 +680,8 @@ const General = ({ data, setData }) => {
                         <p>{__('Choose the Custom Taxonomies you want to enable for translation', 'linguator-multilingual-ai-translation')}</p>
                         </div>
                         {AvailableTaxonomies.length > 0 && (
-                            <div className='flex items-center justify-end gap-2' style={{paddingRight: '30%'}}>
-                                <Label size='sm' className='cursor-pointer' htmlFor="select-all-taxonomies">
+                            <div className='flex justify-end gap-2' style={{paddingRight: '30%'}}>
+                                <Label size='sm' className='cursor-pointer items-start' htmlFor="select-all-taxonomies">
                                     {__('Select All', 'linguator-multilingual-ai-translation')}
                                 </Label>
                                 <Switch
@@ -732,8 +732,8 @@ const General = ({ data, setData }) => {
                         </Label>
                         <p>{__('Choose synchronization options for translated content.', 'linguator-multilingual-ai-translation')}</p>
                         </div>
-                        <div className='flex items-center justify-end  gap-2' style={{paddingRight: '30%'}}>
-                            <Label size='sm' className='cursor-pointer' htmlFor="select-all-sync">
+                        <div className='flex  justify-end  gap-2' style={{paddingRight: '30%'}}>
+                            <Label size='sm' className='cursor-pointer items-start' htmlFor="select-all-sync">
                                 {__('Select All', 'linguator-multilingual-ai-translation')}
                             </Label>
 
@@ -775,7 +775,7 @@ const General = ({ data, setData }) => {
                             {__('Detect Browser Language', 'linguator-multilingual-ai-translation')}
                         </h3>
                         <p>
-                            {__('When visitors open your homepage, Linguator sends them to their preferred language. To avoid issues, homepage caching is turned off for supported cache plugins.', 'linguator-multilingual-ai-translation')}
+                            {__('When visitors open your homepage, Linguator displays it in their preferred language. To avoid issues, homepage caching is turned off for supported cache plugins.', 'linguator-multilingual-ai-translation')}
                         </p>
                     </Container.Item>
                     <Container.Item className='flex items-center justify-end' style={{paddingRight: '30%'}}>
