@@ -193,6 +193,7 @@ class LMAT_Admin_Notices {
 			
 			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
 				if(class_exists(LMAT_Translation_Dashboard::class)){
+					$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?filter=5#new-post';
 					LMAT_Translation_Dashboard::review_notice('lmat', 'Linguator', esc_url($review_url));
 				}
 			}
