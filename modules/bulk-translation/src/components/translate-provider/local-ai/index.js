@@ -32,7 +32,7 @@ class LocalAiTranslate {
 
     destroy=()=>{
         this.stopTranslation=true;
-        if(this.localAiTranslator.hasOwnProperty('stopTranslation')){
+        if(this.localAiTranslator && this.localAiTranslator.hasOwnProperty('stopTranslation')){
             this.localAiTranslator.stopTranslation();
         }
     }
