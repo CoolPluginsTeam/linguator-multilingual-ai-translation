@@ -45,6 +45,10 @@ const lmatUpdateWidgetContent = (translations) => {
 const lmatUpdateMetaFields = (metaFields, service) => {
     const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
+    if(!metaFields){
+        return;
+    }
+
         Object.keys(metaFields).forEach(key => {
             // Update yoast seo meta fields
             if (Object.keys(AllowedMetaFields).includes(key)) {

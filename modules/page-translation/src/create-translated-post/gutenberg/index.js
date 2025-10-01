@@ -51,6 +51,11 @@ const translatePost = (props) => {
      */
     const postMetaFieldsUpdate = () => {
         const metaFieldsData = postContent.metaFields;
+
+        if(!metaFieldsData){
+            return;
+        }
+
         const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
         Object.keys(metaFieldsData).forEach(key => {
