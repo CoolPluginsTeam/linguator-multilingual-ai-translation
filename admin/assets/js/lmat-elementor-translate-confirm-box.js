@@ -60,8 +60,11 @@ const lmatElementorConfirmBox = {
             localStorage.setItem('lmatElementorConfirmBox', JSON.stringify(data));
 
             const elementorButton=document.getElementById('elementor-editor-button');
+            const elementorEditModeButton=document.getElementById('elementor-edit-mode-button');
 
-            if(elementorButton) {
+            if(elementorEditModeButton) {
+                elementorEditModeButton.click();
+            }else if(elementorButton) {
                 elementorButton.click();
             }
 

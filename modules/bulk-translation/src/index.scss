@@ -219,8 +219,9 @@ $prefix: lmat-bulk-translate;
                                 font-weight: 600;
                                 margin-block: .5rem;
             
-                                img{
+                                &>svg{
                                     width: 45px;
+                                    height: auto;
                                     margin-right: 15px;
                                 }
                             }
@@ -1144,10 +1145,6 @@ body>div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibility:
 
 body.lmat-bulk-translate-google-translate{
     top: 0px !important;
-}
-.icon-size{
-    width:40px;
-    height:40px;
 }
 
 /* Google Translate CSS End */

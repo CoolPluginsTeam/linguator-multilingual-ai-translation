@@ -12,7 +12,7 @@ const Providers = (props) => {
 
     return (
         <tr>
-        <td className={`${prefix}-provider-name`} style={{display: "flex", gap: "10px", alignItems: "center"}}>
+        <td className={`${prefix}-provider-name`}>
           {ActiveService.Logo}
           <span>{ActiveService.title}</span>
         </td>
