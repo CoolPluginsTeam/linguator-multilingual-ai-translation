@@ -107,11 +107,16 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         const settings = element.settings;
         ids.push(index)
 
+        const subStringsToCheck=(strings)=>{
+            const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
+            const staticSubStrings=['caption','heading','sub_heading'];
+    
+            return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
+        }
+        
         // Check if settings is an object
         if (typeof settings === 'object' && settings !== null) {
             // Define the substrings to check for translatable content
-            const substringsToCheck = ['title', 'description', 'editor', 'text', 'content', 'label'];
-
             // Iterate through the keys in settings
             Object.keys(settings).forEach(key => {
                 // Skip keys that are CSS properties
@@ -120,7 +125,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                 }
 
                 // Check if the key includes any of the specified substrings
-                if (substringsToCheck.some(substring => key.toLowerCase().includes(substring)) &&
+                if (subStringsToCheck(key) &&
                     typeof settings[key] === 'string' && settings[key].trim() !== '') {
                     const uniqueKey = ids.join('_lmat_page_translation_') + '_lmat_page_translation_settings_lmat_page_translation_' + key;
 
@@ -144,7 +149,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                                     return; // Skip this property
                                 }
 
-                                if (substringsToCheck.some(substring => repeaterKey.toLowerCase().includes(substring)) &&
+                                if (subStringsToCheck(repeaterKey) &&
                                     typeof item[repeaterKey] === 'string' && item[repeaterKey].trim() !== '') {
 
                                     const fieldKey = `${key}[${index}].${repeaterKey}`
