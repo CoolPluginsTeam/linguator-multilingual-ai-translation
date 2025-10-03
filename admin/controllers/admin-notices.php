@@ -49,10 +49,6 @@ class LMAT_Admin_Notices {
 		
 		// Add inline CSS and JS for notice positioning on ?page=lmat
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_notice_positioning_inline' ) );
-
-		if ( ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
-			$this->review_notice();
-		}
 	}
 
 	/**
@@ -123,6 +119,7 @@ class LMAT_Admin_Notices {
 		if ( empty( $screen ) ) {
 			return false;
 		}
+		
 		if ( empty( $allowed_screens ) ) {
 			$screen_id       = sanitize_title( __( 'Languages', 'linguator-multilingual-ai-translation' ) );
 			$allowed_screens = array(
@@ -193,6 +190,14 @@ class LMAT_Admin_Notices {
 	public function display_notices() {
 		// Check if we're on the specific ?page=lmat page and should suppress notices
 		if ( current_user_can( 'manage_options' ) ) {
+			
+			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
+				if(class_exists(LMAT_Translation_Dashboard::class)){
+					$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?filter=5#new-post';
+					LMAT_Translation_Dashboard::review_notice('lmat', 'Linguator', esc_url($review_url));
+				}
+			}
+
 			// Custom notices
 			foreach ( static::get_notices() as $notice => $html ) {
 				if ( $this->can_display_notice( $notice ) && ! static::is_dismissed( $notice ) ) {
@@ -304,21 +309,4 @@ class LMAT_Admin_Notices {
 		";
 		wp_add_inline_script( 'lmat_admin', $js );
 	}
-
-	/**
-	 * Displays a notice asking for a review
-	 *
-	 *  
-	 *
-	 * @return string
-	 */
-	private function review_notice() {
-		$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?rate=5#new-post';
-		
-		if(class_exists(LMAT_Translation_Dashboard::class)){	
-			LMAT_Translation_Dashboard::review_notice('lmat', 'Linguator', esc_url($review_url));
-		}
-	}
-
-
 }

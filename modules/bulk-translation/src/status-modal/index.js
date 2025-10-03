@@ -275,7 +275,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                 <React.Fragment key={key}>
                                                 <tr key={`group-title-${key}`} className={`${prefix}-group-title`}>
                                                     <td colSpan="5">
-                                                        {errorPostsInfo[key].title || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                                        {errorPostsInfo[key]?.title || __('Untitled', 'linguator-multilingual-ai-translation')}
                                                     </td>
                                                 </tr>
                                                 <tr key={key}>

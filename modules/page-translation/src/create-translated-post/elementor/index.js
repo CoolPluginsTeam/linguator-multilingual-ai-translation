@@ -11,10 +11,11 @@ const lmatUpdateWidgetContent = (translations) => {
         const model = lmatFindModelById(elementor.elements.models, translation.ID);
         if (model) {
             const settings = model.get('settings');
-
+            
             // Check for normal fields (title, text, editor, etc.)
             if (settings.get(translation.key)) {
                 settings.set(translation.key, translation.translatedContent);  // Set the translated content
+                model?.renderRemoteServer();
             }
 
             // Handle repeater fields (if any)
@@ -23,13 +24,16 @@ const lmatUpdateWidgetContent = (translations) => {
 
                 const [_, repeaterKey, index, subKey] = repeaterMatch;
                 const repeaterArray = settings.get(repeaterKey);
+
                 if (Array.isArray(repeaterArray.models) && repeaterArray.models[index]) {
                     let repeaterModel = repeaterArray.models[index]
                     let repeaterAttribute = repeaterModel.attributes
                     repeaterAttribute[subKey] = translation.translatedContent;
 
                     settings.set(repeaterKey, repeaterArray); // Set the updated array back to settings
+                    model?.renderRemoteServer();
                 }
+
             }
         }
     });
@@ -40,6 +44,10 @@ const lmatUpdateWidgetContent = (translations) => {
 
 const lmatUpdateMetaFields = (metaFields, service) => {
     const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
+
+    if(!metaFields){
+        return;
+    }
 
         Object.keys(metaFields).forEach(key => {
             // Update yoast seo meta fields
@@ -99,11 +107,16 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         const settings = element.settings;
         ids.push(index)
 
+        const subStringsToCheck=(strings)=>{
+            const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
+            const staticSubStrings=['caption','heading','sub_heading'];
+    
+            return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
+        }
+        
         // Check if settings is an object
         if (typeof settings === 'object' && settings !== null) {
             // Define the substrings to check for translatable content
-            const substringsToCheck = ['title', 'description', 'editor', 'text', 'content', 'label'];
-
             // Iterate through the keys in settings
             Object.keys(settings).forEach(key => {
                 // Skip keys that are CSS properties
@@ -112,7 +125,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                 }
 
                 // Check if the key includes any of the specified substrings
-                if (substringsToCheck.some(substring => key.toLowerCase().includes(substring)) &&
+                if (subStringsToCheck(key) &&
                     typeof settings[key] === 'string' && settings[key].trim() !== '') {
                     const uniqueKey = ids.join('_lmat_page_translation_') + '_lmat_page_translation_settings_lmat_page_translation_' + key;
 
@@ -136,7 +149,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                                     return; // Skip this property
                                 }
 
-                                if (substringsToCheck.some(substring => repeaterKey.toLowerCase().includes(substring)) &&
+                                if (subStringsToCheck(repeaterKey) &&
                                     typeof item[repeaterKey] === 'string' && item[repeaterKey].trim() !== '') {
 
                                     const fieldKey = `${key}[${index}].${repeaterKey}`
@@ -251,7 +264,6 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                 if(translateButton){
                     translateButton.setAttribute('title', 'Translation process completed successfully.');
                 }
-                elementor.reloadPreview();
             } else {
                 console.error('Failed to update Elementor data:', data.data);
             }

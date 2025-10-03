@@ -275,7 +275,7 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
 
         postKeys.forEach(postId=>{
            const languages=posts[postId].languages;
-           const parentPostTitle=posts[postId].title;
+           const parentPostTitle=posts[postId]?.title || 'N/A';
 
            if(languages && languages.length > 0){
                 languages.forEach(language=>{

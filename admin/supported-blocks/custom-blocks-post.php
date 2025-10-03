@@ -134,7 +134,7 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 
 			$args = array(
 				'labels'             => $labels,
-				'public'             => true,
+				'public'             => false,
 				'publicly_queryable' => true,
 				'show_ui'            => true,
 				'show_in_menu'       => false, // Ensure it shows in the menu

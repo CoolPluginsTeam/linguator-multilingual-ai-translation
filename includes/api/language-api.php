@@ -560,6 +560,7 @@ function lmat_get_term_translations( $term_id ) {
  *   @type string $author_name Author nicename.
  *   @type string $post_format Post format.
  *   @type string $post_status Post status.
+ *  @type array $meta_query custom meta fields.
  * }
  * @return int Posts count.
  */

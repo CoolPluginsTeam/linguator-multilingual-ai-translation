@@ -73,7 +73,7 @@ class Translation_Term_Model {
 			if ( $source_term->name !== $tr_term_name ) {
 				$args['name'] = $tr_term_name;
 			}
-			if ( $source_term->description !== $tr_term_description ) {
+			if ( !empty( $source_term->description ) && $source_term->description !== $tr_term_description ) {
 				$args['description'] = $tr_term_description;
 			}
 
@@ -85,8 +85,11 @@ class Translation_Term_Model {
 		} else {
 			$args = array(
 				'translations' => $this->model->term->get_translations( $source_term->term_id ),
-				'description'  => $tr_term_description,
 			);
+
+			if ( !empty( $source_term->description ) ) {
+				$args['description'] = $tr_term_description;
+			}
 
 			if ( $tr_term_slug && ! empty( $tr_term_slug ) ) {
 				$args['slug'] = $tr_term_slug;
@@ -152,7 +155,7 @@ class Translation_Term_Model {
 
 		$translated_entry = $translations->translate_entry( $entry );
 
-		$translated_text = isset( $translated_entry->translation[0] ) && ! empty( $translated_entry->translation[0] ) ? $translated_entry->translation[0] : $source_term->name;
+		$translated_text = isset( $translated_entry->translation[0] ) && ! empty( $translated_entry->translation[0] ) ? $translated_entry->translation[0] : '';
 
 		return $translated_text;
 	}

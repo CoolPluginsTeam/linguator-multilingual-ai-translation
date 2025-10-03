@@ -2,7 +2,7 @@ import {updateCountInfo, updateTranslatePostInfo} from '../../redux-store/featur
 import {store} from '../../redux-store/store.js';
 
 const updateTranslationCount=({postId,key,lang, storeDispatch})=>{
-    const sourceText=store.getState().translatedContent[postId][key]?.source;
+    const sourceText=store.getState().translatedContent[postId]?.[key]?.source;
 
     if(sourceText){
         const stringCount = typeof sourceText === 'string' ? sourceText.split(/(?<=[.!?]+)\s+/).length : 0;

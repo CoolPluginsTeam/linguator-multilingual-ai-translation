@@ -250,13 +250,13 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             
             $total_character_count = is_array($translation_data) && isset($translation_data['total_character_count']) ? $translation_data['total_character_count'] : 0;
             
-            if($total_character_count < 50000){ 
+            if($total_character_count < 30000){ 
                 return;
             }
             
             $total_character_count = self::format_number_count($total_character_count);
             
-            add_action('admin_enqueue_scripts', array(self::class, 'ctp_enqueue_assets'));
+            self::ctp_enqueue_assets();
 
             $message = sprintf(
                 '%s! %s <strong>%s</strong> %s <br>%s %s <br>',
@@ -280,20 +280,10 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                 'button' => [ 'class' => true ],
             ];
 
-            add_action('admin_notices', function() use ($message, $prefix, $url, $allowed){
-                $html= '<div class="notice notice-info is-dismissible cpt-review-notice">';
+            $html .= '<div class="notice notice-info is-dismissible cpt-review-notice">';
+            $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
                 
-                $html .= '<div class="cpt-review-notice-content"><p>'.wp_kses_post($message).'</p><div class="lmat-review-notice-dismiss" data-prefix="'.esc_attr($prefix).'" data-nonce="'.esc_attr(wp_create_nonce('lmat_hide_review_notice')).'"><a href="'.esc_url($url).'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-already-reviewed">'.esc_html__('Already Reviewed', 'cp-notice').'</button><button class="button cpt-not-interested">'.esc_html__('Not Interested', 'cp-notice').'</button></div></div></div>';
-                
-                echo wp_kses($html, $allowed);
-            });
-
-            add_action('lmat_display_admin_notices', function() use ($message, $prefix, $url, $allowed){
-                $html= '<div class="notice notice-info is-dismissible cpt-review-notice">';
-                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
-                
-                echo wp_kses($html, $allowed);
-            });
+            echo wp_kses($html, $allowed);
         }
 
         public static function lmat_hide_review_notice_status($prefix){

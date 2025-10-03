@@ -372,6 +372,7 @@ class LMAT_Model {
 	 *   @type string          $author_name User 'user_nicename'.
 	 *   @type string          $post_format Post format.
 	 *   @type string          $post_status Post status.
+	 *   @type array           $meta_query Custom fields.
 	 * }
 	 * @return int
 	 *
@@ -385,6 +386,7 @@ class LMAT_Model {
 	 *     author?: int<1, max>,
 	 *     author_name?: non-falsy-string,
 	 *     post_format?: non-falsy-string
+	 *     meta_query?: array<non-falsy-string, non-falsy-string>
 	 * } $q
 	 * @phpstan-return int<0, max>
 	 */
@@ -456,6 +458,33 @@ class LMAT_Model {
 
 			if ( ! empty( $q['author'] ) ) {
 				$base_args['author'] = $q['author'];
+			}
+
+			if ( isset($q['meta_query']) && ! empty( $q['meta_query'] ) && count($q['meta_query']) > 0 ) {
+				$q_meta_query = $q['meta_query'];
+				if(is_array($q_meta_query) && count($q_meta_query) > 0){
+					foreach($q_meta_query as $meta_query){
+						if(!isset($meta_query['key']) || !isset($meta_query['value']) || empty($meta_query['key']) || empty($meta_query['value']) || (!is_string($meta_query['value']) && !is_string($meta_query['value']))){
+							continue;
+						}
+
+						$q_meta_compare_value = isset($meta_query['compare']) && !empty($meta_query['compare']) ? sanitize_text_field($meta_query['compare']) : '=';
+						$q_meta_key=isset($meta_query['key']) && !empty($meta_query['key']) ? sanitize_text_field($meta_query['key']) : '';
+						$q_meta_value=isset($meta_query['value']) && !empty($meta_query['value']) ? sanitize_text_field($meta_query['value']) : '';
+
+						if(!isset($base_args['meta_query'])){
+							$base_args['meta_query'] = array();
+						}
+
+						$meta_query_array = array(
+							'key' => $q_meta_key,
+							'value' => $q_meta_value,
+							'compare' => $q_meta_compare_value,
+						);
+
+						$base_args['meta_query'][] = $meta_query_array;
+					}
+				}
 			}
 
 			// Handle filtered taxonomies (post_format, etc.)

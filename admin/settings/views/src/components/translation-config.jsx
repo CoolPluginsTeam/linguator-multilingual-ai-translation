@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Checkbox, Container, Input, Label, RadioButton, Switch, Badge } from '@bsf/force-ui'
-import { Languages, Post } from 'lucide-react';
+import { Languages, Link } from 'lucide-react';
+import { RiDraftLine } from "react-icons/ri";
 import { __ } from '@wordpress/i18n'
-import { FcGoogle } from "react-icons/fc";
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { toast } from 'sonner'
@@ -229,15 +229,15 @@ const TranslationConfig = ({ data, setData }) => {
 
     const slugTranslationOptions = [
         {
-            heading: __('Title Translate', 'linguator-multilingual-ai-translation'),
+            heading: __('Use Translated Title', 'linguator-multilingual-ai-translation'),
             value: 'title_translate'
         },
         {
-            heading: __('Slug Translate', 'linguator-multilingual-ai-translation'),
+            heading: __('Translate Original Slug', 'linguator-multilingual-ai-translation'),
             value: 'slug_translate'
         },
         {
-            heading: __('Keep Slug Original', 'linguator-multilingual-ai-translation'),
+            heading: __('Keep Original Slug', 'linguator-multilingual-ai-translation'),
             value: 'slug_keep'
         }
     ]
@@ -325,8 +325,8 @@ const TranslationConfig = ({ data, setData }) => {
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
             <Container.Item>
                 <Label size='md' className='font-bold flex items-center gap-2'>
-                    {/* <Post className="flex-shrink-0 size-5 text-icon-secondary" /> */}
-                    {__('Bulk Translation default Post Status', 'linguator-multilingual-ai-translation')}
+                    <RiDraftLine className="flex-shrink-0 size-5 text-icon-secondary" />
+                    {__('Bulk Translation – Default Post Status', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <Label variant='help'>
                     {__('This is the default post status for bulk translation.', 'linguator-multilingual-ai-translation')}
@@ -355,9 +355,10 @@ const TranslationConfig = ({ data, setData }) => {
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
             <Container.Item>
                 <Label size='md' className='font-bold flex items-center gap-2'>
-                    {__('Slug Translation Option', 'linguator-multilingual-ai-translation')}
+                    <Link className="flex-shrink-0 size-5 text-icon-secondary" />
+                    {__('Slug Translation Settings', 'linguator-multilingual-ai-translation')}
                 </Label>
-                <Label variant='help'>{__('This is the option for slug translation.', 'linguator-multilingual-ai-translation')}</Label>
+                <Label variant='help'>{__('Choose how post slugs (URLs) are generated when content is translated.', 'linguator-multilingual-ai-translation')}</Label>
                 <div style={{ marginTop: "20px" }}>
                     <RadioButton.Group>
                         {slugTranslationOptions.map((slugOption,index) => (

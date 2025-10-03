@@ -10,7 +10,7 @@ const Providers = (props) => {
 
     return (
 <tr>
-<td className="lmat-page-translation-provider-name" style={{display: "flex", gap: "10px", alignItems: "center"}}>
+<td className="lmat-page-translation-provider-name">
   {ActiveService.Logo}
   <span>{ActiveService.title}</span>
 </td>

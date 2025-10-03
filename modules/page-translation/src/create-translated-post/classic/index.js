@@ -110,6 +110,10 @@ const UpdateClassicPage = (props) => {
     const postMetaFieldsUpdate = () => {
         const metaFieldsData = postContent.metaFields;
 
+        if(!metaFieldsData){
+            return;
+        }
+
         Object.keys(metaFieldsData).forEach(key => {
             // Update yoast seo meta fields
             if (Object.keys(AllowedMetaFields).includes(key)) {
