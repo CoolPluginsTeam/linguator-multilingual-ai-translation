@@ -100,7 +100,30 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$all_translated_post_count=0;
 			$list_html='';
 
+			$publish_post_args = array('post_type'=>$post_type, 'post_status'=>$post_status);
+			$draft_post_args = array('post_type'=>$post_type, 'post_status'=>'draft');
+			$pending_post_args = array('post_type'=>$post_type, 'post_status'=>'pending');
+
+			if($post_type === 'elementor_library'){
+				$library_type=isset($_GET['elementor_library_type']) ? sanitize_text_field(wp_unslash($_GET['elementor_library_type'])) : '';
+
+				if($library_type && !empty($library_type)){
+					$post_meta_query= array(
+						array(
+							'key' => '_elementor_template_type',
+							'value' => $library_type,
+							'compare' => '=',
+						)
+					);
+					
+					$publish_post_args['meta_query'] = $post_meta_query;
+					$draft_post_args['meta_query'] = $post_meta_query;
+					$pending_post_args['meta_query'] = $post_meta_query;
+				};
+			};
+
 			if(count($lmat_languages) > 1 && !$taxonomy && empty($taxonomy)){
+
                 echo wp_kses("<div class='lmat_subsubsub' style='display:none; clear:both;'>
 					<ul class='lmat_subsubsub_list'>", array(
 						'div' => array(
@@ -110,18 +133,17 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 						'ul' => array('class' => array()),
 					));
                     foreach($lmat_languages as $lang){
-	
 						$flag=isset($lang->flag) ? $lang->flag : '';
 						$language_slug=isset($lang->slug) ? $lang->slug : '';
 						$current_class=$lmat_active_languages && $lmat_active_languages == $language_slug ? 'current' : '';
-						$translated_post_count=lmat_count_posts($language_slug, array('post_type'=>$post_type, 'post_status'=>$post_status));
+						$translated_post_count=lmat_count_posts($language_slug, $publish_post_args);
 						$url=function_exists('add_query_arg') ? add_query_arg('lang', $language_slug) : 'edit.php?post_type='.esc_attr($post_type).'&lang='.esc_attr($language_slug);
 
 						if('publish' === $post_status){
-							$draft_post_count=lmat_count_posts($language_slug, array('post_type'=>$post_type, 'post_status'=>'draft'));
+							$draft_post_count=lmat_count_posts($language_slug, $draft_post_args);
 							$translated_post_count+=$draft_post_count;
 
-							$pending_post_count=lmat_count_posts($language_slug, array('post_type'=>$post_type, 'post_status'=>'pending'));
+							$pending_post_count=lmat_count_posts($language_slug, $pending_post_args);
 							$translated_post_count+=$pending_post_count;
 						}
 
