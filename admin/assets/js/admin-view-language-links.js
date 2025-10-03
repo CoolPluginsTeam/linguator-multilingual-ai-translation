@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
         if($defaultFilter.length){
             $defaultFilter.each(function(){
                 const clone=lmatBulkTranslateBtn.clone(true);
-                jQuery(this).after(clone);
+                jQuery(this).append(clone);
                 clone.show();
             });
 
