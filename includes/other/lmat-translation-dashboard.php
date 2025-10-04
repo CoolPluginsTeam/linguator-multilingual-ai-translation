@@ -280,7 +280,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                 'button' => [ 'class' => true ],
             ];
 
-            $html .= '<div class="notice notice-info is-dismissible cpt-review-notice">';
+            $html = '<div class="notice notice-info is-dismissible cpt-review-notice">';
             $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
                 
             echo wp_kses($html, $allowed);
