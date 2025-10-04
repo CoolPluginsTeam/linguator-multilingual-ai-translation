@@ -90,10 +90,8 @@ class LMAT_CRUD_Terms {
 		add_filter( 'pre_term_name', array( $this, 'set_pre_term_name' ) );
 		add_filter( 'pre_term_slug', array( $this, 'set_pre_term_slug' ), 10, 2 );
 
-		// Adds cache domain when querying terms
-		add_filter( 'get_terms_args', array( $this, 'get_terms_args' ), 10, 2 );
-
-		// Filters terms by language
+		// Filters terms query by language.
+		add_filter( 'get_terms_args', array( $this, 'adjust_query_lang' ) );
 		add_filter( 'terms_clauses', array( $this, 'terms_clauses' ), 10, 3 );
 		add_action( 'pre_get_posts', array( $this, 'set_tax_query_lang' ), 999 );
 		add_action( 'posts_selection', array( $this, 'unset_tax_query_lang' ), 0 );
@@ -206,7 +204,7 @@ class LMAT_CRUD_Terms {
 	 * @param string[] $taxonomies Queried taxonomies.
 	 * @return array Modified arguments.
 	 */
-	public function get_terms_args( $args, $taxonomies ) {
+	public function adjust_query_lang( $args ) {
 		// Don't break _get_term_hierarchy().
 		if ( 'all' === $args['get'] && 'id' === $args['orderby'] && 'id=>parent' === $args['fields'] ) {
 			$args['lang'] = '';
@@ -216,11 +214,6 @@ class LMAT_CRUD_Terms {
 			$args['lang'] = empty( $this->tax_query_lang ) && ! empty( $this->curlang ) && ! empty( $args['slug'] ) ? $this->curlang->slug : $this->tax_query_lang;
 		}
 
-		if ( $lang = $this->get_queried_language( $taxonomies, $args ) ) {
-			$lang = is_string( $lang ) && strpos( $lang, ',' ) ? explode( ',', $lang ) : $lang;
-			$key = '_' . ( is_array( $lang ) ? implode( ',', $lang ) : $this->model->get_language( $lang )->slug );
-			$args['cache_domain'] = empty( $args['cache_domain'] ) ? 'lmat' . $key : $args['cache_domain'] . $key;
-		}
 		return $args;
 	}
 
