@@ -723,7 +723,7 @@ class Languages {
 		$this->clean_cache();
 
 		// Keep the previous values, so this is triggered only once per taxonomy.
-		update_option( 'pll_language_taxonomies', array_merge( $known_taxonomies, $new_taxonomies ) );
+		update_option( 'lmat_language_taxonomies', array_merge( $known_taxonomies, $new_taxonomies ) );
 	}
 
 	/**
