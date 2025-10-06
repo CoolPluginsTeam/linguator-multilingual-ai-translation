@@ -190,7 +190,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
         }
 
         for(let i=0; i<targetLangsArr.length; i++){
-            if(!translatePostInfo[postId + '_' + targetLangsArr[i]] || ['pending', 'in-progress'].includes(translatePostInfo[postId + '_' + targetLangsArr[i]].status)){
+            if(!translatePostInfo[postId + '_' + targetLangsArr[i]] || ['pending', 'in-progress', 'running'].includes(translatePostInfo[postId + '_' + targetLangsArr[i]].status)){
                 allPostStatus=false;
                 break;
             }
