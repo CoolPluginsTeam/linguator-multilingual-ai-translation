@@ -45,9 +45,9 @@ const lmatUpdateWidgetContent = (translations) => {
 const lmatUpdateMetaFields = (metaFields, service) => {
     const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
-    if(!metaFields){
-        return;
-    }
+        if(!metaFields){
+            return;
+        }
 
         Object.keys(metaFields).forEach(key => {
             // Update yoast seo meta fields
@@ -102,21 +102,22 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         'opacity', 'width', 'height', 'display', 'position', 'z_index', 'visibility', 'align', 'max_width', 'content_typography_typography', 'flex_justify_content', 'title_color', 'description_color', 'email_content'
     ];
 
+    const subStringsToCheck=(strings)=>{
+        const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
+        const staticSubStrings=['caption','heading','sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
+
+        return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
+    }
+
     const storeSourceStrings = (element,index, ids=[]) => {
         const widgetId = element.id;
         const settings = element.settings;
         ids.push(index)
 
-        const subStringsToCheck=(strings)=>{
-            const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
-            const staticSubStrings=['caption','heading','sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
-    
-            return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
-        }
-        
         // Check if settings is an object
         if (typeof settings === 'object' && settings !== null) {
             // Define the substrings to check for translatable content
+
             // Iterate through the keys in settings
             Object.keys(settings).forEach(key => {
                 // Skip keys that are CSS properties
@@ -199,7 +200,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
             const translatedContent = translation.translatedData;
             const type=translation.type;
 
-            if(!sourceString || '' === sourceString && 'content' !== type){
+            if(!sourceString || '' === sourceString || 'content' !== type){
                 return;
             }
             
@@ -214,7 +215,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
             keyArray.forEach(key => {
                 parentElement = currentElement;
                 parentKey = key;
-                currentElement = currentElement[key];
+                currentElement = currentElement ? currentElement[key] : null;
             });
 
             if(parentElement && parentKey && parentElement[parentKey] && parentElement[parentKey] === sourceString){
