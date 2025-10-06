@@ -8,7 +8,7 @@ const StringPopUpFooter = (props) => {
         <div className="modal-footer" key={props.modalRender}>
             {!props.translatePendingStatus && <StringPopUpNotice className="lmat_page_translation_string_count"><p>{__('Wahooo! You have saved your valuable time via auto translating', 'linguator-multilingual-ai-translation')} <strong><FormatNumberCount number={props.characterCount} /></strong> {__('characters using', 'linguator-multilingual-ai-translation')} <strong>{props.serviceLabel}</strong>.{__('Please share your feedback —', 'linguator-multilingual-ai-translation')}<a href="https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post" target="_blank" rel="noopener" style={{color: 'yellow'}}>{__('leave a quick review', 'linguator-multilingual-ai-translation')}</a>!</p></StringPopUpNotice>}
             <div className="save_btn_cont">
-                <button className="notranslate save_it button button-primary" disabled={props.translatePendingStatus} onClick={props.updatePostData}>{__("Update Content", 'linguator-multilingual-ai-translation')}</button>
+                <button className="notranslate save_it button button-primary" disabled={props.translatePendingStatus} onClick={props.updatePostData}>{props.translateButtonStatus ? <><span className="updating-text">{__("Updating", 'linguator-multilingual-ai-translation')}<span className="dot" style={{"--i": 0}}></span><span className="dot" style={{"--i": 1}}></span><span className ="dot" style={{"--i": 2}}></span></span></> : __("Update Content", 'linguator-multilingual-ai-translation')}</button>
             </div>
         </div>
     );
