@@ -705,7 +705,8 @@ class Languages {
 		}
 
 		// We have at least one 3rd party language taxonomy.
-		$known_taxonomies = $this->options['language_taxonomies'];
+		$known_taxonomies = get_option( 'lmat_language_taxonomies', array() );
+		$known_taxonomies = is_array( $known_taxonomies ) ? $known_taxonomies : array();
 		$new_taxonomies   = array_diff( $registered_taxonomies, $known_taxonomies );
 
 		if ( empty( $new_taxonomies ) ) {
@@ -722,7 +723,7 @@ class Languages {
 		$this->clean_cache();
 
 		// Keep the previous values, so this is triggered only once per taxonomy.
-		$this->options['language_taxonomies'] = array_merge( $known_taxonomies, $new_taxonomies );
+		update_option( 'lmat_language_taxonomies', array_merge( $known_taxonomies, $new_taxonomies ) );
 	}
 
 	/**

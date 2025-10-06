@@ -125,6 +125,10 @@ class LMAT_Install extends LMAT_Install_Base {
 			update_option( 'linguator_wpml_strings', array() );
 		}
 
+		if ( ! get_option( 'lmat_language_taxonomies' ) ) {
+			update_option( 'lmat_language_taxonomies', array() );
+		}
+
 		// Clear language cache on activation to ensure fresh data is loaded
 		// This fixes the issue where deleted languages from linguator still show up
 		delete_transient( 'lmat_languages_list' );
