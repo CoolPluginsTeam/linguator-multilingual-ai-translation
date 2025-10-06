@@ -185,6 +185,8 @@ class LMAT_Frontend_Auto_Translate {
 					'posts_per_page' => 1,
 					'fields'         => 'ids',
 					'post_status'    => 'any',
+					'lang'           => '', // This tells our filter_query to skip this query
+					'suppress_filters' => false, // Keep other filters active
 				) );
 				
 				$id = ! empty( $posts ) ? $posts[0] : null;
