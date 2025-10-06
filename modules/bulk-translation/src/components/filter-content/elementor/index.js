@@ -43,7 +43,7 @@ const FilterElementorContent = async({content, service, postId, storeDispatch, f
 
     const subStringsToCheck=(strings)=>{
         const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
-        const staticSubStrings=['caption','heading','sub_heading'];
+        const staticSubStrings=['caption','heading','sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
 
         return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
     }

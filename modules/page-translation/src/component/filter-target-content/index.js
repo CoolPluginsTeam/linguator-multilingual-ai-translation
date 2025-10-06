@@ -92,8 +92,8 @@ const FilterTargetContent = (props) => {
                     element.textContent = textContent;
                 }
                 else if(element.nodeType === 8){
-                     // let textContent = `<!--${element.textContent}-->`;
-                     element.textContent = element.textContent;
+                    // let textContent = `<!--${element.textContent}-->`;
+                    element.textContent = element.textContent;
                 }
                 else{
                     let filterContent = wrapFirstAndMatchingClosingTag(element.outerHTML);
@@ -163,7 +163,7 @@ const FilterTargetContent = (props) => {
      * @returns {Array} An array of strings after splitting based on the pattern.
      */
     const splitContent = (string) => {
-        const pattern = /(#lmat_page_translation_open_translate_span#.*?#lmat_page_translation_close_translate_span#)|'/;
+        const pattern = /(#lmat_page_translation_open_translate_span#[\s\S]*?#lmat_page_translation_close_translate_span#)|'/;
         const matches = string.split(pattern).filter(Boolean);
 
         // Remove empty strings from the result

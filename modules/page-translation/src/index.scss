@@ -646,6 +646,47 @@ button.lmat-page-translation-setting-close:hover {
     -webkit-animation: moveit 1s infinite;
 }
 
+#lmat_page_translation_strings_model .save_btn_cont button .updating-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lmat_page_translation_strings_model .save_btn_cont button .updating-text .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: #ffffff;
+    margin-left: 1px;
+    margin-top: 6px;
+    opacity: 0.25;
+    animation: lmat-page-translation-savingBlink 1.05s infinite ease-in-out;
+    animation-delay: calc(var(--i) * 0.18s - 1.05s);
+    will-change: opacity, transform;
+}
+
+@keyframes lmat-page-translation-savingBlink {
+    0%,
+    20% {
+        opacity: 0.25;
+        transform: translateY(0);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateY(-1px);
+    }
+
+    60% {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0.25;
+        transform: translateY(0);
+    }
+}
 
 .local_ai_translator_btn.button-primary {
     background: #2271b1;
