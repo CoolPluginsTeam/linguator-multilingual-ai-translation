@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { bulkTranslateEntries, initBulkTranslate } from '../bulk-translate.js';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider, selectErrorPostsInfo } from '../redux-store/features/selectors.js';
+import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider, selectErrorPostsInfo, selectTargetLanguages } from '../redux-store/features/selectors.js';
 import { __ } from '@wordpress/i18n';
 import ErrorModalBox from '../components/error-modal-box/index.js';
+import { store } from '../redux-store/store.js';
 import DOMPurify from 'dompurify';
 
 const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
@@ -180,8 +181,26 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
         }
     }
 
+    const allPostStatus = (postId) => {
+        const targetLangsArr=selectTargetLanguages(store.getState(), postId);
+        let allPostStatus=true;
+        
+        if(!targetLangsArr || !targetLangsArr.length){
+            return true;
+        }
+
+        for(let i=0; i<targetLangsArr.length; i++){
+            if(!translatePostInfo[postId + '_' + targetLangsArr[i]] || ['pending', 'in-progress'].includes(translatePostInfo[postId + '_' + targetLangsArr[i]].status)){
+                allPostStatus=false;
+                break;
+            }
+        }
+        
+        return allPostStatus;
+    }
+
     return (
-        errorModal ? <ErrorModalBox message={errorModalData.errorHtml} onClose={closeErrorModal} Title={__('Bulk Translation Error', 'linguator-multilingual-ai-translation')} prefix={prefix} /> :
+        errorModal ? <ErrorModalBox message={errorModalData.errorHtml} onClose={closeErrorModal} Title={__('Bulk Translation Error', 'linguator-multilingual-ai-translation')} prefix={prefix} />:
         <div id={`${prefix}-status-modal-container`}>
             <h2 className={`${prefix}-bulk-status-heading ${bulkStatus}`}>{sprintf(__('Bulk Translation %s', 'linguator-multilingual-ai-translation'), getBulkStatus())}{bulkStatus === 'running' && <span className={`${prefix}-bulk-status-running`}></span>}</h2>
             <div className={`${prefix}-status-modal-close`} onClick={onModalClose}>&times;</div>
@@ -345,7 +364,25 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                     <td>
                                                         {info.status === 'completed' && info.targetPostId ?
                                                             <span className={`${prefix}-view-link`}>
-                                                                <a href={info.postEditLink} target="_blank" rel="noopener noreferrer" className="button button-primary">{__('Review', 'linguator-multilingual-ai-translation')}</a>
+                                                                {allPostStatus(info.parentPostId) ? (
+                                                                    <a
+                                                                        href={info.postEditLink}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="button button-primary"
+                                                                        title={__('Open the translated post for review', 'linguator-multilingual-ai-translation')}
+                                                                    >
+                                                                        {__('Review', 'linguator-multilingual-ai-translation')}
+                                                                    </a>
+                                                                ) : (
+                                                                    <button
+                                                                        className="button disabled"
+                                                                        disabled
+                                                                        title={__('Please wait until all translations for this post are complete before reviewing.', 'linguator-multilingual-ai-translation')}
+                                                                    >
+                                                                        {__('Review', 'linguator-multilingual-ai-translation')}
+                                                                    </button>
+                                                                )}
                                                             </span>
                                                         : 
                                                         (info.status === 'in-progress' ?
