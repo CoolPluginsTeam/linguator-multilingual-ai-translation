@@ -24,6 +24,13 @@ use WPSEO_Sitemaps;
  */
 class LMAT_WPSEO {
 	/**
+	 * Cached active languages for sitemap generation
+	 *
+	 * @var array
+	 */
+	private $cached_active_languages = array();
+
+	/**
 	 * Translate options and add specific filters and actions
 	 *
 	 *  
@@ -49,6 +56,7 @@ class LMAT_WPSEO {
 				// Get all terms in all languages when the language is set from the content or directory name
 				add_filter( 'get_terms_args', array( $this, 'wpseo_remove_terms_filter' ) );
 				add_action( 'pre_get_posts', array( $this, 'before_sitemap' ), 0 ); // Needs to be fired before WPSEO_Sitemaps::redirect()
+				add_action( 'pre_get_posts', array( $this, 'cache_active_languages_for_sitemap' ), -1 ); // Cache languages before sitemap
 			}
 
 			add_filter( 'lmat_home_url_white_list', array( $this, 'wpseo_home_url_white_list' ) );
@@ -183,6 +191,28 @@ class LMAT_WPSEO {
 	}
 
 	/**
+	 * Cache active languages before sitemap generation to avoid infinite loops
+	 *
+	 * @param WP_Query $query WP_Query object.
+	 * @return void
+	 */
+	public function cache_active_languages_for_sitemap( $query ) {
+		if ( isset( $query->query['sitemap'] ) ) {
+			// Get active languages directly from the languages model to avoid get_terms() calls
+			$languages = LMAT()->model->languages->get_list();
+			$active_languages = array();
+			
+			foreach ( $languages as $lang ) {
+				if ( $lang->active ) {
+					$active_languages[] = $lang->slug;
+				}
+			}
+			
+			$this->cached_active_languages = $active_languages;
+		}
+	}
+
+	/**
 	 * Removes the language filter (and remove inactive languages) for the taxonomy sitemaps
 	 * Only when the language is set from the content or directory name
 	 *
@@ -192,34 +222,17 @@ class LMAT_WPSEO {
 	 * @return array modified list of arguments
 	 */
 	public function wpseo_remove_terms_filter( $args ) {
-		// Only affect Yoast sitemap requests.
-		if ( empty( $GLOBALS['wp_query'] ) || empty( $GLOBALS['wp_query']->query['sitemap'] ) ) {
-			return $args;
-		}
-
-		// Ensure we only act on translated taxonomies to avoid side effects.
-		if ( ! empty( $args['taxonomy'] ) ) {
-			$taxonomies = (array) $args['taxonomy'];
-			$has_translated_tax = false;
-			foreach ( $taxonomies as $tx ) {
-				if ( function_exists( 'lmat_is_translated_taxonomy' ) && lmat_is_translated_taxonomy( $tx ) ) {
-					$has_translated_tax = true;
-					break;
-				}
-			}
-			if ( ! $has_translated_tax ) {
-				return $args;
+		// Only process during sitemap generation
+		if ( isset( $GLOBALS['wp_query']->query['sitemap'] ) ) {
+			// Use cached active languages to avoid infinite loops
+			if ( ! empty( $this->cached_active_languages ) ) {
+				$args['lang'] = implode( ',', $this->cached_active_languages );
+			} else {
+				// If no active languages specified, get all languages
+				$args['lang'] = '';
 			}
 		}
-
-		$languages = $this->wpseo_get_active_languages();
-		// If all languages are active, don't set the lang param to avoid extra term queries.
-		if ( ! empty( $languages ) ) {
-			$args['lang'] = implode( ',', $languages );
-		}
-
-		// Prevent repeated invocations throughout the request, which can explode get_terms calls.
-		remove_filter( 'get_terms_args', array( $this, 'wpseo_remove_terms_filter' ) );
+		
 		return $args;
 	}
 
