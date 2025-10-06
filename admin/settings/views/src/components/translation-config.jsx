@@ -294,31 +294,31 @@ const TranslationConfig = ({ data, setData }) => {
                                 />
                             </Container.Item>
                         </div>
-                        <div style={{ backgroundColor: "#fbfbfb" }}>
-                            <div className='switcher p-6 rounded-lg'>
-                                <Container.Item >
-                                    <h3 className='flex items-center gap-2'>
-                                        <ChromeIcon className="w-5 h-5" />
-                                        {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
-                                    </h3>
-                                    <p>
-                                        {__('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation')}
-                                    </p>
-                                </Container.Item>
-                                <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
-                                    <Switch
-                                        aria-label="Switch Element"
-                                        id="chrome-local-ai-translation"
-                                        onChange={() => {
-                                            setChromeLocalAITranslation(!chromeLocalAITranslation)
-                                        }}
-                                        value={chromeLocalAITranslation}
-                                        size="sm"
-                                    />
-                                </Container.Item>
-                            </div>
-                            {chromeLocalAITranslation && <ChromeLocalAINotice />}
+                    </div>
+                    <div style={{ backgroundColor: "#fbfbfb" }}>
+                        <div className='switcher p-6 rounded-lg'>
+                            <Container.Item >
+                                <h3 className='flex items-center gap-2'>
+                                    <ChromeIcon className="w-5 h-5" />
+                                    {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
+                                </h3>
+                                <p>
+                                    {__('Chrome Local AI Translation uses Chrome Local AI API to translate text.', 'linguator-multilingual-ai-translation')}
+                                </p>
+                            </Container.Item>
+                            <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
+                                <Switch
+                                    aria-label="Switch Element"
+                                    id="chrome-local-ai-translation"
+                                    onChange={() => {
+                                        setChromeLocalAITranslation(!chromeLocalAITranslation)
+                                    }}
+                                    value={chromeLocalAITranslation}
+                                    size="sm"
+                                />
+                            </Container.Item>
                         </div>
+                        {chromeLocalAITranslation && <ChromeLocalAINotice />}
                     </div>
                 </div>
             </Container.Item>
@@ -361,7 +361,7 @@ const TranslationConfig = ({ data, setData }) => {
                 <Label variant='help'>{__('Choose how post slugs (URLs) are generated when content is translated.', 'linguator-multilingual-ai-translation')}</Label>
                 <div style={{ marginTop: "20px" }}>
                     <RadioButton.Group>
-                        {slugTranslationOptions.map((slugOption,index) => (
+                        {slugTranslationOptions.map((slugOption, index) => (
                             <RadioButton.Button
                                 badgeItem={<Badge className="mr-2" size="sm" type="rounded" variant="green" />}
                                 label={{
