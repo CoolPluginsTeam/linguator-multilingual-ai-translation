@@ -60,7 +60,7 @@ class LMAT_Display_Conditions {
 				font-size: 18px;
                 font-weight: 300;
 				line-height: 1.6;
-				color: yellow;
+				color: orange;
 			}
 		</style>
 		        <script>
