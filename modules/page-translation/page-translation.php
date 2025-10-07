@@ -105,7 +105,7 @@ class LMAT_Page_Translation {
 		global $linguator;
 		global $post;
 
-		if(!isset($post) || !is_object($post) || !isset($post->ID)) {
+		if(!isset($post) || !isset($post->ID)){
 			return;
 		}
 
