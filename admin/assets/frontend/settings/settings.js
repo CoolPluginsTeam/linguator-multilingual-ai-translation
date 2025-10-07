@@ -15072,7 +15072,7 @@ var General = function General(_ref) {
     value: false
   }];
   return /*#__PURE__*/external_React_default().createElement((external_React_default()).Fragment, null, /*#__PURE__*/external_React_default().createElement(S, {
-    className: "bg-white p-10 rounded-lg",
+    className: "bg-white p-10 rounded-lg shadow-sm",
     cols: "1",
     containerType: "grid"
   }, /*#__PURE__*/external_React_default().createElement(S, {
