@@ -401,6 +401,12 @@ class LMAT_Wizard
 				array(),
 				LINGUATOR_VERSION
 			);
+			
+			// Enqueue custom font for icons using centralized method
+			global $linguator;
+			if ( $linguator && method_exists( $linguator, 'enqueue_linguator_font' ) ) {
+				$linguator->enqueue_linguator_font();
+			}
 		}
 	}
 

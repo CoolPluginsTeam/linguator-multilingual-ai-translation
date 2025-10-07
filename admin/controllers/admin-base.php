@@ -189,6 +189,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	public function admin_enqueue_scripts() {
 		// Don't load admin scripts on wizard page as it has its own scripts
 		if ( \Linguator\Includes\Core\Linguator::is_wizard() ) {
+			
 			return;
 		}
 
@@ -254,10 +255,44 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		wp_enqueue_style( 'linguator_dialog', plugins_url( "admin/assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
 		
 		// Enqueue custom font for icons
-		wp_enqueue_style( 'linguator-font', plugins_url( 'assets/fonts/lmaticons.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+		$this->enqueue_linguator_font();
 
 		$this->add_inline_scripts();
 		$this->add_menu_redirect_script();
+	}
+
+	/**
+	 * Enqueues the Linguator custom font and its styles.
+	 * Centralized method to avoid loading the same CSS multiple times.
+	 *
+	 * @return void
+	 */
+	public function enqueue_linguator_font() {
+		// Only enqueue if not already enqueued
+		if ( ! wp_style_is( 'linguator-font', 'enqueued' ) ) {
+			wp_enqueue_style( 'linguator-font', plugins_url( 'assets/fonts/lmaticons.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+			
+			// Add custom CSS for the Linguator icon
+			$icon_css = "
+			/* Override dashicons-translation with custom font icon */
+			#adminmenu .toplevel_page_lmat .wp-menu-image:before,
+			#adminmenu .toplevel_page_lmat .dashicons-before:before {
+				font-family: 'linguator' !important;
+				content: '\\e900' !important;
+				font-size: 20px;
+				line-height: 1;
+				vertical-align: middle;
+			}
+			
+			/* Apply same icon to ab-icon class */
+			#wpadminbar #wp-admin-bar-languages .ab-icon:before {
+				font-family: 'linguator' !important;
+				content: '\\e900' !important;
+				font-size: 20px;
+			}
+			";
+			wp_add_inline_style( 'linguator-font', $icon_css );
+		}
 	}
 
 	/**
@@ -340,26 +375,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 			);
 		}
 
-		// Add custom CSS for the Linguator icon
-		$icon_css = "
-		/* Override dashicons-translation with custom font icon */
-		#adminmenu .toplevel_page_lmat .wp-menu-image:before,
-		#adminmenu .toplevel_page_lmat .dashicons-before:before {
-			font-family: 'linguator' !important;
-			content: '\\e900' !important;
-			font-size: 20px;
-			line-height: 1;
-			vertical-align: middle;
-		}
-		
-		/* Apply same icon to ab-icon class */
-		#wpadminbar #wp-admin-bar-languages .ab-icon:before {
-			font-family: 'linguator' !important;
-			content: '\\e900' !important;
-			font-size: 20px;
-		}
-		";
-		wp_add_inline_style( 'linguator-font', $icon_css );
 	}
 
 
