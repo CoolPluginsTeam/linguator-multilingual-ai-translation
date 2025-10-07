@@ -32295,25 +32295,7 @@ var Ready = function Ready() {
       onClick: function onClick() {},
       variant: step.variant
     }, step.button)));
-  })))), /*#__PURE__*/external_React_default().createElement("tr", {
-    className: "ready-table-data"
-  }, /*#__PURE__*/external_React_default().createElement("td", null, /*#__PURE__*/external_React_default().createElement("a", {
-    style: {
-      color: "gray"
-    },
-    className: "",
-    href: "".concat(currentDomain, "admin.php?page=lmat")
-  }, /*#__PURE__*/external_React_default().createElement(R, {
-    className: "",
-    iconPosition: "left",
-    size: "sm",
-    onClick: function onClick() {
-      localStorage.removeItem("setupProgress");
-    },
-    tag: "button",
-    type: "button",
-    variant: "outline"
-  }, (0,external_wp_i18n_namespaceObject.__)('Return to Dashboard', 'linguator-multilingual-ai-translation'))))))));
+  })))))));
 };
 /* harmony default export */ const ready = (Ready);
 ;// ./node_modules/lucide-react/dist/esm/icons/badge-check.js

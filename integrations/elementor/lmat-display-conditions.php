@@ -110,7 +110,7 @@ class LMAT_Display_Conditions {
 
 				// Create the note
 				var noteHtml = '<div class=\"lmat-conditions-note\">' +
-					'Note: The display conditions set on the connected template will also be applied to this version.' +
+					'Note: The Conditions applied on its connected templates will be automatically applied to this template. So please ignore the below conflict notice.' +
 				'</div>';
 				// Prepend the note to the conditions container
 				conditionsContainer.prepend(noteHtml);

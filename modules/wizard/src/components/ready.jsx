@@ -87,23 +87,7 @@ const Ready = () => {
                 </td>
               </tr>
             
-          <tr className="ready-table-data">
-            <td >
-              <a style={{ color: "gray" }} className='' href={`${currentDomain}admin.php?page=lmat`}>
-                <Button
-                  className=""
-                  iconPosition="left"
-                  size="sm"
-                  onClick={() => { localStorage.removeItem("setupProgress") }}
-                  tag="button"
-                  type="button"
-                  variant="outline"
-                >
-                  {__('Return to Dashboard', 'linguator-multilingual-ai-translation')}
-                </Button>
-              </a>
-            </td>
-          </tr>
+          
         </tbody>
       </table>
     </div>
