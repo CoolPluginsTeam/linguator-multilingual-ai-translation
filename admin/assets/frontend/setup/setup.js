@@ -35552,7 +35552,7 @@ var VideoIntro = function VideoIntro(_ref) {
     }
   }, /*#__PURE__*/external_React_default().createElement("iframe", {
     className: "absolute top-0 left-0 w-full h-full rounded-lg shadow-md",
-    src: "https://www.youtube.com/embed/VW2wKkJAo1c",
+    src: "https://www.youtube.com/embed/dst_bf7uiTc",
     title: "Linguator Setup Guide",
     frameBorder: "0",
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
