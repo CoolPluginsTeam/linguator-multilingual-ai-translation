@@ -268,12 +268,6 @@ class Linguator {
 
 		// Set current version
 		$options['version'] = LINGUATOR_VERSION;
-		
-
-		// Clear language cache on plugin load to ensure fresh data
-		// This fixes the issue where deleted languages from Linguator still show up
-		delete_transient( 'lmat_languages_list' );
-
 		/**
 		 * Filter the model class to use
 		 * /!\ this filter is fired *before* the $linguator object is available

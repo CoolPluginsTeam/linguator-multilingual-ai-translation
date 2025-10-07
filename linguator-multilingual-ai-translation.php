@@ -80,20 +80,15 @@ if ( empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Securi
 
 // Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
-	// Only proceed if we need setup and are in admin
-	if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
-		// Get install date
-		$install_date = get_option('lmat_install_date');
-		$current_time = current_time('timestamp');
-			
-		// Convert install date to timestamp if it's in string format
-		$install_timestamp = is_numeric($install_date) ? $install_date : strtotime($install_date);
-			
-		// Only redirect if we're within 30 minutes of installation
-		// This prevents redirect loops and unwanted redirects after the initial setup
-		if ($install_timestamp && ($current_time - $install_timestamp) <= 1800) { // 1800 seconds = 30 minutes
-			// Make sure this only runs on the admin side
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress activation parameter, nonce not needed
+	// Only check setup flag on plugins page to avoid unnecessary database queries
+	$is_plugins_page = false;
+	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'plugins.php' ) !== false ) {
+		$is_plugins_page = true;
+	}
+	// Only run on plugins page
+	if ( $is_plugins_page ) {
+		// Only proceed if we need setup and are in admin
+		if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
 			if (!is_network_admin() && !isset($_GET['activate-multi'])) {
 				// Remove the setup flag
 				delete_option('lmat_needs_setup');
@@ -101,9 +96,6 @@ add_action('admin_init', function() {
 				wp_safe_redirect(admin_url('admin.php?page=lmat_wizard'));
 				exit;
 			}
-		} else {
-			// If more than 30 minutes have passed, just remove the setup flag
-			delete_option('lmat_needs_setup');
 		}
 	}
 	
