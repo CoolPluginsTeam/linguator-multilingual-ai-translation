@@ -32270,7 +32270,7 @@ var Ready = function Ready() {
   }, /*#__PURE__*/external_React_default().createElement("iframe", {
     width: "560",
     height: "315",
-    src: "https://www.youtube-nocookie.com/embed/PnI49VIB48w?si=UPOQ45CbbE6-pm2t",
+    src: "https://www.youtube-nocookie.com/embed/20MbjUb6AnM?si=UPOQ45CbbE6-pm2t",
     title: "YouTube video player",
     frameBorder: "0",
     loading: "lazy",
