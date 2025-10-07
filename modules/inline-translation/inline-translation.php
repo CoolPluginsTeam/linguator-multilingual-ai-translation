@@ -74,6 +74,13 @@ class LMAT_Inline_Translation {
 	}
 
 	private function enqueue_inline_translation_assets( $type = 'gutenberg', $extra_dependencies = array() ) {
+
+		global $post;
+
+		if(!isset($post) || !isset($post->ID)){
+			return;
+		}
+
 		if ( function_exists( 'lmat_current_language' ) ) {
 			$current_language      = lmat_current_language();
 			$current_language_name = lmat_current_language( 'name' );

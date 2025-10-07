@@ -221,9 +221,16 @@ const FilterTargetContent = (props) => {
 
                         textNode = document.createTextNode(textContent);
                     }else if(element.nodeType === 8){
-                        textNode = document.createTextNode(`<!--${element.textContent}-->`);
+                        textNode = document.createTextNode(`#lmat_page_translation_open_translate_span#<!--${element.textContent}-->#lmat_page_translation_close_translate_span#`);
                     }else{
-                        let filterContent = wrapFirstAndMatchingClosingTag(element.outerHTML);
+                        let filterHtml=element.outerHTML;
+
+                        filterHtml = filterHtml.replace(
+                            /<!--([\s\S]*?)-->/g,
+                            (match, inner) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`
+                        );
+
+                        let filterContent = wrapFirstAndMatchingClosingTag(filterHtml);
 
                         textNode = document.createTextNode(filterContent);
                     }

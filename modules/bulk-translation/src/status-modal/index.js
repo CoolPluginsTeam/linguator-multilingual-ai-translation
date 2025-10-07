@@ -370,7 +370,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className="button button-primary"
-                                                                        title={__('Open the translated post for review', 'linguator-multilingual-ai-translation')}
+                                                                        title={sprintf(__('Open the translated %s for review', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
                                                                     >
                                                                         {__('Review', 'linguator-multilingual-ai-translation')}
                                                                     </a>
@@ -378,7 +378,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                                     <button
                                                                         className="button disabled"
                                                                         disabled
-                                                                        title={__('Please wait until all translations for this post are complete before reviewing.', 'linguator-multilingual-ai-translation')}
+                                                                        title={sprintf(__('Please wait until all translations for this %s are complete before reviewing.', 'autopoly-ai-translation-for-polylang-pro'), lmatBulkTranslationGlobal.post_label)}
                                                                     >
                                                                         {__('Review', 'linguator-multilingual-ai-translation')}
                                                                     </button>
