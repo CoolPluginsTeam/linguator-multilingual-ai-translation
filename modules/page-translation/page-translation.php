@@ -105,6 +105,10 @@ class LMAT_Page_Translation {
 		global $linguator;
 		global $post;
 
+		if(!isset($post) || !is_object($post) || !isset($post->ID)) {
+			return;
+		}
+
 		$lmat_linguator        = $linguator;
 		$post_translate_status = get_post_meta( $post->ID, '_lmat_translate_status', true );
 		$post_parent_post_id   = get_post_meta( $post->ID, '_lmat_parent_post_id', true );
