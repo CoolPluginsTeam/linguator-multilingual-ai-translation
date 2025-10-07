@@ -25413,7 +25413,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     },
     value: googleMachineTranslation,
     size: "sm"
-  }))), /*#__PURE__*/external_React_default().createElement("div", {
+  })))), /*#__PURE__*/external_React_default().createElement("div", {
     style: {
       backgroundColor: "#fbfbfb"
     }
@@ -25436,7 +25436,7 @@ var TranslationConfig = function TranslationConfig(_ref) {
     },
     value: chromeLocalAITranslation,
     size: "sm"
-  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null))))), /*#__PURE__*/external_React_default().createElement("hr", {
+  }))), chromeLocalAITranslation && /*#__PURE__*/external_React_default().createElement(ChromeLocalAINotice, null)))), /*#__PURE__*/external_React_default().createElement("hr", {
     className: "w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle"
   }), /*#__PURE__*/external_React_default().createElement(S.Item, null, /*#__PURE__*/external_React_default().createElement(label_es_c, {
     size: "md",

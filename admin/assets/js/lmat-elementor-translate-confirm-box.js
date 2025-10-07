@@ -8,7 +8,6 @@ const lmatElementorConfirmBox = {
     },
 
     createConfirmBox: function() {
-        console.log('createConfirmBox');
         const sourceLangName=window.lmatElementorConfirmBoxData.sourceLangName;
         const targetLangName=window.lmatElementorConfirmBoxData.targetLangName;
         const confirmBox = jQuery(`<div class="lmat-elementor-translate-confirm-box modal-container" style="display:flex">
