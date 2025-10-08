@@ -191,7 +191,7 @@ class LMAT_Admin_Notices {
 		// Check if we're on the specific ?page=lmat page and should suppress notices
 		if ( current_user_can( 'manage_options' ) ) {
 			
-			if ( $this->can_display_notice( 'review' ) && ! static::is_dismissed( 'review' ) && ! empty( $this->options['first_activation'] ) && time() > $this->options['first_activation'] + 3 * DAY_IN_SECONDS ) {
+			if ( $this->can_display_notice( 'review' ) ) {
 				if(class_exists(LMAT_Translation_Dashboard::class)){
 					$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?filter=5#new-post';
 					LMAT_Translation_Dashboard::review_notice('lmat', 'Linguator', esc_url($review_url));
