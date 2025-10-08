@@ -101,10 +101,22 @@ class LMAT_Install extends LMAT_Install_Base {
 		// Check and store first installation date
 		$install_date = get_option('lmat_install_date');
 		if (empty($install_date)) {
-			// Store the first installation date
 			update_option('lmat_install_date', gmdate('Y-m-d h:i:s'));
 			// Set flag for redirection
 			update_option('lmat_needs_setup', 'yes');
+			
+			// Ensure language switcher meta box is visible for new installations
+			$user_id = get_current_user_id();
+			if ($user_id) {
+				$hidden_meta_boxes = get_user_meta($user_id, 'metaboxhidden_nav-menus', true);
+				// If meta doesn't exist yet, initialize as empty array
+				if (!is_array($hidden_meta_boxes)) {
+					$hidden_meta_boxes = array();
+				}
+				// Remove language switcher from hidden meta boxes to make it visible
+				$hidden_meta_boxes = array_diff($hidden_meta_boxes, array('lmat_lang_switch_box'));
+				update_user_meta($user_id, 'metaboxhidden_nav-menus', $hidden_meta_boxes);
+			}
 		}
 
 		

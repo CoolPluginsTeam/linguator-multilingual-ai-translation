@@ -99,31 +99,36 @@ add_action('admin_init', function() {
 		}
 	}
 	
-	// Check if first activation and install time are the same
-	$first_activation = gmdate('Y-m-d h:i:s');
+	// Ensure language switcher is visible on nav-menus page for new installations
 	$install_date = get_option('lmat_install_date');
 	
-	if ($first_activation && $install_date) {
-		// Convert both to timestamps for comparison
-		$activation_timestamp = is_numeric($first_activation) ? $first_activation : strtotime($first_activation);
-		$install_timestamp = is_numeric($install_date) ? $install_date : strtotime($install_date);
+	if ($install_date) {
+		// Check if this is a recent installation (within last 24 hours)
+		$install_timestamp = strtotime($install_date);
+		$time_since_install = time() - $install_timestamp;
 		
-		// If activation and install times are the same (within 30 seconds tolerance)
-		if (abs($activation_timestamp - $install_timestamp) <= 30) {
-			// Remove language switcher from hidden meta boxes
-			add_action('admin_head', function() {
-				// Get current user ID
+		// If installed within last 24 hours, ensure language switcher is visible
+		if ($time_since_install <= 86400) {
+			// Hook into nav-menus page load
+			add_action('load-nav-menus.php', function() {
 				$user_id = get_current_user_id();
+				if (!$user_id) {
+					return;
+				}
 				
 				// Get hidden meta boxes for current user
 				$hidden_meta_boxes = get_user_meta($user_id, 'metaboxhidden_nav-menus', true);
-				if (is_array($hidden_meta_boxes)) {
-					// Remove language switcher from hidden meta boxes
-					$hidden_meta_boxes = array_diff($hidden_meta_boxes, array('lmat_lang_switch_box'));
-					
-					// Update user meta
-					update_user_meta($user_id, 'metaboxhidden_nav-menus', $hidden_meta_boxes);
+				
+				// Initialize as empty array if not set
+				if (!is_array($hidden_meta_boxes)) {
+					$hidden_meta_boxes = array();
 				}
+				
+				// Remove language switcher from hidden meta boxes to make it visible
+				$hidden_meta_boxes = array_diff($hidden_meta_boxes, array('lmat_lang_switch_box'));
+				
+				// Update user meta
+				update_user_meta($user_id, 'metaboxhidden_nav-menus', $hidden_meta_boxes);
 			});
 		}
 	}
