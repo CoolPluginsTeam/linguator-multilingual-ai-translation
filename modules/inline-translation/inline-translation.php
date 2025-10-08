@@ -81,6 +81,10 @@ class LMAT_Inline_Translation {
 			return;
 		}
 
+		if(!is_admin()) {
+			return;
+		}
+
 		if ( function_exists( 'lmat_current_language' ) ) {
 			$current_language      = lmat_current_language();
 			$current_language_name = lmat_current_language( 'name' );

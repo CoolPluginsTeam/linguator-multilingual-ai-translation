@@ -61,10 +61,13 @@ class Translation_Term_Model {
 			return new WP_Error( 'lmat_translate_term_no_source_term', sprintf( __( 'The term with ID %d could not be translated as it doesn\'t exist.', 'linguator-multilingual-ai-translation' ), (int) $entry['id'] ) );
 		}
 
+		$source_language = $this->model->term->get_language( $source_term->term_id );
 		$tr_term_name        = $this->get_translated_term_name( $source_term, $entry['data'] );
 		$tr_term_description = $this->get_translated_term_description( $source_term, $entry['data'] );
 		$tr_term_id          = $this->model->term->get( $entry['id'], $target_language );
 		$tr_term_slug        = $this->get_translated_term_slug( $source_term, $entry['data'] );
+
+		$language_link=apply_filters('lmat_bulk_term_language_link', true);
 
 		if ( $tr_term_id ) {
 			// The translation already exists.
@@ -83,9 +86,11 @@ class Translation_Term_Model {
 				return new WP_Error( 'lmat_translate_update_term_failed', sprintf( __( 'The term with ID %d could not be updated.', 'linguator-multilingual-ai-translation' ), (int) $tr_term_id ) );
 			}
 		} else {
-			$args = array(
-				'translations' => $this->model->term->get_translations( $source_term->term_id ),
-			);
+			$args = array();
+
+			if($language_link){
+				$args['translations'] = $this->model->term->get_translations( $source_term->term_id );
+			}
 
 			if ( !empty( $source_term->description ) ) {
 				$args['description'] = $tr_term_description;
@@ -115,9 +120,10 @@ class Translation_Term_Model {
 		 * @param string $taxonomy        The taxonomy slug.
 		 * @param array  $translations    Array of term translations.
 		 */
-		do_action( 'lmat_save_term', $tr_term_id, $source_term->taxonomy, $this->model->term->get_translations( $tr_term_id ) );
-
-		$this->assign_parents( [ $entry['id'] ], $target_language );
+		if($language_link){
+			do_action( 'lmat_save_term', $tr_term_id, $source_term->taxonomy, $this->model->term->get_translations( $tr_term_id ) );
+			$this->assign_parents( [ $entry['id'] ], $target_language );
+		}
 
 		return $tr_term_id;
 	}
