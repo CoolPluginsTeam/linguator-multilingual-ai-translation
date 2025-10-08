@@ -660,9 +660,9 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			global $linguator;
 
 			$target_language_object = $linguator->model->get_language( $target_language );
-			$post_clone             = new Translation_Term_Model( $linguator );
+			$term_clone             = new Translation_Term_Model( $linguator );
 
-			$term_id = $post_clone->translate(
+			$term_id = $term_clone->translate(
 				array(
 					'id'   => $term_id,
 					'data' => $translations,

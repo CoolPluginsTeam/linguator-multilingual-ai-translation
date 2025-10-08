@@ -146,7 +146,12 @@ class LMAT_Sync_Post_Model {
 
 			$translations = $this->model->post->get_translations( $post_id );
 			$translations[ $target_language ] = $tr_id;
-			$this->model->post->save_translations( $post_id, $translations ); // Saves translations in case we created a post.
+
+			$language_link=apply_filters('lmat_bulk_post_language_link', true);
+
+			if($language_link){
+				$this->model->post->save_translations( $post_id, $translations ); // Saves translations in case we created a post.
+			}
 
 			$languages[] = $target_language;
 
