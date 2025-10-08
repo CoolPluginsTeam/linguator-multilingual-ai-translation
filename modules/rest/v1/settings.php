@@ -517,6 +517,14 @@ class Settings extends Abstract_Controller {
 			}
 		}
 		
+		// Apply CPFM opt-in choice logic for lmat_feedback_data
+		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
+		
+		if ( $cpfm_opt_in_choice === false ) {
+			// Remove the Usage Data Sharing setting if CPFM opt-in choice doesn't exist
+			unset( $response['lmat_feedback_data'] );
+		}
+		
 		/** @var WP_REST_Response */
 		return rest_ensure_response( $response );
 	}
