@@ -8,11 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
-use Linguator\Frontend\Controllers\LMAT_Frontend;
-use Linguator\Includes\Other\LMAT_Model;
-
-
 /**
  * Manages the compatibility with Elementor
  *
