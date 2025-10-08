@@ -290,13 +290,11 @@ class Settings extends Abstract_Controller {
 				case 'hide_default':
 					flush_rewrite_rules();
 					break;
+			
 				case 'post_types':
-					// Trigger mass language assignment for updated post types
-					$this->trigger_mass_language_assignment_for_post_types( $previous_value, $new_value );
-					break;
 				case 'taxonomies':
-					// Trigger mass language assignment for updated taxonomies
-					$this->trigger_mass_language_assignment_for_taxonomies( $previous_value, $new_value );
+				case 'media_support':
+					$this->trigger_mass_language_assignment( $option_name, $previous_value, $new_value );
 					break;
 			}
 		}
@@ -545,61 +543,63 @@ class Settings extends Abstract_Controller {
 	}
 
 	/**
-	 * Triggers mass language assignment for post types when they are updated.
+	 * Triggers mass language assignment for when they are updated.
 	 *
 	 *  
 	 *
-	 * @param array $previous_value Previous post types array.
-	 * @param array $new_value      New post types array.
+	 * @param string $type           The type of option being updated (post_types, taxonomies, media_support).
+	 * @param array $previous_value Previous array.
+	 * @param array $new_value      New array.
 	 * @return void
 	 */
-	private function trigger_mass_language_assignment_for_post_types( $previous_value, $new_value ) {
-		// Ensure we have arrays to work with
+	private function trigger_mass_language_assignment( $type, $previous_value, $new_value ) {
+		// Ensure both are arrays where applicable
 		$previous_value = is_array( $previous_value ) ? $previous_value : array();
 		$new_value = is_array( $new_value ) ? $new_value : array();
-		
-		// Find newly added post types
-		$newly_added = array_diff( $new_value, $previous_value );
-		
-		if ( ! empty( $newly_added ) ) {
-			// Get the default language
-			$default_lang = $this->languages->get_default();
-			if ( $default_lang ) {
-				// Run mass language assignment for the newly added post types
-				$this->model->set_language_in_mass( $default_lang, array( 'post' ) );
-			}
+	
+		// Get the default language
+		$default_lang = $this->languages->get_default();
+		if ( ! $default_lang ) {
+			return;
 		}
-	}
-
-	/**
-	 * Triggers mass language assignment for taxonomies when they are updated.
-	 *
-	 *  
-	 *
-	 * @param array $previous_value Previous taxonomies array.
-	 * @param array $new_value      New taxonomies array.
-	 * @return void
-	 */
-	private function trigger_mass_language_assignment_for_taxonomies( $previous_value, $new_value ) {
-		// Ensure we have arrays to work with
-		$previous_value = is_array( $previous_value ) ? $previous_value : array();
-		$new_value = is_array( $new_value ) ? $new_value : array();
-		
-		// Find newly added taxonomies
-		$newly_added = array_diff( $new_value, $previous_value );
-		
-		if ( ! empty( $newly_added ) ) {
-			// Get the default language
-			$default_lang = $this->languages->get_default();
-			if ( $default_lang ) {
-				// Get terms without language from the newly added taxonomies
-				$terms_without_lang = $this->model->get_terms_with_no_lang( $newly_added, 1000 );
-				
-				if ( ! empty( $terms_without_lang ) ) {
-					// Assign the default language to these terms
-					$this->model->translatable_objects->get( 'term' )->set_language_in_mass( $terms_without_lang, $default_lang );
+	
+		switch ( $type ) {
+			case 'post_types':
+				$newly_added = array_diff( $new_value, $previous_value );
+				if ( ! empty( $newly_added ) ) {
+					// Only assign language to posts that don't already have one
+					$posts_without_lang = $this->model->get_posts_with_no_lang( $newly_added, 1000 );
+					if ( ! empty( $posts_without_lang ) ) {
+						$this->model->translatable_objects
+							->get( 'post' )
+							->set_language_in_mass( $posts_without_lang, $default_lang );
+					}
 				}
-			}
+				break;
+
+			case 'taxonomies':
+				$newly_added = array_diff( $new_value, $previous_value );
+				if ( ! empty( $newly_added ) ) {
+					$terms_without_lang = $this->model->get_terms_with_no_lang( $newly_added, 1000 );
+					if ( ! empty( $terms_without_lang ) ) {
+						$this->model->translatable_objects
+							->get( 'term' )
+							->set_language_in_mass( $terms_without_lang, $default_lang );
+					}
+				}
+				break;
+
+			case 'media_support':
+				if ( ! $previous_value && $new_value ) {
+					// Only assign language to media that don't already have one
+					$media_without_lang = $this->model->get_posts_with_no_lang( array( 'attachment' ), 1000 );
+					if ( ! empty( $media_without_lang ) ) {
+						$this->model->translatable_objects
+							->get( 'post' )
+							->set_language_in_mass( $media_without_lang, $default_lang );
+					}
+				}
+				break;
 		}
 	}
 
