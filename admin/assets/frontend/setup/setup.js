@@ -32233,11 +32233,11 @@ var Ready = function Ready() {
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('Video Tutorial', 'linguator-multilingual-ai-translation'),
-    href: "",
+    href: "https://linguator.com/video-tutorials/",
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('Docs', 'linguator-multilingual-ai-translation'),
-    href: "",
+    href: "https://linguator.com/documentation/",
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('View Pages', 'linguator-multilingual-ai-translation'),
@@ -32249,7 +32249,7 @@ var Ready = function Ready() {
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('FAQs', 'linguator-multilingual-ai-translation'),
-    href: "",
+    href: "https://linguator.com/#support",
     variant: 'outline'
   }];
   return /*#__PURE__*/external_React_default().createElement("div", {
@@ -32261,7 +32261,7 @@ var Ready = function Ready() {
     style: {
       color: "#6b7280"
     }
-  }, (0,external_wp_i18n_namespaceObject.__)("You're now able to translate your contents such as posts, pages, categories and tags. You can learn how to use Linguator by reading the documentation.", 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement("table", {
+  }, (0,external_wp_i18n_namespaceObject.__)("You're now able to translate your contents such as posts, pages, categories and tags. You can learn how to use Linguator by watching the video tutorial.", 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement("table", {
     className: "ready-table"
   }, /*#__PURE__*/external_React_default().createElement("tbody", null, /*#__PURE__*/external_React_default().createElement("tr", {
     className: "ready-table-data"
