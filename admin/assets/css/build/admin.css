@@ -30,6 +30,7 @@
 	width : 10%;
 }
 
+.lmat_subsubsub .lmat_subsubsub_list li a .icon-default-lang:before,
 td.column-default_lang .icon-default-lang:before,
 .lmat-wizard-content .icon-default-lang:before {
 	font-family: 'dashicons';
@@ -344,8 +345,11 @@ td.column-default_lang .icon-default-lang:before,
 
 /* Notices */
 .lmat-notice.notice {
-	padding-right: 38px;
-	position: relative;
+    width: auto;
+	max-width: 100%;
+    clear: both;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .lmat-notice a.notice-dismiss {

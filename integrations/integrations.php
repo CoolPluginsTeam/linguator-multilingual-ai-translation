@@ -15,8 +15,8 @@ use Linguator\Includes\Core\Linguator;
  * Container for 3rd party plugins ( and themes ) integrations.
  * This class is available as soon as the plugin is loaded.
  *
- * @since 1.0.0
- * @since 1.0.0 Renamed from LMAT_Plugins_Compat to LMAT_Integrations.
+ *  
+ *   Renamed from LMAT_Plugins_Compat to LMAT_Integrations.
  */
 #[AllowDynamicProperties]
 class LMAT_Integrations {
@@ -101,14 +101,14 @@ class LMAT_Integrations {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	protected function __construct() {}
 
 	/**
 	 * Returns the single instance of the class.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return self
 	 */
@@ -124,7 +124,7 @@ class LMAT_Integrations {
 	/**
 	 * Requires integrations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

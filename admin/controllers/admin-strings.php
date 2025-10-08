@@ -17,7 +17,7 @@ use WP_Widget_Custom_HTML;
 /**
  * A fully static class to manage strings translations on admin side
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Strings {
 	/**
@@ -42,7 +42,7 @@ class LMAT_Admin_Strings {
 	/**
 	 * Add filters
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -54,7 +54,7 @@ class LMAT_Admin_Strings {
 	/**
 	 * Register strings for translation making sure it is not duplicate or empty
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name      A unique name for the string
 	 * @param string $string    The string to register
@@ -71,7 +71,7 @@ class LMAT_Admin_Strings {
 	/**
 	 * Get registered strings
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array list of all registered strings
 	 */
@@ -124,7 +124,7 @@ class LMAT_Admin_Strings {
 		 * Filter the list of strings registered for translation
 		 * Mainly for use by our LMAT_WPML_Compat class
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $strings list of strings
 		 */
@@ -135,7 +135,7 @@ class LMAT_Admin_Strings {
 	/**
 	 * Performs the sanitization ( before saving in DB ) of default strings translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $translation translation to sanitize
 	 * @param string $name        unique name for the string

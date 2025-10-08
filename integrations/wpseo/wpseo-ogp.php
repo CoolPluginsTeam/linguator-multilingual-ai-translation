@@ -14,7 +14,7 @@ use Yoast\WP\SEO\Presenters\Abstract_Indexable_Presenter;
  * Creates an Opengraph alternate locale meta tag to be consumed by Yoast SEO
  * Requires Yoast SEO 14.0 or newer.
  *
- * @since 1.0.0
+ *  
  */
 final class LMAT_WPSEO_OGP extends Abstract_Indexable_Presenter {
 	/**
@@ -27,7 +27,7 @@ final class LMAT_WPSEO_OGP extends Abstract_Indexable_Presenter {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $locale Facebook locale.
 	 */
@@ -38,7 +38,7 @@ final class LMAT_WPSEO_OGP extends Abstract_Indexable_Presenter {
 	/**
 	 * Returns the meta Opengraph alternate locale meta tag
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -49,7 +49,7 @@ final class LMAT_WPSEO_OGP extends Abstract_Indexable_Presenter {
 	/**
 	 * Returns the alternate locale
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

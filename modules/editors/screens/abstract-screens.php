@@ -104,7 +104,6 @@ abstract class Abstract_Screen {
 			/**
 			 * Filters settings required by the UI.
 			 *
-			 * @since 3.6
 			 *
 			 * @param array $settings.
 			 */
@@ -227,8 +226,11 @@ abstract class Abstract_Screen {
 
 			// Get translated post ID
 			$translation_id = $this->model->post->get_translation( $post->ID, $language );
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 			if ( empty( $translation_id ) && ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) {
-				$translation_id = $this->model->post->get_translation( $_GET['from_post'], $language );
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
+				$from_post = sanitize_text_field( wp_unslash( $_GET['from_post'] ) );
+				$translation_id = $this->model->post->get_translation( $from_post, $language );
 			}
 			$translated_post = null;
 			$edit_link = '';

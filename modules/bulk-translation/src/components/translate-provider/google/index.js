@@ -1,6 +1,6 @@
 import ModalStringScroll from "../../string-modal-scroll/index.js";
 import GoogleLanguage from "./google-language.js";
-import { selectProgressStatus, selectTargetContent, selectTargetLanguages, selectTranslatePostInfo } from "../../../redux-store/features/selectors.js";
+import { selectProgressStatus, selectTargetContent, selectTranslatePostInfo } from "../../../redux-store/features/selectors.js";
 import { store } from "../../../redux-store/store.js";
 import { updateProgressStatus, updateTranslatePostInfo, unsetPendingPost } from "../../../redux-store/features/actions.js";
 import { __, sprintf } from "@wordpress/i18n";

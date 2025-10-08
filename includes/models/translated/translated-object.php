@@ -18,7 +18,7 @@ use WP_Term;
 /**
  * Abstract class to use for object types that support translations.
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 
@@ -34,7 +34,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Instance of `LMAT_Model`.
 	 */
@@ -52,7 +52,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Registers the translations taxonomy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -74,7 +74,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Returns the translations group taxonomy name.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -87,7 +87,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Assigns a language to an object, taking care of the translations group.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int                     $id   Object ID.
 	 * @param LMAT_Language|string|int $lang Language to assign to the object.
@@ -116,7 +116,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Returns a list of object translations, given a `tax_translations` term ID.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $term_id A `tax_translations` term ID.
 	 * @return int[] An associative array of translations with language code as key and translation ID as value.
@@ -146,7 +146,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Saves the object's translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $id           Object ID.
 	 * @param int[] $translations An associative array of translations with language code as key and translation ID as value.
@@ -171,10 +171,10 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		$translations = $this->validate_translations( $translations, $id );
 
 		// Unlink removed translations.
-		$old_translations = $this->get_translations( $id );
+		$old_translations = $this->get_objects_translations( $translations );
 
-		foreach ( array_diff_assoc( $old_translations, $translations ) as $id ) {
-			$this->delete_translation( $id );
+		foreach ( array_diff_assoc( $old_translations, $translations ) as $tr_id ) {
+			$this->delete_translation( $tr_id );
 		}
 
 		// Check ID we need to create or update the translation group.
@@ -182,7 +182,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return $translations;
 		}
 
-		$terms = wp_get_object_terms( $translations, $this->tax_translations );
+		$terms = $this->get_object_terms( $translations, $this->tax_translations );
 		$term  = is_array( $terms ) && ! empty( $terms ) ? reset( $terms ) : false;
 
 		if ( empty( $term ) ) {
@@ -208,6 +208,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		}
 
 		// Clean now unused translation groups.
+		$terms = array_filter( $terms );
 		foreach ( $terms as $term ) {
 			// Get fresh count value.
 			$term = get_term( $term->term_id, $this->tax_translations );
@@ -223,7 +224,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Deletes a translation of an object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Object ID.
 	 * @return void
@@ -261,7 +262,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Returns an array of valid translations of an object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Object ID.
 	 * @return int[] An associative array of translations with language code as key and translation ID as value.
@@ -275,16 +276,14 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return array();
 		}
 
-		$translations = $this->get_raw_translations( $id );
-
-		return $this->validate_translations( $translations, $id, 'display' );
+		return $this->get_objects_translations( array( $id ) );
 	}
 
 	/**
 	 * Returns an unvalidated array of translations of an object.
 	 * It is generally preferable to use `get_translations()`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Object ID.
 	 * @return int[] An associative array of translations with language code as key and translation ID as value.
@@ -298,22 +297,13 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return array();
 		}
 
-		$term = $this->get_object_term( $id, $this->tax_translations );
-
-		if ( empty( $term->description ) ) {
-			return array();
-		}
-
-		$translations = maybe_unserialize( $term->description );
-		$translations = is_array( $translations ) ? $translations : array();
-
-		return $translations;
+		return $this->get_raw_objects_translations( array( $id ) )[ $id ] ?? array();
 	}
 
 	/**
 	 * Returns the ID of the translation of an object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int                 $id   Object ID.
 	 * @param LMAT_Language|string $lang Language (slug or object).
@@ -336,8 +326,8 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Among the object and its translations, returns the ID of the object which is in `$lang`.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Returns `0` instead of `false`.
+	 *  
+	 *   Returns `0` instead of `false`.
 	 *
 	 * @param int                     $id   Object ID.
 	 * @param LMAT_Language|string|int $lang Language (object, slug, or term ID).
@@ -370,7 +360,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Checks if a user can synchronize translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Object ID.
 	 * @return bool
@@ -385,7 +375,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		/**
 		 * Filters whether a synchronization capability check should take place.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param bool|null $check Null to enable the capability check,
 		 *                         true to always allow the synchronization,
@@ -415,7 +405,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Tells whether a translation term must be updated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $id           Object ID.
 	 * @param int[] $translations An associative array of translations with language code as key and translation ID as
@@ -431,6 +421,53 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	}
 
 	/**
+	 * Returns an array of valid translations for multiple objects.
+	 *
+	 *
+	 * @param int[] $object_ids Array of object IDs.
+	 * @return int[] An associative array of translations with language code as key and translation ID as value.
+	 *
+	 * @phpstan-return array<non-empty-string, positive-int>
+	 */
+	protected function get_objects_translations( array $object_ids ) {
+		$translations_arrays = $this->get_raw_objects_translations( $object_ids );
+
+		$validated = array();
+		foreach ( $translations_arrays as $id => $translations ) {
+			$validated = array_merge( $validated, $this->validate_translations( $translations, $id, 'display' ) );
+		}
+		return $validated;
+	}
+
+	/**
+	 * Returns an unvalidated array of translations for multiple objects.
+	 * It is generally preferable to use `get_objects_translations()`.
+	 *
+	 *
+	 * @param int[] $object_ids Array of object IDs.
+	 * @return int[][] An array of an associative array of translations with language code as key and translation ID as value.
+	 *                 First level key is the id of the object that translations are related to.
+	 *
+	 * @phpstan-return array<int,array<non-empty-string, positive-int>>
+	 */
+	protected function get_raw_objects_translations( array $object_ids ) {
+		$terms = $this->get_object_terms( $object_ids, $this->tax_translations );
+
+		$translations = array();
+		foreach ( $object_ids as $id ) {
+			if ( empty( $terms[ $id ] ) || empty( $terms[ $id ]->description ) ) {
+				$translations[ $id ] = array();
+				continue;
+			}
+
+			$trans = maybe_unserialize( $terms[ $id ]->description );
+			$translations[ $id ] = is_array( $trans ) ? $trans : array();
+		}
+
+		return $translations;
+	}
+
+	/**
 	 * Validates and sanitizes translations.
 	 * This will:
 	 * - Make sure to return only translations in existing languages (and only translations).
@@ -438,9 +475,9 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * - Make sure the provided translation (`$id`) is in the list.
 	 * - Check that the translated objects are in the right language, if `$context` is set to 'save'.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Doesn't return `0` ID values.
-	 * @since 1.0.0 Added parameters `$id` and `$context`.
+	 *  
+	 *   Doesn't return `0` ID values.
+	 *   Added parameters `$id` and `$context`.
 	 *
 	 * @param int[]  $translations An associative array of translations with language code as key and translation ID as
 	 *                             value.
@@ -510,7 +547,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	/**
 	 * Creates translations groups in mass.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[][] $translations Array of translations arrays.
 	 * @return void

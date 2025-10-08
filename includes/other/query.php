@@ -16,7 +16,7 @@ use WP_Tax_Query;
 /**
  * A class to manipulate the language query var in WP_Query
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Query {
 	/**
@@ -32,7 +32,7 @@ class LMAT_Query {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query  $query Reference to the WP_Query object.
 	 * @param LMAT_Model $model Instance of LMAT_Model.
@@ -45,7 +45,7 @@ class LMAT_Query {
 	/**
 	 * Checks if the query already includes a language taxonomy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $qvars WP_Query query vars.
 	 * @return bool
@@ -72,7 +72,7 @@ class LMAT_Query {
 	 *
 	 * @see https://wordpress.org/support/topic/tax_query-bug
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $tax_queries An array of tax queries.
 	 * @return bool
@@ -97,7 +97,7 @@ class LMAT_Query {
 	/**
 	 * Get queried taxonomies
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array queried taxonomies
 	 */
@@ -109,8 +109,8 @@ class LMAT_Query {
 	 * Sets the language in query.
 	 * Optimized for (and requires) WP 3.5+.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now an array of languages.
+	 *  
+	 *   Accepts now an array of languages.
 	 *
 	 * @param LMAT_Language|LMAT_Language[] $languages Language object(s).
 	 * @return void
@@ -155,7 +155,7 @@ class LMAT_Query {
 	/**
 	 * Adds the language in the query after it has checked that it won't conflict with other query vars.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|false $lang Language.
 	 * @return void
@@ -212,7 +212,7 @@ class LMAT_Query {
 	 * Sets the language correctly if the current query is a 'OR' relation,
 	 * since WordPress merges the language with the other query vars when the relation is OR.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

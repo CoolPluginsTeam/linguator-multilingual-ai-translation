@@ -219,8 +219,9 @@ $prefix: lmat-bulk-translate;
                                 font-weight: 600;
                                 margin-block: .5rem;
             
-                                img{
+                                &>svg{
                                     width: 45px;
+                                    height: auto;
                                     margin-right: 15px;
                                 }
                             }

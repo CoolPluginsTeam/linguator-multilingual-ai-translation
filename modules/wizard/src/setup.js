@@ -13,14 +13,6 @@ const SetupPageComponent = () =>{
 }
 
 // Mount the appropriate component based on which element exists
-// domReady(() => {
-
-//         const element = document.getElementById('dmo-settings');
-//         if (element) {
-//             const root = createRoot(element);
-//             root.render(<SettingsPage />);
-//         }
-// });
 domReady(() => {
     const element = document.getElementById('lmat-setup');
         if (element) {

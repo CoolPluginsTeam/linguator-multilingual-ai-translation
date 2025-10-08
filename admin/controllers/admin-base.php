@@ -14,11 +14,13 @@ use Linguator\Includes\Filters\LMAT_Filters_Links;
 use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
 use Linguator\Includes\Other\LMAT_Language;
 use Linguator\Admin\Controllers\LMAT_Admin_Links;
+use WP_Post;
+use WP_Term;
 
 /**
  * Setup features available on all admin pages.
  *
- * @since 1.0.0
+
  */
 #[AllowDynamicProperties]
 abstract class LMAT_Admin_Base extends LMAT_Base {
@@ -71,7 +73,6 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Setups actions needed on all admin pages.
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -95,7 +96,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Setups filters and action needed on all admin pages and on plugins page
 	 * Loads the settings pages or the filters base on the request
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		parent::init();
@@ -127,7 +128,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Adds the link to the Linguator panel in the WordPress admin menu
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -148,7 +149,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		/**
 		 * Filter the list of tabs in Linguator settings
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $tabs list of tab names
 		 */
@@ -172,7 +173,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Dummy method to display the 3 tabs pages: languages, strings translations, settings.
 	 * Overwritten in `LMAT_Settings`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -181,13 +182,14 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Setup js scripts & css styles ( only on the relevant pages )
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
 		// Don't load admin scripts on wizard page as it has its own scripts
 		if ( \Linguator\Includes\Core\Linguator::is_wizard() ) {
+			
 			return;
 		}
 
@@ -251,15 +253,52 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		wp_register_style( 'linguator_admin', plugins_url( "admin/assets/css/build/admin{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'wp-jquery-ui-dialog' ), LINGUATOR_VERSION );
 		wp_enqueue_style( 'linguator_dialog', plugins_url( "admin/assets/css/build/dialog{$suffix}.css", LINGUATOR_ROOT_FILE ), array( 'linguator_admin' ), LINGUATOR_VERSION );
+		
+		// Enqueue custom font for icons
+		$this->enqueue_linguator_font();
 
 		$this->add_inline_scripts();
 		$this->add_menu_redirect_script();
 	}
 
 	/**
+	 * Enqueues the Linguator custom font and its styles.
+	 * Centralized method to avoid loading the same CSS multiple times.
+	 *
+	 * @return void
+	 */
+	public function enqueue_linguator_font() {
+		// Only enqueue if not already enqueued
+		if ( ! wp_style_is( 'linguator-font', 'enqueued' ) ) {
+			wp_enqueue_style( 'linguator-font', plugins_url( 'assets/fonts/lmaticons.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+			
+			// Add custom CSS for the Linguator icon
+			$icon_css = "
+			/* Override dashicons-translation with custom font icon */
+			#adminmenu .toplevel_page_lmat .wp-menu-image:before,
+			#adminmenu .toplevel_page_lmat .dashicons-before:before {
+				font-family: 'linguator' !important;
+				content: '\\e900' !important;
+				font-size: 20px;
+				line-height: 1;
+				vertical-align: middle;
+			}
+			
+			/* Apply same icon to ab-icon class */
+			#wpadminbar #wp-admin-bar-languages .ab-icon:before {
+				font-family: 'linguator' !important;
+				content: '\\e900' !important;
+				font-size: 20px;
+			}
+			";
+			wp_add_inline_style( 'linguator-font', $icon_css );
+		}
+	}
+
+	/**
 	 * Adds JavaScript to redirect main menu click to settings page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -285,7 +324,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Tells whether or not the given screen is block editor kind.
 	 * e.g. widget, site or post editor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Screen $screen Screen object.
 	 * @return bool True if the screen is a block editor, false otherwise.
@@ -297,7 +336,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Enqueue scripts to the WP Customizer.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -313,7 +352,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Adds inline scripts to set the default language in JS
 	 * and localizes scripts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -335,6 +374,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 				)
 			);
 		}
+
 	}
 
 
@@ -344,26 +384,26 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * The final goal is to detect if an ajax request is made on admin or frontend.
 	 *
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
 	public function get_ajax_filter_data(): array {
-		global $post_ID, $tag_ID;
+		global $post, $tag;
 
 		$params = array( 'lmat_ajax_backend' => 1 );
-		if ( ! empty( $post_ID ) ) {
-			$params = array_merge( $params, array( 'lmat_post_id' => (int) $post_ID ) );
+		if ( $post instanceof WP_Post && $this->model->post_types->is_translated( $post->post_type ) ) {
+			$params['pll_post_id'] = $post->ID;
 		}
 
-		if ( ! empty( $tag_ID ) ) {
-			$params = array_merge( $params, array( 'lmat_term_id' => (int) $tag_ID ) );
+		if ( $tag instanceof WP_Term && $this->model->taxonomies->is_translated( $tag->taxonomy ) ) {
+			$params['pll_term_id'] = $tag->term_id;
 		}
 
 		/**
 		 * Filters the list of parameters to add to the admin ajax request.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $params List of parameters to add to the admin ajax request.
 		 */
@@ -373,7 +413,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Sets the admin current language, used to filter the content
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -410,7 +450,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		/**
 		 * Filters the current language used by Linguator in the admin context.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language|false|null $curlang  Instance of the current language.
 		 * @param LMAT_Admin_Base          $linguator Instance of the main Linguator's object.
@@ -430,7 +470,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Defines the backend language and the admin language filter based on user preferences
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -438,7 +478,10 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		// Language for admin language filter: may be empty
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
 		// We intentionally don't use a nonce to update the language filter
-		if ( ! wp_doing_ajax() && ! empty( $_GET['lang'] ) && ! is_numeric( sanitize_key( $_GET['lang'] ) ) && current_user_can( 'edit_user', $user_id = get_current_user_id() ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		// Don't update global filter when editing posts or terms (post.php, term.php)
+		$is_edit_page = in_array( $GLOBALS['pagenow'], array( 'post.php', 'term.php' ) );
+		
+		if ( ! wp_doing_ajax() && ! empty( $_GET['lang'] ) && ! is_numeric( sanitize_key( $_GET['lang'] ) ) && ! $is_edit_page && current_user_can( 'edit_user', $user_id = get_current_user_id() ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			update_user_meta( $user_id, 'lmat_filter_content', ( $lang = $this->model->get_language( sanitize_key( $_GET['lang'] ) ) ) ? $lang->slug : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
@@ -451,7 +494,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		 * Filters the preferred language on admin side.
 		 * The preferred language is used for example to determine the language of a new post.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Language $pref_lang Preferred language.
 		 */
@@ -466,7 +509,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @see https://core.trac.wordpress.org/ticket/31246 the suggestion of @boonebgorges.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $qvars The array of requested query variables.
 	 * @return array
@@ -482,7 +525,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Adds the languages list in admin bar for the admin languages filter.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar global object.
 	 * @return void
@@ -503,31 +546,36 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 			esc_html( $selected->name )
 		);
 
+		$all_items = array_merge( array( $all_item ), $this->model->get_languages_list() );
+		$items     = $all_items;
+
+		if ( $this->should_hide_admin_bar_menu() ) {
+			$items = array();
+		}
+
 		/**
 		 * Filters the admin languages filter submenu items
 		 *
-		 * @since 1.0.0
 		 *
 		 * @param array $items The admin languages filter submenu items.
 		 */
-		$items = apply_filters( 'lmat_admin_languages_filter', array_merge( array( $all_item ), $this->model->get_languages_list() ) );
+		$items = apply_filters( 'lmat_admin_languages_filter', $items, $all_items );
 
-		$menu = array(
-			'id'    => 'languages',
-			'title' => wp_kses( $selected->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ) ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) . $title,
-			'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
-			'meta'  => array(
-				'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
-			),
+		if ( empty( $items ) ) {
+			return;
+		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'id'    => 'languages',
+				'title' => $selected->flag . $title,
+				'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
+				'meta'  => array(
+					'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
+					'class' => 'all' === $selected->slug ? '' : 'lmat-filtered-languages',
+				),
+			)
 		);
-
-		if ( 'all' !== $selected->slug ) {
-			$menu['meta']['class'] = 'lmat-filtered-languages';
-		}
-
-		if ( ! empty( $items ) ) {
-			$wp_admin_bar->add_menu( $menu );
-		}
 
 		foreach ( $items as $lang ) {
 			if ( $selected->slug === $lang->slug ) {
@@ -553,7 +601,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * As Linguator interacts with the Customizer, we have to delete this menu ourselves in the case of a block theme,
 	 * unless another plugin than Linguator interacts with the Customizer.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -571,5 +619,25 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 				}
 			}
 		}
+	}
+	/**
+	 * Tells if the Linguator's admin bar menu should be hidden for the current page.
+	 * Conventionally, it should be hidden on edition pages.
+	 *
+	 *
+	 * @return bool
+	 */
+	public function should_hide_admin_bar_menu(): bool {
+		global $pagenow, $typenow, $taxnow;
+
+		if ( in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
+			return ! empty( $typenow );
+		}
+
+		if ( 'term.php' === $pagenow ) {
+			return ! empty( $taxnow );
+		}
+
+		return false;
 	}
 }

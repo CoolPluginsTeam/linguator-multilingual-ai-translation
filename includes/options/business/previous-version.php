@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class defining the "previous version" option.
  *
- * @since 1.0.0
+ *  
  */
 class Previous_Version extends Version {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -31,7 +31,7 @@ class Previous_Version extends Version {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

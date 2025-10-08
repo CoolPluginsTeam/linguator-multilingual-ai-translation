@@ -61,7 +61,9 @@
 }
 
 .ready-table-data:last-child {
-    border: 1px solid #d1d5db;
+    border-bottom: 1px solid #d1d5db;
+    border-left: 1px solid #d1d5db;
+    border-right: 1px solid #d1d5db;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }

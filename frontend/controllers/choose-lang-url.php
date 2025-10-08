@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * The language is set in plugins_loaded with priority 1 as done by WPML
  * Some actions have to be delayed to wait for $wp_rewrite availability
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 	/**
@@ -28,7 +28,7 @@ class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 	/**
 	 * Sets the language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -45,7 +45,7 @@ class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 	/**
 	 * Finds the language according to information found in the url
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -92,7 +92,7 @@ class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 	 * Adds the current language in query vars
 	 * useful for subdomains and multiple domains
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $qv main request query vars
 	 * @return array modified query vars

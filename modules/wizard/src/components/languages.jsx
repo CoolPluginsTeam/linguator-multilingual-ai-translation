@@ -50,7 +50,7 @@ export const RenderedLanguage = ({ languageName, languageFlag, flagUrl, language
 
 
 const Languages = () => {
-  const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, homePageLanguage, setHomePageLangauge, contentSelectedLanguage, setContentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete } = React.useContext(setupContext) //get context
+  const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, contentSelectedLanguage, setContentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete } = React.useContext(setupContext) //get context
   //filter the valid languages
   let [validLanguages, setValidLanguages] = React.useState(lmat_all_languages.filter((language) => (language?.name && language?.flag && !selectedLanguageData.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
   const originalListLanguages = React.useRef(lmat_all_languages.filter((language) => (language?.name && language?.flag && !selectedLanguageData.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
@@ -172,7 +172,7 @@ const Languages = () => {
   return (
     <div className='mx-auto max-w-[600px] min-h-[40vh] p-10 bg-white shadow-sm flex flex-col'>
       <div className='flex-grow mb-5'>
-        <p className='text-sm'>{__('This wizard will help you set up Linguator and start using your multilingual website quickly.', 'linguator-multilingual-ai-translation')}</p>
+        <p className='text-sm'>{__('This wizard will help you set up Linguator to translate your website into multiple languages', 'linguator-multilingual-ai-translation')}</p>
         <p className='text-sm'>{__('First, let’s choose the languages for your website.', 'linguator-multilingual-ai-translation')}</p>
         <h2>{__('Translation Languages', 'linguator-multilingual-ai-translation')}</h2>
         <div className='flex items-end gap-2'>

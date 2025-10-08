@@ -16,6 +16,7 @@ use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object_With_Types_I
 use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object_With_Types_Trait;
 use Linguator\Includes\Other\LMAT_Model;
 use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\LMAT_Switch_Language;
 use WP_Error;
 use WP_Post;
 
@@ -24,7 +25,7 @@ use WP_Post;
 /**
  * Sets the posts languages and translations model up.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-import-type DBInfoWithType from LMAT_Translatable_Object_With_Types_Interface
  */
@@ -70,7 +71,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Instance of `LMAT_Model`.
 	 */
@@ -83,8 +84,8 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Registers the language taxonomy.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Protected and renamed from `register_taxonomy()`.
+	 *  
+	 *   Protected and renamed from `register_taxonomy()`.
 	 *
 	 * @return void
 	 */
@@ -109,7 +110,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Adds the language query var once the global `$wp` is available.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see WP_Taxonomy::add_rewrite_rules()
 	 *
 	 * @return void
@@ -121,7 +122,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Adds hooks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return static
 	 */
@@ -137,7 +138,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Deletes a translation of a post.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Post ID.
 	 * @return void
@@ -158,7 +159,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 * The post types list is cached for better performance.
 	 * The method waits for 'after_setup_theme' to apply the cache to allow themes adding the filter in functions.php.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $filter True if we should return only valid registered object types.
 	 * @return string[] Object type names for which Linguator manages languages.
@@ -188,7 +189,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 			 * The filter must be added soon in the WordPress loading process:
 			 * in a function hooked to ‘plugins_loaded’ or directly in functions.php for themes.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string[] $post_types  List of post type names (as array keys and values).
 			 * @param bool     $is_settings True when displaying the list of custom post types in Linguator settings.
@@ -207,7 +208,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Returns true if Linguator manages languages for this object type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $object_type Object type (post type) name or array of object type names.
 	 * @return bool
@@ -222,7 +223,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Checks if registered post type must be translated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $post_type Post type name.
 	 * @return void
@@ -241,7 +242,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 * This is especially useful for nav menus with a lot of pages as, without doing this,
 	 * we would have one query per page in the menu to get the page language for the permalink.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query Reference to the query object.
 	 * @return void
@@ -255,8 +256,8 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Checks if the current user can read the post.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Renamed the parameter $post_id into $id.
+	 *  
+	 *   Renamed the parameter $post_id into $id.
 	 *
 	 * @param int    $id Post ID
 	 * @param string $context Optional, 'edit' or 'view'. Defaults to 'view'.
@@ -327,7 +328,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Creates a media translation
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int                 $post_id Original attachment id.
 	 * @param string|LMAT_Language $lang    New translation language.
@@ -386,10 +387,13 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 		$translations[ $lang->slug ] = $tr_id;
 		$this->save_translations( $tr_id, $translations );
 
+		$switch_language = new LMAT_Switch_Language();
+		$switch_language->switch_language( $lang );
+
 		/**
 		 * Fires after a media translation is created
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param int    $post_id Post id of the source media.
 		 * @param int    $tr_id   Post id of the new media translation.
@@ -408,7 +412,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Returns a list of posts in a language ($lang) not translated in another language ($untranslated_in).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $type            Post type.
 	 * @param LMAT_Language $untranslated_in The language the posts must not be translated in.
@@ -423,8 +427,8 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 		/**
 		 * Filters the query args when auto suggesting untranslated posts in the Languages metabox.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 Handled arguments restricted to `numberposts` to limit queried posts.
+		 *  
+		 *   Handled arguments restricted to `numberposts` to limit queried posts.
 		 *            No `WP_Query` is made anymore, a custom one is used instead.
 		 *
 		 * @param array $args WP_Query arguments
@@ -497,7 +501,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Returns the description to use for the "language properties" in the REST API.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see Linguator\modules\REST\V2\Languages::get_item_schema()
 	 *
 	 * @return string
@@ -513,7 +517,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 * @see LMAT_Translatable_Object::join_clause()
 	 * @see LMAT_Translatable_Object::get_raw_objects_with_no_lang()
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] {
 	 *     @type string $table         Name of the table.
@@ -535,7 +539,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Wraps `wp_insert_post` with language feature.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array        $postarr {
 	 *     Optional. An array of elements that make up a post to insert.
@@ -565,7 +569,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	/**
 	 * Wraps `wp_update_post` with language feature.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $postarr {
 	 *     Optional. An array of elements that make up a post to update.

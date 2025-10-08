@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Abstract class to manage the copy and synchronization of metas
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Sync_Metas {
 	/**
@@ -41,7 +41,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -60,7 +60,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Removes "added_{$this->meta_type}_meta" action
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -71,7 +71,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Removes all meta synchronization actions and filters
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -88,7 +88,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Adds "added_{$this->meta_type}_meta" action
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -99,7 +99,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Adds meta synchronization actions and filters
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -116,7 +116,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Maybe modify ("translate") a meta value when it is copied or synchronized
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $value Meta value
 	 * @param string $key   Meta key
@@ -129,7 +129,7 @@ abstract class LMAT_Sync_Metas {
 		/**
 		 * Filter a meta value before is copied or synchronized
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param mixed  $value Meta value
 		 * @param string $key   Meta key
@@ -143,7 +143,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Get the custom fields to copy or synchronize.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $from Id of the post from which we copy information.
 	 * @param int    $to   Id of the post to which we paste information.
@@ -155,8 +155,8 @@ abstract class LMAT_Sync_Metas {
 		/**
 		 * Filters the custom fields to copy or synchronize.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 The `$from`, `$to`, `$lang` parameters were added.
+		 *  
+		 *   The `$from`, `$to`, `$lang` parameters were added.
 		 *
 		 * @param string[] $keys List of custom fields names.
 		 * @param bool     $sync True if it is synchronization, false if it is a copy.
@@ -170,7 +170,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Disallow modifying synchronized meta if the current user can not modify translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param null|bool $check    Whether to allow adding/updating/deleting metadata.
 	 * @param int       $id       Object ID.
@@ -196,7 +196,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Synchronize added metas across translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $mid        Meta id.
 	 * @param int    $id         Object ID.
@@ -228,7 +228,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Stores the previous value when updating metas
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param null|bool $r          Not used
 	 * @param int       $id         Object ID.
@@ -248,7 +248,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Synchronize updated metas across translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $mid        Meta id.
 	 * @param int    $id         Object ID.
@@ -290,7 +290,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Store metas to synchronize before deleting them.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[] $mids  Not used.
 	 * @param int   $id    Object ID.
@@ -307,7 +307,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Synchronizes deleted meta across translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[]  $mids  Not used.
 	 * @param int    $id    Object ID.
@@ -341,7 +341,7 @@ abstract class LMAT_Sync_Metas {
 	/**
 	 * Copy or synchronize metas
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $from Id of the source object
 	 * @param int    $to   Id of the target object
@@ -392,7 +392,7 @@ abstract class LMAT_Sync_Metas {
 	 * If synchronized custom fields were previously not synchronized, it is expected
 	 * that saving a post (or term) will synchronize them.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $object_id    Id of the object being saved.
 	 * @param object $obj          Not used.

@@ -17,7 +17,7 @@ use WP_Widget;
 /**
  * The language switcher widget
  *
- * @since 1.0.0
+ *  
  *
  * @extends WP_Widget<T>
  * @phpstan-template T of array{
@@ -35,7 +35,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		parent::__construct(
@@ -51,7 +51,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	/**
 	 * Displays the widget
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args     Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
@@ -126,7 +126,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	/**
 	 * Updates the widget options
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $new_instance New settings for this instance as input by the user via form()
 	 * @param array $old_instance Old settings for this instance
@@ -147,7 +147,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	/**
 	 * Displays the widget form.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $instance Current settings.
 	 * @return string

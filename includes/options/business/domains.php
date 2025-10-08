@@ -21,7 +21,7 @@ use Linguator\Includes\Models\Languages;
  * Class defining single associative array of domain as value and language slug as key option.
  * /!\ Sanitization depends on `force_lang`: this option must be set AFTER `force_lang`.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-type DomainsValue array<non-falsy-string, string>
  */
@@ -29,7 +29,7 @@ class Domains extends Abstract_Option {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -42,7 +42,7 @@ class Domains extends Abstract_Option {
 	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -53,7 +53,7 @@ class Domains extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *
@@ -81,7 +81,7 @@ class Domains extends Abstract_Option {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array   $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -155,11 +155,29 @@ class Domains extends Abstract_Option {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
 	protected function get_description(): string {
 		return __( 'Domains used when the language is set from different domains.', 'linguator-multilingual-ai-translation' );
+
+	}
+
+	/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( 3 === $options->get( 'force_lang' ) ) {
+			return $this->get_site_health_info( $info, $this->get(), self::key() );
+				}
+
+		return $info;
 	}
 }

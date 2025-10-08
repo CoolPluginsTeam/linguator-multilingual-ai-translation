@@ -117,11 +117,11 @@ const App = ({ onDestory, prefix, postIds }) => {
               className: `${prefix}-notice ${prefix}-notice-error`, message: <p>
                 {__('For accurate custom field translations, please disable the Custom Fields synchronization in ', 'linguator-multilingual-ai-translation')}
                 <a
-                  href={`${lmatBulkTranslationGlobal.admin_url}admin.php?page=mlang_settings`}
+                  href={`${lmatBulkTranslationGlobal.admin_url}admin.php?page=lmat_settings`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {__('Polylang settings', 'linguator-multilingual-ai-translation')}
+                  {__('Linguator settings', 'linguator-multilingual-ai-translation')}
                 </a>
                 {sprintf(__('. This may affect linked %s.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
               </p>

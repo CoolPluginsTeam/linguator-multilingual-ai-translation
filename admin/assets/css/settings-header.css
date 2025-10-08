@@ -2,11 +2,11 @@
 .lmat-settings-header-tab-container{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: #fff;
     padding: 0;
     box-shadow: 0 0 transparent, 0 0 transparent, 0 1px 2px 0 #0000000d;
     padding-inline: 1.8rem;
-    margin-bottom: 1rem;
     width: 100%;
     box-sizing: border-box;
 }
@@ -28,11 +28,17 @@
 }
 .toplevel_page_lmat #screen-meta{
     margin-top:65px;
-    width: 100%;
+    margin-right:0;
+}
+.toplevel_page_lmat #wpbody{
+    background-color: #FFF;
 }
 
 .toplevel_page_lmat .wrap{
     margin-top:95px;
+}
+.languages_page_lmat_settings #wpbody{
+    background-color: #F3F4F6;
 }
 #wpcontent{
     padding: 0;
@@ -99,4 +105,39 @@
     width: 100%;
     height: 1px;
     background-color: #3b82f6;
+}
+
+
+.languages_page_lmat_settings .wrap #string-translation{
+    margin-top: 1rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+.lmat-settings-header-actions{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+}
+
+.lmat-header-action-link{
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    font-family: "Poppins", sans-serif;
+    transition: color 0.2s ease;
+}
+
+.lmat-header-action-link:hover{
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.lmat-header-action-link:focus{
+    color: #3b82f6;
+    outline: none;
+    box-shadow: none;
 }

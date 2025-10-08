@@ -23,7 +23,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * A class to create the strings translations table
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Table_String extends WP_List_Table {
 	/**
@@ -57,7 +57,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language[] $languages List of languages.
 	 */
@@ -88,7 +88,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Displays the item information in a column (default case).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $item        Data related to the current string.
 	 * @param string $column_name The current column name.
@@ -101,7 +101,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Displays the checkbox in first column.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $item Data related to the current string.
 	 * @return string
@@ -119,7 +119,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Displays the string to translate.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $item Data related to the current string.
 	 * @return string
@@ -131,7 +131,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Displays the translations to edit.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $item Data related to the current string.
 	 * @return string
@@ -166,7 +166,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Gets the list of columns.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] The list of column titles.
 	 */
@@ -183,7 +183,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Gets the list of sortable columns
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -198,7 +198,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Gets the name of the default primary column.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string Name of the default primary column, in this case, 'string'.
 	 */
@@ -209,7 +209,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Search for a string in translations. Case insensitive.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language[] $languages An array of language objects.
 	 * @param string         $s         Searched string.
@@ -234,7 +234,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Sorts registered string items.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $a The first item to compare.
 	 * @param array $b The second item to compare.
@@ -255,7 +255,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Prepares the list of registered strings for display.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -323,7 +323,7 @@ class LMAT_Table_String extends WP_List_Table {
 	 * Get the current action selected from the bulk actions dropdown.
 	 * overrides parent function to avoid submit button to trigger bulk actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string|false The action name or False if no action was selected
 	 */
@@ -334,7 +334,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * Displays the dropdown list to filter strings per group
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $which only 'top' is supported
 	 * @return void
@@ -375,7 +375,7 @@ class LMAT_Table_String extends WP_List_Table {
 	 * Saves the strings translations in DB
 	 * Optionally clean the DB
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -398,9 +398,9 @@ class LMAT_Table_String extends WP_List_Table {
 					 * Filters the string translation before it is saved in DB.
 					 * Allows to sanitize strings registered with lmat_register_string().
 					 *
-					 * @since 1.0.0
-					 * @since 1.0.0 The translation passed to the filter is unslashed.
-					 * @since 1.0.0 Add original string as 4th parameter.
+					 *  
+					 *   The translation passed to the filter is unslashed.
+					 *   Add original string as 4th parameter.
 					 *
 					 * @param string $translation The string translation.
 					 * @param string $name        The name as defined in lmat_register_string.
@@ -433,7 +433,7 @@ class LMAT_Table_String extends WP_List_Table {
 			/**
 			 * Fires after the strings translations are saved in DB
 			 *
-			 * @since 1.0.0
+			 *  
 			 */
 			do_action( 'lmat_save_strings_translations' );
 		}

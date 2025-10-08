@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Setup filters common to admin and frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Filters {
 	/**
@@ -44,7 +44,7 @@ class LMAT_Filters {
 	/**
 	 * Constructor: setups filters
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -96,7 +96,7 @@ class LMAT_Filters {
 	/**
 	 * Deletes the cache for multilingual sticky posts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -107,8 +107,8 @@ class LMAT_Filters {
 	/**
 	 * Get the language to filter a comments query.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Always returns an array. Renamed from get_comments_queried_language().
+	 *  
+	 *   Always returns an array. Renamed from get_comments_queried_language().
 	 *
 	 * @param WP_Comment_Query $query WP_Comment_Query object.
 	 * @return LMAT_Language[] The languages to use in the filter.
@@ -147,7 +147,7 @@ class LMAT_Filters {
 	 * Useful as the 'lmat_lang' parameter is not included in cache key by WordPress.
 	 * Needed since WP 4.6 as comments have been added to persistent cache. 
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Comment_Query $query WP_Comment_Query object.
 	 * @return void
@@ -165,7 +165,6 @@ class LMAT_Filters {
 	 * Filters the comments according to the current language.
 	 * Used by the recent comments widget and admin language filter.
 	 *
-	 * @since 1.0.0
 	 *
 	 * @param string[]         $clauses SQL clauses.
 	 * @param WP_Comment_Query $query   WP_Comment_Query object.
@@ -193,7 +192,7 @@ class LMAT_Filters {
 	/**
 	 * Filters get_pages() per language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Post[] $pages An array of pages already queried.
 	 * @param array     $args  Array of get_pages() arguments.
@@ -247,7 +246,7 @@ class LMAT_Filters {
 	/**
 	 * Filters the WP_Query in get_pages() per language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $query_args  Array of arguments passed to WP_Query.
 	 * @param array $parsed_args Array of get_pages() arguments.
@@ -264,7 +263,7 @@ class LMAT_Filters {
 	/**
 	 * Get page ids related to a get_pages() in or not in a given language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language The language to use in the relationship
 	 * @param string       $relation 'IN' or 'NOT IN'.
@@ -296,7 +295,7 @@ class LMAT_Filters {
 	/**
 	 * Modifies the sql request for get_adjacent_post to filter by the current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $sql            The JOIN clause in the SQL.
 	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.
@@ -312,7 +311,7 @@ class LMAT_Filters {
 	/**
 	 * Modifies the sql request for wp_get_archives and get_adjacent_post to filter by the current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $sql            The WHERE clause in the SQL.
 	 * @param bool    $in_same_term   Whether post should be in a same taxonomy term.
@@ -328,7 +327,7 @@ class LMAT_Filters {
 	/**
 	 * Converts WordPress locale to valid W3 locale in html language attributes
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $output language attributes
 	 * @return string
@@ -344,7 +343,7 @@ class LMAT_Filters {
 	 * Translates the site title in emails sent to the user (change email, reset password)
 	 * It is necessary to filter the email because WP evaluates the site title before calling switch_to_locale()
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $email Email contents.
 	 * @return string[] Translated email contents.
@@ -359,7 +358,7 @@ class LMAT_Filters {
 	/**
 	 * Translates the privacy policy page, on both frontend and admin
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Privacy policy page id
 	 * @return int
@@ -371,7 +370,7 @@ class LMAT_Filters {
 	/**
 	 * Prevents edit and delete links for the translations of the privacy policy page for non admin
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $caps    The user's actual capabilities.
 	 * @param string $cap     Capability name.
@@ -393,7 +392,7 @@ class LMAT_Filters {
 	/**
 	 * Register our personal data exporter
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $exporters Personal data exporters
 	 * @return array
@@ -409,7 +408,7 @@ class LMAT_Filters {
 	/**
 	 * Export translated user description as WP exports only the description in the default language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $email_address User email address
 	 * @return array Personal data
@@ -451,7 +450,7 @@ class LMAT_Filters {
 	 * In `term_exists()`, WP 6.0 uses `get_terms()`, which is filtered by language by Linguator.
 	 * This filter prevents `term_exists()` to be filtered by language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param  array      $defaults An array of arguments passed to get_terms().
 	 * @param  int|string $term     The term to check. Accepts term ID, slug, or name.

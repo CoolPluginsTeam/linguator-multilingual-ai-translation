@@ -1,0 +1,64 @@
+.lmat_subsubsub .lmat_subsubsub_list{
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
+
+.lmat_subsubsub .lmat_subsubsub_list li{
+    padding: 4px 0px 4px 10px;
+    margin: 0;
+    list-style: none;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.lmat_subsubsub .lmat_subsubsub_list li:last-child{
+    padding-right: 0;
+}
+
+.lmat_subsubsub_list li a{
+    padding: 5px 14px;
+    font-size: 12px;
+    line-height: 1.33;
+    text-decoration: none;
+    color: #000;
+    border: 1px solid #e0e0e0;
+    background-color: #dcdcde;
+    border: 1px solid #c3c4c7;
+    border-bottom-width: 0;
+    border-bottom-color: transparent;
+    transition: all .3s ease-in-out;
+    position: relative;
+}
+
+.lmat_subsubsub_list li a[href=""]{
+    cursor: default;
+    pointer-events: none;
+}
+
+.lmat_subsubsub_list li a:hover{
+    background-color: #fff !important;
+}
+
+.lmat_subsubsub_list li a.current{
+    background-color: #f0f0f1;
+}
+
+.lmat_subsubsub_list li a:after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+    position: absolute;
+    top: calc(100% - 1px);
+    left: 0;
+    transition: all .3s ease-in-out;
+}
+
+.lmat_subsubsub_list li a.current:after{
+    background-color: #f0f0f1;
+}
+
+.lmat_subsubsub_list li a:hover:after{
+    background-color: #fff;
+}

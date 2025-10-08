@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Linguator's options registry.
  *
- * @since 1.0.0
+ *  
  */
 class Registry {
 	protected const OPTIONS = array(
@@ -37,7 +37,6 @@ class Registry {
 		// Internal.
 		Business\Default_Lang::class,
 		Business\Nav_Menus::class,
-		Business\Language_Taxonomies::class,
 		// Read only.
 		Business\First_Activation::class,
 		Business\Previous_Version::class,
@@ -52,7 +51,7 @@ class Registry {
 	/**
 	 * Registers Linguator's options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param Options $options Instance of the options.
 	 * @return void

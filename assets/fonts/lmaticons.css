@@ -1,0 +1,45 @@
+@font-face {
+  font-family: 'linguator';
+  src:  url('lmaticons.eot?linguator');
+  src:  url('lmaticons.eot?linguator#iefix') format('embedded-opentype'),
+    url('lmaticons.ttf?linguator') format('truetype'),
+    url('lmaticons.woff?linguator') format('woff'),
+    url('lmaticons.svg?linguator#linguator') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'linguator' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Linguator icon class */
+.linguator-icon:before {
+  content: "\e900";
+  font-family: 'linguator' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Alternative: If you want to use a specific icon class from your font */
+.icon-linguator:before {
+  content: "\e900";
+}

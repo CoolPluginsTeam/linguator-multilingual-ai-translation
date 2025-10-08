@@ -17,7 +17,7 @@ use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
 /**
  * Class LMAT_Widgets_Filters
  *
- * @since 1.0.0
+ *  
  *
  * Add new options to {@see https://developer.wordpress.org/reference/classes/wp_widget/ WP_Widget} and saves them.
  */
@@ -45,7 +45,7 @@ class LMAT_Filters_Widgets_Options {
 	/**
 	 * Add the language filter field to the widgets options form.
 	 *
-	 * @since 1.0.0 Rename lang_choice field name and id to lmat_lang as the widget setting.
+	 *   Rename lang_choice field name and id to lmat_lang as the widget setting.
 	 *
 	 * @param WP_Widget $widget   The widget instance (passed by reference).
 	 * @param null      $return   Return null if new fields are added.
@@ -113,8 +113,8 @@ class LMAT_Filters_Widgets_Options {
 	 * Called when widget options are saved.
 	 * Saves the language associated to the widget.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Remove unused $old_instance and $widget parameters.
+	 *  
+	 *   Remove unused $old_instance and $widget parameters.
 	 *
 	 * @param array $instance     The current Widget's options.
 	 * @param array $new_instance The new Widget's options.

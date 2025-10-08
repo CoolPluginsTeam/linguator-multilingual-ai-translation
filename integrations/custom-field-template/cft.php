@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with Custom Field Template.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Cft {
 	/**
 	 * Setups actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_action( 'add_meta_boxes', array( $this, 'cft_copy' ), 10, 2 );
@@ -26,7 +26,7 @@ class LMAT_Cft {
 	/**
 	 * Custom field template does check $_REQUEST['post'] to populate the custom fields values.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $post_type Unused.
 	 * @param WP_Post $post      Current post object.

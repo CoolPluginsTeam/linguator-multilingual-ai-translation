@@ -7,7 +7,7 @@ import { getNonce } from '../../../../admin/settings/views/src/utils'
 import SetupContinueButton, { SetupBackButton } from './setup-continue-button'
 import { __, sprintf } from '@wordpress/i18n'
 const Media = () => {
-    const { setupProgress, setSetupProgress, data, setData,showHomePage } = React.useContext(setupContext) // get the context
+    const { setupProgress, setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
     const [media, setMedia] = React.useState(data.media_support) //store the media option
 
     //function to handle save button in the media page
@@ -29,13 +29,9 @@ const Media = () => {
                 setData(mediaResponse)
             }
             //Dynamically move to next page
-            if (showHomePage == "1") {
-                setSetupProgress("home_page")
-                localStorage.setItem("setupProgress", "home_page");
-            } else {
-                setSetupProgress("translation_configuration")
-                localStorage.setItem("setupProgress", "translation_configuration");
-            }
+
+            setSetupProgress("translation_configuration")
+            localStorage.setItem("setupProgress", "translation_configuration");
         } catch (error) {
             toast.error(__("Please try again later", "linguator-multilingual-ai-translation"))
         }

@@ -25,7 +25,7 @@ if ( ! class_exists( 'WP_Widget_Calendar' ) ) {
  * Method used in 0.4.x: use of the get_calendar filter and overwrite the output of get_calendar function -> not very efficient (add 4 to 5 sql queries).
  * Method used since 0.5: remove the WP widget and replace it by our own -> our language filter will not work if get_calendar is called directly by a theme.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 	protected static $lmat_instance = 0; // Can't use $instance of WP_Widget_Calendar as it's private :/.
@@ -34,7 +34,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 	 * Outputs the content for the current Calendar widget instance.
 	 * Modified version of the parent function to call our own get_calendar() method.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args     Display arguments including 'before_title', 'after_title',
 	 *                        'before_widget', and 'after_widget'.
@@ -68,7 +68,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 	/**
 	 * Modified version of the WP `get_calendar()` function to filter the queries.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args {
 	 *     Optional. Arguments for the `get_calendar` function.
@@ -330,7 +330,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		$daysinmonth = (int) gmdate( 't', $unixmonth );
 
 		for ( $day = 1; $day <= $daysinmonth; ++$day ) {
-			if ( isset( $newrow ) && $newrow ) {
+			if ( $newrow ) {
 				$calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
 			}
 			$newrow = false;

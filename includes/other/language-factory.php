@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * LMAT_Language factory.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-import-type LanguageData from LMAT_Language
  */
@@ -35,7 +35,7 @@ class LMAT_Language_Factory {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $options Array of Poylang's options passed by reference.
 	 * @return void
@@ -47,7 +47,7 @@ class LMAT_Language_Factory {
 	/**
 	 * Returns a language object matching the given data, looking up in cached transient.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $language_data Language object properties stored as an array.
 	 *
@@ -62,7 +62,7 @@ class LMAT_Language_Factory {
 	/**
 	 * Returns a language object based on terms.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Term[] $terms List of language terms, with the language taxonomy names as array keys.
 	 *                         `lmat_language` is a mandatory key for the object to be created.
@@ -135,7 +135,7 @@ class LMAT_Language_Factory {
 		/**
 		 * Filters additional data to add to the language before it is created.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array $additional_data.
 		 * @param array $data Language data.
@@ -158,7 +158,7 @@ class LMAT_Language_Factory {
 	 * Sanitizes data, to be ready to be used in the constructor.
 	 * This doesn't verify that the language terms exist.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $data Data to process.
 	 * @return array Sanitized Data.
@@ -193,7 +193,7 @@ class LMAT_Language_Factory {
 	/**
 	 * Returns predefined languages data.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array[]
 	 *
@@ -211,7 +211,7 @@ class LMAT_Language_Factory {
 	/**
 	 * Creates flag_url and flag language properties. Also takes care of custom flag.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $flag_code Flag code.
 	 * @param string $name      Language name.
@@ -256,7 +256,7 @@ class LMAT_Language_Factory {
 		/**
 		 * Filters the custom flag information.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param array|null $flag {
 		 *   Information about the custom flag.
@@ -284,7 +284,7 @@ class LMAT_Language_Factory {
 		 * Filters the flag title attribute.
 		 * Defaults to the language name.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $title  The flag title attribute.
 		 * @param string $slug   The language code.
@@ -315,7 +315,7 @@ class LMAT_Language_Factory {
 			/**
 			 * Filters the html markup of a flag.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string $flag Html markup of the flag or empty string.
 			 * @param string $slug Language code.

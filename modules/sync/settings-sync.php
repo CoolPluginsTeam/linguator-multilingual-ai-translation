@@ -16,7 +16,7 @@ use Linguator\Settings\Controllers\LMAT_Settings_Module;
 /**
  * Settings class for synchronization settings management
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Settings_Sync extends LMAT_Settings_Module {
 	/**
@@ -29,7 +29,7 @@ class LMAT_Settings_Sync extends LMAT_Settings_Module {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The linguator object.
 	 */
@@ -47,7 +47,7 @@ class LMAT_Settings_Sync extends LMAT_Settings_Module {
 	/**
 	 * Deactivates the module
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function deactivate() {
 		$this->options['sync'] = array();
@@ -57,7 +57,7 @@ class LMAT_Settings_Sync extends LMAT_Settings_Module {
 	/**
 	 * Prepare the received data before saving.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $options Raw values to save.
 	 * @return array
@@ -70,7 +70,7 @@ class LMAT_Settings_Sync extends LMAT_Settings_Module {
 	/**
 	 * Get the row actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Row actions.
 	 */
@@ -81,7 +81,7 @@ class LMAT_Settings_Sync extends LMAT_Settings_Module {
 	/**
 	 * Get the list of synchronization settings.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Array synchronization options.
 	 *

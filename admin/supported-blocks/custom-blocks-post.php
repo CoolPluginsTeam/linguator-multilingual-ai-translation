@@ -13,7 +13,7 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 	/**
 	 * Class Custom_Block_Post
 	 *
-	 * This class handles the custom block post type for the AutoPoly - AI Translation For Polylang plugin.
+	 * This class handles the custom block post type for the Linguator - AI Translation For Polylang plugin.
 	 * It manages the registration of the custom post type, adds submenu pages under the Polylang menu,
 	 * and handles post save actions.
 	 *
@@ -134,10 +134,11 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 
 			$args = array(
 				'labels'             => $labels,
-				'public'             => true,
+				'public'             => false,
 				'publicly_queryable' => true,
 				'show_ui'            => true,
 				'show_in_menu'       => false, // Ensure it shows in the menu
+				'show_in_nav_menus'  => false,
 				'query_var'          => true,
 				'rewrite'            => array( 'slug' => 'automatic-translation' ),
 				'capability_type'    => 'page',

@@ -20,7 +20,7 @@ use Linguator\Includes\Helpers\LMAT_Term_Slug;
  * Adds actions and filters related to languages when creating, reading, updating or deleting posts
  * Acts both on frontend and backend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_CRUD_Terms {
 	/**
@@ -73,7 +73,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -90,10 +90,8 @@ class LMAT_CRUD_Terms {
 		add_filter( 'pre_term_name', array( $this, 'set_pre_term_name' ) );
 		add_filter( 'pre_term_slug', array( $this, 'set_pre_term_slug' ), 10, 2 );
 
-		// Adds cache domain when querying terms
-		add_filter( 'get_terms_args', array( $this, 'get_terms_args' ), 10, 2 );
-
-		// Filters terms by language
+		// Filters terms query by language.
+		add_filter( 'get_terms_args', array( $this, 'adjust_query_lang' ) );
 		add_filter( 'terms_clauses', array( $this, 'terms_clauses' ), 10, 3 );
 		add_action( 'pre_get_posts', array( $this, 'set_tax_query_lang' ), 999 );
 		add_action( 'posts_selection', array( $this, 'unset_tax_query_lang' ), 0 );
@@ -105,7 +103,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Allows to set a language by default for terms if it has no language yet.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term ID.
 	 * @param string $taxonomy Taxonomy name.
@@ -136,7 +134,7 @@ class LMAT_CRUD_Terms {
 	 * Called when a category or post tag is created or edited.
 	 * Does nothing except on taxonomies which are filterable.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term id of the term being saved.
 	 * @param int    $tt_id    Term taxonomy id.
@@ -155,7 +153,7 @@ class LMAT_CRUD_Terms {
 			/**
 			 * Fires after the term language and translations are saved.
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param int    $term_id      Term id.
 			 * @param string $taxonomy     Taxonomy name.
@@ -168,7 +166,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Get the language(s) to filter WP_Term_Query.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $taxonomies Queried taxonomies.
 	 * @param array    $args       WP_Term_Query arguments.
@@ -200,13 +198,13 @@ class LMAT_CRUD_Terms {
 	 * Adds language dependent cache domain when querying terms.
 	 * Useful as the 'lang' parameter is not included in cache key by WordPress.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array    $args       WP_Term_Query arguments.
 	 * @param string[] $taxonomies Queried taxonomies.
 	 * @return array Modified arguments.
 	 */
-	public function get_terms_args( $args, $taxonomies ) {
+	public function adjust_query_lang( $args ) {
 		// Don't break _get_term_hierarchy().
 		if ( 'all' === $args['get'] && 'id' === $args['orderby'] && 'id=>parent' === $args['fields'] ) {
 			$args['lang'] = '';
@@ -216,18 +214,13 @@ class LMAT_CRUD_Terms {
 			$args['lang'] = empty( $this->tax_query_lang ) && ! empty( $this->curlang ) && ! empty( $args['slug'] ) ? $this->curlang->slug : $this->tax_query_lang;
 		}
 
-		if ( $lang = $this->get_queried_language( $taxonomies, $args ) ) {
-			$lang = is_string( $lang ) && strpos( $lang, ',' ) ? explode( ',', $lang ) : $lang;
-			$key = '_' . ( is_array( $lang ) ? implode( ',', $lang ) : $this->model->get_language( $lang )->slug );
-			$args['cache_domain'] = empty( $args['cache_domain'] ) ? 'lmat' . $key : $args['cache_domain'] . $key;
-		}
 		return $args;
 	}
 
 	/**
 	 * Filters categories and post tags by language(s) when needed on admin side
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $clauses    List of sql clauses.
 	 * @param string[] $taxonomies List of taxonomies.
@@ -243,7 +236,7 @@ class LMAT_CRUD_Terms {
 	 * Sets the WP_Term_Query language when doing a WP_Query.
 	 * Needed since WP 4.9.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query WP_Query object.
 	 * @return void
@@ -256,7 +249,7 @@ class LMAT_CRUD_Terms {
 	 * Removes the WP_Term_Query language filter for WP_Query.
 	 * Needed since WP 4.9.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -268,7 +261,7 @@ class LMAT_CRUD_Terms {
 	 * Called when a category or post tag is deleted
 	 * Deletes language and translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Id of the term to delete.
 	 * @param string $taxonomy Name of the taxonomy.
@@ -287,7 +280,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Stores the term name for use in pre_term_slug
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $name term name
 	 * @return string unmodified term name
@@ -301,7 +294,7 @@ class LMAT_CRUD_Terms {
 	/**
 	 * Appends language slug to the term slug if needed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $slug     Term slug.
 	 * @param string $taxonomy Term taxonomy.

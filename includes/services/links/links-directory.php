@@ -17,7 +17,7 @@ use Linguator\Includes\Other\LMAT_Language;
  * Links model for use when the language code is added in the url as a directory
  * for example mysite.com/en/something.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
@@ -30,7 +30,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model LMAT_Model instance.
 	 */
@@ -43,7 +43,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Adds hooks for rewrite rules.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -56,8 +56,8 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Adds the language code in a url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url      The url to modify.
 	 * @param LMAT_Language|string|false $language Language object or slug.
@@ -85,7 +85,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Returns the url without the language code.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -111,8 +111,8 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Returns the language based on the language code in the url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Add the $url argument.
+	 *  
+	 *   Add the $url argument.
 	 *
 	 * @param string $url Optional, defaults to the current url.
 	 * @return string The language slug.
@@ -134,8 +134,8 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Returns the home url in a given language.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param LMAT_Language|string $language Language object or slug.
 	 * @return string
@@ -153,8 +153,8 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Prepares the rewrite rules filters.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Hooked to `lmat_prepare_rewrite_rules` and remove `$pre` parameter.
+	 *  
+	 *   Hooked to `lmat_prepare_rewrite_rules` and remove `$pre` parameter.
 	 *
 	 * @return void
 	 */
@@ -178,7 +178,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	 *
 	 * Always make sure that the default language is at the end in case the language information is hidden for default language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $rules Rewrite rules.
 	 * @return string[] Modified rewrite rules.
@@ -214,7 +214,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 				/**
 				 * Filters the rewrite rules to modify.
 				 *
-				 * @since 1.0.0
+				 *  
 				 *
 				 * @param bool        $modify  Whether to modify or not the rule, defaults to true.
 				 * @param array       $rule    Original rewrite rule.
@@ -271,7 +271,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	 * Removes hooks to filter rewrite rules, called when switching blog @see {LMAT_Base::switch_blog()}.
 	 * See `self::prepare_rewrite_rules()` for added hooks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -286,7 +286,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	/**
 	 * Returns *all* rewrite rules filters with their associated callbacks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return callable[] Array of hook names as key and callbacks as values.
 	 */

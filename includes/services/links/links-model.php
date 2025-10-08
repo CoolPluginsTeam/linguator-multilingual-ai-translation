@@ -17,7 +17,7 @@ use Linguator\Includes\Other\LMAT_Language;
 /**
  * Links model abstract class.
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Links_Model {
 	/**
@@ -56,7 +56,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model LMAT_Model instance.
 	 */
@@ -87,7 +87,7 @@ abstract class LMAT_Links_Model {
 	 * Initializes the links model.
 	 * Does nothing by default.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -96,8 +96,8 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Adds the language code in url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url  The url to modify.
 	 * @param LMAT_Language|string|false $lang Language object or slug.
@@ -108,7 +108,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns the url without language code.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -118,7 +118,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns the link to the first page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -128,7 +128,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns the link to a paged page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url  The url to modify.
 	 * @param int    $page The page number.
@@ -139,8 +139,8 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns the language based on the language code in the url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Add the $url argument.
+	 *  
+	 *   Add the $url argument.
 	 *
 	 * @param string $url Optional, defaults to the current url.
 	 * @return string The language slug.
@@ -150,8 +150,8 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns the static front page url in a given language.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now an array of language properties.
+	 *  
+	 *   Accepts now an array of language properties.
 	 *
 	 * @param LMAT_Language|array $language Language object or array of language properties.
 	 * @return string The static front page url.
@@ -161,7 +161,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Changes the language code in url.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $url  The url to modify.
 	 * @param LMAT_Language $lang The language object.
@@ -175,7 +175,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Get the hosts managed on the website.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] The list of hosts.
 	 */
@@ -186,8 +186,8 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns the home url in a given language.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param LMAT_Language|string $language Language object or slug.
 	 * @return string
@@ -205,7 +205,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Adds home and search URLs to language data before the object is created.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $additional_data Array of language additional data.
 	 * @param array $language        Language data.
@@ -222,7 +222,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Adds our domains or subdomains to allowed hosts for safe redirect.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $hosts Allowed hosts.
 	 * @return string[] Modified list of allowed hosts.
@@ -234,7 +234,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns language home URL property according to the current domain.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url      Home URL.
 	 * @param array  $language Array of language props.
@@ -251,7 +251,7 @@ abstract class LMAT_Links_Model {
 	/**
 	 * Returns language search URL property according to the current domain.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url      Search URL.
 	 * @param array  $language Array of language props.
@@ -265,7 +265,7 @@ abstract class LMAT_Links_Model {
 	 * Used to remove hooks in child classes, called when switching blog @see {LMAT_Base::switch_blog()}.
 	 * Does nothing by default.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

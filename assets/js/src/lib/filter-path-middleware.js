@@ -6,7 +6,6 @@
  * Filters requests for translatable entities.
  * This logic is shared across all Linguator plugins.
  *
- * @since 3.5
  *
  * @param {APIFetchOptions} options
  * @param {Array} filteredRoutes

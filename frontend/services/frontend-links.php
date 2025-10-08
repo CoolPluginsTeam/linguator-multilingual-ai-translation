@@ -18,7 +18,7 @@ use WP_Term;
 /**
  * Manages links filters and url of translations on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Links extends LMAT_Links {
 
@@ -32,7 +32,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -46,7 +46,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	/**
 	 * Returns the url of the translation (if it exists) of the current page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language Language object.
 	 * @return string
@@ -71,7 +71,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 		 * Filters the translation url before Linguator attempts to find one.
 		 * Internally used by Linguator for the static front page and posts page.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string       $url               Empty string or the url of the translation of the current page.
 		 * @param LMAT_Language $language          Language of the translation.
@@ -136,7 +136,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 						/**
 						 * Filter whether to hide an archive translation url
 						 *
-						 * @since 1.0.0
+						 *  
 						 *
 						 * @param bool   $hide True to hide the translation url.
 						 *                     defaults to true when the translated archive is empty, false otherwise.
@@ -187,7 +187,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 		/**
 		 * Filter the translation url of the current page before Linguator caches it
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param null|string $url      The translation url, null if none was found
 		 * @param string      $language The language code of the translation
@@ -206,7 +206,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	 * Get the translation of the current archive url
 	 * used also for search
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $language An object representing a language.
 	 * @return string
@@ -219,7 +219,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 		/**
 		 * Filter the archive url
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $url      Url of the archive
 		 * @param object $language Language of the archive
@@ -230,7 +230,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	/**
 	 * Returns the home url in the right language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|string $language  Optional, defaults to current language.
 	 * @param bool                $is_search Optional, whether we need the home url for a search form, defaults to false.

@@ -21,7 +21,7 @@ use Linguator\Includes\Core\Linguator;
 
 
 
-define( 'LINGUATOR_VERSION', '1.0.2' );
+define( 'LINGUATOR_VERSION', '0.0.3' );
 define( 'LMAT_MIN_WP_VERSION', '6.2' );
 define( 'LMAT_MIN_PHP_VERSION', '7.2' );
 define( 'LINGUATOR_FILE', __FILE__ ); 
@@ -78,19 +78,17 @@ if ( empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Securi
 	new Linguator();
 }
 
-// Handle redirect after activation
+// Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
-	// Only proceed if we need setup and are in admin
-	if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
-		// Get install date
-		$install_date = get_option('lmat_install_date');
-		$current_time = current_time('timestamp');
-			
-		// Only redirect if we're within 30 minutes of installation
-		// This prevents redirect loops and unwanted redirects after the initial setup
-		if ($install_date && ($current_time - $install_date) <= 1800) { // 1800 seconds = 30 minutes
-			// Make sure this only runs on the admin side
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WordPress activation parameter, nonce not needed
+	// Only check setup flag on plugins page to avoid unnecessary database queries
+	$is_plugins_page = false;
+	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'plugins.php' ) !== false ) {
+		$is_plugins_page = true;
+	}
+	// Only run on plugins page
+	if ( $is_plugins_page ) {
+		// Only proceed if we need setup and are in admin
+		if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
 			if (!is_network_admin() && !isset($_GET['activate-multi'])) {
 				// Remove the setup flag
 				delete_option('lmat_needs_setup');
@@ -98,9 +96,40 @@ add_action('admin_init', function() {
 				wp_safe_redirect(admin_url('admin.php?page=lmat_wizard'));
 				exit;
 			}
-		} else {
-			// If more than 30 minutes have passed, just remove the setup flag
-			delete_option('lmat_needs_setup');
+		}
+	}
+	
+	// Ensure language switcher is visible on nav-menus page for new installations
+	$install_date = get_option('lmat_install_date');
+	
+	if ($install_date) {
+		// Check if this is a recent installation (within last 24 hours)
+		$install_timestamp = strtotime($install_date);
+		$time_since_install = time() - $install_timestamp;
+		
+		// If installed within last 24 hours, ensure language switcher is visible
+		if ($time_since_install <= 86400) {
+			// Hook into nav-menus page load
+			add_action('load-nav-menus.php', function() {
+				$user_id = get_current_user_id();
+				if (!$user_id) {
+					return;
+				}
+				
+				// Get hidden meta boxes for current user
+				$hidden_meta_boxes = get_user_meta($user_id, 'metaboxhidden_nav-menus', true);
+				
+				// Initialize as empty array if not set
+				if (!is_array($hidden_meta_boxes)) {
+					$hidden_meta_boxes = array();
+				}
+				
+				// Remove language switcher from hidden meta boxes to make it visible
+				$hidden_meta_boxes = array_diff($hidden_meta_boxes, array('lmat_lang_switch_box'));
+				
+				// Update user meta
+				update_user_meta($user_id, 'metaboxhidden_nav-menus', $hidden_meta_boxes);
+			});
 		}
 	}
 });

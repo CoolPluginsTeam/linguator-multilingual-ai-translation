@@ -12,7 +12,7 @@ if(!defined('ABSPATH')){
  * 
  * Dashbord initialize
  * if(!class_exists('LMAT_Translation_Dashboard')){
- * $dashboard=LMAT_Translation_Dashboard::instance();
+ * $dashboard=LMAT_Translation_Dashboard::get_instance();
  * }
  * 
  * Store options
@@ -94,7 +94,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
          * Instance
          * @return object
          */
-        public static function instance(){
+        public static function get_instance(){
             if(!isset(self::$init)){
                 self::$init = new self();
             }
@@ -102,7 +102,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public function __construct(){
-            add_action('wp_ajax_atfpp_hide_review_notice', array($this, 'atfpp_hide_review_notice'));
+            add_action('wp_ajax_lmat_hide_review_notice', array($this, 'lmat_hide_review_notice'));
         }
 
         /**
@@ -174,10 +174,12 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             $prefix = sanitize_key($prefix);
             $all_data = get_option('cpt_dashboard_data', array());
             $data = array();
+            $used_service_providers = array();
 
             if(isset($all_data[$prefix])){
                 $total_string_count = 0;
                 $total_character_count = 0;
+                $total_time_taken = 0;
 
                 foreach($all_data[$prefix] as $key => $value){
 
@@ -195,6 +197,10 @@ if(!class_exists('LMAT_Translation_Dashboard')){
 
                     $total_string_count += isset($value['string_count']) ? absint($value['string_count']) : 0;
                     $total_character_count += isset($value['character_count']) ? absint($value['character_count']) : 0;
+                    $total_time_taken += isset($value['time_taken']) ? absint($value['time_taken']) : 0;
+                    if(!in_array(sanitize_text_field($value['service_provider']), $used_service_providers)){
+                        $used_service_providers[] = isset($value['service_provider']) ? sanitize_text_field($value['service_provider']) : '';
+                    }
                 }
 
                 $data = array(
@@ -204,12 +210,15 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                     }, $all_data[$prefix]),
                     'total_string_count' => $total_string_count,
                     'total_character_count' => $total_character_count,
+                    'total_time_taken' => $total_time_taken,
+                    'service_providers' => $used_service_providers,
                 );
             }else{
                 $data = array(
                     'prefix' => $prefix,
                     'total_string_count' => 0,
                     'total_character_count' => 0,
+                    'total_time_taken' => 0,
                 );
             }
 
@@ -217,10 +226,9 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public static function ctp_enqueue_assets(){
-            if(function_exists('wp_style_is') && !wp_style_is('atfpp-review-style', 'enqueued')){
-                $plugin_url = plugin_dir_url(__FILE__);
-                wp_enqueue_style('atfpp-review-style', esc_url($plugin_url.'assets/css/cpt-dashboard.css'), array(), '1.0.0', 'all');
-                wp_enqueue_script('atfpp-review-script', esc_url($plugin_url.'assets/js/cpt-dashboard.js'), array('jquery'), '1.0.0', true);
+            if(function_exists('wp_style_is') && !wp_style_is('lmat-review-style', 'enqueued')){
+                wp_enqueue_style('lmat-review-style', plugins_url('admin/assets/css/cpt-dashboard.css', LINGUATOR_ROOT_FILE), array(), LINGUATOR_VERSION, 'all');
+                wp_enqueue_script('lmat-review-script', plugins_url('admin/assets/js/cpt-dashboard.js', LINGUATOR_ROOT_FILE), array('jquery'), LINGUATOR_VERSION, true);
             }
         }
 
@@ -233,8 +241,8 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             return $number;
         }
 
-        public static function review_notice($prefix, $plugin_name, $url, $icon=''){
-            if(self::atfpp_hide_review_notice_status($prefix)){
+        public static function review_notice($prefix, $plugin_name, $url){
+            if(self::lmat_hide_review_notice_status($prefix)){
                 return;
             }
             
@@ -242,73 +250,54 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             
             $total_character_count = is_array($translation_data) && isset($translation_data['total_character_count']) ? $translation_data['total_character_count'] : 0;
             
-            if($total_character_count < 50000){ 
+            if($total_character_count < 30000){ 
                 return;
             }
-
-            $total_character_count = self::format_number_count($total_character_count);
-
-            add_action('admin_enqueue_scripts', array(self::class, 'ctp_enqueue_assets'));
-
             
+            $total_character_count = self::format_number_count($total_character_count);
+            
+            self::ctp_enqueue_assets();
 
             $message = sprintf(
-                '🎉 %s! %s <strong>%s</strong> %s 🚀<br>%s %s 🌟<br>',
-                __('Thank You For Using', 'cp-notice').' '.$plugin_name,
+                '%s! %s <strong>%s</strong> %s <br>%s %s <br>',
+                __('Thanks for using', 'cp-notice') . ' <b>' . $plugin_name . '</b>',
                 __('You\'ve translated', 'cp-notice'),
-                esc_html__(esc_html($total_character_count).' characters', 'cp-notice'),
-                esc_html__('so far using our plugin!', 'cp-notice'),
-                __('If our plugin has saved your time and effort, please consider leaving a', 'cp-notice'),
-                __('review to support our work. Your feedback means the world to us!', 'cp-notice')
+                esc_html($total_character_count) . ' ' . __('characters', 'cp-notice'),
+                __('so far using our plugin!', 'cp-notice'),
+                __('If our plugin saves your time and effort, please support us with a review', 'cp-notice'),
+                __('your feedback means everything!', 'cp-notice')
             );
 
             $prefix = sanitize_key($prefix);
             $message = wp_kses_post($message);
             $url = esc_url($url);
             $plugin_name = sanitize_text_field($plugin_name);
-            $icon = isset($icon) && !empty($icon) ? esc_url($icon) : '';
 
             $allowed = [
                 'div' => [ 'class' => true, 'data-prefix' => true, 'data-nonce' => true ],
                 'p' => [],
                 'a' => [ 'href' => true, 'target' => true, 'class' => true ],
-                'img' => [ 'src' => true, 'alt' => true, 'class' => true ],
                 'button' => [ 'class' => true ],
             ];
 
-            add_action('admin_notices', function() use ($message, $prefix, $url, $icon, $plugin_name, $allowed){
-                $html= '<div class="notice notice-info cpt-review-notice">';
-                if($icon){
-                    $html .= '<img class="cpt-review-notice-icon" src="'.$icon.'" alt="'.$plugin_name.'">';
-                }
-                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="atfpp-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('atfpp_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
+            $html = '<div class="notice notice-info is-dismissible cpt-review-notice">';
+            $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
                 
-                echo wp_kses($html, $allowed);
-            });
-
-            add_action('atfpp_display_admin_notices', function() use ($message, $prefix, $url, $icon, $plugin_name, $allowed){
-                $html= '<div class="notice notice-info cpt-review-notice">';
-                if($icon){
-                    $html .= '<img class="cpt-review-notice-icon" src="'.$icon.'" alt="'.$plugin_name.'">';
-                }
-                $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="atfpp-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('atfpp_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
-                
-                echo wp_kses($html, $allowed);
-            });
+            echo wp_kses($html, $allowed);
         }
 
-        public static function atfpp_hide_review_notice_status($prefix){
+        public static function lmat_hide_review_notice_status($prefix){
             $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
             return isset($review_notice_dismissed[$prefix]) ? $review_notice_dismissed[$prefix] : false;
         }
 
-        public function atfpp_hide_review_notice(){
+        public function lmat_hide_review_notice(){
             if(!current_user_can('manage_options')){
                 wp_send_json_error( __( 'Unauthorized', 'autopoly-ai-translation-for-polylang-pro' ), 403 );
                 wp_die( '0', 403 );
             }
 
-            if(wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'atfpp_hide_review_notice')){
+            if(wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'lmat_hide_review_notice')){
                 $prefix = sanitize_key(wp_unslash($_POST['prefix']));
                 $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
                 $review_notice_dismissed[$prefix] = true;

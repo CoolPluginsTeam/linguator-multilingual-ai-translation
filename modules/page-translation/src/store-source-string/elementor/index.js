@@ -29,7 +29,12 @@ const ElementorSaveSource = (content) => {
         'opacity', 'width', 'height', 'display', 'position', 'z_index', 'visibility', 'align', 'max_width', 'content_typography_typography', 'flex_justify_content', 'title_color', 'description_color', 'email_content'
     ];
 
-    const substringsToCheck = ['title', 'description', 'editor', 'text', 'content', 'label'];
+    const subStringsToCheck=(strings)=>{
+        const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
+        const staticSubStrings=['caption','heading','sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
+
+        return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
+    }
 
     const storeWidgetStrings = (element, index, ids=[]) => {
         const settings = element.settings;
@@ -44,7 +49,7 @@ const ElementorSaveSource = (content) => {
                     return; // Skip this property and continue to the next one
                 }
 
-                if (substringsToCheck.some(substring => key.toLowerCase().includes(substring)) &&
+                if (subStringsToCheck(key) &&
                     typeof settings[key] === 'string' && settings[key].trim() !== '') {
                     translateContent([...ids, 'settings', key],settings[key]);
                 }
@@ -58,7 +63,7 @@ const ElementorSaveSource = (content) => {
                                     return; // Skip this property
                                 }
 
-                                if(substringsToCheck.some(substring => repeaterKey.toLowerCase().includes(substring)) &&
+                                if(subStringsToCheck(repeaterKey) &&
                                     typeof item[repeaterKey] === 'string' && item[repeaterKey].trim() !== '') {
                                     translateContent([...ids, 'settings', key, index, repeaterKey],item[repeaterKey]);
                                 }

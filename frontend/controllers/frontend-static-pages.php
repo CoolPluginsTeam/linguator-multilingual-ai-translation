@@ -16,7 +16,7 @@ use Linguator\Includes\Controllers\LMAT_Static_Pages;
 /**
  * Manages the static front page and the page for posts on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
@@ -41,7 +41,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -70,7 +70,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Translates the page_id query var when the site root page is requested
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -81,7 +81,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Manages the canonical redirect of the homepage when using a page on front.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $redirect_url The redirect url.
 	 * @return string|false The modified url, false if the redirect is canceled.
@@ -107,7 +107,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Translates the url of the page on front and page for posts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $url               Empty string or the url of the translation of the current page.
 	 * @param LMAT_Language $language          Language of the translation.
@@ -143,7 +143,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Prevents the canonical redirect if we are on a static front page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $redirect_url The redirect url.
 	 * @return string|false
@@ -155,7 +155,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Is the query for a the static front page (redirected from the language page)?
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query The WP_Query object.
 	 * @return bool
@@ -168,7 +168,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Setups query vars when requesting a static front page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|false $lang  The current language, false if it is not set yet.
 	 * @param WP_Query           $query The main WP query.
@@ -229,7 +229,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Setups query vars when requesting a posts page
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|false $lang  The current language, false if it is not set yet.
 	 * @param WP_Query           $query The main WP query.
@@ -266,7 +266,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 * If permalinks are used, WordPress does set and use `$query->queried_object_id` and sets `$query->query_vars['page_id']` to 0,
 	 * and does set and use `$query->query_vars['page_id']` if permalinks are not used :(.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query Instance of WP_Query.
 	 * @return int The page_id.
@@ -282,7 +282,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Adds support for the theme customizer.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -296,7 +296,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Translates the page ID when customized.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int|false $pre A page ID if the setting is customized, false otherwise.
 	 * @return int|false
@@ -308,7 +308,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	/**
 	 * Fixes the translation URL if the option 'show_on_front' is customized.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string       $url      An empty string or the URL of the translation of the current page.
 	 * @param LMAT_Language $language The language of the translation.

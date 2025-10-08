@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A class to manage the synchronization of taxonomy terms across posts translations
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sync_Tax {
 
@@ -29,7 +29,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -46,9 +46,9 @@ class LMAT_Sync_Tax {
 	/**
 	 * Get the list of taxonomies to copy or to synchronize.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 The `$from`, `$to`, `$lang` parameters were added.
-	 * @since 1.0.0 Changed visibility from protected to public.
+	 *  
+	 *   The `$from`, `$to`, `$lang` parameters were added.
+	 *   Changed visibility from protected to public.
 	 *
 	 * @param bool   $sync True if it is synchronization, false if it is a copy.
 	 * @param int    $from Id of the post from which we copy information, optional, defaults to null.
@@ -65,8 +65,8 @@ class LMAT_Sync_Tax {
 		/**
 		 * Filters the taxonomies to copy or synchronize.
 		 *
-		 * @since 1.0.0
-		 * @since 1.0.0 The `$from`, `$to`, `$lang` parameters were added.
+		 *  
+		 *   The `$from`, `$to`, `$lang` parameters were added.
 		 *
 		 * @param string[] $taxonomies List of taxonomy names.
 		 * @param bool     $sync       True if it is synchronization, false if it is a copy.
@@ -80,7 +80,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * When copying or synchronizing terms, translate terms in translatable taxonomies
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $object_id Object ID.
 	 * @param int[]  $terms     List of terms ids assigned to the source post.
@@ -103,7 +103,7 @@ class LMAT_Sync_Tax {
 				/**
 				 * Filter the translated term when a post translation is created or synchronized
 				 *
-				 * @since 1.0.0
+				 *  
 				 *
 				 * @param int    $tr_term Translated term id
 				 * @param int    $term    Source term id
@@ -123,7 +123,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * Maybe copy taxonomy terms from one post to the other.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $object_id Source object ID.
 	 * @param int    $tr_id     Target object ID.
@@ -158,7 +158,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * When assigning terms to a post, assign translated terms to the translated posts (synchronisation).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $object_id Object ID.
 	 * @param array  $terms     An array of object terms.
@@ -206,7 +206,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * Copy terms from one post to a translation, does not sync
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $from  Id of the source post
 	 * @param int    $to    Id of the target post
@@ -240,7 +240,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * When creating a new term, associate it to posts having translations associated to the translated terms.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id      Id of the created term.
 	 * @param string $taxonomy     Taxonomy.
@@ -294,7 +294,7 @@ class LMAT_Sync_Tax {
 	 * Deactivate the synchronization of terms before deleting a term
 	 * to avoid translated terms to be removed from translated posts
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -305,7 +305,7 @@ class LMAT_Sync_Tax {
 	/**
 	 * Re-activate the synchronization of terms after a term is deleted
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

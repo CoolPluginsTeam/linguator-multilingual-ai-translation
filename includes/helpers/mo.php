@@ -20,9 +20,9 @@ use Linguator\Includes\Other\LMAT_Language;
  * for it to work as expected, use `import_from_db` for the cache to be used
  * and `export_to_db` for the cache to be cleared.
  *
- * @since 1.0.0
- * @since 1.0.0 Stores the strings in a post meta instead of post content to avoid unserialize issues
- * @since 1.0.0 Stores the strings into language taxonomy term meta instead of a post meta.
+ *  
+ *   Stores the strings in a post meta instead of post content to avoid unserialize issues
+ *   Stores the strings into language taxonomy term meta instead of a post meta.
  */
 class LMAT_MO extends \MO {
 	/**
@@ -35,7 +35,7 @@ class LMAT_MO extends \MO {
 	/**
 	 * Constructor, initializes the cache if not already done.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		if ( empty( self::$cache ) ) {
@@ -46,7 +46,7 @@ class LMAT_MO extends \MO {
 	/**
 	 * Writes the strings into a term meta.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language $lang The language in which we want to export strings.
 	 * @return void
@@ -73,8 +73,8 @@ class LMAT_MO extends \MO {
 	/**
 	 * Reads a LMAT_MO object from the term meta.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Reads a LMAT_MO from the term meta.
+	 *  
+	 *   Reads a LMAT_MO from the term meta.
 	 *
 	 * @param LMAT_Language $lang The language in which we want to get strings.
 	 * @return void
@@ -111,7 +111,7 @@ class LMAT_MO extends \MO {
 	/**
 	 * Deletes a string
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $string The source string to remove from the translations.
 	 * @return void
@@ -124,7 +124,7 @@ class LMAT_MO extends \MO {
 	 * Translates a string or returns false if the translation is not found.
 	 * Contrary to `self::translate()`, this method doesn't fallback to the source string but returns empty string instead.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $source The source string to translate.
 	 * @return string The translated string or empty string if not found.

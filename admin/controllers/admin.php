@@ -18,7 +18,7 @@ use Linguator\Includes\Filters\LMAT_Filters_Sanitization;
 /**
  * Main Linguator class for admin (except Linguator pages), accessible from @see LMAT().
  *
- * @since 1.0.0
+ *  
  */
 #[AllowDynamicProperties]
 class LMAT_Admin extends LMAT_Admin_Base {
@@ -48,7 +48,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	public $filters_media;
 
 	/**
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @var LMAT_Filters_Sanitization|null
 	 */
@@ -136,7 +136,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	/**
 	 * Setups filters and action needed on all admin pages and on plugins page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -152,7 +152,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 * Setups filters and action needed on all admin pages and on plugins page
 	 * Loads the settings pages or the filters base on the request
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		parent::init();
@@ -167,7 +167,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	/**
 	 * Adds a 'settings' link for our plugin in the plugins list table.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $links List of links associated to the plugin.
 	 * @return string[] Modified list of links.
@@ -180,7 +180,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	/**
 	 * Adds the upgrade notice in plugins table
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array  $plugin_data Not used
 	 * @param object $r           Plugin update data
@@ -195,8 +195,8 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	/**
 	 * Setup filters for admin pages
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 instantiate a LMAT_Bulk_Translate instance.
+	 *  
+	 *   instantiate a LMAT_Bulk_Translate instance.
 	 * @return void
 	 */
 	public function add_filters() {
@@ -204,12 +204,8 @@ class LMAT_Admin extends LMAT_Admin_Base {
 		$this->filters_widgets_options = new LMAT_Admin_Filters_Widgets_Options( $this );
 
 		// All these are separated just for convenience and maintainability
-		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Classic_Editor', 'Block_Editor' );
+		$classes = array( 'Filters', 'Filters_Columns', 'Filters_Post', 'Filters_Term', 'Classic_Editor', 'Block_Editor', 'Nav_Menu' );
 		
-		// Only load Nav_Menu if 'default' switcher is enabled
-		if ( lmat_is_switcher_type_enabled( 'default' ) ) {
-			$classes[] = 'Nav_Menu';
-		}
 
 		// Don't load media filters if option is disabled or if user has no right
 		if ( $this->options['media_support'] && ( $obj = get_post_type_object( 'attachment' ) ) && ( current_user_can( $obj->cap->edit_posts ) || current_user_can( $obj->cap->create_posts ) ) ) {
@@ -222,7 +218,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 			/**
 			 * Filter the class to instantiate when loading admin filters
 			 *
-			 * @since 1.0.0
+			 *  
 			 *
 			 * @param string $class class name
 			 */
@@ -241,7 +237,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 * Retrieve the locale according to the current language instead of the language
 	 * of the admin interface.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

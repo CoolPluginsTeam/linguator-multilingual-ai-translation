@@ -19,7 +19,7 @@ use Linguator\Includes\Models\Languages;
 /**
  * Class defining navigation menus array option.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-type NavMenusValue array<
  *     non-falsy-string,
@@ -33,7 +33,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -44,9 +44,40 @@ class Nav_Menus extends Abstract_Option {
 	}
 
 	/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		$current_theme = get_stylesheet();
+		/** @phpstan-var NavMenusValue $nav_menus */
+		$nav_menus     = $this->get();
+		$fields        = array();
+		if ( empty( $nav_menus[ $current_theme ] ) ) {
+			return $info;
+		}
+		foreach ( $nav_menus[ $current_theme ] as $location => $lang ) {
+			if ( empty( $lang ) ) {
+				/* translators: default value when a menu location is not used. */
+				$lang = __( 'Not used', 'linguator-multilingual-ai-translation' );
+			}
+
+			$fields[ $location ]['label'] = sprintf( 'menu: %s', $location );
+			$fields[ $location ]['value'] = is_array( $lang ) ? $this->format_array_for_site_health_info( $lang ) : $lang;
+		}
+		$info = array_merge( $info, $fields );
+
+		return $info;
+	}
+
+	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array
 	 */
@@ -57,7 +88,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 */
@@ -91,7 +122,7 @@ class Nav_Menus extends Abstract_Option {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array   $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -148,7 +179,7 @@ class Nav_Menus extends Abstract_Option {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

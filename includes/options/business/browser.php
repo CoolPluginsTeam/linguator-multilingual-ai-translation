@@ -19,13 +19,13 @@ use Linguator\Includes\Options\Options;
  * Class defining the "Detect browser language" boolean option.
  * /!\ Sanitization depends on `force_lang`: this option must be set AFTER `force_lang`.
  *
- * @since 1.0.0
+ *  
  */
 class Browser extends Abstract_Boolean {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -35,12 +35,31 @@ class Browser extends Abstract_Boolean {
 		return 'browser';
 	}
 
+		/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( ! $this->get() ) {
+			$value = '0: ' . __( 'Detect browser language deactivated', 'linguator-multilingual-ai-translation' );
+		} else {
+			$value = '1: ' . __( 'Detect browser language activated', 'linguator-multilingual-ai-translation' );
+		}
+
+		return $this->get_site_health_info( $info, $value, self::key() );
+	}
+
 	/**
 	 * Sanitizes option's value.
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool    $value   Value to sanitize.
 	 * @param Options $options All options.
@@ -60,7 +79,7 @@ class Browser extends Abstract_Boolean {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

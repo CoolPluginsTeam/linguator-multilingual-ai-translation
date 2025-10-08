@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A class to import languages and translations information form a WXR file
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_WP_Import extends WP_Import {
 	/**
@@ -23,7 +23,7 @@ class LMAT_WP_Import extends WP_Import {
 	/**
 	 * Overrides WP_Import::process_terms to remap terms translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function process_terms() {
 		$term_translations = array();
@@ -61,7 +61,7 @@ class LMAT_WP_Import extends WP_Import {
 	 * Overrides WP_Import::process_post to remap posts translations
 	 * Also merges strings translations from the WXR file to the existing ones
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function process_posts() {
 		$menu_items = $mo_posts = array();
@@ -119,7 +119,7 @@ class LMAT_WP_Import extends WP_Import {
 	/**
 	 * Remaps terms languages
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $terms array of terms in 'lmat_term_translations' taxonomy
 	 */
@@ -169,7 +169,7 @@ class LMAT_WP_Import extends WP_Import {
 	/**
 	 * Remaps translations for both posts and terms
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $terms array of terms in 'lmat_post_translations' or 'lmat_term_translations' taxonomies
 	 * @param array $processed_objects array of posts or terms processed by WordPress Importer

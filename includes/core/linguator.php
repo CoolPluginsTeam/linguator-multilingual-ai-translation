@@ -24,6 +24,7 @@ use Linguator\Integrations\LMAT_Integrations;
 use Linguator\Settings\Controllers\LMAT_Settings;
 use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
+use Linguator\Includes\Other\LMAT_Translation_Dashboard;
 
 // Default directory to store user data such as custom flags
 if ( ! defined( 'LMAT_LOCAL_DIR' ) ) {
@@ -38,7 +39,7 @@ if ( is_readable( LMAT_LOCAL_DIR . '/lmat-config.php' ) ) {
 /**
  * Controls the plugin, as well as activation, and deactivation
  *
- * @since 1.0.0
+ *  
  *
  * @template TLMATClass of LMAT_Base
  */
@@ -66,7 +67,7 @@ class Linguator {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		require_once __DIR__ . '/../helpers/functions.php'; // VIP functions
@@ -99,6 +100,11 @@ class Linguator {
 		// Register the custom fields
 		if(class_exists(Custom_Fields::class)){
 			Custom_Fields::get_instance();
+		}
+
+		// Register the translation dashboard
+		if(class_exists(LMAT_Translation_Dashboard::class)){
+			LMAT_Translation_Dashboard::get_instance();
 		}
 
 		// Initialize feedback functionality
@@ -144,7 +150,7 @@ class Linguator {
 	/**
 	 * Tells whether the current request is an ajax request on frontend or not
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -155,7 +161,9 @@ class Linguator {
 		$excluded_actions = array( 'upload-attachment', 'customize_save' );
 		
 		// Add Elementor-specific actions that should be treated as backend
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( isset( $_REQUEST['action'] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 			$action = sanitize_key( $_REQUEST['action'] );
 			// Check for Elementor actions - these should be treated as admin operations
 			if ( strpos( $action, 'elementor' ) !== false || 
@@ -170,7 +178,7 @@ class Linguator {
 		/**
 		 * Filters whether the current request is an ajax request on front.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param bool $is_ajax_on_front Whether the current request is an ajax request on front.
 		 */
@@ -182,7 +190,7 @@ class Linguator {
 	 * Inspired by WP::parse_request()
 	 * Needed because at this point, the constant REST_REQUEST is not defined yet
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -208,7 +216,7 @@ class Linguator {
 	/**
 	 * Tells if we are in the wizard process.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -220,7 +228,7 @@ class Linguator {
 	 * Defines constants
 	 * May be overridden by a plugin if set before plugins_loaded, 1
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -247,7 +255,7 @@ class Linguator {
 	 * Linguator initialization
 	 * setups models and separate admin and frontend
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -260,17 +268,11 @@ class Linguator {
 
 		// Set current version
 		$options['version'] = LINGUATOR_VERSION;
-		
-
-		// Clear language cache on plugin load to ensure fresh data
-		// This fixes the issue where deleted languages from Linguator still show up
-		delete_transient( 'lmat_languages_list' );
-
 		/**
 		 * Filter the model class to use
 		 * /!\ this filter is fired *before* the $linguator object is available
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $class either LMAT_Model or LMAT_Admin_Model
 		 */
@@ -291,7 +293,7 @@ class Linguator {
 			 * Fires when no language has been defined yet
 			 * Used to load overridden textdomains
 			 *
-			 * @since 1.0.0
+			 *  
 			 */
 			do_action( 'lmat_no_language_defined' );
 		}
@@ -311,7 +313,7 @@ class Linguator {
 		/**
 		 * Filters the class to use to instantiate the $linguator object
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param string $class A class name.
 		 */
@@ -338,7 +340,7 @@ class Linguator {
 	 * Linguator initialization.
 	 * Setups the Linguator Context, loads the modules and init Linguator.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string    $class The class name.
 	 * @param LMAT_Model $model Instance of LMAT_Model.
@@ -362,7 +364,7 @@ class Linguator {
 		 * /!\ This hook is fired *before* the $linguator object is available.
 		 * /!\ The languages are also not available yet.
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param LMAT_Model $model Linguator model.
 		 */
@@ -373,7 +375,7 @@ class Linguator {
 		/**
 		 * Fires after the $linguator object is created and before the API is loaded
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param object $linguator
 		 */
@@ -393,7 +395,7 @@ class Linguator {
 		/**
 		 * Fires after the $linguator object and the API is loaded
 		 *
-		 * @since 1.0.0
+		 *  
 		 *
 		 * @param object $linguator
 		 */

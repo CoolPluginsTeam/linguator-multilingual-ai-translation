@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Interface to use for objects that can have one or more types.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-type DBInfoWithType array{
  *     table: non-empty-string,
@@ -26,7 +26,7 @@ interface LMAT_Translatable_Object_With_Types_Interface {
 	/**
 	 * Returns object types that need to be translated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $filter True if we should return only valid registered object types.
 	 * @return string[] Object type names for which Linguator manages languages.
@@ -38,7 +38,7 @@ interface LMAT_Translatable_Object_With_Types_Interface {
 	/**
 	 * Returns true if Linguator manages languages for this object type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $object_type Object type name or array of object type names.
 	 * @return bool

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Determines whether we should load the cache compatibility
  *
- * @since 1.0.0
+ *  
  *
  * @return bool True if the cache compatibility must be loaded
  */
@@ -22,7 +22,7 @@ function lmat_is_cache_active() {
 	/**
 	 * Filters whether we should load the cache compatibility
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @bool $is_cache True if a known cache plugin is active
 	 *                 incl. WP Fastest Cache which doesn't use WP_CACHE
@@ -33,7 +33,7 @@ function lmat_is_cache_active() {
 /**
  * Get the the current requested url
  *
- * @since 1.0.0
+ *  
  *
  * @return string Requested url
  */
@@ -71,7 +71,7 @@ function lmat_get_requested_url() {
 /**
  * Tells if a constant is defined.
  *
- * @since 1.0.0
+ *  
  *
  * @param string $constant_name Name of the constant.
  * @return bool True if the constant is defined, false otherwise.
@@ -85,7 +85,7 @@ function lmat_has_constant( string $constant_name ): bool {
 /**
  * Returns the value of a constant if it is defined.
  *
- * @since 1.0.0
+ *  
  *
  * @param string $constant_name Name of the constant.
  * @param mixed  $default       Optional. Value to return if the constant is not defined. Defaults to `null`.
@@ -105,7 +105,7 @@ function lmat_get_constant( string $constant_name, $default = null ) {
 /**
  * Defines a constant if it is not already defined.
  *
- * @since 1.0.0
+ *  
  *
  * @param string $constant_name Name of the constant.
  * @param mixed  $value         Value to set.
@@ -127,7 +127,7 @@ function lmat_set_constant( string $constant_name, $value ): bool {
  *
  * We define our own function because `is_plugin_active()` is available only in the backend.
  *
- * @since 1.0.0
+ *  
  *
  * @param string $plugin_name Plugin basename.
  * @return bool True if activated, false otherwise.
@@ -146,7 +146,7 @@ function lmat_is_plugin_active( string $plugin_name ) {
  *
  * Wraps `add_settings_error()` to make its use more consistent.
  *
- * @since 1.0.0
+ *  
  *
  * @param WP_Error $error Error object.
  * @return void
@@ -299,7 +299,7 @@ function lmat_use_block_editor_plugin() {
 /**
  * Checks if a specific language switcher type is enabled
  *
- * @since 1.0.0
+ *  
  *
  * @param string $switcher_type The switcher type to check ('default', 'block', 'elementor')
  * @return bool True if the switcher type is enabled

@@ -24,13 +24,14 @@ use Linguator\Frontend\Services\LMAT_Frontend_Links;
 use Linguator\Includes\Helpers\LMAT_Default_Term;
 use Linguator\Includes\Other\LMAT_Query;
 use Linguator\Frontend\Services\LMAT_Canonical;
+use Linguator\Includes\Other\LMAT_Switch_Language;
 
 
 
 /**
  * Main Linguator class when on frontend, accessible from @see LMAT().
  *
- * @since 1.0.0
+ *  
  */
 #[AllowDynamicProperties]
 class LMAT_Frontend extends LMAT_Base {
@@ -139,7 +140,7 @@ class LMAT_Frontend extends LMAT_Base {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Links_Model $links_model Reference to the links model.
 	 */
@@ -177,7 +178,7 @@ class LMAT_Frontend extends LMAT_Base {
 	/**
 	 * Setups the language chooser based on options
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		parent::init();
@@ -200,16 +201,13 @@ class LMAT_Frontend extends LMAT_Base {
 		$this->choose_lang->init();
 
 		// Need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
-		// Only load nav menu if 'default' switcher is enabled
-		if ( lmat_is_switcher_type_enabled( 'default' ) ) {
-			$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
-		}
+		$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
 	}
 
 	/**
 	 * Setups filters and nav menus once the language has been defined
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -237,7 +235,7 @@ class LMAT_Frontend extends LMAT_Base {
 	/**
 	 * When querying multiple taxonomies, makes sure that the language is not the queried object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query WP_Query object.
 	 * @return void
@@ -254,7 +252,7 @@ class LMAT_Frontend extends LMAT_Base {
 	/**
 	 * Modifies some query vars to "hide" that the language is a taxonomy and avoid conflicts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query WP_Query object.
 	 * @return void
@@ -297,7 +295,7 @@ class LMAT_Frontend extends LMAT_Base {
 	/**
 	 * Auto translate posts and terms ids
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -309,7 +307,7 @@ class LMAT_Frontend extends LMAT_Base {
 	 * Resets some variables when the blog is switched.
 	 * Overrides the parent method.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $new_blog_id  New blog ID.
 	 * @param int $prev_blog_id Previous blog ID.
@@ -345,7 +343,7 @@ class LMAT_Frontend extends LMAT_Base {
 		}
 
 		// Send the slug instead of the locale here to avoid conflicts with same locales.
-		$this->load_strings_translations( $this->curlang->slug );
+		LMAT_Switch_Language::load_strings_translations( $this->curlang->slug );
 	}
 
 	/**
@@ -355,7 +353,7 @@ class LMAT_Frontend extends LMAT_Base {
 	 * As Linguator interacts with the Customizer, we have to delete this menu ourselves in the case of a block theme,
 	 * unless another plugin than Linguator interacts with the Customizer.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

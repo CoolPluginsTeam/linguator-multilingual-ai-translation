@@ -18,7 +18,7 @@ use WP_Post;
 /**
  * Manages filters and actions related to the block editor
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Block_Editor {
 	/**
@@ -34,7 +34,7 @@ class LMAT_Admin_Block_Editor {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Admin $linguator The Linguator object.
 	 */
@@ -49,7 +49,7 @@ class LMAT_Admin_Block_Editor {
 	/**
 	 * Filters preload paths based on the context (block editor for posts, site editor or widget editor for instance).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array                   $preload_paths Preload paths.
 	 * @param WP_Block_Editor_Context $context       Editor context.
@@ -88,7 +88,7 @@ class LMAT_Admin_Block_Editor {
 	/**
 	 * Adds inline block editor script for filterable REST routes.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

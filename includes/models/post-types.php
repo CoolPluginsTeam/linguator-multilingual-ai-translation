@@ -17,7 +17,7 @@ use Linguator\Includes\Models\Translated\LMAT_Translated_Post;
 /**
  * Model for post types translated by Linguator.
  *
- * @since 1.0.0	
+ *  	
  */
 class Post_Types {
 	/**
@@ -30,7 +30,7 @@ class Post_Types {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Translated_Post $translated_object Posts model.
 	 */
@@ -44,7 +44,7 @@ class Post_Types {
 	 * The method waits for 'after_setup_theme' to apply the cache
 	 * to allow themes adding the filter in functions.php.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param bool $filter True if we should return only valid registered post types.
 	 * @return string[] Post type names for which Linguator manages languages and translations.
@@ -56,7 +56,7 @@ class Post_Types {
 	/**
 	 * Returns true if Linguator manages languages and translations for this post type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string|string[] $post_type Post type name or array of post type names.
 	 * @return bool

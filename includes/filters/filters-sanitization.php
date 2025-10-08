@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Extract from LMAT_Admin_Filters to be able to use in a REST API context.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Filters_Sanitization {
 	/**
@@ -27,7 +27,7 @@ class LMAT_Filters_Sanitization {
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $locale Locale code of the language.
 	 */
@@ -45,7 +45,7 @@ class LMAT_Filters_Sanitization {
 	/**
 	 * Retrieve the locale code of the language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -63,7 +63,7 @@ class LMAT_Filters_Sanitization {
 	 *
 	 * @link 
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $title     Sanitized title.
 	 * @param string $raw_title The title prior to sanitization.
@@ -89,7 +89,7 @@ class LMAT_Filters_Sanitization {
 	 * All the process is done by the remove_accents() WordPress function based on the locale value
 	 *
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $username     Sanitized username.
 	 * @param string $raw_username The username prior to sanitization.

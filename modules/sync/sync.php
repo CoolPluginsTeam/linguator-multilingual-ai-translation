@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages copy and synchronization of terms and post metas on front
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sync {
 	/**
@@ -43,7 +43,7 @@ class LMAT_Sync {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -76,7 +76,7 @@ class LMAT_Sync {
 	/**
 	 * Get post fields to synchronize.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Post $post Post object.
 	 * @return array
@@ -105,7 +105,7 @@ class LMAT_Sync {
 	/**
 	 * Prevents synchronized post parent modification if the current user hasn't enough rights
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $post_parent Post parent ID
 	 * @param int   $post_id     Post ID, unused
@@ -128,7 +128,7 @@ class LMAT_Sync {
 	/**
 	 * Prevents synchronized post data modification if the current user hasn't enough rights
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $data    An array of slashed post data.
 	 * @param array $postarr An array of sanitized, but otherwise unmodified post data.
@@ -150,7 +150,7 @@ class LMAT_Sync {
 	/**
 	 * Synchronizes post fields in translations.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int     $post_id      Post id.
 	 * @param WP_Post $post         Post object.
@@ -196,7 +196,7 @@ class LMAT_Sync {
 	 * Synchronize term parent in translations.
 	 * Calling clean_term_cache *after* this is mandatory otherwise the $taxonomy_children option is not correctly updated
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $term_id  Term id.
 	 * @param int    $tt_id    Term taxonomy id, not used.
@@ -246,7 +246,7 @@ class LMAT_Sync {
 	/**
 	 * Synchronizes terms and metas in translations for media
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $post_id post id
 	 * @return void
@@ -258,7 +258,7 @@ class LMAT_Sync {
 	/**
 	 * Synchronize sticky posts.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[] $value     New option value.
 	 * @param int[] $old_value Old option value.

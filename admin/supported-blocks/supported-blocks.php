@@ -16,7 +16,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 	/**
 	 * Class Supported_Blocks
 	 *
-	 * This class handles the supported blocks for the AutoPoly - AI Translation For Polylang plugin.
+	 * This class handles the supported blocks for the Linguator - AI Translation For Polylang plugin.
 	 *
 	 * @package LMATP
 	 */
@@ -70,7 +70,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		<div class="lmat-custom-data-table-wrapper">
 			<h3><?php echo __('Supported Blocks Translation Settings', 'linguator-multilingual-ai-translation'); ?>
 			<br>
-			<p><?php echo sprintf(esc_html__('Manage Gutenberg blocks to make them translation-ready with %s.', 'linguator-multilingual-ai-translation'), 'AutoPoly'); ?></p>
+			<p><?php echo sprintf(esc_html__('Manage Gutenberg blocks to make them translation-ready with %s.', 'linguator-multilingual-ai-translation'), 'Linguator'); ?></p>
 			</h3>
 			<div class="lmat-custom-data-table-filters">
 				<div class="lmat-filter-tab" data-column="1" data-default="all">

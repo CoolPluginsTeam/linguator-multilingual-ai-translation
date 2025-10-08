@@ -20,13 +20,20 @@ use WPSEO_Sitemaps;
  * Manages the compatibility with Yoast SEO
  * Version tested: 15.9.2
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_WPSEO {
 	/**
+	 * Cached active languages for sitemap generation
+	 *
+	 * @var array
+	 */
+	private $cached_active_languages = array();
+
+	/**
 	 * Translate options and add specific filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_action( 'wp_loaded', array( $this, 'wpseo_translate_options' ) );
@@ -49,6 +56,7 @@ class LMAT_WPSEO {
 				// Get all terms in all languages when the language is set from the content or directory name
 				add_filter( 'get_terms_args', array( $this, 'wpseo_remove_terms_filter' ) );
 				add_action( 'pre_get_posts', array( $this, 'before_sitemap' ), 0 ); // Needs to be fired before WPSEO_Sitemaps::redirect()
+				add_action( 'pre_get_posts', array( $this, 'cache_active_languages_for_sitemap' ), -1 ); // Cache languages before sitemap
 			}
 
 			add_filter( 'lmat_home_url_white_list', array( $this, 'wpseo_home_url_white_list' ) );
@@ -71,7 +79,7 @@ class LMAT_WPSEO {
 	/**
 	 * Registers options for translation.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function wpseo_translate_options() {
 		if ( method_exists( 'WPSEO_Options', 'clear_cache' ) ) {
@@ -109,7 +117,7 @@ class LMAT_WPSEO {
 	 * Fixes the home url as well as the stylesheet url,
 	 * only when using multiple domains or subdomains.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url  The complete URL including scheme and path.
 	 * @param string $path Path relative to the home URL.
@@ -130,7 +138,7 @@ class LMAT_WPSEO {
 	/**
 	 * Get active languages for the sitemaps
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array list of active language slugs, empty if all languages are active
 	 */
@@ -145,7 +153,7 @@ class LMAT_WPSEO {
 	/**
 	 * Modifies the sql request for posts sitemaps.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $sql       JOIN clause.
 	 * @param string $post_type Post type.
@@ -158,7 +166,7 @@ class LMAT_WPSEO {
 	/**
 	 * Modifies the sql request for posts sitemaps.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $sql       WHERE clause.
 	 * @param string $post_type Post type.
@@ -183,25 +191,55 @@ class LMAT_WPSEO {
 	}
 
 	/**
+	 * Cache active languages before sitemap generation to avoid infinite loops
+	 *
+	 * @param WP_Query $query WP_Query object.
+	 * @return void
+	 */
+	public function cache_active_languages_for_sitemap( $query ) {
+		if ( isset( $query->query['sitemap'] ) ) {
+			// Get active languages directly from the languages model to avoid get_terms() calls
+			$languages = LMAT()->model->languages->get_list();
+			$active_languages = array();
+			
+			foreach ( $languages as $lang ) {
+				if ( $lang->active ) {
+					$active_languages[] = $lang->slug;
+				}
+			}
+			
+			$this->cached_active_languages = $active_languages;
+		}
+	}
+
+	/**
 	 * Removes the language filter (and remove inactive languages) for the taxonomy sitemaps
 	 * Only when the language is set from the content or directory name
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $args get_terms arguments
 	 * @return array modified list of arguments
 	 */
 	public function wpseo_remove_terms_filter( $args ) {
+		// Only process during sitemap generation
 		if ( isset( $GLOBALS['wp_query']->query['sitemap'] ) ) {
-			$args['lang'] = implode( ',', $this->wpseo_get_active_languages() );
+			// Use cached active languages to avoid infinite loops
+			if ( ! empty( $this->cached_active_languages ) ) {
+				$args['lang'] = implode( ',', $this->cached_active_languages );
+			} else {
+				// If no active languages specified, get all languages
+				$args['lang'] = '';
+			}
 		}
+		
 		return $args;
 	}
 
 	/**
 	 * Deactivates the sitemap for inactive languages when using subdomains or multiple domains
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function maybe_deactivate_sitemap() {
 		global $wpseo_sitemaps;
@@ -217,7 +255,7 @@ class LMAT_WPSEO {
 	/**
 	 * Add filters before the sitemap is evaluated and outputted.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_Query $query Instance of WP_Query being filtered.
 	 */
@@ -234,7 +272,7 @@ class LMAT_WPSEO {
 	/**
 	 * Generates a post type archive sitemap url
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $link      The url.
 	 * @param string $post_type The post type name.
@@ -256,7 +294,7 @@ class LMAT_WPSEO {
 	/**
 	 * Adds the home and post type archives urls for all (active) languages to the sitemap
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $str additional urls to sitemap post
 	 * @return string
@@ -297,7 +335,7 @@ class LMAT_WPSEO {
 	/**
 	 * Filters the home url.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $arr The list of files or functions for which `home_url()` must be filtered.
 	 * @return array
@@ -309,7 +347,7 @@ class LMAT_WPSEO {
 	/**
 	 * Get alternate language codes for Opengraph.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[]
 	 */
@@ -329,7 +367,7 @@ class LMAT_WPSEO {
 	/**
 	 * Adds opengraph support for translations
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $presenters An array of objects implementing Abstract_Indexable_Presenter
 	 * @return array
@@ -351,7 +389,7 @@ class LMAT_WPSEO {
 	/**
 	 * Fixes the canonical front page url as unlike WP, WPSEO does not add a trailing slash to the canonical front page url.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The canonical URL evaluated by Yoast SEO.
 	 * @return $url
@@ -363,7 +401,7 @@ class LMAT_WPSEO {
 	/**
 	 * Fixes the links and strings stored in the indexable table since Yoast SEO 14.0
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $presentation The indexable presentation.
 	 * @return object
@@ -404,7 +442,7 @@ class LMAT_WPSEO {
 	 *
 	 * In version 17.0, the breadcrumb links do not honor the filter `wpseo_dynamic_permalinks_enabled`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $indexables An array of Indexable objects.
 	 * @return array
@@ -433,7 +471,7 @@ class LMAT_WPSEO {
 	/**
 	 * Copies or synchronizes the metas.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $keys List of custom fields names.
 	 * @param bool     $sync True if it is synchronization, false if it is a copy.
@@ -476,7 +514,7 @@ class LMAT_WPSEO {
 	/**
 	 * Translate the primary term during the synchronization process
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $value Meta value.
 	 * @param string $key   Meta key.
@@ -511,7 +549,7 @@ class LMAT_WPSEO {
 	/**
 	 * Returns the meta keys with translatable text.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[]
 	 */

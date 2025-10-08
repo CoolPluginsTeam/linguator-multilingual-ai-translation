@@ -16,7 +16,7 @@ use Linguator\Includes\Other\LMAT_Language;
  * Links model for use when the language code is added in the url as a subdomain
  * for example en.mysite.com/something.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	/**
@@ -30,7 +30,7 @@ class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Instance of LMAT_Model.
 	 */
@@ -42,8 +42,8 @@ class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Adds the language code in a url.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Accepts now a language slug.
+	 *  
+	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url      The url to modify.
 	 * @param LMAT_Language|string|false $language Language object or slug.
@@ -63,7 +63,7 @@ class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Returns the url without the language code.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $url The url to modify.
 	 * @return string The modified url.
@@ -86,7 +86,7 @@ class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	/**
 	 * Get the hosts managed on the website.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] The list of hosts.
 	 */

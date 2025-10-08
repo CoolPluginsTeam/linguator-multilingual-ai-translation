@@ -21,7 +21,7 @@ use Linguator\Includes\Other\LMAT_Language;
  * Extend the `LMAT_Walker` class to use it, and implement some of the methods from `Walker`.
  * See: {https://developer.wordpress.org/reference/classes/walker/#methods}.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Walker extends Walker {
 	/**
@@ -62,7 +62,7 @@ class LMAT_Walker extends Walker {
 	 * Sets `LMAT_Walker::walk()` arguments as it should
 	 * and triggers an error in case of misuse of them.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array|int $max_depth The maximum hierarchical depth. Passed by reference.
 	 * @param array     $args      Additional arguments. Passed by reference.

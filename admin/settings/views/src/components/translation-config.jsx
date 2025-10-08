@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Checkbox, Container, Input, Label, RadioButton, Switch, Badge } from '@bsf/force-ui'
-import { Languages, Post } from 'lucide-react';
+import { Languages, Link } from 'lucide-react';
+import { RiDraftLine } from "react-icons/ri";
 import { __ } from '@wordpress/i18n'
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { toast } from 'sonner'
+import { ChromeIcon } from '../../../../../assets/logo/chrome';
+import { GoogleIcon } from '../../../../../assets/logo/google';
+
+
 
 const ChromeLocalAINotice = () => {
     const [showBrowserNotice, setShowBrowserNotice] = React.useState(false);
@@ -224,15 +229,15 @@ const TranslationConfig = ({ data, setData }) => {
 
     const slugTranslationOptions = [
         {
-            heading: __('Title Translate', 'linguator-multilingual-ai-translation'),
+            heading: __('Use Translated Title', 'linguator-multilingual-ai-translation'),
             value: 'title_translate'
         },
         {
-            heading: __('Slug Translate', 'linguator-multilingual-ai-translation'),
+            heading: __('Translate Original Slug', 'linguator-multilingual-ai-translation'),
             value: 'slug_translate'
         },
         {
-            heading: __('Keep Slug Original', 'linguator-multilingual-ai-translation'),
+            heading: __('Keep Original Slug', 'linguator-multilingual-ai-translation'),
             value: 'slug_keep'
         }
     ]
@@ -270,6 +275,7 @@ const TranslationConfig = ({ data, setData }) => {
                         <div className='switcher p-6 rounded-lg'>
                             <Container.Item>
                                 <h3 className='flex items-center gap-2'>
+                                    <GoogleIcon className='w-5 h-5' />
                                     {__('Google Machine Translation', 'linguator-multilingual-ai-translation')}
                                 </h3>
                                 <p>
@@ -293,6 +299,7 @@ const TranslationConfig = ({ data, setData }) => {
                         <div className='switcher p-6 rounded-lg'>
                             <Container.Item >
                                 <h3 className='flex items-center gap-2'>
+                                    <ChromeIcon className="w-5 h-5" />
                                     {__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}
                                 </h3>
                                 <p>
@@ -318,55 +325,59 @@ const TranslationConfig = ({ data, setData }) => {
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
             <Container.Item>
                 <Label size='md' className='font-bold flex items-center gap-2'>
-                    {/* <Post className="flex-shrink-0 size-5 text-icon-secondary" /> */}
-                    {__('Bulk Translation default Post Status', 'linguator-multilingual-ai-translation')}
+                    <RiDraftLine className="flex-shrink-0 size-5 text-icon-secondary" />
+                    {__('Bulk Translation – Default Post Status', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <Label variant='help'>
                     {__('This is the default post status for bulk translation.', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <div style={{ marginTop: "20px" }}>
-                    <div className='flex items-center gap-0 flex-wrap'>
-                        {postStatusOptions.map((postStatus) => (
-                            <div key={postStatus.value} className='flex items-center gap-2 m-width-1/2 align-middle mr-7'>
-                                <Label className='text-sm pr-12 align-middle relative' htmlFor={postStatus.value}><p>{postStatus.heading}</p>
-                                <label className='absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2' htmlFor={postStatus.value}>
-                                    <span className='relative p-0.5'>
-                                        <input type="radio" className="peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4" name="bulkTranslationPostStatus" value={postStatus.value} id={postStatus.value} onChange={() => {
-                                            setBulkTranslationPostStatus(postStatus.value)
-                                        }} checked={bulkTranslationPostStatus === postStatus.value} />
-                                        <span className="inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"><div className="rounded-full bg-current size-1.5"></div></span>
-                                    </span>
-                                </label>
-                                </Label>
-                            </div>
+                    <RadioButton.Group>
+                        {postStatusOptions.map((postStatus, index) => (
+                            <RadioButton.Button
+                                badgeItem={<Badge className="mr-2" size="sm" type="rounded" variant="green" />}
+                                label={{
+                                    heading: postStatus.heading,
+                                }}
+                                reversePosition={true}
+                                value={postStatus.value}
+                                key={index}
+                                checked={bulkTranslationPostStatus === postStatus.value}
+                                onChange={() => {
+                                    setBulkTranslationPostStatus(postStatus.value);
+                                }}
+                            />
+
                         ))}
-                    </div>
+                    </RadioButton.Group>
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
             <Container.Item>
                 <Label size='md' className='font-bold flex items-center gap-2'>
-                    {__('Slug Translation Option', 'linguator-multilingual-ai-translation')}
+                    <Link className="flex-shrink-0 size-5 text-icon-secondary" />
+                    {__('Slug Translation Settings', 'linguator-multilingual-ai-translation')}
                 </Label>
-                <Label variant='help'>{__('This is the option for slug translation.', 'linguator-multilingual-ai-translation')}</Label>
+                <Label variant='help'>{__('Choose how post slugs (URLs) are generated when content is translated.', 'linguator-multilingual-ai-translation')}</Label>
                 <div style={{ marginTop: "20px" }}>
-                    <div className='flex items-center gap-0 flex-wrap'>
-                    {slugTranslationOptions.map((slugOption) => (
-                            <div key={slugOption.value} className='flex items-center gap-2 m-width-1/2 align-middle mr-7'>
-                                <Label className='text-sm pr-12 align-middle relative' htmlFor={slugOption.value}><p>{slugOption.heading}</p>
-                                <label className='absolute mr-0.5 right-3 flex items-center cursor-pointer rounded-full gap-2' htmlFor={slugOption.value}>
-                                    <span className='relative p-0.5'>
-                                        <input type="radio" className="peer flex relative cursor-pointer appearance-none transition-all m-0 before:content-[''] checked:before:content-[''] checked:before:hidden before:hidden !border-1.5 border-solid rounded-full border-border-strong hover:border-border-interactive checked:border-border-interactive bg-white checked:bg-toggle-on checked:hover:bg-toggle-on-hover checked:hover:border-toggle-on-hover focus:ring-2 focus:ring-offset-2 focus:ring-focus size-4" name="slugTranslationOption" value={slugOption.value} id={slugOption.value} onChange={() => {
-                                            setSlugTranslationOption(slugOption.value)
-                                        }} checked={slugTranslationOption === slugOption.value} />
-                                        <span className="inline-flex items-center absolute top-2/4 not-rtl:left-2/4 rtl:right-2/4 -translate-y-2/4 -translate-x-2/4 opacity-0 transition-opacity peer-checked:opacity-100 text-white"><div className="rounded-full bg-current size-1.5"></div></span>
-                                    </span>
-                                </label>
-                                </Label>
-                            </div>
+                    <RadioButton.Group>
+                        {slugTranslationOptions.map((slugOption, index) => (
+                            <RadioButton.Button
+                                badgeItem={<Badge className="mr-2" size="sm" type="rounded" variant="green" />}
+                                label={{
+                                    heading: slugOption.heading,
+                                }}
+                                reversePosition={true}
+                                value={slugOption.value}
+                                key={index}
+                                checked={slugTranslationOption === slugOption.value}
+                                onChange={() => {
+                                    setSlugTranslationOption(slugOption.value)
+                                }}
+                            />
                         ))}
-                        
-                    </div>
+
+                    </RadioButton.Group>
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />

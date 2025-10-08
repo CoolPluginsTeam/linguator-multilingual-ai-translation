@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// ./Assets/js/src/lib/confirmation-modal.js
+;// ./assets/js/src/lib/confirmation-modal.js
 /**
  * @package Linguator
  */
@@ -95,7 +95,7 @@ var initializeLanguageOldValue = function initializeLanguageOldValue() {
   // Keep the old language value to be able to compare to the new one and revert to it if necessary.
   languagesList.attr('data-old-value', languagesList.children(':selected').first().val());
 };
-;// ./Assets/js/src/lib/metabox-autocomplete.js
+;// ./assets/js/src/lib/metabox-autocomplete.js
 /**
  * @package Linguator
  */
@@ -125,7 +125,7 @@ function initMetaboxAutoComplete() {
     });
   });
 }
-;// ./Assets/js/src/lib/filter-path-middleware.js
+;// ./assets/js/src/lib/filter-path-middleware.js
 /**
  * @package Linguator
  */
@@ -134,7 +134,6 @@ function initMetaboxAutoComplete() {
  * Filters requests for translatable entities.
  * This logic is shared across all Linguator plugins.
  *
- * @since 3.5
  *
  * @param {APIFetchOptions} options
  * @param {Array} filteredRoutes
@@ -149,7 +148,7 @@ var filterPathMiddleware = function filterPathMiddleware(options, filteredRoutes
   }) ? filter(options) : options;
 };
 /* harmony default export */ const filter_path_middleware = (filterPathMiddleware);
-;// ./Assets/js/src/block-editor.js
+;// ./assets/js/src/block-editor.js
 /**
  * @package Linguator
  */
@@ -161,7 +160,6 @@ var filterPathMiddleware = function filterPathMiddleware(options, filteredRoutes
 /**
  * Filter REST API requests to add the language in the request
  *
- * @since 2.5
  */
 wp.apiFetch.use(function (options, next) {
   /*
@@ -177,7 +175,6 @@ wp.apiFetch.use(function (options, next) {
 /**
  * Gets the language of the currently edited post, fallback to default language if none is found.
  *
- * @since 2.5
  *
  * @return {Element.value}
  */
@@ -192,7 +189,6 @@ function getCurrentLanguage() {
 /**
  * Adds language parameter according to the current one (query string for GET, body for PUT and POST).
  *
- * @since 3.5
  *
  * @param {APIFetchOptions} options
  * @returns {APIFetchOptions}
@@ -212,15 +208,12 @@ function addLanguageParameter(options) {
  * Handles internals of the metabox:
  * Language select, autocomplete input field.
  *
- * @since 1.5
  *
  * Save post after lang choice is done and redirect to the same page for refreshing all the data.
  *
- * @since 2.5
  *
  * Link post saving after refreshing the metabox.
  *
- * @since 3.0
  */
 jQuery(function ($) {
   // Initialize current language to be able to compare if it changes.

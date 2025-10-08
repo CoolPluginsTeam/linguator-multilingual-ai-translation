@@ -21,7 +21,7 @@ use WP_Locale;
  * This class defers textdomain loading until the language is defined either in a `plugins_loaded` action
  * or in a `wp` action (when the language is set from content on frontend).
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_OLT_Manager {
 	/**
@@ -34,7 +34,7 @@ class LMAT_OLT_Manager {
 	/**
 	 * Constructor: setups relevant filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		// Allows Linguator to be the first plugin loaded ;-)
@@ -57,7 +57,7 @@ class LMAT_OLT_Manager {
 	/**
 	 * Access to the single instance of the class
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return LMAT_OLT_Manager
 	 */
@@ -72,7 +72,7 @@ class LMAT_OLT_Manager {
 	/**
 	 * Loads textdomains.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -101,7 +101,7 @@ class LMAT_OLT_Manager {
 	/**
 	 * Allows Linguator to be the first plugin loaded ;-).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $plugins List of active plugins.
 	 * @return string[] List of active plugins.

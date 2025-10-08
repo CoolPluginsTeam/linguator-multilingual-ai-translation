@@ -16,13 +16,13 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
 /**
  * Manages the compatibility with Twenty_Seventeen.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Twenty_Seventeen {
 	/**
 	 * Translates the front page panels and the header video.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		if ( 'twentyseventeen' === get_template() && did_action( 'lmat_init' ) ) {

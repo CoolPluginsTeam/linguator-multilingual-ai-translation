@@ -19,13 +19,13 @@ use Linguator\Includes\Options\Options;
 /**
  * Class defining the "Remove /language/ in pretty permalinks" boolean option.
  *
- * @since 1.0.0
+ *  
  */
 class Rewrite extends Abstract_Boolean {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -36,9 +36,36 @@ class Rewrite extends Abstract_Boolean {
 	}
 
 	/**
+	 * Adds information to the site health info array.
+	 *
+	 *
+	 * @param array   $info    The current site health information.
+	 * @param Options $options An instance of the Options class providing additional configuration.
+	 *
+	 * @return array The updated site health information.
+	 */
+	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( $this->get() ) {
+			$value = '1: ' . sprintf(
+				/* translators: %s is a URL slug: `/language/`. */
+				__( 'Remove %s in pretty permalinks', 'linguator-multilingual-ai-translation' ),
+				'`/language/`'
+			);
+		} else {
+			$value = '0: ' . sprintf(
+				/* translators: %s is a URL slug: `/language/`. */
+				__( 'Keep %s in pretty permalinks', 'linguator-multilingual-ai-translation' ),
+				'`/language/`'
+			);
+		}
+
+		return $this->get_site_health_info( $info, $value, self::key() );
+	}
+
+	/**
 	 * Returns the default value.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -49,7 +76,7 @@ class Rewrite extends Abstract_Boolean {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */

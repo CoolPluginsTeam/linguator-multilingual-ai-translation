@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * An extremely simple non persistent cache system.
  *
- * @since 1.0.0
+ *  
  *
  * @template TCacheData
  */
@@ -36,7 +36,7 @@ class LMAT_Cache {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		$this->blog_id = get_current_blog_id();
@@ -46,7 +46,7 @@ class LMAT_Cache {
 	/**
 	 * Called when switching blog.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $new_blog_id New blog ID.
 	 * @return void
@@ -58,8 +58,8 @@ class LMAT_Cache {
 	/**
 	 * Adds a value in cache.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Returns the cached value.
+	 *  
+	 *   Returns the cached value.
 	 *
 	 * @param string $key  Cache key.
 	 * @param mixed  $data The value to add to the cache.
@@ -78,7 +78,7 @@ class LMAT_Cache {
 	/**
 	 * Returns value from cache.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key Cache key.
 	 * @return mixed
@@ -93,7 +93,7 @@ class LMAT_Cache {
 	/**
 	 * Cleans the cache (for this blog only).
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $key Optional. Cache key. An empty string to clean the whole cache for the current blog.
 	 *                    Default is an empty string.
@@ -110,7 +110,7 @@ class LMAT_Cache {
 	/**
 	 * Generates and returns a "unique" cache key, depending on `$data` and prefixed by `$prefix`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string              $prefix String to prefix the cache key.
 	 * @param string|array|object $data   Data.

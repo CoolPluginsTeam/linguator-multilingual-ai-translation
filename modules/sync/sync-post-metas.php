@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A class to manage copy and synchronization of post metas.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Sync_Post_Metas extends LMAT_Sync_Metas {
 	/**
@@ -23,7 +23,7 @@ class LMAT_Sync_Post_Metas extends LMAT_Sync_Metas {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -40,7 +40,7 @@ class LMAT_Sync_Post_Metas extends LMAT_Sync_Metas {
 	/**
 	 * Get the custom fields to copy or synchronize.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $from Id of the post from which we copy information.
 	 * @param int    $to   Id of the post to which we paste information.
@@ -85,7 +85,7 @@ class LMAT_Sync_Post_Metas extends LMAT_Sync_Metas {
 	/**
 	 * Translates the thumbnail id.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $value Thumbnail id.
 	 * @param string $key   Meta key.

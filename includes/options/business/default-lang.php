@@ -20,13 +20,13 @@ use WP_Error;
 /**
  * Class defining language slug string option.
  *
- * @since 1.0.0
+ *  
  */
 class Default_Lang extends Abstract_String {
 	/**
 	 * Returns option key.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -39,7 +39,7 @@ class Default_Lang extends Abstract_String {
 	/**
 	 * Returns the JSON schema part specific to this option.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return array Partial schema.
 	 *
@@ -55,7 +55,7 @@ class Default_Lang extends Abstract_String {
 	/**
 	 * Returns the description used in the JSON schema.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -68,7 +68,7 @@ class Default_Lang extends Abstract_String {
 	 * Can populate the `$errors` property with blocking and non-blocking errors: in case of non-blocking errors,
 	 * the value is sanitized and can be stored.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string  $value   Value to sanitize.
 	 * @param Options $options All options.

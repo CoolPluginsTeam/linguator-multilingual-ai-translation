@@ -16,7 +16,7 @@ use Linguator\Includes\Other\LMAT_Model;
 /**
  * Sets all Linguator REST controllers up.
  *
- * @since 1.0.0
+ *  
  */
 class API {
 	/**
@@ -48,7 +48,7 @@ class API {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Linguator's model.
 	 */
@@ -59,7 +59,7 @@ class API {
 	/**
 	 * Adds hooks and registers endpoints.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */

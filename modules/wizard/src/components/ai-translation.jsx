@@ -5,8 +5,11 @@ import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
 import { __, sprintf } from '@wordpress/i18n'
 import React from 'react'
-import { Earth, BrainCog} from 'lucide-react';
 import { Switch } from '@bsf/force-ui'
+import {ChromeIcon} from "../../../../assets/logo/chrome"
+import {GoogleIcon} from "../../../../assets/logo/google"
+
+
 
 const ChromeLocalAINotice = () => {
     const [showBrowserNotice, setShowBrowserNotice] = React.useState(false);
@@ -103,7 +106,7 @@ const ChromeLocalAINotice = () => {
 };
 
 const AiTranslation = () => {
-    const { setSetupProgress, data, setData, showHomePage } = React.useContext(setupContext) // get the context
+    const { setSetupProgress, data, setData } = React.useContext(setupContext) // get the context
     const aiTranslation = data?.ai_translation_configuration; //store the media option
     const provider = aiTranslation?.provider;
     const [googleMachineTranslation, setGoogleMachineTranslation] = React.useState(provider?.google)
@@ -111,10 +114,7 @@ const AiTranslation = () => {
     const [lastUpdatedValue, setLastUpdatedValue] = React.useState({googleMachineTranslation,chromeLocalAITranslation})
 
     const handleBack = () => {
-      if (showHomePage == "1") {
-        setSetupProgress("home_page")
-        localStorage.setItem("setupProgress", "home_page");
-    }else if (window.lmat_setup.media == "1") {
+       if (window.lmat_setup.media == "1") {
         setSetupProgress("media")
         localStorage.setItem("setupProgress", "media");
       } else {
@@ -164,7 +164,7 @@ const AiTranslation = () => {
 
                 <div className='flex justify-between items-center p-6 rounded-lg' style={{ border: "1px solid #e5e7eb", marginBottom: "10px" }}>
                     <div className="flex items-center  gap-2">
-                      <Earth className='size-5 text-button-primary' />
+                      <GoogleIcon className="w-4 h-4" />
                       <p className="text-sm/6">{__('Google Machine Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch
@@ -178,7 +178,7 @@ const AiTranslation = () => {
                 <div className='p-6 rounded-lg' style={{ border: "1px solid #e5e7eb" }}>
                     <div className='flex justify-between items-center'>
                     <div className="flex items-center  gap-2">
-                      <BrainCog className='size-5 text-button-primary' />
+                      <ChromeIcon className="w-4 h-4" />
                       <p className="text-sm/6">{__('Chrome Local AI Translation', 'linguator-multilingual-ai-translation')}</p>
                     </div>
                     <Switch

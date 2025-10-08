@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with WordPress MU Domain Mapping.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Domain_Mapping {
 
 	/**
 	 * Setups actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		if ( function_exists( 'redirect_to_mapped_domain' ) ) {
@@ -39,7 +39,7 @@ class LMAT_Domain_Mapping {
 	 * Fix primary domain check which forces only one domain per blog.
 	 * Accept only known domains/subdomains for the current blog.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function dm_redirect_to_mapped_domain() {
 		// Don't go further if we stopped loading the plugin early (for example when deactivate-linguator=1).

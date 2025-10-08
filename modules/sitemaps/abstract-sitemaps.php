@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * The child classes must called the init() method.
  *
- * @since 1.0.0
+ *  
  */
 abstract class LMAT_Abstract_Sitemaps {
 	/**
 	 * Setups actions and filters.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -29,7 +29,7 @@ abstract class LMAT_Abstract_Sitemaps {
 	/**
 	 * Whitelists the home url filter for the sitemaps.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $whitelist White list.
 	 * @return array;

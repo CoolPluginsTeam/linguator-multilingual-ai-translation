@@ -15,7 +15,7 @@ use Linguator\Includes\Options\Options;
 /**
  * Base class for all settings
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Settings_Module {
 	/**
@@ -104,7 +104,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 * @param array  $args {
@@ -181,7 +181,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Tells if the module is active.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -192,7 +192,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Activates the module.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -205,7 +205,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Deactivates the module.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -218,7 +218,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Protected method to display a configuration form.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -229,7 +229,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Public method returning the form if any.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -251,7 +251,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Allows child classes to prepare the received data before saving.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $options Raw values to save.
 	 * @return array
@@ -263,7 +263,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Ajax method to save the options.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -306,7 +306,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Renders settings errors HTML without relying on output buffering.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $setting Settings group name used with add_settings_error/get_settings_errors.
 	 * @return string HTML markup for admin notices.
@@ -335,7 +335,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Get the row actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[]
 	 */
@@ -360,7 +360,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Get the actions links.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Action links.
 	 */
@@ -371,7 +371,7 @@ class LMAT_Settings_Module {
 	/**
 	 * Get the buttons.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] An array of html fragment for the buttons.
 	 */

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { bulkTranslateEntries, initBulkTranslate } from '../bulk-translate.js';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider } from '../redux-store/features/selectors.js';
+import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider, selectErrorPostsInfo, selectTargetLanguages } from '../redux-store/features/selectors.js';
 import { __ } from '@wordpress/i18n';
 import ErrorModalBox from '../components/error-modal-box/index.js';
+import { store } from '../redux-store/store.js';
+import DOMPurify from 'dompurify';
 
 const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
 
@@ -13,6 +15,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
     const [errorModalData, setErrorModalData] = useState(false);
     const translatePostInfo = useSelector(selectTranslatePostInfo);
     const [destroyHandlers, setDestroyHandlers] = useState([]);
+    const errorPostsInfo = useSelector(selectErrorPostsInfo);
     const pendingPosts=useSelector(selectPendingPosts);
     const serviceProvider = useSelector(selectServiceProvider);
     const [progressBarVisibility, setProgressBarVisibility] = useState(true);
@@ -178,16 +181,34 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
         }
     }
 
+    const allPostStatus = (postId) => {
+        const targetLangsArr=selectTargetLanguages(store.getState(), postId);
+        let allPostStatus=true;
+        
+        if(!targetLangsArr || !targetLangsArr.length){
+            return true;
+        }
+
+        for(let i=0; i<targetLangsArr.length; i++){
+            if(!translatePostInfo[postId + '_' + targetLangsArr[i]] || ['pending', 'in-progress', 'running'].includes(translatePostInfo[postId + '_' + targetLangsArr[i]].status)){
+                allPostStatus=false;
+                break;
+            }
+        }
+        
+        return allPostStatus;
+    }
+
     return (
-        errorModal ? <ErrorModalBox message={errorModalData.errorHtml} onClose={closeErrorModal} Title={__('Bulk Translation Error', 'linguator-multilingual-ai-translation')} prefix={prefix} /> :
+        errorModal ? <ErrorModalBox message={errorModalData.errorHtml} onClose={closeErrorModal} Title={__('Bulk Translation Error', 'linguator-multilingual-ai-translation')} prefix={prefix} />:
         <div id={`${prefix}-status-modal-container`}>
             <h2 className={`${prefix}-bulk-status-heading ${bulkStatus}`}>{sprintf(__('Bulk Translation %s', 'linguator-multilingual-ai-translation'), getBulkStatus())}{bulkStatus === 'running' && <span className={`${prefix}-bulk-status-running`}></span>}</h2>
             <div className={`${prefix}-status-modal-close`} onClick={onModalClose}>&times;</div>
-            {countInfo.totalPosts < 1 && !isLoading ?
+            {(countInfo.totalPosts < 1 && countInfo.errorPosts < 1) && !isLoading ?
                     <p>{emptyPostMessage}</p> :
                     <>
                         {isLoading && <div className={`${prefix}-progress-skeleton`}></div>}
-                        {progressBarVisibility && !isLoading ?
+                        {(countInfo.totalPosts > 1) && progressBarVisibility && !isLoading ?
                         <>
                             <div className={`${prefix}-overall-progress`}>
                                 <div className={`${prefix}-progress-bar`}>
@@ -267,6 +288,22 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                             </tr>
                                         </>
                                     }
+                                    {!isLoading && Object.keys(errorPostsInfo).length > 0 &&
+                                        Object.keys(errorPostsInfo).map((key, index)=>{
+                                            return (
+                                                <React.Fragment key={key}>
+                                                <tr key={`group-title-${key}`} className={`${prefix}-group-title`}>
+                                                    <td colSpan="5">
+                                                        {errorPostsInfo[key]?.title || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                                    </td>
+                                                </tr>
+                                                <tr key={key}>
+                                                    <td colSpan="4" style={{textAlign: 'center' , width: '100%'}} className={`${prefix}-error-message`} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(errorPostsInfo[key].errorMessage)}}></td>
+                                                </tr>
+                                                </React.Fragment>
+                                            );
+                                        })
+                                    }
                                     {!isLoading && Object.keys(translatePostInfo).map((key, index)=>{
                                         const info = translatePostInfo[key];
                                         const rows = [];
@@ -327,7 +364,25 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                     <td>
                                                         {info.status === 'completed' && info.targetPostId ?
                                                             <span className={`${prefix}-view-link`}>
-                                                                <a href={info.postEditLink} target="_blank" rel="noopener noreferrer" className="button button-primary">{__('Review', 'linguator-multilingual-ai-translation')}</a>
+                                                                {allPostStatus(info.parentPostId) ? (
+                                                                    <a
+                                                                        href={info.postEditLink}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="button button-primary"
+                                                                        title={sprintf(__('Open the translated %s for review', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
+                                                                    >
+                                                                        {__('Review', 'linguator-multilingual-ai-translation')}
+                                                                    </a>
+                                                                ) : (
+                                                                    <button
+                                                                        className="button disabled"
+                                                                        disabled
+                                                                        title={sprintf(__('Please wait until all translations for this %s are complete before reviewing.', 'autopoly-ai-translation-for-polylang-pro'), lmatBulkTranslationGlobal.post_label)}
+                                                                    >
+                                                                        {__('Review', 'linguator-multilingual-ai-translation')}
+                                                                    </button>
+                                                                )}
                                                             </span>
                                                         : 
                                                         (info.status === 'in-progress' ?

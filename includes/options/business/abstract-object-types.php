@@ -20,14 +20,14 @@ use Linguator\Includes\Options\Options;
 /**
  * Class defining object types list option.
  *
- * @since 1.0.0
+ *  
  */
 abstract class Abstract_Object_Types extends Abstract_List {
 	/**
 	 * Sanitizes option's value.
 	 * Can return a `WP_Error` object in case of blocking sanitization error: the value must be rejected then.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array   $value   Value to filter.
 	 * @param Options $options All options.
@@ -50,7 +50,7 @@ abstract class Abstract_Object_Types extends Abstract_List {
 	/**
 	 * Returns non-core object types.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] Object type names list.
 	 *

@@ -16,7 +16,7 @@ use Linguator\Includes\Other\LMAT_Language;
 /**
  * Manages links related functions
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Links {
 	/**
@@ -48,7 +48,7 @@ class LMAT_Links {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -61,7 +61,7 @@ class LMAT_Links {
 	/**
 	 * Returns the home url in the requested language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|string $language  The language.
 	 * @param bool                $is_search Optional, whether we need the home url for a search form, defaults to false.

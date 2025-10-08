@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Manages the compatibility with WP Sweep.
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_WP_Sweep {
 	/**
 	 * Setups actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function init() {
 		add_filter( 'wp_sweep_excluded_taxonomies', array( $this, 'wp_sweep_excluded_taxonomies' ) );
@@ -27,7 +27,7 @@ class LMAT_WP_Sweep {
 	/**
 	 * Add 'lmat_term_language' and 'lmat_term_translations' to excluded taxonomies otherwise terms loose their language and translation group.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $excluded_taxonomies List of taxonomies excluded from sweeping.
 	 * @return array
@@ -39,7 +39,7 @@ class LMAT_WP_Sweep {
 	/**
 	 * Add the translation of the default taxonomy terms and our language terms to the excluded terms.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $excluded_term_ids List of term ids excluded from sweeping.
 	 * @return array

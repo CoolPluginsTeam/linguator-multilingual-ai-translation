@@ -15,14 +15,14 @@ use Linguator\Includes\Filters\LMAT_Filters;
 /**
  * Setup miscellaneous admin filters as well as filters common to admin and frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Admin_Filters extends LMAT_Filters {
 
 	/**
 	 * Constructor: setups filters and actions.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -47,7 +47,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	/**
 	 * Updates the user biographies.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $user_id User ID.
 	 * @return void
@@ -68,7 +68,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	/**
 	 * Outputs hidden information to modify the biography form with js.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param WP_User $profileuser The current WP_User object.
 	 * @return void
@@ -90,7 +90,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	/**
 	 * Allows to update translations files for plugins and themes.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $locales List of locales to update for plugins and themes.
 	 * @return string[]
@@ -102,8 +102,8 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	/**
 	 * Adds custom classes to the body
 	 *
-	 * @since 1.0.0 Adds a text direction dependent class to the body.
-	 * @since 1.0.0 Adds a language dependent class to the body.
+	 *   Adds a text direction dependent class to the body.
+	 *   Adds a language dependent class to the body.
 	 *
 	 * @param string $classes Space-separated list of CSS classes.
 	 * @return string
@@ -119,7 +119,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	/**
 	 * Adds post state for translations of the privacy policy page.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string[] $post_states An array of post display states.
 	 * @param WP_Post  $post        The current post object.

@@ -31,7 +31,7 @@ class LMAT_Template_Translation {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		add_filter('lmat_get_post_types', [$this, 'lmat_register_supported_post_types'], 10, 2);
@@ -52,7 +52,7 @@ class LMAT_Template_Translation {
     /**
      * Registers supported post types for Linguator translation.
      *
-     * @since 1.0.0
+     *  
      *
      * @param array $types        Array of post types.
      * @param bool  $is_settings  Whether this is called from settings page.
@@ -68,7 +68,7 @@ class LMAT_Template_Translation {
      * Uses the built-in set_language_in_mass method for efficient bulk processing.
      * Runs only once to avoid duplicate assignments.
      *
-     * @since 1.0.0
+     *  
      *
      * @return void
      */
@@ -100,7 +100,7 @@ class LMAT_Template_Translation {
     /**
      * Translates template ID based on current language.
      *
-     * @since 1.0.0
+     *  
      *
      * @param int $post_id The template post ID.
      * @return int Translated template ID.
@@ -134,7 +134,7 @@ class LMAT_Template_Translation {
     /**
      * Translates condition sub ID based on current language.
      *
-     * @since 1.0.0
+     *  
      *
      * @param int   $sub_id     The sub ID to translate.
      * @param array $condition  The condition data.
@@ -164,7 +164,7 @@ class LMAT_Template_Translation {
     /**
      * Handles translation of Elementor template shortcodes.
      *
-     * @since 1.0.0
+     *  
      *
      * @param bool   $false  Whether to skip shortcode processing.
      * @param string $tag    Shortcode tag.
@@ -190,7 +190,7 @@ class LMAT_Template_Translation {
     /**
      * Updates conditions when translations change.
      *
-     * @since 1.0.0
+     *  
      *
      * @param int    $post_id  Post ID.
      * @param array  $terms    Terms.
@@ -209,7 +209,7 @@ class LMAT_Template_Translation {
     /**
      * Translates widget template ID.
      *
-     * @since 1.0.0
+     *  
      *
      * @param \Elementor\Element_Base $element Element instance.
      */
@@ -225,7 +225,7 @@ class LMAT_Template_Translation {
     /**
      * Adds language panel controls to Elementor document.
      *
-     * @since 1.0.0
+     *  
      *
      * @param \Elementor\Core\Base\Document $document Document instance.
      */
@@ -239,6 +239,7 @@ class LMAT_Template_Translation {
         $post_id = $document->get_main_id();
         $languages = lmat_languages_list(['fields' => '']);
         $translations = lmat_get_post_translations($post_id);
+        $current_lang_slug = lmat_get_post_language($post_id);
         $current_lang_name = lmat_get_post_language($post_id, 'name');
 
         $document->start_controls_section(
@@ -251,6 +252,11 @@ class LMAT_Template_Translation {
 
         foreach ($languages as $lang) {
             $lang_slug = $lang->slug;
+            
+            // Skip the current page's language
+            if ($lang_slug === $current_lang_slug) {
+                continue;
+            }
             if (isset($translations[$lang_slug])) {
                 $translated_post_id = $translations[$lang_slug];
                 $edit_link = get_edit_post_link($translated_post_id, 'edit');
@@ -261,13 +267,17 @@ class LMAT_Template_Translation {
                     $edit_link = add_query_arg('action', 'elementor', $edit_link);
                 }
 
+                // Get the flag HTML for the language
+                $flag_html = method_exists($lang, 'get_display_flag') ? $lang->get_display_flag('no-alt') : '';
+
                 $document->add_control(
                     "lmat_elementor_edit_lang_{$lang_slug}",
                     [
                         'type'            => \Elementor\Controls_Manager::RAW_HTML,
                         'raw'             => sprintf(
-                            '<a href="%s" target="_blank"><i class="eicon-pencil"></i> %s — %s</a>',
+                            '<a href="%s" target="_blank" style="display: flex; align-items: center; gap: 8px;"><i class="eicon-pencil"></i>%s %s — %s</a>',
                             esc_url($edit_link),
+                            $flag_html,
                             esc_html(get_the_title($translated_post_id)),
                             esc_html($lang->name)
                         ),
@@ -282,13 +292,17 @@ class LMAT_Template_Translation {
                     '_wpnonce'  => wp_create_nonce('new-post-translation'),
                 ], admin_url('post-new.php'));
 
+                // Get the flag HTML for the language
+                $flag_html = method_exists($lang, 'get_display_flag') ? $lang->get_display_flag('no-alt') : '';
+
                 $document->add_control(
                     "lmat_elementor_add_lang_{$lang_slug}",
                     [
                         'type'            => \Elementor\Controls_Manager::RAW_HTML,
                         'raw'             => sprintf(
-                            '<a href="%s" target="_blank"><i class="eicon-plus"></i> %s</a>',
+                            '<a href="%s" target="_blank" style="display: flex; align-items: center; gap: 8px;"><i class="eicon-plus"></i>%s %s</a>',
                             esc_url($create_link),
+                            $flag_html,
                             sprintf(
                                 /* translators: %s: Language name */
                                 __('Add translation — %s', 'linguator-multilingual-ai-translation'),

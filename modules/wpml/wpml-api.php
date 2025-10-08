@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @see https://wpml.org/documentation/support/wpml-coding-api/wpml-hooks-reference/
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_WPML_API {
 	/**
@@ -26,7 +26,7 @@ class LMAT_WPML_API {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 */
 	public function __construct() {
 		/*
@@ -136,7 +136,7 @@ class LMAT_WPML_API {
 	/**
 	 * Get a list of the languages enabled for a site.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed         $null Not used.
 	 * @param array| string $args See arguments of icl_get_languages().
@@ -151,7 +151,7 @@ class LMAT_WPML_API {
 	 * Since Linguator does not implement the translated name, always returns only the native name,
 	 * so the 3rd, 4th and 5th parameters are not used.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $null        Not used.
 	 * @param string $native_name The language native name.
@@ -164,7 +164,7 @@ class LMAT_WPML_API {
 	/**
 	 * Returns an HTML hidden input field with name=”lang” and as value the current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -183,7 +183,7 @@ class LMAT_WPML_API {
 	/**
 	 * Find out if a specific language is enabled for the site.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $null Not used.
 	 * @param string $slug Language code.
@@ -197,7 +197,7 @@ class LMAT_WPML_API {
 	/**
 	 * Find out whether the current language text direction is RTL or not.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return bool
 	 */
@@ -208,7 +208,7 @@ class LMAT_WPML_API {
 	/**
 	 * Returns the id of the translation group of a translated element.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $empty_value  Not used.
 	 * @param int    $element_id   The id of the item, post id for posts, term_taxonomy_id for terms.
@@ -237,7 +237,7 @@ class LMAT_WPML_API {
 	/**
 	 * Returns the element translations info using the ID of the translation group.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $empty_value  Not used.
 	 * @param int    $trid         The ID of the translation group.
@@ -344,7 +344,7 @@ class LMAT_WPML_API {
 	 * Switches whole site to the given language or restores the language that was set when first calling this function.
 	 * Unlike the WPML original action, it is not possible to set the current language and the cookie to different values.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param null|string $lang   Language code to switch into, restores the original language if null.
 	 * @param bool|string $cookie Optionally also switches the cookie.
@@ -373,7 +373,7 @@ class LMAT_WPML_API {
 	/**
 	 * Get the language code for a translatable element.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $language_code A 2-letter language code.
 	 * @param array $args          An array with two keys element_id => post_id or term_taxonomy_id, element_type => post type or taxonomy
@@ -403,7 +403,7 @@ class LMAT_WPML_API {
 	/**
 	 * Translates a string.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string      $string  The string's original value.
 	 * @param string      $context The string's registered context.
@@ -419,7 +419,7 @@ class LMAT_WPML_API {
 	/**
 	 * Converts a permalink to a language specific permalink.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string      $url  The url to filter.
 	 * @param null|string $lang Language code, optional, defaults to the current language.
@@ -438,7 +438,7 @@ class LMAT_WPML_API {
 	/**
 	 * Translates a post type slug.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $slug      Post type slug.
 	 * @param string $post_type Post type name.
@@ -459,7 +459,7 @@ class LMAT_WPML_API {
 	/**
 	 * Find out whether a post type or a taxonomy term is translated.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $null Not used.
 	 * @param int    $id   The post_id or term_id.
@@ -479,7 +479,7 @@ class LMAT_WPML_API {
 	/**
 	 * Returns true if languages and translations are managed for this post type.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $value     Not used.
 	 * @param string $post_type The post type name.
@@ -492,7 +492,7 @@ class LMAT_WPML_API {
 	/**
 	 * Returns true if languages and translations are managed for this taxonomy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed  $value    Not used.
 	 * @param string $taxonomy The taxonomy name.

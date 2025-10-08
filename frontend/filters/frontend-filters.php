@@ -19,13 +19,13 @@ use Linguator\Includes\Other\LMAT_Language;
 /**
  * Filters content by language on frontend
  *
- * @since 1.0.0
+ *  
  */
 class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Constructor: setups filters and actions
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param object $linguator The Linguator object.
 	 */
@@ -65,7 +65,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Returns the locale based on current language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 */
@@ -76,7 +76,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Filters sticky posts by current language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[] $posts List of sticky posts ids.
 	 * @return int[] Modified list of sticky posts ids.
@@ -129,7 +129,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Modifies the sql request for wp_get_archives to filter by the current language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $sql JOIN clause
 	 * @param array  $r   wp_get_archives arguments
@@ -142,7 +142,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Modifies the sql request for wp_get_archives to filter by the current language
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $sql WHERE clause
 	 * @param array  $r   wp_get_archives arguments
@@ -165,7 +165,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * Don't display if a language filter is set and this is not the current one
 	 * Needed for {@see https://developer.wordpress.org/reference/functions/the_widget/ the_widget()}.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $instance Widget settings
 	 * @return bool|array false if we hide the widget, unmodified $instance otherwise
@@ -177,7 +177,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Translates media in media widgets
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param array $instance Widget instance data
 	 * @return array
@@ -205,7 +205,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	/**
 	 * Translates the biography.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param null   $null     Expecting the default null value.
 	 * @param int    $id       The user id.
@@ -221,7 +221,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * Filters the translation files to load when doing ajax on front
 	 * This is needed because WP the language files associated to the user locale when a user is logged in
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $mofile Translation file name
 	 * @return string

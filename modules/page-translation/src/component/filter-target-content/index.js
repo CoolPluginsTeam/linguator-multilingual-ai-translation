@@ -92,8 +92,8 @@ const FilterTargetContent = (props) => {
                     element.textContent = textContent;
                 }
                 else if(element.nodeType === 8){
-                    let textContent = `<!--${element.textContent}-->`;
-                    element.textContent = textContent;
+                    // let textContent = `<!--${element.textContent}-->`;
+                    element.textContent = element.textContent;
                 }
                 else{
                     let filterContent = wrapFirstAndMatchingClosingTag(element.outerHTML);
@@ -163,7 +163,7 @@ const FilterTargetContent = (props) => {
      * @returns {Array} An array of strings after splitting based on the pattern.
      */
     const splitContent = (string) => {
-        const pattern = /(#lmat_page_translation_open_translate_span#.*?#lmat_page_translation_close_translate_span#)|'/;
+        const pattern = /(#lmat_page_translation_open_translate_span#[\s\S]*?#lmat_page_translation_close_translate_span#)|'/;
         const matches = string.split(pattern).filter(Boolean);
 
         // Remove empty strings from the result
@@ -221,9 +221,16 @@ const FilterTargetContent = (props) => {
 
                         textNode = document.createTextNode(textContent);
                     }else if(element.nodeType === 8){
-                        textNode = document.createTextNode(`<!--${element.textContent}-->`);
+                        textNode = document.createTextNode(`#lmat_page_translation_open_translate_span#<!--${element.textContent}-->#lmat_page_translation_close_translate_span#`);
                     }else{
-                        let filterContent = wrapFirstAndMatchingClosingTag(element.outerHTML);
+                        let filterHtml=element.outerHTML;
+
+                        filterHtml = filterHtml.replace(
+                            /<!--([\s\S]*?)-->/g,
+                            (match, inner) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`
+                        );
+
+                        let filterContent = wrapFirstAndMatchingClosingTag(filterHtml);
 
                         textNode = document.createTextNode(filterContent);
                     }

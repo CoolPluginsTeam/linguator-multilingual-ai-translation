@@ -21,7 +21,7 @@ use Linguator\Includes\Other\LMAT_Language;
 /**
  * Abstract class to use for object types that support at least one language.
  *
- * @since 1.0.0
+ *  
  *
  * @phpstan-type DBInfo array{
  *     table: non-empty-string,
@@ -102,7 +102,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Model $model Instance of `LMAT_Model`.
 	 */
@@ -121,7 +121,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Registers the language taxonomy.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return void
 	 */
@@ -142,7 +142,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Returns the language taxonomy name.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -155,7 +155,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Returns the type of object.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string
 	 *
@@ -168,7 +168,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Adds hooks.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return static
 	 */
@@ -179,7 +179,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Stores the object's language into the database.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int                     $id   Object ID.
 	 * @param LMAT_Language|string|int $lang Language (object, slug, or term ID).
@@ -213,8 +213,8 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Returns the language of an object.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Renamed the parameter $post_id into $id.
+	 *  
+	 *   Renamed the parameter $post_id into $id.
 	 *
 	 * @param int $id Object ID.
 	 * @return LMAT_Language|false A `LMAT_Language` object. `false` if no language is associated to that object or if the
@@ -240,7 +240,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Removes the term language from the database.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int $id Term ID.
 	 * @return void
@@ -259,56 +259,110 @@ abstract class LMAT_Translatable_Object {
 	 * Wraps `wp_get_object_terms()` to cache it and return only one object.
 	 * Inspired by the WordPress function `get_the_terms()`.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int    $id       Object ID.
 	 * @param string $taxonomy Linguator taxonomy depending if we are looking for a post (or term, or else) language.
 	 * @return WP_Term|false The term associated to the object in the requested taxonomy if it exists, `false` otherwise.
 	 */
-	public function get_object_term( $id, $taxonomy ) {
-		$id = $this->sanitize_int_id( $id );
-
-		if ( empty( $id ) ) {
-			return false;
+	protected function get_object_terms( array $object_ids, string $taxonomy ) {
+		$object_ids = $this->sanitize_int_ids_list( $object_ids );
+		if ( empty( $object_ids ) ) {
+			return array();
 		}
 
-		$term = get_object_term_cache( $id, $taxonomy );
+		$this->update_object_term_cache( $object_ids );
 
-		if ( is_array( $term ) ) {
-			return ! empty( $term ) ? reset( $term ) : false;
+		$cached_values = wp_cache_get_multiple( $object_ids, "{$taxonomy}_relationships" );
+
+		// Flatten the array to prime the terms cache.
+		$all_term_ids = array();
+		foreach ( $cached_values as $term_ids ) {
+			if ( is_array( $term_ids ) ) {
+				$all_term_ids = array_merge( $all_term_ids, $term_ids );
+			}
+		}
+		_prime_term_caches( $all_term_ids, false );
+
+		$terms = array();
+		foreach ( $cached_values as $object_id => $term_ids ) {
+			if ( is_array( $term_ids ) && ! empty( $term_ids ) ) {
+				$term_id = reset( $term_ids ); // There is only one term for language or translation groups.
+
+				/** @var WP_Term $term */
+				$term                = get_term( $term_id );
+				$terms[ $object_id ] = $term;
+			}
 		}
 
-		// Query terms.
-		$terms        = array();
-		$term         = false;
-		$object_terms = wp_get_object_terms( $id, $this->tax_to_cache, array( 'update_term_meta_cache' => false ) );
+		return $terms;
+	}
 
-		if ( is_array( $object_terms ) ) {
-			foreach ( $object_terms as $t ) {
-				$terms[ $t->taxonomy ] = $t;
-				if ( $t->taxonomy === $taxonomy ) {
-					$term = $t;
+	/**
+	 * Caches all object-relationship terms.
+	 *
+	 * @param int[] $object_ids Array of object IDs to retrieve terms for.
+	 *
+	 * @return void
+	 */
+	private function update_object_term_cache( array $object_ids ): void {
+		$non_cached_ids = array();
+		foreach ( $this->tax_to_cache as $taxonomy ) {
+			$non_cached_ids = array_merge( $non_cached_ids, _get_non_cached_ids( $object_ids, "{$taxonomy}_relationships" ) );
+		}
+
+		if ( empty( $non_cached_ids ) ) {
+			return;
+		}
+
+		$terms = wp_get_object_terms(
+			array_unique( $non_cached_ids ),
+			$this->tax_to_cache,
+			array(
+				'fields'                 => 'all_with_object_id',
+				'update_term_meta_cache' => false,
+			)
+		);
+
+		if ( ! is_array( $terms ) ) {
+			return;
+		}
+
+		$object_terms = array();
+		foreach ( $terms as $term ) {
+			$object_terms[ $term->taxonomy ][ $term->object_id ][] = $term->term_id;
+		}
+
+		foreach ( $non_cached_ids as $id ) {
+			foreach ( $this->tax_to_cache as $taxonomy ) {
+				if ( ! isset( $object_terms[ $taxonomy ][ $id ] ) ) {
+					$object_terms[ $taxonomy ][ $id ] = array();
 				}
 			}
 		}
 
-		foreach ( $this->tax_to_cache as $tax ) {
-			if ( empty( $terms[ $tax ] ) ) {
-				$to_cache = array();
-			} else {
-				$to_cache = array( $terms[ $tax ]->term_id );
-			}
-
-			wp_cache_add( $id, $to_cache, "{$tax}_relationships" );
+		foreach ( $object_terms as $tax => $data ) {
+			wp_cache_add_multiple( $data, "{$tax}_relationships" );
 		}
+	}
 
-		return $term;
+	/**
+	 * Return terms associated to the given object in the given taxonomy.
+	 *
+	 *
+	 * @param int    $object_id Object ID.
+	 * @param string $taxonomy  Linguator taxonomy depending if we are looking for a post (or term, or else) language.
+	 * @return WP_Term|null The term associated to the object in the requested taxonomy if it exists, `false` otherwise.
+	 */
+	public function get_object_term( $object_id, $taxonomy ) {
+		$terms = $this->get_object_terms( array( $object_id ), $taxonomy );
+		return $terms[ $object_id ] ?? null;
 	}
 
 	/**
 	 * A JOIN clause to add to sql queries when filtering by language is needed directly in query.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param string $alias Optional alias for object table.
 	 * @return string The JOIN clause.
@@ -330,7 +384,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * A WHERE clause to add to sql queries when filtering by language is needed directly in query.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param LMAT_Language|LMAT_Language[]|string|string[] $lang A `LMAT_Language` object, or a comma separated list of language slugs, or an array of language slugs or objects.
 	 * @return string The WHERE clause.
@@ -371,7 +425,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Returns the IDs of the objects without language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int   $limit  Max number of objects to return. `-1` to return all of them.
 	 * @param array $args   The object args.
@@ -403,8 +457,8 @@ abstract class LMAT_Translatable_Object {
 	 * Can be overridden by child classes in case queried object doesn't use
 	 * `wp_cache_set_last_changed()` or another cache system.
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.0 Changed all parameters.
+	 *  
+	 *   Changed all parameters.
 	 *
 	 * @param int[] $language_ids List of language `term_taxonomy_id`.
 	 * @param int   $limit        Max number of objects to return. `-1` to return all of them.
@@ -435,7 +489,7 @@ abstract class LMAT_Translatable_Object {
 	 * Sanitizes an ID as positive integer.
 	 * Kind of similar to `absint()`, but rejects negative integers instead of making them positive.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $id A supposedly numeric ID.
 	 * @return int A positive integer. `0` for non numeric values and negative integers.
@@ -450,7 +504,7 @@ abstract class LMAT_Translatable_Object {
 	 * Sanitizes an array of IDs as positive integers.
 	 * `0` values are removed.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param mixed $ids An array of numeric IDs.
 	 * @return int[]
@@ -470,7 +524,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Fetches the IDs of the objects without language.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[] $language_ids List of language `term_taxonomy_id`.
 	 * @param int   $limit        Max number of objects to return. `-1` to return all of them.
@@ -509,7 +563,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Assigns a language to object in mass.
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @param int[]        $ids  Array of post ids or term ids.
 	 * @param LMAT_Language $lang Language to assign to the posts or terms.
@@ -550,7 +604,7 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Returns the description to use for the "language properties" in the REST API.
 	 *
-	 * @since 1.0.0
+	 *  
 	 * @see Linguator\modules\REST\V2\Languages::get_item_schema()
 	 *
 	 * @return string
@@ -567,7 +621,7 @@ abstract class LMAT_Translatable_Object {
 	 * @see LMAT_Translatable_Object::join_clause()
 	 * @see LMAT_Translatable_Object::get_raw_objects_with_no_lang()
 	 *
-	 * @since 1.0.0
+	 *  
 	 *
 	 * @return string[] {
 	 *     @type string $table         Name of the table.
