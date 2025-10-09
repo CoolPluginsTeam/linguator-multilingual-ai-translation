@@ -218,7 +218,7 @@ class LMAT_Page_Translation {
 				$editor = '';
 				if ( 'builder' === get_post_meta( $from_post_id, '_elementor_edit_mode', true ) && defined( 'ELEMENTOR_VERSION' ) ) {
 					$source_lang_name = lmat_get_post_language( $from_post_id, 'slug' );
-					$this->enqueue_elementor_confirm_box_assets( $from_post_id, $lang, $source_lang_name );
+					$this->enqueue_elementor_confirm_box_assets( $from_post_id, $lang, $source_lang_name, 'gutenberg' );
 					$editor = 'Elementor';
 				}
 				if ( 'on' === get_post_meta( $from_post_id, '_et_pb_use_builder', true ) && defined( 'ET_CORE' ) ) {
@@ -285,7 +285,7 @@ class LMAT_Page_Translation {
 				$editor = '';
 				if ( 'builder' === get_post_meta( $from_post_id, '_elementor_edit_mode', true ) && defined( 'ELEMENTOR_VERSION' ) ) {
 					$source_lang_name = lmat_get_post_language( $from_post_id, 'slug' );
-					$this->enqueue_elementor_confirm_box_assets( $from_post_id, $lang, $source_lang_name );
+					$this->enqueue_elementor_confirm_box_assets( $from_post_id, $lang, $source_lang_name, 'classic' );
 					$editor = 'Elementor';
 				}
 				if ( 'on' === get_post_meta( $from_post_id, '_et_pb_use_builder', true ) && defined( 'ET_CORE' ) ) {
@@ -460,7 +460,7 @@ class LMAT_Page_Translation {
 		);
 	}
 
-	public function enqueue_elementor_confirm_box_assets( $parent_post_id, $target_lang_name, $source_lang_name ) {
+	public function enqueue_elementor_confirm_box_assets( $parent_post_id, $target_lang_name, $source_lang_name, $editor_type='gutenberg' ) {
 		$post_id = get_the_ID();
 
 		$source_lang_name = LMAT()->model->get_language( $source_lang_name );
@@ -478,6 +478,7 @@ class LMAT_Page_Translation {
 				'targetLangSlug' => $target_lang_name->slug,
 				'sourceLangName' => $source_lang_name->name,
 				'targetLangName' => $target_lang_name->name,
+				'editorType'     => $editor_type,
 			)
 		);
 
