@@ -1,25 +1,25 @@
 const FilterTargetContent = (props) => {
-    const skipTags=props.skipTags || [];
+    const skipTags = props.skipTags || [];
 
     function fixHtmlTags(content) {
         if (typeof content !== 'string' || !content.trim()) return content;
-    
+
         const tagRegex = /<\/?([a-zA-Z0-9]+)(\s[^>]*)?>/g;
         const stack = [];
         let result = '';
         let lastIndex = 0;
         let match;
-    
+
         while ((match = tagRegex.exec(content)) !== null) {
             const [fullMatch, tagName] = match;
             const isClosingTag = fullMatch.startsWith('</');
             const currentIndex = match.index;
-    
+
             // Append content before this tag
             if (currentIndex > lastIndex) {
                 result += content.slice(lastIndex, currentIndex);
             }
-    
+
             if (!isClosingTag) {
                 // Opening tag: push to stack
                 stack.push({ tag: tagName });
@@ -36,26 +36,26 @@ const FilterTargetContent = (props) => {
                     result += `#lmat_page_translation_temp_tag_open#<${tagName}>#lmat_page_translation_temp_tag_close#` + fullMatch;
                 }
             }
-    
+
             lastIndex = tagRegex.lastIndex;
         }
-    
+
         // Append any remaining content after last tag
         if (lastIndex < content.length) {
             result += content.slice(lastIndex);
         }
-    
+
         // Add missing closing tags at the end
         for (let i = stack.length - 1; i >= 0; i--) {
             const { tag } = stack[i];
             result += `#lmat_page_translation_temp_tag_open#</${tag}>#lmat_page_translation_temp_tag_close#`;
         }
-    
+
         // Clear references to free memory (optional in GC-based engines, but helpful)
         match = null;
         stack.length = 0;
         content = null;
-    
+
         return result;
     }
 
@@ -86,16 +86,16 @@ const FilterTargetContent = (props) => {
             for (let i = 0; i < childNodesLength; i++) {
                 let element = childNodes[i];
 
-                if(element.nodeType === 3){
+                if (element.nodeType === 3) {
                     let textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
 
                     element.textContent = textContent;
                 }
-                else if(element.nodeType === 8){
+                else if (element.nodeType === 8) {
                     // let textContent = `<!--${element.textContent}-->`;
                     element.textContent = element.textContent;
                 }
-                else{
+                else {
                     let filterContent = wrapFirstAndMatchingClosingTag(element.outerHTML);
                     element.outerHTML = filterContent;
                 }
@@ -126,7 +126,7 @@ const FilterTargetContent = (props) => {
 
         firstElement.innerHTML = '';
         let closeTag = '';
-        let openTag='';
+        let openTag = '';
         let filterContent = '';
 
         openTag = `#lmat_page_translation_open_translate_span#${firstElementOpeningTag}#lmat_page_translation_close_translate_span#`;
@@ -134,10 +134,10 @@ const FilterTargetContent = (props) => {
             closeTag = `#lmat_page_translation_open_translate_span#</${openTagName}>#lmat_page_translation_close_translate_span#`;
         }
 
-        if(skipTags.includes(openTagName)){
+        if (skipTags.includes(openTagName)) {
             // Remove the custom span markers from the HTML if the tag is in skipTags
             firstElementHtml = firstElementHtml.replace(/#lmat_page_translation_open_translate_span#|#lmat_page_translation_close_translate_span#/g, '');
-            firstElementHtml = "#lmat_page_translation_open_translate_span#"+firstElementHtml+"#lmat_page_translation_close_translate_span#";
+            firstElementHtml = "#lmat_page_translation_open_translate_span#" + firstElementHtml + "#lmat_page_translation_close_translate_span#";
         }
 
         if ('' !== firstElementHtml) {
@@ -189,6 +189,64 @@ const FilterTargetContent = (props) => {
     }
 
     /**
+     * Checks if the HTML is empty or has an unclosed tag.
+     * @param {string} html - The HTML string to check.
+     * @returns {boolean} True if the HTML is empty or has an unclosed tag, false otherwise.
+     */
+    const isEmptyOrUnclosedTag = (html) => {
+        // Clean up whitespace
+        html = html.trim();
+
+        // Regex that matches:
+        // 1️⃣ Single open tag only (<div>, <table>, <span class="x">, etc.)
+        // 2️⃣ Empty tag (<div></div>, <table></table>, etc.)
+        // 3️⃣ Ignores self-closing tags like <img />, <br />, etc.
+        const regex = /^<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?$/i;
+
+        // Test and return true/false
+        return regex.test(html);
+    }
+
+    /**
+     * Synchronizes the TR and TD tags from the first string to the second string.
+     * @param {string} str1 - The first string to synchronize.
+     * @param {string} str2 - The second string to synchronize.
+     * @returns {string} The synchronized string.
+     */
+    const syncTRTDFromFirstToSecond = (str1, str2) => {
+        str1 = str1.trim();
+        
+        // 1️⃣ Check if first string has any tr or td
+        if (!/<\/?(tr|td)\b[^>]*>/i.test(str1)) {
+            return str2; // no tr/td → skip
+        }
+        
+        // 2️⃣ Skip if second string already contains tr or td
+        if (/<\/?(tr|td)\b[^>]*>/i.test(str2)) {
+            return str2;
+        }
+        
+        str2 = str2.trim();
+
+        // 3️⃣ Extract tags (if present)
+        const startTagMatch = str1.match(/^<(tr|td)\b[^>]*>/i);     // opening tag at start
+        const endTagMatch   = str1.match(/<\/(tr|td)>\s*$/i);        // closing tag at end
+      
+        // 4️⃣ Build new string using only what exists
+        let newString = str2;
+      
+        if (startTagMatch) {
+          newString = `#lmat_page_translation_open_translate_span#${startTagMatch[0]}#lmat_page_translation_close_translate_span#` + newString;
+        }
+      
+        if (endTagMatch) {
+          newString = newString + `#lmat_page_translation_open_translate_span#${endTagMatch[0]}#lmat_page_translation_close_translate_span#`;
+        }
+      
+        return newString;
+    }
+
+    /**
      * Replaces the inner text of HTML elements with span elements for translation.
      * @param {string} string - The HTML content string to process.
      * @returns {Array} An array of strings after splitting based on the pattern.
@@ -197,7 +255,7 @@ const FilterTargetContent = (props) => {
 
         const isSeoContent = /^(_yoast_wpseo_|rank_math_|_seopress_)/.test(props.contentKey.trim());
         if (isSeoContent) {
-            string= filterSeoContent(string);
+            string = filterSeoContent(string);
         }
 
         // Filter shortcode content
@@ -210,20 +268,20 @@ const FilterTargetContent = (props) => {
 
         function replaceInnerTextWithSpan(doc) {
             let childElements = doc.childNodes;
-            
+
             const childElementsReplace = (index) => {
                 if (childElements.length > index) {
                     let element = childElements[index];
-                    let textNode=null;
+                    let textNode = null;
 
-                    if(element.nodeType === 3){
+                    if (element.nodeType === 3) {
                         const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
 
                         textNode = document.createTextNode(textContent);
-                    }else if(element.nodeType === 8){
+                    } else if (element.nodeType === 8) {
                         textNode = document.createTextNode(`#lmat_page_translation_open_translate_span#<!--${element.textContent}-->#lmat_page_translation_close_translate_span#`);
-                    }else{
-                        let filterHtml=element.outerHTML;
+                    } else {
+                        let filterHtml = element.outerHTML;
 
                         filterHtml = filterHtml.replace(
                             /<!--([\s\S]*?)-->/g,
@@ -234,25 +292,31 @@ const FilterTargetContent = (props) => {
 
                         textNode = document.createTextNode(filterContent);
                     }
-                    
+
                     element.replaceWith(textNode);
-                    
+
                     index++;
                     childElementsReplace(index);
                 }
             }
-            
+
             childElementsReplace(0);
             return doc;
         }
 
+        let content = string;
 
+        if (isEmptyOrUnclosedTag(string)) {
+            content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
+        } else {
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = fixHtmlTags(string);
+            replaceInnerTextWithSpan(tempElement);
 
-        const tempElement = document.createElement('div');
-        tempElement.innerHTML = fixHtmlTags(string);
-        replaceInnerTextWithSpan(tempElement);
+            content = tempElement.innerText;
 
-        let content = tempElement.innerText;
+            content = syncTRTDFromFirstToSecond(string, content);
+        }
 
         // remoove all the #lmat_page_translation_temp_tag_open# and #lmat_page_translation_open_translate_span#
         content = content.replace(/#lmat_page_translation_temp_tag_open#([\s\S]*?)#lmat_page_translation_temp_tag_close#/g, '');
