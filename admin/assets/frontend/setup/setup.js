@@ -31865,8 +31865,6 @@ var Languages = function Languages() {
     setCurrentSelectedLanguage = _React$useContext2.setCurrentSelectedLanguage,
     contentSelectedLanguage = _React$useContext2.contentSelectedLanguage,
     setContentSelectedLanguage = _React$useContext2.setContentSelectedLanguage,
-    LanguageLoader = _React$useContext2.LanguageLoader,
-    setLanguageLoader = _React$useContext2.setLanguageLoader,
     showUntranslatedContent = _React$useContext2.showUntranslatedContent,
     setShowUntranslatedContent = _React$useContext2.setShowUntranslatedContent,
     languageDeleteConfirmer = _React$useContext2.languageDeleteConfirmer,
@@ -31887,6 +31885,10 @@ var Languages = function Languages() {
       return selectedLanguage.locale === language.locale;
     });
   }));
+  var _React$useState3 = external_React_default().useState(false),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    languageLoader = _React$useState4[0],
+    setLanguageLoader = _React$useState4[1];
 
   //add the languages
   function handleClick() {
@@ -31923,8 +31925,8 @@ var Languages = function Languages() {
     return _handleClick.apply(this, arguments);
   }
   function handleNavigate() {
-    setSetupProgress("default");
-    localStorage.setItem("setupProgress", "default");
+    setSetupProgress("url");
+    localStorage.setItem("setupProgress", "url");
   }
 
   //delete the languages from currentSelectedLanguage
@@ -32197,8 +32199,16 @@ var Languages = function Languages() {
       }
     })));
   })))), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex justify-end pt-5"
-  }, LanguageLoader ? /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
+    className: "flex justify-between ",
+    style: {
+      marginTop: "14px"
+    }
+  }, /*#__PURE__*/external_React_default().createElement(SetupBackButton, {
+    handleClick: function handleClick() {
+      setSetupProgress("default");
+      localStorage.setItem("setupProgress", "default");
+    }
+  }), languageLoader ? /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
     SaveSettings: function SaveSettings() {}
   }, /*#__PURE__*/external_React_default().createElement("svg", {
     "aria-hidden": "true",
@@ -32215,7 +32225,7 @@ var Languages = function Languages() {
     fill: "currentColor"
   })), "Loading...") : /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
     SaveSettings: saveLanguage
-  }, (0,external_wp_i18n_namespaceObject.__)('Continue', 'linguator-multilingual-ai-translation'))));
+  })));
 };
 /* harmony default export */ const languages = (Languages);
 ;// ./modules/wizard/src/components/ready.jsx
@@ -32822,8 +32832,8 @@ var Default = function Default() {
     return _saveDefault.apply(this, arguments);
   }
   function handleNavigate() {
-    setSetupProgress("url");
-    localStorage.setItem("setupProgress", "url");
+    setSetupProgress("languages");
+    localStorage.setItem("setupProgress", "languages");
   }
   return /*#__PURE__*/external_React_default().createElement("div", {
     className: "mx-auto p-10 max-w-[600px] min-h-[40vh] bg-white shadow-sm flex flex-col"
@@ -32902,16 +32912,8 @@ var Default = function Default() {
       languageLocale: language === null || language === void 0 ? void 0 : language.locale
     }));
   }))))), /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex justify-between ",
-    style: {
-      marginTop: "14px"
-    }
-  }, /*#__PURE__*/external_React_default().createElement(SetupBackButton, {
-    handleClick: function handleClick() {
-      setSetupProgress("languages");
-      localStorage.setItem("setupProgress", "languages");
-    }
-  }), defaultLoader ? /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
+    className: "flex justify-end pt-5"
+  }, defaultLoader ? /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
     SaveSettings: function SaveSettings() {}
   }, /*#__PURE__*/external_React_default().createElement("svg", {
     "aria-hidden": "true",
@@ -32928,7 +32930,7 @@ var Default = function Default() {
     fill: "currentColor"
   })), "Loading...") : /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
     SaveSettings: saveDefault
-  })));
+  }, (0,external_wp_i18n_namespaceObject.__)('Continue', 'linguator-multilingual-ai-translation'))));
 };
 /* harmony default export */ const components_default = (Default);
 ;// ./node_modules/@bsf/force-ui/dist/components/container/container-styles.es.js
@@ -34929,8 +34931,8 @@ var URLModifications = function URLModifications() {
     }
   }, /*#__PURE__*/external_React_default().createElement(SetupBackButton, {
     handleClick: function handleClick() {
-      setSetupProgress("default");
-      localStorage.setItem("setupProgress", "default");
+      setSetupProgress("languages");
+      localStorage.setItem("setupProgress", "languages");
     }
   }), urlLoader ? /*#__PURE__*/external_React_default().createElement(SetupContinueButton, {
     SaveSettings: function SaveSettings() {}
@@ -35408,7 +35410,7 @@ var LanguageSwitcher = function LanguageSwitcher() {
 var SetupFileRouting = function SetupFileRouting() {
   var _React$useContext = external_React_default().useContext(setupContext),
     setupProgress = _React$useContext.setupProgress;
-  if (setupProgress === "languages") return /*#__PURE__*/external_React_default().createElement(languages, null);else if (setupProgress === "default") return /*#__PURE__*/external_React_default().createElement(components_default, null);else if (setupProgress === "url") return /*#__PURE__*/external_React_default().createElement(url_modifications, null);else if (setupProgress === "media") return /*#__PURE__*/external_React_default().createElement(media, null);else if (setupProgress === "ready") return /*#__PURE__*/external_React_default().createElement(ready, null);else if (setupProgress === "translation_configuration") return /*#__PURE__*/external_React_default().createElement(ai_translation, null);else if (setupProgress === "language_switcher") return /*#__PURE__*/external_React_default().createElement(language_switcher, null);
+  if (setupProgress === "default") return /*#__PURE__*/external_React_default().createElement(components_default, null);else if (setupProgress === "languages") return /*#__PURE__*/external_React_default().createElement(languages, null);else if (setupProgress === "url") return /*#__PURE__*/external_React_default().createElement(url_modifications, null);else if (setupProgress === "media") return /*#__PURE__*/external_React_default().createElement(media, null);else if (setupProgress === "ready") return /*#__PURE__*/external_React_default().createElement(ready, null);else if (setupProgress === "translation_configuration") return /*#__PURE__*/external_React_default().createElement(ai_translation, null);else if (setupProgress === "language_switcher") return /*#__PURE__*/external_React_default().createElement(language_switcher, null);
 };
 var SetupProgress = function SetupProgress(_ref) {
   var _setupSteps$find;
@@ -35423,14 +35425,14 @@ var SetupProgress = function SetupProgress(_ref) {
   external_React_default().useEffect(function () {
     var step = 1;
     var temp_setupSetups = [{
-      label: (0,external_wp_i18n_namespaceObject.__)("Languages", "linguator-multilingual-ai-translation"),
-      value: "languages",
+      label: (0,external_wp_i18n_namespaceObject.__)("Default", "linguator-multilingual-ai-translation"),
+      value: "default",
       visible: true,
       step: step++
     }];
     temp_setupSetups.push({
-      label: (0,external_wp_i18n_namespaceObject.__)("Default", "linguator-multilingual-ai-translation"),
-      value: "default",
+      label: (0,external_wp_i18n_namespaceObject.__)("Languages", "linguator-multilingual-ai-translation"),
+      value: "languages",
       visible: true,
       step: step++
     });
@@ -50949,7 +50951,7 @@ var SetupPage = function SetupPage() {
     _React$useState10 = setup_page_slicedToArray(_React$useState1, 2),
     data = _React$useState10[0],
     setData = _React$useState10[1]; // General Settings Data
-  var _React$useState11 = external_React_default().useState("languages"),
+  var _React$useState11 = external_React_default().useState("default"),
     _React$useState12 = setup_page_slicedToArray(_React$useState11, 2),
     setupProgress = _React$useState12[0],
     setSetupProgress = _React$useState12[1]; //Track Setup Progress
@@ -51013,10 +51015,10 @@ var SetupPage = function SetupPage() {
       } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "translation_configuration") {
         setSetupProgress(localStorage.getItem("setupProgress"));
       } else {
-        localStorage.setItem("setupProgress", "languages");
+        localStorage.setItem("setupProgress", "default");
       }
     } else {
-      localStorage.setItem("setupProgress", "languages");
+      localStorage.setItem("setupProgress", "default");
     }
     function serverCall() {
       return _serverCall.apply(this, arguments);

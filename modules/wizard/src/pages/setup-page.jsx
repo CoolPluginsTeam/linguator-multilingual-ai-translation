@@ -18,7 +18,7 @@ const SetupPage = () => {
   const [selectedLanguage, setSelectedLanguage] = React.useState({ id: 'none', name: 'None', flag: null, locale: null }) //Selected Langugae from dropdown of Languages tab
   const [currentSelectedLanguage, setCurrentSelectedLanguage] = React.useState([]) //get the current selected language in the languages tab: it will be multiple language so its an array
   const [data, setData] = React.useState([]) // General Settings Data
-  const [setupProgress, setSetupProgress] = React.useState("languages") //Track Setup Progress
+  const [setupProgress, setSetupProgress] = React.useState("default") //Track Setup Progress
   const [languageDialog, setLanguageDialog] = React.useState(false) // handle open and close of Language Dialog
   const [LanguageLoader, setLanguageLoader] = React.useState(false) // Loader in the continue button on languages tab
   const lmat_setup_data = window.lmat_setup; //get the localized setup data
@@ -50,10 +50,10 @@ const SetupPage = () => {
         setSetupProgress(localStorage.getItem("setupProgress"))
       }
       else {
-        localStorage.setItem("setupProgress", "languages");
+        localStorage.setItem("setupProgress", "default");
       }
     } else {
-      localStorage.setItem("setupProgress", "languages");
+      localStorage.setItem("setupProgress", "default");
 
     }
 
