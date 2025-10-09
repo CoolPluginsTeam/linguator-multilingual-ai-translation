@@ -52,8 +52,13 @@ export const RenderedLanguage = ({ languageName, languageFlag, flagUrl, language
 const Languages = () => {
   const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, contentSelectedLanguage, setContentSelectedLanguage, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete } = React.useContext(setupContext) //get context
   //filter the valid languages
-  let [validLanguages, setValidLanguages] = React.useState(lmat_all_languages.filter((language) => (language?.name && language?.flag && !selectedLanguageData.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
-  const originalListLanguages = React.useRef(lmat_all_languages.filter((language) => (language?.name && language?.flag && !selectedLanguageData.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
+  console.log(selectedLanguage)
+  
+  // Ensure selectedLanguageData is always an array
+  const languagesArray = Array.isArray(selectedLanguageData) ? selectedLanguageData : [];
+  
+  let [validLanguages, setValidLanguages] = React.useState(lmat_all_languages.filter((language) => (language?.name && language?.flag && !languagesArray?.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
+  const originalListLanguages = React.useRef(lmat_all_languages.filter((language) => (language?.name && language?.flag && !languagesArray?.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
   const [languageLoader,setLanguageLoader] = React.useState(false);
 
   //add the languages
@@ -62,7 +67,7 @@ const Languages = () => {
       selectedLanguage !== null &&
       selectedLanguage.id !== 'none' &&
       !currentSelectedLanguage.find(lang => lang.locale === selectedLanguage.locale) &&
-      !selectedLanguageData.find((language) => language.locale === selectedLanguage.locale)
+      !languagesArray?.find((language) => language.locale === selectedLanguage.locale)
     ) {
       setCurrentSelectedLanguage([
         ...currentSelectedLanguage,
@@ -102,7 +107,7 @@ const Languages = () => {
       //Condition whether to open dialog show warning or make an API call
       if (!currentSelectedLanguage.includes(selectedLanguage) && selectedLanguage.id != 'none') {
         setLanguageDialog(true)
-      } else if (selectedLanguage.id == 'none' && currentSelectedLanguage.length == 0 && selectedLanguageData.length == 0) {
+      } else if (selectedLanguage.id == 'none' && currentSelectedLanguage.length == 0 && languagesArray?.length == 0) {
         throw new Error(__('You have to select a language to continue', 'linguator-multilingual-ai-translation'))
       } else {
         try {
@@ -182,7 +187,7 @@ const Languages = () => {
             searchFn={(query) => {
               const filtered = lmat_all_languages.filter(lang =>
                 (lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase())) &&
-                !selectedLanguageData.some(sl => sl.locale === lang.locale)
+                !languagesArray?.some(sl => sl.locale === lang.locale)
               );
               setValidLanguages(filtered);
             }}
@@ -250,13 +255,13 @@ const Languages = () => {
         </div>
       }
       {
-        selectedLanguageData?.length > 0 &&
+        languagesArray?.length > 0 &&
         <div className='py-4'>
           <h4 className='m-0 ' style={{paddingBottom: "6px"}}>{__('Selected Languages', 'linguator-multilingual-ai-translation')}</h4>
           <table style={{ width: "100%" }}>
             <tbody>
               {
-                selectedLanguageData.map((language, index) => (
+                languagesArray?.map((language, index) => (
                   <tr key={index} style={{paddingBottom: "6px"}}>
                     <td style={{ width: "80%" }} className='flex gap-6 items-center'>
                       <RenderedLanguage languageName={language?.name} languageFlag={language?.flag} flagUrl={true} languageLocale={language?.locale} />

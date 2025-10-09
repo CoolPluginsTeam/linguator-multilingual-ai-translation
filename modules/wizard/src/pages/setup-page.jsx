@@ -14,7 +14,7 @@ export const setupContext = React.createContext(null)
 const SetupPage = () => {
   const [setupSteps, setSetupSteps] = React.useState([])  // Initialize as empty array
   const [loading, setLoading] = React.useState(true) // Loader state tracker
-  const [selectedLanguageData, setSelectedLanguageData] = React.useState(window.lmat_setup.languages) //Store Selected Language state in database
+  const [selectedLanguageData, setSelectedLanguageData] = React.useState(Array.isArray(window.lmat_setup.languages) ? window.lmat_setup.languages : []) //Store Selected Language state in database
   const [selectedLanguage, setSelectedLanguage] = React.useState({ id: 'none', name: 'None', flag: null, locale: null }) //Selected Langugae from dropdown of Languages tab
   const [currentSelectedLanguage, setCurrentSelectedLanguage] = React.useState([]) //get the current selected language in the languages tab: it will be multiple language so its an array
   const [data, setData] = React.useState([]) // General Settings Data

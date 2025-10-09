@@ -31872,18 +31872,22 @@ var Languages = function Languages() {
     languageToDelete = _React$useContext2.languageToDelete,
     setLanguageToDelete = _React$useContext2.setLanguageToDelete; //get context
   //filter the valid languages
+  console.log(selectedLanguage);
+
+  // Ensure selectedLanguageData is always an array
+  var languagesArray = Array.isArray(selectedLanguageData) ? selectedLanguageData : [];
   var _React$useState = external_React_default().useState(lmat_all_languages.filter(function (language) {
-      return (language === null || language === void 0 ? void 0 : language.name) && (language === null || language === void 0 ? void 0 : language.flag) && !selectedLanguageData.find(function (selectedLanguage) {
+      return (language === null || language === void 0 ? void 0 : language.name) && (language === null || language === void 0 ? void 0 : language.flag) && !(languagesArray !== null && languagesArray !== void 0 && languagesArray.find(function (selectedLanguage) {
         return selectedLanguage.locale === language.locale;
-      });
+      }));
     })),
     _React$useState2 = _slicedToArray(_React$useState, 2),
     validLanguages = _React$useState2[0],
     setValidLanguages = _React$useState2[1];
   var originalListLanguages = external_React_default().useRef(lmat_all_languages.filter(function (language) {
-    return (language === null || language === void 0 ? void 0 : language.name) && (language === null || language === void 0 ? void 0 : language.flag) && !selectedLanguageData.find(function (selectedLanguage) {
+    return (language === null || language === void 0 ? void 0 : language.name) && (language === null || language === void 0 ? void 0 : language.flag) && !(languagesArray !== null && languagesArray !== void 0 && languagesArray.find(function (selectedLanguage) {
       return selectedLanguage.locale === language.locale;
-    });
+    }));
   }));
   var _React$useState3 = external_React_default().useState(false),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
@@ -31901,9 +31905,9 @@ var Languages = function Languages() {
           case 0:
             if (selectedLanguage !== null && selectedLanguage.id !== 'none' && !currentSelectedLanguage.find(function (lang) {
               return lang.locale === selectedLanguage.locale;
-            }) && !selectedLanguageData.find(function (language) {
+            }) && !(languagesArray !== null && languagesArray !== void 0 && languagesArray.find(function (language) {
               return language.locale === selectedLanguage.locale;
-            })) {
+            }))) {
               setCurrentSelectedLanguage([].concat(_toConsumableArray(currentSelectedLanguage), [selectedLanguage]));
             } else if (selectedLanguage.flag == null) {
               toast.info("Please select a language");
@@ -31978,7 +31982,7 @@ var Languages = function Languages() {
             _context3.n = 9;
             break;
           case 2:
-            if (!(selectedLanguage.id == 'none' && currentSelectedLanguage.length == 0 && selectedLanguageData.length == 0)) {
+            if (!(selectedLanguage.id == 'none' && currentSelectedLanguage.length == 0 && (languagesArray === null || languagesArray === void 0 ? void 0 : languagesArray.length) == 0)) {
               _context3.n = 3;
               break;
             }
@@ -32080,9 +32084,9 @@ var Languages = function Languages() {
     },
     searchFn: function searchFn(query) {
       var filtered = lmat_all_languages.filter(function (lang) {
-        return (lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase())) && !selectedLanguageData.some(function (sl) {
+        return (lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase())) && !(languagesArray !== null && languagesArray !== void 0 && languagesArray.some(function (sl) {
           return sl.locale === lang.locale;
-        });
+        }));
       });
       setValidLanguages(filtered);
     },
@@ -32156,7 +32160,7 @@ var Languages = function Languages() {
         color: "red"
       }
     }));
-  })), (selectedLanguageData === null || selectedLanguageData === void 0 ? void 0 : selectedLanguageData.length) > 0 && /*#__PURE__*/external_React_default().createElement("div", {
+  })), (languagesArray === null || languagesArray === void 0 ? void 0 : languagesArray.length) > 0 && /*#__PURE__*/external_React_default().createElement("div", {
     className: "py-4"
   }, /*#__PURE__*/external_React_default().createElement("h4", {
     className: "m-0 ",
@@ -32167,7 +32171,7 @@ var Languages = function Languages() {
     style: {
       width: "100%"
     }
-  }, /*#__PURE__*/external_React_default().createElement("tbody", null, selectedLanguageData.map(function (language, index) {
+  }, /*#__PURE__*/external_React_default().createElement("tbody", null, languagesArray === null || languagesArray === void 0 ? void 0 : languagesArray.map(function (language, index) {
     return /*#__PURE__*/external_React_default().createElement("tr", {
       key: index,
       style: {
@@ -32697,8 +32701,14 @@ var Media = function Media() {
 };
 /* harmony default export */ const media = (Media);
 ;// ./modules/wizard/src/components/default.jsx
+function default_typeof(o) { "@babel/helpers - typeof"; return default_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, default_typeof(o); }
 function default_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return default_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (default_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, default_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, default_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), default_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", default_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), default_regeneratorDefine2(u), default_regeneratorDefine2(u, o, "Generator"), default_regeneratorDefine2(u, n, function () { return this; }), default_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (default_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function default_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } default_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { default_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, default_regeneratorDefine2(e, r, n, t); }
+function default_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function default_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? default_ownKeys(Object(t), !0).forEach(function (r) { default_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : default_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function default_defineProperty(e, r, t) { return (r = default_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function default_toPropertyKey(t) { var i = default_toPrimitive(t, "string"); return "symbol" == default_typeof(i) ? i : i + ""; }
+function default_toPrimitive(t, r) { if ("object" != default_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != default_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function default_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function default_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { default_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { default_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function default_slicedToArray(r, e) { return default_arrayWithHoles(r) || default_iterableToArrayLimit(r, e) || default_unsupportedIterableToArray(r, e) || default_nonIterableRest(); }
@@ -32726,22 +32736,26 @@ var Default = function Default() {
     data = _React$useContext.data,
     setData = _React$useContext.setData,
     showUntranslatedContent = _React$useContext.showUntranslatedContent,
-    setShowUntranslatedContent = _React$useContext.setShowUntranslatedContent; //get context
-  var _React$useState = external_React_default().useState(selectedLanguageData.find(function (lang) {
+    setShowUntranslatedContent = _React$useContext.setShowUntranslatedContent,
+    lmat_all_languages = _React$useContext.lmat_all_languages; //get context
+
+  // Ensure selectedLanguageData is always an array
+  var languagesArray = Array.isArray(selectedLanguageData) ? selectedLanguageData : [];
+  var _React$useState = external_React_default().useState(languagesArray.find(function (lang) {
       var _lang$locale;
       return ((_lang$locale = lang.locale) === null || _lang$locale === void 0 ? void 0 : _lang$locale.toLowerCase()) === data.default_lang;
-    }) || selectedLanguageData.find(function (language) {
+    }) || languagesArray.find(function (language) {
       return language.is_default;
     }) || null),
     _React$useState2 = default_slicedToArray(_React$useState, 2),
     defaultLanguage = _React$useState2[0],
     setDefaultLanguage = _React$useState2[1];
-  var _React$useState3 = external_React_default().useState(selectedLanguageData.find(function (language) {
-      return language.is_default;
+  var _React$useState3 = external_React_default().useState(languagesArray.length > 0 ? languagesArray : lmat_all_languages.filter(function (language) {
+      return (language === null || language === void 0 ? void 0 : language.name) && (language === null || language === void 0 ? void 0 : language.flag);
     })),
     _React$useState4 = default_slicedToArray(_React$useState3, 2),
-    contentSelectedLanguage = _React$useState4[0],
-    setContentSelectedLanguage = _React$useState4[1];
+    validLanguages = _React$useState4[0],
+    setValidLanguages = _React$useState4[1];
   var _React$useState5 = external_React_default().useState(false),
     _React$useState6 = default_slicedToArray(_React$useState5, 2),
     defaultLoader = _React$useState6[0],
@@ -32752,7 +32766,7 @@ var Default = function Default() {
   }
   function _saveDefault() {
     _saveDefault = default_asyncToGenerator(/*#__PURE__*/default_regenerator().m(function _callee() {
-      var apiBody, response, languageResponse, _t;
+      var updatedLanguages, apiBody, response, languageResponse, _apiBody, _languageResponse, languageToAssign, _t;
       return default_regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
@@ -32764,10 +32778,16 @@ var Default = function Default() {
             }
             throw new Error((0,external_wp_i18n_namespaceObject.__)('Please select a default language', 'linguator-multilingual-ai-translation'));
           case 2:
+            updatedLanguages = languagesArray; // First, handle the default language change if needed
             if (!(previousDefaultLanguage.current !== defaultLanguage)) {
+              _context.n = 7;
+              break;
+            }
+            if (!(languagesArray.length > 0)) {
               _context.n = 5;
               break;
             }
+            // Update existing languages - set new default
             apiBody = {
               default_lang: defaultLanguage.slug
             };
@@ -32794,14 +32814,46 @@ var Default = function Default() {
             });
           case 4:
             languageResponse = _context.v;
-            setSelectedLanguageData(languageResponse);
+            // Ensure the response is an array
+            updatedLanguages = Array.isArray(languageResponse) ? languageResponse : [];
+            setSelectedLanguageData(updatedLanguages);
             setData(response);
+            _context.n = 7;
+            break;
           case 5:
+            // No existing languages - create the first one
+            _apiBody = default_objectSpread(default_objectSpread({}, defaultLanguage), {}, {
+              slug: defaultLanguage.code
+            });
+            _context.n = 6;
+            return external_wp_apiFetch_default()({
+              path: 'lmat/v1/languages',
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': getNonce()
+              },
+              body: JSON.stringify(_apiBody)
+            });
+          case 6:
+            _languageResponse = _context.v;
+            // Ensure the response is an array
+            updatedLanguages = Array.isArray(_languageResponse) ? _languageResponse : [_languageResponse];
+            setSelectedLanguageData(updatedLanguages);
+          case 7:
             if (!(showUntranslatedContent == "1")) {
-              _context.n = 6;
+              _context.n = 8;
               break;
             }
-            _context.n = 6;
+            // Find the language object from the updated languages array
+            languageToAssign = updatedLanguages.find(function (language) {
+              return language.locale === defaultLanguage.locale;
+            });
+            if (!languageToAssign) {
+              _context.n = 8;
+              break;
+            }
+            _context.n = 8;
             return external_wp_apiFetch_default()({
               path: 'lmat/v1/languages/assign-language',
               method: 'POST',
@@ -32809,25 +32861,25 @@ var Default = function Default() {
                 'Content-Type': 'application/json',
                 'X-WP-Nonce': getNonce()
               },
-              body: JSON.stringify(contentSelectedLanguage)
+              body: JSON.stringify(languageToAssign)
             });
-          case 6:
+          case 8:
             handleNavigate();
             setShowUntranslatedContent("");
-            _context.n = 8;
+            _context.n = 10;
             break;
-          case 7:
-            _context.p = 7;
+          case 9:
+            _context.p = 9;
             _t = _context.v;
             toast.error(_t.message);
-          case 8:
-            _context.p = 8;
+          case 10:
+            _context.p = 10;
             setDefaultLoader(false);
-            return _context.f(8);
-          case 9:
+            return _context.f(10);
+          case 11:
             return _context.a(2);
         }
-      }, _callee, null, [[1, 7, 8, 9]]);
+      }, _callee, null, [[1, 9, 10, 11]]);
     }));
     return _saveDefault.apply(this, arguments);
   }
@@ -32848,8 +32900,15 @@ var Default = function Default() {
   }, (0,external_wp_i18n_namespaceObject.__)('This language will be shown to visitors if their preferred language isn’t available.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
     className: "m-0 text-sm/6 mb-4"
   }, (0,external_wp_i18n_namespaceObject.__)('You can change the default anytime in the settings.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(at, {
+    combobox: true,
     onChange: function onChange(value) {
       return setDefaultLanguage(value);
+    },
+    searchFn: function searchFn(query) {
+      var filtered = validLanguages.filter(function (lang) {
+        return lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase());
+      });
+      setValidLanguages(filtered);
     },
     value: defaultLanguage,
     size: "md",
@@ -32865,47 +32924,11 @@ var Default = function Default() {
         languageLocale: defaultLanguage === null || defaultLanguage === void 0 ? void 0 : defaultLanguage.locale
       });
     }
-  }), /*#__PURE__*/external_React_default().createElement(at.Options, null, (selectedLanguageData === null || selectedLanguageData === void 0 ? void 0 : selectedLanguageData.length) > 0 && selectedLanguageData.map(function (language, index) {
+  }), /*#__PURE__*/external_React_default().createElement(at.Options, null, validLanguages.map(function (language, index) {
     return /*#__PURE__*/external_React_default().createElement(at.Option, {
       key: index,
       value: language
-    }, /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
-      languageName: language === null || language === void 0 ? void 0 : language.name,
-      languageFlag: language === null || language === void 0 ? void 0 : language.flag,
-      flagUrl: true,
-      languageLocale: language === null || language === void 0 ? void 0 : language.locale
-    }));
-  })))), showUntranslatedContent == "1" && /*#__PURE__*/external_React_default().createElement("div", {
-    className: "flex-grow"
-  }, /*#__PURE__*/external_React_default().createElement("h2", null, (0,external_wp_i18n_namespaceObject.__)('Content without language', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "m-0 text-sm/6"
-  }, (0,external_wp_i18n_namespaceObject.__)('There are posts, pages, categories or tags without language.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "m-0 text-sm/6"
-  }, (0,external_wp_i18n_namespaceObject.__)('For your site to work correctly, you need to assign a language to all your contents.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "mt-0 text-sm/6 mb-4"
-  }, (0,external_wp_i18n_namespaceObject.__)('The selected language below will be applied to all your content without an assigned language.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(at, {
-    onChange: function onChange(value) {
-      return setContentSelectedLanguage(value);
-    },
-    value: contentSelectedLanguage,
-    size: "md",
-    by: "locale"
-  }, /*#__PURE__*/external_React_default().createElement(at.Button, {
-    label: (0,external_wp_i18n_namespaceObject.__)("Choose the language to be assigned", 'linguator-multilingual-ai-translation'),
-    placeholder: (0,external_wp_i18n_namespaceObject.__)("Select an option", 'linguator-multilingual-ai-translation'),
-    render: function render() {
-      return /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
-        languageName: contentSelectedLanguage === null || contentSelectedLanguage === void 0 ? void 0 : contentSelectedLanguage.name,
-        languageFlag: contentSelectedLanguage === null || contentSelectedLanguage === void 0 ? void 0 : contentSelectedLanguage.flag,
-        flagUrl: true,
-        languageLocale: contentSelectedLanguage === null || contentSelectedLanguage === void 0 ? void 0 : contentSelectedLanguage.locale
-      });
-    }
-  }), /*#__PURE__*/external_React_default().createElement(at.Options, null, (selectedLanguageData === null || selectedLanguageData === void 0 ? void 0 : selectedLanguageData.length) > 0 && selectedLanguageData.map(function (language, index) {
-    return /*#__PURE__*/external_React_default().createElement(at.Option, {
-      key: index,
-      value: language
-    }, /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
+    }, (language === null || language === void 0 ? void 0 : language.name) && (language === null || language === void 0 ? void 0 : language.flag) && /*#__PURE__*/external_React_default().createElement(RenderedLanguage, {
       languageName: language === null || language === void 0 ? void 0 : language.name,
       languageFlag: language === null || language === void 0 ? void 0 : language.flag,
       flagUrl: true,
@@ -50930,7 +50953,7 @@ var SetupPage = function SetupPage() {
     _React$useState4 = setup_page_slicedToArray(_React$useState3, 2),
     loading = _React$useState4[0],
     setLoading = _React$useState4[1]; // Loader state tracker
-  var _React$useState5 = external_React_default().useState(window.lmat_setup.languages),
+  var _React$useState5 = external_React_default().useState(Array.isArray(window.lmat_setup.languages) ? window.lmat_setup.languages : []),
     _React$useState6 = setup_page_slicedToArray(_React$useState5, 2),
     selectedLanguageData = _React$useState6[0],
     setSelectedLanguageData = _React$useState6[1]; //Store Selected Language state in database

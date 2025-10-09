@@ -9,9 +9,13 @@ import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
 import { RenderedLanguage } from './languages'
 const Default = () => {
-  const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, data, setData, showUntranslatedContent, setShowUntranslatedContent } = React.useContext(setupContext) //get context
-  const [defaultLanguage, setDefaultLanguage] = React.useState(selectedLanguageData.find((lang) => lang.locale?.toLowerCase() === data.default_lang) || selectedLanguageData.find((language) => language.is_default) || null)
-  const [contentSelectedLanguage, setContentSelectedLanguage] = React.useState(selectedLanguageData.find((language) => language.is_default));
+  const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, data, setData, showUntranslatedContent, setShowUntranslatedContent, lmat_all_languages } = React.useContext(setupContext) //get context
+  
+  // Ensure selectedLanguageData is always an array
+  const languagesArray = Array.isArray(selectedLanguageData) ? selectedLanguageData : [];
+  
+  const [defaultLanguage, setDefaultLanguage] = React.useState(languagesArray.find((lang) => lang.locale?.toLowerCase() === data.default_lang) || languagesArray.find((language) => language.is_default) || null)
+  let [validLanguages, setValidLanguages] = React.useState(languagesArray.length > 0 ? languagesArray : lmat_all_languages.filter((language) => (language?.name && language?.flag)))
   const [defaultLoader, setDefaultLoader] = React.useState(false)
   const previousDefaultLanguage = React.useRef(defaultLanguage)
   async function saveDefault() {
@@ -20,43 +24,78 @@ const Default = () => {
       if (defaultLanguage === null) {
         throw new Error(__('Please select a default language', 'linguator-multilingual-ai-translation'))
       }
+      
+      let updatedLanguages = languagesArray;
+      
+      // First, handle the default language change if needed
       if (previousDefaultLanguage.current !== defaultLanguage) {
-        const apiBody = {
-          default_lang: defaultLanguage.slug
-        }
-        const response = await apiFetch({
-          path: 'lmat/v1/settings',
-          method: 'POST',
-          'headers': {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': getNonce()
-          },
-          body: JSON.stringify(apiBody)
-        })
-        const languageResponse = await apiFetch({
-          path: 'lmat/v1/languages',
-          method: 'GET',
-          'headers': {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': getNonce()
+        if (languagesArray.length > 0) {
+          // Update existing languages - set new default
+          const apiBody = {
+            default_lang: defaultLanguage.slug
           }
-        })
-        setSelectedLanguageData(languageResponse)
-        setData(response)
+          const response = await apiFetch({
+            path: 'lmat/v1/settings',
+            method: 'POST',
+            'headers': {
+              'Content-Type': 'application/json',
+              'X-WP-Nonce': getNonce()
+            },
+            body: JSON.stringify(apiBody)
+          })
+          
+          // Get updated languages list from server
+          const languageResponse = await apiFetch({
+            path: 'lmat/v1/languages',
+            method: 'GET',
+            'headers': {
+              'Content-Type': 'application/json',
+              'X-WP-Nonce': getNonce()
+            }
+          })
+          
+          // Ensure the response is an array
+          updatedLanguages = Array.isArray(languageResponse) ? languageResponse : []
+          setSelectedLanguageData(updatedLanguages)
+          setData(response)
+        } else {
+          // No existing languages - create the first one
+          const apiBody = { ...defaultLanguage, slug: defaultLanguage.code }
+          const languageResponse = await apiFetch({
+            path: 'lmat/v1/languages',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-WP-Nonce': getNonce()
+            },
+            body: JSON.stringify(apiBody)
+          })
+          
+          // Ensure the response is an array
+          updatedLanguages = Array.isArray(languageResponse) ? languageResponse : [languageResponse]
+          setSelectedLanguageData(updatedLanguages)
+        }
       }
+      
+      // Then, handle untranslated content assignment if needed
       if (showUntranslatedContent == "1") {
-        await apiFetch({
-          path: 'lmat/v1/languages/assign-language',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': getNonce()
-          },
-          body: JSON.stringify(contentSelectedLanguage)
-        })
+        // Find the language object from the updated languages array
+        const languageToAssign = updatedLanguages.find((language) => language.locale === defaultLanguage.locale)
+        
+        if (languageToAssign) {
+          await apiFetch({
+            path: 'lmat/v1/languages/assign-language',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-WP-Nonce': getNonce()
+            },
+            body: JSON.stringify(languageToAssign)
+          })
+        }
       }
+      
       handleNavigate()
-
       setShowUntranslatedContent("")
     } catch (error) {
       toast.error(error.message)
@@ -77,7 +116,14 @@ const Default = () => {
           <p className='m-0 text-sm/6'>{__('This language will be shown to visitors if their preferred language isn’t available.', 'linguator-multilingual-ai-translation')}</p>
           <p className='m-0 text-sm/6 mb-4'>{__('You can change the default anytime in the settings.', 'linguator-multilingual-ai-translation')}</p>
           <Select
+            combobox
             onChange={(value) => setDefaultLanguage(value)}
+            searchFn={(query) => {
+              const filtered = validLanguages.filter(lang =>
+                (lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase()))
+              );
+              setValidLanguages(filtered);
+            }}
             value={defaultLanguage}
             size="md"
             by="locale"
@@ -89,52 +135,21 @@ const Default = () => {
             />
             <Select.Options>
               {
-                selectedLanguageData?.length > 0 && selectedLanguageData.map((language, index) => (
+                validLanguages.map((language, index) => (
                   <Select.Option
                     key={index}
                     value={language}
                   >
-                    <RenderedLanguage languageName={language?.name} languageFlag={language?.flag} flagUrl={true} languageLocale={language?.locale} />
+                    {
+                      language?.name && language?.flag &&
+                      <RenderedLanguage languageName={language?.name} languageFlag={language?.flag} flagUrl={true} languageLocale={language?.locale} />
+                    }
                   </Select.Option>
                 ))
               }
             </Select.Options>
           </Select>
         </div>
-
-        {
-          showUntranslatedContent == "1" &&
-          <div className='flex-grow'>
-            <h2>{__('Content without language', 'linguator-multilingual-ai-translation')}</h2>
-            <p className='m-0 text-sm/6'>{__('There are posts, pages, categories or tags without language.', 'linguator-multilingual-ai-translation')}</p>
-            <p className='m-0 text-sm/6'>{__('For your site to work correctly, you need to assign a language to all your contents.', 'linguator-multilingual-ai-translation')}</p>
-            <p className='mt-0 text-sm/6 mb-4'>{__('The selected language below will be applied to all your content without an assigned language.', 'linguator-multilingual-ai-translation')}</p>
-            <Select
-              onChange={(value) => setContentSelectedLanguage(value)}
-              value={contentSelectedLanguage}
-              size="md"
-              by="locale"
-            >
-              <Select.Button
-                label={__("Choose the language to be assigned", 'linguator-multilingual-ai-translation')}
-                placeholder={__("Select an option", 'linguator-multilingual-ai-translation')}
-                render={() => <RenderedLanguage languageName={contentSelectedLanguage?.name} languageFlag={contentSelectedLanguage?.flag} flagUrl={true} languageLocale={contentSelectedLanguage?.locale} />}
-              />
-              <Select.Options>
-                {
-                  selectedLanguageData?.length > 0 && selectedLanguageData.map((language, index) => (
-                    <Select.Option
-                      key={index}
-                      value={language}
-                    >
-                      <RenderedLanguage languageName={language?.name} languageFlag={language?.flag} flagUrl={true} languageLocale={language?.locale} />
-                    </Select.Option>
-                  ))
-                }
-              </Select.Options>
-            </Select>
-          </div>
-        }
       </div>
       <div className='flex justify-end pt-5'>
         {
