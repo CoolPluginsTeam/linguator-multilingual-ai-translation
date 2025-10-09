@@ -12,7 +12,7 @@ jQuery(document).ready(function(){
     }
 
     if(lmatBulkTranslateBtn.length){
-        const $defaultFilter = jQuery('.actions:not(.bulkactions)');
+        const $defaultFilter = jQuery('#posts-filter .actions:not(.bulkactions)');
         const $bulkAction=jQuery('.actions.bulkactions');
 
         if($defaultFilter.length){

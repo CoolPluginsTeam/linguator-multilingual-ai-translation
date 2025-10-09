@@ -99,11 +99,6 @@
                 "content": true
             }
         },
-        "core/code": {
-            "attributes": {
-                "content": true
-            }
-        },
         "core/text-columns": {
             "attributes": {
                 "content": [

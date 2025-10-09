@@ -2,6 +2,7 @@ const { __, sprintf } = wp.i18n;
 
 const lmatElementorConfirmBox = {
     init: function() {
+        this.pageTitleEvent=false;
         if(window.lmatElementorConfirmBoxData){
             this.createConfirmBox();
         }
@@ -33,16 +34,18 @@ const lmatElementorConfirmBox = {
 
         confirmBox.appendTo(jQuery('body'));
 
-        confirmBox.find('button[data-value="yes"]').on('click', (e)=>this.confirmTranslation(e));
+        confirmBox.find('button[data-value="yes"]').on('click', (e)=>{this.confirmTranslation(e)});
         confirmBox.find('button[data-value="no"]').on('click', (e)=>{e.preventDefault();this.closeConfirmBox();});
     },
 
     closeConfirmBox: function() {
+        this.setPageTitle();
         const confirmBox = jQuery('.lmat-elementor-translate-confirm-box.modal-container');
         confirmBox.remove();
     },
 
     confirmTranslation: function(e) {
+        this.setPageTitle();
         e.preventDefault();
         const postId=window.lmatElementorConfirmBoxData.postId;
         const targetLangSlug=window.lmatElementorConfirmBoxData.targetLangSlug;
@@ -69,6 +72,52 @@ const lmatElementorConfirmBox = {
 
             this.closeConfirmBox();
         }
+    },
+
+    setPageTitle: function() {
+
+        if(window.lmatElementorConfirmBoxData.editorType !== 'classic') {
+            return;
+        }
+
+        if(this.pageTitleEvent) {
+            return;
+        }
+
+        this.pageTitleEvent=true;
+
+        const elementorButtons=document.querySelectorAll('#elementor-editor-button, #elementor-edit-mode-button');
+
+        elementorButtons.forEach(button=>{
+            button.addEventListener('click', (e)=>{  
+                e.preventDefault();              
+                
+                if(window.wp && window.elementorAdmin && window.elementorAdmin.getDefaultElements){
+                    const defaultElements=window.elementorAdmin.getDefaultElements();
+
+                    if(defaultElements) {
+                        $goToEditLink=defaultElements.$goToEditLink;
+
+                        if($goToEditLink) {
+                            var $wpTitle = jQuery('#title');
+
+                            if (!$wpTitle.val()) {
+                              $wpTitle.val('Elementor #' + jQuery('#post_ID').val());
+                            }
+
+                            if (wp.autosave) {
+                              wp.autosave.server.triggerSave();
+                            }
+
+                            jQuery(document).on('heartbeat-tick.autosave', function () {
+                              window.elementorCommon.elements.$window.off('beforeunload.edit-post');
+                              location.href = $goToEditLink.attr('href');
+                            });
+                        }
+                    }
+                }
+            });
+        });
     }
 };
 

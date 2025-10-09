@@ -1,5 +1,11 @@
 const FilterTargetContent = (props) => {
     const skipTags = props.skipTags || [];
+    const OpenSpanPlaceholder = '#lmat_page_translation_open_translate_span#';
+    const CloseSpanPlaceholder = '#lmat_page_translation_close_translate_span#';
+    const OpenTempTagPlaceholder = '#lmat_page_translation_temp_tag_open#';
+    const CloseTempTagPlaceholder = '#lmat_page_translation_temp_tag_close#';
+    const LessThanSymbol = '#lmat_page_translation_less_then_symbol#';
+    const GreaterThanSymbol = '#lmat_page_translation_greater_then_symbol#';
 
     function fixHtmlTags(content) {
         if (typeof content !== 'string' || !content.trim()) return content;
@@ -33,7 +39,7 @@ const FilterTargetContent = (props) => {
                     result += fullMatch;
                 } else {
                     // No opening tag: insert missing opening tag before closing
-                    result += `#lmat_page_translation_temp_tag_open#<${tagName}>#lmat_page_translation_temp_tag_close#` + fullMatch;
+                    result += `${OpenTempTagPlaceholder}<${tagName}>${CloseTempTagPlaceholder}` + fullMatch;
                 }
             }
 
@@ -48,7 +54,7 @@ const FilterTargetContent = (props) => {
         // Add missing closing tags at the end
         for (let i = stack.length - 1; i >= 0; i--) {
             const { tag } = stack[i];
-            result += `#lmat_page_translation_temp_tag_open#</${tag}>#lmat_page_translation_temp_tag_close#`;
+            result += `${OpenTempTagPlaceholder}</${tag}>${CloseTempTagPlaceholder}`;
         }
 
         // Clear references to free memory (optional in GC-based engines, but helpful)
@@ -87,7 +93,7 @@ const FilterTargetContent = (props) => {
                 let element = childNodes[i];
 
                 if (element.nodeType === 3) {
-                    let textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
+                    let textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
 
                     element.textContent = textContent;
                 }
@@ -105,7 +111,13 @@ const FilterTargetContent = (props) => {
         // Get the opening tag of the first element
         // const firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
         let firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
-        firstElementOpeningTag = firstElementOpeningTag.replace(/#lmat_page_translation_open_translate_span#|#lmat_page_translation_close_translate_span#/g, '');
+
+        const pattern = new RegExp(
+            `${OpenSpanPlaceholder}|${CloseSpanPlaceholder}`,
+            'g'
+        );
+
+        firstElementOpeningTag = firstElementOpeningTag.replace(pattern, '');
 
         // Check if the first element has a corresponding closing tag
         const openTagName = firstElement.tagName.toLowerCase();
@@ -116,28 +128,33 @@ const FilterTargetContent = (props) => {
 
         // Wrap the style element
         if (firstElementOpeningTag === '<style>') {
-            let wrappedFirstTag = `#lmat_page_translation_open_translate_span#${firstElement.outerHTML}#lmat_page_translation_close_translate_span#`;
+            let wrappedFirstTag = `${OpenSpanPlaceholder}${firstElement.outerHTML}${CloseSpanPlaceholder}`;
             return wrappedFirstTag;
         }
 
         let firstElementHtml = firstElement.innerHTML;
 
-        firstElementHtml = firstElementHtml.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
+        firstElementHtml = firstElementHtml.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
 
         firstElement.innerHTML = '';
         let closeTag = '';
         let openTag = '';
         let filterContent = '';
 
-        openTag = `#lmat_page_translation_open_translate_span#${firstElementOpeningTag}#lmat_page_translation_close_translate_span#`;
+        openTag = `${OpenSpanPlaceholder}${firstElementOpeningTag}${CloseSpanPlaceholder}`;
         if (closingTagMatch) {
-            closeTag = `#lmat_page_translation_open_translate_span#</${openTagName}>#lmat_page_translation_close_translate_span#`;
+            closeTag = `${OpenSpanPlaceholder}</${openTagName}>${CloseSpanPlaceholder}`;
         }
 
         if (skipTags.includes(openTagName)) {
             // Remove the custom span markers from the HTML if the tag is in skipTags
-            firstElementHtml = firstElementHtml.replace(/#lmat_page_translation_open_translate_span#|#lmat_page_translation_close_translate_span#/g, '');
-            firstElementHtml = "#lmat_page_translation_open_translate_span#" + firstElementHtml + "#lmat_page_translation_close_translate_span#";
+            const pattern = new RegExp(
+                `${OpenSpanPlaceholder}|${CloseSpanPlaceholder}`,
+                'g'
+            );
+
+            firstElementHtml = firstElementHtml.replace(pattern, '');
+            firstElementHtml = `${OpenSpanPlaceholder}${firstElementHtml}${CloseSpanPlaceholder}`;
         }
 
         if ('' !== firstElementHtml) {
@@ -163,7 +180,10 @@ const FilterTargetContent = (props) => {
      * @returns {Array} An array of strings after splitting based on the pattern.
      */
     const splitContent = (string) => {
-        const pattern = /(#lmat_page_translation_open_translate_span#[\s\S]*?#lmat_page_translation_close_translate_span#)|'/;
+        const pattern = new RegExp(
+            `(${OpenSpanPlaceholder}[\\s\\S]*?${CloseSpanPlaceholder})|'`,
+        );
+
         const matches = string.split(pattern).filter(Boolean);
 
         // Remove empty strings from the result
@@ -182,7 +202,7 @@ const FilterTargetContent = (props) => {
 
         // Replace placeholders with wrapped spans
         const output = content.replace(regex, (match) => {
-            return `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`;
+            return `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`;
         });
 
         return output;
@@ -215,34 +235,34 @@ const FilterTargetContent = (props) => {
      */
     const syncTRTDFromFirstToSecond = (str1, str2) => {
         str1 = str1.trim();
-        
+
         // 1️⃣ Check if first string has any tr or td
         if (!/<\/?(tr|td)\b[^>]*>/i.test(str1)) {
             return str2; // no tr/td → skip
         }
-        
+
         // 2️⃣ Skip if second string already contains tr or td
         if (/<\/?(tr|td)\b[^>]*>/i.test(str2)) {
             return str2;
         }
-        
+
         str2 = str2.trim();
 
         // 3️⃣ Extract tags (if present)
         const startTagMatch = str1.match(/^<(tr|td)\b[^>]*>/i);     // opening tag at start
-        const endTagMatch   = str1.match(/<\/(tr|td)>\s*$/i);        // closing tag at end
-      
+        const endTagMatch = str1.match(/<\/(tr|td)>\s*$/i);        // closing tag at end
+
         // 4️⃣ Build new string using only what exists
         let newString = str2;
-      
+
         if (startTagMatch) {
-          newString = `#lmat_page_translation_open_translate_span#${startTagMatch[0]}#lmat_page_translation_close_translate_span#` + newString;
+            newString = `${OpenSpanPlaceholder}${startTagMatch[0]}${CloseSpanPlaceholder}` + newString;
         }
-      
+
         if (endTagMatch) {
-          newString = newString + `#lmat_page_translation_open_translate_span#${endTagMatch[0]}#lmat_page_translation_close_translate_span#`;
+            newString = newString + `${OpenSpanPlaceholder}${endTagMatch[0]}${CloseSpanPlaceholder}`;
         }
-      
+
         return newString;
     }
 
@@ -263,7 +283,7 @@ const FilterTargetContent = (props) => {
         const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
 
         if (shortcodeMatches) {
-            string = string.replace(shortcodePattern, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
+            string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
         }
 
         function replaceInnerTextWithSpan(doc) {
@@ -275,17 +295,43 @@ const FilterTargetContent = (props) => {
                     let textNode = null;
 
                     if (element.nodeType === 3) {
-                        const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
+                        const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
 
                         textNode = document.createTextNode(textContent);
                     } else if (element.nodeType === 8) {
-                        textNode = document.createTextNode(`#lmat_page_translation_open_translate_span#<!--${element.textContent}-->#lmat_page_translation_close_translate_span#`);
+                        textNode = document.createTextNode(`${OpenSpanPlaceholder}<!--${element.textContent}-->${CloseSpanPlaceholder}`);
+                    } else if (element.nodeType === 1) {
+                        const childNodes = element.childNodes;
+
+                        const trimmed = element.outerHTML.trim();
+
+                        // Match the outer opening tag dynamically
+                        const match = trimmed.match(/^<([a-zA-Z0-9]+)(\s[^>]*)?>/i);
+                        if (!match) return trimmed; // no valid HTML tag found
+
+                        const tagName = match[1];
+                        const attrs = match[2] || "";
+
+                        const hasClosingTag = new RegExp(`<\\/${tagName}>\\s*$`, "i").test(trimmed);
+
+                        if (childNodes.length > 0) {
+                            replaceInnerTextWithSpan(element);
+                        }
+
+                        let filterHtml = `${OpenSpanPlaceholder}${LessThanSymbol}${tagName}${attrs}${GreaterThanSymbol}${CloseSpanPlaceholder}${element.innerHTML}`;
+
+                        if (hasClosingTag) {
+                            filterHtml += `${OpenSpanPlaceholder}${LessThanSymbol}/${tagName}${GreaterThanSymbol}${CloseSpanPlaceholder}`;
+                        }
+
+                        textNode = document.createTextNode(filterHtml);
+
                     } else {
                         let filterHtml = element.outerHTML;
 
                         filterHtml = filterHtml.replace(
                             /<!--([\s\S]*?)-->/g,
-                            (match, inner) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`
+                            (match, inner) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`
                         );
 
                         let filterContent = wrapFirstAndMatchingClosingTag(filterHtml);
@@ -306,20 +352,29 @@ const FilterTargetContent = (props) => {
 
         let content = string;
 
+        
         if (isEmptyOrUnclosedTag(string)) {
-            content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `#lmat_page_translation_open_translate_span#${match}#lmat_page_translation_close_translate_span#`);
+            content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
         } else {
             const tempElement = document.createElement('div');
             tempElement.innerHTML = fixHtmlTags(string);
             replaceInnerTextWithSpan(tempElement);
-
+            
+            
             content = tempElement.innerText;
+
+            content = content.replace(new RegExp(LessThanSymbol, 'g'), '<').replace(new RegExp(GreaterThanSymbol, 'g'), '>');
 
             content = syncTRTDFromFirstToSecond(string, content);
         }
+        
+        // remoove all the ${OpenTempTagPlaceholder} and ${CloseTempTagPlaceholder}
+        const tempTagPattern = new RegExp(
+            `${OpenTempTagPlaceholder}([\\s\\S]*?)(${CloseTempTagPlaceholder})`,
+            'g'
+        );
+        content = content.replace(tempTagPattern, '');
 
-        // remoove all the #lmat_page_translation_temp_tag_open# and #lmat_page_translation_open_translate_span#
-        content = content.replace(/#lmat_page_translation_temp_tag_open#([\s\S]*?)#lmat_page_translation_temp_tag_close#/g, '');
 
         return splitContent(content);
     }
@@ -333,12 +388,18 @@ const FilterTargetContent = (props) => {
     /**
      * Regular expression pattern to match the span elements that should not be translated.
      */
-    const notTranslatePattern = /#lmat_page_translation_open_translate_span#[\s\S]*?#lmat_page_translation_close_translate_span#/;
+    const notTranslatePattern = new RegExp(
+        `${OpenSpanPlaceholder}[\\s\\S]*?${CloseSpanPlaceholder}`
+    );
 
     /**
      * Regular expression pattern to replace the placeholder span elements.
      */
-    const replacePlaceholderPattern = /#lmat_page_translation_open_translate_span#|#lmat_page_translation_close_translate_span#/g;
+    const replacePlaceholderPattern = new RegExp(
+        `${OpenSpanPlaceholder}|${CloseSpanPlaceholder}`,
+        'g'
+    );
+
 
     const filterContent = content => {
         const updatedContent = content.replace(replacePlaceholderPattern, '');
