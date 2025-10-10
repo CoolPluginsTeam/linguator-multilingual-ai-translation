@@ -250,7 +250,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             
             $total_character_count = is_array($translation_data) && isset($translation_data['total_character_count']) ? $translation_data['total_character_count'] : 0;
             
-            if($total_character_count < 30000){ 
+            if($total_character_count < 50000){ 
                 return;
             }
             

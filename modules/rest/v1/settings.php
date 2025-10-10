@@ -288,7 +288,7 @@ class Settings extends Abstract_Controller {
 				case 'rewrite':
 				case 'force_lang':
 				case 'hide_default':
-					flush_rewrite_rules();
+					delete_option( 'rewrite_rules' );
 					break;
 			
 				case 'post_types':
