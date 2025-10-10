@@ -111,7 +111,7 @@ const FilterTargetContent = (props) => {
         // Get the opening tag of the first element
         // const firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
         let firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
-
+        
         const pattern = new RegExp(
             `${OpenSpanPlaceholder}|${CloseSpanPlaceholder}`,
             'g'
@@ -237,20 +237,20 @@ const FilterTargetContent = (props) => {
         str1 = str1.trim();
 
         // 1️⃣ Check if first string has any tr or td
-        if (!/<\/?(tr|td)\b[^>]*>/i.test(str1)) {
+        if (!/<\/?(tr|td|th)\b[^>]*>/i.test(str1)) {
             return str2; // no tr/td → skip
         }
 
         // 2️⃣ Skip if second string already contains tr or td
-        if (/<\/?(tr|td)\b[^>]*>/i.test(str2)) {
+        if (/<\/?(tr|td|th)\b[^>]*>/i.test(str2)) {
             return str2;
         }
 
         str2 = str2.trim();
 
         // 3️⃣ Extract tags (if present)
-        const startTagMatch = str1.match(/^<(tr|td)\b[^>]*>/i);     // opening tag at start
-        const endTagMatch = str1.match(/<\/(tr|td)>\s*$/i);        // closing tag at end
+        const startTagMatch = str1.match(/^<(tr|td|th)\b[^>]*>/i);     // opening tag at start
+        const endTagMatch = str1.match(/<\/(tr|td|th)>\s*$/i);        // closing tag at end
 
         // 4️⃣ Build new string using only what exists
         let newString = str2;
@@ -373,6 +373,7 @@ const FilterTargetContent = (props) => {
             `${OpenTempTagPlaceholder}([\\s\\S]*?)(${CloseTempTagPlaceholder})`,
             'g'
         );
+        
         content = content.replace(tempTagPattern, '');
 
 
