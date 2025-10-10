@@ -107,7 +107,7 @@ const Default = () => {
           <div className='flex-grow'>
             <h2>{__('Content without language', 'linguator-multilingual-ai-translation')}</h2>
             <p className='m-0 text-sm/6'>{__('There are posts, pages, categories or tags without language.', 'linguator-multilingual-ai-translation')}</p>
-            <p className='m-0 text-sm/6'>{__('For your site to work correctly, you need to assign a language to all your contents.', 'linguator-multilingual-ai-translation')}</p>
+            <p className='m-0 text-sm/6'>{__('For your site to work correctly, you need to assign a language to all your content.', 'linguator-multilingual-ai-translation')}</p>
             <p className='mt-0 text-sm/6 mb-4'>{__('The selected language below will be applied to all your content without an assigned language.', 'linguator-multilingual-ai-translation')}</p>
             <Select
               onChange={(value) => setContentSelectedLanguage(value)}
