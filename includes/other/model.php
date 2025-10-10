@@ -716,5 +716,28 @@ class LMAT_Model {
 
 		$this->set_language_in_mass( $lang, $types_with_objects );
 	}
+
+	public function is_lmat_translatable_current_page($current_screen) :bool{
+		global $linguator;
+		if(!$linguator || !property_exists($linguator, 'model')){
+			return false;
+		}
+		$translated_post_types = $linguator->model->get_translated_post_types();
+		$translated_taxonomies = $linguator->model->get_translated_taxonomies();
+		$translated_post_types = array_values($translated_post_types);
+		$translated_taxonomies = array_values($translated_taxonomies);
+		$translated_post_types=array_filter($translated_post_types, function($post_type){
+			return is_string($post_type);
+		});
+		$translated_taxonomies=array_filter($translated_taxonomies, function($taxonomy){
+			return is_string($taxonomy);
+		});
+		$valid_post_type=(isset($current_screen->post_type) && !empty($current_screen->post_type)) && in_array($current_screen->post_type, $translated_post_types) && $current_screen->post_type !== 'attachment' ? $current_screen->post_type : false;
+		$valid_taxonomy=(isset($current_screen->taxonomy) && !empty($current_screen->taxonomy)) && in_array($current_screen->taxonomy, $translated_taxonomies) ? $current_screen->taxonomy : false;
+		if((!$valid_post_type && !$valid_taxonomy) || ((!$valid_post_type || empty($valid_post_type)) && !isset($valid_taxonomy)) || (isset($current_screen->taxonomy) && !empty($current_screen->taxonomy) && !$valid_taxonomy)){
+			return false;
+		}
+		return true;
+	}
 }
 
