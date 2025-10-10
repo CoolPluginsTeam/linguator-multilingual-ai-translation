@@ -57,6 +57,16 @@
     height: 32px;
 }
 
+.lmat-settings-header-logo a{
+    outline: none;
+    box-shadow: none;
+}
+
+.lmat-settings-header-logo a:focus{
+    outline: none;
+    box-shadow: none;
+}
+
 .lmat-settings-header-logo img{
     height: 32px;
     object-fit: contain;
