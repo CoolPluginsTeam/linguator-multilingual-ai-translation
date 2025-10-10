@@ -266,6 +266,19 @@ abstract class LMAT_Translatable_Object {
 	 * @return WP_Term|false The term associated to the object in the requested taxonomy if it exists, `false` otherwise.
 	 */
 	protected function get_object_terms( array $object_ids, string $taxonomy ) {
+		
+		$is_page_translated=false;
+
+		if(function_exists('get_current_screen')){
+			$is_page_translated = LMAT_Model::is_lmat_translatable_current_page( get_current_screen() );
+		}else{
+			$is_page_translated = LMAT_Model::is_lmat_translatable_current_page();
+		}
+
+		if(!$is_page_translated){
+			return array();
+		}
+
 		$object_ids = $this->sanitize_int_ids_list( $object_ids );
 		if ( empty( $object_ids ) ) {
 			return array();

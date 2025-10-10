@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
+use Linguator\Includes\Other\LMAT_Model;
 use Linguator\Includes\Helpers\LMAT_Cache;
 use Linguator\Includes\Other\LMAT_Language;
 use Linguator\Includes\Other\LMAT_Language_Factory;
@@ -1138,6 +1138,17 @@ class Languages {
 	 * @return WP_Term[]
 	 */
 	protected function get_terms(): array {
+		$is_translation_supported=true;
+		if(function_exists('get_current_screen')){
+			$is_translation_supported=LMAT_Model::is_lmat_translatable_current_page(get_current_screen());
+		}else{
+			$is_translation_supported=LMAT_Model::is_lmat_translatable_current_page();
+		}
+
+		if(!$is_translation_supported){
+			return array();
+		}
+
 		$callback = \Closure::fromCallable( array( $this, 'filter_terms_orderby' ) );
 		add_filter( 'get_terms_orderby', $callback, 10, 3 );
 		$terms = get_terms(
