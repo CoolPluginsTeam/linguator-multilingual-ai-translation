@@ -717,11 +717,37 @@ class LMAT_Model {
 		$this->set_language_in_mass( $lang, $types_with_objects );
 	}
 
-	public function is_lmat_translatable_current_page($current_screen) :bool{
+	public static function is_lmat_translatable_current_page($current_screen=null) :bool{
+
+		if(null === $current_screen){
+			$screen_type=array();
+
+			$url=self::get_current_url();
+
+			if(!strpos($url, '/edit.php') && !strpos($url, '/edit-tags.php')){
+				return false;
+			}
+
+			if(strpos($url, '/edit.php') && isset($_POST['post_type'])){
+				$screen_type['post_type']=$_POST['post_type'];
+			}else if(strpos($url, '/edit-tags.php') && isset($_POST['taxonomy'])){
+				$screen_type['taxonomy']=$_POST['taxonomy'];
+			}else if(strpos($url, '/edit.php')){
+				$screen_type['post_type']='post';
+			}
+			
+
+			if(count($screen_type) > 0){
+				$current_screen = (object) $screen_type;
+			}
+		}
+
 		global $linguator;
+
 		if(!$linguator || !property_exists($linguator, 'model')){
 			return false;
 		}
+
 		$translated_post_types = $linguator->model->get_translated_post_types();
 		$translated_taxonomies = $linguator->model->get_translated_taxonomies();
 		$translated_post_types = array_values($translated_post_types);
@@ -738,6 +764,16 @@ class LMAT_Model {
 			return false;
 		}
 		return true;
+	}
+
+	private static function get_current_url(){
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+            // Remove query string part if it exists
+            $path = strtok( $_SERVER['REQUEST_URI'], '?' );
+            return rtrim( $path, '/' ); // optional: remove trailing slash
+        }
+
+        return false;
 	}
 }
 
