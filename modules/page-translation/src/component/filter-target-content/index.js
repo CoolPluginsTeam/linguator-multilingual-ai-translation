@@ -299,7 +299,9 @@ const FilterTargetContent = (props) => {
 
                         textNode = document.createTextNode(textContent);
                     } else if (element.nodeType === 8) {
-                        textNode = document.createTextNode(`${OpenSpanPlaceholder}<!--${element.textContent}-->${CloseSpanPlaceholder}`);
+                        let elementText=element.textContent;
+                        elementText=elementText.replace(new RegExp(OpenSpanPlaceholder, 'g'), '').replace(new RegExp(CloseSpanPlaceholder, 'g'), '');
+                        textNode = document.createTextNode(`${OpenSpanPlaceholder}${LessThanSymbol}!--${elementText}--${GreaterThanSymbol}${CloseSpanPlaceholder}`);
                     } else if (element.nodeType === 1) {
                         const childNodes = element.childNodes;
 
