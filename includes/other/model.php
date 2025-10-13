@@ -775,8 +775,7 @@ class LMAT_Model {
 		
 		$valid_post_type = (
 			!empty($current_screen->post_type) &&
-			in_array($current_screen->post_type, $translated_post_types, true) &&
-			$current_screen->post_type !== 'attachment'
+			in_array($current_screen->post_type, $translated_post_types, true)
 		) ? $current_screen->post_type : false;
 		
 		$valid_taxonomy = (
