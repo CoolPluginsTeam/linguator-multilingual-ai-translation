@@ -307,7 +307,7 @@ const URLModifications = () => {
               </div>
             </div>
             <div className='flex justify-between ' style={{ marginTop: "14px" }}>
-              <SetupBackButton handleClick={() => { setSetupProgress("default"); localStorage.setItem("setupProgress", "default") }} />
+              <SetupBackButton handleClick={() => { setSetupProgress("languages"); localStorage.setItem("setupProgress", "languages") }} />
               {
                 urlLoader ?
                   <SetupContinueButton SaveSettings={() => { }} >

@@ -17,8 +17,8 @@ const SetupFileRouting = () => {
 
     const {setupProgress} = React.useContext(setupContext)
 
-    if (setupProgress === "languages") return <Languages  />
-    else if(setupProgress === "default") return <Default/>
+    if(setupProgress === "default") return <Default/>
+    else if (setupProgress === "languages") return <Languages  />
     else if(setupProgress === "url") return <URLModifications/>
     else if (setupProgress === "media") return <Media  />
     else if (setupProgress === "ready") return <Ready />
@@ -32,19 +32,20 @@ const SetupProgress = ({lmat_setup_data}) => {
     React.useEffect(()=>{
         let step = 1;
         let temp_setupSetups = [{
-            label: __("Languages","linguator-multilingual-ai-translation"),
-            value: "languages",
-            visible: true,
-            step: step++
-        }]
-
-        temp_setupSetups.push({
             label: __("Default","linguator-multilingual-ai-translation"),
             value: "default",
             visible: true,
             step:step++
+        }]
+
+        temp_setupSetups.push({
+            label: __("Languages","linguator-multilingual-ai-translation"),
+            value: "languages",
+            visible: true,
+            step: step++
         })
 
+        
         temp_setupSetups.push({
             label: __("URL","linguator-multilingual-ai-translation"),
             value: "url",
