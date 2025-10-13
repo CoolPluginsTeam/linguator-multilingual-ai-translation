@@ -32301,11 +32301,11 @@ var Ready = function Ready() {
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('Video Tutorial', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/video-tutorials/",
+    href: "https://linguator.com/video-tutorials/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=video&utm_content=setup",
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('Docs', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/documentation/",
+    href: "https://linguator.com/documentation/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setup",
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('View Pages', 'linguator-multilingual-ai-translation'),
@@ -32317,7 +32317,7 @@ var Ready = function Ready() {
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('FAQs', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/#support",
+    href: "https://linguator.com/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=faqs&utm_content=setup#support",
     variant: 'outline'
   }];
   return /*#__PURE__*/external_React_default().createElement("div", {
