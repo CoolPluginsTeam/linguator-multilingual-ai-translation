@@ -13,6 +13,7 @@ use Linguator\Includes\Models\Languages;
 use Linguator\Includes\Models\Post_Types;
 use Linguator\Includes\Models\Taxonomies;
 use Linguator\Includes\Options\Options;
+use Linguator\Includes\Core\Linguator;
 
 // Link model classes
 use Linguator\Includes\Services\Links\LMAT_Links_Model;
@@ -719,6 +720,14 @@ class LMAT_Model {
 
 	public static function is_lmat_translatable_current_page($current_screen=null) :bool{
 
+		$frontend_request = Linguator::is_ajax_on_front();
+
+		$rest_request = Linguator::is_rest_request();
+
+		if($frontend_request || $rest_request){
+			return true;
+		}
+		
 		if(null === $current_screen){
 			$screen_type=array();
 
@@ -764,13 +773,26 @@ class LMAT_Model {
 			return is_string($taxonomy);
 		});
 		
-		$valid_post_type=(isset($current_screen->post_type) && !empty($current_screen->post_type)) && in_array($current_screen->post_type, $translated_post_types) && $current_screen->post_type !== 'attachment' ? $current_screen->post_type : false;
-		$valid_taxonomy=(isset($current_screen->taxonomy) && !empty($current_screen->taxonomy)) && in_array($current_screen->taxonomy, $translated_taxonomies) ? $current_screen->taxonomy : false;
-		$valid_page=(isset($current_screen->id) && !empty($current_screen->id)) && in_array($current_screen->id, $translated_page) ? $current_screen->id : false;
-		if((!$valid_post_type && !$valid_taxonomy && !$valid_page) || ((!$valid_post_type || empty($valid_post_type)) && !isset($valid_taxonomy) && !isset($valid_page)) || (isset($current_screen->taxonomy) && !empty($current_screen->taxonomy) && !$valid_taxonomy) || (isset($current_screen->id) && !empty($current_screen->id) && !$valid_page)){
+		$valid_post_type = (
+			!empty($current_screen->post_type) &&
+			in_array($current_screen->post_type, $translated_post_types, true) &&
+			$current_screen->post_type !== 'attachment'
+		) ? $current_screen->post_type : false;
+		
+		$valid_taxonomy = (
+			!empty($current_screen->taxonomy) &&
+			in_array($current_screen->taxonomy, $translated_taxonomies, true)
+		) ? $current_screen->taxonomy : false;
+		
+		$valid_page = (
+			!empty($current_screen->id) &&
+			in_array($current_screen->id, $translated_page, true)
+		) ? $current_screen->id : false;
+		
+		// Return false if none of them is valid
+		if (!$valid_post_type && !$valid_taxonomy && !$valid_page) {
 			return false;
 		}
-		
 		return true;
 	}
 
