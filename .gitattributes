@@ -11,3 +11,11 @@ package.json export-ignore
 tailwind.config.json export-ignore
 postcss.config.json export-ignore
 webpack.config.json export-ignore
+.vscode/ export-ignore
+README.md export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.babelrc export-ignore
+LICENSE export-ignore
+*.scss export-ignore
+*.js.LICENSE.txt export-ignore
