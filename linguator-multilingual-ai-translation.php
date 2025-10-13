@@ -3,7 +3,7 @@
  * Plugin Name:       Linguator – Multilingual AI Translation
  * Plugin URI:        https://coolplugins.net/
  * Description:       Create a multilingual WordPress website in minutes with Linguator – Multilingual AI Translation.
- * Version:           0.0.3
+ * Version:           0.0.4
  * Requires at least: 6.2
  * Requires PHP:      7.2
  * Author:            Cool Plugins
@@ -21,7 +21,7 @@ use Linguator\Includes\Core\Linguator;
 
 
 
-define( 'LINGUATOR_VERSION', '0.0.3' );
+define( 'LINGUATOR_VERSION', '0.0.4' );
 define( 'LMAT_MIN_WP_VERSION', '6.2' );
 define( 'LMAT_MIN_PHP_VERSION', '7.2' );
 define( 'LINGUATOR_FILE', __FILE__ ); 
