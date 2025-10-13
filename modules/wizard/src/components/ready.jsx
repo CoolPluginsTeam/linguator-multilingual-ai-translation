@@ -1,11 +1,34 @@
 import { Button } from '@bsf/force-ui'
 import React from 'react'
 import { __, sprintf } from '@wordpress/i18n'
+import apiFetch from '@wordpress/api-fetch'
+import { getNonce } from '../utils'
 
 const Ready = () => {
 
    //get admin url
    let currentDomain = window.lmat_setup.admin_url;
+
+   // Mark setup as complete when reaching the ready page
+   React.useEffect(() => {
+     const markSetupComplete = async () => {
+       try {
+         await apiFetch({
+           path: 'lmat/v1/settings/setup-complete',
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+             'X-WP-Nonce': getNonce()
+           },
+           body: JSON.stringify({ complete: true })
+         });
+       } catch (error) {
+         console.error('Failed to mark setup as complete:', error);
+       }
+     };
+     
+     markSetupComplete();
+   }, []);
 
   //content for page
   let nextSteps = [ {

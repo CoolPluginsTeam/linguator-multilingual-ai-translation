@@ -46,7 +46,7 @@ const SetupPage = () => {
       let setup = localStorage.getItem("setupProgress")
       if (lmat_setup_data[setup] === "1") {
         setSetupProgress((localStorage.getItem("setupProgress")))
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "translation_configuration") {
+      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher") {
         setSetupProgress(localStorage.getItem("setupProgress"))
       }
       else {
@@ -203,8 +203,8 @@ const SetupPage = () => {
   }
 
   function handleNavigate() {
-    setSetupProgress("default")
-    localStorage.setItem("setupProgress", "default");
+    setSetupProgress("url")
+    localStorage.setItem("setupProgress", "url");
   }
 
   // Handle "Get Started" button click
@@ -261,7 +261,7 @@ const SetupPage = () => {
 
   }
   return (
-    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage, showWizard, setShowWizard }}>
+    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage, showWizard, setShowWizard, languageDialog }}>
       <div className='bg-background-secondary m-0 pt-4 setup-body'>
         <Dialog
           design="simple"

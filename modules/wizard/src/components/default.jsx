@@ -114,7 +114,6 @@ const Default = () => {
           <h2>{__('Default Language', 'linguator-multilingual-ai-translation')}</h2>
           <p className='m-0 text-sm/6'>{__('Set your website’s default language here.', 'linguator-multilingual-ai-translation')}</p>
           <p className='m-0 text-sm/6'>{__('This language will be shown to visitors if their preferred language isn’t available.', 'linguator-multilingual-ai-translation')}</p>
-          <p className='m-0 text-sm/6 mb-4'>{__('You can change the default anytime in the settings.', 'linguator-multilingual-ai-translation')}</p>
           <Select
             combobox
             onChange={(value) => setDefaultLanguage(value)}

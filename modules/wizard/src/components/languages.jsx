@@ -50,9 +50,7 @@ export const RenderedLanguage = ({ languageName, languageFlag, flagUrl, language
 
 
 const Languages = () => {
-  const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, contentSelectedLanguage, setContentSelectedLanguage, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete } = React.useContext(setupContext) //get context
-  //filter the valid languages
-  console.log(selectedLanguage)
+  const { setupProgress, setSetupProgress, selectedLanguageData, setSelectedLanguageData, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, contentSelectedLanguage, setContentSelectedLanguage, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, languageDialog } = React.useContext(setupContext) //get context
   
   // Ensure selectedLanguageData is always an array
   const languagesArray = Array.isArray(selectedLanguageData) ? selectedLanguageData : [];
@@ -60,6 +58,13 @@ const Languages = () => {
   let [validLanguages, setValidLanguages] = React.useState(lmat_all_languages.filter((language) => (language?.name && language?.flag && !languagesArray?.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
   const originalListLanguages = React.useRef(lmat_all_languages.filter((language) => (language?.name && language?.flag && !languagesArray?.find((selectedLanguage) => selectedLanguage.locale === language.locale))))
   const [languageLoader,setLanguageLoader] = React.useState(false);
+
+  // Reset language loader when dialog is closed
+  React.useEffect(() => {
+    if (!languageDialog && languageLoader) {
+      setLanguageLoader(false)
+    }
+  }, [languageDialog, languageLoader])
 
   //add the languages
   async function handleClick() {
@@ -107,6 +112,8 @@ const Languages = () => {
       //Condition whether to open dialog show warning or make an API call
       if (!currentSelectedLanguage.includes(selectedLanguage) && selectedLanguage.id != 'none') {
         setLanguageDialog(true)
+        // Reset the loader state when dialog opens since we're not proceeding with API call
+        setLanguageLoader(false)
       } else if (selectedLanguage.id == 'none' && currentSelectedLanguage.length == 0 && languagesArray?.length == 0) {
         throw new Error(__('You have to select a language to continue', 'linguator-multilingual-ai-translation'))
       } else {

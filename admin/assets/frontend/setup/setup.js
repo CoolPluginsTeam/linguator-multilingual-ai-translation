@@ -31870,9 +31870,8 @@ var Languages = function Languages() {
     languageDeleteConfirmer = _React$useContext2.languageDeleteConfirmer,
     setLanguageDeleteConfirmer = _React$useContext2.setLanguageDeleteConfirmer,
     languageToDelete = _React$useContext2.languageToDelete,
-    setLanguageToDelete = _React$useContext2.setLanguageToDelete; //get context
-  //filter the valid languages
-  console.log(selectedLanguage);
+    setLanguageToDelete = _React$useContext2.setLanguageToDelete,
+    languageDialog = _React$useContext2.languageDialog; //get context
 
   // Ensure selectedLanguageData is always an array
   var languagesArray = Array.isArray(selectedLanguageData) ? selectedLanguageData : [];
@@ -31893,6 +31892,13 @@ var Languages = function Languages() {
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     languageLoader = _React$useState4[0],
     setLanguageLoader = _React$useState4[1];
+
+  // Reset language loader when dialog is closed
+  external_React_default().useEffect(function () {
+    if (!languageDialog && languageLoader) {
+      setLanguageLoader(false);
+    }
+  }, [languageDialog, languageLoader]);
 
   //add the languages
   function handleClick() {
@@ -31979,6 +31985,8 @@ var Languages = function Languages() {
               break;
             }
             setLanguageDialog(true);
+            // Reset the loader state when dialog opens since we're not proceeding with API call
+            setLanguageLoader(false);
             _context3.n = 9;
             break;
           case 2:
@@ -32233,12 +32241,58 @@ var Languages = function Languages() {
 };
 /* harmony default export */ const languages = (Languages);
 ;// ./modules/wizard/src/components/ready.jsx
+function ready_regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return ready_regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (ready_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, ready_regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, ready_regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), ready_regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", ready_regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), ready_regeneratorDefine2(u), ready_regeneratorDefine2(u, o, "Generator"), ready_regeneratorDefine2(u, n, function () { return this; }), ready_regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (ready_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function ready_regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } ready_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { ready_regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, ready_regeneratorDefine2(e, r, n, t); }
+function ready_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function ready_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { ready_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { ready_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
+
 
 
 
 var Ready = function Ready() {
   //get admin url
   var currentDomain = window.lmat_setup.admin_url;
+
+  // Mark setup as complete when reaching the ready page
+  external_React_default().useEffect(function () {
+    var markSetupComplete = /*#__PURE__*/function () {
+      var _ref = ready_asyncToGenerator(/*#__PURE__*/ready_regenerator().m(function _callee() {
+        var _t;
+        return ready_regenerator().w(function (_context) {
+          while (1) switch (_context.p = _context.n) {
+            case 0:
+              _context.p = 0;
+              _context.n = 1;
+              return external_wp_apiFetch_default()({
+                path: 'lmat/v1/settings/setup-complete',
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-WP-Nonce': getNonce()
+                },
+                body: JSON.stringify({
+                  complete: true
+                })
+              });
+            case 1:
+              _context.n = 3;
+              break;
+            case 2:
+              _context.p = 2;
+              _t = _context.v;
+              console.error('Failed to mark setup as complete:', _t);
+            case 3:
+              return _context.a(2);
+          }
+        }, _callee, null, [[0, 2]]);
+      }));
+      return function markSetupComplete() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+    markSetupComplete();
+  }, []);
 
   //content for page
   var nextSteps = [{
@@ -32270,12 +32324,12 @@ var Ready = function Ready() {
     className: "mx-auto max-w-[600px] min-h-[40vh] bg-white shadow-lg p-10 flex flex-col gap-6"
   }, /*#__PURE__*/external_React_default().createElement("h2", {
     className: "m-0"
-  }, (0,external_wp_i18n_namespaceObject.__)("You're ready to translate your contents!", 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("p", {
+  }, (0,external_wp_i18n_namespaceObject.__)("You're ready to translate your !", 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("div", null, /*#__PURE__*/external_React_default().createElement("p", {
     className: "m-0 text-sm/6",
     style: {
       color: "#6b7280"
     }
-  }, (0,external_wp_i18n_namespaceObject.__)("You're now able to translate your contents such as posts, pages, categories and tags. You can learn how to use Linguator by watching the video tutorial.", 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement("table", {
+  }, (0,external_wp_i18n_namespaceObject.__)("You're now able to translate your content such as posts, pages, categories and tags. You can learn how to use Linguator by watching the video tutorial.", 'linguator-multilingual-ai-translation'))), /*#__PURE__*/external_React_default().createElement("table", {
     className: "ready-table"
   }, /*#__PURE__*/external_React_default().createElement("tbody", null, /*#__PURE__*/external_React_default().createElement("tr", {
     className: "ready-table-data"
@@ -32897,9 +32951,7 @@ var Default = function Default() {
     className: "m-0 text-sm/6"
   }, (0,external_wp_i18n_namespaceObject.__)('Set your website’s default language here.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
     className: "m-0 text-sm/6"
-  }, (0,external_wp_i18n_namespaceObject.__)('This language will be shown to visitors if their preferred language isn’t available.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement("p", {
-    className: "m-0 text-sm/6 mb-4"
-  }, (0,external_wp_i18n_namespaceObject.__)('You can change the default anytime in the settings.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(at, {
+  }, (0,external_wp_i18n_namespaceObject.__)('This language will be shown to visitors if their preferred language isn’t available.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/external_React_default().createElement(at, {
     combobox: true,
     onChange: function onChange(value) {
       return setDefaultLanguage(value);
@@ -35549,7 +35601,7 @@ var SetupProgress = function SetupProgress(_ref) {
     onClick: function onClick() {
       return localStorage.removeItem("setupProgress");
     },
-    href: "".concat(currentDomain, "/admin.php?page=lmat")
+    href: "".concat(currentDomain, "/admin.php?page=lmat_settings")
   }, (0,external_wp_i18n_namespaceObject.__)("Skip", "linguator-multilingual-ai-translation"))));
 };
 /* harmony default export */ const setup_progress = (SetupProgress);
@@ -51035,7 +51087,7 @@ var SetupPage = function SetupPage() {
       var setup = localStorage.getItem("setupProgress");
       if (lmat_setup_data[setup] === "1") {
         setSetupProgress(localStorage.getItem("setupProgress"));
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "translation_configuration") {
+      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher") {
         setSetupProgress(localStorage.getItem("setupProgress"));
       } else {
         localStorage.setItem("setupProgress", "default");
@@ -51260,8 +51312,8 @@ var SetupPage = function SetupPage() {
     };
   }();
   function handleNavigate() {
-    setSetupProgress("default");
-    localStorage.setItem("setupProgress", "default");
+    setSetupProgress("url");
+    localStorage.setItem("setupProgress", "url");
   }
 
   // Handle "Get Started" button click
@@ -51385,7 +51437,8 @@ var SetupPage = function SetupPage() {
       contentSelectedLanguage: contentSelectedLanguage,
       setContentSelectedLanguage: setContentSelectedLanguage,
       showWizard: showWizard,
-      setShowWizard: setShowWizard
+      setShowWizard: setShowWizard,
+      languageDialog: languageDialog
     }
   }, /*#__PURE__*/external_React_default().createElement("div", {
     className: "bg-background-secondary m-0 pt-4 setup-body"

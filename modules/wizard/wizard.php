@@ -177,7 +177,10 @@ class LMAT_Wizard
 	 */
 	public function settings_tabs($tabs)
 	{
-		$tabs['wizard'] = esc_html__('Setup Guide', 'linguator-multilingual-ai-translation');
+		// Only show the wizard tab if setup is not complete
+		if (!get_option('lmat_setup_complete')) {
+			$tabs['wizard'] = esc_html__('Setup Guide', 'linguator-multilingual-ai-translation');
+		}
 		return $tabs;
 	}
 
