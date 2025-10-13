@@ -35541,7 +35541,7 @@ var SetupProgress = function SetupProgress(_ref) {
       step: step++
     });
     temp_setupSetups.push({
-      label: (0,external_wp_i18n_namespaceObject.__)("Switcher", "linguator-multilingual-ai-translation"),
+      label: (0,external_wp_i18n_namespaceObject.__)("Language Switcher", "linguator-multilingual-ai-translation"),
       value: "language_switcher",
       visible: true,
       step: step++

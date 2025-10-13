@@ -78,7 +78,7 @@ const SetupProgress = ({lmat_setup_data}) => {
         })
 
         temp_setupSetups.push({
-            label: __("Switcher","linguator-multilingual-ai-translation"),
+            label: __("Language Switcher","linguator-multilingual-ai-translation"),
             value: "language_switcher",
             visible: true,
             step: step++

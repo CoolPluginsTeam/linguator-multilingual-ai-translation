@@ -55,6 +55,11 @@ if ( empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Securi
 
 // Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
+	// Don't redirect to wizard if Polylang is detected
+	if ( defined( 'POLYLANG_VERSION' ) ) {
+		return;
+	}
+	
 	// Only check setup flag on plugins page to avoid unnecessary database queries
 	$is_plugins_page = false;
 	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'plugins.php' ) !== false ) {
