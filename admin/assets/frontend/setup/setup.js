@@ -32301,11 +32301,11 @@ var Ready = function Ready() {
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('Video Tutorial', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/video-tutorials/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=video&utm_content=setup",
+    href: "https://linguator.com/docs/video-tutorials/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=video&utm_content=setup",
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('Docs', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/documentation/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setup",
+    href: "https://linguator.com/docs/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setup",
     variant: 'outline'
   }, {
     button: (0,external_wp_i18n_namespaceObject.__)('View Pages', 'linguator-multilingual-ai-translation'),

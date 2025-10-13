@@ -32,6 +32,13 @@ class LMAT_Install extends LMAT_Install_Base {
 	public function can_activate() {
 		global $wp_version;
 
+		// Check for Polylang conflict first
+		if ( defined( 'POLYLANG_VERSION' ) ) {
+			add_action( 'admin_notices', array( $this, 'polylang_conflict_notice' ) );
+			add_action( 'network_admin_notices', array( $this, 'polylang_conflict_notice' ) );
+			return false;
+		}
+
 		if ( version_compare( PHP_VERSION, LMAT_MIN_PHP_VERSION, '<' ) ) {
 			add_action( 'admin_notices', array( $this, 'php_version_notice' ) );
 			return false;
@@ -64,6 +71,28 @@ class LMAT_Install extends LMAT_Install_Base {
 				esc_html( LMAT_MIN_PHP_VERSION )
 			)
 		);
+	}
+
+	/**
+	 * Displays a notice if Polylang is detected.
+	 *
+	 *  
+	 *
+	 * @return void
+	 */
+	public function polylang_conflict_notice() {
+		?>
+		<div class="notice notice-error">
+			<p>
+				<strong><?php esc_html_e( 'Linguator – Multilingual AI Translation', 'linguator-multilingual-ai-translation' ); ?></strong>
+			</p>
+			<p>
+				<?php 
+				echo esc_html__( 'Linguator cannot run alongside Polylang. Please deactivate Polylang first.', 'linguator-multilingual-ai-translation' );
+				?>
+			</p>
+		</div>
+		<?php
 	}
 
 	/**

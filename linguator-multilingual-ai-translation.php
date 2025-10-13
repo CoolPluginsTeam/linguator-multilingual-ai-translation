@@ -29,31 +29,6 @@ define( 'LINGUATOR_DIR', __DIR__ );
 define('LINGUATOR_URL', plugin_dir_url(LINGUATOR_FILE));
 define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
 
-if ( defined( 'POLYLANG_VERSION' ) ) {
-	// Show notice to deactivate Polylang before using Linguator
-	add_action( 'admin_notices', 'lmat_polylang_conflict_notice' );
-	add_action( 'network_admin_notices', 'lmat_polylang_conflict_notice' );
-	return; // Prevent further plugin initialization
-}
-
-/**
- * Display admin notice when Polylang is detected
- */
-function lmat_polylang_conflict_notice() {
-	?>
-	<div class="notice notice-error">
-		<p>
-			<strong><?php esc_html_e( 'Linguator – Multilingual AI Translation', 'linguator-multilingual-ai-translation' ); ?></strong>
-		</p>
-		<p>
-			<?php 
-			echo esc_html__( 'Linguator cannot run alongside Polylang. Please deactivate Polylang first.', 'linguator-multilingual-ai-translation' );
-			?>
-		</p>
-	</div>
-	<?php
-}
-
 // Whether we are using Linguator, get the filename of the plugin in use.
 if ( ! defined( 'LINGUATOR_ROOT_FILE' ) ) {
 	define( 'LINGUATOR_ROOT_FILE', __FILE__ );
@@ -133,8 +108,3 @@ add_action('admin_init', function() {
 		}
 	}
 });
-
-
-
-
-

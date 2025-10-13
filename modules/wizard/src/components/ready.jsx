@@ -37,11 +37,11 @@ const Ready = () => {
     variant: 'outline'
   },{
     button: __('Video Tutorial', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/video-tutorials/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=video&utm_content=setup",
+    href: "https://linguator.com/docs/video-tutorials/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=video&utm_content=setup",
     variant: 'outline'
   },{
     button: __('Docs', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/documentation/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setup",
+    href: "https://linguator.com/docs/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setup",
     variant: 'outline'
   },{
     button: __('View Pages', 'linguator-multilingual-ai-translation'),
