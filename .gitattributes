@@ -8,9 +8,9 @@ composer.json export-ignore
 composer.lock export-ignore
 package-lock.json export-ignore
 package.json export-ignore
-tailwind.config.json export-ignore
-postcss.config.json export-ignore
-webpack.config.json export-ignore
+tailwind.config.js export-ignore
+postcss.config.js export-ignore
+webpack.config.js export-ignore
 .vscode/ export-ignore
 README.md export-ignore
 .gitignore export-ignore
@@ -19,3 +19,5 @@ README.md export-ignore
 LICENSE export-ignore
 *.scss export-ignore
 *.js.LICENSE.txt export-ignore
+.distignore export-ignore
+tsconfig.json export-ignore

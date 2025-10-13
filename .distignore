@@ -42,9 +42,9 @@ node_modules
 *.zip
 postcss.config.js
 .wordpress-org
-postcss.config.js
 tailwind.config.js
 webpack.config.js
+tsconfig.json
 .vscode
 .cursor
 .wordpress-org
