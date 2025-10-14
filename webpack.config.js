@@ -202,6 +202,14 @@ const machineTranslationConfigs = [
     generateAssets: false,
     ext: '.js',
   },
+  {
+    srcDir: 'modules/inline-translation/src/inline-translate-modal/modal',
+    outDir: 'admin/assets/inline-translate-modal',
+    sourceFiles: ['index'],
+    styleLoader: true,
+    generateAssets: false,
+    ext: '.tsx',
+  },
 ];
 
 export default (env, options) => {
@@ -259,7 +267,7 @@ export default (env, options) => {
   const assetBuilds = configs.slice(2).map((cfg) =>
     createConfig(cfg, {
       fileMinimize: false,
-      minimize: false,
+      minimize: true,
       generateAssets: true,
       ext: '.js', // <-- important: pass a real extension, not boolean
     })

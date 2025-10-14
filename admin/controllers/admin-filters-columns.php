@@ -68,7 +68,7 @@ class LMAT_Admin_Filters_Columns {
 		// Adds the language column in the 'Categories' and 'Post Tags' tables.
 		foreach ( $this->model->get_translated_taxonomies() as $tax ) {
 			add_filter( 'manage_edit-' . $tax . '_columns', array( $this, 'add_term_column' ) );
-			add_filter( 'manage_' . $tax . '_custom_column', array( $this, 'term_column' ), 10, 3 );
+			add_filter( 'manage_' . $tax . '_custom_column', array( $this, 'term_column' ), 20, 3 );
 		}
 
 		// Ajax responses to update list table rows.

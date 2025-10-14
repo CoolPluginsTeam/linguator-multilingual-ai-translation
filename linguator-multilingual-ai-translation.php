@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:       Linguator – Multilingual AI Translation
- * Plugin URI:        https://coolplugins.net/
- * Description:       A powerful multilingual plugin for WordPress that enables content synchronization, and seamless language management.
- * Version:           0.0.3
+ * Plugin URI:        https://linguator.com/
+ * Description:       Create a multilingual WordPress website in minutes with Linguator – Multilingual AI Translation.
+ * Version:           0.0.4
  * Requires at least: 6.2
  * Requires PHP:      7.2
  * Author:            Cool Plugins
@@ -21,38 +21,13 @@ use Linguator\Includes\Core\Linguator;
 
 
 
-define( 'LINGUATOR_VERSION', '0.0.3' );
+define( 'LINGUATOR_VERSION', '0.0.4' );
 define( 'LMAT_MIN_WP_VERSION', '6.2' );
 define( 'LMAT_MIN_PHP_VERSION', '7.2' );
 define( 'LINGUATOR_FILE', __FILE__ ); 
 define( 'LINGUATOR_DIR', __DIR__ );
 define('LINGUATOR_URL', plugin_dir_url(LINGUATOR_FILE));
 define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
-
-if ( defined( 'POLYLANG_VERSION' ) ) {
-	// Show notice to deactivate Polylang before using Linguator
-	add_action( 'admin_notices', 'lmat_polylang_conflict_notice' );
-	add_action( 'network_admin_notices', 'lmat_polylang_conflict_notice' );
-	return; // Prevent further plugin initialization
-}
-
-/**
- * Display admin notice when Polylang is detected
- */
-function lmat_polylang_conflict_notice() {
-	?>
-	<div class="notice notice-error">
-		<p>
-			<strong><?php esc_html_e( 'Linguator – Multilingual AI Translation', 'linguator-multilingual-ai-translation' ); ?></strong>
-		</p>
-		<p>
-			<?php 
-			echo esc_html__( 'Linguator cannot run alongside Polylang. Please deactivate Polylang first.', 'linguator-multilingual-ai-translation' );
-			?>
-		</p>
-	</div>
-	<?php
-}
 
 // Whether we are using Linguator, get the filename of the plugin in use.
 if ( ! defined( 'LINGUATOR_ROOT_FILE' ) ) {
@@ -80,6 +55,11 @@ if ( empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Securi
 
 // Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
+	// Don't redirect to wizard if Polylang is detected
+	if ( defined( 'POLYLANG_VERSION' ) ) {
+		return;
+	}
+	
 	// Only check setup flag on plugins page to avoid unnecessary database queries
 	$is_plugins_page = false;
 	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'plugins.php' ) !== false ) {
@@ -133,8 +113,3 @@ add_action('admin_init', function() {
 		}
 	}
 });
-
-
-
-
-

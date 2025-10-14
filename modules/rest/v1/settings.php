@@ -134,6 +134,25 @@ class Settings extends Abstract_Controller {
 				),
 			)
 		);
+		
+		// Add specific endpoint for setup completion
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/setup-complete",
+			array(
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_setup_complete' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => array(
+						'complete' => array(
+							'required' => true,
+							'type'     => 'boolean',
+						),
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -165,6 +184,34 @@ class Settings extends Abstract_Controller {
 	}
 
 	/**
+	 * Updates setup completion status.
+	 *
+	 *  
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function update_setup_complete( $request ) {
+		$complete = $request->get_param( 'complete' );
+		
+		$result = update_option( 'lmat_setup_complete', $complete );
+		
+		if ( $result ) {
+			return rest_ensure_response( array(
+				'success' => true,
+				'lmat_setup_complete' => $complete,
+				'message' => 'Setup completion status updated successfully'
+			) );
+		} else {
+			return new WP_Error(
+				'update_failed',
+				'Failed to update setup completion status',
+				array( 'status' => 500 )
+			);
+		}
+	}
+
+	/**
 	 * Retrieves all options.
 	 *
 	 *  
@@ -176,7 +223,6 @@ class Settings extends Abstract_Controller {
 	 * @phpstan-param WP_REST_Request<T> $request
 	 */
 	public function get_item( $request ) {
-		update_option( 'lmat_setup_complete', true );
 		$public_post_types = get_post_types( array( 'public' => true, '_builtin' => false ) );
 		/** This filter is documented in include/model.php */
 		$this->post_types = array_unique( apply_filters( 'lmat_get_post_types', $public_post_types, true ) );
@@ -288,7 +334,7 @@ class Settings extends Abstract_Controller {
 				case 'rewrite':
 				case 'force_lang':
 				case 'hide_default':
-					flush_rewrite_rules();
+					delete_option( 'rewrite_rules' );
 					break;
 			
 				case 'post_types':
@@ -515,6 +561,14 @@ class Settings extends Abstract_Controller {
 			if ( rest_is_field_included( $option, $fields ) ) {
 				$response[ $option ] = $value;
 			}
+		}
+		
+		// Apply CPFM opt-in choice logic for lmat_feedback_data
+		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
+		
+		if ( $cpfm_opt_in_choice === false ) {
+			// Remove the Usage Data Sharing setting if CPFM opt-in choice doesn't exist
+			unset( $response['lmat_feedback_data'] );
 		}
 		
 		/** @var WP_REST_Response */

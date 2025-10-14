@@ -57,6 +57,16 @@
     height: 32px;
 }
 
+.lmat-settings-header-logo a{
+    outline: none;
+    box-shadow: none;
+}
+
+.lmat-settings-header-logo a:focus{
+    outline: none;
+    box-shadow: none;
+}
+
 .lmat-settings-header-logo img{
     height: 32px;
     object-fit: contain;
@@ -71,7 +81,7 @@
     line-height: 1.25rem;
     color: #4b5563;
     gap: 1.1rem;
-    font-family: "Poppins", sans-serif;
+    font-family: inherit;
 }
 
 .lmat-settings-header-tab-list a{
@@ -127,7 +137,7 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
     font-weight: 500;
-    font-family: "Poppins", sans-serif;
+    font-family: inherit;
     transition: color 0.2s ease;
 }
 

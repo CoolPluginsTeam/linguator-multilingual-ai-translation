@@ -136,6 +136,12 @@ class LMAT_Wizard
 	 */
 	public function redirect_to_wizard()
 	{
+		// Only check for redirect transient on plugins page to avoid unnecessary database queries
+		global $pagenow;
+		if ( ! in_array( $pagenow, array( 'plugins.php', 'index.php' ), true ) ) {
+			return;
+		}
+		
 		if (get_transient('lmat_activation_redirect')) {
 			$do_redirect = true;
 			if ((isset($_GET['page']) && 'lmat_wizard' === sanitize_key($_GET['page'])) || isset($_GET['activate-multi'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -144,6 +150,8 @@ class LMAT_Wizard
 			}
 
 			if ($do_redirect) {
+				// Delete transient before redirecting to prevent repeated checks
+				delete_transient('lmat_activation_redirect');
 				wp_safe_redirect(
 					sanitize_url(
 						add_query_arg(
@@ -169,7 +177,10 @@ class LMAT_Wizard
 	 */
 	public function settings_tabs($tabs)
 	{
-		$tabs['wizard'] = esc_html__('Setup Guide', 'linguator-multilingual-ai-translation');
+		// Only show the wizard tab if setup is not complete
+		if (!get_option('lmat_setup_complete')) {
+			$tabs['wizard'] = esc_html__('Setup Guide', 'linguator-multilingual-ai-translation');
+		}
 		return $tabs;
 	}
 

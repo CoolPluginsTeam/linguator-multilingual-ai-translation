@@ -53,12 +53,13 @@ use Linguator\Includes\Helpers\LMAT_MO;
  * @return string|array Either the html markup of the switcher or the raw elements to build a custom language switcher.
  */
 function lmat_the_languages( $args = array() ) {
-	if ( empty( LMAT()->links ) ) {
+	$linguator = LMAT();
+	if ( ! $linguator || empty( $linguator->links ) ) {
 		return empty( $args['raw'] ) ? '' : array();
 	}
 
 	$switcher = new LMAT_Switcher();
-	return $switcher->the_languages( LMAT()->links, $args );
+	return $switcher->the_languages( $linguator->links, $args );
 }
 
 /**
@@ -82,15 +83,16 @@ function lmat_the_languages( $args = array() ) {
  * )|false
  */
 function lmat_current_language( $field = 'slug' ) {
-	if ( empty( LMAT()->curlang ) ) {
+	$linguator = LMAT();
+	if ( ! $linguator || empty( $linguator->curlang ) ) {
 		return false;
 	}
 
 	if ( \OBJECT === $field ) {
-		return LMAT()->curlang;
+		return $linguator->curlang;
 	}
 
-	return LMAT()->curlang->get_prop( $field );
+	return $linguator->curlang->get_prop( $field );
 }
 
 /**
@@ -113,7 +115,12 @@ function lmat_current_language( $field = 'slug' ) {
  * )|false
  */
 function lmat_default_language( $field = 'slug' ) {
-	$lang = LMAT()->model->get_default_language();
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return false;
+	}
+	
+	$lang = $linguator->model->get_default_language();
 
 	if ( empty( $lang ) ) {
 		return false;
@@ -147,7 +154,12 @@ function lmat_get_post( $post_id, $lang = '' ) {
 		return 0;
 	}
 
-	return LMAT()->model->post->get( $post_id, $lang );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return 0;
+	}
+
+	return $linguator->model->post->get( $post_id, $lang );
 }
 
 /**
@@ -171,7 +183,12 @@ function lmat_get_term( $term_id, $lang = '' ) {
 		return 0;
 	}
 
-	return LMAT()->model->term->get( $term_id, $lang );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return 0;
+	}
+
+	return $linguator->model->term->get( $term_id, $lang );
 }
 
 /**
@@ -188,11 +205,12 @@ function lmat_home_url( $lang = '' ) {
 		$lang = lmat_current_language();
 	}
 
-	if ( empty( $lang ) || empty( LMAT()->links ) ) {
+	$linguator = LMAT();
+	if ( empty( $lang ) || ! $linguator || empty( $linguator->links ) ) {
 		return home_url( '/' );
 	}
 
-	return LMAT()->links->get_home_url( $lang );
+	return $linguator->links->get_home_url( $lang );
 }
 
 /**
@@ -340,7 +358,11 @@ function lmat_translate_string( $string, $lang ) {
  * @return bool
  */
 function lmat_is_translated_post_type( $post_type ) {
-	return LMAT()->model->is_translated_post_type( $post_type );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return false;
+	}
+	return $linguator->model->is_translated_post_type( $post_type );
 }
 
 /**
@@ -353,7 +375,11 @@ function lmat_is_translated_post_type( $post_type ) {
  * @return bool
  */
 function lmat_is_translated_taxonomy( $tax ) {
-	return LMAT()->model->is_translated_taxonomy( $tax );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return false;
+	}
+	return $linguator->model->is_translated_taxonomy( $tax );
 }
 
 /**
@@ -372,7 +398,11 @@ function lmat_is_translated_taxonomy( $tax ) {
  */
 function lmat_languages_list( $args = array() ) {
 	$args = wp_parse_args( $args, array( 'fields' => 'slug' ) );
-	return LMAT()->model->get_languages_list( $args );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return array();
+	}
+	return $linguator->model->get_languages_list( $args );
 }
 
 /**
@@ -472,7 +502,12 @@ function lmat_save_term_translations( $arr ) {
  * )|false
  */
 function lmat_get_post_language( $post_id, $field = 'slug' ) {
-	$lang = LMAT()->model->post->get_language( $post_id );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return false;
+	}
+	
+	$lang = $linguator->model->post->get_language( $post_id );
 
 	if ( empty( $lang ) || \OBJECT === $field ) {
 		return $lang;
@@ -523,7 +558,11 @@ function lmat_get_term_language( $term_id, $field = 'slug' ) {
  * @phpstan-return array<non-empty-string, positive-int>
  */
 function lmat_get_post_translations( $post_id ) {
-	return LMAT()->model->post->get_translations( $post_id );
+	$linguator = LMAT();
+	if ( ! $linguator || ! isset( $linguator->model ) ) {
+		return array();
+	}
+	return $linguator->model->post->get_translations( $post_id );
 }
 
 /**
@@ -687,8 +726,8 @@ function lmat_update_term( int $term_id, array $args = array() ) {
  *
  *  
  *
- * @return LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request
+ * @return LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request|null
  */
 function LMAT() { // PHPCS:ignore WordPress.NamingConventions.ValidFunctionName
-	return $GLOBALS['linguator'];
+	return isset( $GLOBALS['linguator'] ) ? $GLOBALS['linguator'] : null;
 }

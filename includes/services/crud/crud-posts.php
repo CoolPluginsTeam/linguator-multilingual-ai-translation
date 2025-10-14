@@ -89,6 +89,13 @@ class LMAT_CRUD_Posts {
 		if ( ! is_admin() ) {
 			return;
 		}
+		
+		// Only run on post editor pages to avoid unnecessary database queries on every admin page
+		global $pagenow;
+		if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
+			return;
+		}
+		
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
 			return;

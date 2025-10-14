@@ -250,7 +250,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             
             $total_character_count = is_array($translation_data) && isset($translation_data['total_character_count']) ? $translation_data['total_character_count'] : 0;
             
-            if($total_character_count < 30000){ 
+            if($total_character_count < 50000){ 
                 return;
             }
             
@@ -259,13 +259,13 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             self::ctp_enqueue_assets();
 
             $message = sprintf(
-                '%s! %s <strong>%s</strong> %s <br>%s %s <br>',
+                '%s! %s <strong>%s</strong> %s <br>%s %s <a href="https://coolplugins.net/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=author_page&utm_content=review_notice" target="_blank"><strong>Cool Plugins</strong></a>!<br/>',
                 __('Thanks for using', 'cp-notice') . ' <b>' . $plugin_name . '</b>',
                 __('You\'ve translated', 'cp-notice'),
                 esc_html($total_character_count) . ' ' . __('characters', 'cp-notice'),
                 __('so far using our plugin!', 'cp-notice'),
-                __('If our plugin saves your time and effort, please support us with a review', 'cp-notice'),
-                __('your feedback means everything!', 'cp-notice')
+                __('If our plugin saves your time and effort, Please give us a quick rating,', 'cp-notice'),
+                __('it works as a boost for us to keep working on more', 'cp-notice')
             );
 
             $prefix = sanitize_key($prefix);
@@ -281,7 +281,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             ];
 
             $html = '<div class="notice notice-info is-dismissible cpt-review-notice">';
-            $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button></div></div></div>';
+            $html .= '<div class="cpt-review-notice-content"><p>'.$message.'</p><div class="lmat-review-notice-dismiss" data-prefix="'.$prefix.'" data-nonce="'.wp_create_nonce('lmat_hide_review_notice').'"><a href="'. $url .'" target="_blank" class="button button-primary">Rate Now! ★★★★★</a><button class="button cpt-already-reviewed">'.__('Already Reviewed', 'cp-notice').'</button><button class="button cpt-not-interested">'.__('Not Interested', 'cp-notice').'</button></div></div></div>';
                 
             echo wp_kses($html, $allowed);
         }

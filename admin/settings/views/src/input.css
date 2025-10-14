@@ -9,7 +9,7 @@
     margin: 0;
     padding: 0;
     background-color: #F3F4F6;
-    font-family: "Poppins", sans-serif;
+    font-family: inherit;
     min-height: 100vh;
 }
 

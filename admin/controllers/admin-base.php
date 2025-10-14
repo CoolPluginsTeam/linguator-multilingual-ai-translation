@@ -144,7 +144,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		$tabs['settings'] = __( 'Settings', 'linguator-multilingual-ai-translation' );
 		
-		$tabs['settings&tab=general&loco=true'] = __( 'Theme and plugins localization', 'linguator-multilingual-ai-translation' );
+		$tabs['settings&tab=general&loco=true'] = __( 'Theme & plugins localization', 'linguator-multilingual-ai-translation' );
 
 		/**
 		 * Filter the list of tabs in Linguator settings

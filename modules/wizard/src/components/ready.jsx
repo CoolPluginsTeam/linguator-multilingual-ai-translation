@@ -1,11 +1,34 @@
 import { Button } from '@bsf/force-ui'
 import React from 'react'
 import { __, sprintf } from '@wordpress/i18n'
+import apiFetch from '@wordpress/api-fetch'
+import { getNonce } from '../utils'
 
 const Ready = () => {
 
    //get admin url
    let currentDomain = window.lmat_setup.admin_url;
+
+   // Mark setup as complete when reaching the ready page
+   React.useEffect(() => {
+     const markSetupComplete = async () => {
+       try {
+         await apiFetch({
+           path: 'lmat/v1/settings/setup-complete',
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+             'X-WP-Nonce': getNonce()
+           },
+           body: JSON.stringify({ complete: true })
+         });
+       } catch (error) {
+         console.error('Failed to mark setup as complete:', error);
+       }
+     };
+     
+     markSetupComplete();
+   }, []);
 
   //content for page
   let nextSteps = [ {
@@ -14,11 +37,11 @@ const Ready = () => {
     variant: 'outline'
   },{
     button: __('Video Tutorial', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/video-tutorials/",
+    href: "https://linguator.com/docs/video-tutorials/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=video&utm_content=setup",
     variant: 'outline'
   },{
     button: __('Docs', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/documentation/",
+    href: "https://linguator.com/docs/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setup",
     variant: 'outline'
   },{
     button: __('View Pages', 'linguator-multilingual-ai-translation'),
@@ -30,16 +53,16 @@ const Ready = () => {
     variant: 'outline'
   },{
     button: __('FAQs', 'linguator-multilingual-ai-translation'),
-    href: "https://linguator.com/#support",
+    href: "https://linguator.com/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=faqs&utm_content=setup#support",
     variant: 'outline'
   }]
 
  
   return (
     <div className='mx-auto max-w-[600px] min-h-[40vh] bg-white shadow-lg p-10 flex flex-col gap-6'>
-      <h2 className='m-0'>{__("You're ready to translate your contents!", 'linguator-multilingual-ai-translation')}</h2>
+      <h2 className='m-0'>{__("You're ready to translate your !", 'linguator-multilingual-ai-translation')}</h2>
       <div>
-                  <p className='m-0 text-sm/6' style={{ color: "#6b7280" }}>{__("You're now able to translate your contents such as posts, pages, categories and tags. You can learn how to use Linguator by watching the video tutorial.", 'linguator-multilingual-ai-translation')}</p>
+                  <p className='m-0 text-sm/6' style={{ color: "#6b7280" }}>{__("You're now able to translate your content such as posts, pages, categories and tags. You can learn how to use Linguator by watching the video tutorial.", 'linguator-multilingual-ai-translation')}</p>
       </div>
       <table className='ready-table'>
         <tbody>

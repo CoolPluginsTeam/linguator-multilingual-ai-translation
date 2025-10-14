@@ -7,7 +7,6 @@ import {
 } from "@wordpress/components";
 import { useState, useEffect } from "@wordpress/element";
 import * as styles from "./paragraph-translator.module.css";
-import TranslatorModal from "../../../inline-translate-modal/modal";
 import { createElement } from "@wordpress/element";
 
 export const ToolbarButtonCompat = (props: any) =>
@@ -16,11 +15,21 @@ export const ToolbarButtonCompat = (props: any) =>
 export const RiTranslateAi2Compat = (props: any) =>
   createElement(RiTranslateAi2 as any, props);
 
-export const TranslatorModalCompat = (props: any) =>
-  createElement(TranslatorModal as any, props);
+export const TranslatorModalCompat = (props: any) =>{
+
+  // @ts-ignore
+  // eslint-disable-next-line no-undef
+  const TranslatorModal = window?.lmatInlineTranslation?.TranslatorModal;
+  
+  if (!TranslatorModal) {
+    return null;
+  }
+
+  return createElement(TranslatorModal as any, props);
+}
 
 const ParagraphRewriter = ({ value, onChange }) => {
-  const activePageLanguage = (window as any).lmatGutenbergInlineTranslation?.pageLanguage || 'en';
+  const activePageLanguage = (window as any).lmatInlineTranslation?.pageLanguage || 'en';
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedText, setSelectedText] = useState<string>("");
