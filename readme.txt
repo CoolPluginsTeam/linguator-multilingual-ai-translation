@@ -38,6 +38,7 @@ With Linguator, you can:
 
 * **Simple and Familiar Interface** – Built with WordPress standards in mind, Linguator feels natural and easy to use, even for beginners.
 * **AI Power Without Extra Cost** – Leverage AI translation features for free — no need to pay for costly external AI credits.
+* **Reliable Customer Support** – Your satisfaction matters most to us. Our support team responds to every query within 24 hours to help you quickly resolve any issue
 * **No Monthly Fees or SaaS Dependency** – Linguator runs fully inside WordPress — once installed, it’s yours! No external API or subscription required.
 * **Fully Compatible with Elementor & Gutenberg** – Translate visually designed pages effortlessly without breaking layouts.
 * **Save Time with AI-Powered Translation** – Instantly translate your posts, pages, and menus using advanced AI translation technology.
