@@ -4,7 +4,13 @@ import TranslatorModal from '../../inline-translate-modal/modal/index.tsx';
 const ClassicWidgetTranslator = (props) => {
   const value = props.getContent();
 
-  const activePageLanguage = window.lmatClassicInlineTranslation?.pageLanguage || 'en';
+  const activePageLanguage = window.lmatInlineTranslation?.pageLanguage || 'en';
+
+  const TranslatorModal = window?.lmatInlineTranslation?.TranslatorModal;
+
+  if (!TranslatorModal) {
+    return <div>TranslatorModal not found</div>;
+  }
   
   const onUpdateHandler = (value) => {
     props.setContent(value);

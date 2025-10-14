@@ -202,6 +202,14 @@ const machineTranslationConfigs = [
     generateAssets: false,
     ext: '.js',
   },
+  {
+    srcDir: 'modules/inline-translation/src/inline-translate-modal/modal',
+    outDir: 'admin/assets/inline-translate-modal',
+    sourceFiles: ['index'],
+    styleLoader: true,
+    generateAssets: false,
+    ext: '.tsx',
+  },
 ];
 
 export default (env, options) => {
