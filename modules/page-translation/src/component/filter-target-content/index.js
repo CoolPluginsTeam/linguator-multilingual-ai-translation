@@ -6,8 +6,24 @@ const FilterTargetContent = (props) => {
     const CloseTempTagPlaceholder = '#lmat_page_translation_temp_tag_close#';
     const LessThanSymbol = '#lmat_page_translation_less_then_symbol#';
     const GreaterThanSymbol = '#lmat_page_translation_greater_then_symbol#';
+    const entityOpenPlaceholder = '#lmat_page_translation_entity_open_translate_span#';
+    const entityClosePlaceholder = '#lmat_page_translation_entity_close_translate_span#';
 
-    function fixHtmlTags(content) {
+    const removeInnerSpanPlaceholder = (content) => {
+        return content.replace(new RegExp(OpenSpanPlaceholder, 'g'), '').replace(new RegExp(CloseSpanPlaceholder, 'g'), '');
+    }
+
+    const setEntityPlaceholder = (content) => {
+        const entityRegex = /&([a-zA-Z0-9#x]+);/g;
+
+        return content.replace(entityRegex, (match) => `${entityOpenPlaceholder}${match.replace(/&/g, '').replace(/;/g, '')}${entityClosePlaceholder}`);
+    }
+
+    const removeEntityPlaceholder = (content) => {
+        return content.replace(new RegExp(entityOpenPlaceholder, 'g'), '&').replace(new RegExp(entityClosePlaceholder, 'g'), ';');
+    }
+
+    const fixHtmlTags = (content) => {
         if (typeof content !== 'string' || !content.trim()) return content;
 
         const tagRegex = /<\/?([a-zA-Z0-9]+)(\s[^>]*)?>/g;
@@ -93,7 +109,7 @@ const FilterTargetContent = (props) => {
                 let element = childNodes[i];
 
                 if (element.nodeType === 3) {
-                    let textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
+                    let textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
 
                     element.textContent = textContent;
                 }
@@ -128,20 +144,20 @@ const FilterTargetContent = (props) => {
 
         // Wrap the style element
         if (firstElementOpeningTag === '<style>') {
-            let wrappedFirstTag = `${OpenSpanPlaceholder}${firstElement.outerHTML}${CloseSpanPlaceholder}`;
+            let wrappedFirstTag = `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(firstElement.outerHTML)}${CloseSpanPlaceholder}`;
             return wrappedFirstTag;
         }
 
         let firstElementHtml = firstElement.innerHTML;
 
-        firstElementHtml = firstElementHtml.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
+        firstElementHtml = firstElementHtml.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
 
         firstElement.innerHTML = '';
         let closeTag = '';
         let openTag = '';
         let filterContent = '';
 
-        openTag = `${OpenSpanPlaceholder}${firstElementOpeningTag}${CloseSpanPlaceholder}`;
+        openTag = `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(firstElementOpeningTag)}${CloseSpanPlaceholder}`;
         if (closingTagMatch) {
             closeTag = `${OpenSpanPlaceholder}</${openTagName}>${CloseSpanPlaceholder}`;
         }
@@ -154,7 +170,7 @@ const FilterTargetContent = (props) => {
             );
 
             firstElementHtml = firstElementHtml.replace(pattern, '');
-            firstElementHtml = `${OpenSpanPlaceholder}${firstElementHtml}${CloseSpanPlaceholder}`;
+            firstElementHtml = `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(firstElementHtml)}${CloseSpanPlaceholder}`;
         }
 
         if ('' !== firstElementHtml) {
@@ -202,7 +218,7 @@ const FilterTargetContent = (props) => {
 
         // Replace placeholders with wrapped spans
         const output = content.replace(regex, (match) => {
-            return `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`;
+            return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
         });
 
         return output;
@@ -256,11 +272,11 @@ const FilterTargetContent = (props) => {
         let newString = str2;
 
         if (startTagMatch) {
-            newString = `${OpenSpanPlaceholder}${startTagMatch[0]}${CloseSpanPlaceholder}` + newString;
+            newString = `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(startTagMatch[0])}${CloseSpanPlaceholder}` + newString;
         }
 
         if (endTagMatch) {
-            newString = newString + `${OpenSpanPlaceholder}${endTagMatch[0]}${CloseSpanPlaceholder}`;
+            newString = newString + `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(endTagMatch[0])}${CloseSpanPlaceholder}`;
         }
 
         return newString;
@@ -283,7 +299,7 @@ const FilterTargetContent = (props) => {
         const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
 
         if (shortcodeMatches) {
-            string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
+            string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
         }
 
         function replaceInnerTextWithSpan(doc) {
@@ -295,13 +311,11 @@ const FilterTargetContent = (props) => {
                     let textNode = null;
 
                     if (element.nodeType === 3) {
-                        const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
+                        const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
 
                         textNode = document.createTextNode(textContent);
                     } else if (element.nodeType === 8) {
-                        let elementText=element.textContent;
-                        elementText=elementText.replace(new RegExp(OpenSpanPlaceholder, 'g'), '').replace(new RegExp(CloseSpanPlaceholder, 'g'), '');
-                        textNode = document.createTextNode(`${OpenSpanPlaceholder}${LessThanSymbol}!--${elementText}--${GreaterThanSymbol}${CloseSpanPlaceholder}`);
+                        textNode = document.createTextNode(`${OpenSpanPlaceholder}${LessThanSymbol}!--${removeInnerSpanPlaceholder(element.textContent)}--${GreaterThanSymbol}${CloseSpanPlaceholder}`);
                     } else if (element.nodeType === 1) {
                         const childNodes = element.childNodes;
 
@@ -320,7 +334,7 @@ const FilterTargetContent = (props) => {
                             replaceInnerTextWithSpan(element);
                         }
 
-                        let filterHtml = `${OpenSpanPlaceholder}${LessThanSymbol}${tagName}${attrs}${GreaterThanSymbol}${CloseSpanPlaceholder}${element.innerHTML}`;
+                        let filterHtml = `${OpenSpanPlaceholder}${LessThanSymbol}${tagName}${removeInnerSpanPlaceholder(attrs)}${GreaterThanSymbol}${CloseSpanPlaceholder}${setEntityPlaceholder(element.innerHTML)}`;
 
                         if (hasClosingTag) {
                             filterHtml += `${OpenSpanPlaceholder}${LessThanSymbol}/${tagName}${GreaterThanSymbol}${CloseSpanPlaceholder}`;
@@ -333,7 +347,7 @@ const FilterTargetContent = (props) => {
 
                         filterHtml = filterHtml.replace(
                             /<!--([\s\S]*?)-->/g,
-                            (match, inner) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`
+                            (match, inner) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`
                         );
 
                         let filterContent = wrapFirstAndMatchingClosingTag(filterHtml);
@@ -356,12 +370,11 @@ const FilterTargetContent = (props) => {
 
         
         if (isEmptyOrUnclosedTag(string)) {
-            content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `${OpenSpanPlaceholder}${match}${CloseSpanPlaceholder}`);
+            content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
         } else {
             const tempElement = document.createElement('div');
             tempElement.innerHTML = fixHtmlTags(string);
             replaceInnerTextWithSpan(tempElement);
-            
             
             content = tempElement.innerText;
 
@@ -378,6 +391,7 @@ const FilterTargetContent = (props) => {
         
         content = content.replace(tempTagPattern, '');
 
+        content = removeEntityPlaceholder(content);
 
         return splitContent(content);
     }
