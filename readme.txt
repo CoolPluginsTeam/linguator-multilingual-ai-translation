@@ -19,6 +19,8 @@ https://youtu.be/TNSWCCmHQPg?si=LQXRkszBIFPMG9vg
 
 ### Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.
 
+**Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
+
 https://youtu.be/20MbjUb6AnM?si=-1qipV1fFH89KtgT
 
 [Learn more](https://linguator.com/?utm_source=lmat_plugin&utm_medium=readme&utm_campaign=view_plugin&utm_content=learn_more)
@@ -84,6 +86,8 @@ This plugin offers AI translation services via Chrome's built-in AI APIs. Learn 
 * [Chrome Summarizer API Documentation](https://developer.chrome.com/docs/ai/summarizer-api)
 * [Chrome Prompt API Documentation for Extensions](https://developer.chrome.com/docs/extensions/ai/prompt-api)
 
+[Linguator on GitHub.](https://github.com/CoolPluginsTeam/linguator-multilingual-ai-translation) 
+
 == Screenshots ==
 1. Linguator Language Switcher Preview.
 2. Bulk Pages/Post Translation Preview.
@@ -147,7 +151,7 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 == Changelog ==
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
-= Version 0.0.4 (Beta) | 13/10/2025 =
+= Version 0.0.4 (Beta) | 14/10/2025 =
 
 * **Added:** **AI-Powered Translation System** with multiple translation providers (Google Translate and Chrome Local AI).
 
