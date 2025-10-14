@@ -21,3 +21,9 @@ LICENSE export-ignore
 *.js.LICENSE.txt export-ignore
 .distignore export-ignore
 tsconfig.json export-ignore
+assets/js export-ignore
+admin/settings/views/src export-ignore
+modules/bulk-translation/src export-ignore
+modules/page-translation/src export-ignore
+modules/inline-translation/src export-ignore
+modules/wizard/src export-ignore

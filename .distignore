@@ -51,3 +51,9 @@ tsconfig.json
 .wordpress-org
 *js.LICENSE.txt
 *.scss
+assets/js
+admin/settings/views/src
+modules/bulk-translation/src
+modules/page-translation/src
+modules/inline-translation/src
+modules/wizard/src
