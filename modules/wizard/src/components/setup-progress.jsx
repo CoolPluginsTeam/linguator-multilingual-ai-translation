@@ -17,8 +17,8 @@ const SetupFileRouting = () => {
 
     const {setupProgress} = React.useContext(setupContext)
 
-    if (setupProgress === "languages") return <Languages  />
-    else if(setupProgress === "default") return <Default/>
+    if(setupProgress === "default") return <Default/>
+    else if (setupProgress === "languages") return <Languages  />
     else if(setupProgress === "url") return <URLModifications/>
     else if (setupProgress === "media") return <Media  />
     else if (setupProgress === "ready") return <Ready />
@@ -32,19 +32,20 @@ const SetupProgress = ({lmat_setup_data}) => {
     React.useEffect(()=>{
         let step = 1;
         let temp_setupSetups = [{
-            label: __("Languages","linguator-multilingual-ai-translation"),
-            value: "languages",
-            visible: true,
-            step: step++
-        }]
-
-        temp_setupSetups.push({
             label: __("Default","linguator-multilingual-ai-translation"),
             value: "default",
             visible: true,
             step:step++
+        }]
+
+        temp_setupSetups.push({
+            label: __("Languages","linguator-multilingual-ai-translation"),
+            value: "languages",
+            visible: true,
+            step: step++
         })
 
+        
         temp_setupSetups.push({
             label: __("URL","linguator-multilingual-ai-translation"),
             value: "url",
@@ -77,7 +78,7 @@ const SetupProgress = ({lmat_setup_data}) => {
         })
 
         temp_setupSetups.push({
-            label: __("Switcher","linguator-multilingual-ai-translation"),
+            label: __("Language Switcher","linguator-multilingual-ai-translation"),
             value: "language_switcher",
             visible: true,
             step: step++
@@ -122,7 +123,7 @@ const SetupProgress = ({lmat_setup_data}) => {
             </div>
             {setupProgress != "ready" &&
                 <div className='text-center text-sm' style={{marginTop:"14px"}}>
-                    <a style={{ color: "gray" }} className='' onClick={()=>localStorage.removeItem("setupProgress")} href={`${currentDomain}/admin.php?page=lmat`}>{__("Skip","linguator-multilingual-ai-translation")}</a>
+                    <a style={{ color: "gray" }} className='' onClick={()=>localStorage.removeItem("setupProgress")} href={`${currentDomain}/admin.php?page=lmat_settings`}>{__("Skip","linguator-multilingual-ai-translation")}</a>
                 </div>
             }
         </div>

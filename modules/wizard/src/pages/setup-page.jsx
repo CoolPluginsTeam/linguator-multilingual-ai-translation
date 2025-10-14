@@ -14,11 +14,11 @@ export const setupContext = React.createContext(null)
 const SetupPage = () => {
   const [setupSteps, setSetupSteps] = React.useState([])  // Initialize as empty array
   const [loading, setLoading] = React.useState(true) // Loader state tracker
-  const [selectedLanguageData, setSelectedLanguageData] = React.useState(window.lmat_setup.languages) //Store Selected Language state in database
+  const [selectedLanguageData, setSelectedLanguageData] = React.useState(Array.isArray(window.lmat_setup.languages) ? window.lmat_setup.languages : []) //Store Selected Language state in database
   const [selectedLanguage, setSelectedLanguage] = React.useState({ id: 'none', name: 'None', flag: null, locale: null }) //Selected Langugae from dropdown of Languages tab
   const [currentSelectedLanguage, setCurrentSelectedLanguage] = React.useState([]) //get the current selected language in the languages tab: it will be multiple language so its an array
   const [data, setData] = React.useState([]) // General Settings Data
-  const [setupProgress, setSetupProgress] = React.useState("languages") //Track Setup Progress
+  const [setupProgress, setSetupProgress] = React.useState("default") //Track Setup Progress
   const [languageDialog, setLanguageDialog] = React.useState(false) // handle open and close of Language Dialog
   const [LanguageLoader, setLanguageLoader] = React.useState(false) // Loader in the continue button on languages tab
   const lmat_setup_data = window.lmat_setup; //get the localized setup data
@@ -46,14 +46,14 @@ const SetupPage = () => {
       let setup = localStorage.getItem("setupProgress")
       if (lmat_setup_data[setup] === "1") {
         setSetupProgress((localStorage.getItem("setupProgress")))
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "translation_configuration") {
+      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher") {
         setSetupProgress(localStorage.getItem("setupProgress"))
       }
       else {
-        localStorage.setItem("setupProgress", "languages");
+        localStorage.setItem("setupProgress", "default");
       }
     } else {
-      localStorage.setItem("setupProgress", "languages");
+      localStorage.setItem("setupProgress", "default");
 
     }
 
@@ -203,8 +203,8 @@ const SetupPage = () => {
   }
 
   function handleNavigate() {
-    setSetupProgress("default")
-    localStorage.setItem("setupProgress", "default");
+    setSetupProgress("url")
+    localStorage.setItem("setupProgress", "url");
   }
 
   // Handle "Get Started" button click
@@ -261,7 +261,7 @@ const SetupPage = () => {
 
   }
   return (
-    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage, showWizard, setShowWizard }}>
+    <setupContext.Provider value={{ setupSteps, setSetupSteps,loading, data, setData, selectedLanguageData, setSelectedLanguageData, setupProgress, setSetupProgress, setLanguageDialog, selectedLanguage, setSelectedLanguage, lmat_all_languages, currentSelectedLanguage, setCurrentSelectedLanguage, LanguageLoader, setLanguageLoader, showUntranslatedContent, setShowUntranslatedContent, languageDeleteConfirmer, setLanguageDeleteConfirmer, languageToDelete, setLanguageToDelete, contentSelectedLanguage, setContentSelectedLanguage, showWizard, setShowWizard, languageDialog }}>
       <div className='bg-background-secondary m-0 pt-4 setup-body'>
         <Dialog
           design="simple"

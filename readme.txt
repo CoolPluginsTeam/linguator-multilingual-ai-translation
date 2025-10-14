@@ -19,6 +19,8 @@ https://youtu.be/TNSWCCmHQPg?si=LQXRkszBIFPMG9vg
 
 ### Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.
 
+**Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
+
 https://youtu.be/20MbjUb6AnM?si=-1qipV1fFH89KtgT
 
 [Learn more](https://linguator.com/?utm_source=lmat_plugin&utm_medium=readme&utm_campaign=view_plugin&utm_content=learn_more)
@@ -29,11 +31,20 @@ https://youtu.be/20MbjUb6AnM?si=-1qipV1fFH89KtgT
  **Note:** This demo is for preview purposes only — any data entered will not be save.
 
 ### Why Use Linguator?
-Linguator makes it simple to create and manage multilingual websites directly inside WordPress. With Linguator, you can:
 
-* **Save time with AI-powered translation**
-* **Increase reach and global visibility**
-* **Build trust with localized content**
+Linguator makes it simple to create and manage multilingual websites directly inside WordPress — no coding or external service needed. It’s the easiest way to go global using the power of AI, right from your dashboard.
+
+With Linguator, you can:
+
+* **Simple and Familiar Interface** – Built with WordPress standards in mind, Linguator feels natural and easy to use, even for beginners.
+* **AI Power Without Extra Cost** – Leverage AI translation features for free — no need to pay for costly external AI credits.
+* **No Monthly Fees or SaaS Dependency** – Linguator runs fully inside WordPress — once installed, it’s yours! No external API or subscription required.
+* **Fully Compatible with Elementor & Gutenberg** – Translate visually designed pages effortlessly without breaking layouts.
+* **Save Time with AI-Powered Translation** – Instantly translate your posts, pages, and menus using advanced AI translation technology.
+* **Reach a Global Audience** – Translate your content into multiple languages and expand your website’s reach worldwide.
+* **Build Trust with Localized Content** – Speak to visitors in their own language to increase engagement and conversions.
+* **SEO-Optimized for Multilingual Sites** – Generate search-friendly URLs for every language to improve visibility in Google.
+* **Lightweight & Optimized for Speed** – Linguator is built with performance in mind and doesn’t slow down your pages or website loading time.
 
 ### Key Features
 * **AI-Powered Automatic Translation:**  **Save hours of manual work!** Linguator uses powerful AI translation engines to automatically translate your posts and pages into multiple languages — giving you high-quality, natural translations in one click.
@@ -75,12 +86,14 @@ This plugin offers AI translation services via Chrome's built-in AI APIs. Learn 
 * [Chrome Summarizer API Documentation](https://developer.chrome.com/docs/ai/summarizer-api)
 * [Chrome Prompt API Documentation for Extensions](https://developer.chrome.com/docs/extensions/ai/prompt-api)
 
- == Screenshots ==
-1. Linguator Language Switcher Preview 
-2. Bulk Pages/Post Translation Preview
-3. Gutenberg Page Translation Preview
-4. Elementor Page Translation Preview
-5. Menu and language configuration
+[Linguator on GitHub.](https://github.com/CoolPluginsTeam/linguator-multilingual-ai-translation) 
+
+== Screenshots ==
+1. Linguator Language Switcher Preview.
+2. Bulk Pages/Post Translation Preview.
+3. Gutenberg Page Translation Preview.
+4. Elementor Page Translation Preview.
+5. Menu and language configuration.
 
 == Installation ==
 1. Upload the plugin files to the `/wp-content/plugins/linguator-multilingual-ai-translation` directory, or install the plugin through the WordPress plugins screen directly.
@@ -119,13 +132,26 @@ There is no limit. You can add as many languages as you want to your website usi
 = How can I report security bugs? =
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage, and handle any security vulnerabilities. [Report a security vulnerability](https://patchstack.com/database/wordpress/plugin/linguator-multilingual-ai-translation/vdp).
 
+
+= Why Use Linguator? =
+
+* **Simple and Familiar Interface** – Built with WordPress standards in mind, Linguator feels natural and easy to use, even for beginners.
+* **AI Power Without Extra Cost** – Leverage AI translation features for free — no need to pay for costly external AI credits.
+* **No Monthly Fees or SaaS Dependency** – Linguator runs fully inside WordPress — once installed, it’s yours! No external API or subscription required.
+* **Fully Compatible with Elementor & Gutenberg** – Translate visually designed pages effortlessly without breaking layouts.
+* **Save Time with AI-Powered Translation** – Instantly translate your posts, pages, and menus using advanced AI translation technology.
+* **Reach a Global Audience** – Translate your content into multiple languages and expand your website’s reach worldwide.
+* **Build Trust with Localized Content** – Speak to visitors in their own language to increase engagement and conversions.
+* **SEO-Optimized for Multilingual Sites** – Generate search-friendly URLs for every language to improve visibility in Google.
+* **Lightweight & Optimized for Speed** – Linguator is built with performance in mind and doesn’t slow down your pages or website loading time.
+
 =Is Linguator still in beta? =
 Yes, Linguator is currently in its beta stage. This means the core features are ready to use, but we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
-= Version 0.0.4 (Beta) | 13/10/2025 =
+= Version 0.0.4 (Beta) | 14/10/2025 =
 
 * **Added:** **AI-Powered Translation System** with multiple translation providers (Google Translate and Chrome Local AI).
 
