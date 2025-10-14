@@ -52,7 +52,20 @@ class LMAT_Inline_Translation {
 	 */
 	public function classic_inline_translation_assets() {
 		if ( defined( 'LINGUATOR_VERSION' ) ) {
-			$this->enqueue_inline_translation_assets( 'classic' );
+
+			if(!function_exists('get_current_screen')){
+				return;
+			}
+
+			$current_screen = get_current_screen();
+
+			if ( isset( $current_screen ) && isset( $current_screen->id ) && $current_screen->id === 'edit-page' ) {
+				return;
+			}
+
+			if ( method_exists( $current_screen, 'is_block_editor' ) && ! $current_screen->is_block_editor() ) {
+				$this->enqueue_inline_translation_assets( 'classic' );
+			}
 		}
 	}
 
@@ -97,6 +110,8 @@ class LMAT_Inline_Translation {
 
 		$editor_script_asset = include LINGUATOR_DIR . '/admin/assets/' . sanitize_file_name( $type ) . '-inline-translate/index.asset.php';
 
+		$core_modal_script_asset = include LINGUATOR_DIR . '/admin/assets/inline-translate-modal/index.asset.php';
+
 		if(!is_array($editor_script_asset)) {
 			$editor_script_asset = array(
 				'dependencies' => array(),
@@ -104,23 +119,32 @@ class LMAT_Inline_Translation {
 			);
 		}
 
+		if(!is_array($core_modal_script_asset)) {
+			$core_modal_script_asset = array(
+				'dependencies' => array(),
+				'version' => LINGUATOR_VERSION,
+			);
+		}
+
+		wp_register_script( 'lmat-inline-translate-modal', plugins_url( '/admin/assets/inline-translate-modal/index.js', LINGUATOR_ROOT_FILE ), array_merge( $core_modal_script_asset['dependencies'] ), $core_modal_script_asset['version'], true );
+
 		wp_register_script( 'lmat-inline-google-api', 'https://translate.google.com/translate_a/element.js', '', LINGUATOR_VERSION, true );
 		
 		$extra_dependencies[] = 'lmat-inline-google-api';
+		$extra_dependencies[] = 'lmat-inline-translate-modal';
 		
 		wp_register_script( 'lmat-' . sanitize_file_name( $type ) . '-inline-translation', plugins_url( '/admin/assets/' . sanitize_file_name( $type ) . '-inline-translate/index.js', LINGUATOR_ROOT_FILE ), array_merge( $editor_script_asset['dependencies'], $extra_dependencies ), $editor_script_asset['version'], true );
 
 		wp_enqueue_script( 'lmat-inline-google-api' );
+		wp_enqueue_script( 'lmat-inline-translate-modal' );
 		wp_enqueue_script( 'lmat-' . sanitize_file_name( $type ) . '-inline-translation' );
 
 		if ( $current_language && $current_language !== '' ) {
 			wp_localize_script(
-				'lmat-' . sanitize_file_name( $type ) . '-inline-translation',
-				'lmat' . ucfirst( sanitize_file_name( $type ) ) . 'InlineTranslation',
+				'lmat-inline-translate-modal',
+				'lmatInlineTranslation',
 				array(
-					'pageLanguage'     => $current_language,
-					'pageLanguageName' => $current_language_name,
-					'pageLanguageCode' => $current_language_code,
+					'pageLanguage'     => $current_language
 				)
 			);
 		}

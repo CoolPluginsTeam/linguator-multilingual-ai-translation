@@ -1,9 +1,11 @@
-import TranslatorModal from '../../inline-translate-modal/modal/index.tsx';
-
-
 const ElementorWidgetTranslator = (props) => {
   const value = props.getControlValue();
-  const activePageLanguage = window.lmatElementorInlineTranslation?.pageLanguage || 'en';
+  const activePageLanguage = window.lmatInlineTranslation?.pageLanguage || 'en';
+  const TranslatorModal = window?.lmatInlineTranslation?.TranslatorModal;
+
+  if (!TranslatorModal) {
+    return <div>TranslatorModal not found</div>;
+  }
 
   const onUpdateHandler = (value) => {
     props.activeController(value);

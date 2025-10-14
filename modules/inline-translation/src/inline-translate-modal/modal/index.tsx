@@ -217,4 +217,6 @@ const TranslatorModal: React.FC<TranslateModalProps> = ({ value, onUpdate, pageL
   )
 }
 
-export default TranslatorModal;
+// @ts-ignore
+// eslint-disable-next-line no-undef
+window?.lmatInlineTranslation?.TranslatorModal=TranslatorModal;
