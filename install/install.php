@@ -161,11 +161,6 @@ class LMAT_Install extends LMAT_Install_Base {
 			);
 		}
 
-		// Avoid 1 query on every pages if no wpml strings is registered
-		if ( ! get_option( 'linguator_wpml_strings' ) ) {
-			update_option( 'linguator_wpml_strings', array() );
-		}
-
 		if ( ! get_option( 'lmat_language_taxonomies' ) ) {
 			update_option( 'lmat_language_taxonomies', array() );
 		}
