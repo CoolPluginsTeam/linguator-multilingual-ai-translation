@@ -96,10 +96,26 @@ This plugin offers AI translation services via Chrome's built-in AI APIs. Learn 
 5. Menu and language configuration.
 
 == Installation ==
-1. Upload the plugin files to the `/wp-content/plugins/linguator-multilingual-ai-translation` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Use the **Linguator > Settings** screen to configure the plugin.
-4. Follow the setup wizard to configure your languages.
+1. Log in to your WordPress dashboard.
+2. Navigate to the Plugins section.
+3. Search for "Linguator".
+4. Click Install and then Activate the plugin.
+
+That's it! Linguator – Multilingual AI Translation (Beta Version) is now installed and activated. You can start translating your website automatically using the power of AI.
+
+**Language Configuration**
+
+When you first activate Linguator, a simple Setup Wizard will guide you through configuring your multilingual website.
+Follow these steps to complete the setup:
+
+1. Choose the main language for your website. This will be the fallback language shown when a visitor's preferred language isn't available.
+2. Select additional languages you want to support from the list of available languages.
+3. Decide how different language versions will appear in your URLs (e.g., subdirectories like /fr/ or query parameters like ?lang=fr).
+4. Turn on this option to automatically translate media details such as title, alt text, caption, and description for each selected language.
+5. Choose your preferred translation source — Google Translate or Chrome's built-in AI translator — to handle your translations.
+6. Choose how and where the language switcher will appear on your website so visitors can easily switch between languages.
+
+That's it! The setup configuration has been successfully completed. You can now start translating your website content and make it fully multilingual.
 
  **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
