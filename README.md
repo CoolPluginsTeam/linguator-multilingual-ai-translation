@@ -90,6 +90,11 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 ## Changelog
 
+-  Version 0.0.5 (Beta) | 15/10/2025
+
+* **Fixed:** Core table block header & footer translation issue.
+
+* **Improved:** Content & design formatting issue in single page & bulk translation.
 
 -  Version 0.0.4 (Beta) | 14/10/2025
 
