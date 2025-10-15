@@ -1,4 +1,4 @@
-=== Linguator – Multilingual AI Translation (beta) ===
+=== Linguator – Multilingual AI Translation (Beta) ===
 
 Contributors: narinder-singh,satindersingh,coolplugins
 Tags: translation, multilingual, language, ai translation 
@@ -17,7 +17,7 @@ https://youtu.be/TNSWCCmHQPg?si=LQXRkszBIFPMG9vg
 
 **Linguator**  is a powerful multilingual plugin that helps you create and manage multilingual content on your WordPress website. Easily translate your **posts, pages, menus,** and **categories** into different languages using AI and connect with visitors worldwide.
 
-### Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.
+**Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.**
 
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
@@ -28,7 +28,8 @@ https://youtu.be/20MbjUb6AnM?si=-1qipV1fFH89KtgT
 **Demo Access:** [Check Live Preview](https://linguator-demo-site.instawp.co/wp-admin/admin.php?page=lmat_settings)
 **Username:** demo
 **Password:** demo@123
- **Note:** This demo is for preview purposes only — any data entered will not be save.
+
+**Note: This demo is for preview purposes only — any data entered will not be saved**.
 
 ### Why Use Linguator?
 
@@ -48,7 +49,7 @@ With Linguator, you can:
 * **Lightweight & Optimized for Speed** – Linguator is built with performance in mind and doesn’t slow down your pages or website loading time.
 
 ### Key Features
-* **AI-Powered Automatic Translation:**  **Save hours of manual work!** Linguator uses powerful AI translation engines to automatically translate your posts and pages into multiple languages — giving you high-quality, natural translations in one click.
+* **AI-Powered Automatic Translation:**   Save hours of manual work!. Linguator uses powerful AI translation engines to automatically translate your posts and pages into multiple languages — giving you high-quality, natural translations in one click.
 * **SEO-Friendly Multilingual URLs:** Each language gets its own unique, SEO-friendly URL structure — helping your site rank better in Google for multiple languages and attract global visitors.
 
 * **Manual + Automatic Translation Control:** Translate your content automatically using AI, or fine-tune it manually for complete accuracy — Linguator gives you both options for full flexibility.
@@ -169,8 +170,8 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
 = Version 0.0.5 (Beta) | 15/10/2025 =
-* **Fixed:** Core table block header & footer translation issue.
-* **Improved:** Content & design formatting issue in single page & bulk translation.
+* **Fixed:** Core Table block header and footer translation issue.
+* **Improved:** Single page and bulk translation formatting for content and design.
 
 = Version 0.0.4 (Beta) | 14/10/2025 =
 

@@ -92,9 +92,9 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 -  Version 0.0.5 (Beta) | 15/10/2025
 
-* **Fixed:** Core table block header & footer translation issue.
+* **Fixed:** Core Table block header and footer translation issue.
 
-* **Improved:** Content & design formatting issue in single page & bulk translation.
+* **Improved:** Single page and bulk translation formatting for content and design.
 
 -  Version 0.0.4 (Beta) | 14/10/2025
 
