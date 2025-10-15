@@ -8,6 +8,9 @@ Linguator is a powerful multilingual WordPress plugin that helps you translate y
 
 [👉 **Live Demo**](https://linguator-demo-site.instawp.co/wp-admin/admin.php?page=lmat_settings)  
 
+**Username:** demo  
+**Password:** demo@123  
+
 > *This demo is for preview purposes only — any data you enter will not be saved.*
 
 ---
