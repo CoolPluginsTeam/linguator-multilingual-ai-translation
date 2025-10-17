@@ -1,6 +1,3 @@
-import TranslatorModal from '../../inline-translate-modal/modal/index.tsx';
-
-
 const ClassicWidgetTranslator = (props) => {
   const value = props.getContent();
 
