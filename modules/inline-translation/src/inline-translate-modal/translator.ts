@@ -1,5 +1,3 @@
-import { svgIcons } from "./modal/svgIcons";
-
 class Translator {
   private pageLanguage: string;
   private wrpId: string;
