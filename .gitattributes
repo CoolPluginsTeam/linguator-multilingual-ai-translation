@@ -2,6 +2,8 @@
 .cursor/ export-ignore
 .git/ export-ignore
 node_modules/ export-ignore
+.github/ export-ignore
+.wordpress-org/ export-ignore
 
 # Files to ignore on export
 composer.json export-ignore

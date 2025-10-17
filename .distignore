@@ -47,8 +47,6 @@ webpack.config.js
 tsconfig.json
 .vscode
 .cursor
-.wordpress-org
-.wordpress-org
 *js.LICENSE.txt
 *.scss
 assets/js

@@ -1,0 +1,48 @@
+{
+  "landingPage": "/wp-admin/admin.php?page=lmat_settings",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "phpExtensionBundles": [
+    "kitchen-sink"
+  ],
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "linguator-multilingual-ai-translation"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/lmat-seeder.php",
+      "data": "<?php\nif (!defined('ABSPATH')) exit;\nadd_action('init', function () {\n    if (!taxonomy_exists('lmat_language')) return;\n    $plugin_file = WP_PLUGIN_DIR . '/linguator-multilingual-ai-translation/linguator-multilingual-ai-translation.php';\n    if (!file_exists($plugin_file)) {\n        $possible_paths = glob(WP_PLUGIN_DIR . '/linguator*/linguator*.php');\n        if (!empty($possible_paths)) $plugin_file = $possible_paths[0];\n    }\n    $plugin_dir = dirname($plugin_file);\n    $plugin_url = plugins_url('', $plugin_file);\n    $flag_base_url = trailingslashit($plugin_url) . 'assets/flags/';\n    $languages = [\n        ['code' => 'en', 'locale' => 'en_US', 'name' => 'English', 'flag_code' => 'us'],\n        ['code' => 'es', 'locale' => 'es_ES', 'name' => 'Español', 'flag_code' => 'es'],\n        ['code' => 'fr', 'locale' => 'fr_FR', 'name' => 'Français', 'flag_code' => 'fr'],\n        ['code' => 'nl', 'locale' => 'nl_BE', 'name' => 'Nederlands', 'flag_code' => 'be'],\n        ['code' => 'pt', 'locale' => 'pt_BR', 'name' => 'Português', 'flag_code' => 'br'],\n        ['code' => 'ru', 'locale' => 'ru_RU', 'name' => 'Русский', 'flag_code' => 'ru'],\n    ];\n    foreach ($languages as $lang) {\n        $slug = sanitize_title($lang['code']);\n        $term = term_exists($slug, 'lmat_language');\n        $description = ['locale' => $lang['locale'], 'rtl' => false, 'flag_code' => $lang['flag_code']];\n        if (!$term) {\n            $insert = wp_insert_term($lang['name'], 'lmat_language', ['slug' => $slug, 'description' => serialize($description)]);\n            if (is_wp_error($insert)) continue;\n            $term_id = (int)$insert['term_id'];\n        } else {\n            $term_id = (int)(is_array($term) ? $term['term_id'] : $term);\n            wp_update_term($term_id, 'lmat_language', ['description' => serialize($description)]);\n        }\n    }\n    $opt = get_option('linguator', []);\n    if (!is_array($opt)) $opt = [];\n    $opt['default_lang'] = 'en';\n    update_option('linguator', $opt);\n}, 99);\nfunction lmat_assign_english_to_pages() {\n    if (!taxonomy_exists('lmat_language')) return;\n    $english = get_term_by('slug', 'en', 'lmat_language');\n    if (!$english || is_wp_error($english)) return;\n    $pages = get_posts(['post_type' => 'page', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids']);\n    foreach ($pages as $pid) {\n        $has_lang = wp_get_object_terms($pid, 'lmat_language', ['fields' => 'ids']);\n        if (empty($has_lang)) wp_set_object_terms($pid, (int)$english->term_id, 'lmat_language', false);\n    }\n}\nadd_action('init', 'lmat_assign_english_to_pages', 99);\nadd_action('save_post_page', function ($post_id) {\n    if (wp_is_post_revision($post_id) || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)) return;\n    if (!taxonomy_exists('lmat_language')) return;\n    $english = get_term_by('slug', 'en', 'lmat_language');\n    if ($english && !is_wp_error($english)) {\n        $has_lang = wp_get_object_terms($post_id, 'lmat_language', ['fields' => 'ids']);\n        if (empty($has_lang)) wp_set_object_terms($post_id, (int)$english->term_id, 'lmat_language', false);\n    }\n}, 10);\n"
+    },
+    {
+      "step": "importWxr",
+      "file": {
+        "resource": "url",
+        "url": "https://raw.githubusercontent.com/CoolPluginsTeam/wp-playground-repo/main/translation/automatic-translate-pages.xml"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/lmat-force-hide-cpf-panel.php",
+      "data": "<?php\nif (!defined('ABSPATH')) exit;\n\nupdate_option('cpfm_opt_in_choice_lmat', 'yes');\nupdate_option('lmat_setup_complete', 'yes');\ndelete_option('lmat_needs_setup');\n\nadd_action('enqueue_block_editor_assets', function () {\n    $hideCss = '.components-modal__screen-overlay { display: none !important; }';\n    wp_register_style('lmat-hide-cpf', false);\n    wp_enqueue_style('lmat-hide-cpf');\n    wp_add_inline_style('lmat-hide-cpf', $hideCss);\n});\n\nadd_action('wp_footer', 'lmat_add_clarity_script');\nadd_action('admin_head', 'lmat_add_clarity_script');\n\nfunction lmat_add_clarity_script() {\n    ?>\n    <script>\n    (function(c,l,a,r,i,t,y){\n        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};\n        t=l.createElement(r);t.async=1;t.src=\"https://www.clarity.ms/tag/\"+i;\n        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n    })(window, document, \"clarity\", \"script\", \"tmucl388d2\");\n    </script>\n    <?php\n}\n"
+    }
+  ]
+}

@@ -8,6 +8,9 @@ Linguator is a powerful multilingual WordPress plugin that helps you translate y
 
 [👉 **Live Demo**](https://linguator-demo-site.instawp.co/wp-admin/admin.php?page=lmat_settings)  
 
+**Username:** demo  
+**Password:** demo@123  
+
 > *This demo is for preview purposes only — any data you enter will not be saved.*
 
 ---
@@ -87,6 +90,11 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 ## Changelog
 
+-  Version 0.0.5 (Beta) | 15/10/2025
+
+* **Fixed:** Core Table block header and footer translation issue.
+
+* **Improved:** Single page and bulk translation formatting for content and design.
 
 -  Version 0.0.4 (Beta) | 14/10/2025
 

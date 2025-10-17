@@ -55,6 +55,24 @@
                             ]
                         }
                     ]
+                ],
+                "head": [
+                    {
+                        "cells": [
+                            {
+                                "content": true
+                            }
+                        ]
+                    }
+                ],
+                "foot": [
+                    {
+                        "cells": [
+                            {
+                                "content": true
+                            }
+                        ]
+                    }
                 ]
             }
         },
