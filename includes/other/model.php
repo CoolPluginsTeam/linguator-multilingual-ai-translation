@@ -733,7 +733,7 @@ class LMAT_Model {
 
 			$url=self::get_current_url();
 
-			if(!strpos($url, '/edit.php') && !strpos($url, '/edit-tags.php') && !strpos($url, '/admin.php')){
+			if(!strpos($url, '/edit.php') && !strpos($url, '/edit-tags.php') && !strpos($url, '/admin.php') && !strpos($url, '/upload.php') && !strpos($url, '/media.php')){
 				return false;
 			}
 
@@ -745,6 +745,8 @@ class LMAT_Model {
 				$screen_type['post_type']='post';
 			}else if(strpos($url, 'admin.php') && isset($_GET['page']) && $_GET['page'] === 'lmat'){
 				$screen_type['id']='toplevel_page_lmat';
+			}else if(strpos($url, '/upload.php') || strpos($url, '/media.php')){
+				$screen_type['post_type']='attachment';
 			};
 
 			if(count($screen_type) > 0){
