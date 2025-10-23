@@ -49,6 +49,7 @@ tsconfig.json
 .cursor
 *js.LICENSE.txt
 *.scss
+/assets/js
 admin/settings/views/src
 modules/bulk-translation/src
 modules/page-translation/src
