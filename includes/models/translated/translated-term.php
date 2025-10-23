@@ -230,6 +230,15 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * @phpstan-return array<WP_Term|positive-int>
 	 */
 	public function _prime_terms_cache( $terms, $taxonomies ) {
+		$is_page_translated = false;
+		if(function_exists('get_current_screen')){
+			$is_page_translated = LMAT_Model::is_lmat_translatable_current_page( get_current_screen() );
+		}else{
+			$is_page_translated = LMAT_Model::is_lmat_translatable_current_page();
+		}
+		if(!$is_page_translated){
+			return $terms;
+		}
 		$ids = array();
 
 		if ( is_array( $terms ) && $this->is_translated_object_type( $taxonomies ) ) {
