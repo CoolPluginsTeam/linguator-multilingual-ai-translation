@@ -174,6 +174,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function plugin_action_links( $links ) {
 		array_unshift( $links, '<a href="admin.php?page=lmat_settings">' . __( 'Settings', 'linguator-multilingual-ai-translation' ) . '</a>' );
+		array_unshift( $links, '<a href="https://linguator.com/docs/" target="_blank">' . __( 'Learn More', 'linguator-multilingual-ai-translation' ) . '</a>' );
 		return $links;
 	}
 
