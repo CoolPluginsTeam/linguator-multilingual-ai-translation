@@ -83,6 +83,17 @@ class LMAT_OLT_Manager {
 		$GLOBALS['l10n'] = array();
 		$new_locale      = get_locale();
 
+		// Fallback to WordPress site language if get_locale() returns null
+		if ( null === $new_locale || empty( $new_locale ) ) {
+			// Temporarily remove our filter to avoid infinite loop
+			remove_filter( 'locale', array( $this, 'get_locale' ) );
+			$site_locale = get_locale();
+			add_filter( 'locale', array( $this, 'get_locale' ) );
+			if ( ! empty( $site_locale ) ) {
+				$new_locale = $site_locale;
+			}
+		}
+
 		load_default_textdomain( $new_locale );
 
 		// Act only if the language has not been set early (before default textdomain loading and $wp_locale creation).

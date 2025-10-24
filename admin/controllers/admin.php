@@ -174,6 +174,7 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function plugin_action_links( $links ) {
 		array_unshift( $links, '<a href="admin.php?page=lmat_settings">' . __( 'Settings', 'linguator-multilingual-ai-translation' ) . '</a>' );
+		array_unshift( $links, '<a href="https://linguator.com/docs/" target="_blank">' . __( 'Learn More', 'linguator-multilingual-ai-translation' ) . '</a>' );
 		return $links;
 	}
 
@@ -243,6 +244,16 @@ class LMAT_Admin extends LMAT_Admin_Base {
 	 */
 	public function get_locale_for_sanitization() {
 		$locale = get_locale();
+
+		// Fallback to WordPress site language if get_locale() returns null
+		if ( null === $locale || empty( $locale ) ) {
+			remove_filter( 'locale', array( $this, 'get_locale' ) );
+			$site_locale = get_locale();
+			add_filter( 'locale', array( $this, 'get_locale' ) );
+			if ( ! empty( $site_locale ) ) {
+				$locale = $site_locale;
+			}
+		}
 
 		if ( isset( $_POST['post_lang_choice'] ) && $lang = $this->model->get_language( sanitize_key( $_POST['post_lang_choice'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$locale = $lang->locale;

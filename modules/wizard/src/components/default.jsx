@@ -16,6 +16,7 @@ const Default = () => {
   
   const [defaultLanguage, setDefaultLanguage] = React.useState(languagesArray.find((lang) => lang.locale?.toLowerCase() === data.default_lang) || languagesArray.find((language) => language.is_default) || null)
   let [validLanguages, setValidLanguages] = React.useState(languagesArray.length > 0 ? languagesArray : lmat_all_languages.filter((language) => (language?.name && language?.flag)))
+  const originalListLanguages = React.useRef(languagesArray.length > 0 ? languagesArray : lmat_all_languages.filter((language) => (language?.name && language?.flag)))
   const [defaultLoader, setDefaultLoader] = React.useState(false)
   const previousDefaultLanguage = React.useRef(defaultLanguage)
   async function saveDefault() {
@@ -118,7 +119,8 @@ const Default = () => {
             combobox
             onChange={(value) => setDefaultLanguage(value)}
             searchFn={(query) => {
-              const filtered = validLanguages.filter(lang =>
+              // Always filter from the original full list to avoid getting stuck
+              const filtered = originalListLanguages.current.filter(lang =>
                 (lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase()))
               );
               setValidLanguages(filtered);

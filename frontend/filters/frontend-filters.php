@@ -70,6 +70,16 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * @return string
 	 */
 	public function get_locale() {
+		// Fallback to default locale if curlang is null or doesn't have locale property
+		if ( empty( $this->curlang ) || ! isset( $this->curlang->locale ) ) {
+			// Temporarily remove our filter to avoid infinite loop
+			remove_filter( 'locale', array( $this, 'get_locale' ) );
+			$site_locale = get_locale();
+			add_filter( 'locale', array( $this, 'get_locale' ) );
+			if ( ! empty( $site_locale ) ) {
+				return $site_locale;
+			}
+		}
 		return $this->curlang->locale;
 	}
 
