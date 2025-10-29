@@ -192,6 +192,7 @@ const Languages = () => {
             combobox
             onChange={(value) => setSelectedLanguage(value)}
             searchFn={(query) => {
+              // Always filter from the original full list to avoid getting stuck
               const filtered = lmat_all_languages.filter(lang =>
                 (lang.name.toLowerCase().includes(query.toLowerCase()) || lang.locale.toLowerCase().includes(query.toLowerCase()) || lang.label.toLowerCase().includes(query.toLowerCase())) &&
                 !languagesArray?.some(sl => sl.locale === lang.locale)

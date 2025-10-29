@@ -333,7 +333,19 @@ class LMAT_Filters {
 	 * @return string
 	 */
 	public function language_attributes( $output ) {
-		if ( $language = $this->model->get_language( is_admin() ? get_user_locale() : get_locale() ) ) {
+		$locale = is_admin() ? get_user_locale() : get_locale();
+		
+		// Fallback to WordPress site language if get_locale() returns null
+		if ( null === $locale || empty( $locale ) ) {
+			remove_filter( 'locale', array( $this, 'get_locale' ) );
+			$site_locale = get_locale();
+			add_filter( 'locale', array( $this, 'get_locale' ) );
+			if ( ! empty( $site_locale ) ) {
+				$locale = $site_locale;
+			}
+		}
+		
+		if ( $language = $this->model->get_language( $locale ) ) {
 			$output = str_replace( '"' . get_bloginfo( 'language' ) . '"', '"' . $language->get_locale( 'display' ) . '"', $output );
 		}
 		return $output;
