@@ -175,8 +175,18 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
         $languages = LMAT()->model->get_languages_list();
 
         $lang_object = array();
+
+		$default_language=LMAT()->model->get_default_language();
+		$default_language_slug=false;
+
+		if(isset($default_language->slug) && !empty($default_language->slug)){
+			$default_language_slug=$default_language->slug;
+		}
+
         foreach ($languages as $lang) {
-            $lang_object[$lang->slug] = array('name' => $lang->name, 'flag' => $lang->flag_url, 'locale' => $lang->locale);
+			if(!$default_language_slug || $default_language_slug !== $lang->slug){
+				$lang_object[$lang->slug] = array('name' => $lang->name, 'flag' => $lang->flag_url, 'locale' => $lang->locale);
+			}
         }
 
 		$providers=array();
