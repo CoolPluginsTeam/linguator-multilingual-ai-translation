@@ -184,9 +184,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 		}
 
         foreach ($languages as $lang) {
-			if(!$default_language_slug || $default_language_slug !== $lang->slug){
-				$lang_object[$lang->slug] = array('name' => $lang->name, 'flag' => $lang->flag_url, 'locale' => $lang->locale);
-			}
+			$lang_object[$lang->slug] = array('name' => $lang->name, 'flag' => $lang->flag_url, 'locale' => $lang->locale);
         }
 
 		$providers=array();
@@ -236,6 +234,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
                 'slug_translation_option' => $slug_translation_option,
                 'taxonomy_page' => $taxonomy_page,
 				'providers'                => $active_providers,
+				'default_language_slug' => $default_language_slug,
             ), $extra_data)
         );
 		}
