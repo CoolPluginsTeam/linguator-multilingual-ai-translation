@@ -473,8 +473,6 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				$post_title     = html_entity_decode( get_the_title( $post_id ) );
 				$post_edit_link = html_entity_decode( get_edit_post_link( $post_id ) );
 
-				// wp_delete_post($post_id,true);
-
 				wp_send_json_success(
 					array(
 						'post_id'                     => $post_id,

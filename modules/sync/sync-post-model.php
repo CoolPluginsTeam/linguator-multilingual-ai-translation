@@ -172,12 +172,6 @@ class LMAT_Sync_Post_Model {
 			$tr_post->post_content=$filtered_post_content;
 		}
 
-		// var_dump($tr_post->post_content);
-
-		if(isset($tr_post->post_content)){
-			$tr_post->post_content=wp_kses_post();
-		}
-
 		$post_status='draft';
 
 		if(isset($this->options['ai_translation_configuration']['bulk_translation_post_status'])){
