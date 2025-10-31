@@ -10,7 +10,26 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-require ABSPATH . 'wp-admin/options-head.php'; // Displays the errors messages as when we were a child of options-general.php
+// retrieve errors from transient
+// add them back to settings errors
+$transient_errors = get_transient( 'lmat_settings_errors' );
+if ( ! empty( $transient_errors ) && is_array( $transient_errors ) ) {
+	foreach ( $transient_errors as $error ) {
+		add_settings_error(
+			$error['setting'] ?? 'linguator-multilingual-ai-translation',
+			$error['code'] ?? 'error',
+			$error['message'] ?? '',
+			$error['type'] ?? 'error'
+		);
+	}
+	delete_transient( 'lmat_settings_errors' );
+	// delete the transient errors
+}
+
+require ABSPATH . 'wp-admin/options-head.php'; 
+
+
+// display the errors 
 ?>
 <div class="wrap">
 	<?php
@@ -31,4 +50,11 @@ require ABSPATH . 'wp-admin/options-head.php'; // Displays the errors messages a
 			break;
 	}
 	?>
-</div><!-- wrap -->
+</div>
+
+
+
+<!-- wrap end -->
+<!-- used for showing the errors -->
+
+
