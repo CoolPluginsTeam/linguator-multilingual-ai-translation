@@ -8,6 +8,10 @@ const FilterTargetContent = (props) => {
     const GreaterThanSymbol = '#lmat_page_translation_greater_then_symbol#';
     const entityOpenPlaceholder = '#lmat_page_translation_entity_open_translate_span#';
     const entityClosePlaceholder = '#lmat_page_translation_entity_close_translate_span#';
+    const lineBreakNOpenPlaceholder = '#lmat_page_translation_line_break_n_open#';
+    const lineBreakNClosePlaceholder = '#lmat_page_translation_line_break_n_close#';
+    const lineBreakROpenPlaceholder = '#lmat_page_translation_line_break_r_open#';
+    const lineBreakRClosePlaceholder = '#lmat_page_translation_line_break_r_close#';
 
     const removeInnerSpanPlaceholder = (content) => {
         return content.replace(new RegExp(OpenSpanPlaceholder, 'g'), '').replace(new RegExp(CloseSpanPlaceholder, 'g'), '');
@@ -21,6 +25,14 @@ const FilterTargetContent = (props) => {
 
     const removeEntityPlaceholder = (content) => {
         return content.replace(new RegExp(entityOpenPlaceholder, 'g'), '&').replace(new RegExp(entityClosePlaceholder, 'g'), ';');
+    }
+
+    const replaceLineBreakPlaceholder = (content) => {
+        return content.replace(/(\n)/g, () => `${lineBreakNOpenPlaceholder}${lineBreakNClosePlaceholder}`).replace(/(\r)/g, () => `${lineBreakROpenPlaceholder}${lineBreakRClosePlaceholder}`);
+    }
+
+    const removeLineBreakPlaceholder = (content) => {
+        return content.replace(new RegExp(lineBreakNOpenPlaceholder+lineBreakNClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\n${CloseSpanPlaceholder}`).replace(new RegExp(lineBreakROpenPlaceholder+lineBreakRClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\r${CloseSpanPlaceholder}`);
     }
 
     const fixHtmlTags = (content) => {
@@ -294,6 +306,9 @@ const FilterTargetContent = (props) => {
             string = filterSeoContent(string);
         }
 
+        // Replace line break with placeholder
+        string = replaceLineBreakPlaceholder(string);
+
         // Filter shortcode content
         const shortcodePattern = /\[(.*?)\]/g;
         const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
@@ -311,7 +326,7 @@ const FilterTargetContent = (props) => {
                     let textNode = null;
 
                     if (element.nodeType === 3) {
-                        const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$/g, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
+                        const textContent = element.textContent.replace(/^\s+|^\.\s+|^\s.|\s+$|\.\s+$|\s.\+$|(\r?\n){2,}/g, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
 
                         textNode = document.createTextNode(textContent);
                     } else if (element.nodeType === 8) {
@@ -367,7 +382,6 @@ const FilterTargetContent = (props) => {
         }
 
         let content = string;
-
         
         if (isEmptyOrUnclosedTag(string)) {
             content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
@@ -391,6 +405,8 @@ const FilterTargetContent = (props) => {
         
         content = content.replace(tempTagPattern, '');
 
+        content = removeLineBreakPlaceholder(content);
+
         content = removeEntityPlaceholder(content);
 
         return splitContent(content);
@@ -398,9 +414,9 @@ const FilterTargetContent = (props) => {
 
     /**
      * The content to be filtered based on the service type.
-     * If the service is 'localAiTranslator' or 'google', the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
+     * If the service is 'google', 'localAiTranslator', the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
      */
-    const content = ['localAiTranslator', 'google'].includes(props.service) ? filterSourceData(props.content) : props.content;
+    const content = ['google', 'localAiTranslator'].includes(props.service) ? filterSourceData(props.content) : props.content;
 
     /**
      * Regular expression pattern to match the span elements that should not be translated.

@@ -186,7 +186,7 @@ const App = ({ onDestory, prefix, postIds }) => {
                             <div
                                 className={`${prefix}-languages`}>
                                 {Object.keys(languageObject).map((language) => {
-                                    return <div key={language} className={`${prefix}-language`}>
+                                    return (lmatBulkTranslationGlobal.default_language_slug && lmatBulkTranslationGlobal.default_language_slug === language ? null : <div key={language} className={`${prefix}-language`}>
                                         <div
                                             title={!postIds.length ? emptyPostIdsErrorMessage : languageObject[language].name}>
                                             <input
@@ -208,7 +208,7 @@ const App = ({ onDestory, prefix, postIds }) => {
                                                 &nbsp; {languageObject[language].name}
                                             </label>
                                         </div>
-                                    </div>
+                                    </div>)
                                 })}
                             </div>
                             <div

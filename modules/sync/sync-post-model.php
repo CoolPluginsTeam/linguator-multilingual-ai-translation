@@ -126,8 +126,50 @@ class LMAT_Sync_Post_Model {
 			}
 		}
 
-		if(isset($tr_post->post_content)){
-			$tr_post->post_content=wp_kses_post(lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language));
+		if(isset($post_data['post_content'])){
+
+			$filtered_post_content=lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language);
+
+			$default_allowed_tags=wp_kses_allowed_html('post');
+
+			$parent_post_content=get_post_field('post_content', $post_id);
+
+            $existing_allowed_tags=$this->allowed_tags_in_string($parent_post_content);
+
+            $unwanted_tags = [
+                'script',
+                'object',
+                'embed',
+                'textarea',
+                'select',
+                'option',
+                'link',
+                'meta',
+                'noscript',
+                'xmp',
+                'noembed',
+            ];
+
+            // Remove unwanted tags from the existing allowed list
+            foreach ($unwanted_tags as $tag) {
+                if (isset($existing_allowed_tags[$tag])) {
+                    unset($existing_allowed_tags[$tag]);
+                }
+            }
+                
+            // Apply the allowed tags
+            $allowed_tags=apply_filters('lmat/bulk_translation/allowed_tags', array_merge($default_allowed_tags, $existing_allowed_tags));
+                
+            // Add the filter to allow the flex styles
+            add_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
+
+            // Apply the allowed tags
+			$filtered_post_content=wp_kses($filtered_post_content, $allowed_tags);
+
+            // Remove the filter to allow the flex styles
+            remove_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
+
+			$tr_post->post_content=$filtered_post_content;
 		}
 
 		$post_status='draft';
@@ -459,5 +501,56 @@ class LMAT_Sync_Post_Model {
 		}
 
 		return true;
+	}
+
+	private function allowed_tags_in_string($string){
+		$tags = [];
+
+		// Match all opening tags with attributes (skip closing tags)
+		preg_match_all('/<([a-zA-Z0-9]+)([^>]*)>/i', $string, $matches, PREG_SET_ORDER);
+		
+		foreach ($matches as $match) {
+			$tagName = strtolower($match[1]);
+			$attrString = trim($match[2]);
+		
+			// Ensure tag key exists
+			if (!isset($tags[$tagName])) {
+				$tags[$tagName] = [];
+			}
+		
+			// Extract attributes inside this tag
+			if (preg_match_all('/([a-zA-Z0-9\-:]+)(\s*=\s*(".*?"|\'.*?\'|[^\s>]+))?/', $attrString, $attrMatches, PREG_SET_ORDER)) {
+				foreach ($attrMatches as $attr) {
+					$attrName = strtolower($attr[1]);
+
+					// Only add if attribute does not already exist
+					if (!array_key_exists($attrName, $tags[$tagName])) {
+						$tags[$tagName][$attrName] = [];
+					}
+				}
+			}
+		}
+		
+		return $tags;
+	}
+
+	public function lmat_allow_flex_styles($styles){
+	   return $this->lmat_allow_flex_styles_callback($styles);
+	}
+
+	private function lmat_allow_flex_styles_callback($styles){
+		// Define the extra CSS properties you want to allow
+		$extra_allowed = [
+			'display',
+			'justify-content',
+			'align-items',
+			'flex-direction',
+			'flex-wrap',
+			'gap',
+		];
+
+		$allowed_styles=apply_filters('lmat/bulk_translation/allowed_flex_styles', array_unique(array_merge($styles, $extra_allowed)));
+
+		return $allowed_styles;
 	}
 }

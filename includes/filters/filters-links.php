@@ -80,6 +80,37 @@ class LMAT_Filters_Links {
 
 		// Rewrites post types archives links to filter them by language.
 		add_filter( 'post_type_archive_link', array( $this, 'post_type_archive_link' ), 20, 2 );
+
+		add_filter('clean_url', array($this, 'clean_encode_url'), 10, 2);
+	}
+
+	/**
+	 * Clean Encode Url
+	 *
+	 * @param string $url The url to clean.
+	 * @return string The cleaned url.
+	 */
+	public function clean_encode_url($url, $orig_scheme) {
+
+		$pattern = '/%[0-9A-Fa-f]{2}/';
+
+		// Url Contains special characters or symbol
+		if(preg_match($pattern, $url) && function_exists('EWT') && property_exists(EWT(), 'curlang')) {
+			$current_lang = $this->curlang;
+
+			if($current_lang && is_object($current_lang) && property_exists($current_lang, 'slug')) {
+				$current_lang = $current_lang->slug;
+				
+				$current_lang_pattern="#/{$current_lang}/#";
+
+				if(preg_match($current_lang_pattern, $url)) {
+					return urldecode($url);
+				}
+			}
+
+		}
+
+		return $url;
 	}
 
 	/**

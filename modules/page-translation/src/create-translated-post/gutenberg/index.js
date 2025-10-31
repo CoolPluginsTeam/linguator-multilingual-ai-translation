@@ -51,11 +51,11 @@ const translatePost = (props) => {
      */
     const postMetaFieldsUpdate = () => {
         const metaFieldsData = postContent.metaFields;
-
-        if(!metaFieldsData){
+        
+        if(!metaFieldsData && Object.keys(metaFieldsData).length < 1){
             return;
         }
-
+        
         const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
         Object.keys(metaFieldsData).forEach(key => {
@@ -79,13 +79,11 @@ const translatePost = (props) => {
     const postAcfFieldsUpdate = () => {
         const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
         const metaFieldsData = postContent.metaFields;
-
         
         if (window.acf) {
             acf.getFields().forEach(field => {
 
                 const fieldData=JSON.parse(JSON.stringify({key: field.data.key, type: field.data.type, name: field.data.name}));
-                let repeaterField = false;
                 // Update repeater fields
                 if(field.$el && field.$el.closest('.acf-field.acf-field-repeater') && field.$el.closest('.acf-field.acf-field-repeater').length > 0){
                     const rowId=field.$el.closest('.acf-row').data('id');
@@ -95,25 +93,29 @@ const translatePost = (props) => {
                         const index=rowId.replace('row-', '');
                     
                         fieldData.name=repeaterItemName+'_'+index+'_'+fieldData.name;
-                        repeaterField = true;
                     }
-
                 }
 
-               if(field.data && field.data.key && Object.keys(AllowedMetaFields).includes(fieldData.name)){
-                   const fieldName = field.data.name;
-                   const inputType = field.data.type;
+               if(fieldData && fieldData.key && Object.keys(AllowedMetaFields).includes(fieldData.name)){
+                   const fieldName = fieldData.name;
+                   const inputType = fieldData.type;
 
-                   const sourceValue = metaFieldsData[fieldName]? metaFieldsData[fieldName] : field?.val();
+                   let sourceValue = metaFieldsData[fieldName] ? metaFieldsData[fieldName] : field?.val();
 
-                    const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', sourceValue, fieldData.name, service);
+                   let translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', sourceValue, fieldData.name, service);
 
-                    if('wysiwyg' === inputType && tinymce){
-                        const editorId = field.data.id;
-                        tinymce.get(editorId)?.setContent(translatedMetaFields);
-                    }else{
-                        field.val(translatedMetaFields);
-                    }
+                   if(!translatedMetaFields || '' === translatedMetaFields){
+                       return;
+                   }
+
+                   if('wysiwyg' === inputType && window.tinymce){
+                       const editorId = field.data.id;
+                       translatedMetaFields = translatedMetaFields.replace(/(\r\n\r\n)/g, '</p><p>');
+                       
+                       tinymce.get(editorId)?.setContent(translatedMetaFields);
+                   }else{
+                       field.val(translatedMetaFields);
+                   }
                }
             });
         }
