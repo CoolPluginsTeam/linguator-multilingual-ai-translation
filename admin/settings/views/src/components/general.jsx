@@ -48,6 +48,10 @@ const General = ({ data, setData }) => {
         setDomains(newDomains);
         previousDomains.current = newDomains;
     }, []);
+
+   
+
+    //Check if any changes happen to enable or disable the save button
     useEffect(() => {
         let sameChecker = {
             browser: true,
@@ -62,7 +66,6 @@ const General = ({ data, setData }) => {
             selectedLanguageSwitchers: true,
             staticStringsVisibility: true
         }
-        
         // Only include lmatFeedbackData in the checker if the setting is available
         if (data.lmat_feedback_data !== undefined) {
             sameChecker.lmatFeedbackData = true;
@@ -241,6 +244,7 @@ const General = ({ data, setData }) => {
     }, [selectedSynchronization]);
 
     //Handle Select All Post Types
+    
     const handleSelectAllPostTypes = () => {
         setHandleButtonDisabled(false);
         if (selectAllPostTypes) {
@@ -255,12 +259,21 @@ const General = ({ data, setData }) => {
             setSelectedPostTypes(enabledPostTypes);
             setSelectAllPostTypes(false);
         } else {
-            // Select all
-            const allPostTypeValues = AvailablePostTypes.map(postType => postType.value);
-            setSelectedPostTypes(allPostTypeValues);
+            // Select all (only enabled ones)
+            const enabledPostTypes = AvailablePostTypes.filter(postType => {
+                const isDisabled = Array.isArray(disabledPostTypes) && disabledPostTypes.some(disabledType => {
+                    const postTypeKey = typeof disabledType === 'object' ? disabledType.post_type_key : disabledType;
+                    return postTypeKey === postType.value;
+                });
+                return !isDisabled;
+            });
+            const enabledPostTypeValues = enabledPostTypes.map(postType => postType.value);
+            setSelectedPostTypes(enabledPostTypeValues);
             setSelectAllPostTypes(true);
         }
     };
+
+
 
     // Update selectAllPostTypes state when individual post type items change
     React.useEffect(() => {
@@ -627,7 +640,7 @@ const General = ({ data, setData }) => {
                                     aria-label="Select All Post Types"
                                     id="select-all-post-types"
                                     value={selectAllPostTypes}
-                                    onChange={handleSelectAllPostTypes}
+                                    onChange={()=>{handleSelectAllPostTypes()}}
                                     size="sm"
                                 />
                             </div>
