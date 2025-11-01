@@ -85,7 +85,7 @@ const Ready = () => {
           
               <tr className="ready-table-data">
                 <td >
-                  <div className='flex gap-4 flex-wrap items-center '>
+                  <div className='flex gap-4 flex-wrap items-center justify-center '>
                   {
             nextSteps.map((step, index) => (
                     <div key={index}>
