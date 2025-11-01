@@ -461,9 +461,38 @@ class LMAT_CRUD_Posts {
 		) );
 		
 		$ids = ! is_wp_error( $posts ) ? $posts : array();
-
+		// Additional check: Look for any remaining translations that might use this file
+		// This handles cases where translation relationships were broken during deletion
 		if ( ! empty( $ids ) ) {
-			return ''; // Prevent deleting the file.
+			foreach ( $ids as $attachment_id ) {
+				// Check if this attachment still exists and is not being deleted
+				$attachment = get_post( $attachment_id );
+				if ( $attachment && $attachment->post_type === 'attachment' ) {
+					// Check if this attachment has any remaining translations
+					$translations = $this->model->post->get_translations( $attachment_id );
+					if ( count( $translations ) > 1 ) {
+						return ''; // Prevent deleting the file - other translations exist
+					}
+				}
+			}
+		}
+
+		// Also check for any other attachments that might reference the same file
+		// even if they're not in the translation group anymore
+		$other_attachments = $wpdb->get_results( $wpdb->prepare(
+			"SELECT post_id FROM {$wpdb->postmeta} 
+			 WHERE meta_key = '_wp_attached_file' 
+			 AND meta_value = %s 
+			 AND post_id IN (
+				 SELECT ID FROM {$wpdb->posts} 
+				 WHERE post_type = 'attachment' 
+				 AND post_status != 'trash'
+			 )",
+			$attached_file
+		) );
+
+		if ( ! empty( $other_attachments ) ) {
+			return ''; // Prevent deleting the file - other attachments exist
 		}
 
 		return $file;
