@@ -113,6 +113,11 @@ const translatePost = (props) => {
                        translatedMetaFields = translatedMetaFields.replace(/(\r\n\r\n)/g, '</p><p>');
                        
                        tinymce.get(editorId)?.setContent(translatedMetaFields);
+
+                       const tinymceTextArea = document.querySelector(`textarea#${editorId}`);
+                       if(tinymceTextArea) {
+                           tinymceTextArea.value = translatedMetaFields;
+                       }
                    }else{
                        field.val(translatedMetaFields);
                    }
