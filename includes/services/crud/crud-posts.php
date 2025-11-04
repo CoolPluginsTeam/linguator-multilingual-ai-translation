@@ -462,9 +462,10 @@ class LMAT_CRUD_Posts {
 		$without_year_month = sanitize_text_field( $without_year_month );
 
 		// Prepare LIKE patterns safely
-		$like_with_scaled      = '%' . $wpdb->esc_like( $with_scaled ) . '%';
-		$like_without_year_month  = '%' . $wpdb->esc_like( $without_year_month ) . '%';
-		$not_like_attached = '%' . $wpdb->esc_like( $attached_file ) . '%';
+		$like_original_text = '%' . $wpdb->esc_like( '"original_image"' ) . '%';
+		$like_with_scaled      = '%' . $wpdb->esc_like( '"'.$with_scaled.'"' ) . '%';
+		$like_without_year_month  = '%' . $wpdb->esc_like( '"'.$without_year_month.'"' ) . '%';
+		$not_like_attached = '%' . $wpdb->esc_like( '"'.$attached_file.'"' ) . '%';
 
 		// Build and prepare the SQL query
 		$query = $wpdb->prepare(
@@ -477,9 +478,11 @@ class LMAT_CRUD_Posts {
 					meta_key = '_wp_attachment_metadata'
 					AND meta_value LIKE %s
 					AND meta_value LIKE %s
+					AND meta_value LIKE %s
 					AND meta_value NOT LIKE %s
 				)",
 			$attached_file,
+			$like_original_text,
 			$like_with_scaled,
 			$like_without_year_month,
 			$not_like_attached
