@@ -15,17 +15,17 @@ const lmatElementorConfirmBox = {
             <div class="modal-content">
             <p>
                 ${sprintf(
-                __("The original page in %s was built with Elementor. Its content has already been copied into this new %s version. You can now translate it with Elementor to keep the same design, or edit it with the Gutenberg editor.", "autopoly-ai-translation-for-polylang-pro"),
+                __("The original page in %s was built with Elementor. Its content has already been copied into this new %s version. You can now translate it with Elementor to keep the same design, or edit it with the Gutenberg editor.", "linguator-multilingual-ai-translation"),
                 sourceLangName,
                 targetLangName
                 )}
             </p>
             <div>
                 <button data-value="yes">
-                ${__("Translate with Elementor", "autopoly-ai-translation-for-polylang-pro")}
+                ${__("Translate with Elementor", "linguator-multilingual-ai-translation")}
                 </button>
                 <button data-value="no">
-                ${__("Edit with Default Editor", "autopoly-ai-translation-for-polylang-pro")}
+                ${__("Edit with Default Editor", "linguator-multilingual-ai-translation")}
                 </button>
             </div>
             </div>

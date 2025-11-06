@@ -293,7 +293,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
 
         public function lmat_hide_review_notice(){
             if(!current_user_can('manage_options')){
-                wp_send_json_error( __( 'Unauthorized', 'autopoly-ai-translation-for-polylang-pro' ), 403 );
+                wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
                 wp_die( '0', 403 );
             }
 
@@ -304,7 +304,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                 update_option('cpt_review_notice_dismissed', $review_notice_dismissed);
                 wp_send_json_success();
             }else{
-                wp_send_json_error( __( 'Invalid nonce', 'autopoly-ai-translation-for-polylang-pro' ), 400 );
+                wp_send_json_error( __( 'Invalid nonce', 'linguator-multilingual-ai-translation' ), 400 );
                 wp_die( '0', 400 );
             }
         }
