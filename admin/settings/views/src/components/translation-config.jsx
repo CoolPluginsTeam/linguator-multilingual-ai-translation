@@ -326,10 +326,10 @@ const TranslationConfig = ({ data, setData }) => {
             <Container.Item>
                 <Label size='md' className='font-bold flex items-center gap-2'>
                     <RiDraftLine className="flex-shrink-0 size-5 text-icon-secondary" />
-                    {__('Bulk Translation – Default Post Status', 'linguator-multilingual-ai-translation')}
+                    {__('Bulk Translation – Default Post and Page Status', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <Label variant='help'>
-                    {__('This is the default post status for bulk translation.', 'linguator-multilingual-ai-translation')}
+                    {__('This is the default post and page status for bulk translation.', 'linguator-multilingual-ai-translation')}
                 </Label>
                 <div style={{ marginTop: "20px" }}>
                     <RadioButton.Group>
