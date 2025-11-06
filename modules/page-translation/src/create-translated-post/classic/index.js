@@ -65,9 +65,14 @@ const UpdateClassicPage = (props) => {
 
             if(lmatPageTranslationGlobal.post_type =='product' && window.tinymce){
                 const excerptTinymce = tinymce.get('excerpt');
-                
+                const tinymceTextArea = document.querySelector(`textarea#excerpt`);
+
                 if(excerptTinymce) {
                     excerptTinymce.setContent(translateContent);
+                }
+
+                if(tinymceTextArea) {
+                    tinymceTextArea.value = translateContent;
                 }
             }
         }
@@ -165,6 +170,12 @@ const UpdateClassicPage = (props) => {
                     if('wysiwyg' === inputType && window.tinymce){
                         const editorId = field.data.id;
                         tinymce.get(editorId)?.setContent(translatedMetaFields);
+
+                        const tinymceTextArea = document.querySelector(`textarea#${editorId}`);
+                        if(tinymceTextArea) {
+                            tinymceTextArea.value = translatedMetaFields;
+                        }
+
                     }else{
                         field.val(translatedMetaFields);
                     }
@@ -258,6 +269,11 @@ const UpdateClassicPage = (props) => {
 
         if (window.tinymce &&tinymce.get('content')) {
             tinymce.get('content')?.setContent(content);
+
+            const tinymceTextArea = document.querySelector(`textarea#content`);
+            if(tinymceTextArea) {
+                tinymceTextArea.value = content;
+            }
         }
     }
 

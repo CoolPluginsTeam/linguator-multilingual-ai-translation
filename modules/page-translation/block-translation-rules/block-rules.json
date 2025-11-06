@@ -1327,6 +1327,11 @@
                     }
                 ]
             }
+        },
+        "rank-math/toc-block":{
+            "attributes":{
+                "title": true
+            }
         }
     }
 }

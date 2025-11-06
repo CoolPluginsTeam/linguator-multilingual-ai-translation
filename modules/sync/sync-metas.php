@@ -137,7 +137,7 @@ abstract class LMAT_Sync_Metas {
 		 * @param int    $from  Id of the source
 		 * @param int    $to    Id of the target
 		 */
-		return apply_filters( "lmat_translate_{$this->meta_type}_meta", maybe_unserialize( $value ), $key, $lang, $from, $to );
+		return apply_filters( "lmat_translate_{$this->meta_type}_meta", $value, $key, $lang, $from, $to );
 	}
 
 	/**

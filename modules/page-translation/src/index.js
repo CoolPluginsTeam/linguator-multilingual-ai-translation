@@ -245,7 +245,7 @@ const appendElementorTranslateBtn = () => {
 
     if(confirmBox && confirmBox[postId+'_'+targetLang]) {
       setTimeout(() => {
-        buttonElement.click();
+        buttonElement.trigger('click');
 
         delete confirmBox[postId+'_'+targetLang];
 
