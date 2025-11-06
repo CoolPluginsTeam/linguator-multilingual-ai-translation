@@ -443,24 +443,53 @@ class LMAT_CRUD_Posts {
 		$attached_file = substr_replace( $file, '', 0, strlen( trailingslashit( $uploadpath['basedir'] ) ) );
 		$attached_file = preg_replace( '#-\d+x\d+\.([a-z]+)$#', '.$1', $attached_file );
 
-		// Use WordPress functions to find posts by meta value
-		$posts = get_posts( array(
-			'post_type'      => 'attachment',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Required for finding attachments by file path, limited scope
-			'meta_query'     => array(
-				array(
-					'key'   => '_wp_attached_file',
-					'value' => $attached_file,
-					'compare' => '='
-				),
-			),
-			'suppress_filters' => false,
-		) );
-		
-		$ids = ! is_wp_error( $posts ) ? $posts : array();
+		$with_scaled = $attached_file;
+		$without_year_month = $attached_file;
+
+		// First, check if attached_file has '-scaled' before the extension, if so, remove it
+		if ( ! preg_match( '/-scaled\.[a-zA-Z0-9]+$/', $attached_file ) ) {
+			$with_scaled = preg_replace( '/(\.[a-zA-Z0-9]+)$/', '-scaled$1', $attached_file );
+		}
+
+		// Then, check if the path starts with a year/month (e.g., 2025/07/)
+		if ( preg_match( '/^\d{4}\/\d{2}\//', $without_year_month ) ) {
+			$without_year_month = preg_replace( '/^\d{4}\/\d{2}\//', '', $without_year_month );
+		}
+
+		// Escape user inputs safely
+		$attached_file    = sanitize_text_field( $attached_file );
+		$with_scaled      = sanitize_text_field( $with_scaled );
+		$without_year_month = sanitize_text_field( $without_year_month );
+
+		// Prepare LIKE patterns safely
+		$like_original_text = '%' . $wpdb->esc_like( '"original_image"' ) . '%';
+		$like_with_scaled      = '%' . $wpdb->esc_like( '"'.$with_scaled.'"' ) . '%';
+		$like_without_year_month  = '%' . $wpdb->esc_like( '"'.$without_year_month.'"' ) . '%';
+		$not_like_attached = '%' . $wpdb->esc_like( '"'.$attached_file.'"' ) . '%';
+
+		// Build and prepare the SQL query
+		$query = $wpdb->prepare(
+			"SELECT post_id 
+			FROM {$wpdb->postmeta}
+			WHERE 
+				(meta_key = '_wp_attached_file' AND meta_value = %s)
+				OR 
+				(
+					meta_key = '_wp_attachment_metadata'
+					AND meta_value LIKE %s
+					AND meta_value LIKE %s
+					AND meta_value LIKE %s
+					AND meta_value NOT LIKE %s
+				)",
+			$attached_file,
+			$like_original_text,
+			$like_with_scaled,
+			$like_without_year_month,
+			$not_like_attached
+		);
+
+		// Execute and get IDs
+		$ids = $wpdb->get_col( $query );
 
 		if ( ! empty( $ids ) ) {
 			return ''; // Prevent deleting the file.
