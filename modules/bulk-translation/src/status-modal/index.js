@@ -378,7 +378,7 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                                                                     <button
                                                                         className="button disabled"
                                                                         disabled
-                                                                        title={sprintf(__('Please wait until all translations for this %s are complete before reviewing.', 'autopoly-ai-translation-for-polylang-pro'), lmatBulkTranslationGlobal.post_label)}
+                                                                        title={sprintf(__('Please wait until all translations for this %s are complete before reviewing.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
                                                                     >
                                                                         {__('Review', 'linguator-multilingual-ai-translation')}
                                                                     </button>
