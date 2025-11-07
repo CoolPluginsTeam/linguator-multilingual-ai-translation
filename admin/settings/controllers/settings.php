@@ -444,23 +444,17 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function languages_page() {
-
-		// Custom Fields
-		if($this->selected_tab === 'custom-fields' && class_exists(Custom_Fields::class)){
-			$this->header->header();
-			Custom_Fields::get_instance()->lmat_render_custom_fields_page();
-			return;
-		}
-
-		// Support Blocks
-		if($this->selected_tab === 'supported-blocks' && class_exists(Supported_Blocks::class)){
-			$this->header->header();
-			Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
-			return;
-		}
+		/*
+		Filter to render the languages page
+		@param bool $render_lmat_languages_page
+		@param string $selected_tab
+		@param string $active_tab
+		@return bool
+		*/
+		$render_lmat_languages_page = apply_filters('lmat_render_languages_page', true, $this->selected_tab, $this->active_tab);
 
 		// return if the active tab is localizations
-		if($this->active_tab === 'localizations'){
+		if($this->active_tab === 'localizations' || !$render_lmat_languages_page){
 			return;
 		}
 		
@@ -582,7 +576,22 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
 		$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : false;
 
+		/*
+		Filter to enqueue the frontend settings assets
+		@param bool $frontend_settings_assets
+		@param string $active_tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
 		$frontend_settings_assets=apply_filters('lmat_frontend_settings_assets', true, $active_tab, $is_settings_tab);
+
+		/*
+		Filter to enqueue the admin settings assets
+		@param bool $admin_settings_assets
+		@param string $active_tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
 		$admin_settings_assets=apply_filters('lmat_admin_settings_assets', true, $active_tab, $is_settings_tab);
 
 		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && $frontend_settings_assets ) {

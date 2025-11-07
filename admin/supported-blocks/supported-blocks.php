@@ -62,10 +62,18 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		 * @return void
 		 */
 		public function __construct(){
-			add_filter('lmat_frontend_settings_assets', array($this, 'lmat_frontend_supported_blocks_assets'), 10, 3);
+			add_filter('lmat_frontend_settings_assets', array($this, 'stop_frontend_setting_assets'), 10, 3);
 			add_filter('lmat_admin_settings_assets', array($this, 'lmat_supported_blocks_assets'), 10, 3);
+			add_filter('lmat_render_languages_page', array($this, 'lmat_render_supported_blocks_page'), 10, 3);
 		}
 
+		/*
+		Filter to enqueue the admin supported blocks assets
+		@param bool $status
+		@param string $tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
 		public function lmat_supported_blocks_assets($status, $tab, $is_settings_tab){
 			if($is_settings_tab && $tab === 'supported-blocks' && function_exists('LMAT')){
 
@@ -83,7 +91,14 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			return $status;
 		}
 
-		public function lmat_frontend_supported_blocks_assets($status, $tab, $is_settings_tab){
+		/*
+		Filter to stop the admin assets on frontend settings page
+		@param bool $status
+		@param string $tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
+		public function stop_frontend_setting_assets($status, $tab, $is_settings_tab){
 			if($is_settings_tab && $tab === 'supported-blocks'){
 				return false;
 			}
@@ -91,10 +106,29 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			return $status;
 		}
 
+		/*
+		Filter to render the supported blocks page
+		@param bool $status
+		@param string $selected_tab
+		@param string $active_tab
+		@return bool
+		*/
+		public function lmat_render_supported_blocks_page($status, $selected_tab, $active_tab) {
+			if($selected_tab === 'supported-blocks' && $active_tab === 'settings'){
+
+				$header = Header::get_instance('supported-blocks', LMAT()->model);
+
+				$header->header();
+
+				$this->render_supported_blocks_page();
+				return false;
+			}
+		}
+
 		/**
 		 * Render the support blocks page.
 		 */
-		public function lmat_render_support_blocks_page() {
+		public function render_supported_blocks_page() {
 			?>
 		<div class="lmat-custom-data-table-wrapper">
 			<h3><?php echo __('Supported Blocks Translation Settings', 'linguator-multilingual-ai-translation'); ?>

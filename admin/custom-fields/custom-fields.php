@@ -22,10 +22,18 @@ if(!class_exists('Custom_Fields')) {
 
         public function __construct() {
             add_action('wp_ajax_lmat_update_custom_fields_content', array($this, 'update_custom_fields_content'));
-            add_filter('lmat_frontend_settings_assets', array($this, 'lmat_frontend_supported_blocks_assets'), 10, 3);
+            add_filter('lmat_frontend_settings_assets', array($this, 'stop_frontend_setting_assets'), 10, 3);
 			add_filter('lmat_admin_settings_assets', array($this, 'lmat_custom_fields_assets'), 10, 3);
+			add_filter('lmat_render_languages_page', array($this, 'lmat_render_custom_fields_page'), 10, 3);
         }
 
+		/*
+		Filter to enqueue the admin custom fields assets
+		@param bool $status
+		@param string $tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
         public function lmat_custom_fields_assets($status, $tab, $is_settings_tab){
 			if($is_settings_tab && $tab === 'custom-fields' && function_exists('LMAT')){
 
@@ -52,7 +60,14 @@ if(!class_exists('Custom_Fields')) {
 			return $status;
 		}
 
-		public function lmat_frontend_supported_blocks_assets($status, $tab, $is_settings_tab){
+		/*
+		 Filter to stop the admin assets on frontend settings page
+		 @param bool $status
+		 @param string $tab
+		 @param bool $is_settings_tab
+		 @return bool
+		*/
+		public function stop_frontend_setting_assets($status, $tab, $is_settings_tab){
 			if($is_settings_tab && $tab === 'custom-fields'){
 				return false;
 			}
@@ -60,7 +75,19 @@ if(!class_exists('Custom_Fields')) {
 			return $status;
 		}
     
-        public function lmat_render_custom_fields_page() {
+		public function lmat_render_custom_fields_page($status, $selected_tab, $active_tab) {
+			if($selected_tab === 'custom-fields' && $active_tab === 'settings'){
+
+				$header = Header::get_instance('custom-fields', LMAT()->model);
+
+				$header->header();
+
+				$this->render_custom_fields_page();
+				return false;
+			}
+		}
+
+        public function render_custom_fields_page() {
                 $this->lmat_allowed_fields = self::get_allowed_custom_fields();
                 $s_no                        = 1;
                 ?>
