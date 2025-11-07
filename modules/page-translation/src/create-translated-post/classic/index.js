@@ -169,13 +169,16 @@ const UpdateClassicPage = (props) => {
 
                     if('wysiwyg' === inputType && window.tinymce){
                         const editorId = field.data.id;
-                        tinymce.get(editorId)?.setContent(translatedMetaFields);
+
+                        const tinymceTranslatedMetaFields = translatedMetaFields.replace(/(\r\n\r\n)/g, '</p><p>');
+
+                        tinymce.get(editorId)?.setContent(tinymceTranslatedMetaFields);
 
                         const tinymceTextArea = document.querySelector(`textarea#${editorId}`);
-                        if(tinymceTextArea) {
+
+                        if(tinymceTextArea){
                             tinymceTextArea.value = translatedMetaFields;
                         }
-
                     }else{
                         field.val(translatedMetaFields);
                     }
