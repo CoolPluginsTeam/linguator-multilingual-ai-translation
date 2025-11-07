@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.8.3
 Requires PHP: 7.2
-Stable tag: 0.0.6
+Stable tag: 0.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -165,6 +165,19 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 
 == Changelog ==
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
+
+= Version 0.0.7 (Beta) | 07/11/2025 =
+* **Added:** Rank math seo table block translation support & core table block header & footer translation support.
+* **Fixed:** content formatting issue in bulk translation.
+* **Fixed:** String modal open If language not supported.
+* **Fixed:** Fixed translated URL php error with sprintf function.
+* **Fixed:** wysiwyg content line break formatting issue.
+* **Fixed:** Deserialization of untrusted data.
+* **Fixed:** Prevent deleting the media if attachments exist in other language.
+* **Fixed:** Wrong local message not displaying in manage language page.
+* **Improved:** Removed default language from bulk translation.
+* **Improved:** Settings page save changes button visibility check.
+* **Improved:** Setup page UI.
 
 = Version 0.0.6 (Beta) | 23/10/2025 =
 * **Fixed:** Missing JavaScript file issue.
