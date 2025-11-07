@@ -95,7 +95,7 @@ class LMAT_Filters_Links {
 		$pattern = '/%[0-9A-Fa-f]{2}/';
 
 		// Url Contains special characters or symbol
-		if(preg_match($pattern, $url) && function_exists('EWT') && property_exists(EWT(), 'curlang')) {
+		if(preg_match($pattern, $url) && function_exists('LMAT') && property_exists(LMAT(), 'curlang')) {
 			$current_lang = $this->curlang;
 
 			if($current_lang && is_object($current_lang) && property_exists($current_lang, 'slug')) {
