@@ -3,6 +3,7 @@ namespace Linguator\Supported_Blocks;
 
 use Linguator\Modules\Page_Translation\LMAT_Page_Translation_Helper;
 
+use Linguator\Settings\Header\Header;
 use WP_Block_Type_Registry;
 
 /**
@@ -55,11 +56,39 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			return self::$instance;
 		}
 
-		public static function enqueue_editor_assets() {
-			wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-			wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-			wp_enqueue_style( 'lmat-custom-data-table', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
-			wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
+		/**
+		 * Constructor.
+		 *
+		 * @return void
+		 */
+		public function __construct(){
+			add_filter('lmat_frontend_settings_assets', array($this, 'lmat_frontend_supported_blocks_assets'), 10, 3);
+			add_filter('lmat_admin_settings_assets', array($this, 'lmat_supported_blocks_assets'), 10, 3);
+		}
+
+		public function lmat_supported_blocks_assets($status, $tab, $is_settings_tab){
+			if($is_settings_tab && $tab === 'supported-blocks' && function_exists('LMAT')){
+
+				$header = Header::get_instance('supported-blocks', LMAT()->model);
+				$header->header_assets();
+
+				wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+				wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+				wp_enqueue_style( 'lmat-custom-data-table', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+				wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
+				
+				return false;
+			}
+
+			return $status;
+		}
+
+		public function lmat_frontend_supported_blocks_assets($status, $tab, $is_settings_tab){
+			if($is_settings_tab && $tab === 'supported-blocks'){
+				return false;
+			}
+
+			return $status;
 		}
 
 		/**

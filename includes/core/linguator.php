@@ -22,6 +22,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
 use Linguator\Includes\Controllers\LMAT_REST_Request;
 use Linguator\Integrations\LMAT_Integrations;
 use Linguator\Settings\Controllers\LMAT_Settings;
+use Linguator\Supported_Blocks\Supported_Blocks;
 use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
 use Linguator\Includes\Other\LMAT_Translation_Dashboard;
@@ -95,6 +96,10 @@ class Linguator {
 		// Register the custom post type for the supported blocks
 		if(class_exists(Custom_Block_Post::class)){
 			Custom_Block_Post::get_instance();
+		}
+
+		if(class_exists(Supported_Blocks::class)){
+			Supported_Blocks::get_instance();
 		}
 
 		// Register the custom fields
