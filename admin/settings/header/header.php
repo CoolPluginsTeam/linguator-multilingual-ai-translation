@@ -76,7 +76,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		public function tabs() {
 			$default_url = '';
 
-			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang', 'supported-blocks','custom-fields']) ) {
+			if ( $this->active_tab && in_array($this->active_tab, ['strings', 'lang', 'supported-blocks','custom-fields','glossary']) ) {
 				$default_url = 'lmat_settings';
 			}
 
