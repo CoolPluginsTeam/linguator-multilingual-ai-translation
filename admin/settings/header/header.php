@@ -87,6 +87,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				'switcher'    => array( 'title' => __( 'Language Switcher', 'linguator-multilingual-ai-translation' ) ),
 				'supported-blocks' => array( 'title' => __( 'Supported Blocks', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=supported-blocks' ),
 				'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
+				'glossary' => array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' ),
 			);
 
             $languages = $this->model->get_languages_list();
