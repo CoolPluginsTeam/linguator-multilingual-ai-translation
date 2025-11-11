@@ -2,14 +2,17 @@ import React from 'react';
 import filterContent from '../../../../../page-translation/src/component/filter-target-content/index.js';
 import extractInnerContent from '../extarct-inner-content/index.js';
 import storeSourceString from '../../store-source-string/index.js';
-
+import {selectGlossaryTerms} from '../../../redux-store/features/selectors.js';
+import updateGlossaryString from '../update-glossary-string/index.js';
+import {store} from '../../../redux-store/store.js';
 
 /**
  * @param {Object} content
  * @param {string} service
  * @returns {string}
  */
-const FilterClassicContent = async ({content, service, postId, storeDispatch, filterHtmlContent}) => {
+const FilterClassicContent = async ({content, service, postId, storeDispatch, filterHtmlContent, sourceLanguage}) => {
+    const glossaryTerms=selectGlossaryTerms(store.getState(), sourceLanguage);
     
     const loopCallback=async (callback, loop, index)=>{
         await callback(loop[index], index);
@@ -67,6 +70,11 @@ const FilterClassicContent = async ({content, service, postId, storeDispatch, fi
                 if(filterHtmlContent){
                     let reactElement=filterContent({content: text, service, contentKey: 'content_classic_index_'+index, skipTags:[]});
                     stringContent=await extractInnerContent(reactElement);
+
+                    if(['google','localAiTranslator'].includes(service) && glossaryTerms && Object.values(glossaryTerms).length > 0){
+                        stringContent=await updateGlossaryString({content: stringContent, glossaryTerms});
+                    }
+
                     reactElement=null;
                 }
 

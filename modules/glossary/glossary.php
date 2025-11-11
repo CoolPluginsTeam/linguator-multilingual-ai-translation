@@ -66,7 +66,7 @@ if (!class_exists('Glossary')) {
                 wp_localize_script('lmat-glossary-script', 'lmat_glossary', array(
                     'ajaxurl' => admin_url('admin-ajax.php'),
                     'lmat_languages' => self::get_lmat_languages_list(),
-                    'url' => plugins_url( '', LINGUATOR_ROOT_FILE ),
+                    'url' => plugins_url( '', LINGUATOR_ROOT_FILE ).'/',
                     'file' => 'file.svg',
                     'import_glossary_validate' => wp_create_nonce('lmat_import_glossary_nonce'),
                     'update_glossary_validate' => wp_create_nonce('lmat_update_glossary_nonce'),
