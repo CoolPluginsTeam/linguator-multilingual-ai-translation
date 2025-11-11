@@ -22,19 +22,19 @@ const ElementorSaveSource = (content) => {
         }
     }
 
-    // Define a list of properties to exclude
-    const cssProperties = [
-        'content_width', 'title_size', 'font_size', 'margin', 'padding', 'background', 'border', 'color', 'text_align',
-        'font_weight', 'font_family', 'line_height', 'letter_spacing', 'text_transform', 'border_radius', 'box_shadow',
-        'opacity', 'width', 'height', 'display', 'position', 'z_index', 'visibility', 'align', 'max_width', 'content_typography_typography', 'flex_justify_content', 'title_color', 'description_color', 'email_content'
-    ];
-
     const subStringsToCheck=(strings)=>{
         const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
         const staticSubStrings=['caption','heading','sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
 
         return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
     }
+
+    // Define a list of properties to exclude
+    const cssProperties = [
+        'content_width', 'title_size', 'font_size', 'margin', 'padding', 'background', 'border', 'color', 'text_align',
+        'font_weight', 'font_family', 'line_height', 'letter_spacing', 'text_transform', 'border_radius', 'box_shadow',
+        'opacity', 'width', 'height', 'display', 'position', 'z_index', 'visibility', 'align', 'max_width', 'content_typography_typography', 'flex_justify_content', 'title_color', 'description_color', 'email_content'
+    ];
 
     const storeWidgetStrings = (element, index, ids=[]) => {
         const settings = element.settings;
