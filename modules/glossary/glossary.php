@@ -68,7 +68,11 @@ if (!class_exists('Glossary')) {
                     'lmat_languages' => self::get_lmat_languages_list(),
                     'url' => plugins_url( '', LINGUATOR_ROOT_FILE ),
                     'file' => 'file.svg',
-                    'nonce' => wp_create_nonce('lmat_glossary_nonce'),
+                    'import_glossary_validate' => wp_create_nonce('lmat_import_glossary_nonce'),
+                    'update_glossary_validate' => wp_create_nonce('lmat_update_glossary_nonce'),
+                    'delete_glossary_validate' => wp_create_nonce('lmat_delete_glossary_nonce'),
+                    'add_glossary_validate' => wp_create_nonce('lmat_add_glossary_nonce'),
+                    'export_glossary_validate' => wp_create_nonce('lmat_export_glossary_nonce'),
                 ));
 				
 				return false;
@@ -239,7 +243,7 @@ if (!class_exists('Glossary')) {
         }
 
         public function import_glossary_ajax() {
-            check_ajax_referer('lmat_glossary_nonce', '_wpnonce');
+            check_ajax_referer('lmat_import_glossary_nonce', '_wpnonce');
             if (!current_user_can('manage_options')) {
                 wp_send_json_error('Permission denied');
             }
@@ -353,7 +357,7 @@ if (!class_exists('Glossary')) {
         }
 
         public function update_glossary_ajax() {
-            check_ajax_referer('lmat_glossary_nonce', '_wpnonce');
+            check_ajax_referer('lmat_update_glossary_nonce', '_wpnonce');
 
             if (!current_user_can('manage_options')) {
                 wp_send_json_error('Permission denied');
@@ -427,7 +431,7 @@ if (!class_exists('Glossary')) {
         }
 
         public function delete_glossary_ajax() {
-            check_ajax_referer('lmat_glossary_nonce', '_wpnonce');
+            check_ajax_referer('lmat_delete_glossary_nonce', '_wpnonce');
             if (!current_user_can('manage_options')) {
                 wp_send_json_error('Permission denied');
             }
@@ -483,7 +487,7 @@ if (!class_exists('Glossary')) {
         }
 
         public function add_glossary_ajax() {
-            check_ajax_referer('lmat_glossary_nonce', '_wpnonce');
+            check_ajax_referer('lmat_add_glossary_nonce', '_wpnonce');
             if (!current_user_can('manage_options')) {
                 wp_send_json_error('Permission denied');
             }
@@ -550,6 +554,7 @@ if (!class_exists('Glossary')) {
         }
 
         public function export_glossary_ajax() {
+            check_ajax_referer('lmat_export_glossary_nonce', '_wpnonce');
             if (!current_user_can('manage_options')) {
                 wp_die('Permission denied');
             }
@@ -611,13 +616,9 @@ if (!class_exists('Glossary')) {
         }
 
         public function get_glossary_ajax() {
+            check_ajax_referer('lmat_get_glossary_private', '_wpnonce');
             if (!current_user_can('read')) {
                 wp_send_json_error('Permission denied');
-            }
-
-            $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
-            if (!wp_verify_nonce($nonce, 'lmat_get_glossary_nonce')) {
-                wp_send_json_error('Invalid nonce');
             }
 
             $source_lang = isset($_POST['source_lang']) ? sanitize_text_field($_POST['source_lang']) : '';

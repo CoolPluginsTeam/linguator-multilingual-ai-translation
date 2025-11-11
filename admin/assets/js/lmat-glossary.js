@@ -94,7 +94,7 @@ jQuery(document).ready(function($) {
         formData.append('action', 'lmat_import_glossary');
         formData.append('csv_file', file);
         formData.append('overwrite', false);
-        formData.append('_wpnonce', lmat_glossary.nonce);
+        formData.append('_wpnonce', lmat_glossary.import_glossary_validate);
 
         if (!$('.lmat-glossary-loader').length) {
             $('.lmat-glossary-modal-content').append('<div class="lmat-glossary-loader"><div class="lmat-glossary-loader-spinner"></div></div>');
@@ -314,7 +314,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'lmat_update_glossary',
-                _wpnonce: lmat_glossary.nonce,
+                _wpnonce: lmat_glossary.update_glossary_validate,
                 data: {
                     term: term,
                     description: desc,
@@ -621,7 +621,7 @@ jQuery(document).ready(function($) {
 
         $.post(lmat_glossary.ajaxurl, {
             action: 'lmat_delete_glossary',
-            _wpnonce: lmat_glossary.nonce,
+            _wpnonce: lmat_glossary.delete_glossary_validate,
             term: term,
             source_lang: source_lang
         }, function(resp) {
@@ -812,7 +812,7 @@ jQuery(document).ready(function($) {
 
         const data = {
             action: 'lmat_add_glossary',
-            _wpnonce: lmat_glossary.nonce,
+            _wpnonce: lmat_glossary.add_glossary_validate,
             type: $form.find('.lmat-add-type').val(),
             term: term,
             description: desc,
@@ -1282,6 +1282,7 @@ jQuery(document).ready(function($) {
         
         // Create a temporary link to trigger the download
         var url = lmat_glossary.ajaxurl + '?action=lmat_export_glossary';
+        url += '&_wpnonce=' + lmat_glossary.export_glossary_validate;
         var link = document.createElement('a');
         link.href = url;
         link.download = 'glossary-export.csv';
