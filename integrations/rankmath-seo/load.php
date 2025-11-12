@@ -4,9 +4,6 @@
  *
  * @package Linguator
  */
-// if(true){
-// 	return;
-// }
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly.

@@ -4,9 +4,6 @@
  *
  * @package Linguator
  */
-// if(true){
-// 	return;
-// }
 namespace Linguator\Integrations\RankMath;
 
 if ( ! defined( 'ABSPATH' ) ) {
