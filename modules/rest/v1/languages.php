@@ -241,6 +241,28 @@ class Languages extends Abstract_Controller {
 				),
 			)
 		);
+		// Update post language
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/update-post-language",
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'update_post_language' ),
+				'permission_callback' => array( $this, 'update_post_language_permissions_check' ),
+				'args'                => array(
+					'post_id' => array(
+						'description' => __( 'ID of the post to update.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+					'lang' => array(
+						'description' => __( 'Language slug to assign to the post.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'string',
+						'required'    => true,
+					),
+				),
+			)
+		);
 
 		
 	}
@@ -800,6 +822,73 @@ class Languages extends Abstract_Controller {
 		}
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create posts.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		$nonce_check = $this->verify_nonce( $request );
+		if ( is_wp_error( $nonce_check ) ) {
+			return $nonce_check;
+		}
+		return true;
+	}
+
+	/**
+	 * Updates the language of an existing post.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function update_post_language( $request ) {
+		$post_id = (int) $request['post_id'];
+		$lang_slug = sanitize_key( $request['lang'] );
+
+		if ( ! $post_id || ! $lang_slug ) {
+			return new WP_Error( 'lmat_update_lang_invalid_params', __( 'Missing required parameters.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+		}
+
+		$post = get_post( $post_id );
+		if ( ! $post ) {
+			return new WP_Error( 'lmat_update_lang_invalid_post', __( 'Invalid post ID.', 'linguator-multilingual-ai-translation' ), array( 'status' => 404 ) );
+		}
+
+		$language = $this->model->get_language( $lang_slug );
+		if ( ! $language ) {
+			return new WP_Error( 'lmat_update_lang_invalid_language', __( 'Invalid language.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+		}
+
+		// Check if post already has this language
+		$current_lang = $this->model->post->get_language( $post_id );
+		if ( $current_lang && $current_lang->slug === $lang_slug ) {
+			return rest_ensure_response( array(
+				'success' => true,
+				'message' => __( 'Post already has this language.', 'linguator-multilingual-ai-translation' ),
+			) );
+		}
+
+		// Update the post language
+		$result = $this->model->post->set_language( $post_id, $language );
+		if ( ! $result ) {
+			return new WP_Error( 'lmat_update_lang_failed', __( 'Failed to update post language.', 'linguator-multilingual-ai-translation' ), array( 'status' => 500 ) );
+		}
+
+		// Get updated language info
+		$updated_lang = $this->model->post->get_language( $post_id );
+
+		return rest_ensure_response( array(
+			'success' => true,
+			'post_id' => $post_id,
+			'language' => $updated_lang ? $updated_lang->to_array() : null,
+		) );
+	}
+
+	/**
+	 * Permission check for updating post language.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error
+	 */
+	public function update_post_language_permissions_check( $request ) {
+		$post_id = (int) $request['post_id'];
+		if ( $post_id && ! current_user_can( 'edit_post', $post_id ) ) {
+			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to update this post.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 		$nonce_check = $this->verify_nonce( $request );
 		if ( is_wp_error( $nonce_check ) ) {
