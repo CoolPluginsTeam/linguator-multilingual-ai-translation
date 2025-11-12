@@ -319,13 +319,17 @@ var LanguageSection = function LanguageSection(_ref) {
   }, [lang, allLanguages]);
   var updatePostLanguage = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(langSlug) {
-      var _t;
+      var _editorStore$getCurre, editorStore, currentPost, postStatus, isNewPost, response, currentUrl, _t;
       return _regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
             _context.p = 0;
             setUpdating(true);
             setError('');
+            editorStore = (0,external_wp_data_namespaceObject.select)('core/editor');
+            currentPost = editorStore === null || editorStore === void 0 || (_editorStore$getCurre = editorStore.getCurrentPost) === null || _editorStore$getCurre === void 0 ? void 0 : _editorStore$getCurre.call(editorStore);
+            postStatus = currentPost === null || currentPost === void 0 ? void 0 : currentPost.status;
+            isNewPost = !postId || postStatus === 'auto-draft';
             _context.n = 1;
             return external_wp_apiFetch_namespaceObject({
               path: '/lmat/v1/languages/update-post-language',
@@ -336,19 +340,40 @@ var LanguageSection = function LanguageSection(_ref) {
               }
             });
           case 1:
-            // Reload the page to reflect the language change
-            window.location.reload();
-            _context.n = 3;
-            break;
+            response = _context.v;
+            if (!(response && response.success)) {
+              _context.n = 3;
+              break;
+            }
+            _context.n = 2;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, 100);
+            });
           case 2:
-            _context.p = 2;
+            // Reload the page with appropriate language parameter
+            currentUrl = new URL(window.location.href); // Use new_lang for new posts, lang for existing posts
+            if (isNewPost) {
+              currentUrl.searchParams.set('new_lang', langSlug);
+            } else {
+              currentUrl.searchParams.set('lang', langSlug);
+            }
+            window.location.href = currentUrl.toString();
+            _context.n = 4;
+            break;
+          case 3:
+            throw new Error((0,external_wp_i18n_namespaceObject.__)('Language update did not succeed.', 'linguator-multilingual-ai-translation'));
+          case 4:
+            _context.n = 6;
+            break;
+          case 5:
+            _context.p = 5;
             _t = _context.v;
             setUpdating(false);
             setError((0,external_wp_i18n_namespaceObject.__)('Failed to update language. Please try again.', 'linguator-multilingual-ai-translation'));
-          case 3:
+          case 6:
             return _context.a(2);
         }
-      }, _callee, null, [[0, 2]]);
+      }, _callee, null, [[0, 5]]);
     }));
     return function updatePostLanguage(_x) {
       return _ref2.apply(this, arguments);

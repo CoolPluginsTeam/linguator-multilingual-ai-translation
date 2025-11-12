@@ -100,7 +100,13 @@ const LanguageSection = ( { lang, allLanguages } ) => {
         try {
             setUpdating(true);
             setError('');
-            await apiFetch({
+            
+            const editorStore = select('core/editor');
+            const currentPost = editorStore?.getCurrentPost?.();
+            const postStatus = currentPost?.status;
+            const isNewPost = !postId || postStatus === 'auto-draft';
+            
+            const response = await apiFetch({
                 path: '/lmat/v1/languages/update-post-language',
                 method: 'POST',
                 data: {
@@ -108,8 +114,24 @@ const LanguageSection = ( { lang, allLanguages } ) => {
                     lang: langSlug,
                 },
             });
-            // Reload the page to reflect the language change
-            window.location.reload();
+            
+            // Verify the language was updated successfully
+            if (response && response.success) {
+                // Small delay to ensure database write completes
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Reload the page with appropriate language parameter
+                const currentUrl = new URL(window.location.href);
+                // Use new_lang for new posts, lang for existing posts
+                if (isNewPost) {
+                    currentUrl.searchParams.set('new_lang', langSlug);
+                } else {
+                    currentUrl.searchParams.set('lang', langSlug);
+                }
+                window.location.href = currentUrl.toString();
+            } else {
+                throw new Error(__( 'Language update did not succeed.', 'linguator-multilingual-ai-translation' ));
+            }
         } catch ( e ) {
             setUpdating(false);
             setError( __( 'Failed to update language. Please try again.', 'linguator-multilingual-ai-translation' ) );
