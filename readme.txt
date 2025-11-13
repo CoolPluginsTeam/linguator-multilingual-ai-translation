@@ -166,7 +166,7 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 == Changelog ==
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
-= Version 0.0.7 (Beta) | 07/11/2025 =
+= Version 0.0.7 (Beta) | 13/11/2025 =
 * **Added:** Rank math seo table block translation support & core table block header & footer translation support.
 * **Fixed:** content formatting issue in bulk translation.
 * **Fixed:** String modal open If language not supported.
