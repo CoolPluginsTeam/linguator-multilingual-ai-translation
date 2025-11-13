@@ -11,15 +11,13 @@ import Default from "./default"
 import URLModifications from "./url-modifications"
 import AiTranslation from "./ai-translation"
 import LanguageSwitcher from "./language-switcher"
-import Migration from "./migration"
 
 //Component router for setup 
 const SetupFileRouting = () => {
 
     const {setupProgress} = React.useContext(setupContext)
 
-    if(setupProgress === "migration") return <Migration/>
-    else if(setupProgress === "default") return <Default/>
+    if(setupProgress === "default") return <Default/>
     else if (setupProgress === "languages") return <Languages  />
     else if(setupProgress === "url") return <URLModifications/>
     else if (setupProgress === "media") return <Media  />
@@ -34,17 +32,6 @@ const SetupProgress = ({lmat_setup_data}) => {
     React.useEffect(()=>{
         let step = 1;
         let temp_setupSetups = []
-        
-        // Add migration step if Polylang is detected
-        const polylangDetection = window.lmat_setup?.polylang_detection
-        if (polylangDetection && typeof polylangDetection === 'object' && polylangDetection.has_polylang === true) {
-            temp_setupSetups.push({
-                label: __("Migration","linguator-multilingual-ai-translation"),
-                value: "migration",
-                visible: true,
-                step: step++
-            })
-        }
         
         temp_setupSetups.push({
             label: __("Default","linguator-multilingual-ai-translation"),

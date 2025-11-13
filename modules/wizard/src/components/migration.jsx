@@ -19,9 +19,6 @@ const Migration = ({ onComplete, onSkip }) => {
   const [migrating, setMigrating] = React.useState(false)
   const [migrationComplete, setMigrationComplete] = React.useState(false)
   const [migrationResults, setMigrationResults] = React.useState(null)
-  const [migrateLanguages, setMigrateLanguages] = React.useState(true)
-  const [migrateTranslations, setMigrateTranslations] = React.useState(true)
-  const [migrateSettings, setMigrateSettings] = React.useState(true)
 
   React.useEffect(() => {
     // Check for Polylang on component mount
@@ -54,11 +51,6 @@ const Migration = ({ onComplete, onSkip }) => {
   }
 
   const handleMigrate = async () => {
-    if (!migrateLanguages && !migrateTranslations && !migrateSettings) {
-      toast.error(__('Please select at least one item to migrate.', 'linguator-multilingual-ai-translation'))
-      return
-    }
-
     setMigrating(true)
     try {
       const response = await apiFetch({
@@ -69,9 +61,9 @@ const Migration = ({ onComplete, onSkip }) => {
           'X-WP-Nonce': getNonce()
         },
         body: JSON.stringify({
-          migrate_languages: migrateLanguages,
-          migrate_translations: migrateTranslations,
-          migrate_settings: migrateSettings
+          migrate_languages: true,
+          migrate_translations: true,
+          migrate_settings: true
         })
       })
 
@@ -127,22 +119,30 @@ const Migration = ({ onComplete, onSkip }) => {
   if (!migrationData || !migrationData.has_polylang) {
     // Auto-advance to next step
     React.useEffect(() => {
-      handleContinue()
+      if (onComplete) {
+        onComplete()
+      } else {
+        handleContinue()
+      }
     }, [])
     return null
   }
 
   return (
-    <div className='mx-auto max-w-[600px] p-10 min-h-[38vh] bg-white shadow-sm flex flex-col' style={{marginTop: "12px"}}>
-      <div className='flex-grow'>
-        <h2>{__('Migrate from Polylang', 'linguator-multilingual-ai-translation')}</h2>
-        <p className='m-0 text-sm/6 mb-4'>
+    <div className="mx-auto max-w-[600px] p-10 min-h-[38vh] bg-white shadow-sm flex flex-col" style={{marginTop: "12px"}}>
+      <div className="text-center mb-6">
+        <h3 className="text-2xl font-semibold text-text-primary mb-3">
+          {__('Migrate from Polylang', 'linguator-multilingual-ai-translation')}
+        </h3>
+        <p className="text-text-secondary mb-6">
           {__('We detected that you have Polylang installed. You can migrate your languages, translation links, and settings to Linguator.', 'linguator-multilingual-ai-translation')}
         </p>
+      </div>
 
+      <div className="flex-grow">
         {!migrationComplete ? (
           <>
-            <div className='bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4'>
+            <div className='bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6'>
               <div className='flex items-start gap-2'>
                 <IoIosWarning className='text-yellow-500 text-xl mt-0.5 flex-shrink-0' />
                 <div>
@@ -166,58 +166,9 @@ const Migration = ({ onComplete, onSkip }) => {
                 </div>
               </div>
             </div>
-
-            <div className='space-y-3 mb-4'>
-              <label className='flex items-center gap-2 cursor-pointer'>
-                <input
-                  type="checkbox"
-                  checked={migrateLanguages}
-                  onChange={(e) => setMigrateLanguages(e.target.checked)}
-                  disabled={migrating}
-                  className='w-4 h-4'
-                />
-                <span className='text-sm'>
-                  {__('Migrate Languages', 'linguator-multilingual-ai-translation')}
-                  {migrationData.languages_count > 0 && (
-                    <span className='text-gray-500 ml-1'>({migrationData.languages_count})</span>
-                  )}
-                </span>
-              </label>
-
-              <label className='flex items-center gap-2 cursor-pointer'>
-                <input
-                  type="checkbox"
-                  checked={migrateTranslations}
-                  onChange={(e) => setMigrateTranslations(e.target.checked)}
-                  disabled={migrating}
-                  className='w-4 h-4'
-                />
-                <span className='text-sm'>
-                  {__('Migrate Translation Links', 'linguator-multilingual-ai-translation')}
-                  {(migrationData.post_translations > 0 || migrationData.term_translations > 0) && (
-                    <span className='text-gray-500 ml-1'>
-                      ({migrationData.post_translations + migrationData.term_translations})
-                    </span>
-                  )}
-                </span>
-              </label>
-
-              <label className='flex items-center gap-2 cursor-pointer'>
-                <input
-                  type="checkbox"
-                  checked={migrateSettings}
-                  onChange={(e) => setMigrateSettings(e.target.checked)}
-                  disabled={migrating}
-                  className='w-4 h-4'
-                />
-                <span className='text-sm'>
-                  {__('Migrate Settings', 'linguator-multilingual-ai-translation')}
-                </span>
-              </label>
-            </div>
           </>
         ) : (
-          <div className='bg-green-50 border border-green-200 rounded-lg p-4 mb-4'>
+          <div className='bg-green-50 border border-green-200 rounded-lg p-4 mb-6'>
             <div className='flex items-start gap-2'>
               <CheckCircle2 className='text-green-500 text-xl mt-0.5 flex-shrink-0' />
               <div>
@@ -252,19 +203,21 @@ const Migration = ({ onComplete, onSkip }) => {
         )}
       </div>
 
-      <div className='flex justify-end gap-3 pt-5'>
+      <div className="flex justify-center gap-3 pt-4">
         {!migrationComplete ? (
           <>
             <Button
               variant='outline'
               onClick={handleSkip}
               disabled={migrating}
+              className="px-8 py-3"
             >
               {__('Skip Migration', 'linguator-multilingual-ai-translation')}
             </Button>
             <Button
               onClick={handleMigrate}
-              disabled={migrating || (!migrateLanguages && !migrateTranslations && !migrateSettings)}
+              disabled={migrating}
+              className="px-8 py-3"
             >
               {migrating ? (
                 <>

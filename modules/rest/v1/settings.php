@@ -155,6 +155,25 @@ class Settings extends Abstract_Controller {
 			)
 		);
 
+		// Add specific endpoint for migration status
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/migration-status",
+			array(
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_migration_status' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => array(
+						'completed' => array(
+							'required' => true,
+							'type'     => 'boolean',
+						),
+					),
+				),
+			)
+		);
+
 		// Add migration endpoints
 		register_rest_route(
 			$this->namespace,
@@ -249,6 +268,34 @@ class Settings extends Abstract_Controller {
 			return new WP_Error(
 				'update_failed',
 				'Failed to update setup completion status',
+				array( 'status' => 500 )
+			);
+		}
+	}
+
+	/**
+	 * Updates migration completion status.
+	 *
+	 *  
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function update_migration_status( $request ) {
+		$completed = $request->get_param( 'completed' );
+		
+		$result = update_option( 'lmat_migration_completed', $completed );
+		
+		if ( $result !== false ) {
+			return rest_ensure_response( array(
+				'success' => true,
+				'lmat_migration_completed' => $completed,
+				'message' => 'Migration status updated successfully'
+			) );
+		} else {
+			return new WP_Error(
+				'update_failed',
+				'Failed to update migration status',
 				array( 'status' => 500 )
 			);
 		}
