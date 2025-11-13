@@ -85,6 +85,23 @@ const Migration = ({ onComplete, onSkip }) => {
           setSelectedLanguageData(languageResponse)
         }
         
+        // Save migration status to database
+        try {
+          await apiFetch({
+            path: 'lmat/v1/settings/migration-status',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-WP-Nonce': getNonce()
+            },
+            body: JSON.stringify({
+              completed: true
+            })
+          })
+        } catch (error) {
+          console.error('Failed to save migration status:', error)
+        }
+        
         toast.success(__('Migration completed successfully!', 'linguator-multilingual-ai-translation'))
       } else {
         throw new Error(response.message || __('Migration failed', 'linguator-multilingual-ai-translation'))
@@ -97,7 +114,24 @@ const Migration = ({ onComplete, onSkip }) => {
     }
   }
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    // Save migration status to database
+    try {
+      await apiFetch({
+        path: 'lmat/v1/settings/migration-status',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': getNonce()
+        },
+        body: JSON.stringify({
+          completed: true
+        })
+      })
+    } catch (error) {
+      console.error('Failed to save migration status:', error)
+    }
+    
     if (onSkip) {
       onSkip()
     } else {

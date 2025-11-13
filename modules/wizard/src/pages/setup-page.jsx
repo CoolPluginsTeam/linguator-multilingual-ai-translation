@@ -400,63 +400,23 @@ const SetupPage = () => {
                 <VideoIntro onGetStarted={handleGetStarted} />
               ) : showMigration ? (
                 <Migration 
-                  onComplete={async () => {
-                    try {
-                      // Save migration status to database
-                      await apiFetch({
-                        path: 'lmat/v1/settings/migration-status',
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'X-WP-Nonce': getNonce()
-                        },
-                        body: JSON.stringify({
-                          completed: true
-                        })
-                      })
-                      setShowMigration(false)
-                      setMigrationCompleted(true)
-                      // Update data state to reflect migration completion
-                      setData(prev => ({ ...prev, lmat_migration_completed: true }))
-                      localStorage.setItem("setupProgress", "default")
-                      setSetupProgress("default")
-                    } catch (error) {
-                      console.error('Failed to update migration status:', error)
-                      // Still proceed even if API call fails
-                      setShowMigration(false)
-                      setMigrationCompleted(true)
-                      localStorage.setItem("setupProgress", "default")
-                      setSetupProgress("default")
-                    }
+                  onComplete={() => {
+                    // Just navigate to next step, status already saved on Migrate/Skip
+                    setShowMigration(false)
+                    setMigrationCompleted(true)
+                    // Update data state to reflect migration completion
+                    setData(prev => ({ ...prev, lmat_migration_completed: true }))
+                    localStorage.setItem("setupProgress", "default")
+                    setSetupProgress("default")
                   }}
-                  onSkip={async () => {
-                    try {
-                      // Save migration status to database
-                      await apiFetch({
-                        path: 'lmat/v1/settings/migration-status',
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'X-WP-Nonce': getNonce()
-                        },
-                        body: JSON.stringify({
-                          completed: true
-                        })
-                      })
-                      setShowMigration(false)
-                      setMigrationCompleted(true)
-                      // Update data state to reflect migration completion
-                      setData(prev => ({ ...prev, lmat_migration_completed: true }))
-                      localStorage.setItem("setupProgress", "default")
-                      setSetupProgress("default")
-                    } catch (error) {
-                      console.error('Failed to update migration status:', error)
-                      // Still proceed even if API call fails
-                      setShowMigration(false)
-                      setMigrationCompleted(true)
-                      localStorage.setItem("setupProgress", "default")
-                      setSetupProgress("default")
-                    }
+                  onSkip={() => {
+                    // Just navigate to next step, status already saved in handleSkip
+                    setShowMigration(false)
+                    setMigrationCompleted(true)
+                    // Update data state to reflect migration completion
+                    setData(prev => ({ ...prev, lmat_migration_completed: true }))
+                    localStorage.setItem("setupProgress", "default")
+                    setSetupProgress("default")
                   }}
                 />
               ) : (
