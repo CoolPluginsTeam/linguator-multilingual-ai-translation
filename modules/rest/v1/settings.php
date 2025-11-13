@@ -18,6 +18,7 @@ use WP_REST_Server;
 use Linguator\Includes\Models\Languages;
 use Linguator\Includes\Options\Options;
 use Linguator\Modules\REST\Abstract_Controller;
+use Linguator\Includes\Migration\Polylang_Migration;
 
 
 /**
@@ -153,6 +154,48 @@ class Settings extends Abstract_Controller {
 				),
 			)
 		);
+
+		// Add migration endpoints
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/migration/detect",
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'detect_polylang' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			"/{$this->rest_base}/migration/migrate",
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'migrate_polylang' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => array(
+						'migrate_languages'    => array(
+							'required' => false,
+							'type'     => 'boolean',
+							'default'  => true,
+						),
+						'migrate_translations' => array(
+							'required' => false,
+							'type'     => 'boolean',
+							'default'  => true,
+						),
+						'migrate_settings'     => array(
+							'required' => false,
+							'type'     => 'boolean',
+							'default'  => true,
+						),
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -268,6 +311,7 @@ class Settings extends Abstract_Controller {
 		$response['available_taxonomies'] = $available_taxonomies;
 		$response['disabled_post_types'] = $disabled_post_types;
 		$response['lmat_video_status'] = get_option('lmat_video_status');
+		$response['lmat_migration_completed'] = get_option('lmat_migration_completed', false);
 		// Check if CPFM opt-in choice exists for LMAT
 		$cpfm_opt_in_choice = get_option( 'cpfm_opt_in_choice_lmat' );
 		
@@ -655,6 +699,57 @@ class Settings extends Abstract_Controller {
 				}
 				break;
 		}
+	}
+
+	/**
+	 * Detects if Polylang is installed and has data to migrate.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function detect_polylang( $request ) {
+		$migration = new Polylang_Migration( $this->model, $this->options );
+		$detection = $migration->detect_polylang();
+		if ( false === $detection ) {
+			return rest_ensure_response( array(
+				'has_polylang' => false,
+				'message'      => __( 'No Polylang data found.', 'linguator-multilingual-ai-translation' ),
+			) );
+		}
+
+		return rest_ensure_response( $detection );
+	}
+
+	/**
+	 * Performs migration from Polylang to Linguator.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function migrate_polylang( $request ) {
+		$migrate_languages    = $request->get_param( 'migrate_languages' );
+		$migrate_translations = $request->get_param( 'migrate_translations' );
+		$migrate_settings     = $request->get_param( 'migrate_settings' );
+
+		$migration = new Polylang_Migration( $this->model, $this->options );
+		$results   = $migration->migrate_all( $migrate_languages, $migrate_translations, $migrate_settings );
+
+		if ( ! $results['success'] ) {
+			return new WP_Error(
+				'migration_failed',
+				__( 'Migration completed with errors.', 'linguator-multilingual-ai-translation' ),
+				array(
+					'status' => 500,
+					'data'   => $results,
+				)
+			);
+		}
+
+		return rest_ensure_response( array(
+			'success' => true,
+			'message' => __( 'Migration completed successfully.', 'linguator-multilingual-ai-translation' ),
+			'data'    => $results,
+		) );
 	}
 
 	/**

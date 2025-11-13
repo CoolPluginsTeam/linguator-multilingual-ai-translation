@@ -15,6 +15,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'L' => 
         array (
             'Linguator\\includes\\' => 19,
+            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -28,6 +29,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
+        ),
+        'Linguator\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
         ),
         'Linguator\\Settings\\' => 
         array (
@@ -128,6 +133,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Helpers\\LMAT_Format_Util' => __DIR__ . '/../..' . '/includes/helpers/format-util.php',
         'Linguator\\Includes\\Helpers\\LMAT_MO' => __DIR__ . '/../..' . '/includes/helpers/mo.php',
         'Linguator\\Includes\\Helpers\\LMAT_Term_Slug' => __DIR__ . '/../..' . '/includes/helpers/term-slug.php',
+        'Linguator\\Includes\\Migration\\Polylang_Migration' => __DIR__ . '/../..' . '/includes/migration/polylang-migration.php',
         'Linguator\\Includes\\Models\\Languages' => __DIR__ . '/../..' . '/includes/models/languages.php',
         'Linguator\\Includes\\Models\\Post_Types' => __DIR__ . '/../..' . '/includes/models/post-types.php',
         'Linguator\\Includes\\Models\\Taxonomies' => __DIR__ . '/../..' . '/includes/models/taxonomies.php',
@@ -191,6 +197,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Install\\LMAT_Install' => __DIR__ . '/../..' . '/install/install.php',
         'Linguator\\Install\\LMAT_Install_Base' => __DIR__ . '/../..' . '/install/install-base.php',
         'Linguator\\Integrations\\LMAT_Integrations' => __DIR__ . '/../..' . '/integrations/integrations.php',
+        'Linguator\\Integrations\\RankMath\\LMAT_RankMath' => __DIR__ . '/../..' . '/integrations/rankmath-seo/rankmath-lmat.php',
         'Linguator\\Integrations\\aqua_resizer\\LMAT_Aqua_Resizer' => __DIR__ . '/../..' . '/integrations/aqua-resizer/aqua-resizer.php',
         'Linguator\\Integrations\\cache\\LMAT_Cache_Compat' => __DIR__ . '/../..' . '/integrations/cache/cache-compat.php',
         'Linguator\\Integrations\\custom_field_template\\LMAT_Cft' => __DIR__ . '/../..' . '/integrations/custom-field-template/cft.php',

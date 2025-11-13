@@ -46,15 +46,30 @@ const SetupPage = () => {
       let setup = localStorage.getItem("setupProgress")
       if (lmat_setup_data[setup] === "1") {
         setSetupProgress((localStorage.getItem("setupProgress")))
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher") {
+      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher" || localStorage.getItem("setupProgress") === "migration") {
         setSetupProgress(localStorage.getItem("setupProgress"))
       }
       else {
-        localStorage.setItem("setupProgress", "default");
+        // Check if Polylang migration is needed
+        const polylangDetection = lmat_setup_data?.polylang_detection
+        if (polylangDetection && polylangDetection.has_polylang) {
+          localStorage.setItem("setupProgress", "migration");
+          setSetupProgress("migration");
+        } else {
+          localStorage.setItem("setupProgress", "default");
+          setSetupProgress("default");
+        }
       }
     } else {
-      localStorage.setItem("setupProgress", "default");
-
+      // Check if Polylang migration is needed on first load
+      const polylangDetection = lmat_setup_data?.polylang_detection
+      if (polylangDetection && polylangDetection.has_polylang) {
+        localStorage.setItem("setupProgress", "migration");
+        setSetupProgress("migration");
+      } else {
+        localStorage.setItem("setupProgress", "default");
+        setSetupProgress("default");
+      }
     }
 
 

@@ -376,6 +376,24 @@ class LMAT_Wizard
 				'before' // Add the script before the main script
 			);
 
+			// Check for Polylang migration
+			$polylang_detection = false;
+			// Load migration class file directly to ensure it's available
+			$migration_file = LINGUATOR_DIR . '/includes/migration/polylang-migration.php';
+			if ( file_exists( $migration_file ) ) {
+				require_once $migration_file;
+				
+				if ( class_exists( '\Linguator\Includes\Migration\Polylang_Migration' ) ) {
+					try {
+						$migration = new \Linguator\Includes\Migration\Polylang_Migration( $this->model, $this->options );
+						$polylang_detection = $migration->detect_polylang();
+					} catch ( \Exception $e ) {
+						// Log error but don't break the wizard
+						error_log( 'Linguator Migration Error: ' . $e->getMessage() );
+					}
+				}
+			}
+
 			// Localize script with settings data
 			wp_localize_script(
 				'lmat_setup',
@@ -393,6 +411,7 @@ class LMAT_Wizard
 					'home_url'       => get_home_url(),
 					'home_page_data' => $home_page_data,
 					'language_switcher_options' => $this->get_language_switcher_options(),
+					'polylang_detection' => $polylang_detection,
 				)
 			);
 
