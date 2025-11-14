@@ -89,6 +89,12 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
 			);
 
+			// Only show More Settings tab if migration hasn't been completed
+			$migration_completed = get_option( 'lmat_migration_completed', false );
+			if ( ! $migration_completed ) {
+				$tabs['more-settings'] = array( 'title' => __( 'More Settings', 'linguator-multilingual-ai-translation' ) );
+			}
+
             $languages = $this->model->get_languages_list();
             $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
             if(!empty($languages) && $static_strings_visibility){
@@ -107,6 +113,12 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 
 				$tabs['switcher']['redirect']     = true;
 				$tabs['switcher']['redirect_url'] = $default_url . '&tab=switcher';
+				
+				// Only set redirect for more-settings if the tab exists
+				if ( isset( $tabs['more-settings'] ) ) {
+					$tabs['more-settings']['redirect']     = true;
+					$tabs['more-settings']['redirect_url'] = $default_url . '&tab=more-settings';
+				}
 			}
 
 			return apply_filters( 'lmat_settings_header_tabs', $tabs );
