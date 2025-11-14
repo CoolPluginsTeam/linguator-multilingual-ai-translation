@@ -16,7 +16,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 	/**
 	 * Class Supported_Blocks
 	 *
-	 * This class handles the supported blocks for the Linguator - AI Translation For Polylang plugin.
+	 * This class handles the supported blocks for the Linguator plugin.
 	 *
 	 * @package LMATP
 	 */
