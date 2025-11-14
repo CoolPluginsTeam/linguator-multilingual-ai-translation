@@ -15,7 +15,7 @@ const ComponentSelector = ({currentPage,data, setData})=>{
   if(currentPage === 'general') return <General data={data} setData={setData} />
   if(currentPage === 'translation') return <TranslationConfig data={data} setData={setData} />
   if(currentPage === 'switcher') return <Switcher data={data} setData={setData} />
-  if(currentPage === 'more-settings') return <Migration data={data} setData={setData} />
+  if(currentPage === 'advanced-settings') return <Migration data={data} setData={setData} />
 }
 
 

@@ -251,7 +251,7 @@ const Migration = ({ onComplete, onSkip }) => {
           </p>
           <Button
             onClick={checkPolylang}
-            disabled={isDetecting || isMigrating}
+            disabled={isDetecting || isMigrating || (migrationData !== null && migrationData.has_polylang === true)}
             variant="primary"
             size="md"
             icon={isDetecting ? <LoaderPinwheel className="animate-spin" /> : null}

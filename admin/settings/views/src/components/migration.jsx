@@ -134,7 +134,7 @@ const Migration = ({ data, setData }) => {
                     </p>
                     <Button
                         onClick={detectPolylang}
-                        disabled={isDetecting || isMigrating}
+                        disabled={isDetecting || isMigrating || polylangData !== null}
                         variant="primary"
                         size="md"
                         icon={isDetecting ? <LoaderPinwheel className="animate-spin" /> : null}
