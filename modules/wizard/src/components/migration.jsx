@@ -2,7 +2,6 @@ import React from 'react'
 import { Button } from '@bsf/force-ui'
 import { __, sprintf } from '@wordpress/i18n'
 import { setupContext } from '../pages/setup-page'
-import SetupContinueButton from './setup-continue-button'
 import { getNonce } from '../utils'
 import apiFetch from '@wordpress/api-fetch'
 import { toast } from 'sonner'
@@ -63,7 +62,8 @@ const Migration = ({ onComplete, onSkip }) => {
         body: JSON.stringify({
           migrate_languages: true,
           migrate_translations: true,
-          migrate_settings: true
+          migrate_settings: true,
+          migrate_strings: true,
         })
       })
 
@@ -100,6 +100,23 @@ const Migration = ({ onComplete, onSkip }) => {
           })
         } catch (error) {
           console.error('Failed to save migration status:', error)
+        }
+        
+        // Mark setup as complete to skip remaining steps
+        try {
+          await apiFetch({
+            path: 'lmat/v1/settings/setup-complete',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-WP-Nonce': getNonce()
+            },
+            body: JSON.stringify({
+              complete: true
+            })
+          })
+        } catch (error) {
+          console.error('Failed to mark setup as complete:', error)
         }
         
         toast.success(__('Migration completed successfully!', 'linguator-multilingual-ai-translation'))
@@ -193,6 +210,9 @@ const Migration = ({ onComplete, onSkip }) => {
                     {migrationData.term_translations > 0 && (
                       <li>{sprintf(__('%d term translation group(s)', 'linguator-multilingual-ai-translation'), migrationData.term_translations)}</li>
                     )}
+                    {migrationData.strings_count > 0 && (
+                      <li>{sprintf(__('%d static string(s)', 'linguator-multilingual-ai-translation'), migrationData.strings_count)}</li>
+                    )}
                     {migrationData.has_settings && (
                       <li>{__('Settings (default language, URL structure, etc.)', 'linguator-multilingual-ai-translation')}</li>
                     )}
@@ -228,6 +248,9 @@ const Migration = ({ onComplete, onSkip }) => {
                     )}
                     {migrationResults.settings?.migrated?.length > 0 && (
                       <li>{sprintf(__('%d setting(s) migrated', 'linguator-multilingual-ai-translation'), migrationResults.settings.migrated.length)}</li>
+                    )}
+                    {migrationResults.strings?.strings_migrated > 0 && (
+                      <li>{sprintf(__('%d static string(s) migrated', 'linguator-multilingual-ai-translation'), migrationResults.strings.strings_migrated)}</li>
                     )}
                   </ul>
                 )}
@@ -267,9 +290,15 @@ const Migration = ({ onComplete, onSkip }) => {
             </Button>
           </>
         ) : (
-          <SetupContinueButton SaveSettings={handleContinue}>
-            {__('Continue', 'linguator-multilingual-ai-translation')}
-          </SetupContinueButton>
+          <Button
+            onClick={() => {
+              const adminUrl = window.lmat_setup?.admin_url || ''
+              window.location.href = `${adminUrl}admin.php?page=lmat_settings&tab=translation`
+            }}
+            className="px-8 py-3"
+          >
+            {__('Go to Settings', 'linguator-multilingual-ai-translation')}
+          </Button>
         )}
       </div>
     </div>

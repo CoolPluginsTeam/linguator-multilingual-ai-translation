@@ -211,6 +211,11 @@ class Settings extends Abstract_Controller {
 							'type'     => 'boolean',
 							'default'  => true,
 						),
+						'migrate_strings'     => array(
+							'required' => false,
+							'type'     => 'boolean',
+							'default'  => true,
+						),
 					),
 				),
 			)
@@ -777,9 +782,10 @@ class Settings extends Abstract_Controller {
 		$migrate_languages    = $request->get_param( 'migrate_languages' );
 		$migrate_translations = $request->get_param( 'migrate_translations' );
 		$migrate_settings     = $request->get_param( 'migrate_settings' );
+		$migrate_strings      = $request->get_param( 'migrate_strings' );
 
 		$migration = new Polylang_Migration( $this->model, $this->options );
-		$results   = $migration->migrate_all( $migrate_languages, $migrate_translations, $migrate_settings );
+		$results   = $migration->migrate_all( $migrate_languages, $migrate_translations, $migrate_settings, $migrate_strings );
 
 		if ( ! $results['success'] ) {
 			return new WP_Error(

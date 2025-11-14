@@ -118,11 +118,43 @@ class Polylang_Migration {
 			)
 		);
 
+		// Count static strings translations
+		// Polylang stores strings in term meta _pll_strings_translations on language terms
+		$strings_count = 0;
+		if ( ! empty( $polylang_languages ) ) {
+			foreach ( $polylang_languages as $lang ) {
+				$strings = get_term_meta( $lang->term_id, '_pll_strings_translations', true );
+				if ( ! empty( $strings ) && is_array( $strings ) ) {
+					$strings_count += count( $strings );
+				}
+			}
+		} elseif ( $polylang_languages_count > 0 ) {
+			// Query database directly if languages aren't loaded
+			$language_terms = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT t.term_id 
+					FROM {$wpdb->terms} t
+					INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+					WHERE tt.taxonomy = %s",
+					'language'
+				)
+			);
+			if ( ! empty( $language_terms ) ) {
+				foreach ( $language_terms as $lang_term ) {
+					$strings = get_term_meta( $lang_term->term_id, '_pll_strings_translations', true );
+					if ( ! empty( $strings ) && is_array( $strings ) ) {
+						$strings_count += count( $strings );
+					}
+				}
+			}
+		}
+
 		return array(
 			'has_polylang'          => true,
 			'languages_count'      => $polylang_languages_count,
 			'post_translations'     => $post_translations_count,
 			'term_translations'     => $term_translations_count,
+			'strings_count'        => $strings_count,
 			'has_settings'         => ! empty( $polylang_options ),
 		);
 	}
@@ -307,6 +339,31 @@ class Polylang_Migration {
 		// In Polylang, terms are assigned to the 'language' taxonomy via term_relationships
 		// The object_id in term_relationships is the term_taxonomy_id of the term being assigned
 		// The term_taxonomy_id in term_relationships is the term_taxonomy_id of the language term
+		// Note: We need to get terms that are NOT in translation groups separately
+		// Terms in translation groups will get their language from migrate_translations()
+		
+		// First, get all terms that are in translation groups (they'll be handled in migrate_translations)
+		$terms_in_translations = array();
+		$term_translation_terms = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT tt.description 
+				FROM {$wpdb->term_taxonomy} tt
+				WHERE tt.taxonomy = %s",
+				'term_translations'
+			)
+		);
+		
+		if ( ! empty( $term_translation_terms ) ) {
+			foreach ( $term_translation_terms as $trans_term ) {
+				$translations = maybe_unserialize( $trans_term->description );
+				if ( is_array( $translations ) ) {
+					$terms_in_translations = array_merge( $terms_in_translations, array_values( $translations ) );
+				}
+			}
+		}
+		$terms_in_translations = array_map( 'intval', $terms_in_translations );
+		
+		// Now get terms that have languages assigned but are NOT in translation groups
 		$term_languages = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT DISTINCT tt.term_id, lang_t.slug as lang_slug, tt.taxonomy
@@ -327,6 +384,11 @@ class Polylang_Migration {
 			foreach ( $term_languages as $term_data ) {
 				$term_id = (int) $term_data->term_id;
 				$lang_slug = $term_data->lang_slug;
+				
+				// Skip terms that are in translation groups (they'll be handled in migrate_translations)
+				if ( in_array( $term_id, $terms_in_translations, true ) ) {
+					continue;
+				}
 				
 				// Check if this language exists in Linguator
 				$lmat_lang = $this->model->languages->get( $lang_slug );
@@ -477,7 +539,18 @@ class Polylang_Migration {
 					// Check if this language exists in Linguator
 					$lmat_lang = $this->model->languages->get( $lang_slug );
 					if ( $lmat_lang ) {
-						$lmat_translations[ $lang_slug ] = (int) $term_id;
+						$term_id = (int) $term_id;
+						
+						// Ensure the term has the CORRECT language assigned before saving translations
+						// This is required by save_translations() which validates that all terms have languages
+						// We force the language assignment here to ensure it matches the translation data
+						$existing_lang = $this->model->term->get_language( $term_id );
+						if ( ! $existing_lang || $existing_lang->slug !== $lang_slug ) {
+							// Assign the correct language to this term (from the translation data)
+							$this->model->term->set_language( $term_id, $lmat_lang );
+						}
+						
+						$lmat_translations[ $lang_slug ] = $term_id;
 					}
 				}
 
@@ -485,9 +558,33 @@ class Polylang_Migration {
 					// Get the first term ID to create translation group
 					$first_term_id = reset( $lmat_translations );
 					
+					// Verify the first term has a language (required by save_translations)
+					$first_lang = $this->model->term->get_language( $first_term_id );
+					if ( ! $first_lang ) {
+						// Get the language slug from the translations array
+						$first_lang_slug = array_search( $first_term_id, $lmat_translations );
+						if ( $first_lang_slug ) {
+							$first_lang_obj = $this->model->languages->get( $first_lang_slug );
+							if ( $first_lang_obj ) {
+								$this->model->term->set_language( $first_term_id, $first_lang_obj );
+							}
+						}
+					}
+					
 					// Save translations for the first term
-					$this->model->term->save_translations( $first_term_id, $lmat_translations );
-					$results['term_translations']++;
+					// This will link all terms in the translation group
+					$saved_translations = $this->model->term->save_translations( $first_term_id, $lmat_translations );
+					
+					if ( ! empty( $saved_translations ) ) {
+						$results['term_translations']++;
+					} else {
+						$results['errors'][] = sprintf(
+							/* translators: %d: Term ID */
+							__( 'Failed to save translations for term ID %d', 'linguator-multilingual-ai-translation' ),
+							$first_term_id
+						);
+						$results['success'] = false;
+					}
 				}
 			}
 		}
@@ -667,20 +764,290 @@ class Polylang_Migration {
 	}
 
 	/**
+	 * Migrate static strings translations from Polylang to Linguator
+	 *
+	 * @return array Migration result.
+	 */
+	public function migrate_strings() {
+		global $wpdb;
+		
+		$results = array(
+			'success' => true,
+			'strings_migrated' => 0,
+			'languages_processed' => 0,
+			'errors' => array(),
+		);
+
+		// Get all Polylang languages
+		$polylang_languages = array();
+		if ( taxonomy_exists( 'language' ) ) {
+			$polylang_languages = get_terms(
+				array(
+					'taxonomy'   => 'language',
+					'hide_empty' => false,
+				)
+			);
+			if ( is_wp_error( $polylang_languages ) ) {
+				$polylang_languages = array();
+			}
+		}
+
+		// If get_terms didn't work, query database directly
+		if ( empty( $polylang_languages ) ) {
+			$language_terms = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT t.term_id, t.name, t.slug, tt.description 
+					FROM {$wpdb->terms} t
+					INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+					WHERE tt.taxonomy = %s",
+					'language'
+				)
+			);
+
+			if ( ! empty( $language_terms ) ) {
+				foreach ( $language_terms as $term_data ) {
+					$term = new \WP_Term( (object) array(
+						'term_id'     => $term_data->term_id,
+						'name'        => $term_data->name,
+						'slug'        => $term_data->slug,
+						'description' => $term_data->description,
+						'taxonomy'     => 'language',
+					) );
+					$polylang_languages[] = $term;
+				}
+			}
+		}
+
+		if ( empty( $polylang_languages ) ) {
+			return $results;
+		}
+
+		// Migrate strings for each language
+		foreach ( $polylang_languages as $pll_lang ) {
+			// Get Polylang strings for this language
+			$pll_strings = get_term_meta( $pll_lang->term_id, '_pll_strings_translations', true );
+			
+			if ( empty( $pll_strings ) || ! is_array( $pll_strings ) ) {
+				continue;
+			}
+
+			// Find the corresponding Linguator language
+			$lmat_lang = $this->model->languages->get( $pll_lang->slug );
+			if ( ! $lmat_lang ) {
+				$results['errors'][] = sprintf(
+					/* translators: %s: Language slug */
+					__( 'Linguator language not found for Polylang language: %s', 'linguator-multilingual-ai-translation' ),
+					$pll_lang->slug
+				);
+				$results['success'] = false;
+				continue;
+			}
+
+			// Get existing Linguator strings for this language
+			$lmat_strings = get_term_meta( $lmat_lang->term_id, '_lmat_strings_translations', true );
+			if ( ! is_array( $lmat_strings ) ) {
+				$lmat_strings = array();
+			}
+
+			// Merge Polylang strings with existing Linguator strings
+			// Use original string as key to avoid duplicates
+			$strings_map = array();
+			foreach ( $lmat_strings as $string_pair ) {
+				if ( is_array( $string_pair ) && isset( $string_pair[0] ) ) {
+					$strings_map[ $string_pair[0] ] = $string_pair;
+				}
+			}
+
+			// Add Polylang strings (will overwrite if duplicate)
+			$strings_added = 0;
+			foreach ( $pll_strings as $string_pair ) {
+				if ( ! is_array( $string_pair ) || ! isset( $string_pair[0] ) || ! isset( $string_pair[1] ) ) {
+					continue;
+				}
+				
+				$original = wp_unslash( $string_pair[0] );
+				$translation = wp_unslash( $string_pair[1] );
+				
+				// Skip empty strings
+				if ( '' === $original || '' === $translation ) {
+					continue;
+				}
+
+				// Add or update the string translation
+				$strings_map[ $original ] = array( $original, $translation );
+				$strings_added++;
+			}
+
+			// Convert back to array format and save
+			$merged_strings = array_values( $strings_map );
+			
+			// Update term meta with merged strings
+			// Note: update_term_meta returns false if value is unchanged, so we always try to update
+			// and then verify by reading back the value
+			update_term_meta( $lmat_lang->term_id, '_lmat_strings_translations', $merged_strings );
+			
+			// Verify the update was successful by reading the stored value
+			// update_term_meta can return false if value is unchanged, so we verify by reading
+			$stored_meta = get_term_meta( $lmat_lang->term_id, '_lmat_strings_translations', true );
+			
+			// Verify the update was successful
+			if ( is_array( $stored_meta ) && ! empty( $stored_meta ) ) {
+				// Check if at least the expected strings are stored
+				$stored_count = count( $stored_meta );
+				$expected_count = count( $merged_strings );
+				
+				// If we have strings stored (even if count doesn't match exactly due to merging),
+				// consider it successful if we have at least as many as we tried to add
+				if ( $stored_count >= $expected_count || ( $stored_count > 0 && $strings_added > 0 ) ) {
+					$results['strings_migrated'] += $strings_added;
+					$results['languages_processed']++;
+				} else {
+					$results['errors'][] = sprintf(
+						/* translators: %1$s: Language slug, %2$d: Stored count, %3$d: Expected count */
+						__( 'Failed to save strings for language: %1$s (stored: %2$d, expected: %3$d)', 'linguator-multilingual-ai-translation' ),
+						$lmat_lang->slug,
+						$stored_count,
+						$expected_count
+					);
+					$results['success'] = false;
+				}
+			} else {
+				$results['errors'][] = sprintf(
+					/* translators: %s: Language slug */
+					__( 'Failed to save strings for language: %s (no strings stored)', 'linguator-multilingual-ai-translation' ),
+					$lmat_lang->slug
+				);
+				$results['success'] = false;
+			}
+		}
+
+		// Clear cache after migration
+		if ( $results['strings_migrated'] > 0 ) {
+			// Clear Linguator strings cache
+			if ( class_exists( '\Linguator\Includes\Helpers\LMAT_Cache' ) ) {
+				$cache = new \Linguator\Includes\Helpers\LMAT_Cache();
+				foreach ( $polylang_languages as $pll_lang ) {
+					$lmat_lang = $this->model->languages->get( $pll_lang->slug );
+					if ( $lmat_lang ) {
+						$cache->clean( $lmat_lang->slug );
+					}
+				}
+			}
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Migrate navigation menu language switcher items from Polylang to Linguator
+	 *
+	 * @return array Migration result.
+	 */
+	public function migrate_menu_switchers() {
+		global $wpdb;
+		
+		$results = array(
+			'success' => true,
+			'menu_items_migrated' => 0,
+			'errors' => array(),
+		);
+
+		// Find all nav menu items with Polylang switcher URL
+		$menu_items = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT p.ID, pm_url.meta_value as url
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} pm_url ON p.ID = pm_url.post_id AND pm_url.meta_key = %s
+				WHERE p.post_type = %s
+				AND pm_url.meta_value = %s",
+				'_menu_item_url',
+				'nav_menu_item',
+				'#pll_switcher'
+			)
+		);
+
+		if ( empty( $menu_items ) ) {
+			return $results;
+		}
+
+		foreach ( $menu_items as $item ) {
+			$menu_item_id = (int) $item->ID;
+			
+			// Update the URL from #pll_switcher to #lmat_switcher
+			$update_url = update_post_meta( $menu_item_id, '_menu_item_url', '#lmat_switcher' );
+			
+			if ( ! $update_url ) {
+				$results['errors'][] = sprintf(
+					/* translators: %d: Menu item ID */
+					__( 'Failed to update URL for menu item ID %d', 'linguator-multilingual-ai-translation' ),
+					$menu_item_id
+				);
+				$results['success'] = false;
+				continue;
+			}
+
+			// Migrate menu item options from _pll_menu_item to _lmat_menu_item
+			$pll_options = get_post_meta( $menu_item_id, '_pll_menu_item', true );
+			
+			if ( ! empty( $pll_options ) && is_array( $pll_options ) ) {
+				// Update meta key from _pll_menu_item to _lmat_menu_item
+				$update_meta = update_post_meta( $menu_item_id, '_lmat_menu_item', $pll_options );
+				
+				if ( $update_meta ) {
+					// Optionally delete the old Polylang meta (or keep it for reference)
+					// delete_post_meta( $menu_item_id, '_pll_menu_item' );
+				} else {
+					$results['errors'][] = sprintf(
+						/* translators: %d: Menu item ID */
+						__( 'Failed to migrate options for menu item ID %d', 'linguator-multilingual-ai-translation' ),
+						$menu_item_id
+					);
+					$results['success'] = false;
+					continue;
+				}
+			} else {
+				// If no options exist, create default options for Linguator
+				$default_options = array(
+					'hide_if_no_translation' => 0,
+					'hide_current' => 0,
+					'force_home' => 0,
+					'show_flags' => 0,
+					'show_names' => 1,
+					'dropdown' => 0,
+				);
+				update_post_meta( $menu_item_id, '_lmat_menu_item', $default_options );
+			}
+
+			// Update menu item title to Linguator's default if needed
+			$menu_item_title = get_post_meta( $menu_item_id, '_menu_item_title', true );
+			if ( empty( $menu_item_title ) ) {
+				update_post_meta( $menu_item_id, '_menu_item_title', __( 'Languages', 'linguator-multilingual-ai-translation' ) );
+			}
+
+			$results['menu_items_migrated']++;
+		}
+
+		return $results;
+	}
+
+	/**
 	 * Perform complete migration from Polylang to Linguator
 	 *
 	 * @param bool $migrate_languages Whether to migrate languages.
 	 * @param bool $migrate_translations Whether to migrate translation links.
 	 * @param bool $migrate_settings Whether to migrate settings.
+	 * @param bool $migrate_strings Whether to migrate static strings.
 	 * @return array Complete migration result.
 	 */
-	public function migrate_all( $migrate_languages = true, $migrate_translations = true, $migrate_settings = true ) {
+	public function migrate_all( $migrate_languages = true, $migrate_translations = true, $migrate_settings = true, $migrate_strings = true ) {
 		$results = array(
 			'success' => true,
 			'languages' => array(),
 			'language_assignments' => array(),
 			'translations' => array(),
 			'settings' => array(),
+			'strings' => array(),
+			'menu_switchers' => array(),
 			'errors' => array(),
 		);
 
@@ -720,6 +1087,26 @@ class Polylang_Migration {
 				$results['success'] = false;
 			}
 			$results['errors'] = array_merge( $results['errors'], $settings_results['errors'] );
+		}
+
+		if ( $migrate_strings && $results['success'] ) {
+			$strings_results = $this->migrate_strings();
+			$results['strings'] = $strings_results;
+			if ( ! $strings_results['success'] ) {
+				$results['success'] = false;
+			}
+			$results['errors'] = array_merge( $results['errors'], $strings_results['errors'] );
+		}
+
+		// Always migrate menu switchers after translations are migrated
+		// This ensures menu items are updated to use Linguator's switcher
+		if ( $results['success'] ) {
+			$menu_switchers_results = $this->migrate_menu_switchers();
+			$results['menu_switchers'] = $menu_switchers_results;
+			if ( ! $menu_switchers_results['success'] ) {
+				$results['success'] = false;
+			}
+			$results['errors'] = array_merge( $results['errors'], $menu_switchers_results['errors'] );
 		}
 
 		// Clear caches after migration
