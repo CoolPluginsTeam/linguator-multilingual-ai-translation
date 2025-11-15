@@ -151,7 +151,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		add_action( 'admin_init', array( $this, 'register_settings_modules' ) );
 
 		// Adds screen options and the about box in the languages admin panel.
-		add_action( 'load-toplevel_page_lmat', array( $this, 'load_page' ) );
+		add_action( 'load-' . self::get_screen_id( 'lang' ), array( $this, 'load_page' ) );
+		// add_action( 'load-' . self::get_screen_id( 'strings' ), array( $this, 'load_page_strings' ) ); AD pending
 
 		// Saves the per-page value in screen options.
 		add_filter( 'set_screen_option_lmat_lang_per_page', array( $this, 'set_screen_option' ), 10, 3 );
@@ -208,8 +209,6 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function load_page() {
-		
-
 		add_screen_option(
 			'per_page',
 			array(
@@ -469,7 +468,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		
 		if ( $is_settings_tab ) {
 			// Handle user input for legacy actions
-			$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['pll_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+			$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			if ( ! empty( $action ) ) {
 				$this->handle_actions( $action );
 			}
@@ -491,13 +490,13 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				break;
 
 			case 'strings':
-				$string_table = new LMAT_Table_String( $this->model->get_languages_list() );
+				$string_table = new LMAT_Table_String( $this->model->languages );
 				$string_table->prepare_items();
 				break;
 		}
 
 		// Handle user input
-		$action = isset( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'edit' === $action && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			// phpcs:ignore WordPress.Security.NonceVerification, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 			$edit_lang = $this->model->get_language( (int) $_GET['lang'] );
