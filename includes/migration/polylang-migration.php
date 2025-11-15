@@ -943,28 +943,42 @@ class Polylang_Migration {
 	 *
 	 * @return array Migration result.
 	 */
-	public function migrate_menu_switchers() {
+	/**
+	 * Migrate navigation menu language switcher items from Polylang to Linguator
+	 *
+	 * @param bool $dry_run If true, do not perform DB updates; return planned changes.
+	 * @return array Migration result.
+	 */
+	public function migrate_menu_switchers( $dry_run = false ) {
 		global $wpdb;
 		
 		$results = array(
 			'success' => true,
 			'menu_items_migrated' => 0,
+			'planned' => array(),
 			'errors' => array(),
 		);
 
-		// Find all nav menu items with Polylang switcher URL
+		// Find nav menu items that either use the Polylang switcher URL
+		// or that have Polylang menu-item meta. Some installs store the switcher
+		// in `_pll_menu_item` without using the `_menu_item_url = '#pll_switcher'` marker,
+		// so check for either condition.
 		$menu_items = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT p.ID, pm_url.meta_value as url
+				"SELECT DISTINCT p.ID
 				FROM {$wpdb->posts} p
-				INNER JOIN {$wpdb->postmeta} pm_url ON p.ID = pm_url.post_id AND pm_url.meta_key = %s
+				LEFT JOIN {$wpdb->postmeta} pm_url ON p.ID = pm_url.post_id AND pm_url.meta_key = %s
+				LEFT JOIN {$wpdb->postmeta} pm_pll ON p.ID = pm_pll.post_id AND pm_pll.meta_key = %s
 				WHERE p.post_type = %s
-				AND pm_url.meta_value = %s",
+				AND ( pm_url.meta_value = %s OR pm_pll.meta_id IS NOT NULL )",
 				'_menu_item_url',
+				'_pll_menu_item',
 				'nav_menu_item',
 				'#pll_switcher'
 			)
 		);
+		
+		
 
 		if ( empty( $menu_items ) ) {
 			return $results;
@@ -972,11 +986,29 @@ class Polylang_Migration {
 
 		foreach ( $menu_items as $item ) {
 			$menu_item_id = (int) $item->ID;
-			
-			// Update the URL from #pll_switcher to #lmat_switcher
+
+			// If dry run, collect planned actions instead of performing them.
+			if ( $dry_run ) {
+				$results['planned'][] = array(
+					'menu_item_id' => $menu_item_id,
+					'set_url'      => '#lmat_switcher',
+					'migrate_meta' => get_post_meta( $menu_item_id, '_pll_menu_item', true ),
+				);
+				$results['menu_items_migrated']++;
+				continue;
+			}
+
+			// Update the URL from #pll_switcher to #lmat_switcher.
+			// Try update_post_meta first; if it fails (rare), try add_post_meta as a fallback.
 			$update_url = update_post_meta( $menu_item_id, '_menu_item_url', '#lmat_switcher' );
-			
-			if ( ! $update_url ) {
+			if ( false === $update_url ) {
+				// Try to add the meta if update failed (covers some edge cases)
+				add_post_meta( $menu_item_id, '_menu_item_url', '#lmat_switcher', true );
+			}
+
+			// Verify the URL was written (update_post_meta can return false if value didn't change)
+			$current_url = get_post_meta( $menu_item_id, '_menu_item_url', true );
+			if ( $current_url !== '#lmat_switcher' ) {
 				$results['errors'][] = sprintf(
 					/* translators: %d: Menu item ID */
 					__( 'Failed to update URL for menu item ID %d', 'linguator-multilingual-ai-translation' ),
@@ -988,15 +1020,14 @@ class Polylang_Migration {
 
 			// Migrate menu item options from _pll_menu_item to _lmat_menu_item
 			$pll_options = get_post_meta( $menu_item_id, '_pll_menu_item', true );
-			
+
 			if ( ! empty( $pll_options ) && is_array( $pll_options ) ) {
 				// Update meta key from _pll_menu_item to _lmat_menu_item
-				$update_meta = update_post_meta( $menu_item_id, '_lmat_menu_item', $pll_options );
-				
-				if ( $update_meta ) {
-					// Optionally delete the old Polylang meta (or keep it for reference)
-					// delete_post_meta( $menu_item_id, '_pll_menu_item' );
-				} else {
+				update_post_meta( $menu_item_id, '_lmat_menu_item', $pll_options );
+
+				// Verify the meta was written (update_post_meta may return false if unchanged)
+				$stored_meta = get_post_meta( $menu_item_id, '_lmat_menu_item', true );
+				if ( empty( $stored_meta ) || ! is_array( $stored_meta ) ) {
 					$results['errors'][] = sprintf(
 						/* translators: %d: Menu item ID */
 						__( 'Failed to migrate options for menu item ID %d', 'linguator-multilingual-ai-translation' ),
@@ -1016,12 +1047,36 @@ class Polylang_Migration {
 					'dropdown' => 0,
 				);
 				update_post_meta( $menu_item_id, '_lmat_menu_item', $default_options );
+
+				// verify default meta saved
+				$stored_default = get_post_meta( $menu_item_id, '_lmat_menu_item', true );
+				if ( empty( $stored_default ) || ! is_array( $stored_default ) ) {
+					$results['errors'][] = sprintf(
+						/* translators: %d: Menu item ID */
+						__( 'Failed to set default options for menu item ID %d', 'linguator-multilingual-ai-translation' ),
+						$menu_item_id
+					);
+					$results['success'] = false;
+					continue;
+				}
 			}
 
 			// Update menu item title to Linguator's default if needed
 			$menu_item_title = get_post_meta( $menu_item_id, '_menu_item_title', true );
 			if ( empty( $menu_item_title ) ) {
 				update_post_meta( $menu_item_id, '_menu_item_title', __( 'Languages', 'linguator-multilingual-ai-translation' ) );
+
+				// verify title set
+				$stored_title = get_post_meta( $menu_item_id, '_menu_item_title', true );
+				if ( empty( $stored_title ) ) {
+					$results['errors'][] = sprintf(
+						/* translators: %d: Menu item ID */
+						__( 'Failed to set menu item title for menu item ID %d', 'linguator-multilingual-ai-translation' ),
+						$menu_item_id
+					);
+					$results['success'] = false;
+					continue;
+				}
 			}
 
 			$results['menu_items_migrated']++;
@@ -1098,16 +1153,14 @@ class Polylang_Migration {
 			$results['errors'] = array_merge( $results['errors'], $strings_results['errors'] );
 		}
 
-		// Always migrate menu switchers after translations are migrated
-		// This ensures menu items are updated to use Linguator's switcher
-		if ( $results['success'] ) {
-			$menu_switchers_results = $this->migrate_menu_switchers();
-			$results['menu_switchers'] = $menu_switchers_results;
-			if ( ! $menu_switchers_results['success'] ) {
-				$results['success'] = false;
-			}
-			$results['errors'] = array_merge( $results['errors'], $menu_switchers_results['errors'] );
+		// Migrate menu switchers after translations are migrated
+		// Menu items are independent so attempt migration regardless of previous step results.
+		$menu_switchers_results = $this->migrate_menu_switchers();
+		$results['menu_switchers'] = $menu_switchers_results;
+		if ( ! $menu_switchers_results['success'] ) {		
+			$results['success'] = false;
 		}
+		$results['errors'] = array_merge( $results['errors'], $menu_switchers_results['errors'] );
 
 		// Clear caches after migration
 		if ( $results['success'] ) {
