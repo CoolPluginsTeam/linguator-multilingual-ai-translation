@@ -63,9 +63,18 @@ class Options implements ArrayAccess, IteratorAggregate {
 	private $current_blog_id;
 
 	/**
+	 * Map of memoized values of blog IDs to tell if Linguator is active.
+	 *
+	 * @var bool[]
+	 * @phpstan-var array<int, bool>
+	 */
+	private $is_plugin_active = array();
+
+	/**
 	 * Cached options JSON schema by blog ID.
 	 *
 	 * @var array[]|null
+	 * @phpstan-var array<int, Schema>|null
 	 */
 	private $schema;
 
@@ -78,6 +87,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 		// Keep track of the blog ID.
 		$this->blog_id         = (int) get_current_blog_id();
 		$this->current_blog_id = $this->blog_id;
+		$this->is_plugin_active = array( $this->blog_id => true );
 
 		// Handle options.
 		$this->init_options_for_current_blog();
@@ -99,24 +109,29 @@ class Options implements ArrayAccess, IteratorAggregate {
 	 * @phpstan-param class-string<Abstract_Option> $class_name
 	 */
 	public function register( string $class_name ): self {
-		foreach ( $this->options as &$options ) {
-			$key = $class_name::key();
+		$key = $class_name::key();
 
-			if ( ! array_key_exists( $key, $options ) ) {
-				// Option raw value doesn't exist in database, use default instead.
-				$options[ $key ] = new $class_name();
-				continue;
-			}
-
-			// If option exists in database, use this value.
-			if ( $options[ $key ] instanceof Abstract_Option ) {
-				// Already registered, do nothing.
-				continue;
-			}
-
-			// Option raw value exists in database, use it.
-			$options[ $key ] = new $class_name( $options[ $key ] );
+		if ( ! array_key_exists( $key, $this->options[ $this->current_blog_id ] ) ) {
+			// Option raw value doesn't exist in database, use default instead.
+			$this->options[ $this->current_blog_id ][ $key ] = $this->maybe_make_option_inactive(
+				new $class_name()
+			);
+			return $this;
 		}
+
+		// If option exists in database, use this value.
+		if ( $this->options[ $this->current_blog_id ][ $key ] instanceof Abstract_Option ) {
+			// Already registered, do nothing.
+			$this->options[ $this->current_blog_id ][ $key ] = $this->maybe_make_option_inactive(
+				$this->options[ $this->current_blog_id ][ $key ]
+			);
+			return $this;
+		}
+
+		// Option raw value exists in database, use it.
+		$this->options[ $this->current_blog_id ][ $key ] = $this->maybe_make_option_inactive(
+			new $class_name( $this->options[ $this->current_blog_id ][ $key ] )
+		);
 
 		return $this;
 	}
@@ -324,9 +339,9 @@ class Options implements ArrayAccess, IteratorAggregate {
 
 		$properties = array();
 
-		if ( ! empty( $this->options[ $this->current_blog_id ] ) ) {
+		if ( $this->is_plugin_active() ) {
 			foreach ( $this->options[ $this->current_blog_id ] as $option ) {
-				if ( ! $option instanceof Abstract_Option ) {
+				if ( ! $option instanceof Abstract_Option || empty( $option->get_schema() ) ) {
 					continue;
 				}
 
@@ -504,6 +519,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Retrieves site health information based on the current blog's options.
 	 *
+	 * @since 0.0.8
 	 *
 	 * @return array The site health information array.
 	 */
@@ -566,29 +582,68 @@ class Options implements ArrayAccess, IteratorAggregate {
 	/**
 	 * Initializes options for the current blog.
 	 *
-	 *  
 	 *
 	 * @return void
 	 */
 	private function init_options_for_current_blog(): void {
-		$options = get_option( self::OPTION_NAME );
-
-		if ( empty( $options ) || ! is_array( $options ) ) {
-			$this->options[ $this->current_blog_id ]  = array();
-			$this->modified[ $this->current_blog_id ] = true;
+		if ( ! $this->is_plugin_active() ) {
+			// Don't try to get the options from the DB.
+			$this->options[ $this->current_blog_id ] = array();
 		} else {
-			$this->options[ $this->current_blog_id ] = $options;
+			$options = get_option( self::OPTION_NAME );
+
+			if ( empty( $options ) || ! is_array( $options ) ) {
+				$this->options[ $this->current_blog_id ]  = array();
+				$this->modified[ $this->current_blog_id ] = true;
+			} else {
+				$this->options[ $this->current_blog_id ] = $options;
+			}
 		}
 
 		/**
 		 * Fires after the options have been init for the current blog.
 		 * This is the best place to register options.
 		 *
-		 *  
+		 * @since 0.0.8 New parameter `$is_plugin_active`.
 		 *
-		 * @param Options $options         Instance of the options.
-		 * @param int     $current_blog_id Current blog ID.
+		 * @param Options $options          Instance of the options.
+		 * @param int     $current_blog_id  Current blog ID.
+		 * @param bool    $is_plugin_active True if Linguator is active on the current site, false otherwise.
+		 *                                      This can be false after calling `switch_to_blog()`.
 		 */
-		do_action( 'lmat_init_options_for_blog', $this, $this->current_blog_id );
+		do_action( 'lmat_init_options_for_blog', $this, $this->current_blog_id, $this->is_plugin_active() );
+	}
+
+	/**
+	 * Tells if Linguator is active on the current blog.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return bool
+	 */
+	private function is_plugin_active(): bool {
+		if ( isset( $this->is_plugin_active[ $this->current_blog_id ] ) ) {
+			return $this->is_plugin_active[ $this->current_blog_id ];
+		}
+
+		$this->is_plugin_active[ $this->current_blog_id ] = lmat_is_plugin_active( LINGUATOR_BASENAME ) || doing_action( 'activate_' . LINGUATOR_BASENAME );
+
+		return $this->is_plugin_active[ $this->current_blog_id ];
+	}
+
+	/**
+	 * Decorates options if we are on a site where Linguator is not active.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Abstract_Option $option The option to decorate.
+	 * @return Abstract_Option
+	 */
+	private function maybe_make_option_inactive( Abstract_Option $option ): Abstract_Option {
+		if ( $this->is_plugin_active() || $option instanceof Inactive_Option ) {
+			return $option;
+		}
+
+		return new Inactive_Option( $option );
 	}
 }

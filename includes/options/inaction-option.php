@@ -1,0 +1,139 @@
+<?php
+/**
+ * @package Linguator
+ */
+
+namespace Linguator\Includes\Options;
+
+use WP_Error;
+use Linguator\Includes\Options\Options;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Class defining a decorator for options when Linguator is not active on the current site.
+ *
+ * @since 0.0.8
+ */
+class Inactive_Option extends Abstract_Option {
+	public const ERROR_CODE = 'linguator_not_active';
+
+	/**
+	 * The option to decorate.
+	 *
+	 * @var Abstract_Option
+	 */
+	private $option;
+
+	/**
+	 * The key of the option to decorate.
+	 *
+	 * @var string
+	 *
+	 * @phpstan-var non-falsy-string
+	 */
+	private static $key = 'not-an-option';
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Abstract_Option $option The option to wrap.
+	 */
+	public function __construct( Abstract_Option $option ) {
+		$this->option = $option;
+		$this->errors = new WP_Error();
+
+		// Make sure the option doesn't contain any value.
+		$this->option->reset();
+	}
+
+	/**
+	 * Returns option key.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return string
+	 *
+	 * @phpstan-return non-falsy-string
+	 */
+	public static function key(): string {
+		return self::$key;
+	}
+
+	/**
+	 * Does nothing except adding an error.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param mixed   $value   Value to set.
+	 * @param Options $options All options.
+	 * @return bool True if the value has been assigned. False in case of errors.
+	 */
+	public function set( $value, Options $options ): bool { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( ! in_array( self::ERROR_CODE, $this->errors->get_error_codes(), true ) ) {
+			$this->errors->add(
+				self::ERROR_CODE,
+				/* translators: %s is a blog ID. */
+				sprintf( __( 'Linguator is not active on site %s.', 'linguator-multilingual-ai-translation' ), (int) get_current_blog_id() )
+			);
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the value of the option, usually the default value for inactive options.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return mixed
+	 */
+	public function get() {
+		return $this->option->get();
+	}
+
+	/**
+	 * Returns the default value.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return mixed
+	 */
+	protected function get_default() {
+		return $this->option->get();
+	}
+
+	/**
+	 * Not used but required by `Abstract_Option`.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return array Partial schema.
+	 */
+	protected function get_data_structure(): array {
+		return array();
+	}
+
+	/**
+	 * Returns an empty schema for inactive options.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return array The schema for inactive options.
+	 */
+	public function get_schema(): array {
+		return array();
+	}
+
+	/**
+	 * Not used but required by `Abstract_Option`.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @return string
+	 */
+	protected function get_description(): string {
+		return '';
+	}
+}
