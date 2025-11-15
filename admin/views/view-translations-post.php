@@ -53,7 +53,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 *
 			 *  
 			 */
-			do_action( 'lmat_before_post_translation_' . $language->slug );
+			do_action( 'lmat_before_post_translation_' . $language->slug, $post_type );
 			?>
 			<td class = "lmat-translation-column">
 				<?php
