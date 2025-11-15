@@ -266,6 +266,19 @@ class LMAT_Admin_Site_Health {
 			$fields['term-no-lang']['value'] = $terms_no_lang;
 		}
 
+		// Multisite
+		if ( is_multisite() ) {
+			if ( is_plugin_active_for_network( LINGUATOR_BASENAME ) ) {
+				$network_activated = __( 'Yes', 'linguator-multilingual-ai-translation' );
+			} else {
+				$network_activated = __( 'No', 'linguator-multilingual-ai-translation' );
+			}
+			$fields['network_activated'] = array(
+				'label' => __( 'Network activated', 'linguator-multilingual-ai-translation' ),
+				'value' => $network_activated,
+			);
+		}
+
 		// Create the section.
 		if ( ! empty( $fields ) ) {
 			$debug_info['lmat_warnings'] = array(
@@ -296,18 +309,9 @@ class LMAT_Admin_Site_Health {
 			$post_ids_with_no_language = $this->model->get_posts_with_no_lang( $post_type, $limit );
 
 			if ( ! empty( $post_ids_with_no_language ) ) {
-				foreach ( $post_ids_with_no_language as $id ) {
-					$posts[ $post_type ][] = $id;
-				}
+					$posts[ $post_type ] = implode( ',', $post_ids_with_no_language );
 			}
 		}
-
-		if ( ! empty( $posts ) ) {
-			foreach ( $posts as $post_type => $post_ids ) {
-				$posts[ $post_type ] = implode( ', ', $post_ids );
-			}
-		}
-
 		return $posts;
 	}
 
@@ -327,18 +331,9 @@ class LMAT_Admin_Site_Health {
 			$term_ids_with_no_language = $this->model->get_terms_with_no_lang( $taxonomy, $limit );
 
 			if ( ! empty( $term_ids_with_no_language ) ) {
-				foreach ( $term_ids_with_no_language as $id ) {
-					$terms[ $taxonomy ][] = $id;
-				}
+				$terms[ $taxonomy ] = implode( ',', $term_ids_with_no_language );
 			}
 		}
-
-		if ( ! empty( $terms ) ) {
-			foreach ( $terms as $taxonomy => $term_ids ) {
-				$terms[ $taxonomy ] = implode( ', ', $term_ids );
-			}
-		}
-
 		return $terms;
 	}
 }
