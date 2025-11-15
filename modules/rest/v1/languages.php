@@ -19,7 +19,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 use Linguator\Includes\Models\Languages as Languages_Model;
-
+use Linguator\Includes\Capabilities\Capabilities;
 
 
 /**
@@ -361,13 +361,6 @@ class Languages extends Abstract_Controller {
 			);
 		}
 
-		// At this point, `$request['locale']` is provided (but maybe not valid).
-		$prepared = $this->prepare_item_for_database( $request );
-
-		if ( is_wp_error( $prepared ) ) {
-			return $prepared;
-		}
-
 		/**
 		 * @phpstan-var array{
 		 *    locale: non-empty-string,
@@ -430,17 +423,6 @@ class Languages extends Abstract_Controller {
 			$mock_request = new WP_REST_Request( 'POST', $request->get_route() );
 			$mock_request->set_body_params( $language_data );
 
-			// Prepare the language data
-			$prepared = $this->prepare_item_for_database( $mock_request );
-
-			if ( is_wp_error( $prepared ) ) {
-				$errors[ $index ] = array(
-					'language' => $language_identifier,
-					'error' => $prepared
-				);
-				continue;
-			}
-
 			/**
 			 * @phpstan-var array{
 			 *    locale: non-empty-string,
@@ -452,7 +434,7 @@ class Languages extends Abstract_Controller {
 			 *    no_default_cat: bool
 			 * } $args
 			 */
-			$args = (array) $prepared;
+			$args = (array) $language_data;
 			
 			// Add the language
 			$result = $this->languages->add( $args );
@@ -1362,83 +1344,6 @@ class Languages extends Abstract_Controller {
 	}
 
 	/**
-	 * Prepares one language for create or update operation.
-	 *
-	 *  
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return object|WP_Error The prepared language, or WP_Error object on failure.
-	 *
-	 * @phpstan-template T of array
-	 * @phpstan-param WP_REST_Request<T> $request
-	 */
-	protected function prepare_item_for_database( $request ) {
-		if ( isset( $request['term_id'] ) ) {
-			// Update a language.
-			$language = $this->get_language( $request );
-
-			if ( is_wp_error( $language ) ) {
-				return $language;
-			}
-
-			return (object) array(
-				'lang_id'    => $language->term_id,
-				'name'       => $request['name'] ?? $language->name,
-				'slug'       => $request['slug'] ?? $language->slug,
-				'locale'     => $request['locale'] ?? $language->locale,
-				'rtl'        => $request['is_rtl'] ?? (bool) $language->is_rtl,
-				'flag'       => $request['flag_code'] ?? $language->flag_code,
-				'term_group' => $request['term_group'] ?? $language->term_group,
-			);
-		}
-
-		// Create a language.
-		if ( empty( $request['locale'] ) ) {
-			// Should not happen.
-			return new WP_Error(
-				'rest_invalid_locale',
-				__( 'The locale is invalid.', 'linguator-multilingual-ai-translation' ),
-				array( 'status' => 400 )
-			);
-		}
-
-		if ( isset( $request['name'], $request['slug'], $request['is_rtl'], $request['flag_code'] ) ) {
-			return (object) array(
-				'name'           => $request['name'],
-				'slug'           => $request['slug'],
-				'locale'         => $request['locale'],
-				'rtl'            => $request['is_rtl'],
-				'flag'           => $request['flag_code'],
-				'term_group'     => $request['term_group'] ?? 0,
-				'no_default_cat' => $request['no_default_cat'] ?? false,
-			);
-		}
-
-		// Create a language from our default list with only the locale.
-		$languages = include LINGUATOR_DIR . '/admin/settings/controllers/languages.php';
-
-		if ( empty( $languages[ $request['locale'] ] ) ) {
-			return new WP_Error(
-				'lmat_rest_invalid_locale',
-				__( 'The locale is invalid.', 'linguator-multilingual-ai-translation' ),
-				array( 'status' => 400 )
-			);
-		}
-
-		$language = (object) $languages[ $request['locale'] ];
-
-		return (object) array(
-			'name'           => $request['name'] ?? $language->name,
-			'slug'           => $request['slug'] ?? $language->code,
-			'locale'         => $request['locale'],
-			'rtl'            => $request['is_rtl'] ?? 'rtl' === $language->dir,
-			'flag'           => $request['flag_code'] ?? $language->flag,
-			'term_group'     => $request['term_group'] ?? 0,
-			'no_default_cat' => $request['no_default_cat'] ?? false,
-		);
-	}
-
-	/**
 	 * Tells if languages can be edited.
 	 *
 	 *  
@@ -1446,7 +1351,7 @@ class Languages extends Abstract_Controller {
 	 * @return bool
 	 */
 	protected function check_update_permission(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( Capabilities::LANGUAGES );
 	}
 
 	/**
