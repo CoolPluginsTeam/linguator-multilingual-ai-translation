@@ -11,13 +11,13 @@ use Linguator\Includes\Capabilities\User;
 /**
  * Class to manage the language context for posts creation or update.
  *
- * @since 3.8
+ * @since 0.0.8
  */
 class Post extends Abstract_Object {
 	/**
 	 * Returns the language to set for a post creation or update.
 	 *
-	 * @since 3.8
+	 * @since 0.0.8
 	 *
 	 * @param User $user The user object.
 	 * @param int  $id   The post ID for which to set the language. Default `0`.
