@@ -18,7 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Core\Linguator;
-
+use Linguator\Install\LMAT_Activate;
+use Linguator\Install\LMAT_Deactivate;
+use Linguator\Install\LMAT_Usable;
 
 
 define( 'LINGUATOR_VERSION', '0.0.7' );
@@ -41,16 +43,9 @@ if ( ! defined( 'LINGUATOR_BASENAME' ) ) {
 
 define( 'LINGUATOR', ucwords( str_replace( '-', ' ', dirname( LINGUATOR_BASENAME ) ) ) );
 
-// Create installer instance
-$installer = new \Linguator\Install\LMAT_Install( LINGUATOR_BASENAME );
-
-// Register activation/deactivation hooks
-register_activation_hook( __FILE__, array( $installer, 'activate' ) );
-register_deactivation_hook( __FILE__, array( $installer, 'deactivate' ) );
-
 // Initialize the plugin
-if ( empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-	new Linguator();
+if ( ! empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+	return;
 }
 
 // Handle redirect after activation and language switcher visibility
@@ -113,3 +108,21 @@ add_action('admin_init', function() {
 		}
 	}
 });
+
+require __DIR__ . '/includes/helpers/constant-functions.php';
+if ( ! LMAT_Usable::can_activate() ) {
+	// WP version or php version is too old.
+	return;
+}
+
+define( 'LMAT_ACTIVE', true );
+
+if ( LMAT_Deactivate::is_deactivation() ) {
+	// Stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules).
+	LMAT_Deactivate::add_hooks();
+	return;
+}
+
+LMAT_Activate::add_hooks();
+
+new Linguator();
