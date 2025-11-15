@@ -4,6 +4,8 @@
  */
 namespace Linguator\Admin\Controllers;
 
+use Linguator\Includes\Capabilities\Capabilities;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -24,6 +26,11 @@ use WP_Term;
  */
 #[AllowDynamicProperties]
 abstract class LMAT_Admin_Base extends LMAT_Base {
+	/**
+	 * @since 0.0.8
+	 */
+	public const SCREEN_PREFIX = 'languages';
+
 	/**
 	 * Current language (used to filter the content).
 	 *
@@ -132,41 +139,94 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function add_menus() {
+	public function add_menus(): void {
 		global $admin_page_hooks;
 
-		// Prepare the list of tabs
-		$tabs = array( 'lang' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ) );
+		global $admin_page_hooks;
 
-		// Only if at least one language has been created
-		$languages = $this->model->get_languages_list();
-		
+		$parent    = '';
+		$first_tab = '';
 
-		$tabs['settings'] = __( 'Settings', 'linguator-multilingual-ai-translation' );
-		
-		$tabs['settings&tab=general&loco=true'] = __( 'Theme & plugins localization', 'linguator-multilingual-ai-translation' );
+		foreach ( $this->get_menu_items() as $tab => $title ) {
+			$page = self::get_screen_slug( $tab );
+			$capa = $this->get_menu_capability( $tab );
 
-		/**
-		 * Filter the list of tabs in Linguator settings
-		 *
-		 *  
-		 *
-		 * @param array $tabs list of tab names
-		 */
-		$tabs = apply_filters( 'lmat_settings_tabs', $tabs );
-
-		$parent = '';
-
-		foreach ( $tabs as $tab => $title ) {
-			$page = 'lang' === $tab ? 'lmat' : "lmat_$tab";
 			if ( empty( $parent ) ) {
-				$parent = $page;
-				add_menu_page( $title, __( 'Linguator', 'linguator-multilingual-ai-translation' ), 'manage_options', $page, '__return_null', 'dashicons-translation' );
-				$admin_page_hooks[ $page ] = 'languages'; // Hack to avoid the localization of the hook name. See: https://core.trac.wordpress.org/ticket/18857
+				$parent    = $page;
+				$first_tab = $tab;
+
+				/*
+				 * WP actually doesn't care about the user capability used here, as long as it has sub-menus: it will
+				 * use the ones from the sub-menus. See `_wp_menu_output()`.
+				 * Ex: a user with `manage_translations` will still be able to access the Translations page, even if the
+				 * main menu has `manage_options`.
+				 */
+				add_menu_page( $title, __( 'Linguator', 'linguator-multilingual-ai-translation' ), $capa, $parent, '__return_null', 'dashicons-translation' );
+				$admin_page_hooks[ $parent ] = self::SCREEN_PREFIX; // avoid the localization of the hook name.
 			}
 
-			add_submenu_page( $parent, $title, $title, 'manage_options', $page, array( $this, 'languages_page' ) );
+			add_submenu_page( $parent, $title, $title, $capa, $page, array( $this, 'languages_page' ) );
 		}
+
+		/*
+		 * Get rid of the `toplevel` prefix in hook names.
+		 *
+		 * In the WP admin, if an admin screen is the first of its menu (like the LMAT's "Languages" screen), the hooks
+		 * fired in the screen get a `toplevel` prefix (ex: `toplevel_page_lmat`) while all the other screens get a
+		 * slug based on the parent screen title (ex: `languages_page_lmat_strings`, where `languages` is the parent
+		 * screen's slug). This will not prevent the `toplevel` hooks to fire, but it will fire the `languages` hooks in
+		 * addition: this way, screens can be removed or moved around without the need of hooking both prefixes: using
+		 * the hooks with the `languages` prefix will work in both cases.
+		 *
+		 * @see get_plugin_page_hookname()
+		 */
+		foreach ( array( 'load-', 'admin_print_styles-', 'admin_print_scripts-', 'admin_head-', '', 'admin_print_footer_scripts-', 'admin_footer-' ) as $prefix ) {
+			add_action(
+				"{$prefix}toplevel_page_{$parent}",
+				static function () use ( $prefix, $first_tab ) {
+					do_action( $prefix . self::get_screen_id( $first_tab ) );
+				}
+			);
+		}
+
+		/*
+		 * Ensure a common CSS class to the `<body>` tag.
+		 *
+		 * Due to the `toplevel` "issue" described earlier, the CSS class `toplevel_page_lmat` (for example) is added
+		 * to the body. This adds a class with the `languages` prefix. This ensures we have a common CSS class, even if
+		 * the screen is moved to the 1st position in the menu.
+		 */
+		add_action(
+			// Target the screen in 1st position only.
+			"admin_head-toplevel_page_{$parent}",
+			static function () use ( $first_tab ) {
+				add_filter(
+					'admin_body_class',
+					static function ( $admin_body_classes ) use ( $first_tab ) {
+						return $admin_body_classes . ' ' . self::get_screen_id( $first_tab );
+					}
+				);
+			}
+		);
+
+		/**
+		 * Also modify the screen ID and base.
+		 *
+		 * Note: the global variables `$page_hook` and `$hook_suffix` are not changed, their value is still
+		 * `toplevel_page_lmat`. Changing them breaks things because we can't filter `get_plugin_page_hookname()`.
+		 * This is why the above hooks are still needed.
+		 */
+		add_action(
+			'current_screen',
+			static function ( $current_screen ) use ( $parent, $first_tab ) {
+				if ( "toplevel_page_{$parent}" !== $current_screen->id ) {
+					return;
+				}
+
+				$current_screen->id   = self::get_screen_id( $first_tab );
+				$current_screen->base = self::get_screen_id( $first_tab );
+			}
+		);
 	}
 
 	/**
@@ -393,11 +453,11 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		$params = array( 'lmat_ajax_backend' => 1 );
 		if ( $post instanceof WP_Post && $this->model->post_types->is_translated( $post->post_type ) ) {
-			$params['pll_post_id'] = $post->ID;
+			$params['lmat_post_id'] = $post->ID;
 		}
 
 		if ( $tag instanceof WP_Term && $this->model->taxonomies->is_translated( $tag->taxonomy ) ) {
-			$params['pll_term_id'] = $tag->term_id;
+			$params['lmat_term_id'] = $tag->term_id;
 		}
 
 		/**
@@ -639,5 +699,77 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns the ID of a Linguator's settings screen.
+	 *
+	 * @since 3.8
+	 *
+	 * @param string $tab The name of the screen (`lang`, `strings`, `settings`).
+	 * @return string
+	 */
+	public static function get_screen_id( string $tab ): string {
+		return sprintf( '%s_page_%s', self::SCREEN_PREFIX, self::get_screen_slug( $tab ) );
+	}
+
+	/**
+	 * Returns the slug of a Linguator's settings screen, as seen in the URL.
+	 *
+	 * @since 3.8
+	 *
+	 * @param string $tab The name of the screen (`lang`, `strings`, `settings`).
+	 * @return string
+	 */
+	public static function get_screen_slug( string $tab ): string {
+		return 'lang' === $tab ? 'lmat' : "lmat_$tab";
+	}
+
+	/**
+	 * Returns the list of sub-menu items.
+	 *
+	 * @since 3.8
+	 *
+	 * @return string[] List of sub-menu items with page slugs as array keys, and sub-menu titles as array values.
+	 *
+	 * @phpstan-return array<non-empty-string, string>
+	 */
+	protected function get_menu_items(): array {
+		$tabs = array(
+			'lang' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ),
+		);
+
+		$tabs['settings'] = __( 'Settings', 'linguator-multilingual-ai-translation' );
+
+		$tabs['settings&tab=general&loco=true'] = __( 'Theme & plugins localization', 'linguator-multilingual-ai-translation' );
+
+		/**
+		 * Filter the list of sub-menu items in Linguator settings.
+		 *
+		 * @since 1.5.1
+		 *
+		 * @param string[] $tabs List of sub-menu items with page slugs as array keys and titles as array values.
+		 */
+		return (array) apply_filters( 'lmat_settings_tabs', $tabs );
+	}
+
+	/**
+	 * Returns the user capability required to access the given menu page.
+	 *
+	 * @since 3.8
+	 *
+	 * @param string $menu Menu slug.
+	 * @return string
+	 */
+	protected function get_menu_capability( string $menu ): string {
+		switch ( $menu ) {
+			case 'lang':
+				return Capabilities::LANGUAGES;
+
+			case 'strings':
+				return Capabilities::TRANSLATIONS;
+		}
+
+		return 'manage_options';
 	}
 }
