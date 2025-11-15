@@ -161,6 +161,8 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return array();
 		}
 
+		$this->prime_object_term_cache( array_merge( array( $id ), $translations ) );
+
 		$lang = $this->get_language( $id );
 
 		if ( empty( $lang ) ) {
