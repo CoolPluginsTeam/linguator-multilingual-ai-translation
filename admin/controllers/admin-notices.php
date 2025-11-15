@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Other\LMAT_Translation_Dashboard;
+use Linguator\Admin\Controllers\LMAT_Admin_Base;
 
 /**
  * A class to manage admin notices
@@ -105,7 +106,6 @@ class LMAT_Admin_Notices {
 	/**
 	 * Should we display notices on this screen?
 	 *
-	 *  
 	 *
 	 * @param string $notice          The notice name.
 	 * @param array  $allowed_screens The screens allowed to display the notice.
@@ -121,12 +121,11 @@ class LMAT_Admin_Notices {
 		}
 		
 		if ( empty( $allowed_screens ) ) {
-			$screen_id       = sanitize_title( __( 'Languages', 'linguator-multilingual-ai-translation' ) );
 			$allowed_screens = array(
 				'dashboard',
 				'plugins',
-				$screen_id . '_page_lmat_strings',
-				$screen_id . '_page_lmat_settings',
+				LMAT_Admin_Base::get_screen_id( 'lang' ),
+				LMAT_Admin_Base::get_screen_id( 'settings' ),
 			);
 		}
 
