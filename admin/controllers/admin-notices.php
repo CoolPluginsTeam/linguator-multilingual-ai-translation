@@ -248,7 +248,7 @@ class LMAT_Admin_Notices {
 		}
 		
 		// Check if we're specifically on the ?page=lmat page
-		return $screen->id === 'toplevel_page_lmat' || $screen->id === 'languages_page_lmat_settings';
+		return LMAT_Admin_Base::get_screen_id( 'lang' ) === $screen->id || LMAT_Admin_Base::get_screen_id( 'settings' ) === $screen->id;
 	}
 	/**
 	 * Add inline CSS and JavaScript for notice positioning on ?page=lmat
