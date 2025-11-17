@@ -122,7 +122,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		
 		if($loco === 'true'){
-			add_action( 'load-languages_page_lmat_settings', array( $this, 'loco_page_redirect' ) );
+			add_action( 'load-' . LMAT_Admin_Base::get_screen_id( 'settings' ), array( $this, 'loco_page_redirect' ) );
 		}
 
 		if($this->active_tab === 'lang'){

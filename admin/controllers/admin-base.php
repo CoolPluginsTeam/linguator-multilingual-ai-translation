@@ -173,7 +173,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		 *
 		 * In the WP admin, if an admin screen is the first of its menu (like the LMAT's "Languages" screen), the hooks
 		 * fired in the screen get a `toplevel` prefix (ex: `toplevel_page_lmat`) while all the other screens get a
-		 * slug based on the parent screen title (ex: `languages_page_lmat_strings`, where `languages` is the parent
+		 * slug based on the parent screen title (ex: `lmat_strings`, where `languages` is the parent
 		 * screen's slug). This will not prevent the `toplevel` hooks to fire, but it will fire the `languages` hooks in
 		 * addition: this way, screens can be removed or moved around without the need of hooking both prefixes: using
 		 * the hooks with the `languages` prefix will work in both cases.
