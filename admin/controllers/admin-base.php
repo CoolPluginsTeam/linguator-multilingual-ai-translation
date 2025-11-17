@@ -704,7 +704,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Returns the ID of a Linguator's settings screen.
 	 *
-	 * @since 3.8
+	 * @since 0.0.8
 	 *
 	 * @param string $tab The name of the screen (`lang`, `strings`, `settings`).
 	 * @return string
@@ -716,7 +716,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Returns the slug of a Linguator's settings screen, as seen in the URL.
 	 *
-	 * @since 3.8
+	 * @since 0.0.8
 	 *
 	 * @param string $tab The name of the screen (`lang`, `strings`, `settings`).
 	 * @return string
@@ -728,7 +728,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Returns the list of sub-menu items.
 	 *
-	 * @since 3.8
+	 * @since 0.0.8
 	 *
 	 * @return string[] List of sub-menu items with page slugs as array keys, and sub-menu titles as array values.
 	 *
@@ -756,7 +756,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Returns the user capability required to access the given menu page.
 	 *
-	 * @since 3.8
+	 * @since 0.0.8
 	 *
 	 * @param string $menu Menu slug.
 	 * @return string
