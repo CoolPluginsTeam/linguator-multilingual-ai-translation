@@ -9,6 +9,8 @@ namespace Linguator\Install;
 
 use Linguator\Includes\Options\Options;
 use Linguator\Includes\Options\Registry as Options_Registry;
+use Linguator\Modules\Wizard\LMAT_Wizard;
+
 
 /**
  * Handles plugin activation for single and multisite installs.
@@ -47,12 +49,7 @@ class LMAT_Activate extends LMAT_Abstract_Activate {
 		add_action( 'lmat_init_options_for_blog', array( Options_Registry::class, 'register' ) );
 		$options = new Options();
 
-		if ( ! empty( $options['version'] ) ) {
-			// If an old version exists, see if we should upgrade to the new version.
-			if ( version_compare( $options['version'], static::get_plugin_version(), '<' ) ) {
-				( new LMAT_Upgrade( $options ) )->can_activate();
-			}
-		} else {
+		if ( empty( $options['version'] ) ) {
 			// If this is a fresh install, set the current plugin version.
 			$options['version'] = static::get_plugin_version();
 		}
