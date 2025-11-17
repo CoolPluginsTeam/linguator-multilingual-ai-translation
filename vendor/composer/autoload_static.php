@@ -134,6 +134,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Helpers\\LMAT_MO' => __DIR__ . '/../..' . '/includes/helpers/mo.php',
         'Linguator\\Includes\\Helpers\\LMAT_Term_Slug' => __DIR__ . '/../..' . '/includes/helpers/term-slug.php',
         'Linguator\\Includes\\Migration\\Polylang_Migration' => __DIR__ . '/../..' . '/includes/migration/polylang-migration.php',
+        'Linguator\\Includes\\Migration\\WPML_Migration' => __DIR__ . '/../..' . '/includes/migration/wpml-migration.php',
         'Linguator\\Includes\\Models\\Languages' => __DIR__ . '/../..' . '/includes/models/languages.php',
         'Linguator\\Includes\\Models\\Post_Types' => __DIR__ . '/../..' . '/includes/models/post-types.php',
         'Linguator\\Includes\\Models\\Taxonomies' => __DIR__ . '/../..' . '/includes/models/taxonomies.php',

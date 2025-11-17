@@ -978,8 +978,6 @@ class Polylang_Migration {
 			)
 		);
 		
-		
-
 		if ( empty( $menu_items ) ) {
 			return $results;
 		}

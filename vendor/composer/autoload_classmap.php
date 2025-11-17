@@ -79,6 +79,7 @@ return array(
     'Linguator\\Includes\\Helpers\\LMAT_MO' => $baseDir . '/includes/helpers/mo.php',
     'Linguator\\Includes\\Helpers\\LMAT_Term_Slug' => $baseDir . '/includes/helpers/term-slug.php',
     'Linguator\\Includes\\Migration\\Polylang_Migration' => $baseDir . '/includes/migration/polylang-migration.php',
+    'Linguator\\Includes\\Migration\\WPML_Migration' => $baseDir . '/includes/migration/wpml-migration.php',
     'Linguator\\Includes\\Models\\Languages' => $baseDir . '/includes/models/languages.php',
     'Linguator\\Includes\\Models\\Post_Types' => $baseDir . '/includes/models/post-types.php',
     'Linguator\\Includes\\Models\\Taxonomies' => $baseDir . '/includes/models/taxonomies.php',

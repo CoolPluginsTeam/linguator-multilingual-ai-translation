@@ -32,7 +32,6 @@ const SetupPage = () => {
   const [showWizard, setShowWizard] = React.useState(false) // Track if user clicked "Get Started"
   const [showMigration, setShowMigration] = React.useState(false) // Track if migration should be shown
   const [migrationCompleted, setMigrationCompleted] = React.useState(false) // Track if migration is completed/skipped
-
   //turning all languages into array format from object format
   let lmat_all_languages = [];
   for (const key in lmat_setup_data.all_languages) {
@@ -57,12 +56,17 @@ const SetupPage = () => {
 
       setData(responseData)
       
-      // Check if Polylang migration is needed using database option
+      // Check if Polylang or WPML migration is needed using database option
       const polylangDetection = lmat_setup_data?.polylang_detection
+      const wpmlDetection = lmat_setup_data?.wpml_detection
       const migrationCompleted = responseData?.lmat_migration_completed || false
       
-      if (polylangDetection && polylangDetection.has_polylang && !migrationCompleted) {
-        // Show migration section if Polylang is detected and migration not completed
+      // Check if either Polylang or WPML is detected
+      const hasPolylang = polylangDetection && typeof polylangDetection === 'object' && polylangDetection.has_polylang === true
+      const hasWPML = wpmlDetection && typeof wpmlDetection === 'object' && wpmlDetection.has_wpml === true
+      
+      if ((hasPolylang || hasWPML) && !migrationCompleted) {
+        // Show migration section if Polylang or WPML is detected and migration not completed
         setShowMigration(true)
         setMigrationCompleted(false)
       } else {

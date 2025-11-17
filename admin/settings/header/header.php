@@ -125,7 +125,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 
 			// Only show Advanced Settings tab if migration hasn't been completed AND Polylang data exists
 			$migration_completed = get_option( 'lmat_migration_completed', false );
-			if ( ! $migration_completed && $this->has_polylang_data() ) {
+			if ( ! $migration_completed ) {
 				$tabs['advanced-settings'] = array( 'title' => __( 'Advanced Settings', 'linguator-multilingual-ai-translation' ) );
 			}
 

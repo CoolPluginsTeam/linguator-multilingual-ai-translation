@@ -379,9 +379,9 @@ class LMAT_Wizard
 			// Check for Polylang migration
 			$polylang_detection = false;
 			// Load migration class file directly to ensure it's available
-			$migration_file = LINGUATOR_DIR . '/includes/migration/polylang-migration.php';
-			if ( file_exists( $migration_file ) ) {
-				require_once $migration_file;
+			$polylang_migration_file = LINGUATOR_DIR . '/includes/migration/polylang-migration.php';
+			if ( file_exists( $polylang_migration_file ) ) {
+				require_once $polylang_migration_file;
 				
 				if ( class_exists( '\Linguator\Includes\Migration\Polylang_Migration' ) ) {
 					try {
@@ -389,7 +389,25 @@ class LMAT_Wizard
 						$polylang_detection = $migration->detect_polylang();
 					} catch ( \Exception $e ) {
 						// Log error but don't break the wizard
-						error_log( 'Linguator Migration Error: ' . $e->getMessage() );
+						error_log( 'Linguator Polylang Migration Error: ' . $e->getMessage() );
+					}
+				}
+			}
+
+			// Check for WPML migration
+			$wpml_detection = false;
+			// Load migration class file directly to ensure it's available
+			$wpml_migration_file = LINGUATOR_DIR . '/includes/migration/wpml-migration.php';
+			if ( file_exists( $wpml_migration_file ) ) {
+				require_once $wpml_migration_file;
+				
+				if ( class_exists( '\Linguator\Includes\Migration\WPML_Migration' ) ) {
+					try {
+						$wpml_migration = new \Linguator\Includes\Migration\WPML_Migration( $this->model, $this->options );
+						$wpml_detection = $wpml_migration->detect_wpml();
+					} catch ( \Exception $e ) {
+						// Log error but don't break the wizard
+						error_log( 'Linguator WPML Migration Error: ' . $e->getMessage() );
 					}
 				}
 			}
@@ -412,6 +430,7 @@ class LMAT_Wizard
 					'home_page_data' => $home_page_data,
 					'language_switcher_options' => $this->get_language_switcher_options(),
 					'polylang_detection' => $polylang_detection,
+					'wpml_detection' => $wpml_detection,
 				)
 			);
 
