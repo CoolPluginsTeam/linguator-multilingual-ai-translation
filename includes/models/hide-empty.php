@@ -9,32 +9,34 @@ use Linguator\Includes\Models\Languages_Proxy_Interface;
 use Linguator\Includes\Other\LMAT_Language;
 
 /**
- * Class to filter the list of languages to only include non-empty languages.
+ * This class helps to only show languages that are not empty.
+ * In other words, it will hide languages that don't have any items/posts in them.
  */
 class Hide_Empty implements Languages_Proxy_Interface {
 	/**
-	 * Returns the proxy's key.
+	 * Get the unique key for this proxy.
 	 *
 	 * @since 0.0.8
 	 *
-	 * @return string
+	 * @return string The key that identifies this filter.
 	 */
 	public function key(): string {
 		return 'hide_empty';
 	}
 
 	/**
-	 * Returns the list of non-empty languages after passing it through this proxy.
+	 * Filter the list of languages and keep only languages that have at least one item.
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param \LMAT_Language[] $languages List of languages to filter.
-	 * @return \LMAT_Language[] Filtered languages.
+	 * @param \LMAT_Language[] $languages List of language objects to filter.
+	 * @return \LMAT_Language[] Languages that are not empty.
 	 */
 	public function filter( array $languages ): array {
 		return array_filter(
 			$languages,
 			static function ( $lang ) {
+				// Keep this language only if it has more than 0 items (not empty)
 				return $lang->get_tax_prop( 'language', 'count' ) > 0;
 			}
 		);

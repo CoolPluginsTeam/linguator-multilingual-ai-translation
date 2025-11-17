@@ -9,32 +9,35 @@ use Linguator\Includes\Models\Languages_Proxy_Interface;
 use Linguator\Includes\Other\LMAT_Language;
 
 /**
- * Class to filter the list of languages to only include non-default languages.
+ * This class helps to hide the default language from a list of languages.
+ * Whenever you want to show languages but skip the default one, use this.
  */
 class Hide_Default implements Languages_Proxy_Interface {
 	/**
-	 * Returns the proxy's key.
+	 * Returns this filter's key, which can be used to refer to it elsewhere.
 	 *
 	 * @since 0.0.8
 	 *
-	 * @return string
+	 * @return string The key name for this filter.
 	 */
 	public function key(): string {
 		return 'hide_default';
 	}
 
 	/**
-	 * Returns the list of non-default languages after passing it through this proxy.
+	 * Removes the default language from the given list and returns only the non-default languages.
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param \LMAT_Language[] $languages List of languages to filter.
-	 * @return \LMAT_Language[]
+	 * @param \LMAT_Language[] $languages List of languages you want to filter.
+	 * @return \LMAT_Language[] The result list, with the default language removed.
 	 */
 	public function filter( array $languages ): array {
+		// Go through each language and keep only the ones that are not set as default
 		return array_filter(
 			$languages,
 			static function ( $lang ) {
+				// Only include if it's NOT the default language
 				return ! $lang->is_default;
 			}
 		);
