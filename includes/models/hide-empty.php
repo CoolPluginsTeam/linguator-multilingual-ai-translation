@@ -37,7 +37,7 @@ class Hide_Empty implements Languages_Proxy_Interface {
 			$languages,
 			static function ( $lang ) {
 				// Keep this language only if it has more than 0 items (not empty)
-				return $lang->get_tax_prop( 'language', 'count' ) > 0;
+				return $lang->get_tax_prop( 'lmat_language', 'count' ) > 0;
 			}
 		);
 	}
