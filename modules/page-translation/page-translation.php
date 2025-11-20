@@ -575,14 +575,14 @@ class LMAT_Page_Translation {
 	}
 
 	public function block_parsing_rules() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
-			wp_die( '0', 403 );
-		}
-
 		if ( ! check_ajax_referer( 'lmat_fetch_block_rules_nonce', 'lmat_fetch_block_rules_key', false ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid security token sent for block parsing rules.', 'linguator-multilingual-ai-translation' ) ) );
 			exit;
+		}
+
+		if(!current_user_can('edit_posts')){
+			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
+			wp_die( '0', 403 );
 		}
 
 		if ( ! method_exists( Supported_Blocks::class, 'block_parsing_rules' ) ) {

@@ -16,6 +16,7 @@ if (! defined('ABSPATH')) {
 
 use Linguator\Includes\Other\LMAT_Language;
 use Linguator\Settings\Controllers\LMAT_Settings;
+use Linguator\Admin\Controllers\LMAT_Admin_Base;
 
 ?>
 <div id="col-container">
@@ -29,8 +30,7 @@ use Linguator\Settings\Controllers\LMAT_Settings;
 			<div class="metabox-holder">
 				<?php
 				wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
-				
-				do_meta_boxes('toplevel_page_lmat', 'normal', array());
+				do_meta_boxes( LMAT_Admin_Base::get_screen_id( 'lang' ), 'normal', array() );
 				?>
 			</div>
 		</div>

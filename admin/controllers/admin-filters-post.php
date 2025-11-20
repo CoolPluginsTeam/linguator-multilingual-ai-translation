@@ -8,13 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 use Linguator\Admin\Controllers\LMAT_Admin_Filters_Post_Base;
 use Linguator\Admin\Controllers\LMAT_Language;
 use Linguator\Includes\Other\LMAT_Query;
-
-
-
+use Linguator\Includes\Capabilities\User;
 
 /**
  * Manages filters and actions related to posts on admin side
@@ -138,16 +135,20 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	}
 
 	/**
-	 * Save language and translation when editing a post (post.php)
+	 * Save language and translation when editing a post (post.php).
 	 *
 	 *  
 	 *
 	 * @return void
 	 */
 	public function edit_post() {
-		if ( isset( $_POST['post_lang_choice'], $_POST['post_ID'] ) && $post_id = (int) $_POST['post_ID'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! isset( $_POST['post_lang_choice'], $_POST['post_ID'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
 			check_admin_referer( 'lmat_language', '_lmat_nonce' );
 
+			$post_id = (int) $_POST['post_ID'];
 			$post = get_post( $post_id );
 
 			if ( empty( $post ) ) {
@@ -160,7 +161,8 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 				return;
 			}
 
-			if ( ! current_user_can( $post_type_object->cap->edit_post, $post_id ) ) {
+			$user = new User();
+			if ( ! $user->has_cap( $post_type_object->cap->edit_post, $post_id ) ) {
 				return;
 			}
 
@@ -170,6 +172,8 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 				return;
 			}
 
+			$user->can_translate_or_die( $language );
+
 			$this->model->post->set_language( $post_id, $language );
 
 			if ( ! isset( $_POST['post_tr_lang'] ) ) {
@@ -177,56 +181,85 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 			}
 
 			$this->save_translations( $post_id, array_map( 'absint', $_POST['post_tr_lang'] ) );
-		}
 	}
 
 	/**
-	 * Save language when bulk editing a post
+	 * Save language when bulk editing a posts.
 	 *
 	 *  
 	 *
 	 * @return void
 	 */
 	public function bulk_edit_posts() {
-		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['post'] ) && -1 !== $_GET['inline_lang_choice'] ) { // phpcs:ignore WordPress.Security.NonceVerification
-			check_admin_referer( 'bulk-posts' );
+		if ( ! isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['post'], $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
 
-			if ( $lang = $this->model->get_language( sanitize_key( $_GET['inline_lang_choice'] ) ) ) {
-				$post_ids = array_map( 'intval', (array) $_REQUEST['post'] );
-				foreach ( $post_ids as $post_id ) {
-					if ( current_user_can( 'edit_post', $post_id ) ) {
-						$this->model->post->set_language( $post_id, $lang );
-					}
-				}
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-posts' ) ) {
+			return;
+		}
+
+		if ( -1 === $_GET['inline_lang_choice'] ) {
+			return;
+		}
+
+		$language = $this->model->get_language( sanitize_key( $_GET['inline_lang_choice'] ) );
+
+		if ( empty( $language ) ) {
+			return;
+		}
+
+		$user = new User();
+		$user->can_translate_or_die( $language );
+
+		$post_ids = array_map( 'intval', (array) $_REQUEST['post'] );
+		foreach ( $post_ids as $post_id ) {
+			if ( $user->has_cap( 'edit_post', $post_id ) ) {
+				$this->model->post->set_language( $post_id, $language );
 			}
 		}
 	}
 
 	/**
-	 * Save language when inline editing a post
+	 * Save language when inline editing a post.
 	 *
 	 *  
 	 *
 	 * @return void
 	 */
 	public function inline_edit_post() {
-		check_admin_referer( 'inlineeditnonce', '_inline_edit' );
-
-		if ( isset( $_POST['post_ID'], $_POST['inline_lang_choice'] ) ) {
-			$post_id = (int) $_POST['post_ID'];
-			$lang = $this->model->get_language( sanitize_key( $_POST['inline_lang_choice'] ) );
-			if ( $post_id && $lang && current_user_can( 'edit_post', $post_id ) ) {
-				$this->model->post->set_language( $post_id, $lang );
-			}
+		if ( ! isset( $_POST['post_ID'], $_POST['inline_lang_choice'], $_REQUEST['_inline_edit'] ) ) {
+			return;
 		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['_inline_edit'], 'inlineeditnonce' ) ) {
+			return;
+		}
+
+		$language = $this->model->get_language( sanitize_key( $_POST['inline_lang_choice'] ) );
+
+		if ( empty( $language ) ) {
+			return;
+		}
+
+		$user = new User();
+		$user->can_translate_or_die( $language );
+
+		$post_id = (int) $_POST['post_ID'];
+
+		if ( ! $post_id || ! $user->has_cap( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		$this->model->post->set_language( $post_id, $language );
 	}
 
 	/**
-	 * Sets the language attribute and text direction for Tiny MCE
+	 * Sets the language attribute and text direction for Tiny MCE.
 	 *
 	 *  
 	 *
-	 * @param array $mce_init TinyMCE config
+	 * @param array $mce_init TinyMCE config.
 	 * @return array
 	 */
 	public function tiny_mce_before_init( $mce_init ) {

@@ -127,7 +127,7 @@ return array(
 		'facebook' => 'az_AZ',
 	),
 	'azb' => array(
-		'code'     => 'azb',
+		'code'     => 'az',
 		'locale'   => 'azb',
 		'name'     => 'گؤنئی آذربایجان',
 		'label'    => 'South Azerbaijani',
@@ -401,7 +401,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'ar',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_CL' => array(
 		'code'     => 'es',
@@ -411,7 +411,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'cl',
 		'facebook' => 'es_CL',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_CO' => array(
 		'code'     => 'es',
@@ -421,7 +421,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'co',
 		'facebook' => 'es_CO',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_CR' => array(
 		'code'     => 'es',
@@ -431,7 +431,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'cr',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_DO' => array(
 		'code'     => 'es',
@@ -441,7 +441,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'do',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_EC' => array(
 		'code'     => 'es',
@@ -451,7 +451,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'ec',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_ES' => array(
 		'code'     => 'es',
@@ -471,7 +471,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'gt',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_MX' => array(
 		'code'     => 'es',
@@ -481,7 +481,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'mx',
 		'facebook' => 'es_MX',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_PE' => array(
 		'code'     => 'es',
@@ -491,7 +491,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'pe',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_PR' => array(
 		'code'     => 'es',
@@ -501,7 +501,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'pr',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_UY' => array(
 		'code'     => 'es',
@@ -511,7 +511,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'uy',
 		'facebook' => 'es_LA',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'es_VE' => array(
 		'code'     => 'es',
@@ -521,7 +521,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 've',
 		'facebook' => 'es_VE',
-		'deepl'    => 'ES',
+		'deepl'    => 'ES-419',
 	),
 	'et' => array(
 		'code'     => 'et',
@@ -692,6 +692,7 @@ return array(
 		'dir'      => 'rtl',
 		'flag'     => 'il',
 		'facebook' => 'he_IL',
+		'deepl'    => 'HE',
 	),
 	'hi_IN' => array(
 		'code'     => 'hi',
@@ -1327,6 +1328,7 @@ return array(
 		'dir'      => 'ltr',
 		'flag'     => 'th',
 		'facebook' => 'th_TH',
+		'deepl'    => 'TH',
 	),
 	'tl' => array(
 		'code'     => 'tl',
@@ -1416,7 +1418,8 @@ return array(
 		'label'    => 'Vietnamese',
 		'dir'      => 'ltr',
 		'flag'     => 'vn',
-		'facebook' => 'VI',
+		'facebook' => 'vi_VN',
+		'deepl'    => 'VI',
 	),
 	'xho' => array(
 		'facebook' => 'xh_ZA',

@@ -184,6 +184,11 @@ class LMAT_Canonical {
 		if ( ! isset( $queried_terms[ $taxonomy ]['terms'] ) || ! is_array( $queried_terms[ $taxonomy ]['terms'] ) ) {
 			return 0;
 		}
+
+		if ( ! isset( $queried_terms[ $taxonomy ]['field'] ) ) {
+			return 0;
+		}
+
 		$field = $queried_terms[ $taxonomy ]['field'];
 		$term  = reset( $queried_terms[ $taxonomy ]['terms'] );
 		$lang  = isset( $queried_terms['lmat_language']['terms'] ) ? reset( $queried_terms['lmat_language']['terms'] ) : '';

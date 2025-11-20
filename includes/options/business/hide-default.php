@@ -10,11 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 use Linguator\Includes\Options\Primitive\Abstract_Boolean;
 use Linguator\Includes\Options\Options;
-
-
 
 /**
  * Class defining the "Display/Hide URL language information for default language" boolean option.
@@ -34,25 +31,6 @@ class Hide_Default extends Abstract_Boolean {
 	 */
 	public static function key(): string {
 		return 'hide_default';
-	}
-
-	/**
-	 * Adds information to the site health info array.
-	 *
-	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
-	 *
-	 * @return array The updated site health information.
-	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		if ( $this->get() ) {
-			$value = '1: ' . __( 'Hide URL language information for default language', 'linguator-multilingual-ai-translation' );
-		} else {
-			$value = '0: ' . __( 'Display URL language information for default language', 'linguator-multilingual-ai-translation' );
-		}
-
-		return $this->get_site_health_info( $info, $value, self::key() );
 	}
 
 	/**
@@ -100,5 +78,24 @@ class Hide_Default extends Abstract_Boolean {
 			'`true`',
 			'`false`'
 		);
+	}
+
+	/**
+	 * Appends the current state of the hide default option to the site health information array.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
+	 *
+	 * @return array The updated site health information array including hide default status.
+	 */
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( $this->get() ) {
+			$value = '1: ' . __( 'Hide URL language information for default language', 'linguator-multilingual-ai-translation' );
+		} else {
+			$value = '0: ' . __( 'Display URL language information for default language', 'linguator-multilingual-ai-translation' );
+		}
+
+		return $this->format_single_value_for_site_health_info( $value );
 	}
 }

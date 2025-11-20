@@ -259,9 +259,9 @@ abstract class LMAT_Translatable_Object {
 	 * Wraps `wp_get_object_terms()` to cache it and return only one object.
 	 * Inspired by the WordPress function `get_the_terms()`.
 	 *
-	 *  
+	 *  @since 0.0.8
 	 *
-	 * @param int    $id       Object ID.
+	 * @param int[]    $object_ids Array of object IDs.
 	 * @param string $taxonomy Linguator taxonomy depending if we are looking for a post (or term, or else) language.
 	 * @return WP_Term|false The term associated to the object in the requested taxonomy if it exists, `false` otherwise.
 	 */
@@ -271,22 +271,18 @@ abstract class LMAT_Translatable_Object {
 			return array();
 		}
 
-		$this->update_object_term_cache( $object_ids );
-
-		$cached_values = wp_cache_get_multiple( $object_ids, "{$taxonomy}_relationships" );
+		$cached_values = $this->get_from_object_term_cache( $object_ids, $taxonomy );
 
 		// Flatten the array to prime the terms cache.
 		$all_term_ids = array();
 		foreach ( $cached_values as $term_ids ) {
-			if ( is_array( $term_ids ) ) {
-				$all_term_ids = array_merge( $all_term_ids, $term_ids );
-			}
+			$all_term_ids = array_merge( $all_term_ids, $term_ids );
 		}
 		_prime_term_caches( $all_term_ids, false );
 
 		$terms = array();
 		foreach ( $cached_values as $object_id => $term_ids ) {
-			if ( is_array( $term_ids ) && ! empty( $term_ids ) ) {
+			if ( ! empty( $term_ids ) ) {
 				$term_id = reset( $term_ids ); // There is only one term for language or translation groups.
 
 				/** @var WP_Term $term */
@@ -301,14 +297,16 @@ abstract class LMAT_Translatable_Object {
 	/**
 	 * Caches all object-relationship terms.
 	 *
-	 * @param int[] $object_ids Array of object IDs to retrieve terms for.
+	 * @since 0.0.8
+	 *
+	 * @param int[] $object_ids Array of object IDs.
 	 *
 	 * @return void
 	 */
-	private function update_object_term_cache( array $object_ids ): void {
+	protected function prime_object_term_cache( array $object_ids ) {
 		$non_cached_ids = array();
-		foreach ( $this->tax_to_cache as $taxonomy ) {
-			$non_cached_ids = array_merge( $non_cached_ids, _get_non_cached_ids( $object_ids, "{$taxonomy}_relationships" ) );
+		foreach ( $this->tax_to_cache as $tax ) {
+			$non_cached_ids = array_merge( $non_cached_ids, _get_non_cached_ids( $object_ids, "{$tax}_relationships" ) );
 		}
 
 		if ( empty( $non_cached_ids ) ) {
@@ -334,9 +332,9 @@ abstract class LMAT_Translatable_Object {
 		}
 
 		foreach ( $non_cached_ids as $id ) {
-			foreach ( $this->tax_to_cache as $taxonomy ) {
-				if ( ! isset( $object_terms[ $taxonomy ][ $id ] ) ) {
-					$object_terms[ $taxonomy ][ $id ] = array();
+			foreach ( $this->tax_to_cache as $tax ) {
+				if ( ! isset( $object_terms[ $tax ][ $id ] ) ) {
+					$object_terms[ $tax ][ $id ] = array();
 				}
 			}
 		}
@@ -347,10 +345,25 @@ abstract class LMAT_Translatable_Object {
 	}
 
 	/**
+	 * Caches all object-relationship terms and returns them for the specified taxonomy.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param int[]  $object_ids Array of object IDs to retrieve terms for.
+	 * @param string $taxonomy   Linguator taxonomy depending if we are looking for a post (or term, or else) language.
+	 *
+	 * @return int[][]
+	 */
+	protected function get_from_object_term_cache( array $object_ids, string $taxonomy ) {
+		$this->prime_object_term_cache( $object_ids );
+		return wp_cache_get_multiple( $object_ids, "{$taxonomy}_relationships" );
+	}
+
+	/**
 	 * Return terms associated to the given object in the given taxonomy.
 	 *
 	 *
-	 * @param int    $object_id Object ID.
+	 * @param int    $id Object ID.
 	 * @param string $taxonomy  Linguator taxonomy depending if we are looking for a post (or term, or else) language.
 	 * @return WP_Term|null The term associated to the object in the requested taxonomy if it exists, `false` otherwise.
 	 */

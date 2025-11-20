@@ -10,9 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Modules\REST\Request;
+use Linguator\Includes\Capabilities\User;
+use Linguator\Includes\Capabilities\Create\Post as Create_Post;
 use WP_Term;
-
-
 
 /**
  * Adds actions and filters related to languages when creating, updating or deleting posts.
@@ -48,6 +50,13 @@ class LMAT_CRUD_Posts {
 	protected $options;
 
 	/**
+	 * Reference to the Linguator Request object.
+	 *
+	 * @var Request
+	 */
+	private $request;
+
+	/**
 	 * Constructor
 	 *
 	 *  
@@ -59,6 +68,7 @@ class LMAT_CRUD_Posts {
 		$this->model     = &$linguator->model;
 		$this->pref_lang = &$linguator->pref_lang;
 		$this->curlang   = &$linguator->curlang;
+		$this->request   = &$linguator->request;
 
 		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 		add_action( 'set_object_terms', array( $this, 'set_object_terms' ), 10, 4 );
@@ -136,43 +146,25 @@ class LMAT_CRUD_Posts {
 	 * @return void
 	 */
 	public function set_default_language( $post_id ) {
-		if ( ! $this->model->post->get_language( $post_id ) ) {
-			if ( ! empty( $_GET['new_lang'] ) && $lang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				// Defined only on admin.
-				$this->model->post->set_language( $post_id, $lang );
-			} elseif ( ! isset( $this->pref_lang ) && ! empty( $_REQUEST['lang'] ) && $lang = $this->model->get_language( sanitize_key( $_REQUEST['lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				// Testing $this->pref_lang makes this test pass only on admin.
-				$this->model->post->set_language( $post_id, $lang );
-			} elseif ( ( $parent_id = wp_get_post_parent_id( $post_id ) ) && $parent_lang = $this->model->post->get_language( $parent_id ) ) {
-				$this->model->post->set_language( $post_id, $parent_lang );
-			} elseif ( isset( $this->pref_lang ) ) {
-				// Always defined on admin, never defined on frontend.
-				$this->model->post->set_language( $post_id, $this->pref_lang );
-			} elseif ( ! empty( $this->curlang ) ) {
-				// Only on frontend due to the previous test always true on admin.
-				$this->model->post->set_language( $post_id, $this->curlang );
-			} else {
-				// In all other cases set to default language.
-				$this->model->post->set_language( $post_id, $this->options['default_lang'] );
-			}
-
-			// If we captured a pending intent at admin_init and have an auto-draft ID,
-			// store it on the post for later linking.
-			if ( 'auto-draft' === get_post_status( $post_id ) ) {
-				$user_id = get_current_user_id();
-				$intent  = $user_id ? get_user_meta( $user_id, '_lmat_pending_linking_intent', true ) : array();
-				if ( ! empty( $intent['from_post'] ) && ! empty( $intent['new_lang'] ) ) {
-					update_post_meta( $post_id, '_lmat_from_post', (int) $intent['from_post'] );
-					update_post_meta( $post_id, '_lmat_new_lang', sanitize_key( $intent['new_lang'] ) );
-				}
-				else {
-					// No intent captured for this auto-draft: ensure there is no leftover meta
-					// so a regular Add New action creates an unlinked page.
-					delete_post_meta( $post_id, '_lmat_from_post' );
-					delete_post_meta( $post_id, '_lmat_new_lang' );
-				}
-			}
+		if ( is_multisite() && ms_is_switched() && ! $this->model->has_languages() ) {
+			return;
 		}
+
+		if ( $this->model->post->get_language( $post_id ) ) {
+			return;
+		}
+
+		$post_language = new Create_Post(
+			$this->model,
+			$this->request,
+			$this->pref_lang instanceof LMAT_Language ? $this->pref_lang : null, // Can be `false` as well...
+			$this->curlang instanceof LMAT_Language ? $this->curlang : null // Can be `false` as well...
+		);
+
+		$this->model->post->set_language(
+			$post_id,
+			$post_language->get_language( new User(), (int) $post_id )
+		);
 	}
 
 	/**
@@ -186,8 +178,14 @@ class LMAT_CRUD_Posts {
 	 * @return void
 	 */
 	public function save_post( $post_id, $post ) {
-		// Does nothing except on post types which are filterable.
-		if ( $this->model->is_translated_post_type( $post->post_type ) ) {
+		if ( is_multisite() && ms_is_switched() && ! $this->model->has_languages() ) {
+			return;
+		}
+
+		if ( ! $this->model->is_translated_post_type( $post->post_type ) ) {
+			return;
+		}
+
 			if ( $id = wp_is_post_revision( $post_id ) ) {
 				$post_id = $id;
 			}
@@ -227,7 +225,6 @@ class LMAT_CRUD_Posts {
 			 * @param int[]   $translations The list of translations post ids.
 			 */
 			do_action( 'lmat_save_post', $post_id, $post, $this->model->post->get_translations( $post_id ) );
-		}
 
 	}
 

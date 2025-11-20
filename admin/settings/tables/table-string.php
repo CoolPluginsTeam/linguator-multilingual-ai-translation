@@ -12,6 +12,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Strings;
 use Linguator\Includes\Helpers\LMAT_MO;
 use Linguator\Includes\Other\LMAT_Language;
 use Linguator\Settings\Controllers\LMAT_Settings;
+use Linguator\Includes\Models\Languages;
 use WP_List_Table;
 use WP_Error;
 
@@ -29,7 +30,7 @@ class LMAT_Table_String extends WP_List_Table {
 	/**
 	 * The list of languages.
 	 *
-	 * @var LMAT_Language[]
+	 * @var Languages
 	 */
 	protected $languages;
 
@@ -59,9 +60,9 @@ class LMAT_Table_String extends WP_List_Table {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language[] $languages List of languages.
+	 * @param Languages $languages List of languages.
 	 */
-	public function __construct( $languages ) {
+	public function __construct( Languages $languages ) {
 		parent::__construct(
 			array(
 				'plural' => 'Strings translations', // Do not translate ( used for css class )
@@ -112,7 +113,7 @@ class LMAT_Table_String extends WP_List_Table {
 			esc_attr( isset( $item['row'] ) ? $item['row'] : '' ),
 			/* translators:  accessibility text, %s is a string potentially in any language */
 			sprintf( __( 'Select %s', 'linguator-multilingual-ai-translation' ), format_to_edit( $item['string'] ) ),
-			empty( $item['icl'] ) ? 'disabled' : '' // Only strings registered with WPML API can be removed.
+			disabled( empty( $item['icl'] ), true, false ) // Only strings registered with WPML API can be removed.
 		);
 	}
 
@@ -140,7 +141,7 @@ class LMAT_Table_String extends WP_List_Table {
 		$out       = '';
 		$languages = array();
 
-		foreach ( $this->languages as $language ) {
+		foreach ( $this->languages->get_list() as $language ) {
 			$languages[ $language->slug ] = $language->name;
 		}
 
@@ -148,14 +149,16 @@ class LMAT_Table_String extends WP_List_Table {
 		if ( isset( $item['translations'] ) && is_array( $item['translations'] ) ) {
 			foreach ( $item['translations'] as $key => $translation ) {
 				$input_type = $item['multiline'] ?
-					'<textarea name="translation[%1$s][%2$s]" id="%1$s-%2$s">%4$s</textarea>' :
-					'<input type="text" name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" />';
+				'<textarea name="translation[%1$s][%2$s]" id="%1$s-%2$s" %5$s>%4$s</textarea>' :
+				'<input type="text" name="translation[%1$s][%2$s]" id="%1$s-%2$s" value="%4$s" %5$s/>';
+
 				$out .= sprintf(
-					'<div class="translation"><label for="%1$s-%2$s">%3$s</label>' . $input_type . '</div>' . "\n",
+					'<div class="translation"><label for="%1$s-%2$s">%3$s</label>' . $input_type . "</div>\n",
 					esc_attr( $key ),
 					esc_attr( isset( $item['row'] ) ? $item['row'] : '' ),
 					esc_html( $languages[ $key ] ),
-					format_to_edit( $translation ) // Don't interpret special chars.
+					format_to_edit( $translation ), // Don't interpret special chars.
+					$item['disabled'][ $key ]
 				);
 			}
 		}
@@ -260,37 +263,40 @@ class LMAT_Table_String extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
+
+		$languages = $this->languages->get_list();
+
 		// Is admin language filter active?
-		if ( $lg = get_user_meta( get_current_user_id(), 'lmat_filter_content', true ) ) {
-			$languages = wp_list_filter( $this->languages, array( 'slug' => $lg ) );
-		} else {
-			$languages = $this->languages;
+		$filter = get_user_meta( get_current_user_id(), 'lmat_filter_content', true );
+		if ( $filter ) {
+			$languages = wp_list_filter( $languages, array( 'slug' => $filter ) );
 		}
 
 		$data = $this->strings;
 
-		// Filter by selected group
+		// Filter the data by the currently selected group, if any group is selected.
 		if ( -1 !== $this->selected_group ) {
 			$data = wp_list_filter( $data, array( 'context' => $this->selected_group ) );
 		}
 
-		// Filter by searched string
+		// If a search term is provided, filter the data by the search string.
 		$s = empty( $_GET['s'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $s ) ) {
-			// Search in translations
+			// Find strings matching the search in existing translations.
 			$in_translations = $this->search_in_translations( $languages, $s );
 
 			foreach ( $data as $key => $row ) {
+				// Remove any rows that do not contain the search term in either their name, raw string, or translation.
 				if ( stripos( $row['name'], $s ) === false && stripos( $row['string'], $s ) === false && ! in_array( $row['string'], $in_translations ) ) {
 					unset( $data[ $key ] );
 				}
 			}
 		}
 
-		// Sorting
+		// Sort the filtered data based on the selected ordering, if any.
 		uasort( $data, array( $this, 'usort_reorder' ) );
 
-		// Paging
+		// Set the pagination variable according to the number of items per page.
 		$per_page = $this->get_items_per_page( 'lmat_strings_per_page' );
 		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
 
@@ -305,14 +311,19 @@ class LMAT_Table_String extends WP_List_Table {
 			)
 		);
 
+		$allowed_language_slugs = $this->languages->filter( 'translator' )->get_list( array( 'fields' => 'slug' ) );
+
 		// Translate strings
 		// Kept for the end as it is a slow process
 		foreach ( $languages as $language ) {
+			$disabled = disabled( in_array( $language->slug, $allowed_language_slugs, true ), false, false );
+
 			$mo = new LMAT_MO();
 			$mo->import_from_db( $language );
 			foreach ( $this->items as $key => $row ) {
 				$this->items[ $key ]['translations'][ $language->slug ] = $mo->translate_if_any( $row['string'] );
-				$this->items[ $key ]['row']                             = $key; // Store the row number for convenience
+				$this->items[ $key ]['row'] 							= $key; // Keep track of the table row index for reference.
+				$this->items[ $key ]['disabled'][ $language->slug ]     = $disabled;
 			}
 		}
 	}
@@ -383,7 +394,7 @@ class LMAT_Table_String extends WP_List_Table {
 		check_admin_referer( 'string-translation', '_wpnonce_string-translation' );
 
 		if ( ! empty( $_POST['submit'] ) ) {
-			foreach ( $this->languages as $language ) {
+			foreach ( $this->languages->filter( 'translator' )->get_list() as $language ) {
 				if ( empty( $_POST['translation'][ $language->slug ] ) || ! is_array( $_POST['translation'][ $language->slug ] ) ) { // In case the language filter is active
 					continue;
 				}
@@ -417,7 +428,7 @@ class LMAT_Table_String extends WP_List_Table {
 				}
 
 				// Clean database ( removes all strings which were registered some day but are no more )
-				if ( ! empty( $_POST['clean'] ) ) {
+				if ( ! empty( $_POST['clean'] ) && current_user_can( 'manage_options' ) ) {
 					$new_mo = new LMAT_MO();
 
 					foreach ( $this->strings as $string ) {
@@ -439,7 +450,7 @@ class LMAT_Table_String extends WP_List_Table {
 		}
 
 		// Unregisters strings registered through WPML API
-		if ( $this->current_action() === 'delete' && ! empty( $_POST['strings'] ) && function_exists( 'icl_unregister_string' ) ) {
+		if ( $this->current_action() === 'delete' && ! empty( $_POST['strings'] ) && function_exists( 'icl_unregister_string' ) && current_user_can( 'manage_options' ) ) {
 			foreach ( array_map( 'sanitize_key', $_POST['strings'] ) as $key ) {
 				icl_unregister_string( $this->strings[ $key ]['context'], $this->strings[ $key ]['name'] );
 			}

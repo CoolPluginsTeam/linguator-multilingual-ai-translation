@@ -11,6 +11,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+use Linguator\Admin\Controllers\LMAT_Admin_Base;
 ?>
 <div class="form-wrap">
 	<?php $header && $header instanceof \Linguator\Settings\Header\Header && $header->header(); ?>
@@ -30,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="metabox-holder">
 		<?php
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		do_meta_boxes( 'languages_page_lmat_strings', 'normal', array() );
+		do_meta_boxes( LMAT_Admin_Base::get_screen_id( 'strings' ), 'normal', array() );
 		?>
 	</div>
 

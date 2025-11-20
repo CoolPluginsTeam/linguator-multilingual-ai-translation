@@ -9,10 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 use Linguator\Includes\Options\Primitive\Abstract_Boolean;
-
-
+use Linguator\Includes\Options\Options;
 
 /**
  * Class defining the "Translate media" boolean option.
@@ -34,25 +32,6 @@ class Media_Support extends Abstract_Boolean {
 	}
 
 	/**
-	 * Adds information to the site health info array.
-	 *
-	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
-	 *
-	 * @return array The updated site health information.
-	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		if ( $this->get() ) {
-			$value = '1: ' . __( 'The media are translated', 'linguator-multilingual-ai-translation' );
-		} else {
-			$value = '0: ' . __( 'The media are not translated', 'linguator-multilingual-ai-translation' );
-		}
-
-		return $this->get_site_health_info( $info, $value, self::key() );
-	}
-
-	/**
 	 * Returns the description used in the JSON schema.
 	 *
 	 *  
@@ -66,5 +45,24 @@ class Media_Support extends Abstract_Boolean {
 			'`true`',
 			'`false`'
 		);
+	}
+
+	/**
+	 * Appends the current state of the media support option to the site health information array.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
+	 *
+	 * @return array The updated site health information array including media support status.
+	 */
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( $this->get() ) {
+			$value = '1: ' . __( 'The media are translated', 'linguator-multilingual-ai-translation' );
+		} else {
+			$value = '0: ' . __( 'The media are not translated', 'linguator-multilingual-ai-translation' );
+		}
+
+		return $this->format_single_value_for_site_health_info( $value );
 	}
 }
