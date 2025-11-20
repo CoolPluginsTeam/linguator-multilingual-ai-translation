@@ -12,6 +12,7 @@ return array(
 	'elementor',
 	'jetpack',
 	'no-category-base',
+	'rankmath-seo',
 	'twenty-seventeen',
 	'wp-importer',
 	'wp-offload-media',
