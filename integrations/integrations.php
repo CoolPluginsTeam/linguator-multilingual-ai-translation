@@ -99,6 +99,11 @@ class LMAT_Integrations {
 	public $cache_compat;
 
 	/**
+	 * @var mixed
+	 */
+	public $rankmath;
+
+	/**
 	 * Constructor.
 	 *
 	 *  

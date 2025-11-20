@@ -265,8 +265,35 @@ var getSettings = function getSettings() {
   };
 };
 var LanguageSection = function LanguageSection(_ref) {
+  var _select, _select$getCurrentPos;
   var lang = _ref.lang,
     allLanguages = _ref.allLanguages;
+  var _useState = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    updating = _useState2[0],
+    setUpdating = _useState2[1];
+  var _useState3 = (0,external_wp_element_namespaceObject.useState)(''),
+    _useState4 = _slicedToArray(_useState3, 2),
+    error = _useState4[0],
+    setError = _useState4[1];
+  var _useState5 = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    showConfirmDialog = _useState6[0],
+    setShowConfirmDialog = _useState6[1];
+  var _useState7 = (0,external_wp_element_namespaceObject.useState)(null),
+    _useState8 = _slicedToArray(_useState7, 2),
+    pendingLanguage = _useState8[0],
+    setPendingLanguage = _useState8[1];
+  var _useState9 = (0,external_wp_element_namespaceObject.useState)((lang === null || lang === void 0 ? void 0 : lang.slug) || ''),
+    _useState0 = _slicedToArray(_useState9, 2),
+    selectValue = _useState0[0],
+    setSelectValue = _useState0[1];
+  var postId = (_select = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select === void 0 || (_select$getCurrentPos = _select.getCurrentPostId) === null || _select$getCurrentPos === void 0 ? void 0 : _select$getCurrentPos.call(_select);
+
+  // Update selectValue when lang changes
+  (0,external_wp_element_namespaceObject.useEffect)(function () {
+    setSelectValue((lang === null || lang === void 0 ? void 0 : lang.slug) || '');
+  }, [lang === null || lang === void 0 ? void 0 : lang.slug]);
   var options = (0,external_wp_element_namespaceObject.useMemo)(function () {
     var list = [];
     if (lang) {
@@ -277,15 +304,145 @@ var LanguageSection = function LanguageSection(_ref) {
       });
     }
     Object.values(allLanguages).forEach(function (row) {
-      list.push({
-        label: row.lang.name,
-        value: row.lang.slug,
-        flag_url: row.lang.flag_url
-      });
+      var _row$links;
+      // Only include languages that don't have an existing translation (no edit_link)
+      // If edit_link exists, it means there's already a linked translation, so exclude it
+      if (!((_row$links = row.links) !== null && _row$links !== void 0 && _row$links.edit_link)) {
+        list.push({
+          label: row.lang.name,
+          value: row.lang.slug,
+          flag_url: row.lang.flag_url
+        });
+      }
     });
     return list;
   }, [lang, allLanguages]);
-  return /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.PanelBody, {
+  var updatePostLanguage = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(langSlug) {
+      var _editorStore$getCurre, editorStore, currentPost, postStatus, isNewPost, response, currentUrl, _t;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.p = _context.n) {
+          case 0:
+            _context.p = 0;
+            setUpdating(true);
+            setError('');
+            editorStore = (0,external_wp_data_namespaceObject.select)('core/editor');
+            currentPost = editorStore === null || editorStore === void 0 || (_editorStore$getCurre = editorStore.getCurrentPost) === null || _editorStore$getCurre === void 0 ? void 0 : _editorStore$getCurre.call(editorStore);
+            postStatus = currentPost === null || currentPost === void 0 ? void 0 : currentPost.status;
+            isNewPost = !postId || postStatus === 'auto-draft';
+            _context.n = 1;
+            return external_wp_apiFetch_namespaceObject({
+              path: '/lmat/v1/languages/update-post-language',
+              method: 'POST',
+              data: {
+                post_id: postId,
+                lang: langSlug
+              }
+            });
+          case 1:
+            response = _context.v;
+            if (!(response && response.success)) {
+              _context.n = 3;
+              break;
+            }
+            _context.n = 2;
+            return new Promise(function (resolve) {
+              return setTimeout(resolve, 100);
+            });
+          case 2:
+            // Reload the page with appropriate language parameter
+            currentUrl = new URL(window.location.href); // Use new_lang for new posts, lang for existing posts
+            if (isNewPost) {
+              currentUrl.searchParams.set('new_lang', langSlug);
+            } else {
+              currentUrl.searchParams.set('lang', langSlug);
+            }
+            window.location.href = currentUrl.toString();
+            _context.n = 4;
+            break;
+          case 3:
+            throw new Error((0,external_wp_i18n_namespaceObject.__)('Language update did not succeed.', 'linguator-multilingual-ai-translation'));
+          case 4:
+            _context.n = 6;
+            break;
+          case 5:
+            _context.p = 5;
+            _t = _context.v;
+            setUpdating(false);
+            setError((0,external_wp_i18n_namespaceObject.__)('Failed to update language. Please try again.', 'linguator-multilingual-ai-translation'));
+          case 6:
+            return _context.a(2);
+        }
+      }, _callee, null, [[0, 5]]);
+    }));
+    return function updatePostLanguage(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var handleLanguageChange = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(value) {
+      var _selected$links;
+      var selected, _selected$links2;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.n) {
+          case 0:
+            if (!(!value || lang && value === lang.slug)) {
+              _context2.n = 1;
+              break;
+            }
+            setSelectValue((lang === null || lang === void 0 ? void 0 : lang.slug) || '');
+            return _context2.a(2);
+          case 1:
+            // If there's an existing translation in that language, navigate to it
+            selected = allLanguages === null || allLanguages === void 0 ? void 0 : allLanguages[value];
+            if (!(selected && (_selected$links = selected.links) !== null && _selected$links !== void 0 && _selected$links.edit_link)) {
+              _context2.n = 2;
+              break;
+            }
+            window.location.href = selected.links.edit_link;
+            return _context2.a(2);
+          case 2:
+            if (postId) {
+              _context2.n = 3;
+              break;
+            }
+            if (selected && (_selected$links2 = selected.links) !== null && _selected$links2 !== void 0 && _selected$links2.add_link) {
+              window.location.href = selected.links.add_link;
+            }
+            return _context2.a(2);
+          case 3:
+            // Show confirmation dialog before updating
+            setSelectValue(value); // Update select to show the selected value
+            setPendingLanguage(value);
+            setShowConfirmDialog(true);
+          case 4:
+            return _context2.a(2);
+        }
+      }, _callee2);
+    }));
+    return function handleLanguageChange(_x2) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  var handleConfirmLanguageChange = function handleConfirmLanguageChange() {
+    setShowConfirmDialog(false);
+    if (pendingLanguage) {
+      updatePostLanguage(pendingLanguage);
+    }
+    setPendingLanguage(null);
+  };
+  var handleCancelLanguageChange = function handleCancelLanguageChange() {
+    setShowConfirmDialog(false);
+    setPendingLanguage(null);
+    // Reset the select control to the current language
+    setSelectValue((lang === null || lang === void 0 ? void 0 : lang.slug) || '');
+  };
+  var getSelectedLanguageName = function getSelectedLanguageName() {
+    if (!pendingLanguage) return '';
+    var selected = allLanguages === null || allLanguages === void 0 ? void 0 : allLanguages[pendingLanguage];
+    return selected ? selected.lang.name : '';
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.PanelBody, {
     title: (0,external_wp_i18n_namespaceObject.__)('Language', 'linguator-multilingual-ai-translation'),
     initialOpen: true
   }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Flex, {
@@ -305,93 +462,102 @@ var LanguageSection = function LanguageSection(_ref) {
     }
   }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.SelectControl, {
     label: undefined,
-    value: (lang === null || lang === void 0 ? void 0 : lang.slug) || '',
-    onChange: function onChange(value) {
-      // If selecting the current language, do nothing.
-      if (!value || lang && value === lang.slug) {
-        return;
-      }
-      // Look up the selected language row in translations table
-      var selected = allLanguages === null || allLanguages === void 0 ? void 0 : allLanguages[value];
-      if (selected && selected.links) {
-        var target = selected.links.edit_link || selected.links.add_link;
-        if (target) {
-          window.location.href = target;
-        }
-      }
-    },
-    help: undefined,
+    value: selectValue,
+    onChange: handleLanguageChange,
+    disabled: updating || showConfirmDialog,
+    help: updating ? (0,external_wp_i18n_namespaceObject.__)('Updating language...', 'linguator-multilingual-ai-translation') : undefined,
     options: options.map(function (opt) {
       return {
         label: opt.label,
         value: opt.value
       };
     })
-    // Changing language navigates to the corresponding edit/add page.
-  }))));
+  }))), error ? /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Notice, {
+    status: "error",
+    isDismissible: false
+  }, error) : null), showConfirmDialog && /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Modal, {
+    title: (0,external_wp_i18n_namespaceObject.__)('Change Language', 'linguator-multilingual-ai-translation'),
+    onRequestClose: handleCancelLanguageChange,
+    isDismissible: true
+  }, /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('Are you sure you want to change the language of this post to', 'linguator-multilingual-ai-translation'), ' ', /*#__PURE__*/React.createElement("strong", null, getSelectedLanguageName()), "?"), /*#__PURE__*/React.createElement("p", null, (0,external_wp_i18n_namespaceObject.__)('This will update the language of the current post. Any unsaved changes will be lost.', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      gap: '8px',
+      marginTop: '16px'
+    }
+  }, /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Button, {
+    variant: "secondary",
+    onClick: handleCancelLanguageChange,
+    disabled: updating
+  }, (0,external_wp_i18n_namespaceObject.__)('Cancel', 'linguator-multilingual-ai-translation')), /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.Button, {
+    variant: "primary",
+    onClick: handleConfirmLanguageChange,
+    disabled: updating
+  }, (0,external_wp_i18n_namespaceObject.__)('Change Language', 'linguator-multilingual-ai-translation')))));
 };
-var TranslationRow = function TranslationRow(_ref2) {
-  var row = _ref2.row;
+var TranslationRow = function TranslationRow(_ref4) {
+  var row = _ref4.row;
   var lang = row.lang,
     translated_post = row.translated_post,
     links = row.links;
   var initialTitle = (translated_post === null || translated_post === void 0 ? void 0 : translated_post.title) || '';
-  var _useState = (0,external_wp_element_namespaceObject.useState)(initialTitle),
-    _useState2 = _slicedToArray(_useState, 2),
-    title = _useState2[0],
-    setTitle = _useState2[1];
-  var _useState3 = (0,external_wp_element_namespaceObject.useState)(false),
-    _useState4 = _slicedToArray(_useState3, 2),
-    saving = _useState4[0],
-    setSaving = _useState4[1];
-  var _useState5 = (0,external_wp_element_namespaceObject.useState)(''),
-    _useState6 = _slicedToArray(_useState5, 2),
-    error = _useState6[0],
-    setError = _useState6[1];
-  var _useState7 = (0,external_wp_element_namespaceObject.useState)([]),
-    _useState8 = _slicedToArray(_useState7, 2),
-    allPages = _useState8[0],
-    setAllPages = _useState8[1];
-  var _useState9 = (0,external_wp_element_namespaceObject.useState)(false),
-    _useState0 = _slicedToArray(_useState9, 2),
-    loadingPages = _useState0[0],
-    setLoadingPages = _useState0[1];
-  var _useState1 = (0,external_wp_element_namespaceObject.useState)([]),
+  var _useState1 = (0,external_wp_element_namespaceObject.useState)(initialTitle),
     _useState10 = _slicedToArray(_useState1, 2),
-    suggestions = _useState10[0],
-    setSuggestions = _useState10[1];
-  var _useState11 = (0,external_wp_element_namespaceObject.useState)(null),
+    title = _useState10[0],
+    setTitle = _useState10[1];
+  var _useState11 = (0,external_wp_element_namespaceObject.useState)(false),
     _useState12 = _slicedToArray(_useState11, 2),
-    selectedSuggestion = _useState12[0],
-    setSelectedSuggestion = _useState12[1];
-  var _useState13 = (0,external_wp_element_namespaceObject.useState)(false),
+    saving = _useState12[0],
+    setSaving = _useState12[1];
+  var _useState13 = (0,external_wp_element_namespaceObject.useState)(''),
     _useState14 = _slicedToArray(_useState13, 2),
-    linking = _useState14[0],
-    setLinking = _useState14[1];
+    error = _useState14[0],
+    setError = _useState14[1];
+  var _useState15 = (0,external_wp_element_namespaceObject.useState)([]),
+    _useState16 = _slicedToArray(_useState15, 2),
+    allPages = _useState16[0],
+    setAllPages = _useState16[1];
+  var _useState17 = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState18 = _slicedToArray(_useState17, 2),
+    loadingPages = _useState18[0],
+    setLoadingPages = _useState18[1];
+  var _useState19 = (0,external_wp_element_namespaceObject.useState)([]),
+    _useState20 = _slicedToArray(_useState19, 2),
+    suggestions = _useState20[0],
+    setSuggestions = _useState20[1];
+  var _useState21 = (0,external_wp_element_namespaceObject.useState)(null),
+    _useState22 = _slicedToArray(_useState21, 2),
+    selectedSuggestion = _useState22[0],
+    setSelectedSuggestion = _useState22[1];
+  var _useState23 = (0,external_wp_element_namespaceObject.useState)(false),
+    _useState24 = _slicedToArray(_useState23, 2),
+    linking = _useState24[0],
+    setLinking = _useState24[1];
   var editable = !initialTitle; // editable only if there is no value initially
 
   // Debounced save
   var _useDebouncedCallback = useDebouncedCallback(/*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(nextTitle) {
-        var clean, _t;
-        return _regenerator().w(function (_context) {
-          while (1) switch (_context.p = _context.n) {
+      var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(nextTitle) {
+        var clean, _t2;
+        return _regenerator().w(function (_context3) {
+          while (1) switch (_context3.p = _context3.n) {
             case 0:
               // Guard: don’t send empty or whitespace-only titles
               clean = (nextTitle || '').trim();
               if (clean) {
-                _context.n = 1;
+                _context3.n = 1;
                 break;
               }
-              return _context.a(2);
+              return _context3.a(2);
             case 1:
-              _context.p = 1;
+              _context3.p = 1;
               setSaving(true);
               setError('');
 
               // Example payload — adjust to match your PHP route/handler.
               // Expect your server to create/update a placeholder translation record’s title.
-              _context.n = 2;
+              _context3.n = 2;
               return external_wp_apiFetch_namespaceObject({
                 path: '/lmat/v1/translation-title',
                 method: 'POST',
@@ -404,60 +570,60 @@ var TranslationRow = function TranslationRow(_ref2) {
               });
             case 2:
               setSaving(false);
-              _context.n = 4;
+              _context3.n = 4;
               break;
             case 3:
-              _context.p = 3;
-              _t = _context.v;
+              _context3.p = 3;
+              _t2 = _context3.v;
               setSaving(false);
               setError((0,external_wp_i18n_namespaceObject.__)('Failed to save title. Please try again.', 'linguator-multilingual-ai-translation'));
               // Optional: console.error(e);
             case 4:
-              return _context.a(2);
+              return _context3.a(2);
           }
-        }, _callee, null, [[1, 3]]);
+        }, _callee3, null, [[1, 3]]);
       }));
-      return function (_x) {
-        return _ref3.apply(this, arguments);
+      return function (_x3) {
+        return _ref5.apply(this, arguments);
       };
     }(), 2000),
     _useDebouncedCallback2 = _slicedToArray(_useDebouncedCallback, 1),
     debouncedSave = _useDebouncedCallback2[0];
   var hasEdit = !!(links !== null && links !== void 0 && links.edit_link);
   var hasAdd = !!(links !== null && links !== void 0 && links.add_link);
-  var loadAllPages = (0,external_wp_element_namespaceObject.useCallback)(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-    var pages, _t2;
-    return _regenerator().w(function (_context2) {
-      while (1) switch (_context2.p = _context2.n) {
+  var loadAllPages = (0,external_wp_element_namespaceObject.useCallback)(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+    var pages, _t3;
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.p = _context4.n) {
         case 0:
           if (!(loadingPages || allPages.length > 0)) {
-            _context2.n = 1;
+            _context4.n = 1;
             break;
           }
-          return _context2.a(2);
+          return _context4.a(2);
         case 1:
-          _context2.p = 1;
+          _context4.p = 1;
           setLoadingPages(true);
-          _context2.n = 2;
+          _context4.n = 2;
           return external_wp_apiFetch_namespaceObject({
             path: '/lmat/v1/languages/utils/get_all_pages_data'
           });
         case 2:
-          pages = _context2.v;
+          pages = _context4.v;
           setAllPages(Array.isArray(pages) ? pages : []);
-          _context2.n = 4;
+          _context4.n = 4;
           break;
         case 3:
-          _context2.p = 3;
-          _t2 = _context2.v;
+          _context4.p = 3;
+          _t3 = _context4.v;
         case 4:
-          _context2.p = 4;
+          _context4.p = 4;
           setLoadingPages(false);
-          return _context2.f(4);
+          return _context4.f(4);
         case 5:
-          return _context2.a(2);
+          return _context4.a(2);
       }
-    }, _callee2, null, [[1, 3, 4, 5]]);
+    }, _callee4, null, [[1, 3, 4, 5]]);
   })), [loadingPages, allPages.length]);
   var computeSuggestions = (0,external_wp_element_namespaceObject.useCallback)(function (query) {
     var q = (query || '').trim().toLowerCase();
@@ -488,23 +654,23 @@ var TranslationRow = function TranslationRow(_ref2) {
     }
   };
   var linkSelected = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {
-      var _select, _select$getCurrentPos, postId, _t3;
-      return _regenerator().w(function (_context3) {
-        while (1) switch (_context3.p = _context3.n) {
+    var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(e) {
+      var _select2, _select2$getCurrentPo, postId, _t4;
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.p = _context5.n) {
           case 0:
             e.preventDefault();
             if (selectedSuggestion) {
-              _context3.n = 1;
+              _context5.n = 1;
               break;
             }
-            return _context3.a(2);
+            return _context5.a(2);
           case 1:
-            _context3.p = 1;
+            _context5.p = 1;
             setLinking(true);
             setError('');
-            postId = (_select = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select === void 0 || (_select$getCurrentPos = _select.getCurrentPostId) === null || _select$getCurrentPos === void 0 ? void 0 : _select$getCurrentPos.call(_select);
-            _context3.n = 2;
+            postId = (_select2 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select2 === void 0 || (_select2$getCurrentPo = _select2.getCurrentPostId) === null || _select2$getCurrentPo === void 0 ? void 0 : _select2$getCurrentPo.call(_select2);
+            _context5.n = 2;
             return external_wp_apiFetch_namespaceObject({
               path: '/lmat/v1/languages/link-translation',
               method: 'POST',
@@ -516,49 +682,49 @@ var TranslationRow = function TranslationRow(_ref2) {
             });
           case 2:
             window.location.reload();
-            _context3.n = 4;
+            _context5.n = 4;
             break;
           case 3:
-            _context3.p = 3;
-            _t3 = _context3.v;
+            _context5.p = 3;
+            _t4 = _context5.v;
             setError((0,external_wp_i18n_namespaceObject.__)('Failed to link page. Please try again.', 'linguator-multilingual-ai-translation'));
           case 4:
-            _context3.p = 4;
+            _context5.p = 4;
             setLinking(false);
-            return _context3.f(4);
+            return _context5.f(4);
           case 5:
-            return _context3.a(2);
+            return _context5.a(2);
         }
-      }, _callee3, null, [[1, 3, 4, 5]]);
+      }, _callee5, null, [[1, 3, 4, 5]]);
     }));
-    return function linkSelected(_x2) {
-      return _ref5.apply(this, arguments);
+    return function linkSelected(_x4) {
+      return _ref7.apply(this, arguments);
     };
   }();
   var createFromTyped = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {
-      var clean, _select2, _select2$getCurrentPo, _select3, _select3$getCurrentPo, postId, postType, _t4;
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.p = _context4.n) {
+    var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(e) {
+      var clean, _select3, _select3$getCurrentPo, _select4, _select4$getCurrentPo, postId, postType, _t5;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.p = _context6.n) {
           case 0:
             e.preventDefault();
             clean = (title || '').trim();
             if (clean) {
-              _context4.n = 1;
+              _context6.n = 1;
               break;
             }
             // Fallback: if no title, navigate to add page
             if (links !== null && links !== void 0 && links.add_link) {
               window.location.href = links.add_link;
             }
-            return _context4.a(2);
+            return _context6.a(2);
           case 1:
-            _context4.p = 1;
+            _context6.p = 1;
             setLinking(true);
             setError('');
-            postId = (_select2 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select2 === void 0 || (_select2$getCurrentPo = _select2.getCurrentPostId) === null || _select2$getCurrentPo === void 0 ? void 0 : _select2$getCurrentPo.call(_select2);
-            postType = (_select3 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select3 === void 0 || (_select3$getCurrentPo = _select3.getCurrentPostType) === null || _select3$getCurrentPo === void 0 ? void 0 : _select3$getCurrentPo.call(_select3);
-            _context4.n = 2;
+            postId = (_select3 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select3 === void 0 || (_select3$getCurrentPo = _select3.getCurrentPostId) === null || _select3$getCurrentPo === void 0 ? void 0 : _select3$getCurrentPo.call(_select3);
+            postType = (_select4 = (0,external_wp_data_namespaceObject.select)('core/editor')) === null || _select4 === void 0 || (_select4$getCurrentPo = _select4.getCurrentPostType) === null || _select4$getCurrentPo === void 0 ? void 0 : _select4$getCurrentPo.call(_select4);
+            _context6.n = 2;
             return external_wp_apiFetch_namespaceObject({
               path: '/lmat/v1/languages/create-translation',
               method: 'POST',
@@ -572,23 +738,23 @@ var TranslationRow = function TranslationRow(_ref2) {
           case 2:
             // Refresh to reflect new translation and show Edit icon
             window.location.reload();
-            _context4.n = 4;
+            _context6.n = 4;
             break;
           case 3:
-            _context4.p = 3;
-            _t4 = _context4.v;
+            _context6.p = 3;
+            _t5 = _context6.v;
             setError((0,external_wp_i18n_namespaceObject.__)('Failed to create page. Please try again.', 'linguator-multilingual-ai-translation'));
           case 4:
-            _context4.p = 4;
+            _context6.p = 4;
             setLinking(false);
-            return _context4.f(4);
+            return _context6.f(4);
           case 5:
-            return _context4.a(2);
+            return _context6.a(2);
         }
-      }, _callee4, null, [[1, 3, 4, 5]]);
+      }, _callee6, null, [[1, 3, 4, 5]]);
     }));
-    return function createFromTyped(_x3) {
-      return _ref6.apply(this, arguments);
+    return function createFromTyped(_x5) {
+      return _ref8.apply(this, arguments);
     };
   }();
   return /*#__PURE__*/React.createElement("div", {
@@ -706,8 +872,8 @@ var TranslationRow = function TranslationRow(_ref2) {
     isDismissible: false
   }, error) : null);
 };
-var TranslationsSection = function TranslationsSection(_ref7) {
-  var translations = _ref7.translations;
+var TranslationsSection = function TranslationsSection(_ref9) {
+  var translations = _ref9.translations;
   var rows = Object.values(translations);
   return /*#__PURE__*/React.createElement(external_wp_components_namespaceObject.PanelBody, {
     title: (0,external_wp_i18n_namespaceObject.__)('Translations', 'linguator-multilingual-ai-translation'),
