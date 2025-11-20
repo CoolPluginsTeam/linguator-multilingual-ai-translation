@@ -173,6 +173,7 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 * **Improved:** Removed default language from bulk translation.
 * **Improved:** Improve plugin activation & deactivation.
 * **Improved:** User capabilites & permisition checks improvement.
+* **Improved:** Optimize Integration & module file loading.
 
 = Version 0.0.7 (Beta) | 13/11/2025 =
 * **Added:** Rank math seo table block translation support & core table block header & footer translation support.
