@@ -263,9 +263,12 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		/*
 		 * Customizer. Don't reset locations in this case.
 		 */
-		$action = 'save-customize_' . $GLOBALS['wp_customize']->get_stylesheet();
-		if ( isset( $_POST['action'], $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], $action ) && 'customize_save' == $_POST['action'] ) {
-			$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+		if(isset($GLOBALS['wp_customize']) && method_exists($GLOBALS['wp_customize'], 'get_stylesheet')){
+			$action = 'save-customize_' . $GLOBALS['wp_customize']->get_stylesheet();
+
+			if ( isset( $_POST['action'], $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], $action ) && 'customize_save' == $_POST['action'] ) {
+				$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			}
 		}
 
 		return $mods;
