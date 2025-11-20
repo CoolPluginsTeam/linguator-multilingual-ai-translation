@@ -169,11 +169,11 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 = Version 0.0.8 (Beta) | 20/11/2025 =
 * **Added:** Rank math seo plugin integration and support added.
 * **Fixed:** Fixed JS error in gutenberg page translation meta fields update.
-* **Fixed:** PHP error Undefined array key “terms” in canonical.php.
-* **Improved:** Removed default language from bulk translation.
+* **Fixed:** PHP error Undefined terms key in array.
+* **Fixed:** home_url format issue after URL setting update.
 * **Improved:** Improve plugin activation & deactivation.
 * **Improved:** User capabilites & permisition checks improvement.
-* **Improved:** Optimize Integration & module file loading.
+* **Improved:** Optimize plugin code performance.
 
 = Version 0.0.7 (Beta) | 13/11/2025 =
 * **Added:** Rank math seo table block translation support & core table block header & footer translation support.
