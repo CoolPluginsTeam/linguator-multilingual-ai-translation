@@ -485,7 +485,7 @@ const GlossaryPopup = ({
     return text.length > maxLength ? text.slice(0, sliceLength) + "…" : text;
   };
 
-  const imgFolder = lmatPageTranslationGlobal.lmat_url + 'admin/assets/images/';
+  const imgFolder = lmatPageTranslationGlobal.lmat_url + 'assets/images/';
   return (
     <div
       className="lmat-page-translation-glossary-popup"
