@@ -11,7 +11,7 @@ import SaveTranslation from '../component/store-translated-string/index.js';
 const StringPopUpBody = (props) => {
 
     const { service: service } = props;
-    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntry();
+    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntries();
     const StringModalBodyNotice = props.stringModalBodyNotice;
 
     const imgFolder = lmatPageTranslationGlobal.lmat_url + 'admin/assets/images/'; 
@@ -338,7 +338,7 @@ const getMatchedGlossaryTerms = (sourceText) => {
         const service = props.service;
         const id = `lmat_page_translation_${service}_translate_element`;
 
-        const translateContent = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
+        const translateContent = select('block-lmatPageTranslation/translate').getTranslationEntries();
 
         if (translateContent.length > 0 && props.postDataFetchStatus) {
             const ServiceSetting = TranslateService({ Service: service });

@@ -42,6 +42,10 @@ const reducer = (state = TranslateDefaultState, action) => {
             // Update the state with the new target title
             return { ...state, title: { ...state.title, translatedData: { ...(state.title.translatedData || []), [action.provider]: action.text } } };
 
+        case LmatActionTypes.filteredTitleString: // Action to save the filtered title
+            // Update the state with the new filtered title
+            return { ...state, title: { ...state.title, filteredString: action.text } };
+
         case LmatActionTypes.sourceExcerpt: // Action to save the source excerpt
             // Check if the action text contains any letters or numbers
             if (/[\p{L}\p{N}]/gu.test(action.text)) {
@@ -54,6 +58,10 @@ const reducer = (state = TranslateDefaultState, action) => {
             // Update the state with the new target excerpt
             return { ...state, excerpt: { ...state.excerpt, translatedData: { ...(state.excerpt.translatedData || []), [action.provider]: action.text } } };
 
+        case LmatActionTypes.filteredExcerptString: // Action to save the filtered excerpt
+            // Update the state with the new filtered excerpt
+            return { ...state, excerpt: { ...state.excerpt, filteredString: action.text } };
+
         case LmatActionTypes.sourceSlug: // Action to save the source slug
             // Update the state with the new source slug
             return { ...state, slug: { ...state.slug, source: action.text } };
@@ -61,6 +69,10 @@ const reducer = (state = TranslateDefaultState, action) => {
         case LmatActionTypes.traslatedSlug: // Action to save the translated slug
             // Update the state with the new target slug
             return { ...state, slug: { ...state.slug, translatedData: { ...(state.slug.translatedData || []), [action.provider]: action.text } } };
+
+        case LmatActionTypes.filteredSlugString: // Action to save the filtered slug
+            // Update the state with the new filtered slug
+            return { ...state, slug: { ...state.slug, filteredString: action.text } };
 
         case LmatActionTypes.sourceContent: // Action to save the source content
             // Check if the action text contains any letters or numbers
@@ -78,6 +90,12 @@ const reducer = (state = TranslateDefaultState, action) => {
             }
             return state; // Return the current state if no match
 
+        case LmatActionTypes.filteredContentString: // Action to save the filtered content
+        // console.log('action.text', action.text);
+        // console.log('action.id', action.id);
+            // Update the state with the new filtered content
+            return { ...state, content: { ...state.content, [action.id]: { ...(state.content[action.id] || []), filteredString: action.text } } };
+
         case LmatActionTypes.sourceMetaFields: // Action to save the source meta fields
             // Check if the action text contains any letters or numbers
             if (/[\p{L}\p{N}]/gu.test(action.text)) {
@@ -89,6 +107,10 @@ const reducer = (state = TranslateDefaultState, action) => {
         case LmatActionTypes.traslatedMetaFields: // Action to save the translated meta fields
             // Update the state with the new target meta field for the specific ID
             return { ...state, metaFields: { ...state.metaFields, [action.id]: { ...(state.metaFields[action.id] || []), translatedData: { ...(state.metaFields[action.id].translatedData || []), [action.provider]: action.text } } } };
+
+        case LmatActionTypes.filteredMetaFieldsString: // Action to save the filtered meta fields
+            // Update the state with the new filtered meta fields
+            return { ...state, metaFields: { ...state.metaFields, [action.id]: { ...(state.metaFields[action.id] || []), filteredString: action.text } } };
 
         case LmatActionTypes.setBlockRules: // Action to save the block rules
             // Update the state with the new block rules

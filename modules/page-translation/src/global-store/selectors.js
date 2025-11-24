@@ -15,63 +15,101 @@
  *   @property {string} type - The type of the translation entry (e.g., 'title', 'excerpt', 'metaFields', 'content').
  *   @property {string} translatedData - The target text of the translation entry (default is an empty string if not provided).
  */
-export const getTranslationEntry = (state) => {
+export const getTranslationEntries = (state) => {
     // Initialize an empty array to hold translation entries
     const translateEntry = new Array;
 
-    if (state.title.source) {
-        // Push the title translation entry into the array
-        translateEntry.push({
+    if (state.title && state.title.source) {
+        const titleData={
             id: 'title', // Identifier for the entry
             source: state.title.source, // Source text for the title
             type: 'title', // Type of the entry
             translatedData: (state.title.translatedData || {}), // translated text for the title, defaulting to an empty string if not provided
-        });
+        }
+
+        if(state.title && state.title.filteredString && state.title.filteredString !== ''){
+            titleData.filteredString = state.title.filteredString;
+        }
+
+        // Push the title translation entry into the array
+        translateEntry.push(titleData);
     }
 
-    if (state.excerpt.source) {
-        // Push the excerpt translation entry into the array
-        translateEntry.push({
+    if (state.excerpt && state.excerpt.source) {
+        const excerptData={
             id: 'excerpt', // Identifier for the entry
             source: state.excerpt.source, // Source text for the excerpt
             type: 'excerpt', // Type of the entry
             translatedData: (state.excerpt.translatedData || {}), // translated text for the excerpt, defaulting to an empty string if not provided
-        });
+        }
+
+        if(state.excerpt && state.excerpt.filteredString && state.excerpt.filteredString !== ''){
+            excerptData.filteredString = state.excerpt.filteredString;
+        }
+
+        // Push the excerpt translation entry into the array
+        translateEntry.push(excerptData);
     }
 
     if (state.slug && state.slug.source) {
-        // Push the slug translation entry into the array
-        translateEntry.push({
+        const slugData={
             id: 'slug', // Identifier for the entry
             source: state.slug.source, // Source text for the slug
             type: 'slug', // Type of the entry
             translatedData: (state.slug.translatedData || {}), // translated text for the slug, defaulting to an empty string if not provided
-        });
+        }
+
+        if(state.slug && state.slug.filteredString && state.slug.filteredString !== ''){
+            slugData.filteredString = state.slug.filteredString;
+        }
+
+        // Push the slug translation entry into the array
+        translateEntry.push(slugData);
     }
 
     // Iterate over the metaFields object keys and push each translation entry into the array
     Object.keys(state.metaFields).map(key => {
-        translateEntry.push({
+        const metaFieldsData={
             type: 'metaFields', // Type of the entry
             id: key, // Identifier for the meta field
             source: state.metaFields[key].source, // Source text for the meta field
             translatedData: (state.metaFields[key].translatedData || {}), // translated text for the meta field, defaulting to an empty string if not provided
-        });
+        }
+
+        if(state.metaFields && state.metaFields[key] && state.metaFields[key].filteredString && state.metaFields[key].filteredString !== ''){
+            metaFieldsData.filteredString = state.metaFields[key].filteredString;
+        }
+
+        translateEntry.push(metaFieldsData);
     });
 
     // Iterate over the content object keys and push each translation entry into the array
     Object.keys(state.content).map(key => {
-        translateEntry.push({
+        const contentData={
             type: 'content', // Type of the entry
             id: key, // Identifier for the content
             source: state.content[key].source, // Source text for the content
             translatedData: (state.content[key].translatedData || {}), // translated text for the content, defaulting to an empty string if not provided
-        });
+        }
+
+        if(state.content && state.content[key] && state.content[key].filteredString && state.content[key].filteredString !== ''){
+            contentData.filteredString = state.content[key].filteredString;
+        }
+
+        translateEntry.push(contentData);
     });
 
     // Return the array of translation entries
     return translateEntry;
 };
+
+export const getTranslationEntry = (state, data) => {
+    if(data.type && data.id && state[data.type] && state[data.type][data.id]){
+        return state[data.type][data.id];
+    }
+    
+    return false; // Return false if no translation entry is found
+}
 
 /**
  * Retrieves the block rules from the given state.

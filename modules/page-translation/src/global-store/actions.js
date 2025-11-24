@@ -27,6 +27,18 @@ export const titleSaveTranslate = (data, provider) => {
 };
 
 /**
+ * Action creator for saving the filtered title.
+ * @param {string} data - The filtered title to be saved.
+ * @returns {Object} The action object containing the type and text.
+ */
+export const titleSaveFiltered = (data) => {
+    return {
+        type: LmatActionTypes.filteredTitleString, // Action type for saving the filtered title
+        text: data, // The filtered title text
+    }
+};
+
+/**
  * Action creator for saving the source excerpt.
  * @param {string} data - The source excerpt to be saved.
  * @returns {Object} The action object containing the type and text.
@@ -53,6 +65,18 @@ export const excerptSaveTranslate = (data, provider) => {
 };
 
 /**
+ * Action creator for saving the filtered excerpt.
+ * @param {string} data - The filtered excerpt to be saved.
+ * @returns {Object} The action object containing the type and text.
+ */
+export const excerptSaveFiltered = (data) => {
+    return {
+        type: LmatActionTypes.filteredExcerptString, // Action type for saving the filtered excerpt
+        text: data, // The filtered excerpt text
+    }
+};
+
+/**
  * Action creator for saving the source slug.
  * @param {string} data - The source slug to be saved.
  * @returns {Object} The action object containing the type and text.
@@ -75,6 +99,18 @@ export const slugSaveTranslate = (data, provider) => {
         type: LmatActionTypes.traslatedSlug, // Action type for saving the translated slug
         text: data, // The translated slug text
         provider: provider // The provider of the translated slug
+    }
+};
+
+/**
+ * Action creator for saving the filtered slug.
+ * @param {string} data - The filtered slug to be saved.
+ * @returns {Object} The action object containing the type and text.
+ */
+export const slugSaveFiltered = (data) => {
+    return {
+        type: LmatActionTypes.filteredSlugString, // Action type for saving the filtered slug
+        text: data, // The filtered slug text
     }
 };
 
@@ -111,6 +147,20 @@ export const contentSaveTranslate = (id, data, source, provider) => {
 };
 
 /**
+ * Action creator for saving the filtered content.
+ * @param {string} id - The identifier for the content.
+ * @param {string} data - The filtered content to be saved.
+ * @returns {Object} The action object containing the type, text, and id.
+ */
+export const contentSaveFiltered = (data, id) => {
+    return {
+        type: LmatActionTypes.filteredContentString, // Action type for saving the filtered content
+        text: data, // The filtered content text
+        id: id // The identifier for the content
+    }
+};
+
+/**
  * Action creator for saving the source meta fields.
  * @param {string} id - The identifier for the meta fields.
  * @param {Object} data - The source meta fields to be saved.
@@ -139,6 +189,20 @@ export const metaFieldsSaveTranslate = (id, data, source, provider) => {
         id: id, // The identifier for the meta fields
         source: source, // The source of the translated meta fields
         provider: provider // The provider of the translated meta fields
+    }
+};
+
+/**
+ * Action creator for saving the filtered meta fields.
+ * @param {string} id - The identifier for the meta fields.
+ * @param {Object} data - The filtered meta fields to be saved.
+ * @returns {Object} The action object containing the type, text, and id.
+ */
+export const metaFieldsSaveFiltered = (data, id) => {
+    return {
+        type: LmatActionTypes.filteredMetaFieldsString, // Action type for saving the filtered meta fields
+        text: data, // The filtered meta fields text
+        id: id, // The identifier for the meta fields
     }
 };
 

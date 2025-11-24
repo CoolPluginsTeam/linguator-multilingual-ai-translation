@@ -192,7 +192,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
 
     const replaceSourceString=()=>{
         const elementorData = lmatPageTranslationGlobal.elementorData;
-        const translateStrings=wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
+        const translateStrings=wp.data.select('block-lmatPageTranslation/translate').getTranslationEntries();
 
         translateStrings.forEach(translation => {
             const sourceString = translation.source;
