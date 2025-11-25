@@ -315,7 +315,7 @@ class ChromeAiTranslator {
 
         let ele = document.createElement('div'); // Get the element to translate
         ele.innerHTML = this.textContent[this.textContentKeys[index]];
-        this.onBeforeTranslate(); // Call the before translation callback
+        this.onBeforeTranslate(ele); // Call the before translation callback
         const orignalText = ele.innerText;
         let originalString = [];
 

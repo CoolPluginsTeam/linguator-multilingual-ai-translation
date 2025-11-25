@@ -15,8 +15,18 @@ import {selectSourceEntries, selectServiceProvider} from '../../redux-store/feat
 
 import {store} from '../../redux-store/store.js';
 
-
-const filterContent =async ({content, editorType, service, postId, storeDispatch, blockParseRules=null, metaFields=null, allowedMetaFields=null}) => {
+/**
+ * @param {Object} content The content to filter
+ * @param {string} editorType The editor type
+ * @param {string} service The service provider
+ * @param {string} postId The post ID
+ * @param {Object} storeDispatch The store dispatch
+ * @param {Object} blockParseRules The block parse rules
+ * @param {Object} metaFields The meta fields
+ * @param {Object} allowedMetaFields The allowed meta fields
+ * @returns {Object} The filtered content
+ */
+const filterContent =async ({content, editorType, service, postId, storeDispatch, blockParseRules=null, metaFields=null, allowedMetaFields=null, sourceLanguage=null}) => {
 
     const filters={     
         'classic':FilterClassicContent,
@@ -25,7 +35,7 @@ const filterContent =async ({content, editorType, service, postId, storeDispatch
         'taxonomy':FilterTaxonomyContent,
     }
 
-    const data={content, service, postId, storeDispatch};
+    const data={content, service, postId, storeDispatch, sourceLanguage};
     data.filterHtmlContent=Provider({Service: service}).filterHtmlContent;
 
     if(blockParseRules){
@@ -33,7 +43,7 @@ const filterContent =async ({content, editorType, service, postId, storeDispatch
     }
 
     if(metaFields && Object.keys(metaFields).length > 0){
-        await FilterMetaFields({service, postId, storeDispatch, metaFields, allowedMetaFields, filterHtmlContent: data.filterHtmlContent});
+        await FilterMetaFields({service, postId, storeDispatch, metaFields, allowedMetaFields, filterHtmlContent: data.filterHtmlContent, sourceLanguage});
     }
 
     if(filters[editorType]){

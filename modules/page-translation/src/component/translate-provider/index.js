@@ -21,7 +21,7 @@ export default (props) => {
             SettingBtnText: "Translate",
             serviceLabel: "Google Translate",
             Docs: "https://docs.coolplugins.net/doc/google-translate-for-polylang/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=popup_google_pro",
-            heading: __("Choose Language", 'linguator-multilingual-ai-translation'),
+            heading: __("Choose Language", "linguator-multilingual-ai-translation"),
             BetaEnabled: false,
             ButtonDisabled: props.googleButtonDisabled,
             ErrorMessage: props.googleButtonDisabled ? <div className="lmat-page-translation-provider-error button button-primary" onClick={() => openErrorModalHandler("google")}><img src={errorIcon} alt="error" /> {__('View Error', 'linguator-multilingual-ai-translation')}</div> : <></>,

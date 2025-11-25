@@ -227,6 +227,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
                 'nonce' => wp_create_nonce('wp_rest'),
                 'bulkTranslateRouteUrl' =>  get_rest_url( null, 'lmat/v1/bulk-translate' ),
                 'bulkTranslatePrivateKey' => wp_create_nonce('lmat_bulk_translate_entries_nonce'),
+				'get_glossary_validate' => wp_create_nonce('lmat_get_glossary_private'),
                 'lmat_url'                => plugins_url( '', LINGUATOR_ROOT_FILE ) . '/',
                 'admin_url' => admin_url(),
                 'post_label' => $post_label,

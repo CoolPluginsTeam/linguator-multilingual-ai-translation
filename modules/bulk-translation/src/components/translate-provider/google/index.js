@@ -1,6 +1,6 @@
 import ModalStringScroll from "../../string-modal-scroll/index.js";
 import GoogleLanguage from "./google-language.js";
-import { selectProgressStatus, selectTargetContent, selectTranslatePostInfo } from "../../../redux-store/features/selectors.js";
+import { selectProgressStatus, selectTargetContent, selectTranslatePostInfo, selectGlossaryTerms } from "../../../redux-store/features/selectors.js";
 import { store } from "../../../redux-store/store.js";
 import { updateProgressStatus, updateTranslatePostInfo, unsetPendingPost } from "../../../redux-store/features/actions.js";
 import { __, sprintf } from "@wordpress/i18n";
@@ -21,10 +21,13 @@ class GoogleTranslater {
         this.updateDestoryHandler = updateDestoryHandler;
         this.stopTranslation = false;
         this.textContentObject = selectTargetContent(store.getState(), postId);
+        this.glossaryTerms = selectGlossaryTerms(store.getState(), sourceLang);
+        this.activeLanguageGlossaryTerms={};
         this.appendStringTable();
         updateDestoryHandler(() => {
             this.destroy();
         });
+
     }
 
     destroy = () => {
@@ -32,10 +35,11 @@ class GoogleTranslater {
     }
 
     createGoogleTranslator = async (targetLang, index) => {
-        if (this.stopTranslation) return;
-
         this.completedTranslateIndex = 0;
         this.googleTranslator = null;
+        this.activeLanguageGlossaryTerms={};
+        
+        if (this.stopTranslation) return;
 
         const languageObject = lmatBulkTranslationGlobal.languageObject;
         this.completedPostStatus = selectProgressStatus(store.getState());
@@ -46,6 +50,14 @@ class GoogleTranslater {
             this.storeDispatch(updateTranslatePostInfo({ [this.postId + '_' + targetLang]: { status: 'error', messageClass: 'error', errorMessage: sprintf(__('Language %s(%s) is not supported by Google Translate', 'linguator-multilingual-ai-translation'), languageObject[targetLang].name, targetLang), errorHtml: false } }));
         } else {
             this.activeTargetLang = targetLang;
+            this.activeLanguageGlossaryTerms[targetLang]={};
+            if(this.glossaryTerms && Object.values(this.glossaryTerms).length > 0){
+                Object.values(this.glossaryTerms).forEach(term => {
+                    if(term.translations && term.translations[targetLang]){
+                        this.activeLanguageGlossaryTerms[targetLang][term.original_term]=term.translations[targetLang];
+                    }
+                })
+            }
 
             this.storeDispatch(updateTranslatePostInfo({ [this.postId + '_' + targetLang]: { status: 'running', messageClass: '' } }));
             this.startTime = new Date();
@@ -201,7 +213,7 @@ class GoogleTranslater {
     }    
 
     startTranslate = async () => {
-        await ModalStringScroll({ provider: 'google', prefix: this.prefix, postId: this.postId, lang: this.activeTargetLang, storeDispatch: this.storeDispatch, totalPosts: this.totalPosts, completedPostStatus: this.completedPostStatus });
+        await ModalStringScroll({ provider: 'google', prefix: this.prefix, postId: this.postId, lang: this.activeTargetLang, storeDispatch: this.storeDispatch, totalPosts: this.totalPosts, completedPostStatus: this.completedPostStatus, glossaryTerms: this.activeLanguageGlossaryTerms  });
 
         const endTime = new Date();
         const duration = endTime - this.startTime;

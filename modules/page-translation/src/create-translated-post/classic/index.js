@@ -170,14 +170,14 @@ const UpdateClassicPage = (props) => {
                     if('wysiwyg' === inputType && window.tinymce){
                         const editorId = field.data.id;
 
-                        const tinymceTranslatedMetaFields = translatedMetaFields.replace(/(\r\n\r\n)/g, '</p><p>');
+                        const tinymceTranslatedMetaFields = translatedMetaFields.replace(/(\r\n\r\n|\r\n)/g, '</p><p>');
 
                         tinymce.get(editorId)?.setContent(tinymceTranslatedMetaFields);
 
                         const tinymceTextArea = document.querySelector(`textarea#${editorId}`);
 
                         if(tinymceTextArea){
-                            tinymceTextArea.value = translatedMetaFields;
+                         tinymceTextArea.value = translatedMetaFields;
                         }
                     }else{
                         field.val(translatedMetaFields);
@@ -272,11 +272,6 @@ const UpdateClassicPage = (props) => {
 
         if (window.tinymce &&tinymce.get('content')) {
             tinymce.get('content')?.setContent(content);
-
-            const tinymceTextArea = document.querySelector(`textarea#content`);
-            if(tinymceTextArea) {
-                tinymceTextArea.value = content;
-            }
         }
     }
 
