@@ -15,8 +15,6 @@ use Linguator\Includes\Options\Abstract_Option;
 use Linguator\Includes\Options\Options;
 use Linguator\Includes\Models\Languages;
 
-
-
 /**
  * Class defining single associative array of domain as value and language slug as key option.
  * /!\ Sanitization depends on `force_lang`: this option must be set AFTER `force_lang`.
@@ -165,19 +163,19 @@ class Domains extends Abstract_Option {
 	}
 
 	/**
-	 * Adds information to the site health info array.
+	 * Appends the current state of the domains option to the site health information array.
 	 *
+	 * @since 0.0.8
 	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
 	 *
-	 * @return array The updated site health information.
+	 * @return array The updated site health information array including domains status.
 	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		if ( 3 === $options->get( 'force_lang' ) ) {
-			return $this->get_site_health_info( $info, $this->get(), self::key() );
-				}
+			return $this->format_single_value_for_site_health_info( $this->get() );
+		}
 
-		return $info;
+		return parent::get_site_health_info( $options );
 	}
 }

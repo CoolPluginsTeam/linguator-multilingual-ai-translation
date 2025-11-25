@@ -3,6 +3,8 @@
  * @package Linguator
  */
 namespace Linguator\Admin\Controllers;
+use Linguator\Includes\Capabilities\User;
+use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -98,12 +100,12 @@ class LMAT_Admin_Classic_Editor {
 	 * Displays the Languages metabox in the 'Edit Post' and 'Edit Page' panels
 	 *
 	 *  
-	 *
+	* @param WP_Post $post Current post object.
 	 * @return void
 	 */
-	public function post_language() {
-		global $post_ID;
-		$post_type = get_post_type( $post_ID );
+	public function post_language( WP_Post $post ): void {
+		$post_ID       = $post->ID;
+		$post_type     = $post->post_type;
 
 		// phpcs:ignore WordPress.Security.NonceVerification, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$from_post_id = isset( $_GET['from_post'] ) ? (int) $_GET['from_post'] : 0;
@@ -117,7 +119,7 @@ class LMAT_Admin_Classic_Editor {
 		$id = ( 'attachment' === $post_type ) ? sprintf( 'attachments[%d][language]', (int) $post_ID ) : 'post_lang_choice';
 
 		$dropdown_html = $dropdown->walk(
-			$this->model->get_languages_list(),
+			$this->model->languages->filter( 'translator' )->get_list(),
 			-1,
 			array(
 				'name'     => $id,
@@ -212,6 +214,8 @@ class LMAT_Admin_Classic_Editor {
 			wp_die( esc_html( "{$lang_slug} is not a valid language code." ) );
 		}
 
+		( new User() )->can_translate_or_die( $lang );
+		
 		$post_type_object = get_post_type_object( $post_type );
 
 		if ( empty( $post_type_object ) ) {

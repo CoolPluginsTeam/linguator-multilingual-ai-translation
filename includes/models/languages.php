@@ -19,8 +19,6 @@ use Linguator\Includes\Options\Options;
 use WP_Term;
 use WP_Error;
 
-
-
 /**
  * Model for the languages.
  *
@@ -70,6 +68,15 @@ class Languages {
 	 * @var bool
 	 */
 	private $languages_ready = false;
+
+	/**
+	 * Languages list proxies.
+	 *
+	 * @var Languages_Proxy_Interface[]
+	 *
+	 * @phpstan-var array<non-falsy-string, Languages_Proxy_Interface>
+	 */
+	private $language_proxies = array();
 
 	/**
 	 * Constructor.
@@ -180,6 +187,7 @@ class Languages {
 				$args['flag'] = $args['flag'] ?? $found['flag'];
 			}
 		}
+
 		$errors = $this->validate_lang( $args );
 		if ( $errors->has_errors() ) {
 			return $errors;
@@ -217,7 +225,11 @@ class Languages {
 			return new WP_Error( 'lmat_add_language', __( 'Impossible to add the language. Please check if the language code or locale is unique.', 'linguator-multilingual-ai-translation' ) );
 		}
 
-		wp_update_term( (int) $r['term_id'], 'lmat_language', array( 'term_group' => (int) $args['term_group'] ) );
+		$r = wp_update_term( (int) $r['term_id'], 'lmat_language', array( 'term_group' => (int) $args['term_group'] ) );
+
+		if ( is_wp_error( $r ) ) {
+			return new WP_Error( 'lmat_add_language', __( 'Could not set the language order.', 'linguator-multilingual-ai-translation' ) );
+		}
 
 		// The other language taxonomies
 		$this->update_secondary_language_terms( $final_slug, $args['name'] );
@@ -306,9 +318,13 @@ class Languages {
 		$old_slug = $lang->slug;
 
 		// Update the language itself.
-		$this->update_secondary_language_terms( $args['slug'], $args['name'], $lang );
+		$errors = $this->update_secondary_language_terms( $args['slug'], $args['name'], $lang );
 
-		wp_update_term(
+		if ( is_wp_error( $errors ) ) {
+			return $errors;
+		}
+
+		$r = wp_update_term(
 			$lang->get_tax_prop( 'lmat_language', 'term_id' ),
 			'lmat_language',
 			array(
@@ -319,9 +335,17 @@ class Languages {
 			)
 		);
 
+		if ( is_wp_error( $r ) ) {
+			return new WP_Error( 'lmat_update_language', __( 'Could not update the language.', 'linguator-multilingual-ai-translation' ) );
+		}
+
 		if ( $old_slug !== $slug ) {
 			// Update the language slug in translations.
-			$this->update_translations( $old_slug, $slug );
+			$errors = $this->update_translations( $old_slug, $slug );
+
+			if ( $errors->has_errors() ) {
+				return $errors;
+			}
 
 			// Update language option in widgets.
 			foreach ( $GLOBALS['wp_registered_widgets'] as $widget ) {
@@ -528,7 +552,6 @@ class Languages {
 	 * @return array List of LMAT_Language objects or LMAT_Language object properties.
 	 */
 	public function get_list( $args = array() ): array {
-		
 
 		$languages = $this->cache->get( self::CACHE_KEY );
 
@@ -589,7 +612,7 @@ class Languages {
 
 		$languages = array_values( $languages ); // Re-index.
 
-		return empty( $args['fields'] ) ? $languages : wp_list_pluck( $languages, $args['fields'] );
+		return $this->maybe_convert_list( $languages, (array) $args );
 	}
 
 	/**
@@ -736,6 +759,49 @@ class Languages {
 	public function clean_cache(): void {
 		delete_transient( self::TRANSIENT_NAME );
 		$this->cache->clean();
+	}
+
+	/**
+	 * Applies arguments that change the type of the elements of the given list of languages.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param LMAT_Language[] $languages The list of language objects.
+	 * @param array          $args {
+	 *   @type string $fields Optional. Returns only that field if set; {@see LMAT_Language} for a list of fields.
+	 * }
+	 * @return array List of `LMAT_Language` objects or `LMAT_Language` object properties.
+	 */
+	public function maybe_convert_list( array $languages, array $args ): array {
+		if ( ! empty( $args['fields'] ) ) {
+			return wp_list_pluck( $languages, $args['fields'] );
+		}
+		return $languages;
+	}
+
+	/**
+	 * Registers languages proxies.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Languages_Proxy_Interface $proxy Proxy instance.
+	 * @return self
+	 */
+	public function register_proxy( Languages_Proxy_Interface $proxy ): self {
+		$this->language_proxies[ $proxy->key() ] = $proxy;
+		return $this;
+	}
+
+	/**
+	 * Stacks a proxy that will filter the list of languages.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param string $key Proxy's key.
+	 * @return Languages_Proxies
+	 */
+	public function filter( string $key ): Languages_Proxies {
+		return new Languages_Proxies( $this, $this->language_proxies, $key );
 	}
 
 	/**
@@ -924,17 +990,18 @@ class Languages {
 	 *
 	 * @param string $old_slug The old language slug.
 	 * @param string $new_slug Optional, the new language slug, if not set it means that the language has been deleted.
-	 * @return void
+	 * @return WP_Error
 	 *
 	 * @phpstan-param non-empty-string $old_slug
 	 */
-	protected function update_translations( $old_slug, $new_slug = '' ): void {
+	protected function update_translations( $old_slug, $new_slug = '' ): WP_Error {
 		global $wpdb;
 
 		$term_ids = array();
 		$dr       = array();
 		$dt       = array();
 		$ut       = array();
+		$errors   = new WP_Error();
 
 		$taxonomies = $this->translatable_objects->get_taxonomy_names( array( 'translations' ) );
 		$terms      = get_terms( array( 'taxonomy' => $taxonomies ) );
@@ -989,7 +1056,10 @@ class Languages {
 				foreach ( $dr['tt'] as $term_taxonomy_id ) {
 					$term = get_term_by( 'term_taxonomy_id', $term_taxonomy_id );
 					if ( $term ) {
-						wp_remove_object_terms( $object_id, $term->term_id, $term->taxonomy );
+						$r = wp_remove_object_terms( $object_id, $term->term_id, $term->taxonomy );
+						if ( false === $r ) {
+							$errors->add( 'lmat_delete_relationships', __( 'Could not delete the relationships.', 'linguator-multilingual-ai-translation' ) );
+						}
 					}
 				}
 			}
@@ -1000,7 +1070,10 @@ class Languages {
 			foreach ( $dt['t'] as $term_id ) {
 				$term = get_term( $term_id );
 				if ( $term && ! is_wp_error( $term ) ) {
-					wp_delete_term( $term_id, $term->taxonomy );
+					$r = wp_delete_term( $term_id, $term->taxonomy );
+					if ( false === $r ) {
+						$errors->add( 'lmat_delete_terms', __( 'Could not delete the terms.', 'linguator-multilingual-ai-translation' ) );
+					}
 				}
 			}
 		}
@@ -1012,7 +1085,14 @@ class Languages {
 				$description = $case_data[1];
 				$term = get_term( $term_id );
 				if ( $term && ! is_wp_error( $term ) ) {
-					wp_update_term( $term_id, $term->taxonomy, array( 'description' => $description ) );
+					$r = wp_update_term( $term_id, $term->taxonomy, array( 'description' => $description ) );
+					if ( is_wp_error( $r ) ) {
+						$errors->add(
+							'lmat_update_term',
+							/* translators: %s is a taxonomy name */
+							sprintf( __( 'Could not update secondary language term for taxonomy %s.', 'linguator-multilingual-ai-translation' ), $term->taxonomy )
+						);
+					}
 				}
 			}
 		}
@@ -1022,6 +1102,8 @@ class Languages {
 				clean_term_cache( $ids, $taxonomy );
 			}
 		}
+
+		return $errors;
 	}
 
 	/**
@@ -1034,14 +1116,15 @@ class Languages {
 	 * @param LMAT_Language|null $language   Optional. A language object. Required to update the existing terms.
 	 * @param string[]          $taxonomies Optional. List of language taxonomies to deal with. An empty value means
 	 *                                      all of them. Defaults to all taxonomies.
-	 * @return void
+	 * @return WP_Error
 	 *
 	 * @phpstan-param non-empty-string $slug
 	 * @phpstan-param non-empty-string $name
 	 * @phpstan-param array<non-empty-string> $taxonomies
 	 */
-	protected function update_secondary_language_terms( $slug, $name, ?LMAT_Language $language = null, array $taxonomies = array() ): void {
+	protected function update_secondary_language_terms( $slug, $name, ?LMAT_Language $language = null, array $taxonomies = array() ): WP_Error {
 		$slug = 0 === strpos( $slug, 'lmat_' ) ? $slug : "lmat_$slug";
+		$errors = new WP_Error();
 
 		foreach ( $this->translatable_objects->get_secondary_translatable_objects() as $object ) {
 			if ( ! empty( $taxonomies ) && ! in_array( $object->get_tax_language(), $taxonomies, true ) ) {
@@ -1057,16 +1140,32 @@ class Languages {
 
 			if ( empty( $term_id ) ) {
 				// Attempt to repair the language if a term has been deleted by a database cleaning tool.
-				wp_insert_term( $name, $object->get_tax_language(), array( 'slug' => $slug ) );
+				$r = wp_insert_term( $name, $object->get_tax_language(), array( 'slug' => $slug ) );
+				if ( is_wp_error( $r ) ) {
+					$errors->add(
+						'lmat_add_secondary_language_terms',
+						/* translators: %s is a taxonomy name */
+						sprintf( __( 'Could not add secondary language term for taxonomy %s.', 'linguator-multilingual-ai-translation' ), $object->get_tax_language() )
+					);
+				}
 				continue;
 			}
 
 			/** @var LMAT_Language $language */
 			if ( "lmat_{$language->slug}" !== $slug || $language->name !== $name ) {
 				// Something has changed.
-				wp_update_term( $term_id, $object->get_tax_language(), array( 'slug' => $slug, 'name' => $name ) );
+				$r = wp_update_term( $term_id, $object->get_tax_language(), array( 'slug' => $slug, 'name' => $name ) );
+				if ( is_wp_error( $r ) ) {
+					$errors->add(
+						'lmat_update_secondary_language_terms',
+						/* translators: %s is a taxonomy name */
+						sprintf( __( 'Could not update secondary language term for taxonomy %s.', 'linguator-multilingual-ai-translation' ), $object->get_tax_language() )
+					);
+				}
 			}
 		}
+
+		return $errors;
 	}
 
 	/**

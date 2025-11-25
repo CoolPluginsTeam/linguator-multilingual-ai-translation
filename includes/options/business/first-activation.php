@@ -12,8 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use Linguator\Includes\Options\Abstract_Option;
-
-
+use Linguator\Includes\Options\Options;
 
 /**
  * Class defining the first activation option.
@@ -74,5 +73,18 @@ class First_Activation extends Abstract_Option {
 	 */
 	protected function get_description(): string {
 		return __( 'Time of first activation of Linguator.', 'linguator-multilingual-ai-translation' );
+	}
+
+	/**
+	 * Appends the current state of the first activation option to the site health information array.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
+	 *
+	 * @return array The updated site health information array including first activation date.
+	 */
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		return $this->format_single_value_for_site_health_info( wp_date( get_option( 'date_format' ), $this->get() ) );
 	}
 }

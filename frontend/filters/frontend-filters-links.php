@@ -83,8 +83,9 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 			// Rewrites ajax url
 			add_filter( 'admin_url', array( $this, 'admin_url' ), 10, 2 );
 
-			add_filter( 'oembed_endpoint_url', array( $this, 'add_current_language_url_query' ) );
 		}
+		
+		add_filter( 'oembed_endpoint_url', array( $this, 'add_current_language_url_query' ) );
 	}
 
 	/**

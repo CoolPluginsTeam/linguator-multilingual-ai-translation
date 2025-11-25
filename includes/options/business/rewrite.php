@@ -9,12 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 use WP_Error;
 use Linguator\Includes\Options\Primitive\Abstract_Boolean;
 use Linguator\Includes\Options\Options;
-
-
 
 /**
  * Class defining the "Remove /language/ in pretty permalinks" boolean option.
@@ -36,15 +33,15 @@ class Rewrite extends Abstract_Boolean {
 	}
 
 	/**
-	 * Adds information to the site health info array.
+	 * Appends the current state of the rewrite option to the site health information array.
 	 *
+	 * @since 0.0.8
 	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
 	 *
-	 * @return array The updated site health information.
+	 * @return array The updated site health information array including rewrite status.
 	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		if ( $this->get() ) {
 			$value = '1: ' . sprintf(
 				/* translators: %s is a URL slug: `/language/`. */
@@ -59,7 +56,7 @@ class Rewrite extends Abstract_Boolean {
 			);
 		}
 
-		return $this->get_site_health_info( $info, $value, self::key() );
+		return $this->format_single_value_for_site_health_info( $value );
 	}
 
 	/**

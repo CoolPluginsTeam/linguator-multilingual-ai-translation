@@ -20,14 +20,12 @@ use Linguator\Includes\Services\Links\LMAT_Links_Default;
 use Linguator\Includes\Services\Links\LMAT_Links_Directory;
 use Linguator\Includes\Services\Links\LMAT_Links_Subdomain;
 use Linguator\Includes\Services\Links\LMAT_Links_Domain;
-use Linguator\Includes\Helpers\LMAT_Format_Util;
 use Linguator\Includes\Helpers\LMAT_Cache;
-use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object;
 use Linguator\Includes\Models\Translatable\LMAT_Translatable_Objects;
 use Linguator\Includes\Models\Translated\LMAT_Translated_Post;
 use Linguator\Includes\Models\Translated\LMAT_Translated_Term;
-
-
+use Linguator\Includes\Models\Hide_Empty;
+use Linguator\Includes\Models\Hide_Default;
 
 /**
  * Setups the language and translations model based on WordPress taxonomies.
@@ -127,6 +125,9 @@ class LMAT_Model {
 		$this->cache                = new LMAT_Cache();
 		$this->translatable_objects = new LMAT_Translatable_Objects();
 		$this->languages            = new Languages( $this->options, $this->translatable_objects, $this->cache );
+
+		$this->languages->register_proxy( new Hide_Empty() );
+		$this->languages->register_proxy( new Hide_Default() );
 
 		$this->post = $this->translatable_objects->register( new LMAT_Translated_Post( $this ) ); // Translated post sub model.
 		$this->term = $this->translatable_objects->register( new LMAT_Translated_Term( $this ) ); // Translated term sub model.
@@ -235,13 +236,13 @@ class LMAT_Model {
 	 *  
 	 *
 	 * @param string[]           $clauses The list of sql clauses in terms query.
-	 * @param LMAT_Language|false $lang    LMAT_Language object.
+	 * @param LMAT_Language[]|LMAT_Language $languages Language objects.
 	 * @return string[]                   Modified list of clauses.
 	 */
-	public function terms_clauses( $clauses, $lang ) {
-		if ( ! empty( $lang ) && false === strpos( $clauses['join'], 'lmat_tr' ) ) {
+	public function terms_clauses( $clauses, $languages ) {
+		if ( ! empty( $languages ) && false === strpos( $clauses['join'], 'lmat_tr' ) ) {
 			$clauses['join'] .= $this->term->join_clause();
-			$clauses['where'] .= $this->term->where_clause( $lang );
+			$clauses['where'] .= $this->term->where_clause( $languages );
 		}
 		return $clauses;
 	}
