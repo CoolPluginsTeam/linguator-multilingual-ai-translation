@@ -6,7 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ec07570ca5a812141189b1fa81503674' => $vendorDir . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     'a09b5c289ab49d54ed98870947f5cfc1' => $baseDir . '/includes/helpers/functions.php',
     '93d97684e2329aa3a1115835abc2b0a3' => $baseDir . '/includes/api/language-api.php',
 );
