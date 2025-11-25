@@ -12,8 +12,7 @@ use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
 use Linguator\Includes\Other\LMAT_Language;
 use WP_Term;
 use WP_Ajax_Response;
-
-
+use Linguator\Includes\Capabilities\User;
 
 /**
  * Manages filters and actions related to terms on admin side
@@ -132,7 +131,7 @@ class LMAT_Admin_Filters_Term {
 		$dropdown = new LMAT_Walker_Dropdown();
 
 		$dropdown_html = $dropdown->walk(
-			$this->model->get_languages_list(),
+			$this->model->languages->filter( 'translator' )->get_list(),
 			-1,
 			array(
 				'name'     => 'term_lang_choice',
@@ -230,7 +229,7 @@ class LMAT_Admin_Filters_Term {
 		$dropdown = new LMAT_Walker_Dropdown();
 
 		$dropdown_html = $dropdown->walk(
-			$this->model->get_languages_list(),
+			$this->model->languages->filter( 'translator' )->get_list(),
 			-1,
 			array(
 				'name'     => 'term_lang_choice',
@@ -325,7 +324,7 @@ class LMAT_Admin_Filters_Term {
 	 *  
 	 *
 	 * @param int $post_id Post ID.
-	 * @return void
+	 * @return void|never
 	 */
 	public function pre_post_update( $post_id ) {
 		if ( isset( $_GET['bulk_edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -343,31 +342,32 @@ class LMAT_Admin_Filters_Term {
 	 * @return void
 	 */
 	protected function save_language( $term_id, $taxonomy ) {
-		global $wpdb;
-		// Security checks are necessary to accept language modifications
-		// as 'wp_update_term' can be called from outside WP admin
+		$term_id = (int) $term_id;
 
-		// Edit tags
-		if ( isset( $_POST['term_lang_choice'] ) ) {
-			if ( isset( $_POST['action'] ) && sanitize_key( $_POST['action'] ) === 'add-' . $taxonomy ) { // phpcs:ignore WordPress.Security.NonceVerification
-				check_ajax_referer( 'add-' . $taxonomy, '_ajax_nonce-add-' . $taxonomy ); // Category metabox
-			} else {
-				check_admin_referer( 'lmat_language', '_lmat_nonce' ); // Edit tags or tags metabox
-			}
-
-			$language = $this->model->get_language( sanitize_key( $_POST['term_lang_choice'] ) );
-
-			if ( ! empty( $language ) ) {
-				$this->model->term->set_language( $term_id, $language );
-			}
+		/*
+		 * Category metabox.
+		 */
+		if ( isset( $_POST['term_lang_choice'], $_REQUEST[ '_ajax_nonce-add-' . $taxonomy ] ) && wp_verify_nonce( $_REQUEST[ '_ajax_nonce-add-' . $taxonomy ], 'add-' . $taxonomy ) ) {
+			$this->maybe_set_language( $term_id, sanitize_key( $_POST['term_lang_choice'] ) );
+			return;
 		}
 
-		// *Post* bulk edit, in case a new term is created
-		elseif ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'] ) ) {
-			check_admin_referer( 'bulk-posts' );
+		/*
+		 * Edit tags or tags metabox.
+		 */
+		if ( isset( $_POST['term_lang_choice'] ) ) {
+			check_admin_referer( 'lmat_language', '_lmat_nonce' );
+			$this->maybe_set_language( $term_id, sanitize_key( $_POST['term_lang_choice'] ) );
+			return;
+		}
 
-			// Bulk edit does not modify the language
-			// So we possibly create a tag in several languages
+		/*
+		 *  *Post* bulk edit, in case a new term is created.
+		 */
+		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-posts' ) ) {
+			/*
+			 * Bulk edit does not modify the language, so we possibly create a tag in several languages.
+			 */
 			if ( -1 === (int) $_GET['inline_lang_choice'] ) {
 				// The language of the current term is set a according to the language of the current post.
 				$language = $this->model->post->get_language( $this->post_id );
@@ -376,67 +376,77 @@ class LMAT_Admin_Filters_Term {
 					return;
 				}
 
-				$this->model->term->set_language( $term_id, $language );
-				$term  = get_term( $term_id, $taxonomy );
-				$terms = array();
+				( new User() )->can_translate_or_die( $language );
 
-				// Get all terms with the same name using modern WordPress function
+				$this->model->term->set_language( $term_id, $language );
+				$term = get_term( $term_id, $taxonomy );
+
+				// Get all terms with the same name.
 				if ( $term instanceof WP_Term ) {
-					$terms = get_terms( array(
-						'taxonomy'   => $taxonomy,
-						'name'       => $term->name,
-						'hide_empty' => false,
-						'fields'     => 'ids'
-					) );
-					
-					// Convert to objects with term_id property for compatibility with existing loop
-					if ( ! is_wp_error( $terms ) && is_array( $terms ) ) {
-						$terms = array_map( function( $term_id ) {
-							return (object) array( 'term_id' => $term_id );
-						}, $terms );
-					} else {
-						$terms = array();
+					$term_ids = get_terms( array( 'taxonomy' => $taxonomy, 'name' => $term->name, 'hide_empty' => false, 'fields' => 'ids' ) );
+
+					// If we have several terms with the same name, they are translations of each other.
+					if ( is_array( $term_ids ) && count( $term_ids ) > 1 ) {
+						$translations = array();
+
+						foreach ( $term_ids as $_id ) {
+							$translations[ $this->model->term->get_language( $_id )->slug ] = $_id;
+						}
+
+						$this->model->term->save_translations( $term_id, $translations );
 					}
 				}
-
-				// If we have several terms with the same name, they are translations of each other
-				if ( count( $terms ) > 1 ) {
-					$translations = array();
-
-					foreach ( $terms as $term ) {
-						$translations[ $this->model->term->get_language( $term->term_id )->slug ] = $term->term_id;
-					}
-
-					$this->model->term->save_translations( $term_id, $translations );
-				}
+				return;
 			}
 
-			elseif ( current_user_can( 'edit_term', $term_id ) ) {
-				$this->model->term->set_language( $term_id, $this->model->get_language( sanitize_key( $_GET['inline_lang_choice'] ) ) );
+			if ( current_user_can( 'edit_term', $term_id ) ) {
+				$this->maybe_set_language( $term_id, sanitize_key( $_GET['inline_lang_choice'] ) );
 			}
+			return;
 		}
 
-		// Quick edit
-		elseif ( isset( $_POST['inline_lang_choice'] ) ) {
-			check_ajax_referer(
-				isset( $_POST['action'] ) && 'inline-save' == $_POST['action'] ? 'inlineeditnonce' : 'taxinlineeditnonce', // Post quick edit or tag quick edit ?
-				'_inline_edit'
-			);
+		/*
+		 * Quick edit.
+		 */
+		if ( isset( $_POST['inline_lang_choice'], $_REQUEST['_inline_edit'] ) ) {
+			if ( ! wp_verify_nonce( $_REQUEST['_inline_edit'], 'inlineeditnonce' ) && ! wp_verify_nonce( $_REQUEST['_inline_edit'], 'taxinlineeditnonce' ) ) { // Post quick edit or tag quick edit?
+				return;
+			}
 
-			$lang = $this->model->get_language( sanitize_key( $_POST['inline_lang_choice'] ) );
-			$this->model->term->set_language( $term_id, $lang );
+			$this->maybe_set_language( $term_id, sanitize_key( $_POST['inline_lang_choice'] ) );
+			return;
 		}
 
-		// Edit post
-		elseif ( isset( $_POST['post_lang_choice'] ) ) { // FIXME should be useless now
+		/*
+		 * Edit post.
+		 */
+		if ( isset( $_POST['post_lang_choice'] ) ) { // FIXME should be useless now.
 			check_admin_referer( 'lmat_language', '_lmat_nonce' );
-
-			$language = $this->model->get_language( sanitize_key( $_POST['post_lang_choice'] ) );
-
-			if ( ! empty( $language ) ) {
-				$this->model->term->set_language( $term_id, $language );
-			}
+			$this->maybe_set_language( $term_id, sanitize_key( $_POST['post_lang_choice'] ) );
 		}
+	}
+
+	/**
+	 * Assigns a language to a term if the current user has permission.
+	 *
+	 * Checks user translation privileges before setting the language for the specified term.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param int    $term_id   The ID of the term to be updated.
+	 * @param string $language  The language slug to assign to the term.
+	 * @return void|never
+	 */
+	private function maybe_set_language( int $term_id, string $language ): void {
+		$language = $this->model->get_language( $language );
+
+		if ( empty( $language ) ) {
+			return;
+		}
+
+		( new User() )->can_translate_or_die( $language );
+
+		$this->model->term->set_language( $term_id, $language );
 	}
 
 	/**

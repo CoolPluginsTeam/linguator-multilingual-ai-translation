@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Linguator\Includes\Base\LMAT_Base;
 use Linguator\Includes\Options\Options;
 use Linguator\Includes\Options\Registry as Options_Registry;
-use Linguator\Install\LMAT_Install;
 use Linguator\Includes\Other\LMAT_OLT_Manager;
 use Linguator\Includes\Other\LMAT_Model;
 use Linguator\Admin\Controllers\LMAT_Admin_Model;
@@ -22,6 +21,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
 use Linguator\Includes\Controllers\LMAT_REST_Request;
 use Linguator\Integrations\LMAT_Integrations;
 use Linguator\Settings\Controllers\LMAT_Settings;
+use Linguator\Supported_Blocks\Supported_Blocks;
 use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
 use Linguator\Includes\Other\LMAT_Translation_Dashboard;
@@ -72,16 +72,6 @@ class Linguator {
 	public function __construct() {
 		require_once __DIR__ . '/../helpers/functions.php'; // VIP functions
 
-		// register an action when plugin is activating.
-		register_activation_hook( LINGUATOR_BASENAME, array( '\\Linguator\\Modules\\Wizard\\LMAT_Wizard', 'start_wizard' ) );
-
-		$install = new LMAT_Install( LINGUATOR_BASENAME );
-
-		// Check if we can activate based on requirements
-		if ( ! $install->can_activate() ) {
-			return;
-		}
-
 		// Plugin initialization
 		// Take no action before all plugins are loaded
 		add_action( 'plugins_loaded', array( $this, 'init' ), 1 );
@@ -95,6 +85,10 @@ class Linguator {
 		// Register the custom post type for the supported blocks
 		if(class_exists(Custom_Block_Post::class)){
 			Custom_Block_Post::get_instance();
+		}
+
+		if(class_exists(Supported_Blocks::class)){
+			Supported_Blocks::get_instance();
 		}
 
 		// Register the custom fields
@@ -385,12 +379,15 @@ class Linguator {
 		require_once LINGUATOR_DIR . '/includes/api/language-api.php';
 
 		// Loads the modules.
-		$load_scripts = glob( LINGUATOR_DIR . '/modules/*/load.php', GLOB_NOSORT );
-		if ( is_array( $load_scripts ) ) {
-			foreach ( $load_scripts as $load_script ) {
-				require_once $load_script; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+		// Loads the modules.
+		$load_scripts = require LINGUATOR_DIR . '/modules/module-build.php';
+
+		foreach ( $load_scripts as $load_script ) {
+			if(file_exists(LINGUATOR_DIR . "/modules/{$load_script}/load.php")) {
+				require_once LINGUATOR_DIR . "/modules/{$load_script}/load.php";
 			}
 		}
+		
 		$linguator->init();
 		/**
 		 * Fires after the $linguator object and the API is loaded

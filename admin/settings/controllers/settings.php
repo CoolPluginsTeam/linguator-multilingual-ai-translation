@@ -122,7 +122,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 
 		
 		if($loco === 'true'){
-			add_action( 'load-languages_page_lmat_settings', array( $this, 'loco_page_redirect' ) );
+			add_action( 'load-' . LMAT_Admin_Base::get_screen_id( 'settings' ), array( $this, 'loco_page_redirect' ) );
 		}
 
 		if($this->active_tab === 'lang'){
@@ -151,7 +151,8 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		add_action( 'admin_init', array( $this, 'register_settings_modules' ) );
 
 		// Adds screen options and the about box in the languages admin panel.
-		add_action( 'load-toplevel_page_lmat', array( $this, 'load_page' ) );
+		add_action( 'load-' . self::get_screen_id( 'lang' ), array( $this, 'load_page' ) );
+		// add_action( 'load-' . self::get_screen_id( 'strings' ), array( $this, 'load_page_strings' ) ); AD pending
 
 		// Saves the per-page value in screen options.
 		add_filter( 'set_screen_option_lmat_lang_per_page', array( $this, 'set_screen_option' ), 10, 3 );
@@ -208,8 +209,6 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function load_page() {
-		
-
 		add_screen_option(
 			'per_page',
 			array(
@@ -444,23 +443,17 @@ class LMAT_Settings extends LMAT_Admin_Base {
 	 * @return void
 	 */
 	public function languages_page() {
-
-		// Custom Fields
-		if($this->selected_tab === 'custom-fields' && class_exists(Custom_Fields::class)){
-			$this->header->header();
-			Custom_Fields::get_instance()->lmat_render_custom_fields_page();
-			return;
-		}
-
-		// Support Blocks
-		if($this->selected_tab === 'supported-blocks' && class_exists(Supported_Blocks::class)){
-			$this->header->header();
-			Supported_Blocks::get_instance()->lmat_render_support_blocks_page();
-			return;
-		}
+		/*
+		Filter to render the languages page
+		@param bool $render_lmat_languages_page
+		@param string $selected_tab
+		@param string $active_tab
+		@return bool
+		*/
+		$render_lmat_languages_page = apply_filters('lmat_render_languages_page', true, $this->selected_tab, $this->active_tab);
 
 		// return if the active tab is localizations
-		if($this->active_tab === 'localizations'){
+		if($this->active_tab === 'localizations' || !$render_lmat_languages_page){
 			return;
 		}
 		
@@ -469,7 +462,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		
 		if ( $is_settings_tab ) {
 			// Handle user input for legacy actions
-			$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['pll_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+			$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			if ( ! empty( $action ) ) {
 				$this->handle_actions( $action );
 			}
@@ -491,13 +484,13 @@ class LMAT_Settings extends LMAT_Admin_Base {
 				break;
 
 			case 'strings':
-				$string_table = new LMAT_Table_String( $this->model->get_languages_list() );
+				$string_table = new LMAT_Table_String( $this->model->languages );
 				$string_table->prepare_items();
 				break;
 		}
 
 		// Handle user input
-		$action = isset( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$action = isset( $_REQUEST['lmat_action'] ) && is_string( $_REQUEST['lmat_action'] ) ? sanitize_key( $_REQUEST['lmat_action'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'edit' === $action && ! empty( $_GET['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			// phpcs:ignore WordPress.Security.NonceVerification, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 			$edit_lang = $this->model->get_language( (int) $_GET['lang'] );
@@ -581,10 +574,26 @@ class LMAT_Settings extends LMAT_Admin_Base {
 		// Check if this is a settings tab (not lang, strings, or wizard which has its own handling)
 		$is_settings_tab = ! in_array( $this->active_tab, array( 'lang', 'strings', 'wizard' ), true );
 		$active_tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : false;
-		$supported_blocks_tab = $is_settings_tab && $active_tab === 'supported-blocks';
-		$custom_fields_tab = $is_settings_tab && $active_tab === 'custom-fields';
-		
-		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && !$supported_blocks_tab && !$custom_fields_tab) {
+
+		/*
+		Filter to enqueue the frontend settings assets
+		@param bool $frontend_settings_assets
+		@param string $active_tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
+		$frontend_settings_assets=apply_filters('lmat_frontend_settings_assets', true, $active_tab, $is_settings_tab);
+
+		/*
+		Filter to enqueue the admin settings assets
+		@param bool $admin_settings_assets
+		@param string $active_tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
+		$admin_settings_assets=apply_filters('lmat_admin_settings_assets', true, $active_tab, $is_settings_tab);
+
+		if ( $is_settings_tab && (!$active_tab || empty($active_tab) || 'strings' !== $active_tab) && $frontend_settings_assets ) {
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path( LINGUATOR_ROOT_FILE ) . 'admin/assets/frontend/settings/settings.asset.php';
 
@@ -659,18 +668,7 @@ class LMAT_Settings extends LMAT_Admin_Base {
 			);
 
 			
-		} else if($supported_blocks_tab){
-			$this->header->header_assets();
-			if(class_exists(Supported_Blocks::class)){
-				Supported_Blocks::enqueue_editor_assets();
-			}
-		}else if($custom_fields_tab){
-			$this->header->header_assets();
-			if(class_exists(Custom_Fields::class)){
-				Custom_Fields::enqueue_editor_assets();
-			}
-		}
-		else {
+		}else if($admin_settings_assets){
 			$this->header->header_assets();
 
 			// Original scripts for lang and strings tabs

@@ -1,8 +1,13 @@
 import filterContent from '../../../../../page-translation/src/component/filter-target-content/index.js';
 import extractInnerContent from '../extarct-inner-content/index.js';
 import saveSourceString from '../../store-source-string/index.js';
+import {selectGlossaryTerms} from '../../../redux-store/features/selectors.js';
+import updateGlossaryString from '../update-glossary-string/index.js';
+import {store} from '../../../redux-store/store.js';
 
-const filterMetaFields = async ({ metaFields, service, postId, storeDispatch, allowedMetaFields, filterHtmlContent }) => {
+const filterMetaFields = async ({ metaFields, service, postId, storeDispatch, allowedMetaFields, filterHtmlContent, sourceLanguage }) => {
+    const glossaryTerms=selectGlossaryTerms(store.getState(), sourceLanguage);
+
     const loopCallback = async (callback, loop, index) => {
         await callback(loop[index], index);
 
@@ -33,7 +38,7 @@ const filterMetaFields = async ({ metaFields, service, postId, storeDispatch, al
     }
 
     const metaFieldsLoop = async (key, index) => {
-        if (allowedMetaFields &&allowedMetaFields[key] && allowedMetaFields[key].status) {
+        if (allowedMetaFields && allowedMetaFields[key] && allowedMetaFields[key].status) {
             const undefinedKey = 'metaFields_lmat_' + key;
             if (allowedMetaFields[key].type === 'string') {
                 const originalValue = metaFields[key];
@@ -42,6 +47,11 @@ const filterMetaFields = async ({ metaFields, service, postId, storeDispatch, al
                 if (filterHtmlContent) {
                     let reactElement = filterContent({ content: value, service, contentKey: key, skipTags: [] });
                     value = await extractInnerContent(reactElement);
+
+                    if(['google','localAiTranslator'].includes(service) && glossaryTerms && Object.values(glossaryTerms).length > 0){
+                        value=await updateGlossaryString({content: value, glossaryTerms});
+                    }
+
                     reactElement = null;
                 }
 
@@ -63,6 +73,11 @@ const filterMetaFields = async ({ metaFields, service, postId, storeDispatch, al
                 if (filterHtmlContent) {
                     let reactElement = filterContent({ content: filterdValue, service, contentKey: key, skipTags: [] });
                     filterdValue = await extractInnerContent(reactElement);
+
+                    if(['google','localAiTranslator'].includes(service) && glossaryTerms && Object.values(glossaryTerms).length > 0){
+                        filterdValue=await updateGlossaryString({content: filterdValue, glossaryTerms});
+                    }
+
                     reactElement = null;
                 }
 

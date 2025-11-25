@@ -9,12 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 use WP_Error;
 use Linguator\Includes\Options\Primitive\Abstract_Boolean;
 use Linguator\Includes\Options\Options;
-
-
 
 /**
  * Class defining the "Remove the page name or page id from the URL of the front page" boolean option.
@@ -36,25 +33,6 @@ class Redirect_Lang extends Abstract_Boolean {
 	}
 
 	/**
-	 * Adds information to the site health info array.
-	 *
-	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
-	 *
-	 * @return array The updated site health information.
-	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		if ( $this->get() ) {
-			$value = '1: ' . __( 'The front page URL contains the language code instead of the page name or page id', 'linguator-multilingual-ai-translation' );
-		} else {
-			$value = '0: ' . __( 'The front page URL contains the page name or page id instead of the language code', 'linguator-multilingual-ai-translation' );
-		}
-
-		return $this->get_site_health_info( $info, $value, self::key() );
-	}
-
-	/**
 	 * Returns the description used in the JSON schema.
 	 *
 	 *  
@@ -68,5 +46,24 @@ class Redirect_Lang extends Abstract_Boolean {
 			'`true`',
 			'`false`'
 		);
+	}
+
+	/**
+	 * Appends the current state of the redirect lang option to the site health information array.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
+	 *
+	 * @return array The updated site health information array including redirect lang status.
+	 */
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		if ( $this->get() ) {
+			$value = '1: ' . __( 'The front page URL contains the language code instead of the page name or page id', 'linguator-multilingual-ai-translation' );
+		} else {
+			$value = '0: ' . __( 'The front page URL contains the page name or page id instead of the language code', 'linguator-multilingual-ai-translation' );
+		}
+
+		return $this->format_single_value_for_site_health_info( $value );
 	}
 }

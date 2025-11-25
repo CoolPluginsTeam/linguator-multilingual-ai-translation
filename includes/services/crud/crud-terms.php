@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Linguator\Includes\Other\LMAT_Language;
 use Linguator\Includes\Other\LMAT_Model;
 use Linguator\Includes\Helpers\LMAT_Term_Slug;
-
-
-
+use Linguator\Modules\REST\Request;
+use Linguator\Includes\Capabilities\User;
+use Linguator\Includes\Capabilities\Create\Term as Create_Term;
 
 /**
  * Adds actions and filters related to languages when creating, reading, updating or deleting posts
@@ -71,6 +71,13 @@ class LMAT_CRUD_Terms {
 	protected $options;
 
 	/**
+	 * Reference to the Linguator Request object.
+	 *
+	 * @var Request
+	 */
+	private $request;
+
+	/**
 	 * Constructor
 	 *
 	 *  
@@ -83,8 +90,9 @@ class LMAT_CRUD_Terms {
 		$this->curlang     = &$linguator->curlang;
 		$this->filter_lang = &$linguator->filter_lang;
 		$this->pref_lang   = &$linguator->pref_lang;
+		$this->request   = &$linguator->request;
 
-		// Saving terms
+		// Saving terms.
 		add_action( 'create_term', array( $this, 'save_term' ), 999, 3 );
 		add_action( 'edit_term', array( $this, 'save_term' ), 999, 3 ); // After LMAT_Admin_Filters_Term
 		add_filter( 'pre_term_name', array( $this, 'set_pre_term_name' ) );
@@ -96,7 +104,7 @@ class LMAT_CRUD_Terms {
 		add_action( 'pre_get_posts', array( $this, 'set_tax_query_lang' ), 999 );
 		add_action( 'posts_selection', array( $this, 'unset_tax_query_lang' ), 0 );
 
-		// Deleting terms
+		// Deleting terms.
 		add_action( 'pre_delete_term', array( $this, 'delete_term' ), 10, 2 );
 	}
 
@@ -110,24 +118,17 @@ class LMAT_CRUD_Terms {
 	 * @return void
 	 */
 	protected function set_default_language( $term_id, $taxonomy ) {
-		if ( ! $this->model->term->get_language( $term_id ) ) {
-			if ( ! isset( $this->pref_lang ) && ! empty( $_REQUEST['lang'] ) && $lang = $this->model->get_language( sanitize_key( $_REQUEST['lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				// Testing $this->pref_lang makes this test pass only on frontend.
-				$this->model->term->set_language( $term_id, $lang );
-			} elseif ( ( $term = get_term( $term_id, $taxonomy ) ) && ! empty( $term->parent ) && $parent_lang = $this->model->term->get_language( $term->parent ) ) {
-				// Sets language from term parent if exists 
-				$this->model->term->set_language( $term_id, $parent_lang );
-			} elseif ( isset( $this->pref_lang ) ) {
-				// Always defined on admin, never defined on frontend
-				$this->model->term->set_language( $term_id, $this->pref_lang );
-			} elseif ( ! empty( $this->curlang ) ) {
-				// Only on frontend due to the previous test always true on admin
-				$this->model->term->set_language( $term_id, $this->curlang );
-			} else {
-				// In all other cases set to default language.
-				$this->model->term->set_language( $term_id, $this->options['default_lang'] );
-			}
-		}
+		$term_language = new Create_Term(
+			$this->model,
+			$this->request,
+			$this->pref_lang instanceof LMAT_Language ? $this->pref_lang : null, // Can be `false` as well...
+			$this->curlang instanceof LMAT_Language ? $this->curlang : null // Can be `false` as well...
+		);
+
+		$this->model->term->set_language(
+			$term_id,
+			$term_language->get_language( new User(), (int) $term_id, (string) $taxonomy )
+		);
 	}
 
 	/**
@@ -142,7 +143,13 @@ class LMAT_CRUD_Terms {
 	 * @return void
 	 */
 	public function save_term( $term_id, $tt_id, $taxonomy ) {
-		if ( $this->model->is_translated_taxonomy( $taxonomy ) ) {
+		if ( is_multisite() && ms_is_switched() && ! $this->model->has_languages() ) {
+			return;
+		}
+
+		if ( ! $this->model->is_translated_taxonomy( $taxonomy ) ) {
+			return;
+		}
 
 			$lang = $this->model->term->get_language( $term_id );
 
@@ -160,7 +167,6 @@ class LMAT_CRUD_Terms {
 			 * @param int[]  $translations The list of translations term ids.
 			 */
 			do_action( 'lmat_save_term', $term_id, $taxonomy, $this->model->term->get_translations( $term_id ) );
-		}
 	}
 
 	/**
@@ -170,28 +176,29 @@ class LMAT_CRUD_Terms {
 	 *
 	 * @param string[] $taxonomies Queried taxonomies.
 	 * @param array    $args       WP_Term_Query arguments.
-	 * @return LMAT_Language|string|false The language(s) to use in the filter, false otherwise.
+	 * @return LMAT_Language[] The language(s) to use in the filter, false otherwise.
 	 */
-	protected function get_queried_language( $taxonomies, $args ) {
+	protected function get_queried_languages( $taxonomies, $args ): array {
 		global $pagenow;
 
 		// Does nothing except on taxonomies which are filterable
 		// Since WP 4.7, make sure not to filter wp_get_object_terms()
 		if ( ! $this->model->is_translated_taxonomy( $taxonomies ) || ! empty( $args['object_ids'] ) ) {
-			return false;
+			return array();
 		}
 
-		// If get_terms is queried with a 'lang' parameter
+		// If get_terms() is queried with a 'lang' parameter.
 		if ( isset( $args['lang'] ) ) {
-			return $args['lang'];
+			$languages = is_string( $args['lang'] ) ? explode( ',', $args['lang'] ) : $args['lang'];
+			return array_filter( array_map( array( $this->model, 'get_language' ), (array) $languages ) );
 		}
 
-		// On tags page, everything should be filtered according to the admin language filter except the parent dropdown
+		// On the tags page, everything should be filtered according to the admin language filter except the parent dropdown.
 		if ( 'edit-tags.php' === $pagenow && empty( $args['class'] ) ) {
-			return $this->filter_lang;
+			return ! empty( $this->filter_lang ) ? array( $this->filter_lang ) : array();
 		}
 
-		return $this->curlang;
+		return ! empty( $this->curlang ) ? array( $this->curlang ) : array();
 	}
 
 	/**
@@ -228,8 +235,8 @@ class LMAT_CRUD_Terms {
 	 * @return string[] Modified sql clauses.
 	 */
 	public function terms_clauses( $clauses, $taxonomies, $args ) {
-		$lang = $this->get_queried_language( $taxonomies, $args );
-		return $this->model->terms_clauses( $clauses, $lang );
+		$languages = $this->get_queried_languages( $taxonomies, $args );
+		return $this->model->terms_clauses( $clauses, $languages );
 	}
 
 	/**

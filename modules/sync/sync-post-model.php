@@ -114,30 +114,30 @@ class LMAT_Sync_Post_Model {
 		$tr_id     = $this->model->post->get( $post_id, $this->model->get_language( $target_language ) );
 		$tr_post   = get_post( $post_id );
 		$languages = array_keys( $this->get( $post_id ) );
-
+		
 		if ( ! $tr_post instanceof WP_Post ) {
 			// Something went wrong!
 			return 0;
 		}
-
+		
 		foreach($tr_post as $key => $value){
 			if(isset($post_data[$key]) && $key !== 'post_meta_fields'){
 				$tr_post->$key = $post_data[$key];
 			}
 		}
-
+		
 		if(isset($post_data['post_content'])){
-
+			
 			$filtered_post_content=lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language);
-
+			
 			$default_allowed_tags=wp_kses_allowed_html('post');
-
+			
 			$parent_post_content=get_post_field('post_content', $post_id);
-
+			
             $existing_allowed_tags=$this->allowed_tags_in_string($parent_post_content);
-
+			
             $unwanted_tags = [
-                'script',
+				'script',
                 'object',
                 'embed',
                 'textarea',
@@ -149,41 +149,42 @@ class LMAT_Sync_Post_Model {
                 'xmp',
                 'noembed',
             ];
-
+			
             // Remove unwanted tags from the existing allowed list
             foreach ($unwanted_tags as $tag) {
-                if (isset($existing_allowed_tags[$tag])) {
-                    unset($existing_allowed_tags[$tag]);
+				if (isset($existing_allowed_tags[$tag])) {
+					unset($existing_allowed_tags[$tag]);
                 }
             }
-                
+			
             // Apply the allowed tags
             $allowed_tags=apply_filters('lmat/bulk_translation/allowed_tags', array_merge($default_allowed_tags, $existing_allowed_tags));
                 
             // Add the filter to allow the flex styles
             add_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
-
+			
             // Apply the allowed tags
 			$filtered_post_content=wp_kses($filtered_post_content, $allowed_tags);
-
+			
             // Remove the filter to allow the flex styles
             remove_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
-
+			
 			$tr_post->post_content=$filtered_post_content;
 		}
-
+		
 		$post_status='draft';
-
+		
 		if(isset($this->options['ai_translation_configuration']['bulk_translation_post_status'])){
 			$post_status=$this->options['ai_translation_configuration']['bulk_translation_post_status'];
 		}
-
+		
 		// If it does not exist, create it.
 		if ( ! $tr_id ) {
 			$tr_post->ID = 0;
 			$tr_post->post_status = $post_status;
 		
 			$tr_id       = wp_insert_post( wp_slash( $tr_post->to_array() ) );
+
 			$this->model->post->set_language( $tr_id, $target_language ); // Necessary to do it now to share slug.
 
 			$translations = $this->model->post->get_translations( $post_id );
@@ -395,7 +396,7 @@ class LMAT_Sync_Post_Model {
 	 * @return void
 	 */
 	public function save_group( $post_id, $sync_post ) {
-		$term = $this->model->post->get_object_term( $post_id, 'post_translations' );
+		$term = $this->model->post->get_object_term( $post_id, $this->model->post->get_tax_language() );
 
 		if ( empty( $term ) ) {
 			return;
@@ -431,7 +432,7 @@ class LMAT_Sync_Post_Model {
 	 * @return array An associative array of arrays with language code as key and post id as value.
 	 */
 	public function get( $post_id ) {
-		$term = $this->model->post->get_object_term( $post_id, 'post_translations' );
+		$term = $this->model->post->get_object_term( $post_id, $this->model->post->get_tax_language() );
 
 		if ( ! empty( $term ) ) {
 			$lang = $this->model->post->get_language( $post_id );
