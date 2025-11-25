@@ -28,11 +28,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
             'Linguator\\Frontend\\' => 19,
             'Linguator\\Admin\\' => 16,
         ),
-        'D' => 
-        array (
-            'Doctrine\\Instantiator\\' => 22,
-            'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 55,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -72,24 +67,10 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         array (
             0 => __DIR__ . '/../..' . '/admin',
         ),
-        'Doctrine\\Instantiator\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
-        ),
-        'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
-        ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin' => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src/Plugin.php',
-        'Doctrine\\Instantiator\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator/Exception/ExceptionInterface.php',
-        'Doctrine\\Instantiator\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator/Exception/InvalidArgumentException.php',
-        'Doctrine\\Instantiator\\Exception\\UnexpectedValueException' => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator/Exception/UnexpectedValueException.php',
-        'Doctrine\\Instantiator\\Instantiator' => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator/Instantiator.php',
-        'Doctrine\\Instantiator\\InstantiatorInterface' => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator/InstantiatorInterface.php',
         'LMAT_Abstract_Sitemaps' => __DIR__ . '/../..' . '/modules/sitemaps/abstract-sitemaps.php',
         'LMAT_Admin_Site_Health' => __DIR__ . '/../..' . '/modules/site-health/admin-site-health.php',
         'LMAT_Admin_Sync' => __DIR__ . '/../..' . '/modules/sync/admin-sync.php',
