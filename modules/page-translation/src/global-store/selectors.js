@@ -104,11 +104,16 @@ export const getTranslationEntries = (state) => {
 };
 
 export const getTranslationEntry = (state, data) => {
+    
+    if(['title', 'excerpt', 'slug'].includes(data.type)){
+        return state[data.type] || false;
+    }
+
     if(data.type && data.id && state[data.type] && state[data.type][data.id]){
-        return state[data.type][data.id];
+        return state[data.type][data.id] || false;
     }
     
-    return false; // Return false if no translation entry is found
+    return false; 
 }
 
 /**
