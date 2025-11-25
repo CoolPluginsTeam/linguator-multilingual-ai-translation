@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Linguator\\includes\\' => array($baseDir . '/includes'),
-    'Linguator\\Tests\\' => array($baseDir . '/tests'),
     'Linguator\\Settings\\' => array($baseDir . '/admin/settings'),
     'Linguator\\Modules\\' => array($baseDir . '/modules'),
     'Linguator\\Integrations\\' => array($baseDir . '/integrations'),

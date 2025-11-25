@@ -15,7 +15,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'L' => 
         array (
             'Linguator\\includes\\' => 19,
-            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -29,10 +28,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
-        ),
-        'Linguator\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
         ),
         'Linguator\\Settings\\' => 
         array (
