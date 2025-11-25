@@ -1,6 +1,7 @@
 import React from 'react'
 import SetupProgress from '../components/setup-progress'
 import VideoIntro from '../components/video-intro'
+import Migration from '../components/migration'
 import { LoaderPinwheel } from "lucide-react"
 import { RenderedLanguage } from '../components/languages'
 import { Loader, Dialog, Button } from "@bsf/force-ui"
@@ -29,6 +30,8 @@ const SetupPage = () => {
   const [languageAddLoader, setLanguageAddLoader] = React.useState(false)
   const [languageDeleteLoader, setLanguageDeleteLoader] = React.useState(false)
   const [showWizard, setShowWizard] = React.useState(false) // Track if user clicked "Get Started"
+  const [showMigration, setShowMigration] = React.useState(false) // Track if migration should be shown
+  const [migrationCompleted, setMigrationCompleted] = React.useState(false) // Track if migration is completed/skipped
 
   //turning all languages into array format from object format
   let lmat_all_languages = [];
@@ -41,26 +44,7 @@ const SetupPage = () => {
 
 
   React.useEffect(() => {
-    //Handle which tab to go according to reload and redirt from other page
-    if (localStorage.getItem("setupProgress") && performance.getEntriesByType("navigation")[0].type === "reload") {
-      let setup = localStorage.getItem("setupProgress")
-      if (lmat_setup_data[setup] === "1") {
-        setSetupProgress((localStorage.getItem("setupProgress")))
-      } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher") {
-        setSetupProgress(localStorage.getItem("setupProgress"))
-      }
-      else {
-        localStorage.setItem("setupProgress", "default");
-      }
-    } else {
-      localStorage.setItem("setupProgress", "default");
-
-    }
-
-
     async function serverCall() {
-
-
       //API call to get general settings data
       const responseData = await apiFetch({
         path: 'lmat/v1/settings',
@@ -72,8 +56,44 @@ const SetupPage = () => {
       })
 
       setData(responseData)
+      
+      // Check if Polylang migration is needed using database option
+      const polylangDetection = lmat_setup_data?.polylang_detection
+      const migrationCompleted = responseData?.lmat_migration_completed || false
+      
+      if (polylangDetection && polylangDetection.has_polylang && !migrationCompleted) {
+        // Show migration section if Polylang is detected and migration not completed
+        setShowMigration(true)
+        setMigrationCompleted(false)
+      } else {
+        // Migration not needed or already completed, proceed with setup progress
+        setShowMigration(false)
+        setMigrationCompleted(migrationCompleted)
+        
+        //Handle which tab to go according to reload and redirect from other page
+        if (localStorage.getItem("setupProgress") && performance.getEntriesByType("navigation")[0].type === "reload") {
+          let setup = localStorage.getItem("setupProgress")
+          if (lmat_setup_data[setup] === "1") {
+            setSetupProgress((localStorage.getItem("setupProgress")))
+          } else if (localStorage.getItem("setupProgress") === "ready" || localStorage.getItem("setupProgress") === "default" || localStorage.getItem("setupProgress") === "languages" || localStorage.getItem("setupProgress") === "url" || localStorage.getItem("setupProgress") === "media" || localStorage.getItem("setupProgress") === "translation_configuration" || localStorage.getItem("setupProgress") === "language_switcher") {
+            setSetupProgress(localStorage.getItem("setupProgress"))
+          } else {
+            localStorage.setItem("setupProgress", "default");
+            setSetupProgress("default");
+          }
+        } else {
+          // Check localStorage for setup progress, default to "default"
+          const savedProgress = localStorage.getItem("setupProgress")
+          if (savedProgress && (savedProgress === "ready" || savedProgress === "default" || savedProgress === "languages" || savedProgress === "url" || savedProgress === "media" || savedProgress === "translation_configuration" || savedProgress === "language_switcher")) {
+            setSetupProgress(savedProgress)
+          } else {
+            localStorage.setItem("setupProgress", "default");
+            setSetupProgress("default");
+          }
+        }
+      }
+      
       setLoading(false)
-
     }
     serverCall()
   }, [])
@@ -378,6 +398,27 @@ const SetupPage = () => {
             <h1 style={{paddingTop: "30px"}} className='bg-background-secondary text-center m-0'>{__("Linguator – Multilingual AI Translation ", "linguator-multilingual-ai-translation")}</h1>
               {data.lmat_video_status === false ? (
                 <VideoIntro onGetStarted={handleGetStarted} />
+              ) : showMigration ? (
+                <Migration 
+                  onComplete={() => {
+                    // Just navigate to next step, status already saved on Migrate/Skip
+                    setShowMigration(false)
+                    setMigrationCompleted(true)
+                    // Update data state to reflect migration completion
+                    setData(prev => ({ ...prev, lmat_migration_completed: true }))
+                    localStorage.setItem("setupProgress", "default")
+                    setSetupProgress("default")
+                  }}
+                  onSkip={() => {
+                    // Just navigate to next step, status already saved in handleSkip
+                    setShowMigration(false)
+                    setMigrationCompleted(true)
+                    // Update data state to reflect migration completion
+                    setData(prev => ({ ...prev, lmat_migration_completed: true }))
+                    localStorage.setItem("setupProgress", "default")
+                    setSetupProgress("default")
+                  }}
+                />
               ) : (
                   <SetupProgress lmat_setup_data={lmat_setup_data} />
               )}

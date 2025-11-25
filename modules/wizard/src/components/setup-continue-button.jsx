@@ -4,7 +4,7 @@ export default function SetupContinueButton({ SaveSettings,children="Continue" }
     return (
         <>
             <Button
-                className="m-0 flex items-center"
+                className="m-0 flex items-center justify-center"
                 iconPosition="left"
                 size="md"
                 tag="button"

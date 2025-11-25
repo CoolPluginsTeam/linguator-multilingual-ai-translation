@@ -70,6 +70,40 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		}
 
 		/**
+		 * Check if Polylang data exists
+		 *
+		 * @return bool True if Polylang data exists, false otherwise.
+		 */
+		private function has_polylang_data() {
+			global $wpdb;
+
+			// Check if Polylang data exists in database (works even if plugin is deactivated)
+			// Check for 'language' taxonomy terms directly in database
+			$polylang_languages_count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
+					'language'
+				)
+			);
+
+			// Get Polylang settings first to check if Polylang was ever used
+			$polylang_options = get_option( 'polylang', array() );
+			
+			// If no languages found, check if Polylang was ever installed by checking for settings
+			if ( empty( $polylang_languages_count ) || 0 === (int) $polylang_languages_count ) {
+				// If no languages and no settings, Polylang was never used
+				if ( empty( $polylang_options ) ) {
+					return false;
+				}
+				// Settings exist but no languages - still show migration option for settings
+				return true;
+			}
+
+			// If languages exist, Polylang data is present
+			return true;
+		}
+
+		/**
 		 * Tabs
 		 * @return mixed
 		 */
@@ -90,6 +124,12 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				'glossary' => array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' ),
 			);
 
+			// Only show Advanced Settings tab if migration hasn't been completed AND Polylang data exists
+			$migration_completed = get_option( 'lmat_migration_completed', false );
+			if ( ! $migration_completed && $this->has_polylang_data() ) {
+				$tabs['advanced-settings'] = array( 'title' => __( 'Advanced Settings', 'linguator-multilingual-ai-translation' ) );
+			}
+
             $languages = $this->model->get_languages_list();
             $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
             if(!empty($languages) && $static_strings_visibility){
@@ -108,6 +148,12 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 
 				$tabs['switcher']['redirect']     = true;
 				$tabs['switcher']['redirect_url'] = $default_url . '&tab=switcher';
+				
+				// Only set redirect for advanced-settings if the tab exists
+				if ( isset( $tabs['advanced-settings'] ) ) {
+					$tabs['advanced-settings']['redirect']     = true;
+					$tabs['advanced-settings']['redirect_url'] = $default_url . '&tab=advanced-settings';
+				}
 			}
 
 			return apply_filters( 'lmat_settings_header_tabs', $tabs );
