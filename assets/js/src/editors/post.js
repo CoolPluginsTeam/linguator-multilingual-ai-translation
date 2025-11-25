@@ -14,10 +14,12 @@ import {
     Icon,
     ExternalLink,
     Spinner,
-    Notice
+    Notice,
+    Modal,
+    Button
 } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { useMemo, useState, useRef, useCallback } from '@wordpress/element';
+import { useMemo, useState, useRef, useCallback, useEffect } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { CirclePlus, SquarePen } from 'lucide-react';
 
@@ -67,50 +69,183 @@ const getSettings = () => {
 };
 
 const LanguageSection = ( { lang, allLanguages } ) => {
+    const [updating, setUpdating] = useState(false);
+    const [error, setError] = useState('');
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [pendingLanguage, setPendingLanguage] = useState(null);
+    const [selectValue, setSelectValue] = useState(lang?.slug || '');
+    const postId = select('core/editor')?.getCurrentPostId?.();
+
+    // Update selectValue when lang changes
+    useEffect(() => {
+        setSelectValue(lang?.slug || '');
+    }, [lang?.slug]);
+
     const options = useMemo( () => {
         const list = [];
         if ( lang ) {
             list.push( { label: lang.name, value: lang.slug, flag_url: lang.flag_url } );
         }
         Object.values( allLanguages ).forEach( ( row ) => {
-            list.push( { label: row.lang.name, value: row.lang.slug, flag_url: row.lang.flag_url } );
+            // Only include languages that don't have an existing translation (no edit_link)
+            // If edit_link exists, it means there's already a linked translation, so exclude it
+            if ( ! row.links?.edit_link ) {
+                list.push( { label: row.lang.name, value: row.lang.slug, flag_url: row.lang.flag_url } );
+            }
         } );
         return list;
     }, [ lang, allLanguages ] );
 
+    const updatePostLanguage = async ( langSlug ) => {
+        try {
+            setUpdating(true);
+            setError('');
+            
+            const editorStore = select('core/editor');
+            const currentPost = editorStore?.getCurrentPost?.();
+            const postStatus = currentPost?.status;
+            const isNewPost = !postId || postStatus === 'auto-draft';
+            
+            const response = await apiFetch({
+                path: '/lmat/v1/languages/update-post-language',
+                method: 'POST',
+                data: {
+                    post_id: postId,
+                    lang: langSlug,
+                },
+            });
+            
+            // Verify the language was updated successfully
+            if (response && response.success) {
+                // Small delay to ensure database write completes
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Reload the page with appropriate language parameter
+                const currentUrl = new URL(window.location.href);
+                // Use new_lang for new posts, lang for existing posts
+                if (isNewPost) {
+                    currentUrl.searchParams.set('new_lang', langSlug);
+                } else {
+                    currentUrl.searchParams.set('lang', langSlug);
+                }
+                window.location.href = currentUrl.toString();
+            } else {
+                throw new Error(__( 'Language update did not succeed.', 'linguator-multilingual-ai-translation' ));
+            }
+        } catch ( e ) {
+            setUpdating(false);
+            setError( __( 'Failed to update language. Please try again.', 'linguator-multilingual-ai-translation' ) );
+        }
+    };
+
+    const handleLanguageChange = async ( value ) => {
+        // If selecting the current language, do nothing.
+        if ( ! value || ( lang && value === lang.slug ) ) {
+            setSelectValue( lang?.slug || '' );
+            return;
+        }
+
+        // If there's an existing translation in that language, navigate to it
+        const selected = allLanguages?.[ value ];
+        if ( selected && selected.links?.edit_link ) {
+            window.location.href = selected.links.edit_link;
+            return;
+        }
+
+        // If no post ID (new post), navigate to add link if available
+        if ( ! postId ) {
+            if ( selected && selected.links?.add_link ) {
+                window.location.href = selected.links.add_link;
+            }
+            return;
+        }
+
+        // Show confirmation dialog before updating
+        setSelectValue( value ); // Update select to show the selected value
+        setPendingLanguage( value );
+        setShowConfirmDialog( true );
+    };
+
+    const handleConfirmLanguageChange = () => {
+        setShowConfirmDialog( false );
+        if ( pendingLanguage ) {
+            updatePostLanguage( pendingLanguage );
+        }
+        setPendingLanguage( null );
+    };
+
+    const handleCancelLanguageChange = () => {
+        setShowConfirmDialog( false );
+        setPendingLanguage( null );
+        // Reset the select control to the current language
+        setSelectValue( lang?.slug || '' );
+    };
+
+    const getSelectedLanguageName = () => {
+        if ( ! pendingLanguage ) return '';
+        const selected = allLanguages?.[ pendingLanguage ];
+        return selected ? selected.lang.name : '';
+    };
+
     return (
-        <PanelBody title={ __( 'Language', 'linguator-multilingual-ai-translation' ) } initialOpen >
-            <Flex align="center">
-                <FlexItem>
-                    { lang?.flag_url ? (
-                        <img src={ lang.flag_url } alt={ lang?.name || '' } className="flag" style={ { marginRight: 8, width: 20, height: 14 } } />
-                    ) : null }
-                </FlexItem>
-                <FlexItem style={ { flex: 1 } }>
-                    <SelectControl
-                        label={ undefined }
-                        value={ lang?.slug || '' }
-                        onChange={ ( value ) => {
-                            // If selecting the current language, do nothing.
-                            if ( ! value || ( lang && value === lang.slug ) ) {
-                                return;
-                            }
-                            // Look up the selected language row in translations table
-                            const selected = allLanguages?.[ value ];
-                            if ( selected && selected.links ) {
-                                const target = selected.links.edit_link || selected.links.add_link;
-                                if ( target ) {
-                                    window.location.href = target;
-                                }
-                            }
-                        } }
-                        help={ undefined }
-                        options={ options.map( ( opt ) => ( { label: opt.label, value: opt.value } ) ) }
-                        // Changing language navigates to the corresponding edit/add page.
-                    />
-                </FlexItem>
-            </Flex>
-        </PanelBody>
+        <>
+            <PanelBody title={ __( 'Language', 'linguator-multilingual-ai-translation' ) } initialOpen >
+                <Flex align="center">
+                    <FlexItem>
+                        { lang?.flag_url ? (
+                            <img src={ lang.flag_url } alt={ lang?.name || '' } className="flag" style={ { marginRight: 8, width: 20, height: 14 } } />
+                        ) : null }
+                    </FlexItem>
+                    <FlexItem style={ { flex: 1 } }>
+                        <SelectControl
+                            label={ undefined }
+                            value={ selectValue }
+                            onChange={ handleLanguageChange }
+                            disabled={ updating || showConfirmDialog }
+                            help={ updating ? __( 'Updating language...', 'linguator-multilingual-ai-translation' ) : undefined }
+                            options={ options.map( ( opt ) => ( { label: opt.label, value: opt.value } ) ) }
+                        />
+                    </FlexItem>
+                </Flex>
+                { error ? (
+                    <Notice status="error" isDismissible={ false }>
+                        { error }
+                    </Notice>
+                ) : null }
+            </PanelBody>
+            { showConfirmDialog && (
+                <Modal
+                    title={ __( 'Change Language', 'linguator-multilingual-ai-translation' ) }
+                    onRequestClose={ handleCancelLanguageChange }
+                    isDismissible={ true }
+                >
+                    <p>
+                        { __( 'Are you sure you want to change the language of this post to', 'linguator-multilingual-ai-translation' ) }
+                        { ' ' }
+                        <strong>{ getSelectedLanguageName() }</strong>?
+                    </p>
+                    <p>
+                        { __( 'This will update the language of the current post. Any unsaved changes will be lost.', 'linguator-multilingual-ai-translation' ) }
+                    </p>
+                    <div style={ { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' } }>
+                        <Button
+                            variant="secondary"
+                            onClick={ handleCancelLanguageChange }
+                            disabled={ updating }
+                        >
+                            { __( 'Cancel', 'linguator-multilingual-ai-translation' ) }
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={ handleConfirmLanguageChange }
+                            disabled={ updating }
+                        >
+                            { __( 'Change Language', 'linguator-multilingual-ai-translation' ) }
+                        </Button>
+                    </div>
+                </Modal>
+            ) }
+        </>
     );
 };
 
