@@ -835,6 +835,7 @@ jQuery(document).ready(function($) {
                 // Check if we have the added entry data from server
                 if (resp.data && resp.data.added_entry) {
                 $form.hide();
+                $('.lmat-glossary-modal-content h2').hide();
                 $('#add-glossary-success').removeClass('lmat-hidden');
 
                 // Use the data returned from the server
@@ -1037,7 +1038,7 @@ jQuery(document).ready(function($) {
                                          const $translatedTerm = $cell.find('.lmat-translated-term');
                                          if ($translatedTerm.length) {
                                              const translation = $translatedTerm.data('full-text') || $translatedTerm.text().trim();
-                                             if (translation && translation.trim() !== '') {
+                                             if (translation && typeof translation === 'string' && translation.trim() !== '') {
                                                  existingTranslations[langCode] = translation.trim();
                                              }
                                          }

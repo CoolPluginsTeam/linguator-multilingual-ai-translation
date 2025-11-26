@@ -8,6 +8,12 @@
     margin-top: 25px;
     flex: 2;
   }
+
+  .lmat-glossary *{
+    position: relative;
+    box-sizing: border-box;
+    font-family: Inter, Roboto, Helvetica, Arial, sans-serif;
+  }
   
   .lmat-glossary-container {
     padding: 24px;
@@ -734,7 +740,18 @@
   flex-direction: column;
   gap: 6px;
 }
+
+.lmat-translation-label-row{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+}
   
+.lmat-translation-label-row img{
+  width: 18px;
+}
+
 @media (max-width: 700px) {
     .lmat-add-translations.lmat-translations-grid {
         grid-template-columns: 1fr !important;
