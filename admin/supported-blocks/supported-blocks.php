@@ -123,8 +123,6 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 				$this->render_supported_blocks_page();
 				return false;
 			}
-
-			return true;
 		}
 
 		/**
