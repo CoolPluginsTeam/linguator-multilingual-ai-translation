@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import FilterTargetContent from "../component/filter-target-content/index.js";
 import { __ } from "@wordpress/i18n";
-import { select } from "@wordpress/data";
+import { select, dispatch } from "@wordpress/data";
 import { Fragment } from "@wordpress/element";
 import TranslateService from "../component/translate-provider/index.js";
 import ReactDOM from "react-dom";
@@ -11,10 +11,10 @@ import SaveTranslation from '../component/store-translated-string/index.js';
 const StringPopUpBody = (props) => {
 
     const { service: service } = props;
-    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntry();
+    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntries();
     const StringModalBodyNotice = props.stringModalBodyNotice;
 
-    const imgFolder = lmatPageTranslationGlobal.lmat_url + 'admin/assets/images/'; 
+    const imgFolder = lmatPageTranslationGlobal.lmat_url + 'admin/assets/images/';
 
 
     // Add refs and state for popup
@@ -33,11 +33,17 @@ const StringPopUpBody = (props) => {
     const showGlossary = activePopupType === 'glossary';
     const showAddGlossary = activePopupType === 'add-glossary';
 
+    const saveFilteredString = (type, id, filteredString) => {
+        const action=`${type}SaveFiltered`;
+
+        dispatch('block-lmatPageTranslation/translate')[action](filteredString, id);
+    }
+
 
     // Helper function for glossary positioning (assuming fixed/viewport relative positioning for GlossaryPopup)
     const calculateGlossaryPosition = (anchorElementRect, isTdSource = false) => {
         const stringContainer = document.querySelector('.lmat_page_translation_string_container');
-        
+
         // Default to positioning below the anchor if stringContainer is not found
         if (!stringContainer) {
             return {
@@ -47,7 +53,7 @@ const StringPopUpBody = (props) => {
         }
 
         const stringContainerRect = stringContainer.getBoundingClientRect();
-        const position = { right: (anchorElementRect.right - (isTdSource ? 4 : 0) ) };
+        const position = { right: (anchorElementRect.right - (isTdSource ? 4 : 0)) };
         const spaceBelowInContainer = stringContainerRect.bottom - anchorElementRect.bottom;
         const spaceAboveInContainer = anchorElementRect.top - stringContainerRect.top;
 
@@ -76,22 +82,22 @@ const StringPopUpBody = (props) => {
     // Fetch glossary data on initial render
     const calculateAddGlossaryPosition = (anchorElementRect, isTdSource = false) => {
         const stringContainer = document.querySelector('.lmat_page_translation_string_container');
-        
-        const position = { 
-            right: anchorElementRect.right - (isTdSource ? 4 : 0) 
+
+        const position = {
+            right: anchorElementRect.right - (isTdSource ? 4 : 0)
         };
-    
+
         if (!stringContainer) {
             return position;
         }
-    
+
         const stringContainerRect = stringContainer.getBoundingClientRect();
         const spaceBelowInContainer = stringContainerRect.bottom - anchorElementRect.bottom;
-        
+
         if (spaceBelowInContainer < 200) {
-                            position.right = position.right - 30;
-                    }
-    
+            position.right = position.right - 30;
+        }
+
         return position;
     };
 
@@ -99,7 +105,7 @@ const StringPopUpBody = (props) => {
         async function fetchGlossary() {
             try {
 
-                const data={
+                const data = {
                     action: 'lmat_get_glossary',
                     source_lang: props.sourceLang,
                     target_lang: props.targetLang,
@@ -130,29 +136,28 @@ const StringPopUpBody = (props) => {
 
     // Update handleTdClick to check for AI service
     const handleTdClick = (event, colIndex, rowIndex, data) => {
-        if (colIndex !== 2) return;
+        const translationEntry = select("block-lmatPageTranslation/translate").getTranslationEntry({id: data.id, type: data.type});
+
+        if (colIndex !== 2 || !translationEntry) return;
 
         const cellKey = `${rowIndex}_${colIndex}`;
-        let translation = '';
-        if (savedValues[cellKey] !== undefined) {
-            translation = savedValues[cellKey];
-        } else if (data.translatedData) {
-            if (service && data.translatedData[service]) {
-                translation = data.translatedData[service];
-            } else if (data.translatedData[props.service]) {
-                translation = data.translatedData[props.service];
-            } else {
-                translation = data.source || '';
-            }
-        } else {
-            translation = data.source || '';
-        }
 
+        let translation = '';
+        if(translationEntry.translatedData && translationEntry.translatedData[service]){
+            translation = translationEntry.translatedData[service];
+        } else if(translationEntry.translatedData && translationEntry.translatedData[props.service]){
+            translation = translationEntry.translatedData[props.service];
+        } else if(translationEntry.filteredString){
+            translation = translationEntry.filteredString;
+        } else {
+            translation = translationEntry.source || '';
+        }
+        
         // Only set editing state if not already editing this cell
         const isAlreadyEditing = editingCells.some(
             cell => cell.row === rowIndex && cell.col === colIndex
         );
-
+        
         if (!isAlreadyEditing) {
             setEditingCells([{ row: rowIndex, col: colIndex }]);
             setEditingValues({
@@ -174,9 +179,9 @@ const StringPopUpBody = (props) => {
         // Calculate popup position relative to the clicked cell
         const newPopupInfo = {
             left: tdRect.right + window.scrollX,
-            top: tdRect.top + window.scrollY -35,
+            top: tdRect.top + window.scrollY - 35,
             value: data,
-            header: thText, 
+            header: thText,
         };
 
         // Adjust position if near bottom of container
@@ -205,67 +210,69 @@ const StringPopUpBody = (props) => {
         setPopupInfo(null);
         setActivePopupCell(null);
     };
-// Helper to get matched glossary terms
-const getMatchedGlossaryTerms = (sourceText) => {
-    if (!sourceText) return [];
+    // Helper to get matched glossary terms
+    const getMatchedGlossaryTerms = (sourceText) => {
+        if (!sourceText) return [];
 
-    // Create a temporary div to parse HTML and get text content
-    const temp = document.createElement('div');
-    temp.innerHTML = sourceText;
-    const textContent = temp.textContent;
+        // Create a temporary div to parse HTML and get text content
+        const temp = document.createElement('div');
+        temp.innerHTML = sourceText;
+        const textContent = temp.textContent;
 
-    // Normalize text (lowercase + remove unnecessary punctuation)
-    const normalizeText = (text) => {
-        return text.toLowerCase()
-                   .replace(/[.,/#!$%^&*;{}=\-_`~()]/g, (match) => {
-                       // Preserve colon but remove other punctuation
-                       return match === ':' ? ':' : '';
-                   })
-                   .trim();
+        // Normalize text (lowercase + remove unnecessary punctuation)
+        const normalizeText = (text) => {
+            return text.toLowerCase()
+                .replace(/[.,/#!$%^&*;{}=\-_`~()]/g, (match) => {
+                    // Preserve colon but remove other punctuation
+                    return match === ':' ? ':' : '';
+                })
+                .trim();
+        };
+
+        // Escape special characters for safe regex creation
+        const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        const normalizedSourceText = normalizeText(textContent);
+
+        return glossaryTerms
+            .filter(entry => {
+                if (!entry.original_term) return false;
+
+                const glossaryTerm = entry.original_term.trim();
+                const normalizedGlossaryTerm = normalizeText(glossaryTerm);
+                const safeTerm = escapeRegex(normalizedGlossaryTerm);
+
+                // Create regex to match whole words only
+                const regex = new RegExp(`\\b${safeTerm}\\b`, 'i');
+
+                // Check if it matches as a separate word
+                const isMatch = regex.test(normalizedSourceText);
+
+                if (isMatch && glossaryTerm.endsWith(':')) {
+                    // Ensure colon match is properly followed by space or end
+                    const matchIndex = normalizedSourceText.indexOf(normalizedGlossaryTerm);
+                    const afterMatch = normalizedSourceText[matchIndex + normalizedGlossaryTerm.length];
+                    return !afterMatch || afterMatch === ' ';
+                }
+
+                return isMatch;
+            })
+            .map(entry => {
+                return ({
+                    english: entry.original_term,
+                    translation:
+                        entry.translations?.[props.targetLang] || '',
+                    description: entry.description || ''
+                })
+            });
     };
-
-    // Escape special characters for safe regex creation
-    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-    const normalizedSourceText = normalizeText(textContent);
-
-    return glossaryTerms
-        .filter(entry => {
-            if (!entry.original_term) return false;
-
-            const glossaryTerm = entry.original_term.trim();
-            const normalizedGlossaryTerm = normalizeText(glossaryTerm);
-            const safeTerm = escapeRegex(normalizedGlossaryTerm);
-
-            // Create regex to match whole words only
-            const regex = new RegExp(`\\b${safeTerm}\\b`, 'i');
-
-            // Check if it matches as a separate word
-            const isMatch = regex.test(normalizedSourceText);
-
-            if (isMatch && glossaryTerm.endsWith(':')) {
-                // Ensure colon match is properly followed by space or end
-                const matchIndex = normalizedSourceText.indexOf(normalizedGlossaryTerm);
-                const afterMatch = normalizedSourceText[matchIndex + normalizedGlossaryTerm.length];
-                return !afterMatch || afterMatch === ' ';
-            }
-
-            return isMatch;
-        })
-        .map(entry => {return ({
-            english: entry.original_term,
-            translation:
-                entry.translations?.[props.targetLang] || '',
-            description: entry.description || ''
-        })});
-};
 
     const matchedGlossaryTerms = getMatchedGlossaryTerms(selectedSourceText);
 
     // Update handleGlossaryClick to check for AI service
     const handleGlossaryClick = () => {
         if (matchedGlossaryTerms.length === 0) return;
-        
+
         // Toggle glossary popup, close if already open
         setActivePopupType(prev => prev === 'glossary' ? null : 'glossary');
 
@@ -300,16 +307,16 @@ const getMatchedGlossaryTerms = (sourceText) => {
     const handleTextareaInput = (e, row, col) => {
         e.target.style.height = 'auto';
         e.target.style.height = e.target.scrollHeight + 'px';
-        
+
         // Recalculate positions for both glossary and add glossary popups when textarea size changes
         if (activePopupCell && activePopupCell.row === row && activePopupCell.col === col) {
             const textareaRect = e.target.getBoundingClientRect();
-            
+
             if (showGlossary) {
                 const newGlossaryPos = calculateGlossaryPosition(textareaRect, true);
                 setGlossaryPosition(newGlossaryPos);
             }
-            
+
             if (showAddGlossary) {
                 const newAddGlossaryPos = calculateAddGlossaryPosition(textareaRect, true);
                 setAddGlossaryPosition(newAddGlossaryPos);
@@ -338,13 +345,81 @@ const getMatchedGlossaryTerms = (sourceText) => {
         const service = props.service;
         const id = `lmat_page_translation_${service}_translate_element`;
 
-        const translateContent = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
+        const translateContent = select('block-lmatPageTranslation/translate').getTranslationEntries();
 
         if (translateContent.length > 0 && props.postDataFetchStatus) {
             const ServiceSetting = TranslateService({ Service: service });
             ServiceSetting.Provider({ sourceLang: props.sourceLang, targetLang: props.targetLang, translateStatusHandler: props.translateStatusHandler, ID: id, translateStatus: props.translateStatus, modalRenderId: props.modalRender, destroyUpdateHandler: props.updateDestroyHandler });
         }
     }, [props.modalRender, props.postDataFetchStatus]);
+
+    const udpateFilterdContent = (div) => {
+        const tempElement=document.createElement('div');
+        tempElement.innerHTML=div.innerHTML;
+        const childNodes=tempElement.childNodes;
+
+        if(childNodes.length > 0){
+            for(let i=0; i<childNodes.length; i++){
+                const childNode=childNodes[i];
+                if(childNode.nodeType === 3){
+                    continue;
+                }else{
+                    const childNodes=childNode.childNodes;
+                    if(childNodes.length > 0){
+                        if(!childNode.classList.contains('lmat-page-translation-notraslate-tag')){
+                           const textContent= udpateFilterdContent(childNode);
+                            childNode.outerHTML=textContent;
+                       }else{
+                            const textContent= udpateFilterdContent(childNode);
+                            childNode.innerHTML=textContent;
+                       }
+                    }
+                }
+            }
+        }
+
+        return tempElement.innerHTML;
+    }
+
+    const insertOrReplaceInContentEditable = (div, htmlToInsert) => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+    
+        const range = selection.getRangeAt(0);
+    
+        // Make sure the selection is inside this div
+        if (!div.contains(range.startContainer)) return;
+    
+        // Delete selected content (if any)
+        range.deleteContents();
+    
+        // Prepare HTML node
+        const temp = document.createElement("div");
+        temp.innerHTML = htmlToInsert;
+        const node = temp.firstChild;
+    
+        // Insert the span
+        range.insertNode(node);
+    
+        // Move caret after the inserted node
+        range.setStartAfter(node);
+        range.collapse(true);
+    
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        const filteredContent=udpateFilterdContent(div);
+
+        const td=div.closest('td');
+
+        if('' !== filteredContent && td){
+            const type=td.dataset.stringType;
+            const id=td.dataset.key;
+
+            saveFilteredString(type, id, filteredContent);
+        }
+    }
+    
 
     // Update handleInsertGlossaryTerm to accept a cell argument
     const handleInsertGlossaryTerm = (term, cell) => {
@@ -353,20 +428,9 @@ const getMatchedGlossaryTerms = (sourceText) => {
         const textarea = textareaRefs.current[cellKey];
 
         if (textarea) {
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const value = editingValues[cellKey] || '';
             const insertText = term.translation || term.english || '';
-            const newValue = value.slice(0, start) + insertText + value.slice(end);
-            setEditingValues({
-                ...editingValues,
-                [cellKey]: newValue
-            });
-
-            setTimeout(() => {
-                textarea.focus();
-                textarea.selectionStart = textarea.selectionEnd = start + insertText.length;
-            }, 0);
+            
+            insertOrReplaceInContentEditable(textarea, `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${insertText}</span>`)
         } else {
             setEditingValues({
                 ...editingValues,
@@ -387,16 +451,16 @@ const getMatchedGlossaryTerms = (sourceText) => {
         const cell = activePopupCell;
         if (cell) {
             const cellKey = `${cell.row}_${cell.col}`;
-            const newValue = editingValues[cellKey] || '';
+            const newValue = textareaRefs?.current[cellKey]?.innerText || '';
             const rowData = translateContent[cell.row];
-            
-            if (newValue.trim()) {
+
+            if (newValue && newValue.trim() !== '') {
                 // Save non-empty values
                 setSavedValues(prev => ({ ...prev, [cellKey]: newValue }));
 
                 if (rowData?.id) {
                     const providers = getTranslationProviders(service);
-                    
+
                     // Save translation for each provider
                     providers.forEach(provider => {
                         SaveTranslation({
@@ -419,7 +483,7 @@ const getMatchedGlossaryTerms = (sourceText) => {
 
                 if (rowData?.id) {
                     const providers = getTranslationProviders(service);
-                    
+
                     // Save translation for each provider
                     providers.forEach(provider => {
                         SaveTranslation({
@@ -515,17 +579,21 @@ const getMatchedGlossaryTerms = (sourceText) => {
             if (['google', 'yandex', 'localAiTranslator'].includes(props.service)) {
                 // Use FilterTargetContent for pending translations with supported services
                 if (props.translatePendingStatus && !props.service.includes('_ai')) {
-                    return <FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} />;
+                    if(data.filteredString){
+                        return <span dangerouslySetInnerHTML={{ __html: data.filteredString }} style={{ whiteSpace: 'pre-wrap' }}></span>;
+                    }
+
+                    return <FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} item={data} saveFilteredString={saveFilteredString}/>;
                 }
                 return data.source || '';
             } else {
-            return (
-                <img 
-                    src={imgFolder + 'plus.png'} 
-                    alt={__("Add translation", "automatic-translations-for-polylang-pro")} 
-                    className="lmat-page-translation-add-translation-icon" 
-                />
-            );
+                return (
+                    <img
+                        src={imgFolder + 'plus.png'}
+                        alt={__("Add translation", "automatic-translations-for-polylang-pro")}
+                        className="lmat-page-translation-add-translation-icon"
+                    />
+                );
             }
         }
     };
@@ -564,8 +632,6 @@ const getMatchedGlossaryTerms = (sourceText) => {
                                     <>
                                         {translateContent.map((data, index) => {
                                             const cellKey = `${index}_2`;
-                                            let cellDisplayContent;
-                                            const savedEdit = savedValues[cellKey];
                                             let originalTranslation = '';
 
                                             if (data.translatedData) {
@@ -576,64 +642,46 @@ const getMatchedGlossaryTerms = (sourceText) => {
                                                 }
                                             }
 
-                                            if (savedEdit !== undefined) {
-                                                cellDisplayContent = savedEdit;
-                                            } else if (originalTranslation) {
-                                                cellDisplayContent = originalTranslation;
-                                            } else if (!props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service)) {
-                                                cellDisplayContent = data.source || '';
-                                            } else if (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) {
-                                                cellDisplayContent = <FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} />;
-                                            } else if (!props.translatePendingStatus) {
-                                                cellDisplayContent = <img src={imgFolder + 'plus.png'} alt={__("Add translation", "automatic-translations-for-polylang-pro")} className="lmat-page-translation-add-translation-icon" />;
-                                            } else {
-                                                cellDisplayContent = '';
-                                            }
-                                            
                                             const isEditingThisCell = editingCells.some(cell => cell.row === index && cell.col === 2);
-                                            const isEmptyCell = savedEdit === undefined && !originalTranslation;
 
                                             return (
                                                 <Fragment key={index + props.translatePendingStatus}>
                                                     {undefined !== data.source && data.source.trim() !== '' &&
                                                         <>
-                                                            <tr key={index + 'tr' + props.translatePendingStatus}>
+                                                            <tr key={index + 'tr' + props.translatePendingStatus + (data.filteredString ? 'filteredString' : '')}>
                                                                 <td>{index + 1}</td>
                                                                 <td data-source="source_text">{data.source}</td>
-                                                                    <td 
-                                                                        data-key={data.id} 
-                                                                        data-string-type={data.type} 
-                                                                        onClick={(e) => {
-                                                                            handleTdClick(e, 2, index, data);
-                                                                        }}
-                                                                        style={{ cursor: 'pointer' }}
-                                                                        translate={(savedValues[cellKey] && props.service === 'google' || savedValues[cellKey] && props.service === 'yandex') ? "no" : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? "yes" : 'yes'}
+                                                                <td
+                                                                    data-key={data.id}
+                                                                    data-string-type={data.type}
+                                                                    onClick={(e) => {
+                                                                        handleTdClick(e, 2, index, data);
+                                                                    }}
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    translate={(savedValues[cellKey] && props.service === 'google' || savedValues[cellKey] && props.service === 'yandex') ? "no" : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? "yes" : 'yes'}
                                                                     className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'}`}
                                                                     data-translate-status={props.translatePendingStatus ? 'pending' : 'translated'}
-                                                                    >
-                                                                        {isEditingThisCell ? (
-                                                                            <textarea
-                                                                                ref={el => {
-                                                                                    textareaRefs.current[cellKey] = el;
-                                                                                    if (el) {
-                                                                                        el.style.height = 'auto';
-                                                                                        el.style.height = el.scrollHeight + 'px';
-                                                                                    }
-                                                                                }}
-                                                                                value={editingValues[cellKey] || ''}
-                                                                                autoFocus
-                                                                                onFocus={() => setActivePopupCell({ row: index, col: 2 })}
-                                                                                onChange={e => setEditingValues({
-                                                                                    ...editingValues,
-                                                                                    [cellKey]: e.target.value
-                                                                                })}
-                                                                                onInput={e => handleTextareaInput(e, index, 2)}
-                                                                                style={{ width: '100%', minHeight: 40, resize: 'vertical' }}
-                                                                            />
-                                                                        ) : (
-                                                                            getCellContent(index, data, cellKey)
-                                                                        )}
-                                                                    </td>
+                                                                >
+                                                                    {isEditingThisCell ? (
+                                                                        <div
+                                                                            contentEditable="true"
+                                                                            className="lmat-page-translation-content-editable"
+                                                                            ref={el => {
+                                                                                textareaRefs.current[cellKey] = el;
+                                                                                if (el) {
+                                                                                    el.style.height = 'auto';
+                                                                                    el.style.height = el.scrollHeight + 'px';
+                                                                                }
+                                                                            }}
+                                                                            onFocus={() => setActivePopupCell({ row: index, col: 2 })}
+                                                                            onInput={e => handleTextareaInput(e, index, 2)}
+                                                                            style={{ width: '100%', minHeight: 40, resize: 'vertical' }}
+                                                                            dangerouslySetInnerHTML={{ __html: editingValues[cellKey] || '' }}
+                                                                        />
+                                                                    ) : (
+                                                                        getCellContent(index, data, cellKey)
+                                                                    )}
+                                                                </td>
                                                             </tr>
                                                         </>
                                                     }

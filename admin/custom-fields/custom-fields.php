@@ -86,7 +86,7 @@ if(!class_exists('Custom_Fields')) {
 				return false;
 			}
 
-			return true;
+			return $status;
 		}
 
         public function render_custom_fields_page() {

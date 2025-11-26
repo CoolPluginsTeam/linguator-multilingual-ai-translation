@@ -1,4 +1,5 @@
-const FilterTargetContent = (props) => {
+const FilterTargetContent = (props, storeUpdateContent) => {
+    const { item, saveFilteredString } = props;
     const skipTags = props.skipTags || [];
     const OpenSpanPlaceholder = '#lmat_page_translation_open_translate_span#';
     const CloseSpanPlaceholder = '#lmat_page_translation_close_translate_span#';
@@ -413,12 +414,6 @@ const FilterTargetContent = (props) => {
     }
 
     /**
-     * The content to be filtered based on the service type.
-     * If the service is 'google' & 'localAiTranslator' the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
-     */
-    const content = ['google', 'localAiTranslator'].includes(props.service) ? filterSourceData(props.content) : props.content;
-
-    /**
      * Regular expression pattern to match the span elements that should not be translated.
      */
     const notTranslatePattern = new RegExp(
@@ -438,6 +433,33 @@ const FilterTargetContent = (props) => {
         const updatedContent = content.replace(replacePlaceholderPattern, '');
         return updatedContent;
     }
+
+    const getFilteredString=()=>{
+        if(saveFilteredString && item && item.id && item.type && item.source && !item.filteredString){
+            const filteredString = filterSourceData(item.source);
+
+            const filteredStringContent = filteredString.map((data, index) => {
+                const notTranslate = notTranslatePattern.test(data);
+                if (notTranslate) {
+                    const pTemp=document.createElement('p');
+                    pTemp.innerText = filterContent(data);
+                    return `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${pTemp.innerHTML}</span>`;
+                } else {
+                    return data;
+                }
+            }).join('');
+
+            saveFilteredString(item.type, item.id, filteredStringContent);
+        }
+    }
+
+    getFilteredString();
+
+    /**
+     * The content to be filtered based on the service type.
+     * If the service is 'google' & 'localAiTranslator' the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
+     */
+    const content = ['google', 'localAiTranslator'].includes(props.service) ? filterSourceData(props.content) : props.content;
 
     return (
         <>

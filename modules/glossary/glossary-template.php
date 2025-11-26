@@ -19,12 +19,17 @@ foreach ($languages as $lang) {
     $language_map[$lang['code']] = $lang;
 }
 
+$supported_languages = array_keys($language_map);
 $grouped_entries = [];
 
 foreach ($glossary_data as $entry) {
     $term = $entry['original_term'];
     $lang = $entry['original_language_code'];
     $key = $term . '||' . $lang; // Composite key
+
+    if($lang && !in_array($lang, $supported_languages)){
+        continue;
+    }
 
     if (!isset($grouped_entries[$key])) {
         $grouped_entries[$key] = [
@@ -127,7 +132,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                 <li><?php esc_html_e('Terms you want to exclude from being translated;', $text_domain); ?></li>
                 <li><?php esc_html_e('Additional context for each term.', $text_domain); ?></li>
             </ul>
-            <a href="#"><?php esc_html_e('Learn more about adding and managing glossary terms.', $text_domain); ?></a>
+            <a href="<?php echo esc_url( 'https://docs.coolplugins.net/doc/glossary-management-for-polylang/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=glossary_management_free' ); ?>" target="_blank"><?php esc_html_e('Learn more about adding and managing glossary terms.', $text_domain); ?></a>
         </header>
 
         <div class="lmat-controls">
@@ -464,6 +469,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
             <tr class="lmat-glossary-edit-row">
                 <td>
                     <textarea class="lmat-edit-term" rows="3" placeholder="<?php esc_attr_e('String Translation', $text_domain); ?>"><%= term %></textarea>
+                    <div class="lmat-translation-error"></div>
                     <textarea class="lmat-edit-desc" rows="4" placeholder="<?php esc_attr_e('Example: The name of the add-on that allows translating strings', $text_domain); ?>"><%= desc %></textarea>
                 </td>
                 <td>

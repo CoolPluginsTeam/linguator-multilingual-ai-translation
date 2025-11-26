@@ -115,7 +115,7 @@ if (!class_exists('Glossary')) {
 				return false;
 			}
 
-            return true;
+			return $status;
 		}
 
         /**
@@ -642,6 +642,10 @@ if (!class_exists('Glossary')) {
                 // Ensure the entry has a translations array and it's not empty
                 if (!isset($entry['translations']) || !is_array($entry['translations']) || empty($entry['translations'])) {
                     continue; // Skip if no translations array or it's empty
+                }
+
+                if(!isset($entry['original_term']) || empty($entry['original_term'])){
+                    continue;
                 }
 
                 $valid_translations=array();

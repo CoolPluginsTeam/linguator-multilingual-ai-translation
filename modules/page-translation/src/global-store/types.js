@@ -11,12 +11,18 @@ const LmatActionTypes = {
     
     // Action type for saving the title of the translated content
     traslatedTitle: 'SAVE_TRANSLATE_TITLE',
+
+    // Action type for saving the filtered title
+    filteredTitleString: 'SAVE_FILTERED_TITLE',
     
     // Action type for saving the excerpt of the source content
     sourceExcerpt: 'SAVE_SOURCE_EXCERPT',
     
     // Action type for saving the excerpt of the translated content
     traslatedExcerpt: 'SAVE_TRANSLATE_EXCERPT',
+
+    // Action type for saving the filtered excerpt
+    filteredExcerptString: 'SAVE_FILTERED_EXCERPT',
     
     // Action type for saving the main content of the source
     sourceContent: 'SAVE_SOURCE_CONTENT',
@@ -24,11 +30,17 @@ const LmatActionTypes = {
     // Action type for saving the main content of the translated content
     traslatedContent: 'SAVE_TRANSLATE_CONTENT',
     
+    // Action type for saving the filtered content
+    filteredContentString: 'SAVE_FILTERED_CONTENT',
+    
     // Action type for saving the meta fields of the source content
     sourceMetaFields: 'SAVE_SOURCE_META_FIELDS',
     
     // Action type for saving the meta fields of the translated content
     traslatedMetaFields: 'SAVE_TRANSLATE_META_FIELDS',
+
+    // Action type for saving the filtered meta fields
+    filteredMetaFieldsString: 'SAVE_FILTERED_META_FIELDS',
 
     // Action type for saving the block rules
     setBlockRules: 'SET_BLOCK_RULES',
@@ -44,6 +56,9 @@ const LmatActionTypes = {
 
     // Action type for saving the slug of the translated content
     traslatedSlug: 'SAVE_TRANSLATE_SLUG',
+
+    // Action type for saving the filtered slug
+    filteredSlugString: 'SAVE_FILTERED_SLUG',
 
     // Action type for saving the content fetch status
     contentFetchStatus: 'CONTENT_FETCH_STATUS',

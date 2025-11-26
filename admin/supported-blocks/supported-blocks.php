@@ -124,7 +124,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 				return false;
 			}
 
-			return true;
+			return $status;
 		}
 
 		/**
