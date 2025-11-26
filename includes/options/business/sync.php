@@ -9,12 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
 use NOOP_Translations;
 use Linguator\Modules\sync\LMAT_Settings_Sync;
 use Linguator\Includes\Options\Primitive\Abstract_List;
-
-
+use Linguator\Includes\Options\Options;
 
 /**
  * Class defining synchronization settings list option.
@@ -38,22 +36,22 @@ class Sync extends Abstract_List {
 	}
 
 	/**
-	 * Adds information to the site health info array.
+	 * Appends the current state of the sync option to the site health information array.
 	 *
+	 * @since 0.0.8
 	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
 	 *
-	 * @return array The updated site health information.
+	 * @return array The updated site health information array including sync status.
 	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		if ( empty( $this->get() ) ) {
 			$value = '0: ' . __( 'Synchronization disabled', 'linguator-multilingual-ai-translation' );
 		} else {
 			$value = implode( ', ', $this->get() );
-			}
+		}
 
-		return $this->get_site_health_info( $info, $value, self::key() );
+		return $this->format_single_value_for_site_health_info( $value );
 	}
 
 	/**

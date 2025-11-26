@@ -9,8 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Controllers\LMAT_Static_Pages;
-
-
+use Linguator\Admin\Controllers\LMAT_Admin_Base;
 
 /**
  * Manages the static front page and the page for posts on admin side
@@ -112,7 +111,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	public function notice_must_translate() {
 		$screen = get_current_screen();
 
-		if ( ! empty( $screen ) && ( 'toplevel_page_lmat' === $screen->id || 'edit-page' === $screen->id ) ) {
+		if ( ! empty( $screen ) && ( LMAT_Admin_Base::get_screen_id( 'lang' ) === $screen->id || 'edit-page' === $screen->id ) ) {
 			$message = $this->get_must_translate_message();
 
 			if ( ! empty( $message ) ) {

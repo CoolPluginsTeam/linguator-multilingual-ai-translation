@@ -853,6 +853,19 @@ button.lmat-page-translation-setting-close:hover {
     vertical-align: middle;
 }
 
+.lmat-page-translation-content-editable{
+    width: 292px;
+    min-height: 40px;
+    resize: vertical;
+    height: 40px;
+    border: 1px solid rgb(118, 118, 118);
+    overflow: auto;
+
+    &:focus{
+        outline: 1px solid rgb(16, 16, 16);
+    }
+}
+
 #lmat_page_translation_strings_model .lmat_page_translation_translate_progress {
     position: absolute;
     display: none;
@@ -1255,4 +1268,493 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
         transform: translateY(-35px) scale(1);
         opacity: 1;
     }
+}
+
+
+/* includes/automatic-translate/src/component/AtfpRightPopup.css */
+.lmat-page-translation-right-popup {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100%;
+    background: #222;
+    color: #fff;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: right 0.3s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+}
+.lmat-page-translation-right-popup--open {
+    right: 0;
+    pointer-events: auto;
+}
+.lmat-page-translation-right-popup__overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 9998;
+    display: none;
+}
+.lmat-page-translation-right-popup--open .lmat-page-translation-right-popup__overlay {
+    display: block;
+}
+.lmat-page-translation-right-popup__content {
+    padding: 24px 16px 16px 16px;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+.lmat-page-translation-right-popup__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* Inline popover for right of textarea */
+.lmat-page-translation-inline-popup {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 12px;
+    min-width: 220px;
+    max-width: 320px;
+    background: #222;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    z-index: 1000;
+    padding: 16px 16px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.lmat-page-translation-inline-popup__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+.lmat-page-translation-inline-popup__content {
+    margin-top: 24px;
+    width: 100%;
+}
+
+/* InfoPopup styles */
+.lmat-page-translation-info-popup {
+    position: absolute;
+    background: #5cb85c;
+    border-radius: 4px;
+    z-index: 99999;
+    padding: 8px 3px;
+    min-width: 48px;
+    min-height: 48px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #fff;
+    transition: left 0.25s cubic-bezier(.4,0,.2,1), top 0.25s cubic-bezier(.4,0,.2,1);
+    max-width: 320px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+.lmat-page-translation-info-popup__close {
+    background: #fff;
+    color: #222;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+.lmat-page-translation-info-popup__glossary,
+.lmat-page-translation-info-popup__copy,
+.lmat-page-translation-info-popup__add-glossary {
+    background: none;
+    border: none;
+    color: #fff;
+    margin: 5px 0;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.lmat-page-translation-info-popup__close img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    display: block;
+}
+
+/* GlossaryPopup styles */
+.lmat-page-translation-glossary-popup {
+    position: absolute;
+    background: #5cb85c;
+    color: #fff;
+    border-radius: 16px;
+    padding: 10px;
+    z-index: 100000;
+    min-width: 400px;
+    max-width: 90vw;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    transition: left 0.2s, top 0.2s, width 0.2s;
+}
+
+/* Responsive: On small screens, make it full width and centered */
+@media (max-width: 600px) {
+    .lmat-page-translation-glossary-popup {
+        left: 50% !important;
+        top: 10vh !important;
+        min-width: 0;
+        width: 95vw !important;
+        max-width: 98vw;
+        transform: translateX(-50%);
+        padding: 12px;
+        border-radius: 10px;
+    }
+    .lmat-page-translation-glossary-popup__header {
+        font-size: 1rem;
+    }
+    .lmat-page-translation-glossary-popup table {
+        font-size: 0.95em;
+    }
+}
+
+.lmat-page-translation-glossary-popup h3 {
+    margin-top: 0;
+}
+
+.lmat-page-translation-glossary-popup table {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+}
+
+.lmat-page-translation-glossary-popup th {
+    border: 1px solid #fff;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.lmat-page-translation-glossary-insert {
+    background: none;
+    border: 1px solid #2196f3;
+    color: #2196f3;
+    border-radius: 3px;
+    padding: 2px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* GlossaryPopup header with icon and badge */
+.lmat-page-translation-glossary-popup__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+}
+
+.lmat-page-translation-glossary-popup__icon {
+    font-size: 1.2em;
+    margin-right: 4px;
+}
+
+.lmat-page-translation-glossary-popup__badge {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.85em;
+    padding: 4px 8px;
+    margin-left: 6px;
+    font-weight: bold;
+    display: inline-block;
+    line-height: 1;
+}
+
+.lmat-page-translation-glossary-popup table {
+    margin-top: 0;
+}
+
+.lmat-page-translation-glossary-popup thead tr {
+    border: none;
+    border-bottom: 2px solid #444;
+    background: transparent;
+}
+
+.lmat-page-translation-glossary-popup tbody tr {
+    border: none;
+    border-bottom: 1px solid #7a7a7a;
+    background: transparent;
+}
+
+.lmat-page-translation-glossary-popup th {
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+    background: transparent;
+}
+
+.lmat-page-translation-glossary-popup td {
+    padding: 6px 8px;
+    text-align: left;
+    color: #fff;
+    font-size: 0.98em;
+}
+
+.lmat-page-translation-glossary-insert {
+    background: none;
+    border: 1px solid #2196f3;
+    color: #2196f3;
+    border-radius: 3px;
+    padding: 2px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+.lmat-page-translation-glossary-insert {
+    background: #2196f3;
+    color: #fff;
+}
+
+/* Bookmark icon styling for popups */
+.lmat-page-translation-bookmark-icon {
+    width: 25px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+    margin-right: 4px;
+    border-radius: 4px;
+    padding: 8px 5px 5px 5px;
+}
+
+.lmat-page-translation-bookmark-icon:hover {
+    background: #fff;
+}
+
+.lmat-page-translation-bookmark-icon--active {
+    background: #fff;
+}
+
+/* Copy icon styling for popups */
+.lmat-page-translation-copy-icon,
+.lmat-page-translation-add-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+    margin-right: 4px;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.lmat-page-translation-copy-icon:hover,
+.lmat-page-translation-add-icon:hover,
+.lmat-page-translation-add-icon--active {
+    background: #fff;
+}
+
+.lmat-page-translation-info-popup__add-glossary.lmat-page-translation-active {
+    border-radius: 4px;
+}
+
+/* Wrapper for icon and badge */
+.lmat-page-translation-bookmark-icon-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* Badge styling and placement */
+.lmat-page-translation-bookmark-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ff9800;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 2px 6px;
+    min-width: 11px;
+    min-height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.lmat-page-translation-info-popup__save {
+    background: none;
+    border: none;
+    color: #fff;
+    margin: 5px 0;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.lmat-page-translation-save-icon {
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+    margin-right: 4px;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.lmat-page-translation-save-icon:hover {
+    background: #fff;
+}
+
+.lmat-page-translation-translation-textarea {
+    resize: vertical !important;
+    width: 100%;
+    min-height: 40px;
+}
+
+/* Add Glossary Popup Styles */
+.lmat-page-translation-add-glossary-popup {
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 380px;
+    max-width: 400px;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    z-index: 100001; /* Higher than glossary popup */
+    position: fixed; /* Ensure it's in its own stacking context */
+}
+
+.lmat-page-translation-add-glossary-popup .lmat-page-translation-glossary-popup__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    padding: 12px 16px;
+    border-bottom: 2px solid #444;
+}
+
+.lmat-page-translation-add-glossary-form {
+    padding: 16px;
+}
+
+.lmat-page-translation-form-group {
+    margin-bottom: 16px;
+}
+
+.lmat-page-translation-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+.lmat-page-translation-form-group input,
+.lmat-page-translation-form-group select,
+.lmat-page-translation-form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.lmat-page-translation-form-group #lmat-page-translation-term-select {
+    padding: 0px 0px 0px 8px !important
+}
+
+.lmat-page-translation-form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.lmat-page-translation-form-group label {
+    color: #fff;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.lmat-page-translation-error-message {
+    color: #ff6b6b;
+    margin-bottom: 16px;
+    font-size: 14px;
+    padding: 8px;
+    background: rgb(255 255 255 / 51%);
+    border-radius: 4px;
+}
+
+.lmat-page-translation-success-message {
+    color: #000000;
+    margin-bottom: 16px;
+    font-size: 14px;
+    padding: 8px;
+    background: rgb(255 255 255 / 44%);
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.lmat-page-translation-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 16px;
+}
+
+.lmat-page-translation-btn-primary,
+.lmat-page-translation-btn-secondary {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.lmat-page-translation-btn-primary {
+    background: #5cb85c;
+    color: #fff;
+    border-color: #4cae4c;
+}
+
+.lmat-page-translation-btn-primary:hover {
+    background: #4cae4c;
+}
+
+.lmat-page-translation-btn-primary:disabled {
+    background: #3a723a;
+    cursor: not-allowed;
+    color: #aaa;
+}
+
+.lmat-page-translation-btn-secondary {
+    background: #333;
+    color: #fff;
+    border-color: #444;
+}
+
+.lmat-page-translation-btn-secondary:hover {
+    background: #444;
 }

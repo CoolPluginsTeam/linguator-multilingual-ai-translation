@@ -179,7 +179,7 @@ class LMAT_Filters {
 			$lang = wp_list_pluck( $lang, 'slug' );
 
 			// If this clause is not already added by WP.
-			if ( false === strpos( $clauses['join'], "JOIN $wpdb->posts ON $wpdb->posts.ID" ) ) {
+			if ( ! preg_match( "#JOIN\s+{$wpdb->posts}\s+ON\s+(({$wpdb->posts}\.)?ID|({$wpdb->comments}\.)?comment_post_ID)\s*=#", $clauses['join'] ) ) {
 				$clauses['join'] .= " JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
 			}
 
@@ -333,22 +333,13 @@ class LMAT_Filters {
 	 * @return string
 	 */
 	public function language_attributes( $output ) {
-		$locale = is_admin() ? get_user_locale() : get_locale();
-		
-		// Fallback to WordPress site language if get_locale() returns null
-		if ( null === $locale || empty( $locale ) ) {
-			remove_filter( 'locale', array( $this, 'get_locale' ) );
-			$site_locale = get_locale();
-			add_filter( 'locale', array( $this, 'get_locale' ) );
-			if ( ! empty( $site_locale ) ) {
-				$locale = $site_locale;
-			}
+		$language = $this->model->get_language( determine_locale() );
+
+		if ( ! $language ) {
+			return $output;
 		}
-		
-		if ( $language = $this->model->get_language( $locale ) ) {
-			$output = str_replace( '"' . get_bloginfo( 'language' ) . '"', '"' . $language->get_locale( 'display' ) . '"', $output );
-		}
-		return $output;
+
+		return str_replace( '"' . get_bloginfo( 'language' ) . '"', '"' . $language->get_locale( 'display' ) . '"', $output );
 	}
 
 	/**

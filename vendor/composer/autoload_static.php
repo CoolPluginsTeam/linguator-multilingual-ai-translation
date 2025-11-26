@@ -15,7 +15,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'L' => 
         array (
             'Linguator\\includes\\' => 19,
-            'Linguator\\Tests\\' => 16,
             'Linguator\\Settings\\' => 19,
             'Linguator\\Modules\\' => 18,
             'Linguator\\Integrations\\' => 23,
@@ -29,10 +28,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
-        ),
-        'Linguator\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
         ),
         'Linguator\\Settings\\' => 
         array (
@@ -116,6 +111,11 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Frontend\\Services\\LMAT_Canonical' => __DIR__ . '/../..' . '/frontend/services/canonical.php',
         'Linguator\\Frontend\\Services\\LMAT_Frontend_Links' => __DIR__ . '/../..' . '/frontend/services/frontend-links.php',
         'Linguator\\Includes\\Base\\LMAT_Base' => __DIR__ . '/../..' . '/includes/base/base.php',
+        'Linguator\\Includes\\Capabilities\\Capabilities' => __DIR__ . '/../..' . '/includes/capabilities/capabilities.php',
+        'Linguator\\Includes\\Capabilities\\Create\\Abstract_Object' => __DIR__ . '/../..' . '/includes/capabilities/create/abstract-object.php',
+        'Linguator\\Includes\\Capabilities\\Create\\Post' => __DIR__ . '/../..' . '/includes/capabilities/create/post.php',
+        'Linguator\\Includes\\Capabilities\\Create\\Term' => __DIR__ . '/../..' . '/includes/capabilities/create/term.php',
+        'Linguator\\Includes\\Capabilities\\User' => __DIR__ . '/../..' . '/includes/capabilities/user.php',
         'Linguator\\Includes\\Controllers\\LMAT_Nav_Menu' => __DIR__ . '/../..' . '/includes/controllers/nav-menu.php',
         'Linguator\\Includes\\Controllers\\LMAT_REST_Request' => __DIR__ . '/../..' . '/includes/controllers/rest-request.php',
         'Linguator\\Includes\\Controllers\\LMAT_Static_Pages' => __DIR__ . '/../..' . '/includes/controllers/static-pages.php',
@@ -135,7 +135,11 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Helpers\\LMAT_Term_Slug' => __DIR__ . '/../..' . '/includes/helpers/term-slug.php',
         'Linguator\\Includes\\Migration\\Polylang_Migration' => __DIR__ . '/../..' . '/includes/migration/polylang-migration.php',
         'Linguator\\Includes\\Migration\\WPML_Migration' => __DIR__ . '/../..' . '/includes/migration/wpml-migration.php',
+        'Linguator\\Includes\\Models\\Hide_Default' => __DIR__ . '/../..' . '/includes/models/hide-default.php',
+        'Linguator\\Includes\\Models\\Hide_Empty' => __DIR__ . '/../..' . '/includes/models/hide-empty.php',
         'Linguator\\Includes\\Models\\Languages' => __DIR__ . '/../..' . '/includes/models/languages.php',
+        'Linguator\\Includes\\Models\\Languages_Proxies' => __DIR__ . '/../..' . '/includes/models/languages-proxies.php',
+        'Linguator\\Includes\\Models\\Languages_Proxy_Interface' => __DIR__ . '/../..' . '/includes/models/languages-proxy-interface.php',
         'Linguator\\Includes\\Models\\Post_Types' => __DIR__ . '/../..' . '/includes/models/post-types.php',
         'Linguator\\Includes\\Models\\Taxonomies' => __DIR__ . '/../..' . '/includes/models/taxonomies.php',
         'Linguator\\Includes\\Models\\Translatable\\LMAT_Translatable_Object' => __DIR__ . '/../..' . '/includes/models/translatable/translatable-object.php',
@@ -166,6 +170,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Business\\Sync' => __DIR__ . '/../..' . '/includes/options/business/sync.php',
         'Linguator\\Includes\\Options\\Business\\Taxonomies' => __DIR__ . '/../..' . '/includes/options/business/taxonomies.php',
         'Linguator\\Includes\\Options\\Business\\Version' => __DIR__ . '/../..' . '/includes/options/business/version.php',
+        'Linguator\\Includes\\Options\\Inactive_Option' => __DIR__ . '/../..' . '/includes/options/inaction-option.php',
         'Linguator\\Includes\\Options\\LMAT_Translate_Option' => __DIR__ . '/../..' . '/includes/options/translate-option.php',
         'Linguator\\Includes\\Options\\Options' => __DIR__ . '/../..' . '/includes/options/options.php',
         'Linguator\\Includes\\Options\\Primitive\\Abstract_Boolean' => __DIR__ . '/../..' . '/includes/options/primitive/abstract-boolean.php',
@@ -195,8 +200,12 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Walkers\\LMAT_Walker_List' => __DIR__ . '/../..' . '/includes/walkers/walker-list.php',
         'Linguator\\Includes\\Widgets\\LMAT_Widget_Calendar' => __DIR__ . '/../..' . '/includes/widgets/widget-calendar.php',
         'Linguator\\Includes\\Widgets\\LMAT_Widget_Languages' => __DIR__ . '/../..' . '/includes/widgets/widget-languages.php',
-        'Linguator\\Install\\LMAT_Install' => __DIR__ . '/../..' . '/install/install.php',
-        'Linguator\\Install\\LMAT_Install_Base' => __DIR__ . '/../..' . '/install/install-base.php',
+        'Linguator\\Install\\LMAT_Abstract_Activable' => __DIR__ . '/../..' . '/install/abstract-activable.php',
+        'Linguator\\Install\\LMAT_Abstract_Activate' => __DIR__ . '/../..' . '/install/abstract-activate.php',
+        'Linguator\\Install\\LMAT_Abstract_Deactivate' => __DIR__ . '/../..' . '/install/abstract-deactivate.php',
+        'Linguator\\Install\\LMAT_Activate' => __DIR__ . '/../..' . '/install/activate.php',
+        'Linguator\\Install\\LMAT_Deactivate' => __DIR__ . '/../..' . '/install/deactivate.php',
+        'Linguator\\Install\\LMAT_Usable' => __DIR__ . '/../..' . '/install/usable.php',
         'Linguator\\Integrations\\LMAT_Integrations' => __DIR__ . '/../..' . '/integrations/integrations.php',
         'Linguator\\Integrations\\RankMath\\LMAT_RankMath' => __DIR__ . '/../..' . '/integrations/rankmath-seo/rankmath-lmat.php',
         'Linguator\\Integrations\\aqua_resizer\\LMAT_Aqua_Resizer' => __DIR__ . '/../..' . '/integrations/aqua-resizer/aqua-resizer.php',
@@ -229,6 +238,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\Editors\\Screens\\Site' => __DIR__ . '/../..' . '/modules/editors/screens/site.php',
         'Linguator\\Modules\\Editors\\Screens\\Widget' => __DIR__ . '/../..' . '/modules/editors/screens/widget.php',
         'Linguator\\Modules\\Full_Site_Editing\\LMAT_FSE_Tools' => __DIR__ . '/../..' . '/modules/full-site-editing/fse-tools.php',
+        'Linguator\\Modules\\Glossary\\Glossary' => __DIR__ . '/../..' . '/modules/glossary/glossary.php',
         'Linguator\\Modules\\Inline_Translation\\LMAT_Inline_Translation' => __DIR__ . '/../..' . '/modules/inline-translation/inline-translation.php',
         'Linguator\\Modules\\Page_Translation\\LMAT_Page_Translation' => __DIR__ . '/../..' . '/modules/page-translation/page-translation.php',
         'Linguator\\Modules\\Page_Translation\\LMAT_Page_Translation_Helper' => __DIR__ . '/../..' . '/modules/page-translation/page-translation-helper.php',

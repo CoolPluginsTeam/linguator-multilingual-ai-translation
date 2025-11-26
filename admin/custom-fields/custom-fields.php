@@ -2,6 +2,8 @@
 
 namespace Linguator\Custom_Fields;
 
+use Linguator\Settings\Header\Header;
+
 if(!defined('ABSPATH')) exit;
 
 if(!class_exists('Custom_Fields')) {
@@ -20,25 +22,74 @@ if(!class_exists('Custom_Fields')) {
 
         public function __construct() {
             add_action('wp_ajax_lmat_update_custom_fields_content', array($this, 'update_custom_fields_content'));
+            add_filter('lmat_frontend_settings_assets', array($this, 'stop_frontend_setting_assets'), 10, 3);
+			add_filter('lmat_admin_settings_assets', array($this, 'lmat_custom_fields_assets'), 10, 3);
+			add_filter('lmat_render_languages_page', array($this, 'lmat_render_custom_fields_page'), 10, 3);
         }
+
+		/*
+		Filter to enqueue the admin custom fields assets
+		@param bool $status
+		@param string $tab
+		@param bool $is_settings_tab
+		@return bool
+		*/
+        public function lmat_custom_fields_assets($status, $tab, $is_settings_tab){
+			if($is_settings_tab && $tab === 'custom-fields' && function_exists('LMAT')){
+
+				$header = Header::get_instance('custom-fields', LMAT()->model);
+				$header->header_assets();
+
+                wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+                wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
+                wp_enqueue_style( 'lmat-editor-custom-fields', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
+                wp_enqueue_script( 'lmat-editor-custom-fields', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
+            
+                wp_localize_script( 'lmat-editor-custom-fields', 'lmatCustomTableDataObject', array(
+                    'admin_url' => esc_url(admin_url('admin-ajax.php')),
+                    'save_button_handler' => 'lmat_update_custom_fields_content',
+                    'save_button_nonce' => wp_create_nonce('lmat_save_custom_fields'),
+                    'save_button_enabled'=>true,
+                    'save_button_text'=>__('Save Fields', 'linguator-multilingual-ai-translation'),
+                    'save_button_class'=>'lmat-save-custom-fields',
+                ) );
+				
+				return false;
+			}
+
+			return $status;
+		}
+
+		/*
+		 Filter to stop the admin assets on frontend settings page
+		 @param bool $status
+		 @param string $tab
+		 @param bool $is_settings_tab
+		 @return bool
+		*/
+		public function stop_frontend_setting_assets($status, $tab, $is_settings_tab){
+			if($is_settings_tab && $tab === 'custom-fields'){
+				return false;
+			}
+
+			return $status;
+		}
     
-        public static function enqueue_editor_assets() {
-            wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-			wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-			wp_enqueue_style( 'lmat-editor-custom-fields', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
-			wp_enqueue_script( 'lmat-editor-custom-fields', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
-        
-            wp_localize_script( 'lmat-editor-custom-fields', 'lmatCustomTableDataObject', array(
-                'admin_url' => esc_url(admin_url('admin-ajax.php')),
-                'save_button_handler' => 'lmat_update_custom_fields_content',
-                'save_button_nonce' => wp_create_nonce('lmat_save_custom_fields'),
-                'save_button_enabled'=>true,
-                'save_button_text'=>__('Save Fields', 'linguator-multilingual-ai-translation'),
-                'save_button_class'=>'lmat-save-custom-fields',
-            ) );
-        }
-    
-        public function lmat_render_custom_fields_page() {
+		public function lmat_render_custom_fields_page($status, $selected_tab, $active_tab) {
+			if($selected_tab === 'custom-fields' && $active_tab === 'settings'){
+
+				$header = Header::get_instance('custom-fields', LMAT()->model);
+
+				$header->header();
+
+				$this->render_custom_fields_page();
+				return false;
+			}
+
+			return $status;
+		}
+
+        public function render_custom_fields_page() {
                 $this->lmat_allowed_fields = self::get_allowed_custom_fields();
                 $s_no                        = 1;
                 ?>

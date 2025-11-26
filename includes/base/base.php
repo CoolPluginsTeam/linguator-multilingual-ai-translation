@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *  
  */
 use Linguator\Modules\REST\Request;
+use Linguator\Includes\Capabilities\Capabilities;
 use Linguator\Includes\Core\Linguator;
 use Linguator\Includes\Services\Crud\LMAT_CRUD_Posts;
 use Linguator\Includes\Services\Crud\LMAT_CRUD_Terms;
@@ -32,6 +33,15 @@ use WP_Hook;
 
 #[AllowDynamicProperties]
 abstract class LMAT_Base {
+	/**
+	 * Capabilities.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @var Capabilities
+	 */
+	public $capabilities;
+
 	/**
 	 * Stores the plugin options.
 	 *
@@ -64,6 +74,7 @@ abstract class LMAT_Base {
 	 * @var LMAT_CRUD_Terms|null
 	 */
 	public $terms;
+
 	/**
 	 * @var Request
 	 */
@@ -91,6 +102,7 @@ abstract class LMAT_Base {
 	 * @param LMAT_Links_Model $links_model Links Model.
 	 */
 	public function __construct( &$links_model ) {
+		$this->capabilities = new Capabilities();
 		$this->links_model = &$links_model;
 		$this->model = &$links_model->model;
 		$this->options = &$this->model->options;

@@ -44,37 +44,6 @@ class Nav_Menus extends Abstract_Option {
 	}
 
 	/**
-	 * Adds information to the site health info array.
-	 *
-	 *
-	 * @param array   $info    The current site health information.
-	 * @param Options $options An instance of the Options class providing additional configuration.
-	 *
-	 * @return array The updated site health information.
-	 */
-	public function add_to_site_health_info( array $info, Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		$current_theme = get_stylesheet();
-		/** @phpstan-var NavMenusValue $nav_menus */
-		$nav_menus     = $this->get();
-		$fields        = array();
-		if ( empty( $nav_menus[ $current_theme ] ) ) {
-			return $info;
-		}
-		foreach ( $nav_menus[ $current_theme ] as $location => $lang ) {
-			if ( empty( $lang ) ) {
-				/* translators: default value when a menu location is not used. */
-				$lang = __( 'Not used', 'linguator-multilingual-ai-translation' );
-			}
-
-			$fields[ $location ]['label'] = sprintf( 'menu: %s', $location );
-			$fields[ $location ]['value'] = is_array( $lang ) ? $this->format_array_for_site_health_info( $lang ) : $lang;
-		}
-		$info = array_merge( $info, $fields );
-
-		return $info;
-	}
-
-	/**
 	 * Returns the default value.
 	 *
 	 *  
@@ -185,5 +154,36 @@ class Nav_Menus extends Abstract_Option {
 	 */
 	protected function get_description(): string {
 		return __( 'Translated navigation menus for each theme.', 'linguator-multilingual-ai-translation' );
+	}
+
+	/**
+	 * Appends the current state of the nav menus option to the site health information array.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param Options $options Instance of the Options class used to retrieve configuration settings.
+	 *
+	 * @return array The updated site health information array including nav menus status.
+	 */
+	public function get_site_health_info( Options $options ): array { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		$current_theme = get_stylesheet();
+		/** @phpstan-var NavMenusValue $nav_menus */
+		$nav_menus = $this->get();
+		if ( empty( $nav_menus[ $current_theme ] ) ) {
+			return array();
+		}
+
+		$fields = array();
+		foreach ( $nav_menus[ $current_theme ] as $location => $lang ) {
+			$fields[ $location ]['label'] = sprintf( 'menu: %s', $location );
+
+			if ( empty( $lang ) ) {
+				/* translators: default value when a menu location is not used. */
+				$fields[ $location ]['value'] = __( 'Not used', 'linguator-multilingual-ai-translation' );
+			} else {
+				$fields[ $location ]['value'] = $this->format_array_for_site_health_info( $lang );
+			}
+		}
+		return $fields;
 	}
 }

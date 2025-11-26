@@ -9,8 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Services\Links\LMAT_Links;
-
-
+use Linguator\Includes\Capabilities\User;
+use Linguator\Includes\Base\LMAT_Base;
+use Linguator\Includes\Other\LMAT_Language;
 
 /**
  * Manages links related functions.
@@ -18,32 +19,50 @@ use Linguator\Includes\Services\Links\LMAT_Links;
  *  	
  */
 class LMAT_Admin_Links extends LMAT_Links {
+	/**
+	 * Current user.
+	 *
+	 * @var User
+	 */
+	protected $user;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 0.0.8
+	 *
+	 * @param LMAT_Base $linguator Reference to the linguator object.
+	 */
+	public function __construct( LMAT_Base $linguator ) {
+		parent::__construct( $linguator );
+		$this->user = new User();
+	}
 
 	/**
 	 * Returns the html markup for a new translation link.
 	 *
-	 *  
 	 *
 	 * @param string       $link     The new translation link.
 	 * @param LMAT_Language $language The language of the new translation.
 	 * @return string
 	 */
-	protected function new_translation_link( $link, $language ) {
-		$str = '';
-
-		if ( $link ) {
-			/* translators: accessibility text, %s is a native language name */
-			$hint = sprintf( __( 'Add a translation in %s', 'linguator-multilingual-ai-translation' ), $language->name );
-
-			$str = sprintf(
-				'<a href="%1$s" title="%2$s" class="lmat_icon_add"><span class="screen-reader-text">%3$s</span></a>',
-				esc_url( $link ),
-				esc_attr( $hint ),
-				esc_html( $hint )
+	protected function new_translation_link( string $link, LMAT_Language $language ): string {
+		if ( empty( $link ) ) {
+			return sprintf(
+				'<span title="%s" class="lmat_icon_add wp-ui-text-icon"></span>',
+				/* translators: accessibility text, %s is a native language name */
+				esc_attr( sprintf( __( 'You are not allowed to add a translation in %s', 'linguator-multilingual-ai-translation' ), $language->name ) )
 			);
 		}
 
-		return $str;
+		/* translators: accessibility text, %s is a native language name */
+		$hint = sprintf( __( 'Add a translation in %s', 'linguator-multilingual-ai-translation' ), $language->name );
+		return sprintf(
+			'<a href="%1$s" title="%2$s" class="lmat_icon_add"><span class="screen-reader-text">%3$s</span></a>',
+			esc_url( $link ),
+			esc_attr( $hint ),
+			esc_html( $hint )
+		);
 	}
 
 	/**
@@ -55,19 +74,28 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param LMAT_Language $language The language of the translation.
 	 * @return string
 	 */
-	public function edit_translation_link( $link, $language ) {
-		return $link ? sprintf(
-			'<a href="%1$s" class="lmat_icon_edit"><span class="screen-reader-text">%2$s</span></a>',
+	protected function edit_translation_link( string $link, LMAT_Language $language ): string {
+		if ( empty( $link ) ) {
+			return sprintf(
+				'<span title="%s" class="lmat_icon_edit wp-ui-text-icon"></span>',
+				/* translators: accessibility text, %s is a native language name */
+				esc_attr( sprintf( __( 'You are not allowed to edit a translation in %s', 'linguator-multilingual-ai-translation' ), $language->name ) )
+			);
+		}
+
+		/* translators: accessibility text, %s is a native language name */
+		$hint = sprintf( __( 'Edit the translation in %s', 'linguator-multilingual-ai-translation' ), $language->name );
+		return sprintf(
+			'<a href="%1$s" title="%2$s" class="lmat_icon_edit"><span class="screen-reader-text">%3$s</span></a>',
 			esc_url( $link ),
-			/* translators: accessibility text, %s is a native language name */
-			esc_html( sprintf( __( 'Edit the translation in %s', 'linguator-multilingual-ai-translation' ), $language->name ) )
-		) : '';
+			esc_attr( $hint ),
+			esc_html( $hint )
+		);
 	}
 
 	/**
 	 * Get the link to create a new post translation.
 	 *
-	 *  
 	 *
 	 * @param int          $post_id  The source post id.
 	 * @param LMAT_Language $language The language of the new translation.
@@ -75,16 +103,28 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *                               Otherwise, preserves '&'.
 	 * @return string
 	 */
-	public function get_new_post_translation_link( $post_id, $language, $context = 'display' ) {
+	public function get_new_post_translation_link( int $post_id, LMAT_Language $language, string $context = 'display' ): string {
+		if ( ! $this->user->can_translate( $language ) ) {
+			return '';
+		}
+
 		$post_type = get_post_type( $post_id );
-		$post_type_object = get_post_type_object( get_post_type( $post_id ) );
-		if ( empty( $post_type_object ) || ! current_user_can( $post_type_object->cap->create_posts ) ) {
+
+		if ( empty( $post_type ) ) {
+			return '';
+		}
+
+		$post_type_object = get_post_type_object( $post_type );
+
+		if ( empty( $post_type_object ) || ! $this->user->has_cap( $post_type_object->cap->create_posts ) ) {
 			return '';
 		}
 
 		// Special case for the privacy policy page which is associated to a specific capability
-		if ( 'page' === $post_type_object->name && ! current_user_can( 'manage_privacy_options' ) ) {
+		if ( 'page' === $post_type_object->name && ! $this->user->has_cap( 'manage_privacy_options' ) ) {
 			$privacy_page = get_option( 'wp_page_for_privacy_policy' );
+			$privacy_page = is_numeric( $privacy_page ) ? (int) $privacy_page : 0;
+
 			if ( $privacy_page && in_array( $post_id, $this->model->post->get_translations( $privacy_page ) ) ) {
 				return '';
 			}
@@ -94,7 +134,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 			$args = array(
 				'action'     => 'translate_media',
 				'from_media' => $post_id,
-				'new_lang' => $language->slug,
+				'new_lang'   => $language->slug,
 			);
 
 			$link = add_query_arg( $args, admin_url( 'admin.php' ) );
@@ -109,7 +149,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 			$args = array(
 				'post_type' => $post_type,
 				'from_post' => $post_id,
-				'new_lang' => $language->slug,
+				'new_lang'  => $language->slug,
 			);
 
 			$link = add_query_arg( $args, admin_url( 'post-new.php' ) );
@@ -124,7 +164,6 @@ class LMAT_Admin_Links extends LMAT_Links {
 		/**
 		 * Filters the new post translation link.
 		 *
-		 *  
 		 *
 		 * @param string       $link     The new post translation link.
 		 * @param LMAT_Language $language The language of the new translation.
@@ -136,13 +175,12 @@ class LMAT_Admin_Links extends LMAT_Links {
 	/**
 	 * Returns the html markup for a new post translation link.
 	 *
-	 *  
 	 *
 	 * @param int          $post_id  The source post id.
 	 * @param LMAT_Language $language The language of the new translation.
 	 * @return string
 	 */
-	public function new_post_translation_link( $post_id, $language ) {
+	public function new_post_translation_link( int $post_id, LMAT_Language $language ): string {
 		$link = $this->get_new_post_translation_link( $post_id, $language );
 		return $this->new_translation_link( $link, $language );
 	}
@@ -155,14 +193,15 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param int $post_id The translation post id.
 	 * @return string
 	 */
-	public function edit_post_translation_link( $post_id ) {
-		$link = get_edit_post_link( $post_id );
+	public function edit_post_translation_link( int $post_id ): string {
 		$language = $this->model->post->get_language( $post_id );
-		
-		if ( $language && $link ) {
-			$link = add_query_arg( 'lang', $language->slug, $link );
+
+		if ( empty( $language ) ) {
+			// Should not happen.
+			return '';
 		}
-		
+
+		$link = (string) get_edit_post_link( $post_id );
 		return $this->edit_translation_link( $link, $language );
 	}
 
@@ -177,9 +216,13 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param LMAT_Language $language  The language of the new translation.
 	 * @return string
 	 */
-	public function get_new_term_translation_link( $term_id, $taxonomy, $post_type, $language ) {
+	public function get_new_term_translation_link( int $term_id, string $taxonomy, string $post_type, LMAT_Language $language ): string {
+		if ( ! $this->user->can_translate( $language ) ) {
+			return '';
+		}
+
 		$tax = get_taxonomy( $taxonomy );
-		if ( ! $tax || ! current_user_can( $tax->cap->edit_terms ) ) {
+		if ( ! $tax || ! $this->user->has_cap( $tax->cap->edit_terms ) ) {
 			return '';
 		}
 
@@ -187,7 +230,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 			'taxonomy'  => $taxonomy,
 			'post_type' => $post_type,
 			'from_tag'  => $term_id,
-			'new_lang' => $language->slug,
+			'new_lang'  => $language->slug,
 		);
 
 		$link = add_query_arg( $args, admin_url( 'edit-tags.php' ) );
@@ -195,7 +238,6 @@ class LMAT_Admin_Links extends LMAT_Links {
 		/**
 		 * Filters the new term translation link.
 		 *
-		 *  
 		 *
 		 * @param string       $link      The new term translation link.
 		 * @param LMAT_Language $language  The language of the new translation.
@@ -217,7 +259,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param LMAT_Language $language  The language of the new translation.
 	 * @return string
 	 */
-	public function new_term_translation_link( $term_id, $taxonomy, $post_type, $language ) {
+	public function new_term_translation_link( int $term_id, string $taxonomy, string $post_type, LMAT_Language $language ): string {
 		$link = $this->get_new_term_translation_link( $term_id, $taxonomy, $post_type, $language );
 		return $this->new_translation_link( $link, $language );
 	}
@@ -232,15 +274,15 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param string $post_type Post type name.
 	 * @return string
 	 */
-	public function edit_term_translation_link( $term_id, $taxonomy, $post_type ) {
-		$link = get_edit_term_link( $term_id, $taxonomy, $post_type );
+	public function edit_term_translation_link( int $term_id, string $taxonomy, string $post_type ): string {
 		$language = $this->model->term->get_language( $term_id );
-		
-		// Add lang parameter to the edit link similar to how it's done in add new links
-		if ( $language && $link ) {
-			$link = add_query_arg( 'lang', $language->slug, $link );
+
+		if ( empty( $language ) ) {
+			// Should not happen.
+			return '';
 		}
-		
+
+		$link = (string) get_edit_term_link( $term_id, $taxonomy, $post_type );
 		return $this->edit_translation_link( $link, $language );
 	}
 

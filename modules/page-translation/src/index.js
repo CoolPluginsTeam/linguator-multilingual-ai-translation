@@ -113,7 +113,7 @@ const App = () => {
     await MetaFieldsFetch(data);
     await fetchPost(data);
 
-    const allEntries = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntry();
+    const allEntries = wp.data.select('block-lmatPageTranslation/translate').getTranslationEntries();
 
     let totalStringCount = 0;
     let totalCharacterCount = 0;

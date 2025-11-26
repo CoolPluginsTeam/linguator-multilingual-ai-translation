@@ -2,15 +2,23 @@ import React from 'react';
 import filterContent from '../../../../../page-translation/src/component/filter-target-content/index.js';
 import extractInnerContent from '../extarct-inner-content/index.js';
 import saveSourceString from '../../store-source-string/index.js';
+import updateGlossaryString from '../update-glossary-string/index.js';
+import {selectGlossaryTerms} from '../../../redux-store/features/selectors.js';
+import {store} from '../../../redux-store/store.js';
 
 /**
- * @param {Object} content
- * @param {Object} blockParseRules
- * @returns {Object}
+ * @param {Object} content The content to filter
+ * @param {string} service The service provider
+ * @param {Object} blockParseRules The block parse rules
+ * @param {string} postId The post ID
+ * @param {Object} storeDispatch The store dispatch
+ * @param {Object} filterHtmlContent The filter HTML content
+ * @param {string} sourceLanguage The source language
+ * @returns {Object} The filtered content
  */
-const FilterGutenbergContent = async ({content, service, blockParseRules, postId, storeDispatch, filterHtmlContent}) => {
+const FilterGutenbergContent = async ({content, service, blockParseRules, postId, storeDispatch, filterHtmlContent, sourceLanguage}) => {
     const allowedBlocks=Object.keys(blockParseRules?.LmatBlockParseRules);
-    const block=JSON.parse(JSON.stringify(content));
+    const glossaryTerms=selectGlossaryTerms(store.getState(), sourceLanguage);
 
     const loopCallback=async (callback, loop, index)=>{
         await callback(loop[index], index);
@@ -25,12 +33,17 @@ const FilterGutenbergContent = async ({content, service, blockParseRules, postId
     const getStringContent=async (content, contentKey, skipTags=[]) =>{
         let stringContent=content;
         if(filterHtmlContent){
+
             let reactElement=filterContent({content, service, contentKey, skipTags});
             
             stringContent=await extractInnerContent(reactElement);
+
+            if(['google','localAiTranslator'].includes(service) && glossaryTerms && Object.values(glossaryTerms).length > 0){
+                stringContent=await updateGlossaryString({content: stringContent, glossaryTerms});
+            }
+            
             reactElement=null;
         }
-
 
         return stringContent;
     }
@@ -225,15 +238,6 @@ const FilterGutenbergContent = async ({content, service, blockParseRules, postId
 
                 await loopCallback(runLoopAsyncInner, content[key].innerBlocks, 0);
             }
-            
-            // if(content[key].innerContent && content[key].innerContent.length > 0){
-            //     let innerHTML=content[key].innerHTML ? content[key].innerHTML.trim() : '';
-            //     innerHTML=innerHTML.replace(/\s/g, '');
-
-            //     if(innerHTML && '' !== innerHTML && content[key].blockName.startsWith('core/')){
-            //         await filterBlockInnerContent(['content', key,'innerContent'], content[key].innerContent);
-            //     }
-            // }
         }
 
         await loopCallback(runLoopAsync, Object.keys(content), 0);

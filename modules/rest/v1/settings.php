@@ -415,6 +415,15 @@ class Settings extends Abstract_Controller {
 		$validation_errors = $this->validate_domains_before_save( $options );
 		if ( $validation_errors->has_errors() ) {
 			return $this->add_status_to_error( $validation_errors );
+		}else{
+			// Get current force_lang value
+			$current_force_lang = $this->options->get( 'force_lang' );
+			$new_force_lang = isset( $options['force_lang'] ) ? $options['force_lang'] : $current_force_lang;
+
+			if($current_force_lang !== $new_force_lang){
+				$this->model->clean_languages_cache();
+			}
+
 		}
 
 		foreach ( $options as $option_name => $new_value ) {

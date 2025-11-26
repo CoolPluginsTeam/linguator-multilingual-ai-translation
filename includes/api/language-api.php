@@ -397,12 +397,20 @@ function lmat_is_translated_taxonomy( $tax ) {
  * @return string[]
  */
 function lmat_languages_list( $args = array() ) {
-	$args = wp_parse_args( $args, array( 'fields' => 'slug' ) );
 	$linguator = LMAT();
 	if ( ! $linguator || ! isset( $linguator->model ) ) {
 		return array();
 	}
-	return $linguator->model->get_languages_list( $args );
+
+	$args         = wp_parse_args( $args, array( 'fields' => 'slug' ) );
+	$hide_empty   = ! empty( $args['hide_empty'] ) ? 'hide_empty' : '';
+	$hide_default = ! empty( $args['hide_default'] ) ? 'hide_default' : '';
+	unset( $args['hide_empty'], $args['hide_default'] );
+
+	return $linguator->model->languages
+		->filter( $hide_empty )
+		->filter( $hide_default )
+		->get_list( $args );
 }
 
 /**
@@ -717,6 +725,23 @@ function lmat_update_post( array $postarr ) {
  */
 function lmat_update_term( int $term_id, array $args = array() ) {
 	return LMAT()->model->term->update( $term_id, $args );
+}
+
+/**
+ * Wraps `wp_cache_get_multiple` with language feature.
+ *
+ *  
+ *
+ * @param array $keys Array of keys to retrieve.
+ * @param string $group Optional. The group to retrieve the value from.
+ * @param bool $force Optional. Whether to force the cache to be updated.
+ * @return array Array of values.	
+ */
+if ( ! function_exists( 'wp_cache_get_multiple' ) ) {
+	function wp_cache_get_multiple( $keys, $group = '', $force = false ) {
+		global $wp_object_cache;
+		return $wp_object_cache->get_multiple( $keys, $group, $force );
+	}
 }
 
 /**

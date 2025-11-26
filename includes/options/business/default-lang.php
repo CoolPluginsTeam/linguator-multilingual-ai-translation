@@ -15,8 +15,6 @@ use Linguator\Includes\Options\Options;
 use Linguator\Includes\Options\Primitive\Abstract_String;
 use WP_Error;
 
-
-
 /**
  * Class defining language slug string option.
  *
