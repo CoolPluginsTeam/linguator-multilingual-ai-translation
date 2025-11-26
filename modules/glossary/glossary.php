@@ -644,10 +644,6 @@ if (!class_exists('Glossary')) {
                     continue; // Skip if no translations array or it's empty
                 }
 
-                if(!isset($entry['original_term']) || empty($entry['original_term'])){
-                    continue;
-                }
-
                 $valid_translations=array();
 
                 foreach($entry['translations'] as $translation) {
