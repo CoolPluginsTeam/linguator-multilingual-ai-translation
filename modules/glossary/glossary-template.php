@@ -469,6 +469,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
             <tr class="lmat-glossary-edit-row">
                 <td>
                     <textarea class="lmat-edit-term" rows="3" placeholder="<?php esc_attr_e('String Translation', $text_domain); ?>"><%= term %></textarea>
+                    <div class="lmat-translation-error"></div>
                     <textarea class="lmat-edit-desc" rows="4" placeholder="<?php esc_attr_e('Example: The name of the add-on that allows translating strings', $text_domain); ?>"><%= desc %></textarea>
                 </td>
                 <td>
