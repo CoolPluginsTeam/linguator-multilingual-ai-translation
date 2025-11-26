@@ -19,12 +19,17 @@ foreach ($languages as $lang) {
     $language_map[$lang['code']] = $lang;
 }
 
+$supported_languages = array_keys($language_map);
 $grouped_entries = [];
 
 foreach ($glossary_data as $entry) {
     $term = $entry['original_term'];
     $lang = $entry['original_language_code'];
     $key = $term . '||' . $lang; // Composite key
+
+    if($lang && !in_array($lang, $supported_languages)){
+        continue;
+    }
 
     if (!isset($grouped_entries[$key])) {
         $grouped_entries[$key] = [
