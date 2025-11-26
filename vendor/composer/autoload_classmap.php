@@ -84,6 +84,7 @@ return array(
     'Linguator\\Includes\\Helpers\\LMAT_MO' => $baseDir . '/includes/helpers/mo.php',
     'Linguator\\Includes\\Helpers\\LMAT_Term_Slug' => $baseDir . '/includes/helpers/term-slug.php',
     'Linguator\\Includes\\Migration\\Polylang_Migration' => $baseDir . '/includes/migration/polylang-migration.php',
+    'Linguator\\Includes\\Migration\\WPML_Migration' => $baseDir . '/includes/migration/wpml-migration.php',
     'Linguator\\Includes\\Models\\Hide_Default' => $baseDir . '/includes/models/hide-default.php',
     'Linguator\\Includes\\Models\\Hide_Empty' => $baseDir . '/includes/models/hide-empty.php',
     'Linguator\\Includes\\Models\\Languages' => $baseDir . '/includes/models/languages.php',

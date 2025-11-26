@@ -19,6 +19,7 @@ use Linguator\Includes\Models\Languages;
 use Linguator\Includes\Options\Options;
 use Linguator\Modules\REST\Abstract_Controller;
 use Linguator\Includes\Migration\Polylang_Migration;
+use Linguator\Includes\Migration\WPML_Migration;
 
 
 /**
@@ -174,28 +175,40 @@ class Settings extends Abstract_Controller {
 			)
 		);
 
-		// Add migration endpoints
+		// Add migration endpoints - dynamic routes for both Polylang and WPML
 		register_rest_route(
 			$this->namespace,
-			"/{$this->rest_base}/migration/detect",
+			"/{$this->rest_base}/migration/(?P<plugin>polylang|wpml)/detect",
 			array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'detect_polylang' ),
+					'callback'            => array( $this, 'detect_migration' ),
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => array(
+						'plugin' => array(
+							'required' => true,
+							'type'     => 'string',
+							'enum'     => array( 'polylang', 'wpml' ),
+						),
+					),
 				),
 			)
 		);
 
 		register_rest_route(
 			$this->namespace,
-			"/{$this->rest_base}/migration/migrate",
+			"/{$this->rest_base}/migration/(?P<plugin>polylang|wpml)/migrate",
 			array(
 				array(
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'migrate_polylang' ),
+					'callback'            => array( $this, 'migrate_plugin' ),
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
+						'plugin' => array(
+							'required' => true,
+							'type'     => 'string',
+							'enum'     => array( 'polylang', 'wpml' ),
+						),
 						'migrate_languages'    => array(
 							'required' => false,
 							'type'     => 'boolean',
@@ -763,18 +776,40 @@ class Settings extends Abstract_Controller {
 	}
 
 	/**
-	 * Detects if Polylang is installed and has data to migrate.
+	 * Detects if a migration plugin is installed and has data to migrate (dynamic).
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
-	public function detect_polylang( $request ) {
-		$migration = new Polylang_Migration( $this->model, $this->options );
-		$detection = $migration->detect_polylang();
+	public function detect_migration( $request ) {
+		$plugin = $request->get_param( 'plugin' );
+
+		if ( 'polylang' === $plugin ) {
+			$migration = new Polylang_Migration( $this->model, $this->options );
+			$detection = $migration->detect_polylang();
+			$plugin_name = 'Polylang';
+			$has_key = 'has_polylang';
+		} elseif ( 'wpml' === $plugin ) {
+			$migration = new WPML_Migration( $this->model, $this->options );
+			$detection = $migration->detect_wpml();
+			$plugin_name = 'WPML';
+			$has_key = 'has_wpml';
+		} else {
+			return new WP_Error(
+				'invalid_plugin',
+				__( 'Invalid plugin specified.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => 400 )
+			);
+		}
+
 		if ( false === $detection ) {
 			return rest_ensure_response( array(
-				'has_polylang' => false,
-				'message'      => __( 'No Polylang data found.', 'linguator-multilingual-ai-translation' ),
+				$has_key => false,
+				'message' => sprintf(
+					/* translators: %s: Plugin name */
+					__( 'No %s data found.', 'linguator-multilingual-ai-translation' ),
+					$plugin_name
+				),
 			) );
 		}
 
@@ -782,24 +817,39 @@ class Settings extends Abstract_Controller {
 	}
 
 	/**
-	 * Performs migration from Polylang to Linguator.
+	 * Performs migration from a plugin to Linguator (dynamic).
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
-	public function migrate_polylang( $request ) {
+	public function migrate_plugin( $request ) {
+		$plugin = $request->get_param( 'plugin' );
 		$migrate_languages    = $request->get_param( 'migrate_languages' );
 		$migrate_translations = $request->get_param( 'migrate_translations' );
 		$migrate_settings     = $request->get_param( 'migrate_settings' );
 		$migrate_strings      = $request->get_param( 'migrate_strings' );
 
-		$migration = new Polylang_Migration( $this->model, $this->options );
-		$results   = $migration->migrate_all( $migrate_languages, $migrate_translations, $migrate_settings, $migrate_strings );
+		if ( 'polylang' === $plugin ) {
+			$migration = new Polylang_Migration( $this->model, $this->options );
+			$plugin_name = 'Polylang';
+		} elseif ( 'wpml' === $plugin ) {
+			$migration = new WPML_Migration( $this->model, $this->options );
+			$plugin_name = 'WPML';
+		} else {
+			return new WP_Error(
+				'invalid_plugin',
+				__( 'Invalid plugin specified.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$results = $migration->migrate_all( $migrate_languages, $migrate_translations, $migrate_settings, $migrate_strings );
 
 		if ( ! $results['success'] ) {
 			return new WP_Error(
 				'migration_failed',
-				__( 'Migration completed with errors.', 'linguator-multilingual-ai-translation' ),
+				/* translators: %s: Plugin name */
+				sprintf( __( 'Migration from %s completed with errors.', 'linguator-multilingual-ai-translation' ), $plugin_name ),
 				array(
 					'status' => 500,
 					'data'   => $results,
@@ -809,7 +859,8 @@ class Settings extends Abstract_Controller {
 
 		return rest_ensure_response( array(
 			'success' => true,
-			'message' => __( 'Migration completed successfully.', 'linguator-multilingual-ai-translation' ),
+			/* translators: %s: Plugin name */
+			'message' => sprintf( __( 'Migration from %s completed successfully.', 'linguator-multilingual-ai-translation' ), $plugin_name ),
 			'data'    => $results,
 		) );
 	}
