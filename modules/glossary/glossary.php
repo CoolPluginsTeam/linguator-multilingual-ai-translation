@@ -114,6 +114,8 @@ if (!class_exists('Glossary')) {
                 require_once 'glossary-template.php';
 				return false;
 			}
+
+			return $status;
 		}
 
         /**
