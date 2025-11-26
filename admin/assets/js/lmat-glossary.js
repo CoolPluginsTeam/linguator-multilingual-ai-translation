@@ -268,6 +268,13 @@ jQuery(document).ready(function($) {
         let hasError = false;
 
         // Add validation for term and description length
+
+        if(term.length === 0 || term.length === ''){
+            $termField.addClass('error');
+            $termField.next('.lmat-translation-error').text('Term is required.').show();
+            hasError = true;
+        }
+
         if (term.length > 240) {
             $termField.addClass('error');
             $termField.next('.lmat-translation-error').text('Term must be less than 240 characters.').show();
@@ -1036,10 +1043,15 @@ jQuery(document).ready(function($) {
                                      if (!hasSourceTerm && !isSourceByData) {
                                          const $translatedTerm = $cell.find('.lmat-translated-term');
                                          if ($translatedTerm.length) {
-                                             const translation = $translatedTerm.data('full-text') || $translatedTerm.text().trim();
-                                             if (translation && translation.trim() !== '') {
-                                                 existingTranslations[langCode] = translation.trim();
-                                             }
+                                            let translation = $translatedTerm.data('full-text') || $translatedTerm.text().trim();
+
+                                            if(translation){
+                                                translation=translation.toString();
+                                            }
+
+                                            if (translation && translation.trim() !== '') {
+                                                existingTranslations[langCode] = translation.trim();
+                                            }
                                          }
                                      }
                                  }
