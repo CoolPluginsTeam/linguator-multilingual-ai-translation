@@ -1368,6 +1368,11 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     transition: left 0.25s cubic-bezier(.4,0,.2,1), top 0.25s cubic-bezier(.4,0,.2,1);
     max-width: 320px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+
+    box-sizing: unset;
+    * {
+        box-sizing: unset;
+    }
 }
 .lmat-page-translation-info-popup__close {
     background: #fff;
@@ -1677,6 +1682,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     border: 1px solid #444;
     border-radius: 4px;
     font-size: 14px;
+    height: unset;
 }
 
 .lmat-page-translation-form-group #lmat-page-translation-term-select {
