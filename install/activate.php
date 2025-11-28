@@ -97,7 +97,6 @@ class LMAT_Activate extends LMAT_Abstract_Activate {
 		/*
 		 * Don't flush rewrite rules during network activation to avoid possible issues.
 		 * The rewrite rules will automatically be updated on the next page load.
-		 * For more info, see: https://linguator.com/2015/06/10/linguator-1-7-6-and-multisite/
 		 */
 		delete_option( 'rewrite_rules' );
 		$options = get_option( 'linguator' );
