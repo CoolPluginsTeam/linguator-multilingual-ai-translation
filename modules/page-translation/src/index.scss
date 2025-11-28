@@ -853,14 +853,19 @@ button.lmat-page-translation-setting-close:hover {
     vertical-align: middle;
 }
 
-#lmat_page_translation_strings_model table td{
+#lmat_page_translation_strings_model table tr{
     position: relative;
-    padding-right: 23px;
+}
+
+#lmat_page_translation_strings_model table td{
+    &:not(.lmat-page-translation-editing-cell){
+        padding-right: 23px;
+    }
 
     .lmat-page-translation-glossary-count{
         position: absolute;
         top: 12px;
-        right: -2px;
+        right: 1px;
         background: #fff;
         padding: 4px;
         border-radius: 4px;
@@ -1431,6 +1436,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     font-size: 18px;
     margin-bottom: 12px;
     cursor: pointer;
+    padding: 0;
 }
 .lmat-page-translation-info-popup__glossary,
 .lmat-page-translation-info-popup__copy,
@@ -1441,6 +1447,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     margin: 5px 0;
     font-size: 22px;
     cursor: pointer;
+    padding: 0;
 }
 
 .lmat-page-translation-info-popup__close img {
@@ -1716,6 +1723,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     margin: 5px 0;
     font-size: 22px;
     cursor: pointer;
+    padding: 0;
 }
 
 .lmat-page-translation-save-icon {

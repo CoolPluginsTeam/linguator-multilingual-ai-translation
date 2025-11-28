@@ -575,10 +575,8 @@ const StringPopUpBody = (props) => {
         return result;
     };
 
-    // Update the cell display logic in the render section
-    const getCellContent = (index, data, cellKey) => {
-        const savedEdit = savedValues[cellKey];
-        let originalTranslation = '';
+    const getTranslation=(data)=>{
+        let originalTranslation = false;
 
         if (data.translatedData) {
             if (service && data.translatedData[service]) {
@@ -588,21 +586,29 @@ const StringPopUpBody = (props) => {
             }
         }
 
+        return originalTranslation;
+    }
+
+    // Update the cell display logic in the render section
+    const getCellContent = (index, data, cellKey) => {
+        const savedEdit = savedValues[cellKey];
+        const translation = getTranslation(data);
+
         if (savedEdit !== undefined) {
             return savedEdit;
-        } else if (originalTranslation) {
-            return originalTranslation;
+        } else if (translation) {
+            return translation;
         } else {
             if (['google', 'yandex', 'localAiTranslator'].includes(props.service)) {
                 // Use FilterTargetContent for pending translations with supported services
                 if (props.translatePendingStatus && !props.service.includes('_ai')) {
                     if (data.filteredString) {
-                        return <><span dangerouslySetInnerHTML={{ __html: data.filteredString }} style={{ whiteSpace: 'pre-wrap' }}></span><GlossaryCount string={data.source} glossary={glossaryOrignalTerms}/></>;
+                        return <span dangerouslySetInnerHTML={{ __html: data.filteredString }} style={{ whiteSpace: 'pre-wrap' }}></span>;
                     }
 
-                    return <><FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} item={data} saveFilteredString={saveFilteredString} /><GlossaryCount string={data.source} glossary={glossaryOrignalTerms}/></>;
+                    return <FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} item={data} saveFilteredString={saveFilteredString} />;
                 }
-                return <>{data.source}<GlossaryCount string={data.source} glossary={glossaryOrignalTerms}/></> || '';
+                return data.source || '';
             } else {
                 return (
                     <img
@@ -667,7 +673,12 @@ const StringPopUpBody = (props) => {
                                                         <>
                                                             <tr key={index + 'tr' + props.translatePendingStatus + (data.filteredString ? 'filteredString' : '')}>
                                                                 <td>{index + 1}</td>
-                                                                <td data-source="source_text">{data.source}</td>
+                                                                <td data-source="source_text">{data.source}{(!getTranslation(data) && !isEditingThisCell) && <GlossaryCount string={data.source} glossary={glossaryOrignalTerms} 
+                                                                onClick={(e) => {
+                                                                    handleTdClick(e, 2, index, data);
+                                                                }}
+                                                                />}
+                                                                </td>
                                                                 <td
                                                                     data-key={data.id}
                                                                     data-string-type={data.type}
@@ -676,7 +687,7 @@ const StringPopUpBody = (props) => {
                                                                     }}
                                                                     style={{ cursor: 'pointer' }}
                                                                     translate={(savedValues[cellKey] && props.service === 'google' || savedValues[cellKey] && props.service === 'yandex') ? "no" : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? "yes" : 'yes'}
-                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'}`}
+                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''}`}
                                                                     data-translate-status={props.translatePendingStatus ? 'pending' : 'translated'}
                                                                 >
                                                                     {isEditingThisCell ? (
