@@ -381,12 +381,16 @@ class ChromeAiTranslator {
             ele.childNodes.forEach(child => {
                 if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
                     originalString.push(child);
+                }else if(child.classList && !child.classList.contains('notranslate')){
+                    this.filterInnerTextNodes(child, originalString);
                 }
             });
         } else if (ele.querySelector('.notranslate')) {
             ele.childNodes.forEach(child => {
                 if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
                     originalString.push(child);
+                }else if(child.classList && !child.classList.contains('notranslate')){
+                    this.filterInnerTextNodes(child, originalString);
                 }
             });
         }
@@ -414,6 +418,20 @@ class ChromeAiTranslator {
             jQuery(this.progressBarSelector).find(".chrome-ai-translator-strings-count").show().find(".totalChars").text(this.formatCharacterCount(this.completedCharacterCount));
         }
     };
+
+    filterInnerTextNodes=(ele, updatedArray)=>{
+        const childElements=ele.childNodes;
+
+        if(ele.classList && ele.classList.contains('notranslate')) return;
+
+        childElements.forEach(child => {
+            if(child.nodeType === 3 && child.nodeValue.trim() !== ''){
+                updatedArray.push(child);
+            }else if(child.classList &&!child.classList.contains('notranslate')){
+                this.filterInnerTextNodes(child, updatedArray);
+            }
+        });
+    }
 
     stringTranslationBatch = async (originalString, index) => {
         const translatedString = await this.translator.translate(originalString[index].nodeValue); // Translate the string
