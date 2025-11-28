@@ -7,6 +7,7 @@ import TranslateService from "../component/translate-provider/index.js";
 import ReactDOM from "react-dom";
 import { InfoPopup, GlossaryPopup, AddGlossaryPopup } from "../component/RightPopup/index.js";
 import SaveTranslation from '../component/store-translated-string/index.js';
+import GlossaryCount from "../component/glossary-count/index.js";
 
 const StringPopUpBody = (props) => {
 
@@ -27,6 +28,7 @@ const StringPopUpBody = (props) => {
     const [editingValues, setEditingValues] = useState({});
     const textareaRefs = useRef({});
     const [glossaryTerms, setGlossaryTerms] = useState([]);
+    const [glossaryOrignalTerms, setGlossaryOrignalTerms] = useState([]);
     const [selectedSourceText, setSelectedSourceText] = useState('');
     const [activePopupCell, setActivePopupCell] = useState(null);
     const [savedValues, setSavedValues] = useState({});
@@ -34,7 +36,7 @@ const StringPopUpBody = (props) => {
     const showAddGlossary = activePopupType === 'add-glossary';
 
     const saveFilteredString = (type, id, filteredString) => {
-        const action=`${type}SaveFiltered`;
+        const action = `${type}SaveFiltered`;
 
         dispatch('block-lmatPageTranslation/translate')[action](filteredString, id);
     }
@@ -125,6 +127,15 @@ const StringPopUpBody = (props) => {
                 });
 
                 const responseData = await response.json();
+                
+                const glossaryOrignalTerms = [];
+                responseData.data.terms.forEach(term => {
+                    if(term.original_term && term.original_term !== ''){
+                        glossaryOrignalTerms.push(term.original_term);
+                    }
+                });
+
+                setGlossaryOrignalTerms(glossaryOrignalTerms);
                 setGlossaryTerms(responseData.data.terms || []);
             } catch (err) {
                 setGlossaryTerms([]); // fallback or show error
@@ -136,28 +147,28 @@ const StringPopUpBody = (props) => {
 
     // Update handleTdClick to check for AI service
     const handleTdClick = (event, colIndex, rowIndex, data) => {
-        const translationEntry = select("block-lmatPageTranslation/translate").getTranslationEntry({id: data.id, type: data.type});
+        const translationEntry = select("block-lmatPageTranslation/translate").getTranslationEntry({ id: data.id, type: data.type });
 
         if (colIndex !== 2 || !translationEntry) return;
 
         const cellKey = `${rowIndex}_${colIndex}`;
 
         let translation = '';
-        if(translationEntry.translatedData && translationEntry.translatedData[service]){
+        if (translationEntry.translatedData && translationEntry.translatedData[service]) {
             translation = translationEntry.translatedData[service];
-        } else if(translationEntry.translatedData && translationEntry.translatedData[props.service]){
+        } else if (translationEntry.translatedData && translationEntry.translatedData[props.service]) {
             translation = translationEntry.translatedData[props.service];
-        } else if(translationEntry.filteredString){
+        } else if (translationEntry.filteredString) {
             translation = translationEntry.filteredString;
         } else {
             translation = translationEntry.source || '';
         }
-        
+
         // Only set editing state if not already editing this cell
         const isAlreadyEditing = editingCells.some(
             cell => cell.row === rowIndex && cell.col === colIndex
         );
-        
+
         if (!isAlreadyEditing) {
             setEditingCells([{ row: rowIndex, col: colIndex }]);
             setEditingValues({
@@ -354,25 +365,25 @@ const StringPopUpBody = (props) => {
     }, [props.modalRender, props.postDataFetchStatus]);
 
     const udpateFilterdContent = (div) => {
-        const tempElement=document.createElement('div');
-        tempElement.innerHTML=div.innerHTML;
-        const childNodes=tempElement.childNodes;
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = div.innerHTML;
+        const childNodes = tempElement.childNodes;
 
-        if(childNodes.length > 0){
-            for(let i=0; i<childNodes.length; i++){
-                const childNode=childNodes[i];
-                if(childNode.nodeType === 3){
+        if (childNodes.length > 0) {
+            for (let i = 0; i < childNodes.length; i++) {
+                const childNode = childNodes[i];
+                if (childNode.nodeType === 3) {
                     continue;
-                }else{
-                    const childNodes=childNode.childNodes;
-                    if(childNodes.length > 0){
-                        if(!childNode.classList.contains('lmat-page-translation-notraslate-tag')){
-                           const textContent= udpateFilterdContent(childNode);
-                            childNode.outerHTML=textContent;
-                       }else{
-                            const textContent= udpateFilterdContent(childNode);
-                            childNode.innerHTML=textContent;
-                       }
+                } else {
+                    const childNodes = childNode.childNodes;
+                    if (childNodes.length > 0) {
+                        if (!childNode.classList.contains('lmat-page-translation-notraslate-tag')) {
+                            const textContent = udpateFilterdContent(childNode);
+                            childNode.outerHTML = textContent;
+                        } else {
+                            const textContent = udpateFilterdContent(childNode);
+                            childNode.innerHTML = textContent;
+                        }
                     }
                 }
             }
@@ -384,48 +395,48 @@ const StringPopUpBody = (props) => {
     const insertOrReplaceInContentEditable = (div, glossaryText) => {
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0) return;
-    
+
         const range = selection.getRangeAt(0);
-    
+
         // Make sure the selection is inside this div
         if (!div.contains(range.startContainer)) return;
 
-        const selectedString=range.toString();
+        const selectedString = range.toString();
 
         // Get all starting spaces (single or multiple) and ending spaces (single or multiple)
         const startingWhiteSpace = selectedString.match(/^\s+/)?.[0] || "";
         const endingWhiteSpace = selectedString.match(/\s+$/)?.[0] || "";
-    
+
         // Delete selected content (if any)
         range.deleteContents();
-    
+
         // Prepare HTML node
         const temp = document.createElement("div");
         temp.innerHTML = `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${startingWhiteSpace}${glossaryText}${endingWhiteSpace}</span>`;
         const node = temp.firstChild;
-    
+
         // Insert the span
         range.insertNode(node);
-    
+
         // Move caret after the inserted node
         range.setStartAfter(node);
         range.collapse(true);
-    
+
         selection.removeAllRanges();
         selection.addRange(range);
 
-        const filteredContent=udpateFilterdContent(div);
+        const filteredContent = udpateFilterdContent(div);
 
-        const td=div.closest('td');
+        const td = div.closest('td');
 
-        if('' !== filteredContent && td){
-            const type=td.dataset.stringType;
-            const id=td.dataset.key;
+        if ('' !== filteredContent && td) {
+            const type = td.dataset.stringType;
+            const id = td.dataset.key;
 
             saveFilteredString(type, id, filteredContent);
         }
     }
-    
+
 
     // Update handleInsertGlossaryTerm to accept a cell argument
     const handleInsertGlossaryTerm = (term, cell) => {
@@ -435,7 +446,7 @@ const StringPopUpBody = (props) => {
 
         if (textarea) {
             const insertText = term.translation || term.english || '';
-            
+
             insertOrReplaceInContentEditable(textarea, insertText);
         } else {
             setEditingValues({
@@ -585,13 +596,13 @@ const StringPopUpBody = (props) => {
             if (['google', 'yandex', 'localAiTranslator'].includes(props.service)) {
                 // Use FilterTargetContent for pending translations with supported services
                 if (props.translatePendingStatus && !props.service.includes('_ai')) {
-                    if(data.filteredString){
-                        return <span dangerouslySetInnerHTML={{ __html: data.filteredString }} style={{ whiteSpace: 'pre-wrap' }}></span>;
+                    if (data.filteredString) {
+                        return <><span dangerouslySetInnerHTML={{ __html: data.filteredString }} style={{ whiteSpace: 'pre-wrap' }}></span><GlossaryCount string={data.source} glossary={glossaryOrignalTerms}/></>;
                     }
 
-                    return <FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} item={data} saveFilteredString={saveFilteredString}/>;
+                    return <><FilterTargetContent service={props.service} content={data.source || ''} contentKey={data.id} item={data} saveFilteredString={saveFilteredString} /><GlossaryCount string={data.source} glossary={glossaryOrignalTerms}/></>;
                 }
-                return data.source || '';
+                return <>{data.source}<GlossaryCount string={data.source} glossary={glossaryOrignalTerms}/></> || '';
             } else {
                 return (
                     <img
@@ -772,6 +783,7 @@ const StringPopUpBody = (props) => {
                     selectedSourceText={selectedSourceText}
                     onClose={() => setActivePopupType(null)}
                     setGlossaryTerms={setGlossaryTerms}
+                    setGlossaryOrignalTerms={setGlossaryOrignalTerms}
                 />,
                 document.body
             )}
