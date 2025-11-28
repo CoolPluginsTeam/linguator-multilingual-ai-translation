@@ -25,7 +25,14 @@ class LMAT_Usable {
 	public static function can_activate() {
 		global $wp_version;
 
-		// Check if the current PHP version is less than the required version.
+		// Check for Polylang conflict first
+		if ( defined( 'POLYLANG_VERSION' ) ) {
+			add_action( 'admin_notices', array( static::class, 'polylang_conflict_notice' ) );
+			add_action( 'network_admin_notices', array( static::class, 'polylang_conflict_notice' ) );
+			return false;
+		}
+		
+		// Check if the current PHP version is less than the required version.	
 		if ( version_compare( LMAT_get_constant( 'PHP_VERSION', '' ), static::get_min_php_version(), '<' ) ) {
 			// Show an admin notice about outdated PHP.
 			add_action( 'admin_notices', array( static::class, 'php_version_notice' ) );
@@ -65,6 +72,28 @@ class LMAT_Usable {
 				esc_html( static::get_min_php_version() )
 			)
 		);
+	}
+
+	/**
+	 * Displays a notice if Polylang is detected.
+	 *
+	 *  
+	 *
+	 * @return void
+	 */
+	public function polylang_conflict_notice() {
+		?>
+		<div class="notice notice-error">
+			<p>
+				<strong><?php esc_html_e( 'Linguator – Multilingual AI Translation', 'linguator-multilingual-ai-translation' ); ?></strong>
+			</p>
+			<p>
+				<?php 
+				echo esc_html__( 'Linguator cannot run alongside Polylang. Please deactivate Polylang first.', 'linguator-multilingual-ai-translation' );
+				?>
+			</p>
+		</div>
+		<?php
 	}
 
 	/**
