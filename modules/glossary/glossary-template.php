@@ -132,7 +132,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                 <li><?php esc_html_e('Terms you want to exclude from being translated;', $text_domain); ?></li>
                 <li><?php esc_html_e('Additional context for each term.', $text_domain); ?></li>
             </ul>
-            <a href="<?php echo esc_url( 'https://docs.coolplugins.net/doc/glossary-management-for-polylang/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=glossary_management_free' ); ?>" target="_blank"><?php esc_html_e('Learn more about adding and managing glossary terms.', $text_domain); ?></a>
+            <a href="<?php echo esc_url( 'https://linguator.com/docs/add-glossary-feature-linguator/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=glossary_management_free' ); ?>" target="_blank"><?php esc_html_e('Learn more about adding and managing glossary terms.', $text_domain); ?></a>
         </header>
 
         <div class="lmat-controls">

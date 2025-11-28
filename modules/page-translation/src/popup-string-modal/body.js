@@ -381,7 +381,7 @@ const StringPopUpBody = (props) => {
         return tempElement.innerHTML;
     }
 
-    const insertOrReplaceInContentEditable = (div, htmlToInsert) => {
+    const insertOrReplaceInContentEditable = (div, glossaryText) => {
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0) return;
     
@@ -389,13 +389,19 @@ const StringPopUpBody = (props) => {
     
         // Make sure the selection is inside this div
         if (!div.contains(range.startContainer)) return;
+
+        const selectedString=range.toString();
+
+        // Get all starting spaces (single or multiple) and ending spaces (single or multiple)
+        const startingWhiteSpace = selectedString.match(/^\s+/)?.[0] || "";
+        const endingWhiteSpace = selectedString.match(/\s+$/)?.[0] || "";
     
         // Delete selected content (if any)
         range.deleteContents();
     
         // Prepare HTML node
         const temp = document.createElement("div");
-        temp.innerHTML = htmlToInsert;
+        temp.innerHTML = `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${startingWhiteSpace}${glossaryText}${endingWhiteSpace}</span>`;
         const node = temp.firstChild;
     
         // Insert the span
@@ -430,7 +436,7 @@ const StringPopUpBody = (props) => {
         if (textarea) {
             const insertText = term.translation || term.english || '';
             
-            insertOrReplaceInContentEditable(textarea, `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${insertText}</span>`)
+            insertOrReplaceInContentEditable(textarea, insertText);
         } else {
             setEditingValues({
                 ...editingValues,
