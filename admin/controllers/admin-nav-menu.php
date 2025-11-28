@@ -176,12 +176,16 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
 
+		if ( empty( $_POST['menu-item-url'] ) || ! is_array( $_POST['menu-item-url'] ) || empty( $_POST['menu-item-url'][ $menu_item_db_id ] ) || '#lmat_switcher' !== $_POST['menu-item-url'][ $menu_item_db_id ] ) {
+					return;
+			}
 			$options = array( 'hide_if_no_translation' => 0, 'hide_current' => 0, 'force_home' => 0, 'show_flags' => 0, 'show_names' => 1, 'dropdown' => 0 ); // Default values
 			// Our jQuery form has not been displayed
 			if ( empty( $_POST['menu-item-lmat-detect'][ $menu_item_db_id ] ) ) {
 				if ( ! get_post_meta( $menu_item_db_id, '_lmat_menu_item', true ) ) { // Our options were never saved
 					update_post_meta( $menu_item_db_id, '_lmat_menu_item', $options );
 				}
+
 			}
 			else {
 				foreach ( array_keys( $options ) as $opt ) {
@@ -227,15 +231,52 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @return mixed
 	 */
 	public function pre_update_option_theme_mods( $mods ) {
-		if ( current_user_can( 'edit_theme_options' ) && is_array( $mods ) && isset( $mods['nav_menu_locations'] ) ) {
+
+		global $wp_customize;
+			if ( ! current_user_can( 'edit_theme_options' ) || ! is_array( $mods ) || ! isset( $mods['nav_menu_locations'] ) || ! is_array( $mods['nav_menu_locations'] ) ) {
+				return $mods;
+			}
+
 
 			// Manage Locations tab in Appearance -> Menus
 			if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				check_admin_referer( 'save-menu-locations' );
 
-				$nav_menus = $this->options->get( 'nav_menus' );
-				$nav_menus[ $this->theme ] = array();
-				$this->options->set( 'nav_menus', $nav_menus );
+
+
+			$nav_menus[ $this->theme ] = array();
+			$this->options->set( 'nav_menus', $nav_menus );
+
+			$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			return $mods;
+		}
+
+		/*
+		 * Edit Menus tab in Appearance -> Menus.
+		 */
+		if ( isset( $_POST['action'], $_REQUEST['update-nav-menu-nonce'] ) && wp_verify_nonce( $_REQUEST['update-nav-menu-nonce'], 'update-nav_menu' ) && 'update' === $_POST['action'] ) {
+			$nav_menus = $this->options->get( 'nav_menus' );
+
+			$nav_menus[ $this->theme ] = array();
+			$this->options->set( 'nav_menus', $nav_menus );
+
+			$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			return $mods;
+		}
+
+		if ( ! $wp_customize instanceof WP_Customize_Manager ) {
+			return $mods;
+		}
+
+		/*
+		 * Customizer. Don't reset locations in this case.
+		 */
+		if(isset($wp_customize) && method_exists($wp_customize, 'get_stylesheet')){
+			$action = 'save-customize_' . $wp_customize->get_stylesheet();
+
+			if ( isset( $_POST['action'], $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], $action ) && 'customize_save' == $_POST['action'] ) {
+				$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+
 			}
 
 			// Edit Menus tab in Appearance -> Menus
