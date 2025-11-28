@@ -31,12 +31,14 @@ const SetupProgress = ({lmat_setup_data}) => {
     //creating steps according to scenerios to show and hide which tabs of setup
     React.useEffect(()=>{
         let step = 1;
-        let temp_setupSetups = [{
+        let temp_setupSetups = []
+        
+        temp_setupSetups.push({
             label: __("Default","linguator-multilingual-ai-translation"),
             value: "default",
             visible: true,
             step:step++
-        }]
+        })
 
         temp_setupSetups.push({
             label: __("Languages","linguator-multilingual-ai-translation"),

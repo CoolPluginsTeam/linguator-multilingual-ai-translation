@@ -33,11 +33,6 @@
             "includes/api/language-api.php"
         ]
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Linguator\\Tests\\": "tests/"
-        }
-    },
     "scripts": {
         "phpcs": "phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .",
         "phpcs:fix": "phpcbf --standard=WordPress --extensions=php --ignore=*/vendor/*,*/node_modules/* .",

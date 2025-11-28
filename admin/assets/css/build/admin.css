@@ -345,6 +345,7 @@ td.column-default_lang .icon-default-lang:before,
 
 /* Notices */
 .lmat-notice.notice {
+	position: relative;
     width: auto;
 	max-width: 100%;
     clear: both;

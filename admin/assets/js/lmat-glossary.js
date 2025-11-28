@@ -45,6 +45,7 @@ jQuery(document).ready(function($) {
 
     // Close modal & reset
     $(document).on('click', '.lmat-modal-close-btn, .lmat-glossary-modal-actions-left', function() {
+        $('.lmat-glossary-modal-content h2').show();
         const modal = $(this).closest('.lmat-glossary-modal');
         const importSuccessUI = modal.find('#lmat-import-success-ui');
         if ((importSuccessUI.length && !importSuccessUI.hasClass('lmat-hidden') && importSuccessUI.is(':visible'))) {
