@@ -1421,6 +1421,65 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     transition: left 0.2s, top 0.2s, width 0.2s;
 }
 
+.lmat-page-translation-glossary-popup{
+    input, textarea{
+        color: #2c3338;
+        background-color: white;
+    }
+    select{
+        appearance: none;
+        background: #fff url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E') no-repeat right 5px top 55%;
+        background-size: 16px 16px;
+        cursor: pointer;
+        color: #2c3338;
+    }
+
+    .button{
+        display: inline-block;
+        text-decoration: none;
+        font-size: 13px;
+        line-height: 2.15384615;
+        min-height: 30px;
+        margin: 0;
+        padding: 0 10px;
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        -webkit-appearance: none;
+        border-radius: 3px;
+        white-space: nowrap;
+        box-sizing: border-box;
+
+        &.button-primary{
+            background: #2271b1;
+            border-color: #2271b1;
+            color: #fff;
+            text-decoration: none;
+            text-shadow: none;
+
+            &:hover{
+                background: #135e96;
+                border-color: #135e96;
+                color: #fff;
+            }
+        }
+
+        &.button-secondary{
+            color: #2271b1;
+            border-color: #2271b1;
+            background: #f6f7f7;
+            vertical-align: top;
+
+
+            &:hover{
+                background: #f0f0f1;
+                border-color: #0a4b78;
+                color: #0a4b78;
+            }
+        }
+    }
+}
+
 /* Responsive: On small screens, make it full width and centered */
 @media (max-width: 600px) {
     .lmat-page-translation-glossary-popup {
