@@ -31,7 +31,7 @@
     border-radius: 8px;
 }
 
-#lmat-page-translation-button{
+#lmat-page-translation-button {
     &.providers-config-no-active {
         background: #f6f7f7 !important;
         border-color: #c3c4c7 !important;
@@ -45,7 +45,7 @@
         }
     }
 }
-    
+
 #lmat-page-translation-modal-open-warning-wrapper {
     .modal-content {
         padding: 16px;
@@ -102,7 +102,7 @@
 
                 &:hover {
                     background: #dd382e;
-                border-color: #c72a20;
+                    border-color: #c72a20;
                 }
             }
         }
@@ -110,7 +110,7 @@
 }
 
 /* Setting Modal CSS Start */
-#lmat-page-translation-setting-modal{
+#lmat-page-translation-setting-modal {
     .lmat-page-translation-error-modal-box-container {
         position: fixed;
         top: 0;
@@ -163,7 +163,7 @@
         }
     }
 
-    .lmat-page-translation-error-modal-box-body{
+    .lmat-page-translation-error-modal-box-body {
         h4 {
             margin: 0;
             margin-top: 0;
@@ -173,7 +173,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         ol {
             margin-top: 0;
             margin-bottom: 24px;
@@ -187,7 +187,7 @@
                 list-style: decimal;
             }
         }
-        
+
         p {
             margin: 0;
             padding: 0;
@@ -666,6 +666,7 @@ button.lmat-page-translation-setting-close:hover {
 }
 
 @keyframes lmat-page-translation-savingBlink {
+
     0%,
     20% {
         opacity: 0.25;
@@ -853,16 +854,20 @@ button.lmat-page-translation-setting-close:hover {
     vertical-align: middle;
 }
 
-#lmat_page_translation_strings_model table tr{
+#lmat_page_translation_strings_model table tr {
     position: relative;
 }
 
-#lmat_page_translation_strings_model table td{
-    &:not(.lmat-page-translation-editing-cell){
+#lmat_page_translation_strings_model table tbody tr>*:not(td, th) {
+    display: none;
+}
+
+#lmat_page_translation_strings_model table td {
+    &:not(.lmat-page-translation-editing-cell) {
         padding-right: 23px;
     }
 
-    .lmat-page-translation-glossary-count{
+    .lmat-page-translation-glossary-count {
         position: absolute;
         top: 12px;
         right: 1px;
@@ -876,13 +881,15 @@ button.lmat-page-translation-setting-close:hover {
         font-weight: 600;
         color: #000;
     }
-    .lmat-page-translation-glossary-count-icon{
+
+    .lmat-page-translation-glossary-count-icon {
         width: 18px;
         height: 18px;
         object-fit: contain;
         display: block;
     }
-    .lmat-page-translation-glossary-count-badge{
+
+    .lmat-page-translation-glossary-count-badge {
         position: absolute;
         top: -5px;
         right: 5px;
@@ -901,7 +908,7 @@ button.lmat-page-translation-setting-close:hover {
     }
 }
 
-.lmat-page-translation-content-editable{
+.lmat-page-translation-content-editable {
     width: 292px;
     min-height: 40px;
     resize: vertical;
@@ -909,7 +916,7 @@ button.lmat-page-translation-setting-close:hover {
     border: 1px solid rgb(118, 118, 118);
     overflow: auto;
 
-    &:focus{
+    &:focus {
         outline: 1px solid rgb(16, 16, 16);
     }
 }
@@ -1328,33 +1335,41 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     height: 100%;
     background: #222;
     color: #fff;
-    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
     z-index: 9999;
-    transition: right 0.3s cubic-bezier(.4,0,.2,1);
+    transition: right 0.3s cubic-bezier(.4, 0, .2, 1);
     display: flex;
     flex-direction: column;
     pointer-events: none;
 }
+
 .lmat-page-translation-right-popup--open {
     right: 0;
     pointer-events: auto;
 }
+
 .lmat-page-translation-right-popup__overlay {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.2);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
     z-index: 9998;
     display: none;
 }
+
 .lmat-page-translation-right-popup--open .lmat-page-translation-right-popup__overlay {
     display: block;
 }
+
 .lmat-page-translation-right-popup__content {
     padding: 24px 16px 16px 16px;
     height: 100%;
     overflow-y: auto;
     position: relative;
 }
+
 .lmat-page-translation-right-popup__close {
     position: absolute;
     top: 12px;
@@ -1377,13 +1392,14 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     background: #222;
     color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
     z-index: 1000;
     padding: 16px 16px 16px 24px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
+
 .lmat-page-translation-inline-popup__close {
     position: absolute;
     top: 8px;
@@ -1394,6 +1410,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     font-size: 1.3rem;
     cursor: pointer;
 }
+
 .lmat-page-translation-inline-popup__content {
     margin-top: 24px;
     width: 100%;
@@ -1413,15 +1430,17 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     flex-direction: column;
     align-items: center;
     border: 1px solid #fff;
-    transition: left 0.25s cubic-bezier(.4,0,.2,1), top 0.25s cubic-bezier(.4,0,.2,1);
+    transition: left 0.25s cubic-bezier(.4, 0, .2, 1), top 0.25s cubic-bezier(.4, 0, .2, 1);
     max-width: 320px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 
     box-sizing: unset;
+
     * {
         box-sizing: unset;
     }
 }
+
 .lmat-page-translation-info-popup__close {
     background: #fff;
     color: #222;
@@ -1438,6 +1457,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     cursor: pointer;
     padding: 0;
 }
+
 .lmat-page-translation-info-popup__glossary,
 .lmat-page-translation-info-popup__copy,
 .lmat-page-translation-info-popup__add-glossary {
@@ -1467,16 +1487,19 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     z-index: 100000;
     min-width: 400px;
     max-width: 90vw;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
     transition: left 0.2s, top 0.2s, width 0.2s;
 }
 
-.lmat-page-translation-glossary-popup{
-    input, textarea{
+.lmat-page-translation-glossary-popup {
+
+    input,
+    textarea {
         color: #2c3338;
         background-color: white;
     }
-    select{
+
+    select {
         appearance: none;
         background: #fff url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E') no-repeat right 5px top 55%;
         background-size: 16px 16px;
@@ -1484,7 +1507,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
         color: #2c3338;
     }
 
-    .button{
+    .button {
         display: inline-block;
         text-decoration: none;
         font-size: 13px;
@@ -1500,28 +1523,28 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
         white-space: nowrap;
         box-sizing: border-box;
 
-        &.button-primary{
+        &.button-primary {
             background: #2271b1;
             border-color: #2271b1;
             color: #fff;
             text-decoration: none;
             text-shadow: none;
 
-            &:hover{
+            &:hover {
                 background: #135e96;
                 border-color: #135e96;
                 color: #fff;
             }
         }
 
-        &.button-secondary{
+        &.button-secondary {
             color: #2271b1;
             border-color: #2271b1;
             background: #f6f7f7;
             vertical-align: top;
 
 
-            &:hover{
+            &:hover {
                 background: #f0f0f1;
                 border-color: #0a4b78;
                 color: #0a4b78;
@@ -1542,9 +1565,11 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
         padding: 12px;
         border-radius: 10px;
     }
+
     .lmat-page-translation-glossary-popup__header {
         font-size: 1rem;
     }
+
     .lmat-page-translation-glossary-popup table {
         font-size: 0.95em;
     }
@@ -1642,6 +1667,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     font-size: 14px;
     transition: background 0.2s, color 0.2s;
 }
+
 .lmat-page-translation-glossary-insert {
     background: #2196f3;
     color: #fff;
@@ -1755,9 +1781,11 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     max-width: 400px;
     color: #fff;
     border-radius: 16px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
-    z-index: 100001; /* Higher than glossary popup */
-    position: fixed; /* Ensure it's in its own stacking context */
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+    z-index: 100001;
+    /* Higher than glossary popup */
+    position: fixed;
+    /* Ensure it's in its own stacking context */
 }
 
 .lmat-page-translation-add-glossary-popup .lmat-page-translation-glossary-popup__header {
