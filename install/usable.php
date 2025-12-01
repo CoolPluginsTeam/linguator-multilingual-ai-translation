@@ -81,7 +81,7 @@ class LMAT_Usable {
 	 *
 	 * @return void
 	 */
-	public function polylang_conflict_notice() {
+	public static function polylang_conflict_notice() {
 		?>
 		<div class="notice notice-error">
 			<p>
