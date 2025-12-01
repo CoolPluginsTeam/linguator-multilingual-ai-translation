@@ -127,10 +127,10 @@ const StringPopUpBody = (props) => {
                 });
 
                 const responseData = await response.json();
-                
+
                 const glossaryOrignalTerms = [];
                 responseData.data.terms.forEach(term => {
-                    if(term.original_term && term.original_term !== ''){
+                    if (term.original_term && term.original_term !== '') {
                         glossaryOrignalTerms.push(term.original_term);
                     }
                 });
@@ -575,7 +575,7 @@ const StringPopUpBody = (props) => {
         return result;
     };
 
-    const getTranslation=(data)=>{
+    const getTranslation = (data) => {
         let originalTranslation = false;
 
         if (data.translatedData) {
@@ -672,13 +672,12 @@ const StringPopUpBody = (props) => {
                                                     {undefined !== data.source && data.source.trim() !== '' &&
                                                         <>
                                                             <tr key={index + 'tr' + props.translatePendingStatus + (data.filteredString ? 'filteredString' : '')}>
-                                                                <td>{index + 1}</td>
-                                                                <td data-source="source_text">{data.source}{(!getTranslation(data) && !isEditingThisCell) && <GlossaryCount string={data.source} glossary={glossaryOrignalTerms} 
-                                                                onClick={(e) => {
-                                                                    handleTdClick(e, 2, index, data);
-                                                                }}
-                                                                />}
-                                                                </td>
+                                                                <td>{index + 1}{(!getTranslation(data) && !isEditingThisCell) && <GlossaryCount string={data.source} glossary={glossaryOrignalTerms}
+                                                                    onClick={(e) => {
+                                                                        handleTdClick(e, 2, index, data);
+                                                                    }}
+                                                                />}</td>
+                                                                <td data-source="source_text">{data.source}</td>
                                                                 <td
                                                                     data-key={data.id}
                                                                     data-string-type={data.type}
