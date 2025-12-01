@@ -859,7 +859,7 @@ button.lmat-page-translation-setting-close:hover {
 }
 
 #lmat_page_translation_strings_model table tbody tr>*:not(td, th) {
-    display: none;
+    display: none !important;
 }
 
 #lmat_page_translation_strings_model table td {
