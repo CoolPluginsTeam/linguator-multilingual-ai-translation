@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.8.3
 Requires PHP: 7.2
-Stable tag: 0.0.8
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -165,6 +165,12 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 
 == Changelog ==
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
+
+= Version 1.0.0 (Beta) | 01/12/2025 =
+* **Added:** Glossary management feature added
+* **Added:** Glossary support in single page & bulk translation.
+* **Added:** Polylang & WPML to Linguator migration support.
+* **Improved:** Bulk translation In Progress text styling issue.
 
 = Version 0.0.8 (Beta) | 20/11/2025 =
 * **Added:** Rank math seo plugin integration and support added.
