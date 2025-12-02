@@ -157,7 +157,7 @@ class Languages {
 	 *    @type string $flag_code      Optional. Country code, {@see settings/flags.php}. Will be converted to flag.
 	 *   @type bool   $no_default_cat Optional. If set, no default category will be created for this language. Default is false.
 	 * }
-	 * @return true|WP_Error True success, a `WP_Error` otherwise.
+	 * @return LMAT_Language|WP_Error The object language on success, a `WP_Error` otherwise.
 	 *
 	 * @phpstan-param array{
 	 *     name?: string,
@@ -225,7 +225,7 @@ class Languages {
 			return new WP_Error( 'lmat_add_language', __( 'Impossible to add the language. Please check if the language code or locale is unique.', 'linguator-multilingual-ai-translation' ) );
 		}
 
-		$r = wp_update_term( (int) $r['term_id'], 'lmat_language', array( 'term_group' => (int) $args['term_group'] ) );
+		$id = (int) $r['term_id'];
 
 		if ( is_wp_error( $r ) ) {
 			return new WP_Error( 'lmat_add_language', __( 'Could not set the language order.', 'linguator-multilingual-ai-translation' ) );
@@ -241,13 +241,16 @@ class Languages {
 
 		// Refresh languages
 		$this->clean_cache();
-		$this->get_list();
+		$new_language = $this->get( $id );
+		if ( ! $new_language ) {
+			return new WP_Error( 'lmat_add_language', __( 'Could not add the language.', 'linguator-multilingual-ai-translation' ) );
+		}
 
 		flush_rewrite_rules();
 
 		do_action( 'lmat_add_language', $args );
 
-		return true;
+		return $new_language;
 	}
 
 	/**
@@ -284,7 +287,8 @@ class Languages {
 	 * } $args
 	 */
 	public function update( $args ) {
-		$lang = $this->get( (int) $args['lang_id'] );
+		$id   = (int) $args['lang_id'];
+		$lang = $this->get( $id );
 
 		if ( empty( $lang ) ) {
 			return new WP_Error( 'lmat_invalid_language_id', __( 'The language does not seem to exist.', 'linguator-multilingual-ai-translation' ) );
@@ -401,7 +405,11 @@ class Languages {
 
 		// Refresh languages.
 		$this->clean_cache();
-		$this->get_list();
+		$updated_language = $this->get( $id );
+
+		if ( ! $updated_language ) {
+			return new WP_Error( 'pll_update_language', __( 'Could not update the language.', 'polylang' ) );
+		}
 
 		// Refresh rewrite rules.
 		flush_rewrite_rules();
@@ -427,7 +435,7 @@ class Languages {
 		 */
 		do_action( 'lmat_update_language', $args, $lang );
 
-		return true;
+		return $updated_language;
 	}
 
 	/**
