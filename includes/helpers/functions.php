@@ -121,6 +121,51 @@ function lmat_add_notice( WP_Error $error ) {
 	}
 }
 
+
+/**
+ * Sanitizes an ID as positive integer.
+ * Kind of similar to `absint()`, but rejects negative integers instead of making them positive.
+ *
+ * 
+ *
+ * @param mixed $id A supposedly numeric ID.
+ * @return int A positive integer. `0` for non numeric values and negative integers.
+ *
+ * @phpstan-return int<0,max>
+ */
+function lmat_sanitize_id( $id ) {
+		$options = array(
+		'options' => array(
+			'min_range' => 1,
+			'default'   => 0,
+		),
+	);
+	return filter_var( $id, FILTER_VALIDATE_INT, $options );
+}
+
+
+/**
+ * Sanitizes an array of IDs as positive integers.
+ * `0` values are removed.
+ *
+ * 
+ *
+ * @param mixed $ids A supposedly array of numeric IDs.
+ * @return int[]
+ *
+ * @phpstan-return array<positive-int>
+ */
+
+function lmat_sanitize_ids( $ids ) {
+	if ( empty( $ids ) || ! is_array( $ids ) ) {
+		return array();
+	}
+
+	return array_filter( array_map( 'lmat_sanitize_id', $ids ) );
+	
+}
+
+
 /**
  * Replaces links with their translated versions.
  *
