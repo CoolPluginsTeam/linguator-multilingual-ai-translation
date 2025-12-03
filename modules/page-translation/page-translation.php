@@ -409,6 +409,9 @@ class LMAT_Page_Translation {
 
 		wp_enqueue_style( 'lmat-page-translate' );
 		wp_enqueue_script( 'lmat-page-translate' );
+		
+		// Set script translations for wp-i18n functions (required for WordPress 6.9+)
+		wp_set_script_translations( 'lmat-page-translate', 'linguator-multilingual-ai-translation' );
 
 		$post_id = get_the_ID();
 
@@ -469,6 +472,9 @@ class LMAT_Page_Translation {
 		$target_lang_name = LMAT()->model->get_language( $target_lang_name );
 
 		wp_enqueue_script( 'lmat-elementor-confirm-box', plugins_url('admin/assets/js/lmat-elementor-translate-confirm-box.js', LINGUATOR_ROOT_FILE), array( 'jquery', 'wp-i18n' ), LINGUATOR_VERSION, true );
+		
+		// Set script translations for wp-i18n functions (required for WordPress 6.9+)
+		wp_set_script_translations( 'lmat-elementor-confirm-box', 'linguator-multilingual-ai-translation' );
 
 		wp_localize_script(
 			'lmat-elementor-confirm-box',

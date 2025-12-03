@@ -157,7 +157,7 @@ class Languages {
 	 *    @type string $flag_code      Optional. Country code, {@see settings/flags.php}. Will be converted to flag.
 	 *   @type bool   $no_default_cat Optional. If set, no default category will be created for this language. Default is false.
 	 * }
-	 * @return true|WP_Error True success, a `WP_Error` otherwise.
+	 * @return LMAT_Language|WP_Error The object language on success, a `WP_Error` otherwise.
 	 *
 	 * @phpstan-param array{
 	 *     name?: string,
@@ -225,7 +225,7 @@ class Languages {
 			return new WP_Error( 'lmat_add_language', __( 'Impossible to add the language. Please check if the language code or locale is unique.', 'linguator-multilingual-ai-translation' ) );
 		}
 
-		$r = wp_update_term( (int) $r['term_id'], 'lmat_language', array( 'term_group' => (int) $args['term_group'] ) );
+		$id = (int) $r['term_id'];
 
 		if ( is_wp_error( $r ) ) {
 			return new WP_Error( 'lmat_add_language', __( 'Could not set the language order.', 'linguator-multilingual-ai-translation' ) );
@@ -241,13 +241,16 @@ class Languages {
 
 		// Refresh languages
 		$this->clean_cache();
-		$this->get_list();
+		$new_language = $this->get( $id );
+		if ( ! $new_language ) {
+			return new WP_Error( 'lmat_add_language', __( 'Could not add the language.', 'linguator-multilingual-ai-translation' ) );
+		}
 
 		flush_rewrite_rules();
 
 		do_action( 'lmat_add_language', $args );
 
-		return true;
+		return $new_language;
 	}
 
 	/**
@@ -284,7 +287,8 @@ class Languages {
 	 * } $args
 	 */
 	public function update( $args ) {
-		$lang = $this->get( (int) $args['lang_id'] );
+		$id   = (int) $args['lang_id'];
+		$lang = $this->get( $id );
 
 		if ( empty( $lang ) ) {
 			return new WP_Error( 'lmat_invalid_language_id', __( 'The language does not seem to exist.', 'linguator-multilingual-ai-translation' ) );
@@ -401,7 +405,11 @@ class Languages {
 
 		// Refresh languages.
 		$this->clean_cache();
-		$this->get_list();
+		$updated_language = $this->get( $id );
+
+		if ( ! $updated_language ) {
+			return new WP_Error( 'pll_update_language', __( 'Could not update the language.', 'polylang' ) );
+		}
 
 		// Refresh rewrite rules.
 		flush_rewrite_rules();
@@ -427,7 +435,7 @@ class Languages {
 		 */
 		do_action( 'lmat_update_language', $args, $lang );
 
-		return true;
+		return $updated_language;
 	}
 
 	/**
@@ -1237,49 +1245,32 @@ class Languages {
 	 * @return WP_Term[]
 	 */
 	protected function get_terms(): array {
-		$callback = \Closure::fromCallable( array( $this, 'filter_terms_orderby' ) );
-		add_filter( 'get_terms_orderby', $callback, 10, 3 );
+		
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $this->translatable_objects->get_taxonomy_names( array( 'language' ) ),
-				'orderby'    => 'term_group',
 				'hide_empty' => false,
 			)
 		);
-		remove_filter( 'get_terms_orderby', $callback );
 
-		return empty( $terms ) || is_wp_error( $terms ) ? array() : $terms;
-	}
-
-	/**
-	 * Filters the ORDERBY clause of the languages query.
-	 *
-	 * This allows to order languages terms by `taxonomy` first then by `term_group` and `term_id`.
-	 * Ordering terms by taxonomy allows not to mix terms between all language taxomonomies.
-	 * Having the "lmat_language' taxonomy first is important for {@see LMAT_Admin_Model:delete_language()}.
-	 *
-	 *  
-	 *
-	 * @param  string   $orderby    `ORDERBY` clause of the terms query.
-	 * @param  array    $args       An array of term query arguments.
-	 * @param  string[] $taxonomies An array of taxonomy names.
-	 * @return string
-	 */
-	protected function filter_terms_orderby( $orderby, $args, $taxonomies ) {
-		$allowed_taxonomies = $this->translatable_objects->get_taxonomy_names( array( 'language' ) );
-
-		if ( ! is_array( $taxonomies ) || ! empty( array_diff( $taxonomies, $allowed_taxonomies ) ) ) {
-			return $orderby;
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			return array();
 		}
 
-		if ( empty( $orderby ) || ! is_string( $orderby ) ) {
-			return $orderby;
-		}
+		// Sort terms by 'language' taxonomy first, then by term_group, then by term_id.
+		$callback = static function ( $a, $b ) {
+			if ( $a->taxonomy === $b->taxonomy ) {
+				if ( $a->term_group === $b->term_group ) {
+					return $a->term_id < $b->term_id ? -1 : 1;
+				}
+				return $a->term_group < $b->term_group ? -1 : 1;
+			}
 
-		if ( ! preg_match( '@^(?<alias>[^.]+)\.term_group$@', $orderby, $matches ) ) {
-			return $orderby;
-		}
+			return 'language' === $a->taxonomy ? -1 : 1;
+		};
 
-		return sprintf( "tt.taxonomy = 'lmat_language' DESC, %1\$s.term_group, %1\$s.term_id", $matches['alias'] );
+		usort( $terms, $callback );
+
+		return $terms;
 	}
 }

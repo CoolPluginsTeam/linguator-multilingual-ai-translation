@@ -144,7 +144,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 * @return void
 	 */
 	public function delete_translation( $id ) {
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return;
@@ -266,7 +266,7 @@ class LMAT_Translated_Post extends LMAT_Translated_Object implements LMAT_Transl
 	 * @phpstan-param non-empty-string $context
 	 */
 	public function current_user_can_read( $id, $context = 'view' ) {
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return false;

@@ -187,7 +187,7 @@ abstract class LMAT_Translatable_Object {
 	 *              the object).
 	 */
 	public function set_language( $id, $lang ) {
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return false;
@@ -205,7 +205,7 @@ abstract class LMAT_Translatable_Object {
 
 		$term_taxonomy_ids = wp_set_object_terms( $id, $lang, $this->tax_language );
 
-		wp_cache_set( 'last_changed', microtime(), $this->cache_type );
+		wp_cache_set_last_changed( $this->cache_type );
 
 		return is_array( $term_taxonomy_ids );
 	}
@@ -221,7 +221,7 @@ abstract class LMAT_Translatable_Object {
 	 *                            ID is invalid.
 	 */
 	public function get_language( $id ) {
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return false;
@@ -246,7 +246,7 @@ abstract class LMAT_Translatable_Object {
 	 * @return void
 	 */
 	public function delete_language( $id ) {
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return;
@@ -266,7 +266,7 @@ abstract class LMAT_Translatable_Object {
 	 * @return WP_Term|false The term associated to the object in the requested taxonomy if it exists, `false` otherwise.
 	 */
 	protected function get_object_terms( array $object_ids, string $taxonomy ) {
-		$object_ids = $this->sanitize_int_ids_list( $object_ids );
+		$object_ids = lmat_sanitize_ids( $object_ids );
 		if ( empty( $object_ids ) ) {
 			return array();
 		}
@@ -462,7 +462,7 @@ abstract class LMAT_Translatable_Object {
 
 		$object_ids = $this->query_objects_with_no_lang( $language_ids, $limit, $args );
 
-		return array_values( $this->sanitize_int_ids_list( $object_ids ) );
+		return array_values( lmat_sanitize_ids( $object_ids ) );
 	}
 
 	/**
@@ -483,55 +483,17 @@ abstract class LMAT_Translatable_Object {
 	 * @phpstan-param array<empty> $args
 	 */
 	protected function query_objects_with_no_lang( array $language_ids, $limit, array $args = array() ) {
-		$key          = md5( maybe_serialize( $language_ids ) . maybe_serialize( $args ) . $limit );
-		$last_changed = wp_cache_get_last_changed( $this->cache_type );
-		$cache_key    = "{$this->cache_type}_no_lang:{$key}:{$last_changed}";
-		$object_ids   = wp_cache_get( $cache_key, $this->cache_type );
+		$key        = "{$this->cache_type}_no_lang:" . md5( maybe_serialize( $language_ids ) . maybe_serialize( $args ) . $limit );
+		$object_ids = $this->get_from_cache( $key );
 
 		if ( is_array( $object_ids ) ) {
 			return $object_ids;
 		}
 
 		$object_ids = $this->get_raw_objects_with_no_lang( $language_ids, $limit, $args );
-		wp_cache_set( $cache_key, $object_ids, $this->cache_type );
+		$this->set_to_cache( $key, $object_ids );
 
 		return $object_ids;
-	}
-
-	/**
-	 * Sanitizes an ID as positive integer.
-	 * Kind of similar to `absint()`, but rejects negative integers instead of making them positive.
-	 *
-	 *  
-	 *
-	 * @param mixed $id A supposedly numeric ID.
-	 * @return int A positive integer. `0` for non numeric values and negative integers.
-	 *
-	 * @phpstan-return int<0,max>
-	 */
-	public function sanitize_int_id( $id ) {
-		return is_numeric( $id ) && $id >= 1 ? abs( (int) $id ) : 0;
-	}
-
-	/**
-	 * Sanitizes an array of IDs as positive integers.
-	 * `0` values are removed.
-	 *
-	 *  
-	 *
-	 * @param mixed $ids An array of numeric IDs.
-	 * @return int[]
-	 *
-	 * @phpstan-return array<positive-int>
-	 */
-	public function sanitize_int_ids_list( $ids ) {
-		if ( empty( $ids ) || ! is_array( $ids ) ) {
-			return array();
-		}
-
-		$ids = array_map( array( $this, 'sanitize_int_id' ), $ids );
-
-		return array_filter( $ids );
 	}
 
 	/**
@@ -611,7 +573,7 @@ abstract class LMAT_Translatable_Object {
 		clean_term_cache( $ids, $this->tax_language );
 
 		// Invalidate our cache.
-		wp_cache_set( 'last_changed', microtime(), $this->cache_type );
+		wp_cache_set_last_changed( $this->cache_type );
 	}
 
 	/**
@@ -626,6 +588,49 @@ abstract class LMAT_Translatable_Object {
 		/* translators: %s is the name of a database table. */
 		return sprintf( __( 'Language taxonomy properties for table %s.', 'linguator-multilingual-ai-translation' ), $this->get_db_infos()['table'] );
 	}
+
+
+	/**
+	 * Fetches the value from the cache. Handles backward compatibility with WordPress < 6.9.
+	 *
+	 * @since 3.8
+	 *
+	 * @param string $key The cache key.
+	 * @return mixed|false The cached value, false if not found.
+	 */
+	private function get_from_cache( $key ) {
+		$last_changed = wp_cache_get_last_changed( $this->cache_type );
+
+		if ( ! function_exists( 'wp_cache_get_salted' ) ) {
+			// Backward compatibility with WordPress < 6.9.
+			$cache_key = "{$key}:{$last_changed}";
+			return wp_cache_get( $cache_key, $this->cache_type );
+		}
+
+		return wp_cache_get_salted( $key, $this->cache_type, $last_changed );
+	}
+
+	/**
+	 * Stores the value in the cache. Handles backward compatibility with WordPress < 6.9.
+	 *
+	 * @since 3.8
+	 *
+	 * @param string $key   The cache key.
+	 * @param mixed  $value The value to store in the cache.
+	 * @return bool True if the value has been stored, false otherwise.
+	 */
+	private function set_to_cache( $key, $value ): bool {
+		$last_changed = wp_cache_get_last_changed( $this->cache_type );
+
+		if ( ! function_exists( 'wp_cache_set_salted' ) ) {
+			// Backward compatibility with WordPress < 6.9.
+			$cache_key = "{$key}:{$last_changed}";
+			return wp_cache_set( $cache_key, $value, $this->cache_type );
+		}
+
+		return wp_cache_set_salted( $key, $value, $this->cache_type, $last_changed );
+	}
+
 
 	/**
 	 * Returns database-related information that can be used in some of this class methods.

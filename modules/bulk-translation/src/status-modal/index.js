@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { bulkTranslateEntries, initBulkTranslate } from '../bulk-translate.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectTranslatePostInfo, selectProgressStatus, selectCountInfo, selectPendingPosts, selectServiceProvider, selectErrorPostsInfo, selectTargetLanguages } from '../redux-store/features/selectors.js';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import ErrorModalBox from '../components/error-modal-box/index.js';
 import { store } from '../redux-store/store.js';
 import DOMPurify from 'dompurify';

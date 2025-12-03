@@ -119,7 +119,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 			return false;
 		}
 
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		// Add translation group for correct WXR export.
 		$translations = $this->get_translations( $id );
@@ -144,7 +144,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	public function delete_translation( $id ) {
 		global $wpdb;
 
-		$id = $this->sanitize_int_id( $id );
+		$id = lmat_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return;
@@ -255,7 +255,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * @phpstan-param array<positive-int> $ids
 	 */
 	public function clean_term_cache( $ids ) {
-		clean_object_term_cache( $this->sanitize_int_ids_list( $ids ), 'term' );
+		clean_object_term_cache( lmat_sanitize_ids( $ids ), 'term' );
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import { sprintf, __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import Providers from "./providers.js";
 import TranslateService from "../component/translate-provider/index.js";
 

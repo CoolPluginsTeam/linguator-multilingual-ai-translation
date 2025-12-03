@@ -46,9 +46,8 @@ jQuery(
 		var wizardSelectmenuWidth = '100%';
 
 		// Inject flag image when jQuery UI selectmenu is created or an item is selected.
-		// jQuery UI 1.12 introduce a wrapper inside de li tag which is necessary to selectmenu widget to work correctly.
+		// jQuery UI 1.12 introduces a wrapper inside de li tag which is necessary to selectmenu widget to work correctly.
 		// Mainly copy from the original jQuery UI 1.12 selectmenu widget _renderItem method.
-		// Note this code works fine with jQuery UI 1.11.4 too.
 		var selectmenuRenderItem = function ( ul, item ) {
 			var li = $( '<li>' );
 			var wrapper = $( '<div>');
@@ -67,13 +66,7 @@ jQuery(
 			// `wrapper` and `ul` are safe, see above.
 			return li.append( wrapper ).appendTo( ul ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append, WordPressVIPMinimum.JS.HTMLExecutingFunctions.appendTo
 		};
-		// Override selected item to inject flag for jQuery UI less than 1.12.
-		var selectmenuRefreshButtonText = function ( selectElement ) {
-			var buttonText = $( selectElement ).selectmenu( 'instance' ).buttonText;
-			// The data to prepend comes from a `data-html-flag` HTML attribute, filled by a method from `LMAT_Language`.
-			buttonText.prepend( $( selectElement ).children( ':selected' ).data( 'flag-html' ) ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
-			buttonText.children( 'img' ).addClass( 'ui-icon' );
-		};
+
 		// Override selected item since jQuery UI 1.12 which introduces extension point method _renderButtonItem.
 		// @see https://api.jqueryui.com/1.12/selectmenu/#method-_renderButtonItem _renderButtonItem documentation.
 		var selectmenuRenderButtonItem = function ( selectElement ) {
@@ -102,6 +95,7 @@ jQuery(
 			// Overrides each item in the jQuery UI selectmenu list by injecting flag image.
 			selectmenuWidgetInstance._renderItem = selectmenuRenderItem;
 			// Override the selected item rendering for jQuery UI 1.12+
+			// Override the selected item rendering.
 			selectmenuWidgetInstance._renderButtonItem = selectmenuRenderButtonItem;
 			// Need to refresh to take in account the new button item rendering method after the selectmenu widget instanciaion.
 			selectmenuWidgetInstance.refresh();
@@ -122,10 +116,6 @@ jQuery(
 
 		// Selectmenu widget callbacks
 		var selectmenuFlagListCallbacks = {};
-		// Callbacks when Selectmenu widget create or select event is triggered.
-		var createSelectCallback = function ( event, ui ) {
-			selectmenuRefreshButtonText( event.target );
-		}
 
 		/**
 		 *  Overrides the flag dropdown list with our customized jquery ui selectmenu.
@@ -133,19 +123,18 @@ jQuery(
 
 		// Callbacks when Selectmenu widget change or open event is triggered.
 		// Needed to correctly refresh the selected element in the list when editing an existing language or when the value change is triggered by the language choice.
-		// jQuery UI 1.11 callback version.
+		
 		var changeOpenCallback = function ( event, ui ) {
-			selectmenuRefreshButtonText( $( event.target ).selectmenu( 'refresh' ) );
-		}
-		// jQueryUI 1.12 callback version.
-		var changeOpenCallbackjQueryUI112 = function ( event, ui ) {
+
 			// Just a refresh of the menu is needed with jQuery UI 1.12 because _renderButtonItem is triggered and then inject correctly the flag.
 			$( event.target ).selectmenu( 'refresh' );
+			
 		}
 		// Use jQuery UI 1.12+ callbacks - no need for create and select callbacks since _renderButtonItem method handles rendering.
-		selectmenuFlagListCallbacks = {
-			change: changeOpenCallbackjQueryUI112,
-			open: changeOpenCallbackjQueryUI112,
+		selectmenuFlagListCallbacks = 
+		{
+			change: changeOpenCallback,
+			open: changeOpenCallback,
 		};
 
 		// Create the selectmenu widget only if the field is present.

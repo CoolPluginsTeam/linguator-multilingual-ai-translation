@@ -328,18 +328,18 @@ class LMAT_Settings extends LMAT_Admin_Base {
 					'term_group' => isset( $_POST['term_group'] ) ? (int) $_POST['term_group'] : 0,
 					'flag' => sanitize_text_field( wp_unslash( $_POST['flag'] ?? '' ) ),
 				);
-				$errors = $this->model->add_language( $sanitized_data );
+				$language = $this->model->add_language( $sanitized_data );
 
-				if ( is_wp_error( $errors ) ) {
-						lmat_add_notice( $errors );
+				if ( is_wp_error( $language ) ) {
+						lmat_add_notice( $language );
 				} else {
 					lmat_add_notice( new WP_Error( 'lmat_languages_created', __( 'Language added.', 'linguator-multilingual-ai-translation' ), 'success' ) );
-					$locale = $sanitized_data['locale'];
+					$locale = $language->locale;
 
-					if ( 'en_US' !== $locale && current_user_can( 'install_languages' ) ) {
+					if ( 'en_US' !== $language->locale && current_user_can( 'install_languages' ) ) {
 						// Attempts to install the language pack
 						require_once ABSPATH . 'wp-admin/includes/translation-install.php';
-						if ( ! wp_download_language_pack( $locale ) ) {
+						if ( ! wp_download_language_pack( $language->locale ) ) {
 							lmat_add_notice( new WP_Error( 'lmat_download_mo', __( 'The language was created, but the WordPress language file was not downloaded. Please install it manually.', 'linguator-multilingual-ai-translation' ), 'warning' ) );
 						}
 

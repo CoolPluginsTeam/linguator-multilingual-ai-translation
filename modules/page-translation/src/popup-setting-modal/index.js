@@ -6,7 +6,7 @@ import ChromeLocalAiTranslator from "../component/translate-provider/local-ai-tr
 import SettingModalHeader from "./header.js";
 import SettingModalBody from "./body.js";
 import SettingModalFooter from "./footer.js";
-import { __, sprintf } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";   
 import ErrorModalBox from "../component/error-modal-box/index.js";
 import TranslateService from "../component/translate-provider/index.js";
 
