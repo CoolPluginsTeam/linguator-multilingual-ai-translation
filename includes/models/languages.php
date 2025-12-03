@@ -1245,49 +1245,32 @@ class Languages {
 	 * @return WP_Term[]
 	 */
 	protected function get_terms(): array {
-		$callback = \Closure::fromCallable( array( $this, 'filter_terms_orderby' ) );
-		add_filter( 'get_terms_orderby', $callback, 10, 3 );
+		
 		$terms = get_terms(
 			array(
 				'taxonomy'   => $this->translatable_objects->get_taxonomy_names( array( 'language' ) ),
-				'orderby'    => 'term_group',
 				'hide_empty' => false,
 			)
 		);
-		remove_filter( 'get_terms_orderby', $callback );
 
-		return empty( $terms ) || is_wp_error( $terms ) ? array() : $terms;
-	}
-
-	/**
-	 * Filters the ORDERBY clause of the languages query.
-	 *
-	 * This allows to order languages terms by `taxonomy` first then by `term_group` and `term_id`.
-	 * Ordering terms by taxonomy allows not to mix terms between all language taxomonomies.
-	 * Having the "lmat_language' taxonomy first is important for {@see LMAT_Admin_Model:delete_language()}.
-	 *
-	 *  
-	 *
-	 * @param  string   $orderby    `ORDERBY` clause of the terms query.
-	 * @param  array    $args       An array of term query arguments.
-	 * @param  string[] $taxonomies An array of taxonomy names.
-	 * @return string
-	 */
-	protected function filter_terms_orderby( $orderby, $args, $taxonomies ) {
-		$allowed_taxonomies = $this->translatable_objects->get_taxonomy_names( array( 'language' ) );
-
-		if ( ! is_array( $taxonomies ) || ! empty( array_diff( $taxonomies, $allowed_taxonomies ) ) ) {
-			return $orderby;
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			return array();
 		}
 
-		if ( empty( $orderby ) || ! is_string( $orderby ) ) {
-			return $orderby;
-		}
+		// Sort terms by 'language' taxonomy first, then by term_group, then by term_id.
+		$callback = static function ( $a, $b ) {
+			if ( $a->taxonomy === $b->taxonomy ) {
+				if ( $a->term_group === $b->term_group ) {
+					return $a->term_id < $b->term_id ? -1 : 1;
+				}
+				return $a->term_group < $b->term_group ? -1 : 1;
+			}
 
-		if ( ! preg_match( '@^(?<alias>[^.]+)\.term_group$@', $orderby, $matches ) ) {
-			return $orderby;
-		}
+			return 'language' === $a->taxonomy ? -1 : 1;
+		};
 
-		return sprintf( "tt.taxonomy = 'lmat_language' DESC, %1\$s.term_group, %1\$s.term_id", $matches['alias'] );
+		usort( $terms, $callback );
+
+		return $terms;
 	}
 }
