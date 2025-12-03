@@ -76,6 +76,9 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		
 		// FIXME is it possible to choose the order ( after theme locations in WP3.5 and older ) ?
 		// FIXME not displayed if Linguator is activated before the first time the user goes to nav menus http://core.trac.wordpress.org/ticket/16828
+		// New Code (with load-nav-menus.php)
+		// Original: "Hey WordPress, add this box to the Menus screen!" (Shouted on every page load).
+		// New Code: "Wait... are we on the Menus screen? Yes? Okay, now add this box." (Polite and efficient).
 		add_action( 'load-nav-menus.php', function () {
 			add_meta_box( 'lmat_lang_switch_box', __( 'Language switcher', 'linguator-multilingual-ai-translation' ), array( $this, 'lang_switch' ), 'nav-menus', 'side', 'high' );
 		} );
