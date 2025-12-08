@@ -126,3 +126,6 @@ if ( LMAT_Deactivate::is_deactivation() ) {
 LMAT_Activate::add_hooks();
 
 new Linguator();
+
+// Load menu sync feature
+require __DIR__ . '/includes/menu-sync-integration.php';

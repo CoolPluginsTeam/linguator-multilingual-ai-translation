@@ -1,0 +1,167 @@
+/**
+ * Menu Sync Styles
+ */
+
+/* Sync button */
+#lmat-sync-menu-btn {
+	vertical-align: middle;
+}
+
+/* Result container */
+#lmat-sync-result {
+	max-width: 100%;
+}
+
+#lmat-sync-result .notice {
+	margin: 0;
+	padding: 10px 15px;
+}
+
+#lmat-sync-result ul {
+	margin: 10px 0 0 20px;
+	list-style: disc;
+}
+
+#lmat-sync-result li {
+	margin: 5px 0;
+	font-size: 13px;
+}
+
+/* Dialog overlay */
+.lmat-sync-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.7);
+	z-index: 100000;
+}
+
+/* Dialog modal */
+.lmat-sync-modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	z-index: 100001;
+	max-width: 500px;
+	width: 90%;
+	max-height: 80vh;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Dialog header */
+.lmat-sync-header {
+	padding: 20px;
+	border-bottom: 1px solid #ddd;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.lmat-sync-header h2 {
+	margin: 0;
+	font-size: 18px;
+}
+
+.lmat-sync-close {
+	background: none;
+	border: none;
+	font-size: 28px;
+	line-height: 1;
+	cursor: pointer;
+	color: #666;
+	padding: 0;
+	width: 30px;
+	height: 30px;
+}
+
+.lmat-sync-close:hover {
+	color: #000;
+}
+
+/* Dialog body */
+.lmat-sync-body {
+	padding: 20px;
+	overflow-y: auto;
+	flex: 1;
+}
+
+.lmat-sync-actions {
+	margin-bottom: 15px;
+	display: flex;
+	gap: 10px;
+}
+
+.lmat-sync-languages {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.lmat-lang-option {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.lmat-lang-option:hover {
+	background: #f5f5f5;
+	border-color: #999;
+}
+
+.lmat-lang-option input[type="checkbox"] {
+	margin: 0 10px 0 0;
+}
+
+.lmat-lang-option span {
+	font-size: 14px;
+}
+
+/* Dialog footer */
+.lmat-sync-footer {
+	padding: 15px 20px;
+	border-top: 1px solid #ddd;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.lmat-sync-footer .button {
+	margin: 0;
+}
+
+.lmat-sync-spinner {
+	float: none;
+	margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+	.lmat-sync-modal {
+		width: 95%;
+		max-height: 90vh;
+	}
+
+	.lmat-sync-header {
+		padding: 15px;
+	}
+
+	.lmat-sync-body {
+		padding: 15px;
+	}
+
+	.lmat-sync-footer {
+		padding: 10px 15px;
+		flex-wrap: wrap;
+	}
+}
