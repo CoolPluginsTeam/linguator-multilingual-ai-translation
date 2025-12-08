@@ -157,7 +157,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * **Lightweight & Optimized for Speed** – Linguator is built with performance in mind and doesn’t slow down your pages or website loading time.
 
 =Is Linguator still in beta? =
-Yes, Linguator is currently in its beta stage. This means the core features are ready to use, but we’re still improving stability, performance, and adding more integrations based on user feedback.
+No, Linguator is not in beta stage. The core features are ready to use, and we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
 
