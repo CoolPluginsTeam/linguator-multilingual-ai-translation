@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Checkbox, Container, Input, Label, RadioButton, Switch, Badge } from '@bsf/force-ui'
 import { Languages, Link } from 'lucide-react';
 import { RiDraftLine } from "react-icons/ri";
-import { __ } from '@wordpress/i18n'
+import { __, sprintf } from '@wordpress/i18n'
 import apiFetch from "@wordpress/api-fetch"
 import { getNonce } from '../utils'
 import { toast } from 'sonner'

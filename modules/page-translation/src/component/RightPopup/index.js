@@ -8,6 +8,7 @@ const AddGlossaryPopup = ({
   selectedSourceText,
   onClose,
   setGlossaryTerms,
+  setGlossaryOrignalTerms
 }) => {
   const [type, setType] = useState("general");
   const [sourceText, setSourceText] = useState(selectedSourceText || "");
@@ -197,6 +198,17 @@ const AddGlossaryPopup = ({
               const refreshData = await refreshResponse.json();
 
               if (refreshData?.success) {
+
+                let glossaryOrignalTerms = [];
+                
+                refreshData.data.terms.forEach(term => {
+                  if(term.original_term && term.original_term !== ''){
+                    glossaryOrignalTerms.push(term.original_term);
+                  }
+                });
+
+                setGlossaryOrignalTerms(glossaryOrignalTerms);
+
                 setGlossaryTerms(refreshData.data?.terms || []);
                 setSuccessMessage("Glossary term added successfully!");
                 setTimeout(() => {
