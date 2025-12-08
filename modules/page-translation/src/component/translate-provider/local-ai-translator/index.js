@@ -75,7 +75,7 @@ const localAiTranslator = async (props) => {
         mainWrapperSelector: "#lmat_page_translation_strings_model",
         btnSelector: `#${props.ID}`,
         btnClass: "local_ai_translator_btn",
-        btnText: __("Translate To", 'linguator-multilingual-ai-translation') + ' ' + targetLangName + ' (Beta)',
+        btnText: __("Translate To", 'linguator-multilingual-ai-translation') + ' ' + targetLangName,
         stringSelector: ".lmat_page_translation_string_container tbody tr td.translate:not([data-translate-status='translated'])",
         progressBarSelector: "#lmat_page_translation_strings_model .lmat_page_translation_translate_progress",
         sourceLanguage: props.sourceLang,
