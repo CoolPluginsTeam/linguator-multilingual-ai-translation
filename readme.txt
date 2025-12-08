@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.8.3
 Requires PHP: 7.2
-Stable tag: 0.0.8
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,6 @@ https://youtu.be/TNSWCCmHQPg?si=LQXRkszBIFPMG9vg
 
 **Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.**
 
-**Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
 https://youtu.be/20MbjUb6AnM?si=-1qipV1fFH89KtgT
 
@@ -78,7 +77,6 @@ With Linguator, you can:
  **Trusted by 80,000+ users worldwide**, Linguator is built by experts in AI translation — the same team behind [**LocoAI – Auto Translate for Loco Translate**](https://wordpress.org/plugins/automatic-translator-addon-for-loco-translate).
  With [**580+ five-star reviews**](https://wordpress.org/plugins/automatic-translator-addon-for-loco-translate/#reviews), our plugins are proven to deliver quality and user satisfaction.
 
- **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
 #### Service Provider 
 This plugin offers AI translation services via Chrome's built-in AI APIs. Learn more about Chrome AI using the links below.
@@ -102,7 +100,7 @@ This plugin offers AI translation services via Chrome's built-in AI APIs. Learn 
 3. Search for "Linguator".
 4. Click Install and then Activate the plugin.
 
-That's it! Linguator – Multilingual AI Translation (Beta Version) is now installed and activated. You can start translating your website automatically using the power of AI.
+That's it! Linguator – Multilingual AI Translation is now installed and activated. You can start translating your website automatically using the power of AI.
 
 **Language Configuration**
 
@@ -117,8 +115,6 @@ Follow these steps to complete the setup:
 6. Choose how and where the language switcher will appear on your website so visitors can easily switch between languages.
 
 That's it! The setup configuration has been successfully completed. You can now start translating your website content and make it fully multilingual.
-
- **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
 == Frequently Asked Questions ==
 
@@ -164,7 +160,19 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 Yes, Linguator is currently in its beta stage. This means the core features are ready to use, but we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
-**Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
+
+= Version 1.0.1 | 08/12/2025 =
+* **Added:** Introduces "lmat_sanatize_id()" function.
+* **Improved:** Rewrite get_terms() more efficiently.
+* **Improved:** Cache management with better performance.
+* **Improved:** Simplifies the usage of these two methods language::add() & language::update().
+* **Tested:** Tested Upto WordPress Version 6.9.
+
+= Version 1.0.0 (Beta) | 01/12/2025 =
+* **Added:** Glossary management feature added
+* **Added:** Glossary support in single page & bulk translation.
+* **Added:** Polylang & WPML to Linguator migration support.
+* **Improved:** Bulk translation In Progress text styling issue.
 
 = Version 0.0.8 (Beta) | 20/11/2025 =
 * **Added:** Rank math seo plugin integration and support added.
