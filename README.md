@@ -1,10 +1,8 @@
-# 🧠 Linguator – Multilingual AI Translation (Beta)
+# 🧠 Linguator – Multilingual AI Translation
 
 **Translate Your WordPress Website 10X Faster – Powered by AI, Built for Global Reach.**
 
 Linguator is a powerful multilingual WordPress plugin that helps you translate your website into multiple languages using the power of AI — quickly, easily, and directly from your WordPress dashboard.
-
-**Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
 [👉 **Live Demo**](https://linguator-demo-site.instawp.co/wp-admin/admin.php?page=lmat_settings)
 
@@ -88,9 +86,7 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 ## Changelog
 
-**Note:** Linguator is currently in **Beta**, and we're actively improving features and performance based on user feedback.
-
-= Version 1.0.1 (Beta) | 06/12/2025 =
+= Version 1.0.1 | 08/12/2025 =
 
 - **Added:** Introduces "lmat_sanatize_id()" function.
 - **Improved:** Rewrite get_terms() more efficiently.
@@ -157,20 +153,18 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 = Version 0.0.3 (Beta) | 05/09/2025 =
 
-- Fixed escaping and sanitization issues.
-- Minor bug fixes.
+* Fixed escaping and sanitization issues.
+* Minor bug fixes.
 
 = Version 0.0.2 (Beta) | 02/08/2025 =
 
-- Fixed issue with translated strings.
-- Fixed Minor issues.
+* Fixed issue with translated strings.
+* Fixed Minor issues.
 
 = Version 0.0.1 (Beta) | 07/06/2025 =
 
-- Initial release with core multilingual features for WP approval
+* Initial release with core multilingual features for WP approval
 
 ## 🧾 License
 
 This plugin is licensed under the [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html).
-
-> **Beta Notice:** This is a Beta release — we’re continuously adding new features and improvements.
