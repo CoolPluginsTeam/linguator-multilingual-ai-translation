@@ -166,6 +166,14 @@ Yes, Linguator is currently in its beta stage. This means the core features are 
 == Changelog ==
 **Note:** Linguator is currently in **Beta**, and we’re actively improving features and performance based on user feedback.
 
+
+= Version 1.0.1 (Beta) | 06/12/2025 =
+* **Added:** Introduces "lmat_sanatize_id()" function.
+* **Improved:** Rewrite get_terms() more efficiently.
+* **Improved:** Cache management with better performance.
+* **Improved:** Simplifies the usage of these two methods language::add() & language::update().
+* **Tested:** Tested Upto WordPress Version 6.9.
+
 = Version 1.0.0 (Beta) | 01/12/2025 =
 * **Added:** Glossary management feature added
 * **Added:** Glossary support in single page & bulk translation.
