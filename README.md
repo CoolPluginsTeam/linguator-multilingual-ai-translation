@@ -153,17 +153,17 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 = Version 0.0.3 (Beta) | 05/09/2025 =
 
-- Fixed escaping and sanitization issues.
-- Minor bug fixes.
+* Fixed escaping and sanitization issues.
+* Minor bug fixes.
 
 = Version 0.0.2 (Beta) | 02/08/2025 =
 
-- Fixed issue with translated strings.
-- Fixed Minor issues.
+* Fixed issue with translated strings.
+* Fixed Minor issues.
 
 = Version 0.0.1 (Beta) | 07/06/2025 =
 
-- Initial release with core multilingual features for WP approval
+* Initial release with core multilingual features for WP approval
 
 ## 🧾 License
 
