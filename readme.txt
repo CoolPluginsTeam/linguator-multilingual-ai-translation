@@ -161,7 +161,7 @@ No, Linguator is not in beta stage. The core features are ready to use, and weâ€
 
 == Changelog ==
 
-= Version 1.0.1 | 08/12/2025 =
+= Version 1.0.1 | 09/12/2025 =
 * **Added:** Introduces "lmat_sanatize_id()" function.
 * **Improved:** Rewrite get_terms() more efficiently.
 * **Improved:** Cache management with better performance.
