@@ -34,6 +34,7 @@ return array(
     'Linguator\\Admin\\Controllers\\LMAT_Admin_Filters_Term' => $baseDir . '/admin/controllers/admin-filters-term.php',
     'Linguator\\Admin\\Controllers\\LMAT_Admin_Filters_Widgets_Options' => $baseDir . '/admin/controllers/admin-filters-widgets-options.php',
     'Linguator\\Admin\\Controllers\\LMAT_Admin_Links' => $baseDir . '/admin/controllers/admin-links.php',
+    'Linguator\\Admin\\Controllers\\LMAT_Admin_Menu_Sync' => $baseDir . '/admin/controllers/admin-menu-sync.php',
     'Linguator\\Admin\\Controllers\\LMAT_Admin_Model' => $baseDir . '/admin/controllers/admin-model.php',
     'Linguator\\Admin\\Controllers\\LMAT_Admin_Nav_Menu' => $baseDir . '/admin/controllers/admin-nav-menu.php',
     'Linguator\\Admin\\Controllers\\LMAT_Admin_Notices' => $baseDir . '/admin/controllers/admin-notices.php',

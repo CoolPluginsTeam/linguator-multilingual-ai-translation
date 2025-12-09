@@ -84,6 +84,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Filters_Term' => __DIR__ . '/../..' . '/admin/controllers/admin-filters-term.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Filters_Widgets_Options' => __DIR__ . '/../..' . '/admin/controllers/admin-filters-widgets-options.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Links' => __DIR__ . '/../..' . '/admin/controllers/admin-links.php',
+        'Linguator\\Admin\\Controllers\\LMAT_Admin_Menu_Sync' => __DIR__ . '/../..' . '/admin/controllers/admin-menu-sync.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Model' => __DIR__ . '/../..' . '/admin/controllers/admin-model.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Nav_Menu' => __DIR__ . '/../..' . '/admin/controllers/admin-nav-menu.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Notices' => __DIR__ . '/../..' . '/admin/controllers/admin-notices.php',
