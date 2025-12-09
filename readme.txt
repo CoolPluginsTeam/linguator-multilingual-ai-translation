@@ -174,12 +174,6 @@ No, Linguator is not in beta stage. The core features are ready to use, and weâ€
 * **Added:** Polylang & WPML to Linguator migration support.
 * **Improved:** Bulk translation In Progress text styling issue.
 
-= Version 1.0.0 (Beta) | 01/12/2025 =
-* **Added:** Glossary management feature added
-* **Added:** Glossary support in single page & bulk translation.
-* **Added:** Polylang & WPML to Linguator migration support.
-* **Improved:** Bulk translation In Progress text styling issue.
-
 = Version 0.0.8 (Beta) | 20/11/2025 =
 * **Added:** Rank math seo plugin integration and support added.
 * **Fixed:** Fixed JS error in gutenberg page translation meta fields update.
