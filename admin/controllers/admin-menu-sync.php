@@ -74,13 +74,16 @@ class LMAT_Admin_Menu_Sync {
 			return;
 		}
 		
+		// Detect current menu's language
+		$current_menu_lang = $this->get_menu_language( $nav_menu_selected_id );
+		
 		?>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			// Find the Save Menu button and add our Sync button next to it
 			var $saveButton = $('#save_menu_header');
 			if ($saveButton.length) {
-				var $syncButton = $('<button type="button" id="lmat-sync-menu-btn" class="button button-secondary" data-menu-id="<?php echo esc_attr( $nav_menu_selected_id ); ?>" style="margin-left: 10px;"><?php esc_html_e( 'Sync Menu', 'linguator-multilingual-ai-translation' ); ?></button>');
+				var $syncButton = $('<button type="button" id="lmat-sync-menu-btn" class="button button-secondary" data-menu-id="<?php echo esc_attr( $nav_menu_selected_id ); ?>" data-menu-lang="<?php echo esc_attr( $current_menu_lang ); ?>" style="margin-left: 10px;"><?php esc_html_e( 'Sync Menu', 'linguator-multilingual-ai-translation' ); ?></button>');
 				$saveButton.after($syncButton);
 				
 				// Add result container below the buttons
@@ -452,5 +455,29 @@ class LMAT_Admin_Menu_Sync {
 		}
 		
 		$this->options->set( 'nav_menus', $nav_menus );
+	}
+
+	/**
+	 * Get the language assigned to a menu
+	 *
+	 * @param int $menu_id Menu ID.
+	 * @return string Language slug or empty string if not found.
+	 */
+	private function get_menu_language( $menu_id ) {
+		$nav_menus = $this->options->get( 'nav_menus' );
+		
+		if ( empty( $nav_menus[ $this->theme ] ) ) {
+			return '';
+		}
+
+		foreach ( $nav_menus[ $this->theme ] as $location => $languages ) {
+			foreach ( $languages as $lang => $assigned_menu_id ) {
+				if ( $assigned_menu_id == $menu_id ) {
+					return $lang;
+				}
+			}
+		}
+
+		return '';
 	}
 }

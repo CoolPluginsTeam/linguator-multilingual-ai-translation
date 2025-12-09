@@ -43,11 +43,8 @@
         "</div>" +
         '<div class="lmat-sync-body">' +
         '<div class="lmat-sync-actions">' +
-        '<button type="button" class="button lmat-select-all">' +
+        '<button type="button" class="button lmat-toggle-all">' +
         lmatMenuSync.strings.selectAll +
-        "</button>" +
-        '<button type="button" class="button lmat-deselect-all">' +
-        lmatMenuSync.strings.deselectAll +
         "</button>" +
         "</div>" +
         '<div class="lmat-sync-languages"></div>' +
@@ -73,16 +70,16 @@
       this.bindDialogEvents();
     },
 
-    /**
-     * Populate languages list
-     */
     populateLanguages: function () {
       var $container = $("#lmat-sync-dialog .lmat-sync-languages");
       var html = "";
 
+      // Get current menu's language from the button data attribute
+      var currentMenuLang = $("#lmat-sync-menu-btn").data("menu-lang");
+
       $.each(lmatMenuSync.languages, function (index, lang) {
-        // Skip default language
-        if (lang.is_default) {
+        // Skip the language that the current menu is already assigned to
+        if (lang.slug === currentMenuLang) {
           return;
         }
 
@@ -115,14 +112,22 @@
         }
       );
 
-      // Select all
-      $(document).on("click", ".lmat-select-all", function () {
-        $('#lmat-sync-dialog input[type="checkbox"]').prop("checked", true);
-      });
+      // Toggle select/deselect all
+      $(document).on("click", ".lmat-toggle-all", function () {
+        var $button = $(this);
+        var $checkboxes = $('#lmat-sync-dialog input[type="checkbox"]');
+        var allChecked =
+          $checkboxes.length === $checkboxes.filter(":checked").length;
 
-      // Deselect all
-      $(document).on("click", ".lmat-deselect-all", function () {
-        $('#lmat-sync-dialog input[type="checkbox"]').prop("checked", false);
+        if (allChecked) {
+          // Deselect all
+          $checkboxes.prop("checked", false);
+          $button.text(lmatMenuSync.strings.selectAll);
+        } else {
+          // Select all
+          $checkboxes.prop("checked", true);
+          $button.text(lmatMenuSync.strings.deselectAll);
+        }
       });
 
       // Confirm sync
@@ -136,6 +141,24 @@
           self.hideDialog();
         }
       });
+
+      // Update button text when individual checkboxes are clicked
+      $(document).on(
+        "change",
+        '#lmat-sync-dialog input[type="checkbox"]',
+        function () {
+          var $button = $(".lmat-toggle-all");
+          var $checkboxes = $('#lmat-sync-dialog input[type="checkbox"]');
+          var allChecked =
+            $checkboxes.length === $checkboxes.filter(":checked").length;
+
+          if (allChecked) {
+            $button.text(lmatMenuSync.strings.deselectAll);
+          } else {
+            $button.text(lmatMenuSync.strings.selectAll);
+          }
+        }
+      );
     },
 
     /**
@@ -146,6 +169,9 @@
 
       // Reset checkboxes
       $('#lmat-sync-dialog input[type="checkbox"]').prop("checked", false);
+
+      // Reset button text to "Select All"
+      $(".lmat-toggle-all").text(lmatMenuSync.strings.selectAll);
 
       // Show dialog
       $("#lmat-sync-dialog").fadeIn(200);
