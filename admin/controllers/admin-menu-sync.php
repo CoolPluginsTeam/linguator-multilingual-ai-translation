@@ -355,7 +355,14 @@ class LMAT_Admin_Menu_Sync {
 			$translations = lmat_get_post_translations( $item->object_id );
 			
 			if ( isset( $translations[ $lang->slug ] ) ) {
-				$item_data['menu-item-object-id'] = $translations[ $lang->slug ];
+				$translated_post_id = $translations[ $lang->slug ];
+				$item_data['menu-item-object-id'] = $translated_post_id;
+				
+				// Get the translated post title
+				$translated_post = get_post( $translated_post_id );
+				if ( $translated_post ) {
+					$item_data['menu-item-title'] = $translated_post->post_title;
+				}
 			} else {
 				// No translation available, skip this item
 				return false;
@@ -365,7 +372,14 @@ class LMAT_Admin_Menu_Sync {
 			$translations = lmat_get_term_translations( $item->object_id );
 			
 			if ( isset( $translations[ $lang->slug ] ) ) {
-				$item_data['menu-item-object-id'] = $translations[ $lang->slug ];
+				$translated_term_id = $translations[ $lang->slug ];
+				$item_data['menu-item-object-id'] = $translated_term_id;
+				
+				// Get the translated term name
+				$translated_term = get_term( $translated_term_id );
+				if ( $translated_term && ! is_wp_error( $translated_term ) ) {
+					$item_data['menu-item-title'] = $translated_term->name;
+				}
 			} else {
 				// No translation available, skip this item
 				return false;
