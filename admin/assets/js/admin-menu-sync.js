@@ -12,8 +12,47 @@
      * Initialize
      */
     init: function () {
+      this.addSyncButton();
       this.bindEvents();
       this.createDialog();
+    },
+
+    /**
+     * Add Sync Menu button next to Save Menu button
+     */
+    addSyncButton: function () {
+      var $saveButton = $("#save_menu_header");
+      
+      if (!$saveButton.length) {
+        console.warn("Save Menu button not found");
+        return;
+      }
+      
+      if (!lmatMenuSync.menuId) {
+        console.warn("Menu ID not available:", lmatMenuSync.menuId);
+        return;
+      }
+      
+      
+      var $syncButton = $(
+        '<button type="button" id="lmat-sync-menu-btn" class="button button-secondary" style="margin-left: 10px;">' +
+          lmatMenuSync.strings.syncButton +
+          "</button>"
+      );
+
+      // Add data attributes
+      $syncButton.data("menu-id", lmatMenuSync.menuId);
+      $syncButton.data("menu-lang", lmatMenuSync.menuLang);
+
+      // Add button after Save Menu button
+      $saveButton.after($syncButton);
+
+      // Add result container below the buttons
+      var $resultContainer = $(
+        '<div id="lmat-sync-result" style="display:none; margin-top: 15px; clear: both;"></div>'
+      );
+      $("#nav-menu-header").after($resultContainer);
+      
     },
 
     /**
@@ -218,10 +257,12 @@
       var menuId = $btn.data("menu-id");
       var selectedLangs = [];
 
+
       // Get selected languages
       $('#lmat-sync-dialog input[type="checkbox"]:checked').each(function () {
         selectedLangs.push($(this).val());
       });
+
 
       // Validate
       if (selectedLangs.length === 0) {
@@ -240,16 +281,19 @@
       $btn.prop("disabled", true);
       $btn.next(".spinner").addClass("is-active");
 
+      var ajaxData = {
+        action: "lmat_sync_menu",
+        nonce: lmatMenuSync.nonce,
+        menu_id: menuId,
+        target_langs: selectedLangs,
+      };
+
+
       // AJAX request
       $.ajax({
         url: lmatMenuSync.ajaxUrl,
         type: "POST",
-        data: {
-          action: "lmat_sync_menu",
-          nonce: lmatMenuSync.nonce,
-          menu_id: menuId,
-          target_langs: selectedLangs,
-        },
+        data: ajaxData,
         success: function (response) {
           if (response.success) {
             self.showResult(
@@ -263,14 +307,24 @@
               window.location.reload();
             }, 2000);
           } else {
-            self.showResult(
-              "error",
-              response.data.message || lmatMenuSync.strings.error
-            );
+            // Log detailed error
+            console.error("Sync failed:", response);
+            var errorMsg = response.data && response.data.message 
+              ? response.data.message 
+              : lmatMenuSync.strings.error;
+            self.showResult("error", errorMsg);
           }
         },
-        error: function () {
-          self.showResult("error", lmatMenuSync.strings.error);
+        error: function (xhr, status, error) {
+          // Log detailed error
+          console.error("AJAX error:", status, error, xhr);
+          var errorMsg = lmatMenuSync.strings.error;
+          if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+            errorMsg = xhr.responseJSON.data.message;
+          } else if (xhr.responseText) {
+            errorMsg += " (" + error + ")";
+          }
+          self.showResult("error", errorMsg);
         },
         complete: function () {
           $(".lmat-sync-spinner").removeClass("is-active");
