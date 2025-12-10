@@ -404,6 +404,7 @@ class Settings extends Abstract_Controller {
 	 * @phpstan-param WP_REST_Request<T> $request
 	 */
 	public function update_item( $request ) {
+		error_log(print_r($request->get_params(), true));
 		$errors  = new WP_Error();
 		$schema  = $this->options->get_schema();
 		$options = array_intersect_key(
