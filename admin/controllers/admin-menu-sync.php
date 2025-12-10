@@ -204,6 +204,14 @@ class LMAT_Admin_Menu_Sync {
 		}
 		
 		foreach ( $languages as $lang ) {
+			
+			
+			// Always include the default language
+			// For non-default languages, check if they have translated content
+			if ( empty( $lang->is_default ) && !$this->language_has_content( $lang->slug ) ) {
+				continue;
+			}
+			
 			$lang_data[] = array(
 				'slug' => $lang->slug,
 				'name' => $lang->name,
@@ -555,5 +563,33 @@ class LMAT_Admin_Menu_Sync {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Check if a language has any translated content (posts or pages)
+	 *
+	 * @param string $lang_slug Language slug.
+	 * @return bool True if language has content, false otherwise.
+	 */
+	private function language_has_content( $lang_slug ) {
+		// Linguator uses taxonomy 'lmat_language' to associate posts with languages
+		// Check if there are any PUBLISHED posts/pages with this language taxonomy term
+		$args = array(
+			'post_type'      => array( 'post', 'page' ), // Only posts and pages
+			'post_status'    => 'publish', // Only published content
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'tax_query'      => array(
+				array(
+					'taxonomy' => 'lmat_language',
+					'field'    => 'slug',
+					'terms'    => $lang_slug,
+				),
+			),
+		);
+		
+		$query = new \WP_Query( $args );
+		
+		return $query->have_posts();
 	}
 }
