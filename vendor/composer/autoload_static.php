@@ -162,6 +162,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Business\\Hide_Default' => __DIR__ . '/../..' . '/includes/options/business/hide-default.php',
         'Linguator\\Includes\\Options\\Business\\Language_Switcher_Options' => __DIR__ . '/../..' . '/includes/options/business/language-switcher-options.php',
         'Linguator\\Includes\\Options\\Business\\Media_Support' => __DIR__ . '/../..' . '/includes/options/business/media-support.php',
+        'Linguator\\Includes\\Options\\Business\\Menu_Sync_Visibility' => __DIR__ . '/../..' . '/includes/options/business/menu-sync-visibility.php',
         'Linguator\\Includes\\Options\\Business\\Nav_Menus' => __DIR__ . '/../..' . '/includes/options/business/nav-menus.php',
         'Linguator\\Includes\\Options\\Business\\Post_Types' => __DIR__ . '/../..' . '/includes/options/business/post-types.php',
         'Linguator\\Includes\\Options\\Business\\Previous_Version' => __DIR__ . '/../..' . '/includes/options/business/previous-version.php',

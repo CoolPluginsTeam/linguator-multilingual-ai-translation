@@ -112,6 +112,7 @@ return array(
     'Linguator\\Includes\\Options\\Business\\Hide_Default' => $baseDir . '/includes/options/business/hide-default.php',
     'Linguator\\Includes\\Options\\Business\\Language_Switcher_Options' => $baseDir . '/includes/options/business/language-switcher-options.php',
     'Linguator\\Includes\\Options\\Business\\Media_Support' => $baseDir . '/includes/options/business/media-support.php',
+    'Linguator\\Includes\\Options\\Business\\Menu_Sync_Visibility' => $baseDir . '/includes/options/business/menu-sync-visibility.php',
     'Linguator\\Includes\\Options\\Business\\Nav_Menus' => $baseDir . '/includes/options/business/nav-menus.php',
     'Linguator\\Includes\\Options\\Business\\Post_Types' => $baseDir . '/includes/options/business/post-types.php',
     'Linguator\\Includes\\Options\\Business\\Previous_Version' => $baseDir . '/includes/options/business/previous-version.php',
