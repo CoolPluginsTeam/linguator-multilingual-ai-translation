@@ -83,13 +83,23 @@
           return;
         }
 
+        // Add warning icon if menu already exists
+        var warningIcon = "";
+        if (lang.has_synced_menu) {
+          warningIcon =
+            '<span class="lmat-warning-icon" title="A synced menu already exists for this language and will be replaced">⚠️</span>';
+        }
+
         html +=
-          '<label class="lmat-lang-option">' +
+          '<label class="lmat-lang-option' +
+          (lang.has_synced_menu ? " has-existing-menu" : "") +
+          '">' +
           '<input type="checkbox" name="target_langs[]" value="' +
           lang.slug +
           '">' +
           "<span>" +
           lang.name +
+          warningIcon +
           "</span>" +
           "</label>";
       });
@@ -162,10 +172,25 @@
     },
 
     /**
-     * Show dialog
+     * Show sync dialog
      */
     showDialog: function (e) {
       e.preventDefault();
+
+      var $button = $(e.currentTarget);
+      var menuId = $button.data("menu-id");
+
+      // Check if menu has items
+      var menuItemsCount = $("#menu-to-edit li.menu-item").length;
+
+      if (menuItemsCount === 0) {
+        // Show error message if menu is empty
+        alert(
+          lmatMenuSync.strings.emptyMenuError ||
+            "The source menu is empty. Please add menu items before syncing."
+        );
+        return;
+      }
 
       // Reset checkboxes
       $('#lmat-sync-dialog input[type="checkbox"]').prop("checked", false);

@@ -129,11 +129,86 @@ class LMAT_Admin_Menu_Sync {
 		$languages = $this->model->get_languages_list();
 		$lang_data = array();
 		
+		// Get source menu object to check for existing synced menus
+		global $nav_menu_selected_id;
+		$source_menu = wp_get_nav_menu_object( $nav_menu_selected_id );
+		
+		// Extract base menu name (remove language suffix if present)
+		$base_menu_name = '';
+		if ( $source_menu ) {
+			$base_menu_name = $source_menu->name;
+			// Remove language suffix pattern like " (Language)" or " (भाषा)"
+			$base_menu_name = preg_replace( '/\s*\([^)]+\)\s*$/', '', $base_menu_name );
+		}
+		
+		// Get all menus to check for existing synced versions
+		$all_menus = wp_get_nav_menus();
+		$existing_menu_langs = array();
+		
+		// First, check if a menu with the exact base name exists (this is typically the default language)
+		// But exclude the current menu itself
+		$base_menu_exists = false;
+		foreach ( $all_menus as $menu ) {
+			// Only count it if it's not the currently selected menu
+			if ( $menu->name === $base_menu_name && $menu->term_id != $nav_menu_selected_id ) {
+				$base_menu_exists = true;
+				break;
+			}
+		}
+		
+		foreach ( $all_menus as $menu ) {
+			// Skip the currently selected menu
+			if ( $menu->term_id == $nav_menu_selected_id ) {
+				continue;
+			}
+			
+			// Check if this is the base menu (matches exactly) - assign to default language
+			if ( $base_menu_exists && $menu->name === $base_menu_name ) {
+				foreach ( $languages as $lang ) {
+					if ( !empty( $lang->is_default ) ) {
+						$existing_menu_langs[ $lang->slug ] = true;
+						break;
+					}
+				}
+			}
+			
+			// Check if this menu matches various patterns for each language
+			// IMPORTANT: Only check menus that start with the base menu name
+			$menu_name_lower = strtolower( $menu->name );
+			$base_name_lower = strtolower( $base_menu_name );
+			
+			// Only proceed if the menu name starts with the base menu name
+			if ( strpos( $menu_name_lower, $base_name_lower ) !== 0 ) {
+				continue;
+			}
+			
+			foreach ( $languages as $lang ) {
+				$lang_name_lower = strtolower( $lang->name );
+				
+				// Pattern 1: "base_name (language_name)" - exact match
+				$pattern1 = $base_name_lower . ' (' . $lang_name_lower . ')';
+				
+				// Pattern 2: Check if menu name contains the language name in parentheses after base name
+				$pattern2 = $base_name_lower . ' (' . $lang_name_lower;
+				
+				// Pattern 3: Check for "base_name language_name" 
+				$pattern3 = $base_name_lower . ' ' . $lang_name_lower;
+				
+				if ( $menu_name_lower === $pattern1 || 
+				     strpos( $menu_name_lower, $pattern2 ) === 0 ||
+				     $menu_name_lower === $pattern3 ) {
+					$existing_menu_langs[ $lang->slug ] = true;
+					break;
+				}
+			}
+		}
+		
 		foreach ( $languages as $lang ) {
 			$lang_data[] = array(
 				'slug' => $lang->slug,
 				'name' => $lang->name,
 				'is_default' => !empty( $lang->is_default ),
+				'has_synced_menu' => isset( $existing_menu_langs[ $lang->slug ] ),
 			);
 		}
 
@@ -156,6 +231,7 @@ class LMAT_Admin_Menu_Sync {
 					'error' => __( 'Error syncing menu. Please try again.', 'linguator-multilingual-ai-translation' ),
 					'noLanguages' => __( 'Please select at least one language.', 'linguator-multilingual-ai-translation' ),
 					'confirmReplace' => __( 'This will replace existing menus in the selected languages. Continue?', 'linguator-multilingual-ai-translation' ),
+					'emptyMenuError' => __( 'The source menu is empty. Please add menu items before syncing.', 'linguator-multilingual-ai-translation' ),
 				),
 			)
 		);

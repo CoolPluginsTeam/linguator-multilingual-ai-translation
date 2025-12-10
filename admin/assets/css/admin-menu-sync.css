@@ -125,6 +125,24 @@
 
 .lmat-lang-option span {
 	font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.lmat-warning-icon {
+	font-size: 16px;
+	cursor: help;
+}
+
+.lmat-lang-option.has-existing-menu {
+	background: #fff3cd;
+	border-color: #ffc107;
+}
+
+.lmat-lang-option.has-existing-menu:hover {
+	background: #ffe69c;
+	border-color: #ff9800;
 }
 
 /* Dialog footer */
