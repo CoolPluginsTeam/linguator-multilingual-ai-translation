@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'; // importing toaster and toast for notification purpose
 import { synchronizations } from '../utils'
 import { getNonce } from '../utils'
-import { Link, Globe, Focus, Milestone, RefreshCcw, Share2, Settings2 } from 'lucide-react';
+import { Link, Globe, Focus, Milestone, RefreshCcw, Share2, Settings2, Menu } from 'lucide-react';
 import { __, sprintf } from '@wordpress/i18n';
 
 const General = ({ data, setData }) => {
@@ -33,6 +33,7 @@ const General = ({ data, setData }) => {
     const [selectedLanguageSwitchers, setSelectedLanguageSwitchers] = useState(data.lmat_language_switcher_options || ['default']); // Selected Language Switcher options
     const [showTerms, setShowTerms] = useState(false); // For showing/hiding terms box
     const [staticStringsVisibility, setStaticStringsVisibility] = useState(data.static_strings_visibility !== undefined ? data.static_strings_visibility : false); // For Static Strings tab visibility
+    const [menuSyncVisibility, setMenuSyncVisibility] = useState(data.menu_sync_visibility !== undefined ? data.menu_sync_visibility : false); // For Menu Sync feature visibility
 
 
     //make the Domains in a suitable way to view
@@ -64,7 +65,8 @@ const General = ({ data, setData }) => {
             selectedPostTypes: true,
             selectedTaxonomies: true,
             selectedLanguageSwitchers: true,
-            staticStringsVisibility: true
+            staticStringsVisibility: true,
+            menuSyncVisibility: true
         }
         // Only include lmatFeedbackData in the checker if the setting is available
         if (data.lmat_feedback_data !== undefined) {
@@ -99,6 +101,12 @@ const General = ({ data, setData }) => {
 
         if (staticStringsVisibility !== data.static_strings_visibility) {
             sameChecker.staticStringsVisibility = false
+        }
+
+        // For menu_sync_visibility, handle both defined and undefined cases
+        const menuSyncBackendValue = data.menu_sync_visibility !== undefined ? data.menu_sync_visibility : false;
+        if (menuSyncVisibility !== menuSyncBackendValue) {
+            sameChecker.menuSyncVisibility = false
         }
         for (const value of previousDomains.current) {
             if (!domains.includes(value) || previousDomains.current.length != domains.length) {
@@ -163,7 +171,7 @@ const General = ({ data, setData }) => {
         if (flag) {
             setHandleButtonDisabled(true)
         }
-    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers, staticStringsVisibility])
+    }, [browser, mediaSupport, hideDefault, forceLang, rewrite, domains, selectedSynchronization, selectedPostTypes, selectedTaxonomies, lmatFeedbackData, selectedLanguageSwitchers, staticStringsVisibility, menuSyncVisibility])
 
     //Make the post types and taxonomies from  posttype->posttype_name   to {value: postype ,label:posttype_name (posttype)}
     useEffect(() => {
@@ -359,6 +367,7 @@ const General = ({ data, setData }) => {
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies,
                     static_strings_visibility: staticStringsVisibility,
+                    menu_sync_visibility: menuSyncVisibility,
                 }
                 
                 
@@ -378,6 +387,7 @@ const General = ({ data, setData }) => {
                     post_types: selectedPostTypes,
                     taxonomies: selectedTaxonomies,
                     static_strings_visibility: staticStringsVisibility,
+                    menu_sync_visibility: menuSyncVisibility,
                 }
                 
                 // Only include lmat_feedback_data if the setting is available
@@ -867,6 +877,30 @@ const General = ({ data, setData }) => {
                     </Container.Item>
                 </div>
 
+                <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />
+                {/* Menu Sync section */}
+                <div className='switcher'>
+                    <Container.Item>
+                        <h3 className='flex items-center gap-2'>
+                            <Menu className="flex-shrink-0 size-5 text-icon-secondary" />
+                            {__('Menu Sync', 'linguator-multilingual-ai-translation')}
+                        </h3>
+                        <p>
+                            {__('Enable or disable the Menu Sync feature. This feature allows you to synchronize menu structures across different language versions of your site.', 'linguator-multilingual-ai-translation')}
+                        </p>
+                    </Container.Item>
+                    <Container.Item className='flex items-center justify-end' style={{paddingRight: '30%'}}>
+                        <Switch
+                            aria-label="Switch Element"
+                            id="menu-sync-visibility"
+                            onChange={() => {
+                                setMenuSyncVisibility(!menuSyncVisibility)
+                            }}
+                            size="sm"
+                            value={menuSyncVisibility}
+                        />
+                    </Container.Item>
+                </div>
                 
                 
                 {data.lmat_feedback_data !== undefined && (
