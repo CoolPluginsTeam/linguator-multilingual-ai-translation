@@ -431,13 +431,13 @@ class LMAT_Admin_Menu_Sync {
 				return false; // No translation available
 			}
 			
-				$translated_post_id = $translations[ $lang->slug ];
-				$item_data['menu-item-object-id'] = $translated_post_id;
-				
-				// Get the translated post title
-				$translated_post = get_post( $translated_post_id );
-				if ( $translated_post ) {
-					$item_data['menu-item-title'] = $translated_post->post_title;
+			$translated_post_id = $translations[ $lang->slug ];
+			$item_data['menu-item-object-id'] = $translated_post_id;
+			
+			// Get the translated post title
+			$translated_post = get_post( $translated_post_id );
+			if ( $translated_post ) {
+				$item_data['menu-item-title'] = $translated_post->post_title;
 			}
 		} elseif ( $item->type === 'taxonomy' ) {
 			// Get translated term
@@ -447,16 +447,22 @@ class LMAT_Admin_Menu_Sync {
 				return false; // No translation available
 			}
 			
-				$translated_term_id = $translations[ $lang->slug ];
-				$item_data['menu-item-object-id'] = $translated_term_id;
-				
-				// Get the translated term name
-				$translated_term = get_term( $translated_term_id );
-				if ( $translated_term && ! is_wp_error( $translated_term ) ) {
-					$item_data['menu-item-title'] = $translated_term->name;
-				}
+			$translated_term_id = $translations[ $lang->slug ];
+			$item_data['menu-item-object-id'] = $translated_term_id;
+			
+			// Get the translated term name
+			$translated_term = get_term( $translated_term_id );
+			if ( $translated_term && ! is_wp_error( $translated_term ) ) {
+				$item_data['menu-item-title'] = $translated_term->name;
 			}
-		// Note: Custom links are copied as-is, no translation needed
+		} elseif ( $item->type === 'custom' ) {
+			// Handle custom links - translate navigation label using glossary
+			$translated_title = $this->translate_custom_link_title( $item->title, $lang );
+			if ( $translated_title ) {
+				$item_data['menu-item-title'] = $translated_title;
+			}
+			// URL remains the same for custom links
+		}
 
 		// Add menu item
 		$new_item_id = wp_update_nav_menu_item( $menu_id, 0, $item_data );
@@ -545,6 +551,164 @@ class LMAT_Admin_Menu_Sync {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Custom Link Title Translation
+	 *
+	 * @param string $title Original navigation label.
+	 * @param object $lang Target language object.
+	 * @return string Translated title or original if translation fails.
+	 */
+	/**
+	 * Translate custom link title using glossary or AI translation
+	 *
+	 * @param string $title Original navigation label.
+	 * @param object $lang Target language object.
+	 * @return string Translated title or original if translation fails.
+	 */
+	private function translate_custom_link_title( $title, $lang ) {
+		// Get source language (default language)
+		$default_lang = $this->model->languages->get_default();
+		if ( ! $default_lang ) {
+			return $title;
+		}
+		
+		$source_lang_code = $default_lang->slug;
+		$target_lang_code = $lang->slug;
+		
+		// First, check glossary for existing translation
+		$glossary_translation = $this->get_glossary_translation( $title, $source_lang_code, $target_lang_code );
+		if ( $glossary_translation ) {
+			return $glossary_translation;
+		}
+		
+		// No glossary entry found, use AI translation
+		$ai_translation = $this->translate_with_ai( $title, $lang );
+		if ( $ai_translation && $ai_translation !== $title ) {
+			return $ai_translation;
+		}
+		
+		// No translation found, return original title
+		return $title;
+	}
+	
+	/**
+	 * Get translation from glossary
+	 *
+	 * @param string $title Original navigation label.
+	 * @param string $source_lang_code Source language code.
+	 * @param string $target_lang_code Target language code.
+	 * @return string|false Translated title or false if not found.
+	 */
+	private function get_glossary_translation( $title, $source_lang_code, $target_lang_code ) {
+		$glossary_data = get_option( 'lmat_glossary_data', array() );
+		
+		if ( empty( $glossary_data ) || ! is_array( $glossary_data ) ) {
+			return false;
+		}
+		
+		// Search for translation in glossary
+		foreach ( $glossary_data as $entry ) {
+			// Check if the original term matches (case-insensitive)
+			if ( isset( $entry['original_term'] ) && 
+			     strcasecmp( trim( $entry['original_term'] ), trim( $title ) ) === 0 &&
+			     isset( $entry['original_language_code'] ) &&
+			     $entry['original_language_code'] === $source_lang_code ) {
+				
+				// Look for translation in target language
+				if ( isset( $entry['translations'] ) && is_array( $entry['translations'] ) ) {
+					foreach ( $entry['translations'] as $translation ) {
+						if ( isset( $translation['target_language_code'] ) &&
+						     $translation['target_language_code'] === $target_lang_code &&
+						     ! empty( $translation['translated_term'] ) ) {
+							return trim( $translation['translated_term'] );
+						}
+					}
+				}
+				break;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Translate text using Google Translate
+	 *
+	 * @param string $text Text to translate.
+	 * @param object $lang Target language object.
+	 * @return string|false Translated text or false if translation fails.
+	 */
+	private function translate_with_ai( $text, $lang ) {
+		// Get translation configuration
+		$ai_config = $this->options->get( 'ai_translation_configuration' );
+		
+		// Check if Google translation is enabled
+		if ( empty( $ai_config['provider']['google'] ) ) {
+			return false;
+		}
+		
+		// Get source language
+		$default_lang = $this->model->languages->get_default();
+		if ( ! $default_lang ) {
+			return false;
+		}
+		
+		// Use Google Translate
+		return $this->translate_with_google( $text, $default_lang->locale, $lang->locale );
+	}
+	
+	/**
+	 * Translate using Google Translate
+	 *
+	 * @param string $text Text to translate.
+	 * @param string $source_locale Source language locale.
+	 * @param string $target_locale Target language locale.
+	 * @return string|false Translated text or false.
+	 */
+	private function translate_with_google( $text, $source_locale, $target_locale ) {
+		// Extract language codes (first 2 letters)
+		$source_lang = substr( $source_locale, 0, 2 );
+		$target_lang = substr( $target_locale, 0, 2 );
+		
+		// Build Google Translate URL
+		$url = add_query_arg(
+			array(
+				'client' => 'gtx',
+				'sl'     => $source_lang,
+				'tl'     => $target_lang,
+				'dt'     => 't',
+				'q'      => rawurlencode( $text ),
+			),
+			'https://translate.googleapis.com/translate_a/single'
+		);
+		
+		// Make the request
+		$response = wp_remote_get(
+			$url,
+			array(
+				'timeout'    => 15,
+				'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+			)
+		);
+		
+		if ( is_wp_error( $response ) ) {
+			error_log( 'Google Translate Error: ' . $response->get_error_message() );
+			return false;
+		}
+		
+		$body = wp_remote_retrieve_body( $response );
+		
+		// Parse the response
+		$data = json_decode( $body, true );
+		
+		if ( isset( $data[0][0][0] ) && ! empty( $data[0][0][0] ) ) {
+			return trim( $data[0][0][0] );
+		}
+		
+		error_log( 'Google Translate: No translation found in response' );
+		return false;
 	}
 
 	/**
