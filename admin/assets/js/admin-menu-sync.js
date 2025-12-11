@@ -224,9 +224,28 @@
 
       if (menuItemsCount === 0) {
         // Show error message if menu is empty
-        alert(
+        this.showErrorDialog(
           lmatMenuSync.strings.emptyMenuError ||
             "The source menu is empty. Please add menu items before syncing."
+        );
+        return;
+      }
+
+      // Check if there are any languages available to sync
+      var currentMenuLang = $button.data("menu-lang");
+      var availableLanguages = 0;
+      
+      $.each(lmatMenuSync.languages, function (index, lang) {
+        if (lang.slug !== currentMenuLang) {
+          availableLanguages++;
+        }
+      });
+
+      if (availableLanguages === 0) {
+        // Show message if no languages available
+        this.showErrorDialog(
+          lmatMenuSync.strings.noTranslatedContent ||
+            "No translated content is available. Please add and translate content in other languages first."
         );
         return;
       }
@@ -239,6 +258,55 @@
 
       // Show dialog
       $("#lmat-sync-dialog").fadeIn(200);
+    },
+
+    /**
+     * Show error dialog
+     */
+    showErrorDialog: function (message) {
+      // Create error dialog if it doesn't exist
+      if (!$("#lmat-error-dialog").length) {
+        var errorDialogHTML =
+          '<div id="lmat-error-dialog" style="display:none;">' +
+          '<div class="lmat-sync-overlay"></div>' +
+          '<div class="lmat-sync-modal" style="max-width: 500px;">' +
+          '<div class="lmat-sync-header">' +
+          "<h2>Menu Sync</h2>" +
+          '<button type="button" class="lmat-error-close">&times;</button>' +
+          "</div>" +
+          '<div class="lmat-sync-body">' +
+          '<div class="lmat-error-message" style="padding: 20px; text-align: center;"></div>' +
+          "</div>" +
+          '<div class="lmat-sync-footer" style="text-align: center;">' +
+          '<button type="button" class="button lmat-error-ok">OK</button>' +
+          "</div>" +
+          "</div>" +
+          "</div>";
+
+        $("body").append(errorDialogHTML);
+
+        // Bind close events
+        $(document).on(
+          "click",
+          ".lmat-error-close, .lmat-error-ok, #lmat-error-dialog .lmat-sync-overlay",
+          function () {
+            $("#lmat-error-dialog").fadeOut(200);
+          }
+        );
+
+        // ESC key to close
+        $(document).on("keyup", function (e) {
+          if (e.key === "Escape" && $("#lmat-error-dialog").is(":visible")) {
+            $("#lmat-error-dialog").fadeOut(200);
+          }
+        });
+      }
+
+      // Set message and show dialog
+      $("#lmat-error-dialog .lmat-error-message").html(
+        '<p style="margin: 0; font-size: 14px; line-height: 1.5;">' + message + "</p>"
+      );
+      $("#lmat-error-dialog").fadeIn(200);
     },
 
     /**
