@@ -275,10 +275,7 @@
           '<button type="button" class="lmat-error-close">&times;</button>' +
           "</div>" +
           '<div class="lmat-sync-body">' +
-          '<div class="lmat-error-message" style="padding: 20px; text-align: center;"></div>' +
-          "</div>" +
-          '<div class="lmat-sync-footer" style="text-align: center;">' +
-          '<button type="button" class="button lmat-error-ok">OK</button>' +
+          '<div class="lmat-error-message" style="padding: 30px 20px; text-align: center;"></div>' +
           "</div>" +
           "</div>" +
           "</div>";
@@ -288,7 +285,7 @@
         // Bind close events
         $(document).on(
           "click",
-          ".lmat-error-close, .lmat-error-ok, #lmat-error-dialog .lmat-sync-overlay",
+          ".lmat-error-close, #lmat-error-dialog .lmat-sync-overlay",
           function () {
             $("#lmat-error-dialog").fadeOut(200);
           }
@@ -304,7 +301,7 @@
 
       // Set message and show dialog
       $("#lmat-error-dialog .lmat-error-message").html(
-        '<p style="margin: 0; font-size: 14px; line-height: 1.5;">' + message + "</p>"
+        '<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #d63638; font-weight: 500;">' + message + "</p>"
       );
       $("#lmat-error-dialog").fadeIn(200);
     },
