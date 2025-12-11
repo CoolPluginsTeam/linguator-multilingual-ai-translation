@@ -230,9 +230,6 @@ class LMAT_Admin_Menu_Sync {
 		$menu_id = isset( $_POST['menu_id'] ) ? absint( $_POST['menu_id'] ) : 0;
 		$target_langs = isset( $_POST['target_langs'] ) && is_array( $_POST['target_langs'] ) ? array_map( 'sanitize_text_field', $_POST['target_langs'] ) : array();
 
-			// Debug log
-			error_log( 'Menu Sync Request - Menu ID: ' . $menu_id . ', Target Langs: ' . implode( ', ', $target_langs ) );
-
 			if ( empty( $menu_id ) ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid menu ID.', 'linguator-multilingual-ai-translation' ) ) );
 			}
@@ -240,13 +237,8 @@ class LMAT_Admin_Menu_Sync {
 			if ( empty( $target_langs ) ) {
 				wp_send_json_error( array( 'message' => __( 'No target languages selected.', 'linguator-multilingual-ai-translation' ) ) );
 		}
-
 		// Perform sync
 		$result = $this->sync_menu_to_languages( $menu_id, $target_langs );
-
-			// Debug log
-			error_log( 'Menu Sync Result: ' . print_r( $result, true ) );
-
 		if ( $result['success'] ) {
 			wp_send_json_success( $result );
 		} else {
@@ -706,8 +698,6 @@ class LMAT_Admin_Menu_Sync {
 		if ( isset( $data[0][0][0] ) && ! empty( $data[0][0][0] ) ) {
 			return trim( $data[0][0][0] );
 		}
-		
-		error_log( 'Google Translate: No translation found in response' );
 		return false;
 	}
 
