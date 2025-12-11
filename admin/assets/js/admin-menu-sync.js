@@ -270,11 +270,6 @@
         return;
       }
 
-      // Confirm replacement
-      if (!confirm(lmatMenuSync.strings.confirmReplace)) {
-        return;
-      }
-
       // Show loading
       $(".lmat-sync-spinner").addClass("is-active");
       $(".lmat-sync-confirm").prop("disabled", true);
