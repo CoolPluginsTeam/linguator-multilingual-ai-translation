@@ -5,6 +5,14 @@
 /* Sync button */
 #lmat-sync-menu-btn {
 	vertical-align: middle;
+	background-color: #3db63d !important;
+	color: #fff !important;
+	border-color: #33a133 !important;
+}
+#lmat-sync-menu-btn:hover {
+	background-color: #37a737 !important;
+	color: #fff !important;
+	border-color: #238b23 !important;
 }
 
 /* Result container */
