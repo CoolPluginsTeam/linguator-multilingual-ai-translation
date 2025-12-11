@@ -87,7 +87,7 @@ class LMAT_Admin_Menu_Sync {
 			'lmat-menu-sync',
 			plugins_url( 'admin/assets/css/admin-menu-sync.css', LINGUATOR_ROOT_FILE ),
 			array(),
-			LINGUATOR_VERSION
+			LINGUATOR_VERSION . '.' . time()
 		);
 
 		// Enqueue JavaScript
@@ -95,7 +95,7 @@ class LMAT_Admin_Menu_Sync {
 			'lmat-menu-sync',
 			plugins_url( 'admin/assets/js/admin-menu-sync.js', LINGUATOR_ROOT_FILE ),
 			array( 'jquery' ),
-			LINGUATOR_VERSION,
+			LINGUATOR_VERSION . '.' . time(),
 			true
 		);
 

@@ -74,6 +74,31 @@
 	background: #fff;
 }
 
+/* Error dialog header - no border */
+#lmat-error-dialog .lmat-sync-header {
+	border-bottom: none !important;
+	padding: 8px 12px !important;
+	justify-content: flex-end !important;
+}
+
+/* Larger close button for error dialog */
+#lmat-error-dialog .lmat-error-close {
+	font-size: 32px !important;
+	width: 40px !important;
+	height: 40px !important;
+	min-width: 40px !important;
+	min-height: 40px !important;
+}
+
+/* Error dialog body - reduced padding */
+#lmat-error-dialog .lmat-sync-body {
+	padding: 0 !important;
+}
+
+#lmat-error-dialog .lmat-error-message {
+	padding: 20px !important;
+}
+
 .lmat-sync-header h2 {
 	margin: 0;
 	font-size: 18px;
@@ -82,7 +107,8 @@
 }
 
 .lmat-sync-close,
-.lmat-error-close {
+.lmat-error-close,
+#lmat-error-dialog .lmat-error-close {
 	background: none !important;
 	border: none !important;
 	font-size: 24px !important;
@@ -96,27 +122,31 @@
 	align-items: center !important;
 	justify-content: center !important;
 	border-radius: 4px !important;
-	transition: all 0.2s ease !important;
+	transition: color 0.2s ease !important;
 	font-weight: 300 !important;
 	outline: none !important;
 	box-shadow: none !important;
 	margin: 0 !important;
 	min-width: 32px !important;
 	min-height: 32px !important;
+	flex-shrink: 0 !important;
 }
 
 .lmat-sync-close:hover,
-.lmat-error-close:hover {
+.lmat-error-close:hover,
+#lmat-error-dialog .lmat-error-close:hover {
 	color: #000 !important;
-	background: #f0f0f1 !important;
+	background: none !important;
 	border: none !important;
 	outline: none !important;
 }
 
 .lmat-sync-close:focus,
-.lmat-error-close:focus {
+.lmat-error-close:focus,
+#lmat-error-dialog .lmat-error-close:focus {
 	outline: none !important;
 	box-shadow: none !important;
+	border: none !important;
 }
 
 /* Dialog body */

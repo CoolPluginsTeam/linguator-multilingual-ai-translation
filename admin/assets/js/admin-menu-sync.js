@@ -270,12 +270,11 @@
           '<div id="lmat-error-dialog" style="display:none;">' +
           '<div class="lmat-sync-overlay"></div>' +
           '<div class="lmat-sync-modal" style="max-width: 500px;">' +
-          '<div class="lmat-sync-header">' +
-          "<h2>Menu Sync</h2>" +
+          '<div class="lmat-sync-header" style="justify-content: flex-end; padding: 8px 12px;">' +
           '<button type="button" class="lmat-error-close">&times;</button>' +
           "</div>" +
-          '<div class="lmat-sync-body">' +
-          '<div class="lmat-error-message" style="padding: 30px 20px; text-align: center;"></div>' +
+          '<div class="lmat-sync-body" style="padding: 0;">' +
+          '<div class="lmat-error-message" style="padding: 20px; text-align: center;"></div>' +
           "</div>" +
           "</div>" +
           "</div>";
@@ -303,6 +302,38 @@
       $("#lmat-error-dialog .lmat-error-message").html(
         '<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #d63638; font-weight: 500;">' + message + "</p>"
       );
+      
+      // Force close button styling
+      $("#lmat-error-dialog .lmat-error-close").css({
+        'background': 'none',
+        'border': 'none',
+        'font-size': '32px',
+        'line-height': '1',
+        'cursor': 'pointer',
+        'color': '#50575e',
+        'padding': '0',
+        'width': '40px',
+        'height': '40px',
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'border-radius': '4px',
+        'transition': 'color 0.2s ease',
+        'font-weight': '300',
+        'outline': 'none',
+        'box-shadow': 'none',
+        'margin': '0',
+        'min-width': '40px',
+        'min-height': '40px'
+      }).hover(
+        function() {
+          $(this).css('color', '#000');
+        },
+        function() {
+          $(this).css('color', '#50575e');
+        }
+      );
+      
       $("#lmat-error-dialog").fadeIn(200);
     },
 
