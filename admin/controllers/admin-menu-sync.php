@@ -424,11 +424,27 @@ class LMAT_Admin_Menu_Sync {
 			}
 			
 			$translated_post_id = $translations[ $lang->slug ];
+			
+			// Get the translated post and verify it exists and is published
+			$translated_post = get_post( $translated_post_id );
+			
+			// Skip if translated post doesn't exist or is not published
+			if ( ! $translated_post || ! in_array( $translated_post->post_status, array( 'publish', 'private' ), true ) ) {
+				return false; // Translated post doesn't exist or is not published
+			}
+			
 			$item_data['menu-item-object-id'] = $translated_post_id;
 			
-			// Get the translated post title
-			$translated_post = get_post( $translated_post_id );
-			if ( $translated_post ) {
+			// Get the original post
+			$original_post = get_post( $item->object_id );
+			
+			// Check if navigation label is customized (different from original post title)
+			if ( $original_post && $item->title !== $original_post->post_title ) {
+				// Navigation label is custom, translate it
+				$translated_title = $this->translate_custom_link_title( $item->title, $lang );
+				$item_data['menu-item-title'] = $translated_title ? $translated_title : $item->title;
+			} else {
+				// Use translated post title
 				$item_data['menu-item-title'] = $translated_post->post_title;
 			}
 		} elseif ( $item->type === 'taxonomy' ) {
@@ -440,15 +456,31 @@ class LMAT_Admin_Menu_Sync {
 			}
 			
 			$translated_term_id = $translations[ $lang->slug ];
+			
+			// Get the translated term and verify it exists
+			$translated_term = get_term( $translated_term_id );
+			
+			// Skip if translated term doesn't exist or is an error
+			if ( ! $translated_term || is_wp_error( $translated_term ) ) {
+				return false; // Translated term doesn't exist
+			}
+			
 			$item_data['menu-item-object-id'] = $translated_term_id;
 			
-			// Get the translated term name
-			$translated_term = get_term( $translated_term_id );
-			if ( $translated_term && ! is_wp_error( $translated_term ) ) {
+			// Get the original term
+			$original_term = get_term( $item->object_id );
+			
+			// Check if navigation label is customized (different from original term name)
+			if ( $original_term && ! is_wp_error( $original_term ) && $item->title !== $original_term->name ) {
+				// Navigation label is custom, translate it
+				$translated_title = $this->translate_custom_link_title( $item->title, $lang );
+				$item_data['menu-item-title'] = $translated_title ? $translated_title : $item->title;
+			} else {
+				// Use translated term name
 				$item_data['menu-item-title'] = $translated_term->name;
 			}
 		} elseif ( $item->type === 'custom' ) {
-			// Handle custom links - translate navigation label using glossary
+			// Handle custom links - translate navigation label
 			$translated_title = $this->translate_custom_link_title( $item->title, $lang );
 			if ( $translated_title ) {
 				$item_data['menu-item-title'] = $translated_title;
