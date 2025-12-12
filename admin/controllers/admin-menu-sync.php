@@ -116,13 +116,29 @@ class LMAT_Admin_Menu_Sync {
 	
 	// If no menu selected, skip synced menu detection
 	if ( ! $source_menu || empty( $base_menu_name ) ) {
+		// Load predefined languages for English labels
+		$predefined_languages = include LINGUATOR_DIR . '/admin/settings/controllers/languages.php';
+		
 		foreach ( $languages as $lang ) {
-			$lang_data[ $lang->slug ] = array(
-				'name'            => $lang->name,
-				'native_name'     => isset( $lang->native_name ) ? $lang->native_name : $lang->name,
-				'flag'            => isset( $lang->flag ) ? $lang->flag : '',
-				'has_synced_menu' => false,
-			);
+			// Get English label from predefined languages
+			$english_name = $lang->name;
+			$native_name = $lang->name;
+			
+			$lookup_key = $lang->slug;
+			if ( isset( $predefined_languages[ $lookup_key ] ) && isset( $predefined_languages[ $lookup_key ]['label'] ) ) {
+				$english_name = $predefined_languages[ $lookup_key ]['label'];
+				if ( isset( $predefined_languages[ $lookup_key ]['name'] ) ) {
+					$native_name = $predefined_languages[ $lookup_key ]['name'];
+				}
+			}
+			
+		$lang_data[ $lang->slug ] = array(
+			'name'            => $english_name,
+			'native_name'     => $native_name,
+			'locale'          => isset( $lang->locale ) ? $lang->locale : $lang->slug,
+			'flag'            => isset( $lang->flag ) ? $lang->flag : '',
+			'has_synced_menu' => false,
+		);
 		}
 		
 		wp_localize_script( 'lmat-menu-sync', 'lmatMenuSync', array(
@@ -197,6 +213,9 @@ class LMAT_Admin_Menu_Sync {
 		}
 	}
 		
+	// Load predefined languages for English labels
+	$predefined_languages = include LINGUATOR_DIR . '/admin/settings/controllers/languages.php';
+	
 	// Build language data for JavaScript
 	foreach ( $languages as $lang ) {
 		// Always include the default language
@@ -205,12 +224,27 @@ class LMAT_Admin_Menu_Sync {
 			continue;
 		}
 		
-		$lang_data[] = array(
-			'slug' => $lang->slug,
-			'name' => $lang->name,
-			'is_default' => ! empty( $lang->is_default ),
-			'has_synced_menu' => isset( $existing_menu_langs[ $lang->slug ] ),
-		);
+		// Get English label from predefined languages
+		$english_name = $lang->name; // Fallback to current name
+		$native_name = $lang->name;
+		
+		// Look up by slug first, then by locale code
+		$lookup_key = $lang->slug;
+		if ( isset( $predefined_languages[ $lookup_key ] ) && isset( $predefined_languages[ $lookup_key ]['label'] ) ) {
+			$english_name = $predefined_languages[ $lookup_key ]['label'];
+			if ( isset( $predefined_languages[ $lookup_key ]['name'] ) ) {
+				$native_name = $predefined_languages[ $lookup_key ]['name'];
+			}
+		}
+		
+	$lang_data[] = array(
+		'slug' => $lang->slug,
+		'name' => $english_name, // English name for display
+		'native_name' => $native_name, // Native name
+		'locale' => isset( $lang->locale ) ? $lang->locale : $lang->slug, // Locale code
+		'is_default' => ! empty( $lang->is_default ),
+		'has_synced_menu' => isset( $existing_menu_langs[ $lang->slug ] ),
+	);
 	}
 
 		// Get menu ID and language for sync button
@@ -231,7 +265,7 @@ class LMAT_Admin_Menu_Sync {
 					'syncButton' => __( 'Sync Menu', 'linguator-multilingual-ai-translation' ),
 					'selectLanguages' => __( 'Select languages to sync:', 'linguator-multilingual-ai-translation' ),
 					'selectAll' => __( 'Select All', 'linguator-multilingual-ai-translation' ),
-					'deselectAll' => __( 'Deselect All', 'linguator-multilingual-ai-translation' ),
+					'deselectAll' => __( 'Unselect All', 'linguator-multilingual-ai-translation' ),
 					'sync' => __( 'Sync', 'linguator-multilingual-ai-translation' ),
 					'cancel' => __( 'Cancel', 'linguator-multilingual-ai-translation' ),
 					'syncing' => __( 'Syncing menus...', 'linguator-multilingual-ai-translation' ),

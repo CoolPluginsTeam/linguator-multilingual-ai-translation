@@ -129,6 +129,12 @@
             '<span class="lmat-warning-icon" title="A synced menu already exists for this language and will be replaced">⚠️</span>';
         }
 
+        // Display format: "English - en_US" or "Hindi - hi_IN"
+        var displayName = lang.name;
+        if (lang.locale) {
+          displayName = lang.name + " - " + lang.locale;
+        }
+
         html +=
           '<label class="lmat-lang-option' +
           (lang.has_synced_menu ? " has-existing-menu" : "") +
@@ -137,7 +143,7 @@
           lang.slug +
           '">' +
           "<span>" +
-          lang.name +
+          displayName +
           warningIcon +
           "</span>" +
           "</label>";
@@ -161,7 +167,7 @@
         }
       );
 
-      // Toggle select/deselect all
+      // Toggle select/unselect all
       $(document).on("click", ".lmat-toggle-all", function () {
         var $button = $(this);
         var $checkboxes = $('#lmat-sync-dialog input[type="checkbox"]');
@@ -169,7 +175,7 @@
           $checkboxes.length === $checkboxes.filter(":checked").length;
 
         if (allChecked) {
-          // Deselect all
+          // Unselect all
           $checkboxes.prop("checked", false);
           $button.text(lmatMenuSync.strings.selectAll);
         } else {
