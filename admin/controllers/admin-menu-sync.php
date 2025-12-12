@@ -103,22 +103,56 @@ class LMAT_Admin_Menu_Sync {
 		$languages = $this->model->languages->get_list();
 		$lang_data = array();
 		
-		// Get source menu object to check for existing synced menus
-		$source_menu = wp_get_nav_menu_object( $nav_menu_selected_id );
-		
-		// Extract base menu name (remove language suffix if present)
-		$base_menu_name = '';
-		if ( $source_menu ) {
-			$base_menu_name = $source_menu->name;
-			// Remove language suffix pattern like " (Language)" or " (भाषा)"
-			$base_menu_name = preg_replace( '/\s*\([^)]+\)\s*$/', '', $base_menu_name );
+	// Get source menu object to check for existing synced menus
+	$source_menu = wp_get_nav_menu_object( $nav_menu_selected_id );
+	
+	// Extract base menu name (remove language suffix if present)
+	$base_menu_name = '';
+	if ( $source_menu ) {
+		$base_menu_name = $source_menu->name;
+		// Remove language suffix pattern like " (Language)" or " (भाषा)"
+		$base_menu_name = preg_replace( '/\s*\([^)]+\)\s*$/', '', $base_menu_name );
+	}
+	
+	// If no menu selected, skip synced menu detection
+	if ( ! $source_menu || empty( $base_menu_name ) ) {
+		foreach ( $languages as $lang ) {
+			$lang_data[ $lang->slug ] = array(
+				'name'            => $lang->name,
+				'native_name'     => isset( $lang->native_name ) ? $lang->native_name : $lang->name,
+				'flag'            => isset( $lang->flag ) ? $lang->flag : '',
+				'has_synced_menu' => false,
+			);
 		}
 		
-		// Get all menus to check for existing synced versions
-		$all_menus = wp_get_nav_menus();
-		$existing_menu_langs = array();
+		wp_localize_script( 'lmat-menu-sync', 'lmatMenuSync', array(
+			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
+			'nonce'      => wp_create_nonce( 'lmat_sync_menu' ),
+			'languages'  => $lang_data,
+			'menuId'     => $nav_menu_selected_id,
+			'menuLang'   => '', // No language selected
+			'syncButton' => __( 'Sync Menu', 'linguator-multilingual-ai-translation' ),
+		) );
 		
-		// Optimize: Cache lowercase conversions and find default language once
+		return;
+	}
+	
+	// Get all menus to check for existing synced versions
+	// Get terms directly to bypass any language filtering
+	$all_menus = get_terms( array(
+		'taxonomy'   => 'nav_menu',
+		'hide_empty' => false,
+		'orderby'    => 'name',
+	) );
+	
+	// Fallback to wp_get_nav_menus if get_terms fails
+	if ( is_wp_error( $all_menus ) || empty( $all_menus ) ) {
+		$all_menus = wp_get_nav_menus();
+	}
+	
+	$existing_menu_langs = array();
+	
+	// Optimize: Cache lowercase conversions and find default language once
 		$base_name_lower = strtolower( $base_menu_name );
 		$default_lang_slug = '';
 		foreach ( $languages as $lang ) {
@@ -128,55 +162,56 @@ class LMAT_Admin_Menu_Sync {
 			}
 		}
 		
-		// Check menus for existing synced versions
-		foreach ( $all_menus as $menu ) {
-			// Skip the currently selected menu
-			if ( $menu->term_id == $nav_menu_selected_id ) {
-				continue;
-			}
-			
-			$menu_name_lower = strtolower( $menu->name );
-			
-			// Check if this is the base menu (matches exactly) - assign to default language
-			if ( $menu->name === $base_menu_name && $default_lang_slug ) {
-				$existing_menu_langs[ $default_lang_slug ] = true;
-				continue;
-			}
-			
-			// Only proceed if the menu name starts with the base menu name
-			if ( strpos( $menu_name_lower, $base_name_lower ) !== 0 ) {
-				continue;
-			}
-			
-			// Check against language patterns
-			foreach ( $languages as $lang ) {
-				$lang_name_lower = strtolower( $lang->name );
-				
-				// Pattern checks
-				if ( $menu_name_lower === "{$base_name_lower} ({$lang_name_lower})" || 
-				     strpos( $menu_name_lower, "{$base_name_lower} ({$lang_name_lower}" ) === 0 ||
-				     $menu_name_lower === "{$base_name_lower} {$lang_name_lower}" ) {
-					$existing_menu_langs[ $lang->slug ] = true;
-					break; // Found match for this menu, move to next menu
-				}
-			}
+	// Check menus for existing synced versions (including currently selected menu)
+	foreach ( $all_menus as $menu ) {
+		$menu_name_lower = strtolower( $menu->name );
+		
+		// Check if this is the base menu (matches exactly) - assign to default language
+		if ( $menu->name === $base_menu_name && $default_lang_slug ) {
+			$existing_menu_langs[ $default_lang_slug ] = true;
 		}
 		
-		// Build language data for JavaScript
-		foreach ( $languages as $lang ) {
-			// Always include the default language
-			// For non-default languages, check if they have translated content
-			if ( empty( $lang->is_default ) && ! $this->language_has_content( $lang->slug ) ) {
-				continue;
-			}
-			
-			$lang_data[] = array(
-				'slug' => $lang->slug,
-				'name' => $lang->name,
-				'is_default' => ! empty( $lang->is_default ),
-				'has_synced_menu' => isset( $existing_menu_langs[ $lang->slug ] ),
-			);
+		// Only proceed if the menu name starts with the base menu name
+		if ( strpos( $menu_name_lower, $base_name_lower ) !== 0 ) {
+			continue;
 		}
+			
+		// Check against language patterns for all menus (including current)
+		foreach ( $languages as $lang ) {
+			$lang_name_lower = strtolower( $lang->name );
+			$lang_native_lower = isset( $lang->native_name ) ? strtolower( $lang->native_name ) : '';
+			
+			$pattern1 = "{$base_name_lower} ({$lang_name_lower}";
+			$pattern2 = "{$base_name_lower} {$lang_name_lower}";
+			$pattern3 = $lang_native_lower ? "{$base_name_lower} ({$lang_native_lower}" : '';
+			
+			// Pattern checks - check if menu name contains language-specific pattern
+			// More flexible matching to handle variations like "p1 (हिन्दी) (Primary Menu हिन्दी)"
+			// Check if menu name contains the base + language pattern
+			if ( strpos( $menu_name_lower, $pattern1 ) !== false ||
+			     strpos( $menu_name_lower, $pattern2 ) !== false ||
+			     ( $pattern3 && strpos( $menu_name_lower, $pattern3 ) !== false ) ) {
+				$existing_menu_langs[ $lang->slug ] = true;
+				break; // Found match for this menu, move to next menu
+			}
+		}
+	}
+		
+	// Build language data for JavaScript
+	foreach ( $languages as $lang ) {
+		// Always include the default language
+		// For non-default languages, check if they have translated content
+		if ( empty( $lang->is_default ) && ! $this->language_has_content( $lang->slug ) ) {
+			continue;
+		}
+		
+		$lang_data[] = array(
+			'slug' => $lang->slug,
+			'name' => $lang->name,
+			'is_default' => ! empty( $lang->is_default ),
+			'has_synced_menu' => isset( $existing_menu_langs[ $lang->slug ] ),
+		);
+	}
 
 		// Get menu ID and language for sync button
 		$menu_id = $nav_menu_selected_id ? absint( $nav_menu_selected_id ) : 0;

@@ -256,6 +256,9 @@
       // Reset button text to "Select All"
       $(".lmat-toggle-all").text(lmatMenuSync.strings.selectAll);
 
+      // Regenerate language list to reflect current menu's synced languages
+      this.populateLanguages();
+
       // Show dialog
       $("#lmat-sync-dialog").fadeIn(200);
     },
