@@ -406,6 +406,20 @@ class LMAT_Admin_Menu_Sync {
 			'menu_id' => 0,
 		);
 
+		// First, check if there are any items that can be synced
+		$items_to_sync = array();
+		foreach ( $source_items as $item ) {
+			if ( $this->can_sync_item( $item, $lang ) ) {
+				$items_to_sync[] = $item;
+			}
+		}
+
+		// If no items can be synced, don't create an empty menu
+		if ( empty( $items_to_sync ) ) {
+			$result['skipped'] = count( $source_items );
+			return $result;
+		}
+
 		// Create or get target menu
 		$target_menu_name = $source_menu->name . ' (' . $lang->name . ')';
 		$target_menu = wp_get_nav_menu_object( $target_menu_name );
@@ -444,12 +458,74 @@ class LMAT_Admin_Menu_Sync {
 			}
 		}
 
+		// If nothing was actually synced, delete the empty menu
+		if ( $result['synced'] === 0 ) {
+			wp_delete_nav_menu( $target_menu_id );
+			$result['menu_id'] = 0;
+			return $result;
+		}
+
 		// Assign menu to locations
 		if ( ! empty( $menu_locations ) ) {
 			$this->assign_menu_to_locations( $target_menu_id, $lang->slug, $menu_locations );
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Check if a menu item can be synced to a language
+	 *
+	 * @param object $item Source menu item.
+	 * @param object $lang Target language.
+	 * @return bool True if item can be synced, false otherwise.
+	 */
+	private function can_sync_item( $item, $lang ) {
+		// Custom links can always be synced (we translate the label)
+		if ( $item->type === 'custom' ) {
+			return true;
+		}
+
+		// Check if post type item has translation
+		if ( $item->type === 'post_type' && in_array( $item->object, array( 'post', 'page' ), true ) ) {
+			$translations = lmat_get_post_translations( $item->object_id );
+			
+			if ( ! isset( $translations[ $lang->slug ] ) ) {
+				return false;
+			}
+			
+			$translated_post_id = $translations[ $lang->slug ];
+			$translated_post = get_post( $translated_post_id );
+			
+			// Check if translated post exists and is published
+			if ( ! $translated_post || ! in_array( $translated_post->post_status, array( 'publish', 'private' ), true ) ) {
+				return false;
+			}
+			
+			return true;
+		}
+
+		// Check if taxonomy item has translation
+		if ( $item->type === 'taxonomy' ) {
+			$translations = lmat_get_term_translations( $item->object_id );
+			
+			if ( ! isset( $translations[ $lang->slug ] ) ) {
+				return false;
+			}
+			
+			$translated_term_id = $translations[ $lang->slug ];
+			$translated_term = get_term( $translated_term_id );
+			
+			// Check if translated term exists and is valid
+			if ( ! $translated_term || is_wp_error( $translated_term ) ) {
+				return false;
+			}
+			
+			return true;
+		}
+
+		// For other types, allow sync
+		return true;
 	}
 
 	/**
