@@ -213,14 +213,40 @@ class LMAT_Admin_Menu_Sync {
 		}
 	}
 		
+	// Get source menu items to check for available translations
+	$source_items = wp_get_nav_menu_items( $nav_menu_selected_id );
+	
+	// Get current menu's language to exclude it from the list
+	$current_menu_lang = $this->get_menu_language( $nav_menu_selected_id );
+	
 	// Load predefined languages for English labels
 	$predefined_languages = include LINGUATOR_DIR . '/admin/settings/controllers/languages.php';
 	
 	// Build language data for JavaScript
 	foreach ( $languages as $lang ) {
-		// Always include the default language
-		// For non-default languages, check if they have translated content
-		if ( empty( $lang->is_default ) && ! $this->language_has_content( $lang->slug ) ) {
+		// Skip the current menu's language (can't sync to itself)
+		if ( $lang->slug === $current_menu_lang ) {
+			continue;
+		}
+		
+		// Check if this language has translated content in general
+		if ( ! $this->language_has_content( $lang->slug ) ) {
+			continue;
+		}
+		
+		// Check if at least one menu item can be synced to this language
+		$has_translations = false;
+		if ( ! empty( $source_items ) ) {
+			foreach ( $source_items as $item ) {
+				if ( $this->can_sync_item( $item, $lang ) ) {
+					$has_translations = true;
+					break; // Found at least one, no need to check more
+				}
+			}
+		}
+		
+		// Only include this language if it has translations for menu items
+		if ( ! $has_translations ) {
 			continue;
 		}
 		
