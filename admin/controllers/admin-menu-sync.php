@@ -241,6 +241,7 @@ class LMAT_Admin_Menu_Sync {
 		
 		// Check if at least one menu item can be synced to this language
 		$has_translations = false;
+		
 		if ( ! empty( $source_items ) ) {
 			foreach ( $source_items as $item ) {
 				if ( $this->can_sync_item( $item, $lang ) ) {
@@ -517,9 +518,25 @@ class LMAT_Admin_Menu_Sync {
 			return true;
 		}
 
-		// Check if post type item has translation
-		if ( $item->type === 'post_type' && in_array( $item->object, array( 'post', 'page' ), true ) ) {
+		// Check if post type item has translation (supports all post types including custom)
+		if ( $item->type === 'post_type' ) {
+			// Check if this post type is enabled for translation in Linguator
+			if ( ! $this->model->post->is_translated_object_type( $item->object ) ) {
+				return false;
+			}
+			
+			// Check if the source post has a language assigned
+			$source_lang = $this->model->post->get_language( $item->object_id );
+			if ( ! $source_lang ) {
+				return false;
+			}
+			
 			$translations = lmat_get_post_translations( $item->object_id );
+			
+			// If no translations array exists, the post isn't in a translation group yet
+			if ( empty( $translations ) ) {
+				return false;
+			}
 			
 			if ( ! isset( $translations[ $lang->slug ] ) ) {
 				return false;
@@ -591,8 +608,13 @@ class LMAT_Admin_Menu_Sync {
 		}
 
 		// Handle different item types
-		if ( $item->type === 'post_type' && in_array( $item->object, array( 'post', 'page' ), true ) ) {
-			// Get translated post
+		if ( $item->type === 'post_type' ) {
+			// Check if this post type is enabled for translation in Linguator
+			if ( ! $this->model->post->is_translated_object_type( $item->object ) ) {
+				return false; // Post type not enabled for translation
+			}
+			
+			// Get translated post (supports all post types including custom)
 			$translations = lmat_get_post_translations( $item->object_id );
 			
 			if ( ! isset( $translations[ $lang->slug ] ) ) {
@@ -917,10 +939,18 @@ class LMAT_Admin_Menu_Sync {
 	 */
 	private function language_has_content( $lang_slug ) {
 		// Linguator uses taxonomy 'lmat_language' to associate posts with languages
-		// Check if there are any PUBLISHED posts/pages with this language taxonomy term
+		// Check if there are any PUBLISHED posts/pages/custom post types with this language taxonomy term
+		// Get all translatable post types (includes custom post types)
+		$post_types = $this->model->post->get_translated_object_types();
+		
+		// If no post types are enabled, return false
+		if ( empty( $post_types ) ) {
+			return false;
+		}
+		
 		// Optimized: Use minimal query with 'ids' fields and no_found_rows
 		$query = new \WP_Query( array(
-			'post_type'      => array( 'post', 'page' ),
+			'post_type'      => $post_types, // Check ALL enabled post types
 			'post_status'    => 'publish',
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
