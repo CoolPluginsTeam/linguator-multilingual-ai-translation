@@ -182,9 +182,14 @@ class LMAT_Admin_Menu_Sync {
 	foreach ( $all_menus as $menu ) {
 		$menu_name_lower = strtolower( $menu->name );
 		
-		// Check if this is the base menu (matches exactly) - assign to default language
+		// Check if this is the base menu (matches exactly)
+		// Only mark as default language if the menu is actually assigned to it
 		if ( $menu->name === $base_menu_name && $default_lang_slug ) {
-			$existing_menu_langs[ $default_lang_slug ] = true;
+			// Check if this menu is explicitly assigned to the default language
+			$menu_lang = $this->get_menu_language( $menu->term_id );
+			if ( $menu_lang === $default_lang_slug ) {
+				$existing_menu_langs[ $default_lang_slug ] = true;
+			}
 		}
 		
 		// Only proceed if the menu name starts with the base menu name
