@@ -251,7 +251,7 @@
         // Show message if no languages available
         this.showErrorDialog(
           lmatMenuSync.strings.noTranslatedContent ||
-            "No translated content is available. Please add and translate content in other languages first."
+            "No translated content is available for selected menu items. Please add and translate content in other languages first."
         );
         return;
       }

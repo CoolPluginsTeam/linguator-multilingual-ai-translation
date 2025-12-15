@@ -300,7 +300,7 @@ class LMAT_Admin_Menu_Sync {
 					'noLanguages' => __( 'Please select at least one language.', 'linguator-multilingual-ai-translation' ),
 					'confirmReplace' => __( 'This will replace existing menus in the selected languages. Continue?', 'linguator-multilingual-ai-translation' ),
 					'emptyMenuError' => __( 'The source menu is empty. Please add menu items before syncing.', 'linguator-multilingual-ai-translation' ),
-					'noTranslatedContent' => __( 'No translated content is available. Please add and translate content in other languages first.', 'linguator-multilingual-ai-translation' ),
+					'noTranslatedContent' => __( 'No translated content is available for selected menu items. Please add and translate content in other languages first.', 'linguator-multilingual-ai-translation' ),
 				),
 			)
 		);
