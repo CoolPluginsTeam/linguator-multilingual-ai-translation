@@ -160,6 +160,18 @@
 	margin-bottom: 15px;
 	display: flex;
 	gap: 10px;
+	justify-content: flex-end;
+}
+
+.lmat-sync-error {
+	background-color: #f8d7da;
+	border: 1px solid #f5c6cb;
+	color: #721c24;
+	padding: 12px 15px;
+	border-radius: 4px;
+	margin-bottom: 15px;
+	font-size: 14px;
+	line-height: 1.5;
 }
 
 .lmat-sync-languages {

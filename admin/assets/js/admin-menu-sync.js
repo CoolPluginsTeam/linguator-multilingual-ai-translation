@@ -86,6 +86,7 @@
         lmatMenuSync.strings.selectAll +
         "</button>" +
         "</div>" +
+        '<div class="lmat-sync-error" style="display:none;"></div>' +
         '<div class="lmat-sync-languages"></div>' +
         "</div>" +
         '<div class="lmat-sync-footer">' +
@@ -212,6 +213,11 @@
           } else {
             $button.text(lmatMenuSync.strings.selectAll);
           }
+          
+          // Hide error message when a language is selected
+          if ($checkboxes.filter(":checked").length > 0) {
+            $(".lmat-sync-error").slideUp(200);
+          }
         }
       );
     },
@@ -261,6 +267,9 @@
 
       // Reset button text to "Select All"
       $(".lmat-toggle-all").text(lmatMenuSync.strings.selectAll);
+      
+      // Hide error message
+      $(".lmat-sync-error").hide();
 
       // Regenerate language list to reflect current menu's synced languages
       this.populateLanguages();
@@ -351,6 +360,8 @@
      */
     hideDialog: function () {
       $("#lmat-sync-dialog").fadeOut(200);
+      // Hide error message when dialog closes
+      $(".lmat-sync-error").hide();
     },
 
     /**
@@ -371,13 +382,21 @@
 
       // Validate
       if (selectedLangs.length === 0) {
-        alert(lmatMenuSync.strings.noLanguages);
+        $(".lmat-sync-error")
+          .html(lmatMenuSync.strings.noLanguages)
+          .slideDown(200);
         return;
       }
+      
+      // Hide error message if languages are selected
+      $(".lmat-sync-error").slideUp(200);
 
       // Show loading
       $(".lmat-sync-spinner").addClass("is-active");
-      $(".lmat-sync-confirm").prop("disabled", true);
+      var $confirmBtn = $(".lmat-sync-confirm");
+      $confirmBtn.prop("disabled", true);
+      $confirmBtn.data("original-text", $confirmBtn.text()); // Store original text
+      $confirmBtn.text(lmatMenuSync.strings.syncing); // Change to "Syncing..."
       $btn.prop("disabled", true);
       $btn.next(".spinner").addClass("is-active");
 
@@ -428,7 +447,13 @@
         },
         complete: function () {
           $(".lmat-sync-spinner").removeClass("is-active");
-          $(".lmat-sync-confirm").prop("disabled", false);
+          var $confirmBtn = $(".lmat-sync-confirm");
+          $confirmBtn.prop("disabled", false);
+          // Restore original button text
+          var originalText = $confirmBtn.data("original-text");
+          if (originalText) {
+            $confirmBtn.text(originalText);
+          }
           $btn.prop("disabled", false);
           $btn.next(".spinner").removeClass("is-active");
           self.hideDialog();
