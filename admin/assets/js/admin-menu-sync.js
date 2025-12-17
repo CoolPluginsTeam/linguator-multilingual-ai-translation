@@ -428,21 +428,66 @@
           } else {
             // Log detailed error
             console.error("Sync failed:", response);
-            var errorMsg = response.data && response.data.message 
-              ? response.data.message 
-              : lmatMenuSync.strings.error;
+            
+            // Handle specific error codes with appropriate messages
+            var errorMsg = lmatMenuSync.strings.error;
+            var errorCode = response.data && response.data.error_code;
+            
+            if (errorCode) {
+              switch (errorCode) {
+                case 'permission_denied':
+                  errorMsg = lmatMenuSync.strings.permissionError || response.data.message;
+                  break;
+                case 'invalid_menu_id':
+                case 'menu_not_found':
+                  errorMsg = lmatMenuSync.strings.invalidMenuError || response.data.message;
+                  break;
+                case 'empty_menu':
+                  errorMsg = lmatMenuSync.strings.emptyMenuError || response.data.message;
+                  break;
+                case 'no_translations':
+                  errorMsg = lmatMenuSync.strings.noTranslationsError || response.data.message;
+                  break;
+                case 'no_languages_selected':
+                  errorMsg = lmatMenuSync.strings.noLanguages || response.data.message;
+                  break;
+                default:
+                  errorMsg = response.data.message || lmatMenuSync.strings.error;
+              }
+            } else if (response.data && response.data.message) {
+              errorMsg = response.data.message;
+            }
+            
             self.showResult("error", errorMsg);
           }
         },
         error: function (xhr, status, error) {
           // Log detailed error
           console.error("AJAX error:", status, error, xhr);
+          
           var errorMsg = lmatMenuSync.strings.error;
-          if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
-            errorMsg = xhr.responseJSON.data.message;
-          } else if (xhr.responseText) {
+          
+          // Handle specific HTTP status codes
+          if (xhr.status === 403) {
+            errorMsg = lmatMenuSync.strings.permissionError || "Permission denied.";
+          } else if (xhr.status === 404) {
+            errorMsg = "Server endpoint not found. Please refresh the page.";
+          } else if (xhr.status === 500) {
+            errorMsg = "Server error occurred. Please try again.";
+          } else if (xhr.status === 0) {
+            errorMsg = "Network error. Please check your internet connection.";
+          } else if (xhr.responseJSON && xhr.responseJSON.data) {
+            // Check for error code in response
+            if (xhr.responseJSON.data.error_code) {
+              var errorCode = xhr.responseJSON.data.error_code;
+              errorMsg = xhr.responseJSON.data.message || lmatMenuSync.strings.error;
+            } else if (xhr.responseJSON.data.message) {
+              errorMsg = xhr.responseJSON.data.message;
+            }
+          } else if (error) {
             errorMsg += " (" + error + ")";
           }
+          
           self.showResult("error", errorMsg);
         },
         complete: function () {

@@ -49,6 +49,13 @@ class LMAT_Admin_Menu_Sync {
 	private $theme;
 
 	/**
+	 * Cache for menu language mappings to avoid N+1 queries
+	 *
+	 * @var array|null
+	 */
+	private $menu_language_cache = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param object $linguator The Linguator object.
@@ -212,8 +219,15 @@ class LMAT_Admin_Menu_Sync {
 			if ( strpos( $menu_name_lower, $pattern1 ) !== false ||
 			     strpos( $menu_name_lower, $pattern2 ) !== false ||
 			     ( $pattern3 && strpos( $menu_name_lower, $pattern3 ) !== false ) ) {
-				$existing_menu_langs[ $lang->slug ] = true;
-				break; // Found match for this menu, move to next menu
+				
+				// Additional check: Verify the menu is actually assigned to this language
+				// This prevents false positives when someone names a menu with a language suffix
+				// but assigns it to a different language (e.g., menu named "p1(hindi)" assigned to English)
+				$menu_assigned_lang = $this->get_menu_language( $menu->term_id );
+				if ( $menu_assigned_lang === $lang->slug ) {
+					$existing_menu_langs[ $lang->slug ] = true;
+					break; // Found match for this menu, move to next menu
+				}
 			}
 		}
 	}
@@ -307,6 +321,9 @@ class LMAT_Admin_Menu_Sync {
 					'confirmReplace' => __( 'This will replace existing menus in the selected languages. Continue?', 'linguator-multilingual-ai-translation' ),
 					'emptyMenuError' => __( 'The source menu is empty. Please add menu items before syncing.', 'linguator-multilingual-ai-translation' ),
 					'noTranslatedContent' => __( 'No translated content is available for selected menu items. Please add and translate content in other languages first.', 'linguator-multilingual-ai-translation' ),
+					'permissionError' => __( 'You do not have permission to sync menus.', 'linguator-multilingual-ai-translation' ),
+					'invalidMenuError' => __( 'Invalid menu selected.', 'linguator-multilingual-ai-translation' ),
+					'noTranslationsError' => __( 'No menu items could be synced. Please ensure translations exist for your menu items.', 'linguator-multilingual-ai-translation' ),
 				),
 			)
 		);
@@ -324,7 +341,10 @@ class LMAT_Admin_Menu_Sync {
 
 		// Check capabilities
 		if ( ! current_user_can( 'edit_theme_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'linguator-multilingual-ai-translation' ) ) );
+			wp_send_json_error( array( 
+				'message' => __( 'You do not have permission to perform this action.', 'linguator-multilingual-ai-translation' ),
+				'error_code' => 'permission_denied'
+			) );
 		}
 
 		// Get parameters
@@ -332,11 +352,17 @@ class LMAT_Admin_Menu_Sync {
 		$target_langs = isset( $_POST['target_langs'] ) && is_array( $_POST['target_langs'] ) ? array_map( 'sanitize_text_field', $_POST['target_langs'] ) : array();
 
 			if ( empty( $menu_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid menu ID.', 'linguator-multilingual-ai-translation' ) ) );
+				wp_send_json_error( array( 
+					'message' => __( 'Invalid menu ID.', 'linguator-multilingual-ai-translation' ),
+					'error_code' => 'invalid_menu_id'
+				) );
 			}
 
 			if ( empty( $target_langs ) ) {
-				wp_send_json_error( array( 'message' => __( 'No target languages selected.', 'linguator-multilingual-ai-translation' ) ) );
+				wp_send_json_error( array( 
+					'message' => __( 'No target languages selected.', 'linguator-multilingual-ai-translation' ),
+					'error_code' => 'no_languages_selected'
+				) );
 		}
 		// Perform sync
 		$result = $this->sync_menu_to_languages( $menu_id, $target_langs );
@@ -376,6 +402,7 @@ class LMAT_Admin_Menu_Sync {
 			return array(
 				'success' => false,
 				'message' => __( 'Source menu is empty.', 'linguator-multilingual-ai-translation' ),
+				'error_code' => 'empty_menu'
 			);
 		}
 
@@ -385,6 +412,7 @@ class LMAT_Admin_Menu_Sync {
 			return array(
 				'success' => false,
 				'message' => __( 'Source menu not found.', 'linguator-multilingual-ai-translation' ),
+				'error_code' => 'menu_not_found'
 			);
 		}
 
@@ -417,6 +445,7 @@ class LMAT_Admin_Menu_Sync {
 		} else {
 			$result['success'] = false;
 			$result['message'] = __( 'No menus were synced. Please ensure translations exist.', 'linguator-multilingual-ai-translation' );
+			$result['error_code'] = 'no_translations';
 		}
 
 		return $result;
@@ -452,23 +481,36 @@ class LMAT_Admin_Menu_Sync {
 			return $result;
 		}
 
-		// Create or get target menu
-		$target_menu_name = $source_menu->name . ' (' . $lang->name . ')';
-		$target_menu = wp_get_nav_menu_object( $target_menu_name );
+		// Create or get target menu with unique name handling
+		$base_menu_name = $source_menu->name . ' (' . $lang->name . ')';
+		$target_menu = wp_get_nav_menu_object( $base_menu_name );
 
 		if ( $target_menu ) {
-			$target_menu_id = $target_menu->term_id;
+			// Menu already exists - verify it's not assigned to a different language
+			$existing_menu_lang = $this->get_menu_language( $target_menu->term_id );
 			
-			// Delete existing menu items in batch
-			$existing_items = wp_get_nav_menu_items( $target_menu_id );
-			if ( $existing_items ) {
-				foreach ( $existing_items as $item ) {
-					wp_delete_post( $item->ID, true );
+			if ( $existing_menu_lang && $existing_menu_lang !== $lang->slug ) {
+				// Menu exists but assigned to different language - generate unique name
+				$target_menu_name = $this->generate_unique_menu_name( $source_menu->name, $lang->name );
+				$target_menu_id = wp_create_nav_menu( $target_menu_name );
+				if ( is_wp_error( $target_menu_id ) ) {
+					return $result;
+				}
+			} else {
+				// Use existing menu and delete its items
+				$target_menu_id = $target_menu->term_id;
+				
+				// Delete existing menu items in batch
+				$existing_items = wp_get_nav_menu_items( $target_menu_id );
+				if ( $existing_items ) {
+					foreach ( $existing_items as $item ) {
+						wp_delete_post( $item->ID, true );
+					}
 				}
 			}
 		} else {
 			// Create new menu
-			$target_menu_id = wp_create_nav_menu( $target_menu_name );
+			$target_menu_id = wp_create_nav_menu( $base_menu_name );
 			if ( is_wp_error( $target_menu_id ) ) {
 				return $result;
 			}
@@ -723,7 +765,7 @@ class LMAT_Admin_Menu_Sync {
 
 		foreach ( $nav_menus[ $this->theme ] as $location => $languages ) {
 			foreach ( $languages as $lang => $assigned_menu_id ) {
-				if ( $assigned_menu_id == $menu_id ) {
+				if ( $assigned_menu_id === $menu_id ) {
 					$locations[] = $location;
 					break;
 				}
@@ -752,27 +794,73 @@ class LMAT_Admin_Menu_Sync {
 	}
 
 	/**
+	 * Generate a unique menu name to avoid collisions
+	 * Handles cases where menu name already exists with different language assignment
+	 *
+	 * @param string $base_name Base menu name.
+	 * @param string $lang_name Language name.
+	 * @return string Unique menu name.
+	 */
+	private function generate_unique_menu_name( $base_name, $lang_name ) {
+		$menu_name = $base_name . ' (' . $lang_name . ')';
+		$counter = 1;
+		
+		// Keep incrementing counter until we find a unique name
+		while ( wp_get_nav_menu_object( $menu_name ) ) {
+			$menu_name = $base_name . ' (' . $lang_name . ') ' . $counter;
+			$counter++;
+			
+			// Safety limit to prevent infinite loops
+			if ( $counter > 100 ) {
+				$menu_name = $base_name . ' (' . $lang_name . ') ' . time();
+				break;
+			}
+		}
+		
+		return $menu_name;
+	}
+
+	/**
+	 * Build cache of menu ID to language mappings
+	 * Prevents N+1 query problem when checking multiple menu languages
+	 *
+	 * @return void
+	 */
+	private function build_menu_language_cache() {
+		if ( $this->menu_language_cache !== null ) {
+			return; // Already cached
+		}
+		
+		$this->menu_language_cache = array();
+		$nav_menus = $this->options->get( 'nav_menus' );
+		
+		if ( empty( $nav_menus[ $this->theme ] ) ) {
+			return;
+		}
+
+		foreach ( $nav_menus[ $this->theme ] as $location => $languages ) {
+			foreach ( $languages as $lang => $assigned_menu_id ) {
+				// Store menu_id => language mapping
+				$this->menu_language_cache[ $assigned_menu_id ] = $lang;
+			}
+		}
+	}
+
+	/**
 	 * Get the language assigned to a menu
+	 * Uses cache to avoid repeated database queries
 	 *
 	 * @param int $menu_id Menu ID.
 	 * @return string Language slug or empty string if not found.
 	 */
 	private function get_menu_language( $menu_id ) {
-		$nav_menus = $this->options->get( 'nav_menus' );
+		// Build cache on first call
+		$this->build_menu_language_cache();
 		
-		if ( empty( $nav_menus[ $this->theme ] ) ) {
-			return '';
-		}
-
-		foreach ( $nav_menus[ $this->theme ] as $location => $languages ) {
-			foreach ( $languages as $lang => $assigned_menu_id ) {
-				if ( $assigned_menu_id == $menu_id ) {
-					return $lang;
-				}
-			}
-		}
-
-		return '';
+		// Return from cache
+		return isset( $this->menu_language_cache[ $menu_id ] ) 
+			? $this->menu_language_cache[ $menu_id ] 
+			: '';
 	}
 
 	/**
@@ -938,8 +1026,8 @@ class LMAT_Admin_Menu_Sync {
 	 * @return bool True if language has content, false otherwise.
 	 */
 	private function language_has_content( $lang_slug ) {
-		// Linguator uses taxonomy 'lmat_language' to associate posts with languages
-		// Check if there are any PUBLISHED posts/pages/custom post types with this language taxonomy term
+		global $wpdb;
+		
 		// Get all translatable post types (includes custom post types)
 		$post_types = $this->model->post->get_translated_object_types();
 		
@@ -948,24 +1036,29 @@ class LMAT_Admin_Menu_Sync {
 			return false;
 		}
 		
-		// Optimized: Use minimal query with 'ids' fields and no_found_rows
-		$query = new \WP_Query( array(
-			'post_type'      => $post_types, // Check ALL enabled post types
-			'post_status'    => 'publish',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true, // Performance optimization
-			'update_post_meta_cache' => false, // Don't need meta
-			'update_post_term_cache' => false, // Don't need term cache
-			'tax_query'      => array(
-				array(
-					'taxonomy' => 'lmat_language',
-					'field'    => 'slug',
-					'terms'    => $lang_slug,
-				),
-			),
-		) );
+		// Get the language term ID for faster querying
+		$lang_term = get_term_by( 'slug', $lang_slug, 'lmat_language' );
+		if ( ! $lang_term ) {
+			return false;
+		}
 		
-		return $query->have_posts();
+		// Use direct SQL query for maximum performance
+		// This avoids WP_Query overhead and is much faster
+		$post_types_placeholder = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+		
+		$sql = "SELECT 1 
+				FROM {$wpdb->posts} p 
+				INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				WHERE tt.taxonomy = 'lmat_language' 
+				AND tt.term_id = %d 
+				AND p.post_status = 'publish' 
+				AND p.post_type IN ($post_types_placeholder)
+				LIMIT 1";
+		
+		$params = array_merge( array( $lang_term->term_id ), $post_types );
+		$prepared_sql = $wpdb->prepare( $sql, $params );
+		
+		return (bool) $wpdb->get_var( $prepared_sql );
 	}
 }
