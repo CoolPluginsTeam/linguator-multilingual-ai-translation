@@ -175,58 +175,36 @@ class LMAT_Admin_Menu_Sync {
 	
 	$existing_menu_langs = array();
 	
-	// Optimize: Cache lowercase conversions and find default language once
-		$base_name_lower = strtolower( $base_menu_name );
-		$default_lang_slug = '';
-		foreach ( $languages as $lang ) {
-			if ( ! empty( $lang->is_default ) ) {
-				$default_lang_slug = $lang->slug;
-				break;
+	// Get the locations of the current menu being edited
+	$current_menu_locations = $this->get_menu_locations( $nav_menu_selected_id );
+	
+	// Only check for conflicts if the current menu is assigned to at least one location
+	if ( ! empty( $current_menu_locations ) ) {
+		// Check menus for existing synced versions in the SAME location(s)
+		foreach ( $all_menus as $menu ) {
+			// Skip the current menu itself
+			if ( $menu->term_id === $nav_menu_selected_id ) {
+				continue;
 			}
-		}
-		
-	// Check menus for existing synced versions (including currently selected menu)
-	foreach ( $all_menus as $menu ) {
-		$menu_name_lower = strtolower( $menu->name );
-		
-		// Check if this is the base menu (matches exactly)
-		// Only mark as default language if the menu is actually assigned to it
-		if ( $menu->name === $base_menu_name && $default_lang_slug ) {
-			// Check if this menu is explicitly assigned to the default language
+			
+			// Get the language assigned to this menu using its ID
 			$menu_lang = $this->get_menu_language( $menu->term_id );
-			if ( $menu_lang === $default_lang_slug ) {
-				$existing_menu_langs[ $default_lang_slug ] = true;
-			}
-		}
-		
-		// Only proceed if the menu name starts with the base menu name
-		if ( strpos( $menu_name_lower, $base_name_lower ) !== 0 ) {
-			continue;
-		}
 			
-		// Check against language patterns for all menus (including current)
-		foreach ( $languages as $lang ) {
-			$lang_name_lower = strtolower( $lang->name );
-			$lang_native_lower = isset( $lang->native_name ) ? strtolower( $lang->native_name ) : '';
-			
-			$pattern1 = "{$base_name_lower} ({$lang_name_lower}";
-			$pattern2 = "{$base_name_lower} {$lang_name_lower}";
-			$pattern3 = $lang_native_lower ? "{$base_name_lower} ({$lang_native_lower}" : '';
-			
-			// Pattern checks - check if menu name contains language-specific pattern
-			// More flexible matching to handle variations like "p1 (हिन्दी) (Primary Menu हिन्दी)"
-			// Check if menu name contains the base + language pattern
-			if ( strpos( $menu_name_lower, $pattern1 ) !== false ||
-			     strpos( $menu_name_lower, $pattern2 ) !== false ||
-			     ( $pattern3 && strpos( $menu_name_lower, $pattern3 ) !== false ) ) {
+			// If this menu has a language, check if it's in the same location(s)
+			if ( $menu_lang ) {
+				$menu_locations = $this->get_menu_locations( $menu->term_id );
 				
-				// Additional check: Verify the menu is actually assigned to this language
-				// This prevents false positives when someone names a menu with a language suffix
-				// but assigns it to a different language (e.g., menu named "p1(hindi)" assigned to English)
-				$menu_assigned_lang = $this->get_menu_language( $menu->term_id );
-				if ( $menu_assigned_lang === $lang->slug ) {
-					$existing_menu_langs[ $lang->slug ] = true;
-					break; // Found match for this menu, move to next menu
+				// Check if there's any overlap in locations
+				$has_common_location = ! empty( array_intersect( $current_menu_locations, $menu_locations ) );
+				
+				if ( $has_common_location ) {
+					// This menu is in the same location(s) and has a language assigned
+					foreach ( $languages as $lang ) {
+						if ( $menu_lang === $lang->slug ) {
+							$existing_menu_langs[ $lang->slug ] = true;
+							break;
+						}
+					}
 				}
 			}
 		}
