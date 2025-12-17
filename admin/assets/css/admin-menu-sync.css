@@ -157,10 +157,10 @@
 }
 
 .lmat-sync-actions {
-	margin-bottom: 15px;
+	margin-bottom: 8px;
+	margin-top: -12px;
 	display: flex;
 	gap: 10px;
-	justify-content: flex-end;
 }
 
 .lmat-sync-error {
@@ -228,6 +228,7 @@
 	display: flex;
 	gap: 10px;
 	align-items: center;
+	margin-top: -12px;
 }
 
 .lmat-sync-footer .button {
