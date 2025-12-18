@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'a09b5c289ab49d54ed98870947f5cfc1' => $baseDir . '/includes/helpers/functions.php',
     '93d97684e2329aa3a1115835abc2b0a3' => $baseDir . '/includes/api/language-api.php',
+    '1d3d25f3c1ac932cc7bbd70af4c9977f' => $baseDir . '/includes/sync-menu/menu-sync-integration.php',
 );

@@ -1,0 +1,262 @@
+/**
+ * Menu Sync Styles
+ */
+
+/* Sync button */
+#lmat-sync-menu-btn {
+	vertical-align: middle;
+	background-color: #3db63d !important;
+	color: #fff !important;
+	border-color: #33a133 !important;
+}
+#lmat-sync-menu-btn:hover {
+	background-color: #37a737 !important;
+	color: #fff !important;
+	border-color: #238b23 !important;
+}
+
+/* Result container */
+#lmat-sync-result {
+	max-width: 100%;
+}
+
+#lmat-sync-result .notice {
+	margin: 0;
+	padding: 10px 15px;
+}
+
+#lmat-sync-result ul {
+	margin: 10px 0 0 20px;
+	list-style: disc;
+}
+
+#lmat-sync-result li {
+	margin: 5px 0;
+	font-size: 13px;
+}
+
+/* Dialog overlay */
+.lmat-sync-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.7);
+	z-index: 100000;
+}
+
+/* Dialog modal */
+.lmat-sync-modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+	z-index: 100001;
+	max-width: 500px;
+	width: 90%;
+	max-height: 80vh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* Dialog header */
+.lmat-sync-header {
+	padding: 16px 20px;
+	border-bottom: 1px solid #dcdcde;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #fff;
+}
+
+/* Error dialog header - no border */
+#lmat-error-dialog .lmat-sync-header {
+	border-bottom: none !important;
+	padding: 8px 12px !important;
+	justify-content: flex-end !important;
+}
+
+/* Larger close button for error dialog */
+#lmat-error-dialog .lmat-error-close {
+	font-size: 32px !important;
+	width: 40px !important;
+	height: 40px !important;
+	min-width: 40px !important;
+	min-height: 40px !important;
+}
+
+/* Error dialog body - reduced padding */
+#lmat-error-dialog .lmat-sync-body {
+	padding: 0 !important;
+}
+
+#lmat-error-dialog .lmat-error-message {
+	padding: 20px !important;
+}
+
+.lmat-sync-header h2 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.lmat-sync-close,
+.lmat-error-close,
+#lmat-error-dialog .lmat-error-close {
+	background: none !important;
+	border: none !important;
+	font-size: 24px !important;
+	line-height: 1 !important;
+	cursor: pointer !important;
+	color: #50575e !important;
+	padding: 0 !important;
+	width: 32px !important;
+	height: 32px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border-radius: 4px !important;
+	transition: color 0.2s ease !important;
+	font-weight: 300 !important;
+	outline: none !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+	min-width: 32px !important;
+	min-height: 32px !important;
+	flex-shrink: 0 !important;
+}
+
+.lmat-sync-close:hover,
+.lmat-error-close:hover,
+#lmat-error-dialog .lmat-error-close:hover {
+	color: #000 !important;
+	background: none !important;
+	border: none !important;
+	outline: none !important;
+}
+
+.lmat-sync-close:focus,
+.lmat-error-close:focus,
+#lmat-error-dialog .lmat-error-close:focus {
+	outline: none !important;
+	box-shadow: none !important;
+	border: none !important;
+}
+
+/* Dialog body */
+.lmat-sync-body {
+	padding: 20px;
+	overflow-y: auto;
+	flex: 1;
+}
+
+.lmat-sync-actions {
+	margin-bottom: 8px;
+	margin-top: -12px;
+	display: flex;
+	gap: 10px;
+}
+
+.lmat-sync-error {
+	background-color: #f8d7da;
+	border: 1px solid #f5c6cb;
+	color: #721c24;
+	padding: 12px 15px;
+	border-radius: 4px;
+	margin-bottom: 15px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.lmat-sync-languages {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.lmat-lang-option {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.lmat-lang-option:hover {
+	background: #f5f5f5;
+	border-color: #999;
+}
+
+.lmat-lang-option input[type="checkbox"] {
+	margin: 0 10px 0 0;
+}
+
+.lmat-lang-option span {
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.lmat-warning-icon {
+	font-size: 16px;
+	cursor: help;
+}
+
+.lmat-lang-option.has-existing-menu {
+	background: #fff3cd;
+	border-color: #ffc107;
+}
+
+.lmat-lang-option.has-existing-menu:hover {
+	background: #ffe69c;
+	border-color: #ff9800;
+}
+
+/* Dialog footer */
+.lmat-sync-footer {
+	padding: 15px 20px;
+	border-top: 1px solid #ddd;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-top: -12px;
+}
+
+.lmat-sync-footer .button {
+	margin: 0;
+}
+
+.lmat-sync-spinner {
+	float: none;
+	margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+	.lmat-sync-modal {
+		width: 95%;
+		max-height: 90vh;
+	}
+
+	.lmat-sync-header {
+		padding: 15px;
+	}
+
+	.lmat-sync-body {
+		padding: 15px;
+	}
+
+	.lmat-sync-footer {
+		padding: 10px 15px;
+		flex-wrap: wrap;
+	}
+}

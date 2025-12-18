@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -161,7 +161,11 @@ No, Linguator is not in beta stage. The core features are ready to use, and weâ€
 
 == Changelog ==
 
-= Version 1.0.1 | 09/12/2025 =
+= Version 1.0.2 | 18/12/2025 =
+* **Added:** Introduces "Sync Menu" feature.
+* **Fixed:** Minor issues.
+
+= Version 1.0.1 | 08/12/2025 =
 * **Added:** Introduces "lmat_sanatize_id()" function.
 * **Improved:** Rewrite get_terms() more efficiently.
 * **Improved:** Cache management with better performance.

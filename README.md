@@ -35,6 +35,7 @@ With Linguator, you can:
 ## 🌍 Key Features
 
 - Add & manage unlimited languages
+- Sync Menus over multiple languages
 - Translate custom post types (Events, Portfolios, etc.)
 - Translate media (image titles, captions, alt text)
 - Create language-specific menus
@@ -86,7 +87,12 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 ## Changelog
 
-= Version 1.0.1 | 09/12/2025 =
+= Version 1.0.2 | 18/12/2025 =
+
+* **Added:** Introduces "Sync Menu" feature.
+* **Fixed:** Minor issues.
+
+= Version 1.0.1 | 08/12/2025 =
 
 - **Added:** Introduces "lmat_sanatize_id()" function.
 - **Improved:** Rewrite get_terms() more efficiently.

@@ -30,7 +30,8 @@
         ],
         "files": [
             "includes/helpers/functions.php",
-            "includes/api/language-api.php"
+            "includes/api/language-api.php",
+            "includes/sync-menu/menu-sync-integration.php"
         ]
     },
     "scripts": {
