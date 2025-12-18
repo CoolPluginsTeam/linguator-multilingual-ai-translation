@@ -89,6 +89,11 @@ class LMAT_Admin_Menu_Sync {
 	public function enqueue_scripts() {
 		global $nav_menu_selected_id;
 
+		// Don't enqueue scripts if no menu is selected
+		if ( empty( $nav_menu_selected_id ) ) {
+			return;
+		}
+
 		// Enqueue CSS
 		wp_enqueue_style(
 			'lmat-menu-sync',
