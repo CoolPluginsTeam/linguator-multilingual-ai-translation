@@ -9,6 +9,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
     public static $files = array (
         'a09b5c289ab49d54ed98870947f5cfc1' => __DIR__ . '/../..' . '/includes/helpers/functions.php',
         '93d97684e2329aa3a1115835abc2b0a3' => __DIR__ . '/../..' . '/includes/api/language-api.php',
+        '1d3d25f3c1ac932cc7bbd70af4c9977f' => __DIR__ . '/../..' . '/includes/sync-menu/menu-sync-integration.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -84,6 +85,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Filters_Term' => __DIR__ . '/../..' . '/admin/controllers/admin-filters-term.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Filters_Widgets_Options' => __DIR__ . '/../..' . '/admin/controllers/admin-filters-widgets-options.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Links' => __DIR__ . '/../..' . '/admin/controllers/admin-links.php',
+        'Linguator\\Admin\\Controllers\\LMAT_Admin_Menu_Sync' => __DIR__ . '/../..' . '/admin/controllers/admin-menu-sync.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Model' => __DIR__ . '/../..' . '/admin/controllers/admin-model.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Nav_Menu' => __DIR__ . '/../..' . '/admin/controllers/admin-nav-menu.php',
         'Linguator\\Admin\\Controllers\\LMAT_Admin_Notices' => __DIR__ . '/../..' . '/admin/controllers/admin-notices.php',
@@ -161,6 +163,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Business\\Hide_Default' => __DIR__ . '/../..' . '/includes/options/business/hide-default.php',
         'Linguator\\Includes\\Options\\Business\\Language_Switcher_Options' => __DIR__ . '/../..' . '/includes/options/business/language-switcher-options.php',
         'Linguator\\Includes\\Options\\Business\\Media_Support' => __DIR__ . '/../..' . '/includes/options/business/media-support.php',
+        'Linguator\\Includes\\Options\\Business\\Menu_Sync_Visibility' => __DIR__ . '/../..' . '/includes/options/business/menu-sync-visibility.php',
         'Linguator\\Includes\\Options\\Business\\Nav_Menus' => __DIR__ . '/../..' . '/includes/options/business/nav-menus.php',
         'Linguator\\Includes\\Options\\Business\\Post_Types' => __DIR__ . '/../..' . '/includes/options/business/post-types.php',
         'Linguator\\Includes\\Options\\Business\\Previous_Version' => __DIR__ . '/../..' . '/includes/options/business/previous-version.php',

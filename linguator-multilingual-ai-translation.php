@@ -126,3 +126,4 @@ if ( LMAT_Deactivate::is_deactivation() ) {
 LMAT_Activate::add_hooks();
 
 new Linguator();
+
