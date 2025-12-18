@@ -1035,20 +1035,20 @@ jQuery(document).ready(function($) {
                                      const isSourceByData = $cell.data('is-source') === true || $cell.data('is-source') === 'true';
                                      
                                      // Only get actual translations, NOT source terms
-                                     if (!hasSourceTerm && !isSourceByData) {
-                                         const $translatedTerm = $cell.find('.lmat-translated-term');
-                                         if ($translatedTerm.length) {
-                                            const translation = $translatedTerm.data('full-text') || $translatedTerm.text().trim();
+                                    if (!hasSourceTerm && !isSourceByData) {
+                                        const $translatedTerm = $cell.find('.lmat-translated-term');
+                                        if ($translatedTerm.length) {
+                                            let translation = $translatedTerm.data('full-text') || $translatedTerm.text().trim();
 
                                             if(translation){
                                                 translation=translation.toString();
                                             }
 
-                                             if (translation && typeof translation === 'string' && translation.trim() !== '') {
-                                                 existingTranslations[langCode] = translation.trim();
-                                             }
-                                         }
-                                     }
+                                            if (translation && typeof translation === 'string' && translation.trim() !== '') {
+                                                existingTranslations[langCode] = translation.trim();
+                                            }
+                                        }
+                                    }
                                  }
                              });
                             
