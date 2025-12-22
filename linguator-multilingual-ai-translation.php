@@ -105,7 +105,7 @@ add_action('admin_init', function() {
 			add_action('load-nav-menus.php', function() {
 				$user_id = get_current_user_id();
 				if (!$user_id) {
-					return;m
+					return;
 				}
 				
 				// Get hidden meta boxes for current user
