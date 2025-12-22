@@ -23,13 +23,28 @@ use Linguator\Install\LMAT_Deactivate;
 use Linguator\Install\LMAT_Usable;
 
 
-define( 'LINGUATOR_VERSION', '1.0.2' );
-define( 'LMAT_MIN_WP_VERSION', '6.2' );
-define( 'LMAT_MIN_PHP_VERSION', '7.2' );
-define( 'LINGUATOR_FILE', __FILE__ ); 
-define( 'LINGUATOR_DIR', __DIR__ );
-define('LINGUATOR_URL', plugin_dir_url(LINGUATOR_FILE));
-define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
+// Linguator constants - wrapped in checks to prevent redeclaration
+if ( ! defined( 'LINGUATOR_VERSION' ) ) {
+	define( 'LINGUATOR_VERSION', '1.0.2' );
+}
+if ( ! defined( 'LMAT_MIN_WP_VERSION' ) ) {
+	define( 'LMAT_MIN_WP_VERSION', '6.2' );
+}
+if ( ! defined( 'LMAT_MIN_PHP_VERSION' ) ) {
+	define( 'LMAT_MIN_PHP_VERSION', '7.2' );
+}
+if ( ! defined( 'LINGUATOR_FILE' ) ) {
+	define( 'LINGUATOR_FILE', __FILE__ );
+}
+if ( ! defined( 'LINGUATOR_DIR' ) ) {
+	define( 'LINGUATOR_DIR', __DIR__ );
+}
+if ( ! defined( 'LINGUATOR_URL' ) ) {
+	define( 'LINGUATOR_URL', plugin_dir_url( LINGUATOR_FILE ) );
+}
+if ( ! defined( 'LINGUATOR_FEEDBACK_API' ) ) {
+	define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
+}
 
 // Whether we are using Linguator, get the filename of the plugin in use.
 if ( ! defined( 'LINGUATOR_ROOT_FILE' ) ) {
@@ -41,7 +56,9 @@ if ( ! defined( 'LINGUATOR_BASENAME' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-define( 'LINGUATOR', ucwords( str_replace( '-', ' ', dirname( LINGUATOR_BASENAME ) ) ) );
+if ( ! defined( 'LINGUATOR' ) ) {
+	define( 'LINGUATOR', ucwords( str_replace( '-', ' ', dirname( LINGUATOR_BASENAME ) ) ) );
+}
 
 // Initialize the plugin
 if ( ! empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -88,7 +105,7 @@ add_action('admin_init', function() {
 			add_action('load-nav-menus.php', function() {
 				$user_id = get_current_user_id();
 				if (!$user_id) {
-					return;
+					return;m
 				}
 				
 				// Get hidden meta boxes for current user
@@ -109,13 +126,17 @@ add_action('admin_init', function() {
 	}
 });
 
-require __DIR__ . '/includes/helpers/constant-functions.php';
+if ( ! function_exists( 'lmat_has_constant' ) ) {
+	require __DIR__ . '/includes/helpers/constant-functions.php';
+}
 if ( ! LMAT_Usable::can_activate() ) {
 	// WP version or php version is too old.
 	return;
 }
 
-define( 'LMAT_ACTIVE', true );
+if ( ! defined( 'LMAT_ACTIVE' ) ) {
+	define( 'LMAT_ACTIVE', true );
+}
 
 if ( LMAT_Deactivate::is_deactivation() ) {
 	// Stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules).
