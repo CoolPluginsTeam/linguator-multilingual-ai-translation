@@ -17,6 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly.
 }
 
+/**
+ * Early check: If Translate Words is active, stop loading Linguator completely
+ * This prevents duplicate menus and conflicts
+ */
+$active_plugins = get_option( 'active_plugins', array() );
+if ( in_array( 'translate-words/translate-wp-words.php', $active_plugins, true ) ) {
+	// Translate Words is active, stop loading this plugin
+	return;
+}
+
 use Linguator\Includes\Core\Linguator;
 use Linguator\Install\LMAT_Activate;
 use Linguator\Install\LMAT_Deactivate;
