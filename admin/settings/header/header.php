@@ -114,31 +114,36 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				$default_url = 'lmat_settings';
 			}
 
-			$tabs = array(
-				'general'     => array( 'title' => __( 'General Settings', 'linguator-multilingual-ai-translation' ) ),
-				'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
-				'translation' => array( 'title' => __( 'AI Translation', 'linguator-multilingual-ai-translation' ) ),
-				'switcher'    => array( 'title' => __( 'Language Switcher', 'linguator-multilingual-ai-translation' ) ),
-				'supported-blocks' => array( 'title' => __( 'Supported Blocks', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=supported-blocks' ),
-				'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
-				'glossary' => array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' ),
+		$tabs = array(
+			'general'     => array( 'title' => __( 'General Settings', 'linguator-multilingual-ai-translation' ) ),
+			'lang'   => array( 'title' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat' ),
+			'translation' => array( 'title' => __( 'AI Translation', 'linguator-multilingual-ai-translation' ) ),
+			'switcher'    => array( 'title' => __( 'Language Switcher', 'linguator-multilingual-ai-translation' ) ),
+			'supported-blocks' => array( 'title' => __( 'Supported Blocks', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=supported-blocks' ),
+			'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
+		);
+
+		// Only show Advanced Settings tab if migration hasn't been completed AND Polylang data exists
+		$migration_completed = get_option( 'lmat_migration_completed', false );
+		if ( ! $migration_completed ) {
+			$tabs['advanced-settings'] = array( 'title' => __( 'Advanced Settings', 'linguator-multilingual-ai-translation' ) );
+		}
+
+        $languages = $this->model->get_languages_list();
+        
+        // Only show Glossary tab if languages exist
+        if(!empty($languages)){
+            $tabs['glossary'] = array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' );
+        }
+        
+        $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
+        if(!empty($languages) && $static_strings_visibility){
+            $tabs['strings']     = array(
+				'title'        => __( 'Static Strings', 'linguator-multilingual-ai-translation' ),
+				'redirect'     => true,
+				'redirect_url' => 'lmat_settings&tab=strings',
 			);
-
-			// Only show Advanced Settings tab if migration hasn't been completed AND Polylang data exists
-			$migration_completed = get_option( 'lmat_migration_completed', false );
-			if ( ! $migration_completed ) {
-				$tabs['advanced-settings'] = array( 'title' => __( 'Advanced Settings', 'linguator-multilingual-ai-translation' ) );
-			}
-
-            $languages = $this->model->get_languages_list();
-            $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
-            if(!empty($languages) && $static_strings_visibility){
-                $tabs['strings']     = array(
-					'title'        => __( 'Static Strings', 'linguator-multilingual-ai-translation' ),
-					'redirect'     => true,
-					'redirect_url' => 'lmat_settings&tab=strings',
-				);
-            }
+        }
 
 			if ( $default_url && ! empty( $default_url ) ) {
 				$tabs['general']['redirect']         = true;
