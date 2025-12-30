@@ -133,6 +133,9 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                 
                 if(isset($all_data[$prefix])){
                     $data_update = false;
+                    $cache_key  = sanitize_text_field($prefix) .'_translation_data_post_ids';
+                    $cache_group = sanitize_text_field($prefix) .'_translation_info';
+            
                     foreach($all_data[$prefix] as $key => $translate_data){
                         if(!empty($unique_key) && isset($translate_data[$unique_key]) && 
                         sanitize_text_field($translate_data[$unique_key]) === sanitize_text_field($data[$unique_key]) && 
@@ -155,7 +158,18 @@ if(!class_exists('LMAT_Translation_Dashboard')){
                     }
 
                     if(!$data_update){
+
+                        wp_cache_delete($cache_key, $cache_group);
+                        delete_transient($cache_key);
+                        
                         $all_data[$prefix][] = array_map('sanitize_text_field', $data);
+                        
+                        $post_ids = array_column( $all_data[$prefix], 'post_id' );
+
+			            $unique_post_ids = array_keys( array_flip( $post_ids ) );
+
+                        wp_cache_set( $cache_key, array_values($unique_post_ids), $cache_group, DAY_IN_SECONDS );
+                        set_transient($cache_key, array_values($unique_post_ids), DAY_IN_SECONDS);
                     }
                 }else{
                     $all_data[$prefix][] = array_map('sanitize_text_field', $data);
