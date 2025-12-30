@@ -10,6 +10,7 @@ return array(
 	'glossary',
 	'inline-translation',
 	'page-translation',
+	're-translation',
 	'rest',
 	'site-health',
 	'sitemaps',
