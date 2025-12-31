@@ -224,7 +224,7 @@ if(!class_exists('Custom_Fields')) {
 			$save_settings=get_option('lmat_allowed_custom_fields', false);
 
 			if ( ! $save_settings || ! is_array( $save_settings ) || count( $save_settings ) < 1 ) {
-				wp_send_json_success( array( 'message' => __( 'No custom fields selected. Autopoly cannot translate any fields.', 'linguator-multilingual-ai-translation' ) ) );
+				wp_send_json_success( array( 'message' => __( 'No custom fields selected. Linguator cannot translate any fields.', 'linguator-multilingual-ai-translation' ) ) );
 				exit;
 			}
 

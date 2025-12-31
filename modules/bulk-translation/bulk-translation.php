@@ -131,7 +131,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
             return;
         }
 
-        $post_label=__("Pages", "autopoly-ai-translation-for-linguator-pro");
+        $post_label=__("Pages", "linguator-multilingual-ai-translation");
         $taxonomy_page=false;
 
         if(isset($current_screen->post_type)){
