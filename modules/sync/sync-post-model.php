@@ -7,8 +7,6 @@ use Linguator\Custom_Fields\Custom_Fields;
 
 /**
  * Model for synchronizing posts
- *
- *  
  */
 class LMAT_Sync_Post_Model {
 	/**
@@ -43,15 +41,13 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Constructor
 	 *
-	 *  
-	 *
 	 * @param object $linguator Linguator object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->options      = &$linguator->options;
 		$this->model        = &$linguator->model;
 		$this->sync         = &$linguator->sync;
-		$this->sync_content = new LMAT_Sync_Post($linguator);
+		$this->sync_content = new LMAT_Sync_Post( $linguator );
 
 		add_filter( 'lmat_copy_taxonomies', array( $this, 'copy_taxonomies' ), 5, 4 );
 		add_filter( 'lmat_copy_post_metas', array( $this, 'copy_post_metas' ), 5, 4 );
@@ -59,8 +55,6 @@ class LMAT_Sync_Post_Model {
 
 	/**
 	 * Copies all taxonomies.
-	 *
-	 *  
 	 *
 	 * @param string[] $taxonomies List of taxonomy names.
 	 * @param bool     $sync       True for a synchronization, false for a simple copy.
@@ -77,8 +71,6 @@ class LMAT_Sync_Post_Model {
 
 	/**
 	 * Copies all custom fields.
-	 *
-	 *  
 	 *
 	 * @param string[] $keys List of custom fields names.
 	 * @param bool     $sync True if it is synchronization, false if it is a copy.
@@ -100,94 +92,118 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Duplicates the post to one language and optionally saves the synchronization group
 	 *
-	 *  
-	 *
 	 * @param int    $post_id    Post id of the source post.
 	 * @param string $source_language Source language slug.
 	 * @param string $target_language Target language slug.
 	 * @param bool   $save_group True to update the synchronization group, false otherwise.
 	 * @return int Id of the target post, 0 on failure.
 	 */
-	public function copy_post( $post_id, $source_language, $target_language, $save_group = true, $post_data = array() ) {
+	public function copy_post( $post_id, $source_language, $target_language, $save_group = true, $post_data = array(), $re_translate = false ) {
 		global $wpdb;
 
 		$tr_id     = $this->model->post->get( $post_id, $this->model->get_language( $target_language ) );
 		$tr_post   = get_post( $post_id );
 		$languages = array_keys( $this->get( $post_id ) );
-		
+
+		if ( isset( $re_translate['status'] ) && true === $re_translate['status'] ) {
+			if ( ! isset( $re_translate['postId'] ) ) {
+				wp_send_json_error( __( 'Re-translate post id not found', 'autopoly-ai-translation-for-linguator-pro' ) );
+			}
+
+			if ( $re_translate['postId'] !== $tr_id ) {
+				wp_send_json_error( __( 'Re-translate post id not matched with target language saved post id', 'autopoly-ai-translation-for-linguator-pro' ) );
+			}
+
+			if ( ! isset( $re_translate['fieldsType'] ) || empty( $re_translate['fieldsType'] ) ) {
+				wp_send_json_error( __( 'Re-translate translation fields not exist in fields key', 'autopoly-ai-translation-for-linguator-pro' ), 400 );
+			}
+
+			$tr_post = get_post( $tr_id );
+
+			$post_data_keys = array_keys( $post_data );
+
+			foreach ( $post_data_keys as $key ) {
+				$valid_key = substr( $key, 5 );
+
+				if ( str_starts_with( $key, 'post_' ) && ! in_array( $valid_key, $re_translate['fieldsType'] ) ) {
+					unset( $post_data[ $key ] );
+				}
+			}
+		}
+
 		if ( ! $tr_post instanceof WP_Post ) {
 			// Something went wrong!
 			return 0;
 		}
-		
-		foreach($tr_post as $key => $value){
-			if(isset($post_data[$key]) && $key !== 'post_meta_fields'){
-				$tr_post->$key = $post_data[$key];
+
+		foreach ( $tr_post as $key => $value ) {
+			if ( isset( $post_data[ $key ] ) && $key !== 'post_meta_fields' ) {
+				$tr_post->$key = $post_data[ $key ];
 			}
 		}
-		
-		if(isset($post_data['post_content'])){
-			
-			$filtered_post_content=lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language);
-			
-			$default_allowed_tags=wp_kses_allowed_html('post');
-			
-			$parent_post_content=get_post_field('post_content', $post_id);
-			
-            $existing_allowed_tags=$this->allowed_tags_in_string($parent_post_content);
-			
-            $unwanted_tags = [
+
+		if ( isset( $post_data['post_content'] ) ) {
+
+			$filtered_post_content = lmat_replace_links_with_translations( $tr_post->post_content, $target_language, $source_language );
+
+			$default_allowed_tags = wp_kses_allowed_html( 'post' );
+
+			$parent_post_content = get_post_field( 'post_content', $post_id );
+
+			$existing_allowed_tags = $this->allowed_tags_in_string( $parent_post_content );
+
+			$unwanted_tags = array(
 				'script',
-                'object',
-                'embed',
-                'textarea',
-                'select',
-                'option',
-                'link',
-                'meta',
-                'noscript',
-                'xmp',
-                'noembed',
-            ];
-			
-            // Remove unwanted tags from the existing allowed list
-            foreach ($unwanted_tags as $tag) {
-				if (isset($existing_allowed_tags[$tag])) {
-					unset($existing_allowed_tags[$tag]);
-                }
-            }
-			
-            // Apply the allowed tags
-            $allowed_tags=apply_filters('lmat/bulk_translation/allowed_tags', array_merge($default_allowed_tags, $existing_allowed_tags));
-                
-            // Add the filter to allow the flex styles
-            add_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
-			
-            // Apply the allowed tags
-			$filtered_post_content=wp_kses($filtered_post_content, $allowed_tags);
-			
-            // Remove the filter to allow the flex styles
-            remove_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
-			
-			$tr_post->post_content=$filtered_post_content;
+				'object',
+				'embed',
+				'textarea',
+				'select',
+				'option',
+				'link',
+				'meta',
+				'noscript',
+				'xmp',
+				'noembed',
+			);
+
+			// Remove unwanted tags from the existing allowed list
+			foreach ( $unwanted_tags as $tag ) {
+				if ( isset( $existing_allowed_tags[ $tag ] ) ) {
+					unset( $existing_allowed_tags[ $tag ] );
+				}
+			}
+
+			// Apply the allowed tags
+			$allowed_tags = apply_filters( 'lmat/bulk_translation/allowed_tags', array_merge( $default_allowed_tags, $existing_allowed_tags ) );
+
+			// Add the filter to allow the flex styles
+			add_filter( 'safe_style_css', array( $this, 'lmat_allow_flex_styles' ), 10, 1 );
+
+			// Apply the allowed tags
+			$filtered_post_content = wp_kses( $filtered_post_content, $allowed_tags );
+
+			// Remove the filter to allow the flex styles
+			remove_filter( 'safe_style_css', array( $this, 'lmat_allow_flex_styles' ), 10, 1 );
+
+			$tr_post->post_content = $filtered_post_content;
 		}
-		
-		$post_status='draft';
-		
-		if(isset($this->options['ai_translation_configuration']['bulk_translation_post_status'])){
-			$post_status=$this->options['ai_translation_configuration']['bulk_translation_post_status'];
-		}
-		
+
 		// If it does not exist, create it.
 		if ( ! $tr_id ) {
-			$tr_post->ID = 0;
-			$tr_post->post_status = $post_status;
-		
-			$tr_id       = wp_insert_post( wp_slash( $tr_post->to_array() ) );
 
+			$post_status='draft';
+		
+			if(isset($this->options['ai_translation_configuration']['bulk_translation_post_status'])){
+				$post_status=$this->options['ai_translation_configuration']['bulk_translation_post_status'];
+			}
+
+			$tr_post->ID          = 0;
+			$tr_post->post_status = $post_status;
+
+			$tr_id = wp_insert_post( wp_slash( $tr_post->to_array() ) );
 			$this->model->post->set_language( $tr_id, $target_language ); // Necessary to do it now to share slug.
 
-			$translations = $this->model->post->get_translations( $post_id );
+			$translations                     = $this->model->post->get_translations( $post_id );
 			$translations[ $target_language ] = $tr_id;
 
 			$language_link=apply_filters('lmat_bulk_post_language_link', true);
@@ -216,33 +232,34 @@ class LMAT_Sync_Post_Model {
 			/**
 			 * Fires after a synchronized post has been created
 			 *
-			 *  
-			 *
 			 * @param int    $post_id Id of the source post.
 			 * @param int    $tr_id   Id of the newly created post.
 			 * @param string $lang    Language of the newly created post.
 			 */
 			do_action( 'lmat_created_sync_post', $post_id, $tr_id, $target_language );
 
-			$post=get_post($post_id);
+			$post = get_post( $post_id );
 			do_action( 'lmat_save_post', $post_id, $post, $translations ); // Fire again as we just updated $translations.
 
 			unset( $this->temp_synchronized[ $post_id ][ $tr_id ] );
 		}
 
-		if ( $save_group ) {
-			$this->save_group( $post_id, $languages );
+		if ( ! isset( $re_translate['status'] ) ) {
+
+			if ( $save_group ) {
+				$this->save_group( $post_id, $languages );
+			}
+
+			$tr_post->ID = $tr_id;
+			$post        = get_post( $post_id );
+
+			$tr_post->post_parent = (int) $this->model->post->get( $post->post_parent, $target_language ); // Translates post parent.
+
+			$post     = clone $tr_post;
+			$post->ID = $post_id;
+
+			$tr_post = $this->sync_content->copy_content( $post, $tr_post, $target_language );
 		}
-
-		$tr_post->ID = $tr_id;
-		$post=get_post($post_id);
-
-		$tr_post->post_parent = (int) $this->model->post->get( $post->post_parent, $target_language ); // Translates post parent.
-
-		$post = clone $tr_post;
-		$post->ID=$post_id;
-
-		$tr_post = $this->sync_content->copy_content( $post, $tr_post, $target_language );
 
 		// The columns to copy in DB.
 		$columns = array(
@@ -260,87 +277,104 @@ class LMAT_Sync_Post_Model {
 			'post_parent',
 			'menu_order',
 			'post_mime_type',
+			'post_status',
 		);
 
-		$columns[] = 'post_status';
+		if ( isset( $re_translate['status'] ) && true === $re_translate['status'] ) {
+			$columns = array_keys( $post_data );
+
+			if ( in_array( 'post_meta_fields', $columns ) ) {
+				$custom_field_index = array_search( 'post_meta_fields', $columns );
+				unset( $columns[ $custom_field_index ] );
+			}
+
+			$columns = array_combine( $columns, $columns );
+		}
 
 		is_sticky( $post_id ) ? stick_post( $tr_id ) : unstick_post( $tr_id );
 
 		/**
 		 * Filters the post fields to synchronize when synchronizing posts
 		 *
-		 *  
-		 *
 		 * @param array  $fields     WP_Post fields to synchronize.
 		 * @param int    $post_id    Post id of the source post.
 		 * @param string $lang       Target language slug.
 		 * @param bool   $save_group True to update the synchronization group, false otherwise.
 		 */
-		$columns = apply_filters( 'lmat_sync_post_fields', array_combine( $columns, $columns ), $post_id, $target_language, $save_group );
-		
+		if ( ! isset( $re_translate['status'] ) ) {
+			$columns = apply_filters( 'lmat_sync_post_fields', array_combine( $columns, $columns ), $post_id, $target_language, $save_group );
+		}
+
 		$tr_post = array_intersect_key( (array) $tr_post, $columns );
-		
-		$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => (int) $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
+
+		if(!empty($tr_post)){
+			$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => (int) $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
+		}
+
 		clean_post_cache( $tr_id );
 
-		$post_meta_sync=true;
+		$post_meta_sync = true;
 
-		if (!isset($this->options['sync']) || (isset($this->options['sync']) && !in_array('post_meta', $this->options['sync']))) {
+		if ( ! isset( $this->options['sync'] ) || ( isset( $this->options['sync'] ) && ! in_array( 'post_meta', $this->options['sync'] ) ) ) {
 			$post_meta_sync = false;
 		}
 
-		if(!$post_meta_sync && isset($post_data['post_meta_fields']) && count($post_data['post_meta_fields']) > 0){
-			$this->update_post_custom_fields($post_data['post_meta_fields'], $tr_id);
+		if ( ! $post_meta_sync && isset( $post_data['post_meta_fields'] ) && count( $post_data['post_meta_fields'] ) > 0 ) {
+			$this->update_post_custom_fields( $post_data['post_meta_fields'], $tr_id );
 		}
 
 		/**
 		 * Fires after a post has been synchronized.
-		 *
-		 *  
 		 *
 		 * @param int    $post_id Id of the source post.
 		 * @param int    $tr_id   Id of the target post.
 		 * @param string $lang    Language of the target post.
 		 * @param string $strategy `copy`.
 		 */
-		do_action( 'lmat_post_synchronized', $post_id, $tr_id, $target_language, 'copy' );
+		if ( ! isset( $re_translate['status'] ) ) {
+			do_action( 'lmat_post_synchronized', $post_id, $tr_id, $target_language, 'copy' );
+		}
+
+		$re_translate_status = isset( $re_translate['status'] ) && true === $re_translate['status'];
 
 		// Update Elementor Translations
-		$this->update_elementor_data($tr_id, $post_data, $post_id);
+		if ( ! $re_translate_status || ( $re_translate_status && isset( $re_translate['fieldsType'] ) && in_array( 'content', $re_translate['fieldsType'] ) ) ) {
+			$this->update_elementor_data( $tr_id, $post_data, $post_id, $re_translate_status );
+		}
 
 		return $tr_id;
 	}
 
-	private function update_post_custom_fields($fields, $post_id){
+	private function update_post_custom_fields( $fields, $post_id ) {
 		$post_meta_sync = true;
 
-		if (!isset($this->options['sync']) || (isset($this->options['sync']) && !in_array('post_meta', $this->options['sync']))) {
+		if ( ! isset( $this->options['sync'] ) || ( isset( $this->options['sync'] ) && ! in_array( 'post_meta', $this->options['sync'] ) ) ) {
 			$post_meta_sync = false;
 		}
 
-		if($post_meta_sync){
+		if ( $post_meta_sync ) {
 			return;
 		}
 
-		$allowed_meta_fields=Custom_Fields::get_allowed_custom_fields();
+		$allowed_meta_fields = Custom_Fields::get_allowed_custom_fields('post');
 
-		if($fields && is_array($fields) && count($fields) > 0){
-			$valid_meta_fields=array_intersect(array_keys($fields), array_keys($allowed_meta_fields));
-			if(count($valid_meta_fields) > 0){
-				foreach($valid_meta_fields as $key){
-					if(isset($allowed_meta_fields[$key]) && $allowed_meta_fields[$key]['status']){
-						$value=is_array($fields[$key]) ? $this->sanitize_array_value($fields[$key], array()) : sanitize_text_field($fields[$key]);
+		if ( $fields && is_array( $fields ) && count( $fields ) > 0 ) {
+			$valid_meta_fields = array_intersect( array_keys( $fields ), array_keys( $allowed_meta_fields ) );
+			if ( count( $valid_meta_fields ) > 0 ) {
+				foreach ( $valid_meta_fields as $key ) {
+					if ( isset( $allowed_meta_fields[ $key ] ) && $allowed_meta_fields[ $key ]['status'] ) {
+						$value = is_array( $fields[ $key ] ) ? $this->sanitize_array_value( $fields[ $key ], array() ) : sanitize_text_field( $fields[ $key ] );
 
-						update_post_meta(absint($post_id), sanitize_text_field($key), $value);
+						update_post_meta( absint( $post_id ), sanitize_text_field( $key ), $value );
 					}
 				}
 			}
 		}
 	}
 
-	private function sanitize_array_value($value, $arr){
-		foreach($value as $key => $item){
-			$arr[sanitize_text_field($key)]=is_array($item) ? $this->sanitize_array_value($item, array()) : sanitize_text_field($item);
+	private function sanitize_array_value( $value, $arr ) {
+		foreach ( $value as $key => $item ) {
+			$arr[ sanitize_text_field( $key ) ] = is_array( $item ) ? $this->sanitize_array_value( $item, array() ) : sanitize_text_field( $item );
 		}
 
 		return $arr;
@@ -349,37 +383,39 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Update Elementor data
 	 *
-	 * @param int $tr_id The ID of the translated post.
+	 * @param int    $tr_id The ID of the translated post.
 	 * @param string $elementor_data The Elementor data to update.
 	 * @return void
 	 */
-	private function update_elementor_data($tr_id, $post_data, $parent_post_id = 0){
-		$current_post_elementor_data = get_post_meta($tr_id, '_elementor_data', true);
+	private function update_elementor_data( $tr_id, $post_data, $parent_post_id = 0, $re_translate = false ) {
+		$current_post_elementor_data = get_post_meta( $tr_id, '_elementor_data', true );
 
-		if(!isset($post_data['meta_fields']['_elementor_data'])){
+		if ( ! isset( $post_data['meta_fields']['_elementor_data'] ) ) {
 			return;
 		}
 
-		$elementor_data=$post_data['meta_fields']['_elementor_data'];
+		$elementor_data = $post_data['meta_fields']['_elementor_data'];
 
 		// Check if the current post has Elementor data
-		if('' !== $current_post_elementor_data && $elementor_data && '' !== $elementor_data){
-			if(class_exists('Elementor\Plugin')){
-				$plugin=\Elementor\Plugin::$instance;
-				$document=$plugin->documents->get($tr_id);
-	
-				$document->save( [
-					'elements' => json_decode($elementor_data, true),
-				] );
+		if ( '' !== $current_post_elementor_data && $elementor_data && '' !== $elementor_data ) {
+			if ( class_exists( 'Elementor\Plugin' ) ) {
+				$plugin   = \Elementor\Plugin::$instance;
+				$document = $plugin->documents->get( $tr_id );
+
+				$document->save(
+					array(
+						'elements' => json_decode( $elementor_data, true ),
+					)
+				);
 
 				$plugin->files_manager->clear_cache();
-			}else{
+			} elseif ( ! $re_translate ) {
 
-				if($parent_post_id > 0){
-					$elementor_data=\Elementor\Plugin::$instance->documents->get($parent_post_id)->get_elements_data();
-					$elementor_data=wp_json_encode($elementor_data);
-					$elementor_data=preg_replace('#(?<!\\\\)/#', '\\/', $elementor_data);
-					update_post_meta($tr_id, '_elementor_data', $elementor_data);
+				if ( $parent_post_id > 0 ) {
+					$elementor_data = \Elementor\Plugin::$instance->documents->get( $parent_post_id )->get_elements_data();
+					$elementor_data = wp_json_encode( $elementor_data );
+					$elementor_data = preg_replace( '#(?<!\\\\)/#', '\\/', $elementor_data );
+					update_post_meta( $tr_id, '_elementor_data', $elementor_data );
 				}
 			}
 		}
@@ -388,8 +424,6 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Saves the synchronization group
 	 * This is stored as an array beside the translations in the post_translations term description
-	 *
-	 *  
 	 *
 	 * @param int   $post_id   ID of the post currently being saved.
 	 * @param array $sync_post Array of languages to sync with this post.
@@ -426,8 +460,6 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Get all posts synchronized with a given post
 	 *
-	 *  
-	 *
 	 * @param int $post_id The id of the post.
 	 * @return array An associative array of arrays with language code as key and post id as value.
 	 */
@@ -454,8 +486,6 @@ class LMAT_Sync_Post_Model {
 	/**
 	 * Checks whether two posts are synchronized
 	 *
-	 *  
-	 *
 	 * @param int $post_id  The id of a first post to compare.
 	 * @param int $other_id The id of the other post to compare.
 	 * @return bool
@@ -466,8 +496,6 @@ class LMAT_Sync_Post_Model {
 
 	/**
 	 * Check if the current user can synchronize a post in other language
-	 *
-	 *  
 	 *
 	 * @param int    $post_id Post to synchronize.
 	 * @param string $lang    Language code.
@@ -482,7 +510,7 @@ class LMAT_Sync_Post_Model {
 
 		// If we don't have a translation yet, check if we have the right to create a new one?
 		if ( empty( $tr_id ) ) {
-			$post_type = get_post_type( $post_id );
+			$post_type        = get_post_type( $post_id );
 			$post_type_object = get_post_type_object( $post_type );
 			return current_user_can( $post_type_object->cap->create_posts );
 		}
@@ -504,53 +532,53 @@ class LMAT_Sync_Post_Model {
 		return true;
 	}
 
-	private function allowed_tags_in_string($string){
-		$tags = [];
+	private function allowed_tags_in_string( $string ) {
+		$tags = array();
 
 		// Match all opening tags with attributes (skip closing tags)
-		preg_match_all('/<([a-zA-Z0-9]+)([^>]*)>/i', $string, $matches, PREG_SET_ORDER);
-		
-		foreach ($matches as $match) {
-			$tagName = strtolower($match[1]);
-			$attrString = trim($match[2]);
-		
+		preg_match_all( '/<([a-zA-Z0-9]+)([^>]*)>/i', $string, $matches, PREG_SET_ORDER );
+
+		foreach ( $matches as $match ) {
+			$tagName    = strtolower( $match[1] );
+			$attrString = trim( $match[2] );
+
 			// Ensure tag key exists
-			if (!isset($tags[$tagName])) {
-				$tags[$tagName] = [];
+			if ( ! isset( $tags[ $tagName ] ) ) {
+				$tags[ $tagName ] = array();
 			}
-		
+
 			// Extract attributes inside this tag
-			if (preg_match_all('/([a-zA-Z0-9\-:]+)(\s*=\s*(".*?"|\'.*?\'|[^\s>]+))?/', $attrString, $attrMatches, PREG_SET_ORDER)) {
-				foreach ($attrMatches as $attr) {
-					$attrName = strtolower($attr[1]);
+			if ( preg_match_all( '/([a-zA-Z0-9\-:]+)(\s*=\s*(".*?"|\'.*?\'|[^\s>]+))?/', $attrString, $attrMatches, PREG_SET_ORDER ) ) {
+				foreach ( $attrMatches as $attr ) {
+					$attrName = strtolower( $attr[1] );
 
 					// Only add if attribute does not already exist
-					if (!array_key_exists($attrName, $tags[$tagName])) {
-						$tags[$tagName][$attrName] = [];
+					if ( ! array_key_exists( $attrName, $tags[ $tagName ] ) ) {
+						$tags[ $tagName ][ $attrName ] = array();
 					}
 				}
 			}
 		}
-		
+
 		return $tags;
 	}
 
-	public function lmat_allow_flex_styles($styles){
-	   return $this->lmat_allow_flex_styles_callback($styles);
+	public function lmat_allow_flex_styles( $styles ) {
+		return $this->lmat_allow_flex_styles_callback( $styles );
 	}
 
-	private function lmat_allow_flex_styles_callback($styles){
+	private function lmat_allow_flex_styles_callback( $styles ) {
 		// Define the extra CSS properties you want to allow
-		$extra_allowed = [
+		$extra_allowed = array(
 			'display',
 			'justify-content',
 			'align-items',
 			'flex-direction',
 			'flex-wrap',
 			'gap',
-		];
+		);
 
-		$allowed_styles=apply_filters('lmat/bulk_translation/allowed_flex_styles', array_unique(array_merge($styles, $extra_allowed)));
+		$allowed_styles = apply_filters( 'lmat/bulk_translation/allowed_flex_styles', array_unique( array_merge( $styles, $extra_allowed ) ) );
 
 		return $allowed_styles;
 	}
