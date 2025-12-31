@@ -327,8 +327,8 @@ class ChromeAiTranslator {
                     !/^\d+$/.test(child.nodeValue.trim())
                 ) {
                     originalString.push(child);
-                }else if(child.childNodes.length > 0){
-                    // this.translateChildNodes(child, originalString);
+                } else if (child.classList && !child.classList.contains('notranslate')) {
+                    this.filterInnerTextNodes(child, originalString);
                 }
             });
         } else if (ele.querySelector('.notranslate')) {
@@ -339,6 +339,8 @@ class ChromeAiTranslator {
                     !/^\d+$/.test(child.nodeValue.trim())
                 ) {
                     originalString.push(child);
+                } else if (child.classList && !child.classList.contains('notranslate')) {
+                    this.filterInnerTextNodes(child, originalString);
                 }
             });
         }
@@ -365,6 +367,20 @@ class ChromeAiTranslator {
             this.onComplete({ characterCount: this.completedCharacterCount }); // Call the complete callback
         }
     };
+
+    filterInnerTextNodes = (ele, updatedArray) => {
+        const childElements = ele.childNodes;
+
+        if (ele.classList && ele.classList.contains('notranslate')) return;
+
+        childElements.forEach(child => {
+            if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
+                updatedArray.push(child);
+            } else if (child.classList && !child.classList.contains('notranslate')) {
+                this.filterInnerTextNodes(child, updatedArray);
+            }
+        });
+    }
 
     translateChildNodes = async (ele, originalString) => {
         if(ele.childNodes.length > 0 && !ele.querySelector('.notranslate')){

@@ -1,13 +1,15 @@
 import {updateCountInfo, updateTranslatePostInfo} from '../../redux-store/features/actions.js';
 import {store} from '../../redux-store/store.js';
+import { getContentCount } from '../../helper/index.js';
 
 const updateTranslationCount=({postId,key,lang, storeDispatch})=>{
     const sourceText=store.getState().translatedContent[postId]?.[key]?.source;
 
     if(sourceText){
-        const stringCount = typeof sourceText === 'string' ? sourceText.split(/(?<=[.!?]+)\s+/).length : 0;
-        const wordCount = typeof sourceText === 'string' ? sourceText.trim().split(/\s+/).filter(word => /[^\p{L}\p{N}]/.test(word)).length : 0;
-        const characterCount = typeof sourceText === 'string' ? sourceText.length : 0;
+        const contentCounts = getContentCount(sourceText);
+        const stringCount = contentCounts.stringsCount;
+        const wordCount = contentCounts.wordsCount;
+        const characterCount = contentCounts.charactersCount;
 
         const previousPostInfo=store.getState().translatePostInfo[postId+'_'+lang];
         const previousStringCount=previousPostInfo?.stringsTranslated || 0;

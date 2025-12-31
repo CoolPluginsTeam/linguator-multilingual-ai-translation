@@ -251,6 +251,7 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Modules\\REST\\V1\\Bulk_Translation' => __DIR__ . '/../..' . '/modules/rest/v1/bulk-translation.php',
         'Linguator\\Modules\\REST\\V1\\Languages' => __DIR__ . '/../..' . '/modules/rest/v1/languages.php',
         'Linguator\\Modules\\REST\\V1\\Settings' => __DIR__ . '/../..' . '/modules/rest/v1/settings.php',
+        'Linguator\\Modules\\Re_Translation\\LMAT_Re_Translation' => __DIR__ . '/../..' . '/modules/re-translation/re-translation.php',
         'Linguator\\Modules\\Wizard\\LMAT_Wizard' => __DIR__ . '/../..' . '/modules/wizard/wizard.php',
         'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => __DIR__ . '/../..' . '/modules/sync/settings-sync.php',
         'Linguator\\Settings\\Controllers\\LMAT_Settings' => __DIR__ . '/../..' . '/admin/settings/controllers/settings.php',

@@ -659,7 +659,7 @@ const StringPopUpBody = (props) => {
                         <div className="lmat_page_translation_translate_progress" key={props.modalRender}>
                             {__("Automatic translation is in progress....", 'linguator-multilingual-ai-translation')}<br />
                             {__("It will take few minutes, enjoy ☕ coffee in this time!", 'linguator-multilingual-ai-translation')}<br /><br />
-                            {__("Please do not leave this window or browser tab while translation is in progress...", 'linguator-multilingual-ai-translation')}
+                            {__("Please do not leave this window or browser tab while translation is in progress...", 'automatic-translations-for-polylang-pro')}
                         </div>
                     )}
                     <div className={`translator-widget ${service}`} style={{ display: 'flex' }}>

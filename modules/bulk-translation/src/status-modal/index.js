@@ -16,27 +16,27 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
     const translatePostInfo = useSelector(selectTranslatePostInfo);
     const [destroyHandlers, setDestroyHandlers] = useState([]);
     const errorPostsInfo = useSelector(selectErrorPostsInfo);
-    const pendingPosts=useSelector(selectPendingPosts);
+    const pendingPosts = useSelector(selectPendingPosts);
     const serviceProvider = useSelector(selectServiceProvider);
     const [progressBarVisibility, setProgressBarVisibility] = useState(true);
     const [charactersCountVisibility, setCharactersCountVisibility] = useState(false);
     const [bulkStatus, setBulkStatus] = useState('status');
     const countInfo = useSelector(selectCountInfo);
-    let [emptyPostMessage, setEmptyPostMessage]=useState(sprintf(__('Translations already exist for all selected %s in the chosen languages. There are no new %s to translate.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label, lmatBulkTranslationGlobal.post_label));
+    let [emptyPostMessage, setEmptyPostMessage] = useState(sprintf(__('Translations already exist for all selected %s in the chosen languages. There are no new %s to translate.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label, lmatBulkTranslationGlobal.post_label));
     let progressStatus = useSelector(selectProgressStatus);
-    progressStatus=progressStatus.toFixed(1);
-    progressStatus=Math.min(progressStatus, 100);
+    progressStatus = progressStatus.toFixed(1);
+    progressStatus = Math.min(progressStatus, 100);
 
     useEffect(() => {
         const translatePosts = async () => {
             const response = await bulkTranslateEntries({ ids: postIds, langs: selectedLanguages, storeDispatch });
             setIsLoading(false);
 
-            if(!response.success && false === response.success && response.message){
+            if (!response.success && false === response.success && response.message) {
                 setEmptyPostMessage(response.message);
                 return;
             }
-        
+
             initBulkTranslate(response.postKeys, response.nonce, storeDispatch, prefix, updateDestoryHandler);
         }
         translatePosts();
@@ -56,64 +56,64 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
         setDestroyHandlers(prev => [...prev, callback]);
     }
 
-    const onModalClose= (e) => {
+    const onModalClose = (e) => {
         destroyHandlers.forEach(callback => typeof callback === 'function' && callback());
         onDestory(e);
     }
 
     useEffect(() => {
 
-        if(countInfo.totalPosts < 1 && !isLoading && bulkStatus !== 'status'){
+        if (countInfo.totalPosts < 1 && !isLoading && bulkStatus !== 'status') {
             updateBulkStatus('status');
             return;
         }
 
-        if(translatePostInfo && Object.keys(translatePostInfo).length > 0){
-            if(pendingPosts.length < 1){''
+        if (translatePostInfo && Object.keys(translatePostInfo).length > 0) {
+            if (pendingPosts.length < 1) {
                 updateBulkStatus('completed');
                 return;
             }
 
-            let error=false;
-            let running=false;
+            let error = false;
+            let running = false;
 
-            const runLoop=(items, index)=>{
-                const status=translatePostInfo[items[index]].status;
+            const runLoop = (items, index) => {
+                const status = translatePostInfo[items[index]].status;
 
-                if(status === 'running' || status === 'in-progress' || status === 'pending'){
-                    running=true;
+                if (status === 'running' || status === 'in-progress' || status === 'pending') {
+                    running = true;
                     bulkStatus !== 'running' && updateBulkStatus('running');
                     return;
                 }
 
-                if(status === 'error'){
-                    error=true;
+                if (status === 'error') {
+                    error = true;
                 }
 
                 index++;
-                if(index < items.length){
-                    runLoop(items, index);                    
+                if (index < items.length) {
+                    runLoop(items, index);
                 }
             }
 
             runLoop(Object.keys(translatePostInfo), 0);
-            
-            if(running) return;
 
-            if(error){
+            if (running) return;
+
+            if (error) {
                 updateBulkStatus('pending');
-            }else{
+            } else {
                 updateBulkStatus('pending');
             }
         }
-    }, [translatePostInfo]); 
+    }, [translatePostInfo]);
 
-    const updateBulkStatus=(status)=>{
+    const updateBulkStatus = (status) => {
         setBulkStatus(status);
     }
 
-    const getBulkStatus=()=>{
-        switch(bulkStatus){
+    const getBulkStatus = () => {
+        switch (bulkStatus) {
             case 'running':
                 return __('In Progress', 'linguator-multilingual-ai-translation');
             case 'pending':
@@ -126,14 +126,14 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
     }
 
     useEffect(() => {
-       if(progressStatus >= 100 && pendingPosts.length < 1){
-            if(countInfo.postsTranslated < 1){
+        if (progressStatus >= 100 && pendingPosts.length < 1) {
+            if (countInfo.postsTranslated < 1) {
                 setProgressBarVisibility(false);
                 setCharactersCountVisibility(false);
                 return;
             }
 
-            if(countInfo.stringsTranslated > 0){
+            if (countInfo.stringsTranslated > 0) {
                 setTimeout(() => {
                     setCharactersCountVisibility(true);
                 }, 1000);
@@ -143,15 +143,15 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                 setProgressBarVisibility(false);
                 setCharactersCountVisibility(false);
             }, 7500);
-       }
+        }
     }, [pendingPosts]);
 
     const getTranslatedPostLink = () => {
-        const translatedLanguagesArr=Object.values(translatePostInfo).filter(post=>post.status==='completed' && post.targetLanguage);
-        const translatedLangs=translatedLanguagesArr.map(post=>post.targetLanguage).filter((lang, index, self) => self.indexOf(lang) === index);
-      
-        if(translatedLangs.length === 1){
-            const translatedLang=translatedLangs[0];
+        const translatedLanguagesArr = Object.values(translatePostInfo).filter(post => post.status === 'completed' && post.targetLanguage);
+        const translatedLangs = translatedLanguagesArr.map(post => post.targetLanguage).filter((lang, index, self) => self.indexOf(lang) === index);
+
+        if (translatedLangs.length === 1) {
+            const translatedLang = translatedLangs[0];
             // Get current query params
             const url = new URL(window.location.href);
             const params = new URLSearchParams(url.search);
@@ -163,17 +163,15 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
 
             const newQuery = Object.fromEntries(params.entries());
 
-            return window.location.href.split('?')[0]+'?'+new URLSearchParams(newQuery).toString();
-        }else{
+            return window.location.href.split('?')[0] + '?' + new URLSearchParams(newQuery).toString();
+        } else {
             return window.location.href;
         }
 
     }
-    
+
     const getServiceProviderLabel = () => {
-        switch(serviceProvider){
-            case 'google':
-                return 'Google Translate';
+        switch (serviceProvider) {
             case 'localAiTranslator':
                 return 'Chrome AI Translator';
             default:
@@ -182,221 +180,224 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
     }
 
     const allPostStatus = (postId) => {
-        const targetLangsArr=selectTargetLanguages(store.getState(), postId);
-        let allPostStatus=true;
-        
-        if(!targetLangsArr || !targetLangsArr.length){
+        const targetLangsArr = selectTargetLanguages(store.getState(), postId);
+        let allPostStatus = true;
+
+        if (!targetLangsArr || !targetLangsArr.length) {
             return true;
         }
 
-        for(let i=0; i<targetLangsArr.length; i++){
-            if(!translatePostInfo[postId + '_' + targetLangsArr[i]] || ['pending', 'in-progress', 'running'].includes(translatePostInfo[postId + '_' + targetLangsArr[i]].status)){
-                allPostStatus=false;
+        for (let i = 0; i < targetLangsArr.length; i++) {
+            if (!translatePostInfo[postId + '_' + targetLangsArr[i]] || ['pending', 'in-progress', 'running'].includes(translatePostInfo[postId + '_' + targetLangsArr[i]].status)) {
+                allPostStatus = false;
                 break;
             }
         }
-        
+
         return allPostStatus;
-    }
+    };
 
     return (
-        errorModal ? <ErrorModalBox message={errorModalData.errorHtml} onClose={closeErrorModal} Title={__('Bulk Translation Error', 'linguator-multilingual-ai-translation')} prefix={prefix} />:
-        <div id={`${prefix}-status-modal-container`}>
-            <h2 className={`${prefix}-bulk-status-heading ${bulkStatus}`}>{sprintf(__('Bulk Translation %s', 'linguator-multilingual-ai-translation'), getBulkStatus())}{bulkStatus === 'running' && <span className={`${prefix}-bulk-status-running`}></span>}</h2>
-            <div className={`${prefix}-status-modal-close`} onClick={onModalClose}>&times;</div>
-            {(countInfo.totalPosts < 1 && countInfo.errorPosts < 1) && !isLoading ?
+        errorModal ? <ErrorModalBox message={errorModalData.errorHtml} onClose={closeErrorModal} Title={__('Bulk Translation Error', 'linguator-multilingual-ai-translation')} prefix={prefix} /> :
+            <div id={`${prefix}-status-modal-container`}>
+                <h2 className={`${prefix}-bulk-status-heading ${bulkStatus}`}>{sprintf(__('Bulk Translation %s', 'linguator-multilingual-ai-translation'), getBulkStatus())}{bulkStatus === 'running' && <span className={`${prefix}-bulk-status-running`}></span>}</h2>
+                <div className={`${prefix}-status-modal-close`} onClick={onModalClose}>&times;</div>
+                {(countInfo.totalPosts < 1 && countInfo.errorPosts < 1) && !isLoading ?
                     <p>{emptyPostMessage}</p> :
                     <>
                         {isLoading && <div className={`${prefix}-progress-skeleton`}></div>}
                         {(countInfo.totalPosts > 1) && progressBarVisibility && !isLoading ?
-                        <>
-                            <div className={`${prefix}-overall-progress`}>
-                                <div className={`${prefix}-progress-bar`}>
-                                    <div className={`${prefix}-progress`} style={{width: progressStatus + '%'}}>{progressStatus + '%'}</div>
+                            <>
+                                <div className={`${prefix}-overall-progress`}>
+                                    <div className={`${prefix}-progress-bar`}>
+                                        <div className={`${prefix}-progress`} style={{ width: progressStatus + '%' }}>{progressStatus + '%'}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            {charactersCountVisibility &&
-                                <div className={`${prefix}-translator-strings-count`}>
-                                    {__('Wahooo! You have saved your valuable time via auto translating', 'linguator-multilingual-ai-translation')}
-                                    <strong className="totalChars"> {countInfo.charactersTranslated} </strong>{__('characters using', 'linguator-multilingual-ai-translation')}
-                                <strong> {getServiceProviderLabel()}</strong>
+                                {charactersCountVisibility &&
+                                    <div className={`${prefix}-translator-strings-count`}>
+                                        {__('Wahooo! You have saved your valuable time via auto translating', 'linguator-multilingual-ai-translation')}
+                                        <strong className="totalChars"> {countInfo.charactersTranslated} </strong>{__('characters using', 'linguator-multilingual-ai-translation')}
+                                        <strong> {getServiceProviderLabel()}</strong>
+                                    </div>
+                                }
+                            </> : (countInfo.postsTranslated > 0 &&
+                                <div className={`${prefix}-count-container`}>
+                                    <div className={`${prefix}-post-count`}>
+                                        <span className={`${prefix}-count-text-heading`}>{__('Posts Translated:', 'linguator-multilingual-ai-translation')} </span>
+                                        <span className={`${prefix}-post-translated-post`}>{countInfo.postsTranslated}</span>
+                                        <span className={`${prefix}-post-text`}> {__('out of', 'linguator-multilingual-ai-translation')} </span>
+                                        <span className={`${prefix}-post-total`}>{countInfo.totalPosts}</span>
+                                        <span className={`${prefix}-post-total-text`}> {__('posts translated', 'linguator-multilingual-ai-translation')}</span>
+                                    </div>
+                                    <div className={`${prefix}-string-count`}>
+                                        <span className={`${prefix}-count-text-heading`}>{__('Strings:', 'linguator-multilingual-ai-translation')} </span>
+                                        <span className={`${prefix}-string-number`}>{countInfo.stringsTranslated}</span>
+                                    </div>
+                                    <div className={`${prefix}-char-count`}>
+                                        <span className={`${prefix}-count-text-heading`}>{__('Characters:', 'linguator-multilingual-ai-translation')} </span>
+                                        <span className={`${prefix}-char-number`}>{countInfo.charactersTranslated}</span>
+                                    </div>
                                 </div>
-                            }
-                        </> : (countInfo.postsTranslated > 0 &&
-                            <div className={`${prefix}-count-container`}>
-                                <div className={`${prefix}-post-count`}>
-                                    <span className={`${prefix}-count-text-heading`}>{__('Posts Translated:', 'linguator-multilingual-ai-translation')} </span>
-                                    <span className={`${prefix}-post-translated-post`}>{countInfo.postsTranslated}</span>
-                                    <span className={`${prefix}-post-text`}> {__('out of', 'linguator-multilingual-ai-translation')} </span>
-                                    <span className={`${prefix}-post-total`}>{countInfo.totalPosts}</span>
-                                    <span className={`${prefix}-post-total-text`}> {__('posts translated', 'linguator-multilingual-ai-translation')}</span>
-                                </div>
-                                <div className={`${prefix}-string-count`}>
-                                    <span className={`${prefix}-count-text-heading`}>{__('Strings:', 'linguator-multilingual-ai-translation')} </span>
-                                    <span className={`${prefix}-string-number`}>{countInfo.stringsTranslated}</span>
-                                </div>
-                                <div className={`${prefix}-char-count`}>
-                                    <span className={`${prefix}-count-text-heading`}>{__('Characters:', 'linguator-multilingual-ai-translation')} </span>
-                                    <span className={`${prefix}-char-number`}>{countInfo.charactersTranslated}</span>
-                                </div>
-                            </div>
-                        )
+                            )
                         }
 
                         <div className={`${prefix}-status-table-container`}>
                             <div>
                                 <table className={`${prefix}-status-table`}>
                                     <thead>
-                                    <tr>
-                                        <th>{__('Language', 'linguator-multilingual-ai-translation')}</th>
-                                        <th>{__('Status', 'linguator-multilingual-ai-translation')}</th>
-                                        <th>{__('Title', 'linguator-multilingual-ai-translation')}</th>
-                                        <th>{__('Actions', 'linguator-multilingual-ai-translation')}</th>
-                                    </tr>
+                                        <tr>
+                                            <th>{__('Language', 'linguator-multilingual-ai-translation')}</th>
+                                            <th>{__('Status', 'linguator-multilingual-ai-translation')}</th>
+                                            <th>{__('Title', 'linguator-multilingual-ai-translation')}</th>
+                                            <th>{__('Actions', 'linguator-multilingual-ai-translation')}</th>
+                                        </tr>
                                     </thead>
 
                                     <tbody>
-                                    {isLoading &&
-                                        <>
-                                            <tr>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                                <td>
-                                                    <div className={`${prefix}-progress-skeleton`}></div>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    }
-                                    {!isLoading && Object.keys(errorPostsInfo).length > 0 &&
-                                        Object.keys(errorPostsInfo).map((key, index)=>{
-                                            return (
-                                                <React.Fragment key={key}>
-                                                <tr key={`group-title-${key}`} className={`${prefix}-group-title`}>
-                                                    <td colSpan="5">
-                                                        {errorPostsInfo[key]?.title || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                        {isLoading &&
+                                            <>
+                                                <tr>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
+                                                    </td>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
+                                                    </td>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
+                                                    </td>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
                                                     </td>
                                                 </tr>
-                                                <tr key={key}>
-                                                    <td colSpan="4" style={{textAlign: 'center' , width: '100%'}} className={`${prefix}-error-message`} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(errorPostsInfo[key].errorMessage)}}></td>
-                                                </tr>
-                                                </React.Fragment>
-                                            );
-                                        })
-                                    }
-                                    {!isLoading && Object.keys(translatePostInfo).map((key, index)=>{
-                                        const info = translatePostInfo[key];
-                                        const rows = [];
-                                        const workingStatus=info.status === 'running' || info.status === 'in-progress' ? true : false;
-
-                                        if (info.firstPostLanguage) {
-                                            rows.push(
-                                                <tr key={`group-title-${info.parentPostId || key}`} className={`${prefix}-group-title`}>
-                                                    <td colSpan="5">
-                                                        {info.parentPostTitle || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                                <tr>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
+                                                    </td>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
+                                                    </td>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
+                                                    </td>
+                                                    <td>
+                                                        <div className={`${prefix}-progress-skeleton`}></div>
                                                     </td>
                                                 </tr>
-                                            );
+                                            </>
                                         }
+                                        {!isLoading && Object.keys(errorPostsInfo).length > 0 &&
+                                            Object.keys(errorPostsInfo).map((key, index) => {
+                                                return (
+                                                    <React.Fragment key={key}>
+                                                        <tr key={`group-title-${key}`} className={`${prefix}-group-title`}>
+                                                            <td colSpan="5">
+                                                                {errorPostsInfo[key]?.title || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                                            </td>
+                                                        </tr>
+                                                        <tr key={key}>
+                                                            <td colSpan="4" style={{ textAlign: 'center', width: '100%' }} className={`${prefix}-error-message`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(errorPostsInfo[key].errorMessage) }}></td>
+                                                        </tr>
+                                                    </React.Fragment>
+                                                );
+                                            })
+                                        }
+                                        {!isLoading && Object.keys(translatePostInfo).map((key, index) => {
+                                            const info = translatePostInfo[key];
+                                            const rows = [];
+                                            const workingStatus = info.status === 'running' || info.status === 'in-progress' ? true : false;
 
-                                        // Language row
-                                        rows.push(
-                                            <tr key={key} className={`${prefix}-td-${info.status}`}>
-                                                <td className={`${prefix}-status-flag`}>
-                                                    {info.flagUrl && <img src={info.flagUrl} width="20" alt={info.targetLanguage}/>}
-                                                    {info.languageName || info.targetLanguage}
-                                                </td>
-                                                {info.status === 'error' ?
-                                                <>
-                                                    <td colSpan={`${info.errorHtml ? '2' : '3'}`}>{info.errorMessage}</td>
-                                                    {info.errorHtml && <td colSpan="1" onClick={()=>{handleErrorModal(info)}}><button className={`${prefix}-status-error-button`}>{__('Error Details', 'linguator-multilingual-ai-translation')}</button></td>}
-                                                </> :
-                                                <>
-                                                    <td>
-                                                        <span className={`${prefix}-status ${info.messageClass} ${info.status}`}>
-                                                            {info.status === 'pending' && __('Pending', 'linguator-multilingual-ai-translation')}
-                                                            {info.status === 'completed' && __('Completed', 'linguator-multilingual-ai-translation')}
-                                                            {workingStatus && <div className={`${prefix}-progress-bar-circular`} data-id={info.parentPostId + '_' + info.targetLanguage}>
-                                                                <svg className={`${prefix}-circle`} viewBox="0 0 36 36">
-                                                                    <path className={`${prefix}-bg`} d="M18 2.0845
-                                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                                    <path className={`${prefix}-progress`}
-                                                                    strokeDasharray="0, 100"
-                                                                    d="M18 2.0845
-                                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                                </svg>
-                                                                <div className={`${prefix}-percentage`}>0%</div>
-                                                            </div>}
-                                                        </span>
+                                            if (info.firstPostLanguage) {
+                                                rows.push(
+                                                    <tr key={`group-title-${info.parentPostId || key}`} className={`${prefix}-group-title`}>
+                                                        <td colSpan="5">
+                                                            {info.parentPostTitle || __('Untitled', 'linguator-multilingual-ai-translation')}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
+
+                                            // Language row
+                                            rows.push(
+                                                <tr key={key} className={`${prefix}-td-${info.status}`}>
+                                                    <td className={`${prefix}-status-flag`}>
+                                                        <div>
+                                                        {info.flagUrl && <img src={info.flagUrl} width="20" alt={info.targetLanguage} />}
+                                                        {info.languageName || info.targetLanguage}
+                                                        {info.Retranslate && info.Retranslate?.status && <span className={`${prefix}-retranslate`}>{__('Retranslate', 'linguator-multilingual-ai-translation')}</span>}
+                                                        </div>
                                                     </td>
-                                                    <td>
+                                                    {info.status === 'error' ?
                                                         <>
-                                                        {info.status === 'completed' ?
-                                                            <a href={info.postLink} target="_blank" rel="noopener noreferrer">{info.targetPostTitle}</a> :
-                                                            (info.status === 'in-progress' ?
-                                                            <div className={`${prefix}-${info.messageClass}-text`}>{__('In Progress', 'linguator-multilingual-ai-translation')}<span></span></div> :
-                                                            <div className={`${prefix}-progress-skeleton short`}></div>)
-                                                        }
+                                                            <td colSpan={`${info.errorHtml ? '2' : '3'}`}>{info.errorMessage}</td>
+                                                            {info.errorHtml && <td colSpan="1" onClick={() => { handleErrorModal(info) }}><button className={`${prefix}-status-error-button`}>{__('Error Details', 'linguator-multilingual-ai-translation')}</button></td>}
+                                                        </> :
+                                                        <>
+                                                            <td>
+                                                                <span className={`${prefix}-status ${info.messageClass} ${info.status}`}>
+                                                                    {info.status === 'pending' && __('Pending', 'linguator-multilingual-ai-translation')}
+                                                                    {info.status === 'completed' && __('Completed', 'linguator-multilingual-ai-translation')}
+                                                                    {workingStatus && <div className={`${prefix}-progress-bar-circular`} data-id={info.parentPostId + '_' + info.targetLanguage}>
+                                                                        <svg className={`${prefix}-circle`} viewBox="0 0 36 36">
+                                                                            <path className={`${prefix}-bg`} d="M18 2.0845
+                                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                                            <path className={`${prefix}-progress`}
+                                                                                strokeDasharray="0, 100"
+                                                                                d="M18 2.0845
+                                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                                        </svg>
+                                                                        <div className={`${prefix}-percentage`}>0%</div>
+                                                                    </div>}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <>
+                                                                    {info.status === 'completed' ?
+                                                                        <a href={info.postLink} target="_blank" rel="noopener noreferrer">{info.targetPostTitle}</a> :
+                                                                        (info.status === 'in-progress' ?
+                                                                            <div className={`${prefix}-${info.messageClass}-text`}>{__('In Progress', 'linguator-multilingual-ai-translation')}<span></span></div> :
+                                                                            <div className={`${prefix}-progress-skeleton short`}></div>)
+                                                                    }
+                                                                </>
+                                                            </td>
+                                                            <td>
+                                                                {info.status === 'completed' && info.targetPostId ?
+                                                                    <span className={`${prefix}-view-link`}>
+                                                                        {allPostStatus(info.parentPostId) ? (
+                                                                            <a
+                                                                                href={info.postEditLink}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className="button button-primary"
+                                                                                title={sprintf(__('Open the translated %s for review', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
+                                                                            >
+                                                                                {__('Review', 'linguator-multilingual-ai-translation')}
+                                                                            </a>
+                                                                        ) : (
+                                                                            <button
+                                                                                className="button disabled"
+                                                                                disabled
+                                                                                title={sprintf(__('Please wait until all translations for this %s are complete before reviewing.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
+                                                                            >
+                                                                                {__('Review', 'linguator-multilingual-ai-translation')}
+                                                                            </button>
+                                                                        )}
+                                                                    </span>
+                                                                    :
+                                                                    (info.status === 'in-progress' ?
+                                                                        <div className={`${prefix}-${info.messageClass}-text`}>{__('In Progress', 'linguator-multilingual-ai-translation')}<span></span></div> :
+                                                                        <div className={`${prefix}-progress-skeleton short`}></div>)
+                                                                }
+                                                            </td>
                                                         </>
-                                                    </td>
-                                                    <td>
-                                                        {info.status === 'completed' && info.targetPostId ?
-                                                            <span className={`${prefix}-view-link`}>
-                                                                {allPostStatus(info.parentPostId) ? (
-                                                                    <a
-                                                                        href={info.postEditLink}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className="button button-primary"
-                                                                        title={sprintf(__('Open the translated %s for review', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
-                                                                    >
-                                                                        {__('Review', 'linguator-multilingual-ai-translation')}
-                                                                    </a>
-                                                                ) : (
-                                                                    <button
-                                                                        className="button disabled"
-                                                                        disabled
-                                                                        title={sprintf(__('Please wait until all translations for this %s are complete before reviewing.', 'linguator-multilingual-ai-translation'), lmatBulkTranslationGlobal.post_label)}
-                                                                    >
-                                                                        {__('Review', 'linguator-multilingual-ai-translation')}
-                                                                    </button>
-                                                                )}
-                                                            </span>
-                                                        : 
-                                                        (info.status === 'in-progress' ?
-                                                            <div className={`${prefix}-${info.messageClass}-text`}>{__('In Progress', 'linguator-multilingual-ai-translation')}<span></span></div> :
-                                                            <div className={`${prefix}-progress-skeleton short`}></div>)
-                                                        }
-                                                    </td>
-                                                </>
-                                                }
-                                            </tr>
-                                        );
+                                                    }
+                                                </tr>
+                                            );
 
-                                        return rows;
-                                    })}
+                                            return rows;
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
@@ -407,8 +408,8 @@ const StatusModal = ({ postIds, selectedLanguages, prefix, onDestory }) => {
                             </div>
                         }
                     </>
-            }
-        </div>
+                }
+            </div>
     );
 };
 

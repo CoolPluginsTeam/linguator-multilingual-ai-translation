@@ -9,16 +9,21 @@ import storeTranslateString from "../store-translate-strings/index.js";
  * @param {number} props.scrollSpeed - The duration of the scroll animation in milliseconds.
  */
 const ScrollAnimation = (props) => {
-    const { element, scrollSpeed, prefix, completedPostStatus, totalPosts, postId, lang } = props;
+    const { element, scrollSpeed, prefix, completedPostStatus, totalPosts, postId, lang, provider } = props;
 
-    if(element.scrollHeight - element.offsetHeight <= 0){
+    if (element.scrollHeight - element.offsetHeight <= 0) {
         return;
     }
-    
+
     let startTime = null;
     let startScrollTop = element.scrollTop;
     const animateScroll = () => {
-        
+        const stringContainer = document.querySelector(`#${prefix}-${provider}-table-container[data-render-id="${postId}"]`);
+
+        if(!stringContainer){
+            return;
+        }
+
         const scrollHeight = element.scrollHeight - element.offsetHeight + 100;
         const currentTime = performance.now();
         const duration = scrollSpeed;
@@ -36,7 +41,7 @@ const ScrollAnimation = (props) => {
         var clientHeight = element.clientHeight;
         var scrollPercentage = (scrollTop / (currentScrollHeight - clientHeight)) * 100;
 
-        let completedPercentage=(Math.round(scrollPercentage * 10) / 10).toFixed(2);
+        let completedPercentage = (Math.round(scrollPercentage * 10) / 10).toFixed(2);
         completedPercentage = Math.min(completedPercentage, 100).toString();
 
         updateProgressBarStatus(prefix, postId, lang, completedPercentage, completedPostStatus, totalPosts);
@@ -45,7 +50,7 @@ const ScrollAnimation = (props) => {
             return; // Stop animate scroll
         }
 
-        if(scrollPosition || 0 === scrollPosition){
+        if (scrollPosition || 0 === scrollPosition) {
             element.scrollTop = scrollPosition;
         }
 
@@ -59,24 +64,24 @@ const ScrollAnimation = (props) => {
 /**
  * Updates the translated content in the string container based on the provided translation object.
  */
-const updateTranslatedContent = ({provider, startTime, endTime, prefix, postId, lang, storeDispatch, glossaryTerms}) => {
+const updateTranslatedContent = ({ provider, startTime, endTime, prefix, postId, lang, storeDispatch, glossaryTerms }) => {
     const stringContainer = document.querySelector(`#${prefix}-${provider}-table-container[data-render-id="${postId}"]`);
 
-    if(!stringContainer){
+    if (!stringContainer) {
         return;
     }
 
-    const translatedData = stringContainer.querySelectorAll(`.${prefix}-${provider}-table-cell`);    
+    const translatedData = stringContainer.querySelectorAll(`.${prefix}-${provider}-table-cell`);
     translatedData.forEach((ele, index) => {
-        if(glossaryTerms && glossaryTerms[[lang]]){
-            const glossaryTermsSpan=ele.querySelectorAll('span[data-glossary-term]');
+        if (glossaryTerms && glossaryTerms[[lang]]) {
+            const glossaryTermsSpan = ele.querySelectorAll('span[data-glossary-term]');
 
             glossaryTermsSpan.forEach(glossarySpan => {
-                const glossaryTermKey=glossarySpan.dataset?.glossaryTerm;
-                const glossaryTermValue=glossaryTerms[lang]?.[glossaryTermKey];
-                
-                if(glossaryTermValue && '' !== glossaryTermValue){
-                    glossarySpan.innerHTML=glossarySpan.innerText.replace(glossaryTermKey, glossaryTermValue);
+                const glossaryTermKey = glossarySpan.dataset?.glossaryTerm;
+                const glossaryTermValue = glossaryTerms[lang]?.[glossaryTermKey.toLowerCase()];
+
+                if (glossaryTermValue && '' !== glossaryTermValue) {
+                    glossarySpan.innerHTML = glossarySpan.innerText.replace(glossaryTermKey, glossaryTermValue);
                 }
             });
         }
@@ -96,36 +101,36 @@ const updateTranslatedContent = ({provider, startTime, endTime, prefix, postId, 
  * @param {number} endTime - The end time of the translation.
  * @param {Function} translateStatus - The function to call when the translation is complete.
  */
-const onCompleteTranslation = ({provider, startTime, endTime, prefix, postId, lang, storeDispatch, glossaryTerms}) => {
+const onCompleteTranslation = ({ provider, startTime, endTime, prefix, postId, lang, storeDispatch, glossaryTerms }) => {
     const stringContainer = document.querySelector(`#${prefix}-${provider}-table-container[data-render-id="${postId}"]`);
 
-    if(!stringContainer){
+    if (!stringContainer) {
         return;
     }
 
-    updateTranslatedContent({provider, startTime, endTime, prefix, postId, lang, storeDispatch, glossaryTerms});
+    updateTranslatedContent({ provider, startTime, endTime, prefix, postId, lang, storeDispatch, glossaryTerms });
 }
 
-const updateProgressBarStatus=(prefix, postId, lang, percentage, completedPostStatus, totalPosts)=>{
-    const progressBarCircular=document.querySelector(`.${prefix}-progress-bar-circular[data-id="${postId}_${lang}"]`);
+const updateProgressBarStatus = (prefix, postId, lang, percentage, completedPostStatus, totalPosts) => {
+    const progressBarCircular = document.querySelector(`.${prefix}-progress-bar-circular[data-id="${postId}_${lang}"]`);
 
-    let currentPostCompletedPercentage=percentage;
-    currentPostCompletedPercentage=Math.round(currentPostCompletedPercentage);
-    currentPostCompletedPercentage=Math.min(currentPostCompletedPercentage, 100);
+    let currentPostCompletedPercentage = percentage;
+    currentPostCompletedPercentage = Math.round(currentPostCompletedPercentage);
+    currentPostCompletedPercentage = Math.min(currentPostCompletedPercentage, 100);
 
-    if(progressBarCircular){
-        progressBarCircular.querySelector(`.${prefix}-percentage`).innerHTML=currentPostCompletedPercentage + '%';
-        progressBarCircular.querySelector(`.${prefix}-progress`).style.strokeDasharray=currentPostCompletedPercentage + ', 100';
+    if (progressBarCircular) {
+        progressBarCircular.querySelector(`.${prefix}-percentage`).innerHTML = currentPostCompletedPercentage + '%';
+        progressBarCircular.querySelector(`.${prefix}-progress`).style.strokeDasharray = currentPostCompletedPercentage + ', 100';
     }
 
-    let totalProgress=completedPostStatus + (percentage / totalPosts);
-    const totalProgressBar=document.querySelector(`.${prefix}-overall-progress .${prefix}-progress`);
-    if(totalProgressBar){
+    let totalProgress = completedPostStatus + (percentage / totalPosts);
+    const totalProgressBar = document.querySelector(`.${prefix}-overall-progress .${prefix}-progress`);
+    if (totalProgressBar) {
 
-        totalProgress=totalProgress.toFixed(2);
-        totalProgress=Math.min(totalProgress, 100);
-        totalProgressBar.style.width=totalProgress + '%';
-        totalProgressBar.innerHTML=totalProgress + '%';
+        totalProgress = totalProgress.toFixed(2);
+        totalProgress = Math.min(totalProgress, 100);
+        totalProgressBar.style.width = totalProgress + '%';
+        totalProgressBar.innerHTML = totalProgress + '%';
     }
 }
 
@@ -142,19 +147,19 @@ const updateProgressBarStatus=(prefix, postId, lang, percentage, completedPostSt
  * @param {number} totalPosts - The total number of posts.
  * @param {number} completedPostStatus - The completed post status.
  */
-const ModalStringScroll = async ({provider, prefix, postId, lang, storeDispatch, totalPosts, completedPostStatus, glossaryTerms}) => {
+const ModalStringScroll = async ({ provider, prefix, postId, lang, storeDispatch, totalPosts, completedPostStatus, glossaryTerms }) => {
     const startTime = new Date().getTime();
-    
-    let translateComplete = false;
-    
-    const stringContainer = document.querySelector(`#${prefix}-${provider}-table-container[data-render-id="${postId}"]`);
-    let scrollHeight=false;
 
-    if(stringContainer){
+    let translateComplete = false;
+
+    const stringContainer = document.querySelector(`#${prefix}-${provider}-table-container[data-render-id="${postId}"]`);
+    let scrollHeight = false;
+
+    if (stringContainer) {
         stringContainer.scrollTop = 0;
         scrollHeight = stringContainer.scrollHeight;
     }
-    
+
     await new Promise((resolve) => {
         // Defensive: check for valid container
         if (!stringContainer) {
@@ -166,9 +171,9 @@ const ModalStringScroll = async ({provider, prefix, postId, lang, storeDispatch,
         if (typeof scrollHeight === 'number' && scrollHeight > 100) {
 
             const visibilityChange = () => {
-                if(document.visibilityState === 'visible'){
+                if (document.visibilityState === 'visible') {
                     const scrollSpeed = Math.ceil(scrollHeight / (stringContainer.offsetHeight || 1)) * 1000;
-                    ScrollAnimation({ element: stringContainer, scrollSpeed, prefix, totalPosts, completedPostStatus, postId, lang });
+                    ScrollAnimation({ element: stringContainer, scrollSpeed, prefix, provider, totalPosts, completedPostStatus, postId, lang });
                 }
             }
 
@@ -176,7 +181,7 @@ const ModalStringScroll = async ({provider, prefix, postId, lang, storeDispatch,
 
             setTimeout(() => {
                 const scrollSpeed = Math.ceil(scrollHeight / (stringContainer.offsetHeight || 1)) * 1000;
-                ScrollAnimation({ element: stringContainer, scrollSpeed, provider, prefix, totalPosts, completedPostStatus, postId, lang });
+                ScrollAnimation({ element: stringContainer, scrollSpeed, provider, prefix, provider, totalPosts, completedPostStatus, postId, lang });
             }, 500);
 
             const onScroll = () => {

@@ -131,13 +131,13 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
 
         Object.keys(translation).forEach(key=>{
             const keys=key.split('_lmat_bulk_content_temp_');
-            if(keys[0] === 'title'){
+            if(keys[0] === 'title' && source.title){
                 updateTitle(source, translation[keys[0]]);
-            }else if(keys[0] === 'post_name'){
+            }else if(keys[0] === 'post_name' && source.post_name){
                 updatePostName(source, translation[keys[0]]);
-            }else if(keys[0] === 'excerpt'){
+            }else if(keys[0] === 'excerpt' && source.excerpt){
                 updateExcerpt(source, translation[keys[0]]);
-            }else if(keys[0] === 'content'){
+            }else if(keys[0] === 'content' && source.content){
                 let keyArray=keys;
 
                 let currentBlock = source.content;
@@ -151,7 +151,6 @@ const updateGutenbergContent=async ({source, lang, translatedContent, servicePro
                     const indexOfAttrs = keyArray.indexOf("attrs");
                     const blockKey = keyArray.slice(0, indexOfAttrs);
                     
-                    let innerContentParentBlock=null;
                     let innerContentKey=null;
                     let innerContentCurrentBlock=source.content;
 

@@ -1,4 +1,4 @@
-.lmat-bulk-translate-btn {
+.lmat-bulk-translate-btn, .lmat-bulk-translate-btn_re_translation {
   background: #3db63d !important;
   color: #fff !important;
   border-color: #33a133 !important;
@@ -6,22 +6,26 @@
   transition: all .3s ease-in-out;
 }
 
-.lmat-bulk-translate-btn:hover {
+.lmat-bulk-translate-btn:hover, .lmat-bulk-translate-btn_re_translation:hover {
   background: #37a737 !important;
   color: #fff !important;
   border-color: #238b23 !important;
 }
 
-.lmat-bulk-translate-btn.providers-config-no-active {
+.lmat-bulk-translate-btn.providers-config-no-active, .lmat-bulk-translate-btn_re_translation.providers-config-no-active {
   background: #f6f7f7 !important;
   border-color: #c3c4c7 !important;
   color: #50575e !important;
 }
 
-.lmat-bulk-translate-btn.providers-config-no-active:hover {
+.lmat-bulk-translate-btn.providers-config-no-active:hover, .lmat-bulk-translate-btn_re_translation.providers-config-no-active:hover {
   background: #e1e1e1 !important;
   color: #50575e !important;
   border-color: #c9c9c9 !important;
+}
+
+.lmat-bulk-translate-btn_re_translation {
+  margin-right: 10px !important;
 }
 
 .lmat-bulk-translate-notice {
@@ -238,7 +242,6 @@
 
 #lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-setting-modal-container .lmat-bulk-translate-setting-modal-content .lmat-bulk-translate-setting-modal-body tbody td.lmat-bulk-translate-provider-name > svg {
   width: 45px;
-  height: auto;
   margin-left: 15px;
 }
 
@@ -537,8 +540,15 @@
   background-color: transparent !important;
 }
 
-#lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-status-modal-container .lmat-bulk-translate-status-table tbody td:nth-child(1) {
-  min-width: 120px;
+#lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-status-modal-container .lmat-bulk-translate-status-table tbody td:nth-child(1) div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 #lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-status-modal-container .lmat-bulk-translate-status-table tbody td:nth-child(1) img {
@@ -620,6 +630,17 @@
   border-color: #ff152d;
 }
 
+#lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-status-modal-container .lmat-bulk-translate-status-table .lmat-bulk-translate-retranslate {
+  padding: 3px 5px;
+  border-radius: 28px;
+  font-size: 12px;
+  color: #fff;
+  border: 1px solid transparent;
+  background: #5cb85c;
+  margin-right: 7px;
+  line-height: 1;
+}
+
 #lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-status-modal-container .lmat-bulk-translate-status-table .lmat-bulk-translate-status {
   padding: 4px 8px;
   border-radius: 5px;
@@ -678,7 +699,6 @@
   width: auto;
   padding: .1rem .5rem;
   border-radius: 27px;
-  white-space: nowrap;
 }
 
 #lmat-bulk-translate-wrapper #lmat-bulk-translate-container #lmat-bulk-translate-status-modal-container .lmat-bulk-translate-status-table .lmat-bulk-translate-td-in-progress .lmat-bulk-translate-in-progress-text span {

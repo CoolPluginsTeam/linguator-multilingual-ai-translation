@@ -46,7 +46,7 @@ const filterContent =async ({content, editorType, service, postId, storeDispatch
         await FilterMetaFields({service, postId, storeDispatch, metaFields, allowedMetaFields, filterHtmlContent: data.filterHtmlContent, sourceLanguage});
     }
 
-    if(filters[editorType]){
+    if(filters[editorType] && data.content && data.content !== ''){
         return await filters[editorType](data);
     }
 

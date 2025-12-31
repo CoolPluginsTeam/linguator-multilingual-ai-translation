@@ -58,13 +58,13 @@ const updateElementorContent = async ({source, lang, translatedContent, serviceP
     const updateContent = (source, translation) => {
         Object.keys(translation).forEach(key=>{
             const keys=key.split('_lmat_bulk_content_temp_');
-            if(keys[0] === 'title'){
+            if(keys[0] === 'title' && source.title){
                 updateTitle(source, translation[keys[0]]);
-            }else if(keys[0] === 'post_name'){
+            }else if(keys[0] === 'post_name' && source.post_name){
                 updatePostName(source, translation[keys[0]]);
-            }else if(keys[0] === 'excerpt'){
+            }else if(keys[0] === 'excerpt' && source.excerpt){
                 updateExcerpt(source, translation[keys[0]]);
-            }else if(keys[0] === 'content'){
+            }else if(keys[0] === 'content' && source.content){
                 let keyArray=keys;
 
                 let currentElement = source.content;

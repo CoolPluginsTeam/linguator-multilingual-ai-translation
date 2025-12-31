@@ -1,6 +1,6 @@
 $prefix: lmat-bulk-translate;
 
-.#{$prefix}-btn {
+.#{$prefix}-btn, .#{$prefix}-btn_re_translation {
     background: #3db63d !important;
     color: #fff !important;
     border-color: #33a133 !important;
@@ -25,6 +25,10 @@ $prefix: lmat-bulk-translate;
             border-color:#c9c9c9!important;
         }
     }
+}
+
+.#{$prefix}-btn_re_translation{
+    margin-left: 10px !important;
 }
 
 .#{$prefix}-notice {
@@ -221,7 +225,6 @@ $prefix: lmat-bulk-translate;
             
                                 &>svg{
                                     width: 45px;
-                                    height: auto;
                                     margin-right: 15px;
                                 }
                             }
@@ -497,7 +500,11 @@ $prefix: lmat-bulk-translate;
                             }
                         }
                         &:nth-child(1){
-                            min-width: 120px;
+                            div{
+                                display: flex;
+                                flex-wrap: nowrap;
+                                align-items: center;
+                            }
 
                             img{
                                 margin-right: 6px;
@@ -576,6 +583,17 @@ $prefix: lmat-bulk-translate;
                     }
                 }
 
+                .#{$prefix}-retranslate{
+                   padding: 3px 5px;
+                    border-radius: 28px;
+                    font-size: 12px;
+                    color: #fff;
+                    border: 1px solid transparent;
+                    background: #5cb85c;
+                    margin-left: 7px;
+                    line-height: 1;
+                }
+
                 .#{$prefix}-status {
                     padding: 4px 8px;
                     border-radius: 5px;
@@ -634,7 +652,6 @@ $prefix: lmat-bulk-translate;
                         width: auto;
                         padding: .1rem .5rem;
                         border-radius: 27px;
-                        white-space: nowrap;
 
                         span {
                             width: 15px;

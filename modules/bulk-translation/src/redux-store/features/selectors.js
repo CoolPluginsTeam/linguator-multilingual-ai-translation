@@ -35,19 +35,40 @@ export const selectSourceEntries=(state, postId)=>{
   return source;
 }
 
-export const selectTargetContent=(state, postId)=>{
+export const selectTargetContent=(state, postId, fields=false, metaFieldsKeys=false)=>{
     const filteredObject={};
 
     if(state.translatedContent[postId] && Object.keys(state.translatedContent[postId]).length > 0){
         Object.keys(state.translatedContent[postId]).forEach(key=>{
-            if(state.translatedContent[postId][key]?.targetContent){
+            if(state.translatedContent[postId][key]?.targetContent && (!fields || fields && typeof fields === 'object' && fields.includes(key.split('_')[0]))){
+              if(metaFieldsKeys && 'metaFields' === key.split('_')[0] && metaFieldsKeys.includes(key)){
                 filteredObject[key]=state.translatedContent[postId][key]?.targetContent;
+              }else if(!metaFieldsKeys || key.split('_')[0] !== 'metaFields'){
+                filteredObject[key]=state.translatedContent[postId][key]?.targetContent;
+              }
             }
         });
     }
 
-
     return filteredObject;
+}
+
+export const availableContentTypes=(state, postId)=>{
+    const content=state.parentPostsInfo[postId]?.originalContent;
+    
+    if(content){
+
+      const contentTypes=[];
+        Object.keys(content).forEach(key=>{
+            if(typeof content[key] === 'object' && Object.keys(content[key]).length > 0 || typeof content[key] === 'string' && '' !== content[key]) {
+                contentTypes.push(key);
+            }
+        });
+
+        return contentTypes;
+    }
+
+    return [];
 }
 
 export const selectTargetLanguages=(state, postId)=>{

@@ -19,7 +19,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 	 *
 	 * This class handles the supported blocks for the Linguator plugin.
 	 *
-	 * @package LMATP
+	 * @package LMAT
 	 */
 	class Supported_Blocks {
 		/**
@@ -38,7 +38,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		private $custom_block_data_array = array();
 
 		/**
-		 * LMATP plugin category.
+		 * LMAT plugin category.
 		 *
 		 * @var array
 		 */

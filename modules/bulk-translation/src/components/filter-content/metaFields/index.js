@@ -40,7 +40,7 @@ const filterMetaFields = async ({ metaFields, service, postId, storeDispatch, al
     const metaFieldsLoop = async (key, index) => {
         if (allowedMetaFields && allowedMetaFields[key] && allowedMetaFields[key].status) {
             const undefinedKey = 'metaFields_lmat_' + key;
-            if (allowedMetaFields[key].type === 'string') {
+            if (allowedMetaFields[key].type === 'string' && typeof metaFields[key] === 'string') {
                 const originalValue = metaFields[key];
                 let value = originalValue;
 

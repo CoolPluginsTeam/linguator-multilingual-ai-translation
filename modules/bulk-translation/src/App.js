@@ -141,7 +141,6 @@ const App = ({ onDestory, prefix, postIds }) => {
         id={`${prefix}-container`}
         className={containerCls()}>
         {settingModalVisibility && <SettingModal
-            postIds={postIds}
             prefix={prefix}
             onDestory={destroyApp}
             onCloseHandler={settingModalVisibilityHandler}

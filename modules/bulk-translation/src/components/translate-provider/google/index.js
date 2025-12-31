@@ -1,9 +1,11 @@
 import ModalStringScroll from "../../string-modal-scroll/index.js";
 import GoogleLanguage from "./google-language.js";
-import { selectProgressStatus, selectTargetContent, selectTranslatePostInfo, selectGlossaryTerms } from "../../../redux-store/features/selectors.js";
+import { selectProgressStatus, selectTargetContent, selectTranslatePostInfo, selectGlossaryTerms, availableContentTypes } from "../../../redux-store/features/selectors.js";
 import { store } from "../../../redux-store/store.js";
 import { updateProgressStatus, updateTranslatePostInfo, unsetPendingPost } from "../../../redux-store/features/actions.js";
 import { __, sprintf } from "@wordpress/i18n";
+import {translateFieldNameSort} from "../../../helper/index.js";
+import reTranslate from "../../re-transalte/index.js";
 
 /**
  * Initializes Google Translate functionality on specific elements based on provided data.
@@ -23,11 +25,14 @@ class GoogleTranslater {
         this.textContentObject = selectTargetContent(store.getState(), postId);
         this.glossaryTerms = selectGlossaryTerms(store.getState(), sourceLang);
         this.activeLanguageGlossaryTerms={};
+        this.availableContentTypes=translateFieldNameSort(availableContentTypes(store.getState(), postId));
+        this.reTranslationStarted=false;
+        this.reTranslationKeys=[];
+        this.reTranslateMetaKeys=[];
         this.appendStringTable();
         updateDestoryHandler(() => {
             this.destroy();
         });
-
     }
 
     destroy = () => {
@@ -38,6 +43,15 @@ class GoogleTranslater {
         this.completedTranslateIndex = 0;
         this.googleTranslator = null;
         this.activeLanguageGlossaryTerms={};
+        const reTranslationData=reTranslate({ postId: this.postId, targetLang, availableContentTypes: this.availableContentTypes, reTranslationKeys: this.reTranslationKeys, reTranslationStatus: this.reTranslationStarted, reTranslateMetaKeys: this.reTranslateMetaKeys });
+
+        if(reTranslationData && reTranslationData.reUpdate){
+            this.reTranslationStarted=reTranslationData.status;
+            this.reTranslationKeys=reTranslationData.reTranslateKeys;
+            this.reTranslateMetaKeys=reTranslationData.reTranslateMetaKeys;
+            this.textContentObject=reTranslationData.targetContent;
+            this.appendStringTable();
+        }
         
         if (this.stopTranslation) return;
 
@@ -217,7 +231,7 @@ class GoogleTranslater {
 
         const endTime = new Date();
         const duration = endTime - this.startTime;
-        const previousDuration = selectTranslatePostInfo(store.getState(), this.postId + '_' + this.activeTargetLang).duration || 0;
+        const previousDuration = selectTranslatePostInfo(store.getState())?.[this.postId + '_' + this.activeTargetLang]?.duration || 0;
 
         this.storeDispatch(updateTranslatePostInfo({ [this.postId + '_' + this.activeTargetLang]: { duration: previousDuration + duration } }));
 

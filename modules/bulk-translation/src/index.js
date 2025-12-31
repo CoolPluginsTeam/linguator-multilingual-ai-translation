@@ -26,6 +26,15 @@ import { __, sprintf } from '@wordpress/i18n';
 
         const handleModalVisibility = (e) => {
             e.preventDefault();
+    
+            setModalVisible(prev => !prev);
+            destroyGoogleWidget();
+
+        }
+
+        const bulkTranslationHandler=(e)=>{
+            e.preventDefault();
+            
             let checkboxClass='table.widefat input[name="post[]"]:checked';
 
             if(lmatBulkTranslationGlobal.taxonomy_page && '' !== lmatBulkTranslationGlobal.taxonomy_page){
@@ -36,14 +45,16 @@ import { __, sprintf } from '@wordpress/i18n';
             const postIds=Array.from(selectedPostIds).map(postId=>postId.value);
 
             setPostIds(postIds);
-            
+
             if(providers.length < 1){
                 setProviderConfigError(prev => !prev);
                 return;
             }
-
-            setModalVisible(prev => !prev);
             
+            handleModalVisibility(e);
+        }
+
+        const destroyGoogleWidget=()=>{
             const googleWidget=document.querySelector('.skiptranslate iframe[id=":1.container"]');
             document.body.classList.remove(prefix+'-google-translate');
 
@@ -53,17 +64,13 @@ import { __, sprintf } from '@wordpress/i18n';
                     closeButton.click();
                 }
             }
-
         }
         
         useEffect(() => {
             const doActionsBtn=document.querySelectorAll(`.${prefix}-btn`);
             if(doActionsBtn){
                 doActionsBtn.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        handleModalVisibility(e);
-                    });
+                    btn.addEventListener('click', bulkTranslationHandler);
                 });
             }
         }, []);
@@ -84,8 +91,8 @@ import { __, sprintf } from '@wordpress/i18n';
 
         return (
             modalVisible ? (
-                <App onDestory={handleModalVisibility} prefix={prefix} postIds={postIds} />
-             ) : providerConfigError ? <div id={`${prefix}-container`}><ErrorModalBox message={providerConfigMsg} onDestroy={handleModalVisibility} onClose={handleModalVisibility} Title='Translation Provider Not Configured' prefix={prefix} /></div> : null
+                <App onDestory={handleModalVisibility} prefix={prefix} postIds={postIds}/>
+            ) : providerConfigError ? <div id={`${prefix}-container`}><ErrorModalBox message={providerConfigMsg} onDestroy={handleModalVisibility} onClose={handleModalVisibility} Title='Translation Provider Not Configured' prefix={prefix} /></div> : null
         );
     }
     

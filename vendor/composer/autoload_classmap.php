@@ -200,6 +200,7 @@ return array(
     'Linguator\\Modules\\REST\\V1\\Bulk_Translation' => $baseDir . '/modules/rest/v1/bulk-translation.php',
     'Linguator\\Modules\\REST\\V1\\Languages' => $baseDir . '/modules/rest/v1/languages.php',
     'Linguator\\Modules\\REST\\V1\\Settings' => $baseDir . '/modules/rest/v1/settings.php',
+    'Linguator\\Modules\\Re_Translation\\LMAT_Re_Translation' => $baseDir . '/modules/re-translation/re-translation.php',
     'Linguator\\Modules\\Wizard\\LMAT_Wizard' => $baseDir . '/modules/wizard/wizard.php',
     'Linguator\\Modules\\sync\\LMAT_Settings_Sync' => $baseDir . '/modules/sync/settings-sync.php',
     'Linguator\\Settings\\Controllers\\LMAT_Settings' => $baseDir . '/admin/settings/controllers/settings.php',
