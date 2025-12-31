@@ -6,7 +6,7 @@ const CopyClipboard = async ({ text = false, startCopyStatus = () => {}, endCopy
         await navigator.clipboard.writeText(text);
       } else {
         // Fallback method if Clipboard API is not supported
-        const textArea = document.createElement('textarea');
+        let textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
         textArea.select();
@@ -14,6 +14,7 @@ const CopyClipboard = async ({ text = false, startCopyStatus = () => {}, endCopy
           document.execCommand('copy');
         }
         document.body.removeChild(textArea);
+        textArea=null;
       }
 
       startCopyStatus();

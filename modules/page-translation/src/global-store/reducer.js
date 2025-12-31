@@ -17,7 +17,8 @@ const TranslateDefaultState = {
     content: [], // Initial state for content translations
     metaFields: {}, // Initial state for meta field translations
     allowedMetaFields: {}, // Initial state for allowed meta fields
-    contentFetchStatus: false // Initial state for content fetch status
+    contentFetchStatus: false, // Initial state for content fetch status
+    reTranslationFields: {},
 };
 
 /**
@@ -91,8 +92,8 @@ const reducer = (state = TranslateDefaultState, action) => {
             return state; // Return the current state if no match
 
         case LmatActionTypes.filteredContentString: // Action to save the filtered content
-        // console.log('action.text', action.text);
-        // console.log('action.id', action.id);
+            // console.log('action.text', action.text);
+            // console.log('action.id', action.id);
             // Update the state with the new filtered content
             return { ...state, content: { ...state.content, [action.id]: { ...(state.content[action.id] || []), filteredString: action.text } } };
 
@@ -156,6 +157,9 @@ const reducer = (state = TranslateDefaultState, action) => {
         case LmatActionTypes.contentFetchStatus: // Action to save the content fetch status
             // Update the state with the new content fetch status
             return { ...state, contentFetchStatus: action.status };
+        case LmatActionTypes.reTranslationFields: // Action to save the retranslate fields
+            // Update the state with the new retranslate fields
+            return { ...state, reTranslationFields: action.fields };
         default: // If the action type does not match any case
             return state; // Return the current state unchanged
     }

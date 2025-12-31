@@ -949,6 +949,33 @@ button.lmat-page-translation-setting-close:hover {
     margin-block: 1rem;
 }
 
+#lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper select{
+    font-size: 14px;
+    line-height: 2;
+    color: #2c3338;
+    border-color: #8c8f94;
+    box-shadow: none;
+    border-radius: 3px;
+    padding: 0 24px 0 8px;
+    min-height: 30px;
+    max-width: 25rem;
+    -webkit-appearance: none;
+    background: #fff url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E') no-repeat right 5px top 55%;
+    background-size: 16px 16px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+#lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper select:hover{
+    color: #2271b1;
+}
+
+#lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper select:focus{
+    border-color: #2271b1;
+    color: #0a4b78;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
 #lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper>button {
     height: 34px;
     pointer-events: none;
@@ -1095,7 +1122,7 @@ body>div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibility:
     }
 }
 
-:where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-yandex-strings-modal, #lmat-page-translation-google-strings-modal) .translator-widget {
+:where(#lmat-page-translation-localAiTranslator-strings-modal,#lmat-page-translation-google-strings-modal) .translator-widget {
     justify-content: space-between;
     align-items: center;
 }
@@ -1108,124 +1135,99 @@ body>div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibility:
     width: 100% !important;
 }
 
-#lmat_page_translation_strings_model :where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-yandex-strings-modal, #lmat-page-translation-google-strings-modal) .lmat_page_translation_string_container {
+#lmat_page_translation_strings_model :where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-google-strings-modal) .lmat_page_translation_string_container {
     max-height: calc(100vh - 300px - var(--lmat-page-translation-notice-wrapper-height, 0px));
     box-shadow: 0 -1px 4px #0000005e inset;
 }
 
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-wrapper ~ .lmat_page_translation_string_container {
+    max-height: calc(100vh - 332px - var(--lmat-page-translation-notice-wrapper-height,0px));
+}
 
-#lmat-page-translation-pro-notice-wrapper {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
+#lmat_page_translation_strings_model #lmat-page-translation-google-strings-modal .lmat-page-translation-retranslate-wrapper ~ .lmat_page_translation_string_container {
+    max-height: calc(100vh - 362px - var(--lmat-page-translation-notice-wrapper-height, 0px));
+}
+
+#lmat_page_translation_strings_model .react-loading-skeleton-lmat-page-translation {
+    height: calc(100vh - 235px - var(--lmat-page-translation-notice-wrapper-height, 0px)) !important;
+    margin-block: 16px;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-container {
     display: flex;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(34, 34, 34, 0.7);
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    padding: 16px;
-    color: black;
+    gap: 1.2rem;
+    border: 1px solid #00000029;
+    padding: .5rem;
+    border-bottom-width: 0;
 }
 
-#lmat-page-translation-pro-notice-wrapper.lmat-page-translation-active {
-    opacity: 1;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice {
-    position: relative;
-    top: 0;
-    left: 0;
-    max-width: 500px;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-header h2 {
-    height: unset;
-    padding: 8px 36px 8px 25px;
-    border: none;
-    background: 0 0;
-    border-bottom: 1px solid #dcdcde;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 2;
-    margin: 0;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-header .lmat-page-translation-close-button {
-    right: 15px;
-    top: 13px;
-    border-radius: 0 !important;
-    height: 30px !important;
-    width: 20px !important;
-    position: absolute;
-    font-size: 32px;
-    font-weight: 700;
-    color: #646970;
-    cursor: pointer;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-content {
-    margin: 15px 20px;
-    font-size: 16px;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-header h3 {
     color: #3c3c3c;
-    line-height: 18px;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-content p {
     font-size: 16px;
-    line-height: 18px;
-    margin: 0px !important;
-    padding: 0px !important;
 }
 
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-footer {
-    padding: 15px 20px;
-    border-top: 1px solid #dcdcde;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-body {
+    display: flex;
+    gap: 1rem;
+    width: auto;
+    flex: 1;
 }
 
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-footer .lmat-page-translation-upgrade-button {
-    background: #db352b;
-    border-color: #dd362b;
-    color: #fff;
-    padding: 2px 11px;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items {
+    display: flex;
     align-items: center;
-    margin-inline: auto;
-    align-self: center;
-    justify-content: center;
-    width: 123px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    line-height: 1.3;
-    min-height: 30px;
+    gap: .3rem;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items input {
     margin: 0;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    background: #fff;
+    color: #50575e;
+    clear: none;
     cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    -webkit-appearance: none;
-    border-radius: 3px;
-    box-sizing: border-box;
-    font-family: inherit;
-    font-weight: inherit;
-    vertical-align: top;
-    text-decoration: none;
-    text-shadow: none;
+    display: inline-block;
+    line-height: 0;
+    height: 1rem;
+    margin: -0.25rem 0.25rem 0 0;
+    outline: 0;
+    padding: 0 !important;
     text-align: center;
+    vertical-align: middle;
+    width: 1rem;
+    min-width: 1rem;
+    -webkit-appearance: none;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: .05s border-color ease-in-out;
 }
 
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-footer .lmat-page-translation-upgrade-button:hover {
-    background: #dd382e;
-    border-color: #c72a20;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items input:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: 2px solid transparent;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items input:checked::before {
+    content: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-5.81%208.38H9.02L5.78%209.67l1.34-1.25%202.57%202.4z%27%20fill%3D%27%233582c4%27%2F%3E%3C%2Fsvg%3E") / '';
+    margin: -0.1875rem 0 0 -0.25rem;
+    height: 1.3125rem;
+    width: 1.3125rem;
+    float: left;
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    border: unset;
+    transform: unset;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items label {
+    line-height: 1;
+    font-weight: 500;
+    margin-right: 1rem;
+    font-size: 14px;
+    color: #3c434a;
 }
 
 /* Tooltip element */
@@ -1326,7 +1328,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
 }
 
 
-/* includes/automatic-translate/src/component/AtfpRightPopup.css */
+/* includes/automatic-translate/src/component/LmatRightPopup.css */
 .lmat-page-translation-right-popup {
     position: fixed;
     top: 0;
@@ -1843,7 +1845,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     margin-bottom: 16px;
     font-size: 14px;
     padding: 8px;
-    background: rgb(255 255 255 / 51%);
+    background: rgba(255, 255, 255, 0.51);
     border-radius: 4px;
 }
 
@@ -1852,7 +1854,7 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
     margin-bottom: 16px;
     font-size: 14px;
     padding: 8px;
-    background: rgb(255 255 255 / 44%);
+    background: rgba(255, 255, 255, 0.44);
     border-radius: 4px;
     text-align: center;
     font-weight: 500;

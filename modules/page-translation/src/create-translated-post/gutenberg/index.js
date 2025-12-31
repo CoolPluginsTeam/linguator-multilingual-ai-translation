@@ -79,6 +79,10 @@ const translatePost = (props) => {
     const postAcfFieldsUpdate = () => {
         const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
         const metaFieldsData = postContent.metaFields;
+
+        if (!metaFieldsData) {
+            return;
+        }
         
         if (window.acf) {
             acf.getFields().forEach(field => {
@@ -167,8 +171,18 @@ const translatePost = (props) => {
     const postContentUpdate = () => {
         const postContentData = postContent.content;
 
-        if (postContentData.length <= 0) {
+        if (!postContentData || postContentData.length <= 0) {
             return;
+        }
+
+        if(window.lmatPageTranslationGlobal.re_translate_page && "1" === window.lmatPageTranslationGlobal.re_translate_page){
+            const availableFieldType=select('block-lmatPageTranslation/translate').getReTranslationFields();
+
+            if((!availableFieldType || Object.keys(availableFieldType).length < 1) || (Object.keys(availableFieldType).length > 0 && availableFieldType['content'] === true)){
+                const blocks = select('core/block-editor').getBlocks();
+                const allIds = blocks.map(block => block.clientId);
+                dispatch('core/block-editor').removeBlocks(allIds);
+            }
         }
 
         Object.values(postContentData).forEach(block => {

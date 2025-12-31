@@ -70,7 +70,7 @@ const popStringModal = (props) => {
      * Updates the fetch state.
      * @param {boolean} state - The state to update the fetch with.
      */
-    const setPopupVisibilityHandler = () => {
+    const setPopupVisibilityHandler = (state) => {
         if(props.service === 'google'){
             const iframe = document.querySelector('.skiptranslate iframe[id=":1.container"]');
             if (iframe) {
@@ -99,11 +99,23 @@ const popStringModal = (props) => {
             return;
         }
 
-        const postContent = refPostData;
+        const postContent = refPostData ? JSON.parse(JSON.stringify(refPostData)) : {};
+
         const modalClose = () => {setPopupVisibility(false); setPopupVisibilityHandler(false)};
         let service=props.service;
         
         setTranslateButtonStatus(true);
+
+        const reTranslationFields=select('block-lmatPageTranslation/translate').getReTranslationFields();
+        const reTranslationStatus=window.lmatPageTranslationGlobal && window.lmatPageTranslationGlobal.re_translate_page === "1";
+
+        if(reTranslationStatus && Object.keys(reTranslationFields).length > 0){
+            const notValidField=Object.keys(postContent).filter(key=>!reTranslationFields[key]);
+
+            notValidField.forEach(key=>{
+                delete postContent[key];
+            })
+        }
 
         props.translatePost({ postContent: postContent, modalClose: modalClose, service: service });
         props.pageTranslate(true);

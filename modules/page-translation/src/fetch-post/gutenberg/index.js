@@ -5,7 +5,7 @@ import { __ } from "@wordpress/i18n";
 
 const GutenbergPostFetch = async (props) => {
     const apiUrl = lmatPageTranslationGlobal.ajax_url;
-    let blockRules = wp.data.select('block-lmatPageTranslation/translate').getBlockRules() || {};
+    let blockRules = select('block-lmatPageTranslation/translate').getBlockRules() || {};
     const apiController = [];
 
     const destroyHandler = () => {
@@ -71,6 +71,10 @@ const GutenbergPostFetch = async (props) => {
             lmat_page_translation_nonce: lmatPageTranslationGlobal.ajax_nonce,
             action: lmatPageTranslationGlobal.action_fetch
         };
+
+        if(window.lmatPageTranslationGlobal.re_translate_page && '1' === window.lmatPageTranslationGlobal.re_translate_page){
+            apiSendData.re_translate_page = true;
+        }
 
         const contentController = new AbortController();
         apiController.push(contentController);

@@ -4,7 +4,7 @@ const fetchPostContent = async (props) => {
     const elementorPostData = lmatPageTranslationGlobal.elementorData && typeof lmatPageTranslationGlobal.elementorData === 'string' ? JSON.parse(lmatPageTranslationGlobal.elementorData) : lmatPageTranslationGlobal.elementorData;
 
     const content={
-        widgetsContent:elementorPostData,
+        content:elementorPostData,
     }
 
     if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){

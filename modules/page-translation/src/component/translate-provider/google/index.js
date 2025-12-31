@@ -41,7 +41,13 @@ const GoogleTranslater = (data) => {
         }
     }
 
-    document.querySelector(`#${ID}`).addEventListener('change', () => {
+    const widgetElement=document.querySelector(`#${ID}`);
+
+    if(!widgetElement){
+        return;
+    }
+
+    widgetElement.addEventListener('change', () => {
         ModalStringScroll(translateStatusHandler,'google', modalRenderId);
     });
 

@@ -163,7 +163,7 @@ class LMAT_Page_Translation {
 						}
 
 						$re_translate_text = isset( $re_translate_data['re_translation_status'] ) && $re_translate_data['re_translation_status'] === true ? esc_html__( 'Re-Translate Page', 'linguator-multilingual-ai-translation' ) : esc_html__( 'Translate Page', 'linguator-multilingual-ai-translation' );
-						echo '<button class="button button-primary" id="lmat-page-translation-button" name="lmat_page_translation_meta_box_translate">' . $re_translate_text . '</button>';
+						echo '<a href="#" class="button button-primary" id="lmat-page-translation-button" name="lmat_page_translation_meta_box_translate">' . $re_translate_text . '</a>';
 					}
 				}
 			}
@@ -710,7 +710,7 @@ class LMAT_Page_Translation {
 	}
 
 	public function update_classic_translate_status() {
-		if ( ! check_ajax_referer( 'lmat_classic_translate_nonce', 'lmat_classic_translate_nonce', false ) ) {
+		if ( ! check_ajax_referer( 'lmat_classic_translate_nonce', 'update_translation_status_key', false ) ) {
 			wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
 			wp_die( '0', 400 );
 		}

@@ -34,6 +34,10 @@ const ClassicPostFetch = async (props) => {
             action: lmatPageTranslationGlobal.action_fetch
         };
 
+        if(window.lmatPageTranslationGlobal.re_translate_page && '1' === window.lmatPageTranslationGlobal.re_translate_page){
+            apiSendData.re_translate_page = true;
+        }
+
         const contentController = new AbortController();
         apiController.push(contentController);
 

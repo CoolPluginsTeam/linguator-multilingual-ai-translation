@@ -33,7 +33,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
     }
 
     const removeLineBreakPlaceholder = (content) => {
-        return content.replace(new RegExp(lineBreakNOpenPlaceholder+lineBreakNClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\n${CloseSpanPlaceholder}`).replace(new RegExp(lineBreakROpenPlaceholder+lineBreakRClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\r${CloseSpanPlaceholder}`);
+        return content.replace(new RegExp(lineBreakNOpenPlaceholder + lineBreakNClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\n${CloseSpanPlaceholder}`).replace(new RegExp(lineBreakROpenPlaceholder + lineBreakRClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\r${CloseSpanPlaceholder}`);
     }
 
     const fixHtmlTags = (content) => {
@@ -102,7 +102,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
      */
     const wrapFirstAndMatchingClosingTag = (html) => {
         // Create a temporary element to parse the HTML string
-        const tempElement = document.createElement('div');
+        let tempElement = document.createElement('div');
         tempElement.innerHTML = html;
 
         // Get the first element
@@ -140,7 +140,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         // Get the opening tag of the first element
         // const firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
         let firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
-        
+
         const pattern = new RegExp(
             `${OpenSpanPlaceholder}|${CloseSpanPlaceholder}`,
             'g'
@@ -199,8 +199,10 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
         firstElement.outerHTML = filterContent;
 
+        const output=tempElement.innerHTML;
+        tempElement=null;
         // Return the modified HTML
-        return tempElement.innerHTML;
+        return output;
     }
 
     /**
@@ -383,27 +385,29 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         }
 
         let content = string;
-        
+
         if (isEmptyOrUnclosedTag(string)) {
             content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
         } else {
-            const tempElement = document.createElement('div');
+            let tempElement = document.createElement('div');
             tempElement.innerHTML = fixHtmlTags(string);
             replaceInnerTextWithSpan(tempElement);
-            
+
             content = tempElement.innerText;
 
             content = content.replace(new RegExp(LessThanSymbol, 'g'), '<').replace(new RegExp(GreaterThanSymbol, 'g'), '>');
 
             content = syncTRTDFromFirstToSecond(string, content);
+
+            tempElement=null;
         }
-        
+
         // remoove all the ${OpenTempTagPlaceholder} and ${CloseTempTagPlaceholder}
         const tempTagPattern = new RegExp(
             `${OpenTempTagPlaceholder}([\\s\\S]*?)(${CloseTempTagPlaceholder})`,
             'g'
         );
-        
+
         content = content.replace(tempTagPattern, '');
 
         content = removeLineBreakPlaceholder(content);
@@ -434,16 +438,18 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         return updatedContent;
     }
 
-    const getFilteredString=()=>{
-        if(saveFilteredString && item && item.id && item.type && item.source && !item.filteredString){
+    const getFilteredString = () => {
+        if (saveFilteredString && item && item.id && item.type && item.source && !item.filteredString) {
             const filteredString = filterSourceData(item.source);
 
             const filteredStringContent = filteredString.map((data, index) => {
                 const notTranslate = notTranslatePattern.test(data);
                 if (notTranslate) {
-                    const pTemp=document.createElement('p');
+                    let pTemp = document.createElement('p');
                     pTemp.innerText = filterContent(data);
-                    return `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${pTemp.innerHTML}</span>`;
+                    const output=pTemp.innerHTML;
+                    pTemp=null;
+                    return `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${output}</span>`;
                 } else {
                     return data;
                 }
@@ -463,15 +469,14 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
     return (
         <>
-            {['localAiTranslator', 'google'].includes(props.service) ?
-                content.map((data, index) => {
-                    const notTranslate = notTranslatePattern.test(data);
-                    if (notTranslate) {
-                        return <span key={index} className="notranslate lmat-page-translation-notraslate-tag" translate="no">{filterContent(data)}</span>;
-                    } else {
-                        return data;
-                    }
-                })
+            {['localAiTranslator', 'google'].includes(props.service) ? content.map((data, index) => {
+                const notTranslate = notTranslatePattern.test(data);
+                if (notTranslate) {
+                    return <span key={index} className="notranslate lmat-page-translation-notraslate-tag" translate="no">{filterContent(data)}</span>;
+                } else {
+                    return data;
+                }
+            })
                 : content}
         </>
     );

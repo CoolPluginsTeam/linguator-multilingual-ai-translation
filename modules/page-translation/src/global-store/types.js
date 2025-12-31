@@ -8,34 +8,34 @@
 const LmatActionTypes = {
     // Action type for saving the title of the source content
     sourceTitle: 'SAVE_SOURCE_TITLE',
-    
+
     // Action type for saving the title of the translated content
     traslatedTitle: 'SAVE_TRANSLATE_TITLE',
 
     // Action type for saving the filtered title
     filteredTitleString: 'SAVE_FILTERED_TITLE',
-    
+
     // Action type for saving the excerpt of the source content
     sourceExcerpt: 'SAVE_SOURCE_EXCERPT',
-    
+
     // Action type for saving the excerpt of the translated content
     traslatedExcerpt: 'SAVE_TRANSLATE_EXCERPT',
 
     // Action type for saving the filtered excerpt
     filteredExcerptString: 'SAVE_FILTERED_EXCERPT',
-    
+
     // Action type for saving the main content of the source
     sourceContent: 'SAVE_SOURCE_CONTENT',
-    
+
     // Action type for saving the main content of the translated content
     traslatedContent: 'SAVE_TRANSLATE_CONTENT',
-    
+
     // Action type for saving the filtered content
     filteredContentString: 'SAVE_FILTERED_CONTENT',
-    
+
     // Action type for saving the meta fields of the source content
     sourceMetaFields: 'SAVE_SOURCE_META_FIELDS',
-    
+
     // Action type for saving the meta fields of the translated content
     traslatedMetaFields: 'SAVE_TRANSLATE_META_FIELDS',
 
@@ -62,6 +62,9 @@ const LmatActionTypes = {
 
     // Action type for saving the content fetch status
     contentFetchStatus: 'CONTENT_FETCH_STATUS',
+
+    // Action type for saving the ReTranslationFields
+    reTranslationFields: 'RE_TRANSLATION_FIELDS',
 };
 
 export default LmatActionTypes;

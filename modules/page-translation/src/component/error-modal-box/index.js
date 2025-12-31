@@ -20,8 +20,8 @@ const ErrorModalBox = ({ message, onClose, Title }) => {
                 element.addEventListener('click', (e) => {
                     e.preventDefault();
                     const toolTipExists = element.querySelector('.lmat-page-translation-tooltip');
-                    
-                    if(toolTipExists){
+
+                    if (toolTipExists) {
                         return;
                     }
 
@@ -30,13 +30,16 @@ const ErrorModalBox = ({ message, onClose, Title }) => {
                     toolTipElement.className = 'lmat-page-translation-tooltip';
                     element.appendChild(toolTipElement);
 
-                    CopyClipboard({ text: element.getAttribute('data-clipboard-text'), startCopyStatus: () => {
-                        toolTipElement.classList.add('lmat-page-translation-tooltip-active');
-                    }, endCopyStatus: () => {
-                        setTimeout(() => {
-                            toolTipElement.remove();
-                        }, 800);
-                    } });
+                    CopyClipboard({
+                        text: element.getAttribute('data-clipboard-text'), startCopyStatus: () => {
+                            toolTipElement.classList.add('lmat-page-translation-tooltip-active');
+                        }, endCopyStatus: () => {
+                            setTimeout(() => {
+                                toolTipElement.remove();
+                                toolTipElement=null;
+                            }, 800);
+                        }
+                    });
                 });
             });
 

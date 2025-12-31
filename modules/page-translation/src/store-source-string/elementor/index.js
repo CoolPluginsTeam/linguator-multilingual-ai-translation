@@ -90,12 +90,12 @@ const ElementorSaveSource = (content) => {
         }
     }
 
-    if(content.widgetsContent && content.widgetsContent.length > 0){
+    if(content.content && content.content.length > 0){
         const runLoop= (element, index)=>{
             storeWidgetStrings(element, index, []);
         }
 
-        loopCallback(runLoop, content.widgetsContent, 0);
+        loopCallback(runLoop, content.content, 0);
     }
 
     if(content.title && '' !== content.title){
@@ -104,7 +104,7 @@ const ElementorSaveSource = (content) => {
         if(currentPostId){
             const existingTitle=elementor?.settings?.page?.model?.get('post_title');
 
-            if(existingTitle && '' !== existingTitle && existingTitle === `Elementor #${currentPostId}`){
+            if((existingTitle && '' !== existingTitle && existingTitle === `Elementor #${currentPostId}`) || (lmatPageTranslationGlobal.re_translate_page && '1' === lmatPageTranslationGlobal.re_translate_page && lmatPageTranslationGlobal.parent_post_title && '' !== lmatPageTranslationGlobal.parent_post_title && lmatPageTranslationGlobal.re_translate_title === '1')){
                 dispatch('block-lmatPageTranslation/translate').titleSaveSource(content.title);
             }
         }

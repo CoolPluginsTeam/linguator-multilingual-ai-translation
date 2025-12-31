@@ -1,7 +1,7 @@
 import { dispatch, select } from '@wordpress/data';
 import YoastSeoFields from '../../component/translate-seo-fields/yoast-seo-fields.js';
 import RankMathSeo from '../../component/translate-seo-fields/rank-math-seo.js';
-import SeoPressFields from '../../component/translate-seo-fields/seo-press.js'
+import SeoPressFields from '../../component/translate-seo-fields/seo-press.js';
 import translatedMetaFields from '../meta-fields/index.js';
 
 /**
@@ -18,60 +18,60 @@ const UpdateClassicPage = (props) => {
      */
     const postDataUpdate = () => {
 
-        if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate' || lmatPageTranslationGlobal.slug_translation_option === 'slug_keep'){
+        if (lmatPageTranslationGlobal.slug_translation_option === 'slug_translate' || lmatPageTranslationGlobal.slug_translation_option === 'slug_keep') {
             let translateContent = '';
-            if(lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
+            if (lmatPageTranslationGlobal.slug_translation_option === 'slug_translate') {
                 translateContent = select('block-lmatPageTranslation/translate').getTranslatedString('slug', postContent.slug_name, null, service);
             }
 
-            if(lmatPageTranslationGlobal.slug_translation_option === 'slug_keep'){
+            if (lmatPageTranslationGlobal.slug_translation_option === 'slug_keep') {
                 translateContent = lmatPageTranslationGlobal.slug_name;
             }
 
             const slugBox = document.querySelector('#slugdiv');
             const slugInput = slugBox?.querySelector('input#post_name[name="post_name"]');
-            const slugLabel=slugBox?.querySelector('label');
+            const slugLabel = slugBox?.querySelector('label');
 
-            if(slugInput) {
+            if (slugInput) {
                 slugInput.value = translateContent;
             }
 
-            if(slugLabel) {
+            if (slugLabel) {
                 slugLabel.classList.add('screen-reader-text');
             }
         }
 
-        if(postContent.title && postContent.title.trim() !== '') {
+        if (postContent.title && postContent.title.trim() !== '') {
             const translateContent = select('block-lmatPageTranslation/translate').getTranslatedString('title', postContent.title, null, service);
             const titleBox = document.querySelector('#titlediv');
             const titleInput = titleBox?.querySelector('input#title[name="post_title"]');
-            const titleLabel=titleBox?.querySelector('label');
+            const titleLabel = titleBox?.querySelector('label');
 
-            if(titleInput) {
+            if (titleInput) {
                 titleInput.value = translateContent;
             }
 
-            if(titleLabel) {
+            if (titleLabel) {
                 titleLabel.classList.add('screen-reader-text');
             }
         }
 
-        if(postContent.excerpt && postContent.excerpt.trim() !== '') { 
+        if (postContent.excerpt && postContent.excerpt.trim() !== '') {
             const translateContent = select('block-lmatPageTranslation/translate').getTranslatedString('excerpt', postContent.excerpt, null, service);
             const excerptBox = document.querySelector('#postexcerpt.postbox textarea#excerpt');
-            if(excerptBox) {
+            if (excerptBox) {
                 excerptBox.value = translateContent;
             }
 
-            if(lmatPageTranslationGlobal.post_type =='product' && window.tinymce){
+            if (lmatPageTranslationGlobal.post_type == 'product' && window.tinymce) {
                 const excerptTinymce = tinymce.get('excerpt');
                 const tinymceTextArea = document.querySelector(`textarea#excerpt`);
 
-                if(excerptTinymce) {
+                if (excerptTinymce) {
                     excerptTinymce.setContent(translateContent);
                 }
 
-                if(tinymceTextArea) {
+                if (tinymceTextArea) {
                     tinymceTextArea.value = translateContent;
                 }
             }
@@ -79,28 +79,34 @@ const UpdateClassicPage = (props) => {
 
     }
 
-    const updateMetaFieldsTable = () =>{
-        const customStuff=document.querySelector('#postcustomstuff');
+    const updateMetaFieldsTable = () => {
+        const metaFieldsData = postContent.metaFields;
 
-        const inputFields=customStuff?.querySelectorAll('tbody#the-list td.left input[type="text"][value]');
+        if (!metaFieldsData) {
+            return;
+        }
 
-        if(inputFields && inputFields.length > 0){
-            const inputFieldsArray=Array.from(inputFields);
+        const customStuff = document.querySelector('#postcustomstuff');
+
+        const inputFields = customStuff?.querySelectorAll('tbody#the-list td.left input[type="text"][value]');
+
+        if (inputFields && inputFields.length > 0) {
+            const inputFieldsArray = Array.from(inputFields);
 
             inputFieldsArray.forEach(inputField => {
-                const value=inputField?.value;
+                const value = inputField?.value;
 
-                if(value && '' !== value && Object.keys(AllowedMetaFields).includes(value)){
-                    let metaId=inputField?.closest('tr').id;
-                    metaId=metaId.replace('meta-', '');
+                if (value && '' !== value && Object.keys(AllowedMetaFields).includes(value)) {
+                    let metaId = inputField?.closest('tr').id;
+                    metaId = metaId.replace('meta-', '');
 
-                    if(metaId && '' !== metaId){
-                        const valueInputField=document.querySelector(`#meta-${metaId}-value[name="meta[${metaId}][value]"]`);
-                    
-                        if(valueInputField && valueInputField.value ){
-                            const translatedValue=select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', valueInputField.value, value, service);
-                            if(translatedValue && '' !== translatedValue){
-                                valueInputField.value=translatedValue;
+                    if (metaId && '' !== metaId) {
+                        const valueInputField = document.querySelector(`#meta-${metaId}-value[name="meta[${metaId}][value]"]`);
+
+                        if (valueInputField && valueInputField.value) {
+                            const translatedValue = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', valueInputField.value, value, service);
+                            if (translatedValue && '' !== translatedValue) {
+                                valueInputField.value = translatedValue;
                             }
                         }
                     }
@@ -115,7 +121,7 @@ const UpdateClassicPage = (props) => {
     const postMetaFieldsUpdate = () => {
         const metaFieldsData = postContent.metaFields;
 
-        if(!metaFieldsData){
+        if (!metaFieldsData) {
             return;
         }
 
@@ -140,34 +146,37 @@ const UpdateClassicPage = (props) => {
     const postAcfFieldsUpdate = () => {
         const metaFieldsData = postContent.metaFields;
 
-        
+        if (!metaFieldsData) {
+            return;
+        }
+
         if (window.acf) {
             acf.getFields().forEach(field => {
-                const fieldData=JSON.parse(JSON.stringify({key: field.data.key, type: field.data.type, name: field.data.name}));
+                const fieldData = JSON.parse(JSON.stringify({ key: field.data.key, type: field.data.type, name: field.data.name }));
                 let repeaterField = false;
                 // Update repeater fields
-                if(field.$el && field.$el.closest('.acf-field.acf-field-repeater') && field.$el.closest('.acf-field.acf-field-repeater').length > 0){
-                    const rowId=field.$el.closest('.acf-row').data('id');
-                    const repeaterItemName=field.$el.closest('.acf-field.acf-field-repeater').data('name');
+                if (field.$el && field.$el.closest('.acf-field.acf-field-repeater') && field.$el.closest('.acf-field.acf-field-repeater').length > 0) {
+                    const rowId = field.$el.closest('.acf-row').data('id');
+                    const repeaterItemName = field.$el.closest('.acf-field.acf-field-repeater').data('name');
 
-                    if(rowId && '' !== rowId){
-                        const index=rowId.replace('row-', '');
-                    
-                        fieldData.name=repeaterItemName+'_'+index+'_'+fieldData.name;
+                    if (rowId && '' !== rowId) {
+                        const index = rowId.replace('row-', '');
+
+                        fieldData.name = repeaterItemName + '_' + index + '_' + fieldData.name;
                         repeaterField = true;
                     }
 
                 }
 
-               if(field.data && field.data.key && Object.keys(AllowedMetaFields).includes(fieldData.name)){
-                   const fieldName = field.data.name;
-                   const inputType = field.data.type;
+                if (field.data && field.data.key && Object.keys(AllowedMetaFields).includes(fieldData.name)) {
+                    const fieldName = field.data.name;
+                    const inputType = field.data.type;
 
-                   const sourceValue = metaFieldsData[fieldName]? metaFieldsData[fieldName] : field?.val();
+                    const sourceValue = metaFieldsData[fieldName] ? metaFieldsData[fieldName] : field?.val();
 
                     const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', sourceValue, fieldData.name, service);
 
-                    if('wysiwyg' === inputType && window.tinymce){
+                    if ('wysiwyg' === inputType && window.tinymce) {
                         const editorId = field.data.id;
 
                         const tinymceTranslatedMetaFields = translatedMetaFields.replace(/(\r\n\r\n|\r\n)/g, '</p><p>');
@@ -176,13 +185,13 @@ const UpdateClassicPage = (props) => {
 
                         const tinymceTextArea = document.querySelector(`textarea#${editorId}`);
 
-                        if(tinymceTextArea){
-                         tinymceTextArea.value = translatedMetaFields;
+                        if (tinymceTextArea) {
+                            tinymceTextArea.value = translatedMetaFields;
                         }
-                    }else{
+                    } else {
                         field.val(translatedMetaFields);
                     }
-               }
+                }
             });
         }
     }
@@ -220,19 +229,25 @@ const UpdateClassicPage = (props) => {
      * Updates the post content based on translation.
      */
     const postContentUpdate = () => {
-        const arrContent = splitContentWithDynamicBreaks(postContent.content);
+        const postContentData = postContent.content;
+
+        if (!postContentData || postContentData.length <= 0) {
+            return;
+        }
+
+        const arrContent = splitContentWithDynamicBreaks(postContentData);
 
         const strings = [];
 
         arrContent.forEach((text, index) => {
-            const entity=(/^&[a-zA-Z0-9#]+;$/.test(text));
+            const entity = (/^&[a-zA-Z0-9#]+;$/.test(text));
             const htmlTag = /^<\/?\s*[a-zA-Z0-9#]+\s*\/?>$/.test(text);
             const isEmptyHtmlTag = /^<\s*\/?\s*[a-zA-Z0-9#]+\s*><\/\s*\/?\s*[a-zA-Z0-9#]+\s*>$/.test(text);
             const blockCommentTag = /<!--[\s\S]*?-->/g.test(text) && text.indexOf('<!--') < text.indexOf('-->');
 
-            const plainText=!entity && !htmlTag && !isEmptyHtmlTag && !blockCommentTag; 
+            const plainText = !entity && !htmlTag && !isEmptyHtmlTag && !blockCommentTag;
 
-            if(text !== '' && !text.includes('lmat_skip_content_open_') && plainText){
+            if (text !== '' && !text.includes('lmat_skip_content_open_') && plainText) {
                 const uniqueKey = 'classic_index_' + index;
                 const translatedText = select('block-lmatPageTranslation/translate').getTranslatedString('content', text, uniqueKey, service);
                 strings.push(translatedText);
@@ -270,28 +285,35 @@ const UpdateClassicPage = (props) => {
             }
         }
 
-        if (window.tinymce &&tinymce.get('content')) {
+        if (window.tinymce && tinymce.get('content')) {
             tinymce.get('content')?.setContent(content);
         }
     }
 
     const updatePostMetaFields = () => {
-        const ajaxUrl=window.lmatPageTranslationGlobal.ajax_url;
-        const postId=window.lmatPageTranslationGlobal.current_post_id;
-        const nonce=window.lmatPageTranslationGlobal.post_meta_fields_key;
-        const action=window.lmatPageTranslationGlobal.update_post_meta_fields;
+
+        const metaFieldsData = postContent.metaFields;
         
-        if(!postId || !nonce || !action){
+        if (!metaFieldsData) {
             return;
         }
 
-        const requestBody={
+        const ajaxUrl = window.lmatPageTranslationGlobal.ajax_url;
+        const postId = window.lmatPageTranslationGlobal.current_post_id;
+        const nonce = window.lmatPageTranslationGlobal.post_meta_fields_key;
+        const action = window.lmatPageTranslationGlobal.update_post_meta_fields;
+
+        if (!postId || !nonce || !action) {
+            return;
+        }
+
+        const requestBody = {
             action: action,
             post_id: postId,
             meta_fields: JSON.stringify(translatedMetaFields(postContent.metaFields, service)),
             post_meta_fields_key: nonce
         }
-        
+
         fetch(ajaxUrl, {
             method: 'POST',
             headers: {
@@ -300,23 +322,23 @@ const UpdateClassicPage = (props) => {
             },
             body: new URLSearchParams(requestBody)
         })
-        .then(response => response.json())
-        .then()
-        .catch(error => {
-            console.error('Error:', error); 
-        });
+            .then(response => response.json())
+            .then()
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     /**
      * Updates the translate status.
      */
     const updateTranslateStatus = () => {
-        const ajaxUrl=window.lmatPageTranslationGlobal.ajax_url;
-        const postId=window.lmatPageTranslationGlobal.current_post_id;
-        const nonce=window.lmatPageTranslationGlobal.classic_status_key;
-        const action=window.lmatPageTranslationGlobal.action_update_status;
+        const ajaxUrl = window.lmatPageTranslationGlobal.ajax_url;
+        const postId = window.lmatPageTranslationGlobal.current_post_id;
+        const nonce = window.lmatPageTranslationGlobal.classic_status_key;
+        const action = window.lmatPageTranslationGlobal.action_update_status;
 
-        const requestBody={
+        const requestBody = {
             action: action,
             post_id: postId,
             status: 'completed',
@@ -331,18 +353,18 @@ const UpdateClassicPage = (props) => {
             },
             body: new URLSearchParams(requestBody)
         })
-        .then(response => response.json())
-        .then()
-        .catch(error => {
-            console.error('Error:', error); 
-        });
+            .then(response => response.json())
+            .then()
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     // Update post title and excerpt text
     postDataUpdate();
 
     // Update post seo & acf fields on page
-    if(lmatPageTranslationGlobal.postMetaSync === 'false'){
+    if (lmatPageTranslationGlobal.postMetaSync === 'false') {
         // Update post meta fields
         postMetaFieldsUpdate();
 
@@ -362,7 +384,7 @@ const UpdateClassicPage = (props) => {
     }, 500);
 
     // Update all translation supported post meta fields using ajax request
-    if(lmatPageTranslationGlobal.postMetaSync === 'false'){
+    if (lmatPageTranslationGlobal.postMetaSync === 'false') {
         updatePostMetaFields();
     }
 

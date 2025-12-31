@@ -8,15 +8,24 @@ import ReactDOM from "react-dom";
 import { InfoPopup, GlossaryPopup, AddGlossaryPopup } from "../component/RightPopup/index.js";
 import SaveTranslation from '../component/store-translated-string/index.js';
 import GlossaryCount from "../component/glossary-count/index.js";
+import ReTranslationFields from "./re-translate-options.js";
 
 const StringPopUpBody = (props) => {
 
     const { service: service } = props;
-    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntries();
+
+    const reTranslationFields = select("block-lmatPageTranslation/translate").getReTranslationFields();
+    let getFieldTypes=false;
+    if(window.lmatPageTranslationGlobal && window.lmatPageTranslationGlobal.re_translate_page && window.lmatPageTranslationGlobal.re_translate_page === "1" && reTranslationFields && Object.keys(reTranslationFields).length > 0){
+       getFieldTypes=reTranslationFields;
+    }
+
+    const translateContent = select("block-lmatPageTranslation/translate").getTranslationEntries(getFieldTypes);
+
     const StringModalBodyNotice = props.stringModalBodyNotice;
 
     const imgFolder = lmatPageTranslationGlobal.lmat_url + 'admin/assets/images/';
-
+    const renderFieldsTypes=select("block-lmatPageTranslation/translate").getReTranslationFields();
 
     // Add refs and state for popup
     const tableRef = useRef(null);
@@ -32,6 +41,7 @@ const StringPopUpBody = (props) => {
     const [selectedSourceText, setSelectedSourceText] = useState('');
     const [activePopupCell, setActivePopupCell] = useState(null);
     const [savedValues, setSavedValues] = useState({});
+    const [renderFields, setRenderFields]=useState(renderFieldsTypes);
     const showGlossary = activePopupType === 'glossary';
     const showAddGlossary = activePopupType === 'add-glossary';
 
@@ -226,7 +236,7 @@ const StringPopUpBody = (props) => {
         if (!sourceText) return [];
 
         // Create a temporary div to parse HTML and get text content
-        const temp = document.createElement('div');
+        let temp = document.createElement('div');
         temp.innerHTML = sourceText;
         const textContent = temp.textContent;
 
@@ -244,6 +254,7 @@ const StringPopUpBody = (props) => {
         const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
         const normalizedSourceText = normalizeText(textContent);
+        temp=null;
 
         return glossaryTerms
             .filter(entry => {
@@ -342,30 +353,40 @@ const StringPopUpBody = (props) => {
         }
     }, [popupInfo]);
 
-    useEffect(() => {
-
-        if (['yandex', 'google'].includes(props.service)) {
-            document.documentElement.setAttribute('translate', 'no');
-            document.body.classList.add('notranslate');
-        }
-
-        /**
-         * Calls the translate service provider based on the service type.
-         * For example, it can call services like yandex Translate.
-        */
+    /**
+     * Calls the translate service provider based on the service type.
+     * For example, it can call services like yandex Translate.
+    */
+    const initalizeServiceProvider=()=>{
         const service = props.service;
         const id = `lmat_page_translation_${service}_translate_element`;
 
-        const translateContent = select('block-lmatPageTranslation/translate').getTranslationEntries();
+        const reTranslationFields = select("block-lmatPageTranslation/translate").getReTranslationFields();
+        let getFieldTypes=false;
+        if(window.lmatPageTranslationGlobal && window.lmatPageTranslationGlobal.re_translate_page && window.lmatPageTranslationGlobal.re_translate_page === "1" && reTranslationFields && Object.keys(reTranslationFields).length > 0){
+           getFieldTypes=reTranslationFields;
+        }
+
+        const translateContent = select('block-lmatPageTranslation/translate').getTranslationEntries(getFieldTypes);
 
         if (translateContent.length > 0 && props.postDataFetchStatus) {
             const ServiceSetting = TranslateService({ Service: service });
             ServiceSetting.Provider({ sourceLang: props.sourceLang, targetLang: props.targetLang, translateStatusHandler: props.translateStatusHandler, ID: id, translateStatus: props.translateStatus, modalRenderId: props.modalRender, destroyUpdateHandler: props.updateDestroyHandler });
         }
+    }
+
+    useEffect(() => {
+
+        if (['google'].includes(props.service)) {
+            document.documentElement.setAttribute('translate', 'no');
+            document.body.classList.add('notranslate');
+        }
+
+       initalizeServiceProvider();
     }, [props.modalRender, props.postDataFetchStatus]);
 
     const udpateFilterdContent = (div) => {
-        const tempElement = document.createElement('div');
+        let tempElement = document.createElement('div');
         tempElement.innerHTML = div.innerHTML;
         const childNodes = tempElement.childNodes;
 
@@ -389,10 +410,12 @@ const StringPopUpBody = (props) => {
             }
         }
 
-        return tempElement.innerHTML;
+        const output=tempElement.innerHTML;
+        tempElement=null;
+        return output;
     }
 
-    const insertOrReplaceInContentEditable = (div, glossaryText) => {
+    const insertOrReplaceInContentEditable = (div, glossaryText, cellKey) => {
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0) return;
 
@@ -411,7 +434,7 @@ const StringPopUpBody = (props) => {
         range.deleteContents();
 
         // Prepare HTML node
-        const temp = document.createElement("div");
+        let temp = document.createElement("div");
         temp.innerHTML = `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${startingWhiteSpace}${glossaryText}${endingWhiteSpace}</span>`;
         const node = temp.firstChild;
 
@@ -434,7 +457,13 @@ const StringPopUpBody = (props) => {
             const id = td.dataset.key;
 
             saveFilteredString(type, id, filteredContent);
+            setEditingValues({
+                ...editingValues,
+                [cellKey]: filteredContent
+            })
         }
+
+        temp=null;
     }
 
 
@@ -447,7 +476,7 @@ const StringPopUpBody = (props) => {
         if (textarea) {
             const insertText = term.translation || term.english || '';
 
-            insertOrReplaceInContentEditable(textarea, insertText);
+            insertOrReplaceInContentEditable(textarea, insertText, cellKey);
         } else {
             setEditingValues({
                 ...editingValues,
@@ -613,7 +642,7 @@ const StringPopUpBody = (props) => {
                 return (
                     <img
                         src={imgFolder + 'plus.png'}
-                        alt={__("Add translation", "automatic-translations-for-polylang-pro")}
+                        alt={__("Add translation", "linguator-multilingual-ai-translation")}
                         className="lmat-page-translation-add-translation-icon"
                     />
                 );
@@ -625,12 +654,12 @@ const StringPopUpBody = (props) => {
         <div className="modal-body">
             {translateContent.length > 0 && props.postDataFetchStatus ?
                 <>
-                    {StringModalBodyNotice && <div className="lmat-page-translation-body-notice-wrapper"><StringModalBodyNotice /></div>}
+                    {StringModalBodyNotice && <div className="lmat-page-translation-body-notice-wrapper"><StringModalBodyNotice/></div>}
                     {props.translatePendingStatus && (
                         <div className="lmat_page_translation_translate_progress" key={props.modalRender}>
-                            {__("Automatic translation is in progress....", 'automatic-translations-for-polylang-pro')}<br />
-                            {__("It will take few minutes, enjoy ☕ coffee in this time!", 'automatic-translations-for-polylang-pro')}<br /><br />
-                            {__("Please do not leave this window or browser tab while translation is in progress...", 'automatic-translations-for-polylang-pro')}
+                            {__("Automatic translation is in progress....", 'linguator-multilingual-ai-translation')}<br />
+                            {__("It will take few minutes, enjoy ☕ coffee in this time!", 'linguator-multilingual-ai-translation')}<br /><br />
+                            {__("Please do not leave this window or browser tab while translation is in progress...", 'linguator-multilingual-ai-translation')}
                         </div>
                     )}
                     <div className={`translator-widget ${service}`} style={{ display: 'flex' }}>
@@ -640,7 +669,7 @@ const StringPopUpBody = (props) => {
                             <div id={`lmat_page_translation_${props.service}_translate_element`}></div>
                         </div>
                     </div>
-
+                    {window.lmatPageTranslationGlobal?.re_translate_page && '1' === window.lmatPageTranslationGlobal?.re_translate_page && <ReTranslationFields setRenderFields={setRenderFields}/>}
                     <div className="lmat_page_translation_string_container">
                         <table className="scrolldown" id="stringTemplate" ref={tableRef}>
                             <thead>
@@ -654,6 +683,10 @@ const StringPopUpBody = (props) => {
                                 {props.postDataFetchStatus &&
                                     <>
                                         {translateContent.map((data, index) => {
+                                            if("1" === window.lmatPageTranslationGlobal?.re_translate_page && (renderFields && Object.keys(renderFields).length > 0 && !renderFields[data.type])){
+                                                return null;
+                                            }
+
                                             const cellKey = `${index}_2`;
                                             let originalTranslation = '';
 
@@ -685,9 +718,9 @@ const StringPopUpBody = (props) => {
                                                                         handleTdClick(e, 2, index, data);
                                                                     }}
                                                                     style={{ cursor: 'pointer' }}
-                                                                    translate={(savedValues[cellKey] && props.service === 'google' || savedValues[cellKey] && props.service === 'yandex') ? "no" : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? "yes" : 'yes'}
-                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''}`}
+                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''} ${!getTranslation(data) ? 'translate' : 'notranslate'}`}
                                                                     data-translate-status={props.translatePendingStatus ? 'pending' : 'translated'}
+                                                                    {...!getTranslation(data) ? { translate: 'yes' } : { translate: 'no' }}
                                                                 >
                                                                     {isEditingThisCell ? (
                                                                         <div
@@ -752,7 +785,8 @@ const StringPopUpBody = (props) => {
                     </div>
             }
             {/* Popup rendered via portal for correct positioning */}
-            {popupInfo &&
+            {
+                popupInfo &&
                 ReactDOM.createPortal(
                     <InfoPopup
                         left={popupInfo.left}
@@ -785,32 +819,36 @@ const StringPopUpBody = (props) => {
             }
 
             {/* Add Glossary Modal */}
-            {showAddGlossary && activePopupCell && ReactDOM.createPortal(
-                <AddGlossaryPopup
-                    position={addGlossaryPosition}
-                    sourceLang={props.sourceLang}
-                    targetLang={props.targetLang}
-                    selectedSourceText={selectedSourceText}
-                    onClose={() => setActivePopupType(null)}
-                    setGlossaryTerms={setGlossaryTerms}
-                    setGlossaryOrignalTerms={setGlossaryOrignalTerms}
-                />,
-                document.body
-            )}
+            {
+                showAddGlossary && activePopupCell && ReactDOM.createPortal(
+                    <AddGlossaryPopup
+                        position={addGlossaryPosition}
+                        sourceLang={props.sourceLang}
+                        targetLang={props.targetLang}
+                        selectedSourceText={selectedSourceText}
+                        onClose={() => setActivePopupType(null)}
+                        setGlossaryTerms={setGlossaryTerms}
+                        setGlossaryOrignalTerms={setGlossaryOrignalTerms}
+                    />,
+                    document.body
+                )
+            }
 
             {/* Glossary Modal */}
-            {showGlossary && matchedGlossaryTerms.length > 0 && ReactDOM.createPortal(
-                <GlossaryPopup
-                    position={glossaryPosition}
-                    terms={matchedGlossaryTerms}
-                    sourceLangLabel={getLanguageName(props.sourceLang)}
-                    targetLangLabel={getLanguageName(props.targetLang)}
-                    onInsert={term => handleInsertGlossaryTerm(term, activePopupCell)}
-                    width={256}
-                />,
-                document.body
-            )}
-        </div>
+            {
+                showGlossary && matchedGlossaryTerms.length > 0 && ReactDOM.createPortal(
+                    <GlossaryPopup
+                        position={glossaryPosition}
+                        terms={matchedGlossaryTerms}
+                        sourceLangLabel={getLanguageName(props.sourceLang)}
+                        targetLangLabel={getLanguageName(props.targetLang)}
+                        onInsert={term => handleInsertGlossaryTerm(term, activePopupCell)}
+                        width={256}
+                    />,
+                    document.body
+                )
+            }
+        </div >
     );
 }
 

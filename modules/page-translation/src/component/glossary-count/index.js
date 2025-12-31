@@ -1,20 +1,20 @@
-const GlossaryCount = ({ string, glossary }) => {
+const GlossaryCount = ({ string, glossary, onClick = () => { } }) => {
 
-    let count=0;
+    let count = 0;
 
     glossary.forEach(term => {
-        if(string.includes(term)){
+        if (string.toLowerCase().includes(term.toLowerCase())) {
             count++;
         }
     });
 
-    if(!count || count < 1) return null;
+    if (!count || count < 1) return null;
 
     const bookmarkIcon = lmatPageTranslationGlobal.lmat_url + 'assets/images/bookmark.png';
 
     return (
         <span className="lmat-page-translation-glossary-count">
-            <img src={bookmarkIcon} alt="Glossary" className="lmat-page-translation-glossary-count-icon"/>
+            <img src={bookmarkIcon} alt="Glossary" className="lmat-page-translation-glossary-count-icon" onClick={onClick} />
             <span className="lmat-page-translation-glossary-count-badge">{count}</span>
         </span>
     );

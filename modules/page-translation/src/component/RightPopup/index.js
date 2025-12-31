@@ -40,7 +40,7 @@ const AddGlossaryPopup = ({
   // Function to extract text content from HTML
   const extractTextFromHtml = (html) => {
     // Create temporary div to parse HTML
-    const temp = document.createElement('div');
+    let temp = document.createElement('div');
     temp.innerHTML = html;
 
     // Get all text nodes
@@ -71,6 +71,7 @@ const AddGlossaryPopup = ({
       }
     }
 
+    temp=null;
     // Remove duplicates but preserve order
     return [...new Set(texts)];
   };
@@ -200,9 +201,9 @@ const AddGlossaryPopup = ({
               if (refreshData?.success) {
 
                 let glossaryOrignalTerms = [];
-                
+
                 refreshData.data.terms.forEach(term => {
-                  if(term.original_term && term.original_term !== ''){
+                  if (term.original_term && term.original_term !== '') {
                     glossaryOrignalTerms.push(term.original_term);
                   }
                 });

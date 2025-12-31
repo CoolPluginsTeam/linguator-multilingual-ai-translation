@@ -688,6 +688,81 @@ button.lmat-page-translation-setting-close:hover {
   -webkit-animation: moveit 1s infinite;
 }
 
+#lmat_page_translation_strings_model .save_btn_cont button .updating-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#lmat_page_translation_strings_model .save_btn_cont button .updating-text .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #ffffff;
+  margin-left: 1px;
+  margin-top: 6px;
+  opacity: 0.25;
+  -webkit-animation: lmat-page-translation-savingBlink 1.05s infinite ease-in-out;
+          animation: lmat-page-translation-savingBlink 1.05s infinite ease-in-out;
+  -webkit-animation-delay: calc(var(--i) * 0.18s - 1.05s);
+          animation-delay: calc(var(--i) * 0.18s - 1.05s);
+  will-change: opacity, transform;
+}
+
+@-webkit-keyframes lmat-page-translation-savingBlink {
+  0%,
+  20% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+  }
+  60% {
+    opacity: 0.9;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes lmat-page-translation-savingBlink {
+  0%,
+  20% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+  }
+  60% {
+    opacity: 0.9;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    opacity: 0.25;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
 .local_ai_translator_btn.button-primary {
   background: #2271b1;
   border-color: #2271b1;
@@ -866,7 +941,7 @@ button.lmat-page-translation-setting-close:hover {
 #lmat_page_translation_strings_model table td,
 #lmat_page_translation_strings_model table th {
   border: 1px solid #ddd;
-  padding: 4px;
+  padding: 8px 4px;
   height: 26px;
   text-align: left;
   white-space: pre-wrap;
@@ -874,6 +949,84 @@ button.lmat-page-translation-setting-close:hover {
   line-height: 14px;
   overflow: hidden;
   vertical-align: middle;
+}
+
+#lmat_page_translation_strings_model table tr {
+  position: relative;
+}
+
+#lmat_page_translation_strings_model table tbody tr > *:not(td, th) {
+  display: none !important;
+}
+
+#lmat_page_translation_strings_model table td:not(.lmat-page-translation-editing-cell) {
+  padding-right: 23px;
+}
+
+#lmat_page_translation_strings_model table td .lmat-page-translation-glossary-count {
+  position: absolute;
+  top: 12px;
+  right: 1px;
+  background: #fff;
+  padding: 4px;
+  border-radius: 4px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+}
+
+#lmat_page_translation_strings_model table td .lmat-page-translation-glossary-count-icon {
+  width: 18px;
+  height: 18px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  display: block;
+}
+
+#lmat_page_translation_strings_model table td .lmat-page-translation-glossary-count-badge {
+  position: absolute;
+  top: -5px;
+  right: 5px;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  min-height: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  z-index: 2;
+  aspect-ratio: 1/1;
+  pointer-events: none;
+}
+
+.lmat-page-translation-content-editable {
+  width: 292px;
+  min-height: 40px;
+  resize: vertical;
+  height: 40px;
+  border: 1px solid #767676;
+  overflow: auto;
+}
+
+.lmat-page-translation-content-editable:focus {
+  outline: 1px solid #101010;
 }
 
 #lmat_page_translation_strings_model .lmat_page_translation_translate_progress {
@@ -910,6 +1063,35 @@ button.lmat-page-translation-setting-close:hover {
   -webkit-column-gap: 8px;
           column-gap: 8px;
   margin-block: 1rem;
+}
+
+#lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper select {
+  font-size: 14px;
+  line-height: 2;
+  color: #2c3338;
+  border-color: #8c8f94;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border-radius: 3px;
+  padding: 0 24px 0 8px;
+  min-height: 30px;
+  max-width: 25rem;
+  -webkit-appearance: none;
+  background: #fff url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+  background-size: 16px 16px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+#lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper select:hover {
+  color: #2271b1;
+}
+
+#lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper select:focus {
+  border-color: #2271b1;
+  color: #0a4b78;
+  -webkit-box-shadow: 0 0 0 1px #2271b1;
+          box-shadow: 0 0 0 1px #2271b1;
 }
 
 #lmat_page_translation_strings_model .lmat_page_translation_translate_element_wrapper > button {
@@ -1076,7 +1258,7 @@ body > div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibilit
   }
 }
 
-:where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-yandex-strings-modal, #lmat-page-translation-google-strings-modal) .translator-widget {
+:where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-google-strings-modal) .translator-widget {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
@@ -1093,141 +1275,114 @@ body > div.skiptranslate iframe.skiptranslate[frameborder][src][style="visibilit
   width: 100% !important;
 }
 
-#lmat_page_translation_strings_model :where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-yandex-strings-modal, #lmat-page-translation-google-strings-modal) .lmat_page_translation_string_container {
+#lmat_page_translation_strings_model :where(#lmat-page-translation-localAiTranslator-strings-modal, #lmat-page-translation-google-strings-modal) .lmat_page_translation_string_container {
   max-height: calc(100vh - 300px - var(--lmat-page-translation-notice-wrapper-height, 0px));
   -webkit-box-shadow: 0 -1px 4px #0000005e inset;
           box-shadow: 0 -1px 4px #0000005e inset;
 }
 
-#lmat-page-translation-pro-notice-wrapper {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-  width: 100%;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-wrapper ~ .lmat_page_translation_string_container {
+  max-height: calc(100vh - 332px - var(--lmat-page-translation-notice-wrapper-height,0px));
+}
+
+#lmat_page_translation_strings_model #lmat-page-translation-google-strings-modal .lmat-page-translation-retranslate-wrapper ~ .lmat_page_translation_string_container {
+  max-height: calc(100vh - 362px - var(--lmat-page-translation-notice-wrapper-height, 0px));
+}
+
+#lmat_page_translation_strings_model .react-loading-skeleton-lmat-page-translation {
+  height: calc(100vh - 235px - var(--lmat-page-translation-notice-wrapper-height, 0px)) !important;
+  margin-block: 16px;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 100%;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  background-color: rgba(34, 34, 34, 0.7);
-  border-radius: 10px;
-  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  opacity: 0;
-  -webkit-transition: opacity 0.5s ease;
-  transition: opacity 0.5s ease;
-  padding: 16px;
-  color: black;
+  gap: 1.2rem;
+  border: 1px solid #00000029;
+  padding: .5rem;
+  border-bottom-width: 0;
 }
 
-#lmat-page-translation-pro-notice-wrapper.lmat-page-translation-active {
-  opacity: 1;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice {
-  position: relative;
-  top: 0;
-  left: 0;
-  max-width: 500px;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-header h2 {
-  height: unset;
-  padding: 8px 36px 8px 25px;
-  border: none;
-  background: 0 0;
-  border-bottom: 1px solid #dcdcde;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 2;
-  margin: 0;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-header .lmat-page-translation-close-button {
-  right: 15px;
-  top: 13px;
-  border-radius: 0 !important;
-  height: 30px !important;
-  width: 20px !important;
-  position: absolute;
-  font-size: 32px;
-  font-weight: 700;
-  color: #646970;
-  cursor: pointer;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-content {
-  margin: 15px 20px;
-  font-size: 16px;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-header h3 {
   color: #3c3c3c;
-  line-height: 18px;
-}
-
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-content p {
   font-size: 16px;
-  line-height: 18px;
-  margin: 0px !important;
-  padding: 0px !important;
 }
 
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-footer {
-  padding: 15px 20px;
-  border-top: 1px solid #dcdcde;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1rem;
+  width: auto;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-footer .lmat-page-translation-upgrade-button {
-  background: #db352b;
-  border-color: #dd362b;
-  color: #fff;
-  padding: 2px 11px;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  margin-inline: auto;
-  -ms-flex-item-align: center;
-      align-self: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  width: 123px;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  line-height: 1.3;
-  min-height: 30px;
-  margin: 0;
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  -webkit-appearance: none;
-  border-radius: 3px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  font-family: inherit;
-  font-weight: inherit;
-  vertical-align: top;
-  text-decoration: none;
-  text-shadow: none;
-  text-align: center;
+  gap: .3rem;
 }
 
-#lmat-page-translation-pro-notice-wrapper .lmat-page-translation-pro-notice .lmat-page-translation-notice-footer .lmat-page-translation-upgrade-button:hover {
-  background: #dd382e;
-  border-color: #c72a20;
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items input {
+  margin: 0;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  background: #fff;
+  color: #50575e;
+  clear: none;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 0;
+  height: 1rem;
+  margin: -0.25rem 0.25rem 0 0;
+  outline: 0;
+  padding: 0 !important;
+  text-align: center;
+  vertical-align: middle;
+  width: 1rem;
+  min-width: 1rem;
+  -webkit-appearance: none;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  -webkit-transition: .05s border-color ease-in-out;
+  transition: .05s border-color ease-in-out;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items input:focus {
+  border-color: #2271b1;
+  -webkit-box-shadow: 0 0 0 1px #2271b1;
+          box-shadow: 0 0 0 1px #2271b1;
+  outline: 2px solid transparent;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items input:checked::before {
+  content: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-5.81%208.38H9.02L5.78%209.67l1.34-1.25%202.57%202.4z%27%20fill%3D%27%233582c4%27%2F%3E%3C%2Fsvg%3E")/"";
+  margin: -0.1875rem 0 0 -0.25rem;
+  height: 1.3125rem;
+  width: 1.3125rem;
+  float: left;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  border: unset;
+  -webkit-transform: unset;
+          transform: unset;
+}
+
+#lmat_page_translation_strings_model .lmat-page-translation-retranslate-items label {
+  line-height: 1;
+  font-weight: 500;
+  margin-right: 1rem;
+  font-size: 14px;
+  color: #3c434a;
 }
 
 /* Tooltip element */
@@ -1321,5 +1476,638 @@ body.rtl #lmat_page_translation_strings_model .save_btn_cont {
             transform: translateY(-35px) scale(1);
     opacity: 1;
   }
+}
+
+/* includes/automatic-translate/src/component/LmatRightPopup.css */
+.lmat-page-translation-right-popup {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 350px;
+  height: 100%;
+  background: #222;
+  color: #fff;
+  -webkit-box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+          box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  -webkit-transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  pointer-events: none;
+}
+
+.lmat-page-translation-right-popup--open {
+  right: 0;
+  pointer-events: auto;
+}
+
+.lmat-page-translation-right-popup__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 9998;
+  display: none;
+}
+
+.lmat-page-translation-right-popup--open .lmat-page-translation-right-popup__overlay {
+  display: block;
+}
+
+.lmat-page-translation-right-popup__content {
+  padding: 24px 16px 16px 16px;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+.lmat-page-translation-right-popup__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Inline popover for right of textarea */
+.lmat-page-translation-inline-popup {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 12px;
+  min-width: 220px;
+  max-width: 320px;
+  background: #222;
+  color: #fff;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  z-index: 1000;
+  padding: 16px 16px 16px 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
+.lmat-page-translation-inline-popup__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.lmat-page-translation-inline-popup__content {
+  margin-top: 24px;
+  width: 100%;
+}
+
+/* InfoPopup styles */
+.lmat-page-translation-info-popup {
+  position: absolute;
+  background: #5cb85c;
+  border-radius: 4px;
+  z-index: 99999;
+  padding: 8px 3px;
+  min-width: 48px;
+  min-height: 48px;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 1px solid #fff;
+  -webkit-transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1), top 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1), top 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 320px;
+  -webkit-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  -webkit-box-sizing: unset;
+          box-sizing: unset;
+}
+
+.lmat-page-translation-info-popup * {
+  -webkit-box-sizing: unset;
+          box-sizing: unset;
+}
+
+.lmat-page-translation-info-popup__close {
+  background: #fff;
+  color: #222;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.lmat-page-translation-info-popup__glossary,
+.lmat-page-translation-info-popup__copy,
+.lmat-page-translation-info-popup__add-glossary {
+  background: none;
+  border: none;
+  color: #fff;
+  margin: 5px 0;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.lmat-page-translation-info-popup__close img {
+  width: 16px;
+  height: 16px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  display: block;
+}
+
+/* GlossaryPopup styles */
+.lmat-page-translation-glossary-popup {
+  position: absolute;
+  background: #5cb85c;
+  color: #fff;
+  border-radius: 16px;
+  padding: 10px;
+  z-index: 100000;
+  min-width: 400px;
+  max-width: 90vw;
+  -webkit-box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  -webkit-transition: left 0.2s, top 0.2s, width 0.2s;
+  transition: left 0.2s, top 0.2s, width 0.2s;
+}
+
+.lmat-page-translation-glossary-popup input,
+.lmat-page-translation-glossary-popup textarea {
+  color: #2c3338;
+  background-color: white;
+}
+
+.lmat-page-translation-glossary-popup select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: #fff url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+  background-size: 16px 16px;
+  cursor: pointer;
+  color: #2c3338;
+}
+
+.lmat-page-translation-glossary-popup .button {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 2.15384615;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-appearance: none;
+  border-radius: 3px;
+  white-space: nowrap;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.lmat-page-translation-glossary-popup .button.button-primary {
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+}
+
+.lmat-page-translation-glossary-popup .button.button-primary:hover {
+  background: #135e96;
+  border-color: #135e96;
+  color: #fff;
+}
+
+.lmat-page-translation-glossary-popup .button.button-secondary {
+  color: #2271b1;
+  border-color: #2271b1;
+  background: #f6f7f7;
+  vertical-align: top;
+}
+
+.lmat-page-translation-glossary-popup .button.button-secondary:hover {
+  background: #f0f0f1;
+  border-color: #0a4b78;
+  color: #0a4b78;
+}
+
+/* Responsive: On small screens, make it full width and centered */
+@media (max-width: 600px) {
+  .lmat-page-translation-glossary-popup {
+    left: 50% !important;
+    top: 10vh !important;
+    min-width: 0;
+    width: 95vw !important;
+    max-width: 98vw;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .lmat-page-translation-glossary-popup__header {
+    font-size: 1rem;
+  }
+  .lmat-page-translation-glossary-popup table {
+    font-size: 0.95em;
+  }
+}
+
+.lmat-page-translation-glossary-popup h3 {
+  margin-top: 0;
+}
+
+.lmat-page-translation-glossary-popup table {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
+}
+
+.lmat-page-translation-glossary-popup th {
+  border: 1px solid #fff;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.lmat-page-translation-glossary-insert {
+  background: none;
+  border: 1px solid #2196f3;
+  color: #2196f3;
+  border-radius: 3px;
+  padding: 2px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* GlossaryPopup header with icon and badge */
+.lmat-page-translation-glossary-popup__header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+}
+
+.lmat-page-translation-glossary-popup__icon {
+  font-size: 1.2em;
+  margin-right: 4px;
+}
+
+.lmat-page-translation-glossary-popup__badge {
+  background: #ff9800;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.85em;
+  padding: 4px 8px;
+  margin-left: 6px;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1;
+}
+
+.lmat-page-translation-glossary-popup table {
+  margin-top: 0;
+}
+
+.lmat-page-translation-glossary-popup thead tr {
+  border: none;
+  border-bottom: 2px solid #444;
+  background: transparent;
+}
+
+.lmat-page-translation-glossary-popup tbody tr {
+  border: none;
+  border-bottom: 1px solid #7a7a7a;
+  background: transparent;
+}
+
+.lmat-page-translation-glossary-popup th {
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1em;
+  background: transparent;
+}
+
+.lmat-page-translation-glossary-popup td {
+  padding: 6px 8px;
+  text-align: left;
+  color: #fff;
+  font-size: 0.98em;
+}
+
+.lmat-page-translation-glossary-insert {
+  background: none;
+  border: 1px solid #2196f3;
+  color: #2196f3;
+  border-radius: 3px;
+  padding: 2px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s;
+}
+
+.lmat-page-translation-glossary-insert {
+  background: #2196f3;
+  color: #fff;
+}
+
+/* Bookmark icon styling for popups */
+.lmat-page-translation-bookmark-icon {
+  width: 25px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  -o-object-fit: contain;
+     object-fit: contain;
+  margin-right: 4px;
+  border-radius: 4px;
+  padding: 8px 5px 5px 5px;
+}
+
+.lmat-page-translation-bookmark-icon:hover {
+  background: #fff;
+}
+
+.lmat-page-translation-bookmark-icon--active {
+  background: #fff;
+}
+
+/* Copy icon styling for popups */
+.lmat-page-translation-copy-icon,
+.lmat-page-translation-add-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  -o-object-fit: contain;
+     object-fit: contain;
+  margin-right: 4px;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.lmat-page-translation-copy-icon:hover,
+.lmat-page-translation-add-icon:hover,
+.lmat-page-translation-add-icon--active {
+  background: #fff;
+}
+
+.lmat-page-translation-info-popup__add-glossary.lmat-page-translation-active {
+  border-radius: 4px;
+}
+
+/* Wrapper for icon and badge */
+.lmat-page-translation-bookmark-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Badge styling and placement */
+.lmat-page-translation-bookmark-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 6px;
+  min-width: 11px;
+  min-height: 18px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.lmat-page-translation-info-popup__save {
+  background: none;
+  border: none;
+  color: #fff;
+  margin: 5px 0;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.lmat-page-translation-save-icon {
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  vertical-align: middle;
+  -o-object-fit: contain;
+     object-fit: contain;
+  margin-right: 4px;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.lmat-page-translation-save-icon:hover {
+  background: #fff;
+}
+
+.lmat-page-translation-translation-textarea {
+  resize: vertical !important;
+  width: 100%;
+  min-height: 40px;
+}
+
+/* Add Glossary Popup Styles */
+.lmat-page-translation-add-glossary-popup {
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  min-width: 380px;
+  max-width: 400px;
+  color: #fff;
+  border-radius: 16px;
+  -webkit-box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  z-index: 100001;
+  /* Higher than glossary popup */
+  position: fixed;
+  /* Ensure it's in its own stacking context */
+}
+
+.lmat-page-translation-add-glossary-popup .lmat-page-translation-glossary-popup__header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  padding: 12px 16px;
+  border-bottom: 2px solid #444;
+}
+
+.lmat-page-translation-add-glossary-form {
+  padding: 16px;
+}
+
+.lmat-page-translation-form-group {
+  margin-bottom: 16px;
+}
+
+.lmat-page-translation-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.lmat-page-translation-form-group input,
+.lmat-page-translation-form-group select,
+.lmat-page-translation-form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 14px;
+  height: unset;
+}
+
+.lmat-page-translation-form-group #lmat-page-translation-term-select {
+  padding: 0px 0px 0px 8px !important;
+}
+
+.lmat-page-translation-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.lmat-page-translation-form-group label {
+  color: #fff;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.lmat-page-translation-error-message {
+  color: #ff6b6b;
+  margin-bottom: 16px;
+  font-size: 14px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.51);
+  border-radius: 4px;
+}
+
+.lmat-page-translation-success-message {
+  color: #000000;
+  margin-bottom: 16px;
+  font-size: 14px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.44);
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.lmat-page-translation-form-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 16px;
+}
+
+.lmat-page-translation-btn-primary,
+.lmat-page-translation-btn-secondary {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.lmat-page-translation-btn-primary {
+  background: #5cb85c;
+  color: #fff;
+  border-color: #4cae4c;
+}
+
+.lmat-page-translation-btn-primary:hover {
+  background: #4cae4c;
+}
+
+.lmat-page-translation-btn-primary:disabled {
+  background: #3a723a;
+  cursor: not-allowed;
+  color: #aaa;
+}
+
+.lmat-page-translation-btn-secondary {
+  background: #333;
+  color: #fff;
+  border-color: #444;
+}
+
+.lmat-page-translation-btn-secondary:hover {
+  background: #444;
 }
 /*# sourceMappingURL=index.css.map */

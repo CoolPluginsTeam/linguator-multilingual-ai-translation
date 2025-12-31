@@ -10,7 +10,7 @@ const MetaFieldsFetch = async (props) => {
     }
 
     const destroyHandler = () => {
-        apiController.forEach(controller => {   
+        apiController.forEach(controller => {
             controller.abort('Modal Closed');
         });
     }
@@ -40,12 +40,24 @@ const MetaFieldsFetch = async (props) => {
     }
     
     const getMetaFields = async () => {
+
         const action=window?.lmatPageTranslationGlobal?.get_meta_fields;
         const meta_fields_key=window?.lmatPageTranslationGlobal?.meta_fields_key;
         const postId=parseInt(props.postId);
 
+
         if(!action || !meta_fields_key || !postId){
             return;
+        }
+
+        const bodyData={action,
+            meta_fields_key,
+            postId: postId
+        };
+
+        if(window?.lmatPageTranslationGlobal?.re_translate_page && '1' === window?.lmatPageTranslationGlobal?.re_translate_page && window?.lmatPageTranslationGlobal?.current_post_id ){
+            bodyData.current_post_id=window?.lmatPageTranslationGlobal?.current_post_id;
+            bodyData.re_translate_page   = 'true';
         }
 
         const allowedCustomFieldsController = new AbortController();
@@ -56,11 +68,7 @@ const MetaFieldsFetch = async (props) => {
                 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'application/json',
             },
-            body: new URLSearchParams({
-                action,
-                meta_fields_key,
-                postId: postId
-            }),
+            body: new URLSearchParams(bodyData),
             headers: {
                 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': 'application/json',

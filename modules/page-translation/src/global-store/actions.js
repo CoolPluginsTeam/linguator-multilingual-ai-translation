@@ -243,7 +243,7 @@ export const translationInfo = ({ sourceStringCount = null, sourceWordCount = nu
  * @param {Object} data - The allowed meta fields to be saved.
  * @returns {Object} The action object containing the type and data.
  */
-export const allowedMetaFields = ({id, type, status}) => {
+export const allowedMetaFields = ({ id, type, status }) => {
     return {
         type: LmatActionTypes.allowedMetaFields,
         id: id,
@@ -261,5 +261,12 @@ export const contentFetchStatus = (status) => {
     return {
         type: LmatActionTypes.contentFetchStatus,
         status: status
+    }
+}
+
+export const updateReTranslationFields = (fields) => {
+    return {
+        type: LmatActionTypes.reTranslationFields,
+        fields: fields
     }
 }
