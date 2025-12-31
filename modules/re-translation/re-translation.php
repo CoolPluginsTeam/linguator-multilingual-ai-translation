@@ -1,12 +1,14 @@
 <?php
-namespace Linguator\Modules\Re_Translation;
 
-use Linguator\Custom_Fields\Custom_Fields;
-use WP_Post;
+namespace Linguator\Modules\Re_Translation;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Linguator\Custom_Fields\Custom_Fields;
+use WP_Post;
+
 
 if ( ! class_exists( 'LMAT_Re_Translation' ) ) {
 
@@ -86,6 +88,7 @@ if ( ! class_exists( 'LMAT_Re_Translation' ) ) {
 		 * @return void
 		 */
 		public function lmat_re_translation( $post_id, $post_after, $post_before ) {
+
 			if ( false === $this->lmat_check_retranslation_request() ) {
 				return;
 			}
@@ -298,7 +301,7 @@ if ( ! class_exists( 'LMAT_Re_Translation' ) ) {
 		public static function get_updated_post_metas( int $current_post_id, int $update_post_id ) {
 
 			$data            = array();
-			$allowed_meta    = Custom_Fields::get_allowed_custom_fields();
+			$allowed_meta    = Custom_Fields::get_allowed_custom_fields('post');
 			$old_meta_fields = get_post_meta( $current_post_id, '_lmat_updated_post_inital_custom_fields', true );
 			$old_meta_fields = is_array( $old_meta_fields ) ? $old_meta_fields : array();
 			$update_post_id  = absint( $update_post_id );
@@ -356,7 +359,7 @@ if ( ! class_exists( 'LMAT_Re_Translation' ) ) {
 		private static function build_allowed_meta_hashes( int $post_id ) {
 
 			$post_id      = absint( $post_id );
-			$allowed_meta = Custom_Fields::get_allowed_custom_fields();
+			$allowed_meta = Custom_Fields::get_allowed_custom_fields('post');
 			$meta_hashes  = array();
 
 			if ( empty( $allowed_meta ) || ! is_array( $allowed_meta ) ) {
@@ -721,6 +724,4 @@ if ( ! class_exists( 'LMAT_Re_Translation' ) ) {
 			return array( 'title', 'content', 'excerpt', 'custom_fields' );
 		}
 	}
-
-	new LMAT_Re_Translation();
 }
