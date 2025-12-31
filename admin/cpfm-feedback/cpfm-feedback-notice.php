@@ -38,6 +38,7 @@ class CPFM_Feedback_Notice {
         if (!current_user_can('manage_options')) {
             return;
         }
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
         do_action('cpfm_register_notice');
     }
 
@@ -50,6 +51,7 @@ class CPFM_Feedback_Notice {
         }
        
 
+       // phpcs:ignore WordPress.Security.NonceVerification.Recommended
        $current_page   = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
         
@@ -133,6 +135,7 @@ class CPFM_Feedback_Notice {
             foreach ($registered_notices[$category] as $notice) {
                    $plugin_name = isset($notice['plugin_name'])?sanitize_key($notice['plugin_name']):'';
                    if($plugin_name){
+                       // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                        do_action('cpfm_after_opt_in_' . $plugin_name, $category);
                    }
              
@@ -151,6 +154,7 @@ class CPFM_Feedback_Notice {
         }
 
         $screen         = get_current_screen();
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $current_page   = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
        

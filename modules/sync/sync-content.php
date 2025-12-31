@@ -266,6 +266,7 @@ class LMAT_Sync_Post {
 		// Attach to the translated post
 		if ( ! wp_get_post_parent_id( $tr_id ) && 0 < $this->target_post->ID ) {
 			// Query inspired by wp_media_attach_action()
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->posts SET post_parent = %d WHERE post_type = 'attachment' AND ID = %d", $this->target_post->ID, $tr_id ) );
 			clean_attachment_cache( $tr_id );
 		}

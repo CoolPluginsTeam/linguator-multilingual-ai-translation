@@ -465,6 +465,7 @@ class LMAT_CRUD_Posts {
 		$not_like_attached = '%' . $wpdb->esc_like( '"'.$attached_file.'"' ) . '%';
 
 		// Build and prepare the SQL query
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$query = $wpdb->prepare(
 			"SELECT post_id 
 			FROM {$wpdb->postmeta}
@@ -486,6 +487,7 @@ class LMAT_CRUD_Posts {
 		);
 
 		// Execute and get IDs
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
 		$ids = $wpdb->get_col( $query );
 
 		if ( ! empty( $ids ) ) {

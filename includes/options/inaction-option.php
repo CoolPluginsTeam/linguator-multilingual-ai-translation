@@ -80,11 +80,11 @@ class Inactive_Option extends Abstract_Option {
 		if ( ! in_array( self::ERROR_CODE, $this->errors->get_error_codes(), true ) ) {
 			$this->errors->add(
 				self::ERROR_CODE,
-				/* translators: %s is a blog ID. */
-				sprintf(
+				esc_html( sprintf( 
+					// translators: %s is a blog ID.
 					__( 'Linguator is not active on site %s.', 'linguator-multilingual-ai-translation' ),
 					(int) get_current_blog_id()
-				)
+				) )
 			);
 		}
 		return false;

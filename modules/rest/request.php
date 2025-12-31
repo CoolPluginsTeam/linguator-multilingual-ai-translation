@@ -5,6 +5,10 @@
 
 namespace Linguator\Modules\REST;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Closure;
 use Linguator\Includes\Other\LMAT_Model;
 use Linguator\Includes\Other\LMAT_Language;

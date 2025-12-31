@@ -565,7 +565,7 @@ abstract class LMAT_Translatable_Object {
 			$values[] = $wpdb->prepare( '( %d, %d )', $id, $tt_id );
 		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- Bulk insert is dynamically generated and already safely prepared per value; no better alternative for mass assignment in this context.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Bulk insert is dynamically generated and already safely prepared per value; no better alternative for mass assignment in this context.
 		$wpdb->query( "INSERT INTO {$wpdb->term_relationships} ( object_id, term_taxonomy_id ) VALUES " . implode( ',', array_unique( $values ) ) );
 
 		// Updating term count is mandatory .

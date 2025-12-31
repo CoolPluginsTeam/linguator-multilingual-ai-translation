@@ -332,7 +332,7 @@ class LMAT_Admin_Menu_Sync {
 
 		// Get parameters
 		$menu_id = isset( $_POST['menu_id'] ) ? absint( $_POST['menu_id'] ) : 0;
-		$target_langs = isset( $_POST['target_langs'] ) && is_array( $_POST['target_langs'] ) ? array_map( 'sanitize_text_field', $_POST['target_langs'] ) : array();
+		$target_langs = isset( $_POST['target_langs'] ) && is_array( $_POST['target_langs'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['target_langs'] ) ) : array();
 
 			if ( empty( $menu_id ) ) {
 				wp_send_json_error( array( 
@@ -355,7 +355,6 @@ class LMAT_Admin_Menu_Sync {
 			wp_send_json_error( $result );
 			}
 		} catch ( Exception $e ) {
-			error_log( 'Menu Sync Exception: ' . $e->getMessage() );
 			wp_send_json_error( array( 
 				'message' => $e->getMessage(),
 				'error' => 'exception'
@@ -422,6 +421,7 @@ class LMAT_Admin_Menu_Sync {
 		// Build success message
 		if ( ! empty( $result['synced_languages'] ) ) {
 			$result['message'] = sprintf(
+				// translators: %s: Comma-separated list of language names.
 				__( 'Menu synced to: %s', 'linguator-multilingual-ai-translation' ),
 				implode( ', ', $result['synced_languages'] )
 			);
@@ -987,7 +987,6 @@ class LMAT_Admin_Menu_Sync {
 		);
 		
 		if ( is_wp_error( $response ) ) {
-			error_log( 'Google Translate Error: ' . $response->get_error_message() );
 			return false;
 		}
 		
@@ -1029,7 +1028,12 @@ class LMAT_Admin_Menu_Sync {
 		// This avoids WP_Query overhead and is much faster
 		$post_types_placeholder = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
 		
-		$sql = "SELECT 1 
+		$params = array_merge( array( $lang_term->term_id ), $post_types );
+		
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct DB query is required here because WordPress core does not provide an efficient or native way to fetch all objects (posts/terms/etc) that do NOT have a language assigned (i.e., not related to any language term_taxonomy_id) in bulk. This negative relationship cannot be expressed using get_terms()/wp_get_object_terms(), especially when type filtering is needed. Using a raw query here ensures both performance and compatibility. The $post_types_placeholder is safely constructed from array_fill() with placeholders.
+		return (bool) $wpdb->get_var( 
+			$wpdb->prepare(
+				"SELECT 1 
 				FROM {$wpdb->posts} p 
 				INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
 				INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
@@ -1037,11 +1041,10 @@ class LMAT_Admin_Menu_Sync {
 				AND tt.term_id = %d 
 				AND p.post_status = 'publish' 
 				AND p.post_type IN ($post_types_placeholder)
-				LIMIT 1";
-		
-		$params = array_merge( array( $lang_term->term_id ), $post_types );
-		$prepared_sql = $wpdb->prepare( $sql, $params );
-		
-		return (bool) $wpdb->get_var( $prepared_sql );
+				LIMIT 1",
+				$params
+			)
+		 );
+		// phpcs:enable
 	}
 }

@@ -55,6 +55,7 @@ class Polylang_Migration {
 
 		// Check if Polylang data exists in database (works even if plugin is deactivated)
 		// Check for 'language' taxonomy terms directly in database
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$polylang_languages_count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
@@ -104,6 +105,7 @@ class Polylang_Migration {
 		}
 
 		// Count translation links - check database directly since taxonomies might not be registered
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$post_translations_count = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
@@ -111,6 +113,7 @@ class Polylang_Migration {
 			)
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$term_translations_count = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
@@ -130,6 +133,7 @@ class Polylang_Migration {
 			}
 		} elseif ( $polylang_languages_count > 0 ) {
 			// Query database directly if languages aren't loaded
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$language_terms = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT t.term_id 
@@ -189,6 +193,7 @@ class Polylang_Migration {
 
 		// If get_terms didn't work, query database directly
 		if ( empty( $polylang_languages ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$language_terms = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT t.term_id, t.name, t.slug, tt.description 
@@ -303,6 +308,7 @@ class Polylang_Migration {
 
 		// Migrate post language assignments
 		// Get all posts that have a language assigned in Polylang
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$posts_with_language = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT DISTINCT p.ID, t.slug as lang_slug
@@ -344,6 +350,7 @@ class Polylang_Migration {
 		
 		// First, get all terms that are in translation groups (they'll be handled in migrate_translations)
 		$terms_in_translations = array();
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$term_translation_terms = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT tt.description 
@@ -364,6 +371,7 @@ class Polylang_Migration {
 		$terms_in_translations = array_map( 'intval', $terms_in_translations );
 		
 		// Now get terms that have languages assigned but are NOT in translation groups
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$term_languages = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT DISTINCT tt.term_id, lang_t.slug as lang_slug, tt.taxonomy
@@ -438,6 +446,7 @@ class Polylang_Migration {
 
 		// If get_terms didn't work, query database directly
 		if ( empty( $post_translations ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$translation_terms = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT t.term_id, tt.description 
@@ -504,6 +513,7 @@ class Polylang_Migration {
 
 		// If get_terms didn't work, query database directly
 		if ( empty( $term_translations ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$translation_terms = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT t.term_id, tt.description 
@@ -794,6 +804,7 @@ class Polylang_Migration {
 
 		// If get_terms didn't work, query database directly
 		if ( empty( $polylang_languages ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$language_terms = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT t.term_id, t.name, t.slug, tt.description 
@@ -963,6 +974,7 @@ class Polylang_Migration {
 		// or that have Polylang menu-item meta. Some installs store the switcher
 		// in `_pll_menu_item` without using the `_menu_item_url = '#pll_switcher'` marker,
 		// so check for either condition.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$menu_items = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT DISTINCT p.ID

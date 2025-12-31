@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Early check: If Translate Words is active, stop loading Linguator completely
  * This prevents duplicate menus and conflicts
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $active_plugins = get_option( 'active_plugins', array() );
 if ( in_array( 'translate-words/translate-wp-words.php', $active_plugins, true ) && file_exists( WP_PLUGIN_DIR . '/translate-words/includes/core/linguator.php' ) ) {
 	// Translate Words is active and has Linguator functionality bundled, stop loading this plugin
@@ -84,13 +85,14 @@ add_action('admin_init', function() {
 	
 	// Only check setup flag on plugins page to avoid unnecessary database queries
 	$is_plugins_page = false;
-	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'plugins.php' ) !== false ) {
+	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'plugins.php' ) !== false ) {
 		$is_plugins_page = true;
 	}
 	// Only run on plugins page
 	if ( $is_plugins_page ) {
 		// Only proceed if we need setup and are in admin
 		if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if (!is_network_admin() && !isset($_GET['activate-multi'])) {
 				// Remove the setup flag
 				delete_option('lmat_needs_setup');

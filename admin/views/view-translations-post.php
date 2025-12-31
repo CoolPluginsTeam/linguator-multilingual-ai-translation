@@ -19,24 +19,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p><strong><?php esc_html_e( 'Translations', 'linguator-multilingual-ai-translation' ); ?></strong></p>
 <table>
 	<?php
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	foreach ( $this->model->get_languages_list() as $language ) {
 		if ( $language->term_id === $lang->term_id ) {
 			continue;
 		}
 
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$translation_id = $this->model->post->get_translation( $post_ID, $language );
 		if ( ! $translation_id || $translation_id === $post_ID ) { // $translation_id == $post_ID happens if the post has been (auto)saved before changing the language.
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation_id = 0;
 		}
 
 		if ( ! empty( $from_post_id ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation_id = $this->model->post->get( $from_post_id, $language );
 		}
 
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$add_link    = $this->links->new_post_translation_link( $post_ID, $language );
 		$link        = $add_link;
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$translation = null;
 		if ( $translation_id ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation = get_post( $translation_id );
 			$link = $this->links->edit_post_translation_link( $translation_id );
 		}

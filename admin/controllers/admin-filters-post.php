@@ -195,7 +195,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-posts' ) ) {
+		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-posts' ) ) {
 			return;
 		}
 
@@ -232,7 +232,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_inline_edit'], 'inlineeditnonce' ) ) {
+		if ( ! isset( $_REQUEST['_inline_edit'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_inline_edit'] ) ), 'inlineeditnonce' ) ) {
 			return;
 		}
 

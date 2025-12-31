@@ -24,7 +24,7 @@ add_action( 'admin_init', function() {
 	// Only register AJAX handler, no UI loading
 	// Check if this is an AJAX request OR if we're on the menu page
 	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
-	$is_menu_page = isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'nav-menus.php' ) !== false;
+	$is_menu_page = isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'nav-menus.php' ) !== false;
 	
 	if ( ! $is_ajax && ! $is_menu_page ) {
 		return; // Not AJAX and not menu page, skip

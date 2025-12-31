@@ -110,6 +110,7 @@ abstract class LMAT_Base {
 
 		LMAT_Switch_Language::init( $this->model );
 
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$GLOBALS['l10n_unloaded']['lmat_string'] = true; // Short-circuit _load_textdomain_just_in_time() for 'lmat_string' domain in WP 4.6+
 
 		add_action( 'widgets_init', array( $this, 'widgets_init' ) );

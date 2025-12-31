@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * the key is the flag file name (without the extension)
  * the value is the Country name
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $flags = array(
 	'ad'        => __( 'Andorra', 'linguator-multilingual-ai-translation' ),
 	'ae'        => __( 'United Arab Emirates', 'linguator-multilingual-ai-translation' ),

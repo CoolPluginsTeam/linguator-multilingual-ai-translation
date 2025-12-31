@@ -119,9 +119,12 @@ class Linguator {
 				
 			];
 			\Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice::cpfm_register_notice('lmat', $notice);
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 				if (!isset($GLOBALS['cool_plugins_feedback'])) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 					$GLOBALS['cool_plugins_feedback'] = [];
 				}
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 				$GLOBALS['cool_plugins_feedback']['lmat'][] = $notice;
 	   
 		});

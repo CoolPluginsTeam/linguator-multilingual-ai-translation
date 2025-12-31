@@ -190,6 +190,7 @@ class LMAT_Page_Translation {
 
 			?>
 			<input type="button" class="button button-primary<?php echo esc_attr( $providers_config_class ); ?>" name="lmat_page_translation_meta_box_translate" id="lmat-page-translation-button" value="<?php echo esc_attr__( 'Translate Page', 'linguator-multilingual-ai-translation' ); ?>" readonly/><br><br>
+			<?php // translators: %1$s: parent post language, %2$s: target language ?>
 			<p style="margin-bottom: .5rem;"><?php echo esc_html( sprintf( __( 'Translate or duplicate content from %1$s to %2$s', 'linguator-multilingual-ai-translation' ), $parent_post_language, $target_language ) ); ?></p>
 			<?php
 		}
@@ -513,7 +514,8 @@ class LMAT_Page_Translation {
 	}
 
 	public function fetch_post_content() {
-		$post_id = absint( isset( $_POST['postId'] ) ? absint( sanitize_text_field( $_POST['postId'] ) ) : false );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$post_id = absint( isset( $_POST['postId'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['postId'] ) ) ) : false );
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
@@ -536,7 +538,7 @@ class LMAT_Page_Translation {
 			wp_die( '0', 400 );
 		}
 
-		$post_id = absint( isset( $_POST['postId'] ) ? absint( sanitize_text_field( $_POST['postId'] ) ) : false );
+		$post_id = absint( isset( $_POST['postId'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['postId'] ) ) ) : false );
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
@@ -557,7 +559,7 @@ class LMAT_Page_Translation {
 			wp_die( '0', 400 );
 		}
 
-		$post_id = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( $_POST['post_id'] ) ) : false;
+		$post_id = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : false;
 
 		if ( ! isset( $post_id ) || false === $post_id ) {
 			wp_send_json_error( __( 'Invalid Post ID.', 'linguator-multilingual-ai-translation' ) );
@@ -569,7 +571,7 @@ class LMAT_Page_Translation {
 			wp_die( '0', 403 );
 		}
 
-		$meta_fields = isset( $_POST['meta_fields'] ) ? json_decode( wp_unslash( $_POST['meta_fields'] ), true ) : false;
+		$meta_fields = isset( $_POST['meta_fields'] ) ? json_decode( sanitize_textarea_field( wp_unslash( $_POST['meta_fields'] ) ), true ) : false;
 
 		if ( ! $meta_fields || ! is_array( $meta_fields ) || count( $meta_fields ) < 1 ) {
 			wp_send_json_success( __( 'No Meta Fields to update.', 'linguator-multilingual-ai-translation' ) );
@@ -629,13 +631,13 @@ class LMAT_Page_Translation {
 			wp_die( '0', 400 );
 		}
 
-		$post_id = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( $_POST['post_id'] ) ) : 0;
+		$post_id = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : 0;
 		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
 			wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
 			wp_die( '0', 403 );
 		}
 
-		$status = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : '';
+		$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 		if ( $status !== 'completed' ) {
 			wp_send_json_error( __( 'Invalid status', 'linguator-multilingual-ai-translation' ), 400 );
 			wp_die( '0', 400 );

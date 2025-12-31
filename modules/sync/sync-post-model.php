@@ -3,6 +3,10 @@
  * @package Linguator
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Linguator\Custom_Fields\Custom_Fields;
 
 /**
@@ -280,6 +284,7 @@ class LMAT_Sync_Post_Model {
 		
 		$tr_post = array_intersect_key( (array) $tr_post, $columns );
 		
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => (int) $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
 		clean_post_cache( $tr_id );
 

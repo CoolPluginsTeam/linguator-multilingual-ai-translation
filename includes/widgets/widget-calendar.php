@@ -179,6 +179,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 
 		if ( $cache && is_array( $cache ) && isset( $cache[ $key ] ) ) {
 			/** This filter is documented in wp-includes/general-template.php */
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			$output = apply_filters( 'get_calendar', $cache[ $key ], $args );
 
 			if ( $args['display'] ) {
@@ -260,7 +261,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 			$post_type
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- This is safe query and already prepared in $previous_prepared_query.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- This is safe query and already prepared in $previous_prepared_query.
 		$previous                = $wpdb->get_row( $previous_prepared_query );
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- This is safe $join_clause and already esc_sql used.
@@ -269,7 +270,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 			$post_type
 		);  #modified#
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- This is safe query and already prepared in $next_prepared_query.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- This is safe query and already prepared in $next_prepared_query.
 		$next                = $wpdb->get_row( $next_prepared_query );
 
 		// translators: Calendar caption: 1: Month name, 2: 4-digit year.
@@ -311,7 +312,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 			sprintf( '%04d-%02d-%02d 23:59:59', $thisyear, $thismonth, $last_day )
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- This is safe query and already prepared in $dayswithposts_prepared_query.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- This is safe query and already prepared in $dayswithposts_prepared_query.
 		$dayswithposts = $wpdb->get_results( $dayswithposts_prepared_query, ARRAY_N );
 
 		if ( $dayswithposts ) {
@@ -403,6 +404,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		wp_cache_set( 'get_calendar', $cache, 'calendar' );
 
 		/** This filter is documented in wp-includes/general-template.php */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$calendar_output = apply_filters( 'get_calendar', $calendar_output, $args );
 
 		if ( $args['display'] ) {

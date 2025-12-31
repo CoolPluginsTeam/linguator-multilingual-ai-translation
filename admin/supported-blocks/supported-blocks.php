@@ -133,9 +133,12 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		public function render_supported_blocks_page() {
 			?>
 		<div class="lmat-custom-data-table-wrapper">
-			<h3><?php echo __('Supported Blocks Translation Settings', 'linguator-multilingual-ai-translation'); ?>
+			<h3><?php echo esc_html__('Supported Blocks Translation Settings', 'linguator-multilingual-ai-translation'); ?>
 			<br>
-			<p><?php echo sprintf(esc_html__('Manage Gutenberg blocks to make them translation-ready with %s.', 'linguator-multilingual-ai-translation'), 'Linguator'); ?></p>
+			<?php 
+				// translators: %s: Linguator.
+				printf( esc_html__( 'Manage Gutenberg blocks to make them translation-ready with %s.', 'linguator-multilingual-ai-translation' ), 'Linguator' ); 
+			?></p>
 			</h3>
 			<div class="lmat-custom-data-table-filters">
 				<div class="lmat-filter-tab" data-column="1" data-default="all">
