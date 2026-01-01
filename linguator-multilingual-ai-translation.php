@@ -7,7 +7,7 @@
  * Requires at least: 6.2
  * Requires PHP:      7.2
  * Author:            Cool Plugins
- * Author URI:        https://profiles.wordpress.org/coolplugins/
+ * Author URI:        https://coolplugins.net/
  * Text Domain:       linguator-multilingual-ai-translation
  * License:           GPL2
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,19 +17,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly.
 }
 
+/**
+ * Early check: If Translate Words is active, stop loading Linguator completely
+ * This prevents duplicate menus and conflicts
+ */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$active_plugins = get_option( 'active_plugins', array() );
+if ( in_array( 'translate-words/translate-wp-words.php', $active_plugins, true ) && file_exists( WP_PLUGIN_DIR . '/translate-words/includes/core/linguator.php' ) ) {
+	// Translate Words is active and has Linguator functionality bundled, stop loading this plugin
+	return;
+}
+
 use Linguator\Includes\Core\Linguator;
 use Linguator\Install\LMAT_Activate;
 use Linguator\Install\LMAT_Deactivate;
 use Linguator\Install\LMAT_Usable;
 
 
-define( 'LINGUATOR_VERSION', '1.0.2' );
-define( 'LMAT_MIN_WP_VERSION', '6.2' );
-define( 'LMAT_MIN_PHP_VERSION', '7.2' );
-define( 'LINGUATOR_FILE', __FILE__ ); 
-define( 'LINGUATOR_DIR', __DIR__ );
-define('LINGUATOR_URL', plugin_dir_url(LINGUATOR_FILE));
-define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
+// Linguator constants - wrapped in checks to prevent redeclaration
+if ( ! defined( 'LINGUATOR_VERSION' ) ) {
+	define( 'LINGUATOR_VERSION', '1.0.2' );
+}
+if ( ! defined( 'LMAT_MIN_WP_VERSION' ) ) {
+	define( 'LMAT_MIN_WP_VERSION', '6.2' );
+}
+if ( ! defined( 'LMAT_MIN_PHP_VERSION' ) ) {
+	define( 'LMAT_MIN_PHP_VERSION', '7.2' );
+}
+if ( ! defined( 'LINGUATOR_FILE' ) ) {
+	define( 'LINGUATOR_FILE', __FILE__ );
+}
+if ( ! defined( 'LINGUATOR_DIR' ) ) {
+	define( 'LINGUATOR_DIR', __DIR__ );
+}
+if ( ! defined( 'LINGUATOR_URL' ) ) {
+	define( 'LINGUATOR_URL', plugin_dir_url( LINGUATOR_FILE ) );
+}
+if ( ! defined( 'LINGUATOR_FEEDBACK_API' ) ) {
+	define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
+}
 
 // Whether we are using Linguator, get the filename of the plugin in use.
 if ( ! defined( 'LINGUATOR_ROOT_FILE' ) ) {
@@ -41,7 +67,9 @@ if ( ! defined( 'LINGUATOR_BASENAME' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-define( 'LINGUATOR', ucwords( str_replace( '-', ' ', dirname( LINGUATOR_BASENAME ) ) ) );
+if ( ! defined( 'LINGUATOR' ) ) {
+	define( 'LINGUATOR', ucwords( str_replace( '-', ' ', dirname( LINGUATOR_BASENAME ) ) ) );
+}
 
 // Initialize the plugin
 if ( ! empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -57,13 +85,14 @@ add_action('admin_init', function() {
 	
 	// Only check setup flag on plugins page to avoid unnecessary database queries
 	$is_plugins_page = false;
-	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'plugins.php' ) !== false ) {
+	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'plugins.php' ) !== false ) {
 		$is_plugins_page = true;
 	}
 	// Only run on plugins page
 	if ( $is_plugins_page ) {
 		// Only proceed if we need setup and are in admin
 		if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if (!is_network_admin() && !isset($_GET['activate-multi'])) {
 				// Remove the setup flag
 				delete_option('lmat_needs_setup');
@@ -109,13 +138,17 @@ add_action('admin_init', function() {
 	}
 });
 
-require __DIR__ . '/includes/helpers/constant-functions.php';
+if ( ! function_exists( 'lmat_has_constant' ) ) {
+	require __DIR__ . '/includes/helpers/constant-functions.php';
+}
 if ( ! LMAT_Usable::can_activate() ) {
 	// WP version or php version is too old.
 	return;
 }
 
-define( 'LMAT_ACTIVE', true );
+if ( ! defined( 'LMAT_ACTIVE' ) ) {
+	define( 'LMAT_ACTIVE', true );
+}
 
 if ( LMAT_Deactivate::is_deactivation() ) {
 	// Stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules).

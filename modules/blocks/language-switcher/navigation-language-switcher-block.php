@@ -5,6 +5,10 @@
 
 namespace Linguator\Modules\Blocks;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Language switcher block for navigation.
  *

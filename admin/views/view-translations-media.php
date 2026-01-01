@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p><strong><?php esc_html_e( 'Translations', 'linguator-multilingual-ai-translation' ); ?></strong></p>
 <table>
 	<?php
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	foreach ( $this->model->get_languages_list() as $language ) {
 		if ( $language->term_id === $lang->term_id ) {
 			continue;
@@ -29,6 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<td class = "lmat-media-language-column"><span class = "lmat-translation-flag"><?php echo $language->flag ? wp_kses( $language->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ), 'span' => array( 'class' => true ), 'abbr' => array() ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) : ''; ?></span><?php echo esc_html( $language->name ); ?></td>
 			<td class = "lmat-media-edit-column">
 				<?php
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 				$translation_id = $this->model->post->get_translation( $post_ID, $language );
 				if ( ! empty( $translation_id ) && $translation_id !== $post_ID ) {
 					// The translation exists

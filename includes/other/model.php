@@ -473,9 +473,10 @@ class LMAT_Model {
 						$q_meta_key=isset($meta_query['key']) && !empty($meta_query['key']) ? sanitize_text_field($meta_query['key']) : '';
 						$q_meta_value=isset($meta_query['value']) && !empty($meta_query['value']) ? sanitize_text_field($meta_query['value']) : '';
 
-						if(!isset($base_args['meta_query'])){
-							$base_args['meta_query'] = array();
-						}
+					if(!isset($base_args['meta_query'])){
+						// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						$base_args['meta_query'] = array();
+					}
 
 						$meta_query_array = array(
 							'key' => $q_meta_key,

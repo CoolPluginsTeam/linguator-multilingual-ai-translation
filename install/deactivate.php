@@ -27,5 +27,6 @@ class LMAT_Deactivate extends LMAT_Abstract_Deactivate {
 	 */
 	protected static function process(): void {
 		delete_option( 'rewrite_rules' ); // Remove stored permalinks so WordPress updates them safely after deactivation.
+		wp_clear_scheduled_hook('lmat_extra_data_update');
 	}
 }

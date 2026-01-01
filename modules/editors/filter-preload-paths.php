@@ -5,6 +5,10 @@
 
 namespace Linguator\Modules\Editors;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use WP_Post;
 use Linguator\Includes\Base\LMAT_Base;
 use Linguator\Includes\Other\LMAT_Model;

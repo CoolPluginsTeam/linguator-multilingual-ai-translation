@@ -388,8 +388,6 @@ class LMAT_Wizard
 						$migration = new \Linguator\Includes\Migration\Polylang_Migration( $this->model, $this->options );
 						$polylang_detection = $migration->detect_polylang();
 					} catch ( \Exception $e ) {
-						// Log error but don't break the wizard
-						error_log( 'Linguator Polylang Migration Error: ' . $e->getMessage() );
 					}
 				}
 			}
@@ -406,8 +404,6 @@ class LMAT_Wizard
 						$wpml_migration = new \Linguator\Includes\Migration\WPML_Migration( $this->model, $this->options );
 						$wpml_detection = $wpml_migration->detect_wpml();
 					} catch ( \Exception $e ) {
-						// Log error but don't break the wizard
-						error_log( 'Linguator WPML Migration Error: ' . $e->getMessage() );
 					}
 				}
 			}

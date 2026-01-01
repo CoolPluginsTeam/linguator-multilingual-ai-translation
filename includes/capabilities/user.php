@@ -149,9 +149,10 @@ class User {
 	 */
 	public function can_translate_or_die( LMAT_Language $language ): void {
 		if ( ! $this->can_translate( $language ) ) {
-			/* translators: %s: language name */
 			// User is not allowed, so stop and show error message
-			wp_die( esc_html( sprintf( __( 'You are not allowed to do action in %s.', 'linguator-multilingual-ai-translation' ), $language->name ) ) );
+			wp_die( esc_html( sprintf( 
+				// translators: %s: language name
+				__( 'You are not allowed to do action in %s.', 'linguator-multilingual-ai-translation' ), $language->name ) ) );
 		}
 	}
 }

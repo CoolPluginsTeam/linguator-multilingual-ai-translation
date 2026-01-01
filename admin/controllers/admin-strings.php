@@ -82,6 +82,7 @@ class LMAT_Admin_Strings {
 		);
 
 		global $wp_registered_widgets;
+		// phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
 		$sidebars = wp_get_sidebars_widgets();
 		foreach ( $sidebars as $sidebar => $widgets ) {
 			if ( 'wp_inactive_widgets' == $sidebar || empty( $widgets ) ) {

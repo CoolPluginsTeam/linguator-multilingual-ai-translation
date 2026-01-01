@@ -275,8 +275,10 @@ class Settings extends Abstract_Controller {
 		$complete = $request->get_param( 'complete' );
 		
 		$result = update_option( 'lmat_setup_complete', $complete );
+		// Verify the option was set correctly by checking the stored value
+		$stored_value = get_option( 'lmat_setup_complete' );
 		
-		if ( $result ) {
+		if ( $result !== false || $stored_value == $complete ) {
 			return rest_ensure_response( array(
 				'success' => true,
 				'lmat_setup_complete' => $complete,
