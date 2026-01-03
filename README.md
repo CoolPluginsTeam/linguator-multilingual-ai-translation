@@ -89,8 +89,8 @@ With **580+ five-star reviews**, our plugins are proven to deliver quality and u
 
 = Version 1.0.3 | 03/01/2026 =
 
-* Added compatibility with the Translate Words plugin.
-* General code improvements and optimizations.
+* **Added:** Compatibility with the Translate Words plugin.
+* **Improved:** General code improvements and optimizations.
 
 = Version 1.0.2 | 18/12/2025 =
 

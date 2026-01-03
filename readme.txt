@@ -162,8 +162,8 @@ No, Linguator is not in beta stage. The core features are ready to use, and weâ€
 == Changelog ==
 
 = Version 1.0.3 | 03/01/2026 =
-* Compatible with Translate words plugin.
-* Over all Code Improvement
+* **Added:** Compatibility with the Translate Words plugin.
+* **Improved:** General code improvements and optimizations.
 
 = Version 1.0.2 | 18/12/2025 =
 * **Added:** Introduces "Sync Menu" feature.
