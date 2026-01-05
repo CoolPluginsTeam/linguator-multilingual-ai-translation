@@ -17,6 +17,7 @@ return array(
 	'wp-importer',
 	'wp-offload-media',
 	'wp-sweep',
+	'wpbakery',
 	'wpseo',
 	'yarpp',
 );
