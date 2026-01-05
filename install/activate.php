@@ -97,12 +97,11 @@ class LMAT_Activate extends LMAT_Abstract_Activate {
 			$cache = new \Linguator\Includes\Helpers\LMAT_Cache();
 			$cache->clean();
 		}
-
 		/*
-		 * Don't flush rewrite rules during network activation to avoid possible issues.
-		 * The rewrite rules will automatically be updated on the next page load.
+		 * Flush rewrite rules to ensure REST API endpoints are accessible immediately.
+		 * This prevents "invalid JSON response" errors when the setup wizard tries to make REST API calls.
 		 */
-		delete_option( 'rewrite_rules' );
+		flush_rewrite_rules();
 		$options = get_option( 'linguator' );
 		$lmat_feedback_data = $options['lmat_feedback_data'];
 		if ( $lmat_feedback_data === true && ! wp_next_scheduled( 'lmat_extra_data_update' ) ) {
