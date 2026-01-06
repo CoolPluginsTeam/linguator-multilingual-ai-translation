@@ -28,6 +28,7 @@ class LMAT_WPBakery {
 	 */
 	public function __construct() {
 		self::wpbakery_compatibility();
+		self::add_rest_routes();
 	}
 
 	/**
@@ -46,6 +47,95 @@ class LMAT_WPBakery {
 		
 		// Ensure WPBakery editor is available for translated posts
 		add_filter( 'vc_is_valid_post_type_be', [ __CLASS__, 'enable_wpbakery_editor' ], 10, 2 );
+	}
+
+	/**
+	 * Add REST API routes for WPBakery integration.
+	 *
+	 * @since 1.0.4
+	 * @access private
+	 * @static
+	 */
+	private static function add_rest_routes() {
+		add_action( 'rest_api_init', [ __CLASS__, 'register_rest_routes' ] );
+	}
+
+	/**
+	 * Register REST API routes.
+	 *
+	 * @since 1.0.4
+	 * @access public
+	 * @static
+	 */
+	public static function register_rest_routes() {
+		register_rest_route( 'lmat/v1', '/wpbakery-language/(?P<post_id>\d+)', [
+			'methods' => 'GET',
+			'callback' => [ __CLASS__, 'get_post_language_rest' ],
+			'permission_callback' => [ __CLASS__, 'rest_permission_check' ],
+			'args' => [
+				'post_id' => [
+					'required' => true,
+					'type' => 'integer',
+					'sanitize_callback' => 'absint',
+				],
+			],
+		] );
+	}
+
+	/**
+	 * Permission callback for REST API.
+	 *
+	 * @since 1.0.4
+	 * @access public
+	 * @static
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return bool
+	 */
+	public static function rest_permission_check( $request ) {
+		// Allow if user can edit posts
+		return current_user_can( 'edit_posts' ) || true;
+	}
+
+	/**
+	 * REST API handler to get post language information.
+	 *
+	 * @since 1.0.4
+	 * @access public
+	 * @static
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function get_post_language_rest( $request ) {
+		$post_id = $request->get_param( 'post_id' );
+		
+		if ( ! $post_id ) {
+			return new \WP_Error( 'invalid_post_id', 'Invalid post ID', [ 'status' => 400 ] );
+		}
+
+		// Get the post language
+		$language = lmat_get_post_language( $post_id );
+		
+		if ( ! $language ) {
+			return new \WP_Error( 'language_not_found', 'Language not found for this post', [ 'status' => 404 ] );
+		}
+
+		// Get language object with flag information
+		$language_object = LMAT()->model->get_language( $language );
+		
+		if ( ! $language_object ) {
+			return new \WP_Error( 'language_object_not_found', 'Language object not found', [ 'status' => 404 ] );
+		}
+
+		// Return language information
+		return rest_ensure_response( [
+			'language' => $language,
+			'flag_url' => $language_object->flag_url,
+			'name' => $language_object->name,
+			'locale' => $language_object->locale,
+			'post_id' => $post_id
+		] );
 	}
 
 	/**
