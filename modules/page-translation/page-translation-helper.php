@@ -138,6 +138,15 @@ if ( ! class_exists( 'LMAT_Page_Translation_Helper' ) ) {
 				}
 
 				$content = $post_data->post_content;
+				
+				/**
+				 * Filter the post content for translation.
+				 * 
+				 * @since 1.0.4
+				 * @param string $content Post content.
+				 * @param int    $post_id Post ID.
+				 */
+				$content = apply_filters( 'lmat_post_content_for_translation', $content, $post_id );
 
 				if ( function_exists( 'lmat_replace_links_with_translations' ) ) {
 					$content = lmat_replace_links_with_translations( $content, $locale, $current_locale );
