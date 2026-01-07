@@ -387,6 +387,10 @@ class LMAT_WPBakery {
 		if ( false === strpos( $content, '[lmat_val' ) ) {
 			return $content;
 		}
+
+		// Normalize quotes first (fix smart quotes introduced by translation around tokens)
+		// We do this BEFORE restoring values, so that we don't accidentally normalize quotes *inside* the translated text.
+		$content = self::normalize_shortcode_quotes( $content );
 		
 		// Find all translated values and their IDs
 		// Regex explanation:
@@ -406,6 +410,9 @@ class LMAT_WPBakery {
 				
 				// Decode entities in translation (e.g. &quot; -> ", &lt; -> <)
 				$translated_value = html_entity_decode( $translated_value );
+				
+				// Escape attributes to prevent breaking shortcode syntax (e.g. quotes inside value)
+				$translated_value = esc_attr( $translated_value );
 				
 				// Finds the token in the content and replaces it.
 				// The token is unique enough that global replacement is safe.
@@ -495,7 +502,7 @@ class LMAT_WPBakery {
 					return $matches[0];
 				}
 
-				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size' );
+				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size', 'font_container', 'google_fonts' );
 				if ( in_array( $attribute, $skip_attributes, true ) ) {
 					return $matches[0];
 				}
@@ -533,6 +540,37 @@ class LMAT_WPBakery {
 			$content = preg_replace( '/\[lmat_val[^\]]*\](.*?)\[\/lmat_val\]/s', '', $content );
 		}
 		return $content;
+	}
+
+	/**
+	 * Normalize quotes in shortcodes (fix smart quotes introduced by translation).
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param string $content Post content.
+	 * @return string Content with normalized quotes.
+	 */
+	public static function normalize_shortcode_quotes( $content ) {
+		// Regex to find WPBakery shortcodes
+		// Handles [vc_...] up to the closing bracket ]
+		// We use a callback to only replace quotes *inside* the tag definition
+		return preg_replace_callback(
+			'/\[vc_[^\]]+\]/s',
+			function( $matches ) {
+				$tag = $matches[0];
+				
+				// Replace smart double quotes with straight double quotes
+				$tag = str_replace( [ '“', '”', '″', '„' ], '"', $tag );
+				
+				// Replace smart single quotes with straight single quotes
+				$tag = str_replace( [ '‘', '’', '′', '‚' ], "'", $tag );
+				
+				return $tag;
+			},
+			$content
+		);
 	}
 }
 
