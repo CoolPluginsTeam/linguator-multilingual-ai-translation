@@ -58,6 +58,9 @@ class LMAT_WPBakery {
 		
 		// Filter post content before saving to re-encode WPBakery attributes
 		add_filter( 'wp_insert_post_data', [ __CLASS__, 'encode_wpbakery_content_before_save' ], 10, 2 );
+		
+		// Clean up page translation placeholders on frontend display (priority 5 - before shortcodes)
+		add_filter( 'the_content', [ __CLASS__, 'cleanup_content_on_frontend' ], 5 );
 	}
 
 
@@ -422,6 +425,9 @@ class LMAT_WPBakery {
 
 		// Cleanup any remaining lmat_val tags globally
 		$content = self::remove_remaining_lmat_tags( $content );
+		
+		// Remove page translation placeholders that might have been left in the content
+		$content = self::remove_page_translation_placeholders( $content );
 
 		return $content;
 	}
@@ -462,7 +468,10 @@ class LMAT_WPBakery {
 			return $data;
 		}
 
-		// First, restore exposed attributes
+		// First, clean up any page translation placeholders
+		$data['post_content'] = self::remove_page_translation_placeholders( $data['post_content'] );
+		
+		// Second, restore exposed attributes
 		if ( false !== strpos( $data['post_content'], '[lmat_val' ) ) {
 			$data['post_content'] = self::restore_translatable_attributes( $data['post_content'] );
 		}
@@ -562,15 +571,84 @@ class LMAT_WPBakery {
 				$tag = $matches[0];
 				
 				// Replace smart double quotes with straight double quotes
-				$tag = str_replace( [ '“', '”', '″', '„' ], '"', $tag );
+				$smart_double_quotes = array( "\xE2\x80\x9C", "\xE2\x80\x9D", "\xE2\x80\xB3", "\xE2\x80\x9E" );
+				$tag = str_replace( $smart_double_quotes, '"', $tag );
 				
 				// Replace smart single quotes with straight single quotes
-				$tag = str_replace( [ '‘', '’', '′', '‚' ], "'", $tag );
+				$smart_single_quotes = array( "\xE2\x80\x98", "\xE2\x80\x99", "\xE2\x80\xB2", "\xE2\x80\x9A" );
+				$tag = str_replace( $smart_single_quotes, "'", $tag );
 				
 				return $tag;
 			},
 			$content
 		);
+	}
+	
+	/**
+	 * Remove page translation placeholders from content.
+	 *
+	 * These placeholders (#lmat_page_translation_*#) are used during the translation
+	 * process to protect certain elements from being translated. They should be removed
+	 * from the final content.
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param string $content Post content.
+	 * @return string Content with placeholders removed.
+	 */
+	public static function remove_page_translation_placeholders( $content ) {
+		// List of all page translation placeholders
+		$placeholders = array(
+			'#lmat_page_translation_open_translate_span#',
+			'#lmat_page_translation_close_translate_span#',
+			'#lmat_page_translation_temp_tag_open#',
+			'#lmat_page_translation_temp_tag_close#',
+			'#lmat_page_translation_less_then_symbol#',
+			'#lmat_page_translation_greater_then_symbol#',
+			'#lmat_page_translation_entity_open_translate_span#',
+			'#lmat_page_translation_entity_close_translate_span#',
+			'#lmat_page_translation_line_break_n_open#',
+			'#lmat_page_translation_line_break_n_close#',
+			'#lmat_page_translation_line_break_r_open#',
+			'#lmat_page_translation_line_break_r_close#',
+		);
+		
+		// Remove all placeholders from content
+		foreach ( $placeholders as $placeholder ) {
+			$content = str_replace( $placeholder, '', $content );
+		}
+		
+		return $content;
+	}
+	
+	/**
+	 * Cleanup content on frontend display.
+	 *
+	 * Removes any leftover translation placeholders and lmat_val tags that might
+	 * have been saved to the database during translation.
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param string $content Post content.
+	 * @return string Cleaned content.
+	 */
+	public static function cleanup_content_on_frontend( $content ) {
+		// Check if content has any placeholders before processing
+		if ( false === strpos( $content, '#lmat_page_translation' ) && false === strpos( $content, '[lmat_val' ) ) {
+			return $content;
+		}
+		
+		// Remove any remaining lmat_val tags
+		$content = self::remove_remaining_lmat_tags( $content );
+		
+		// Remove page translation placeholders
+		$content = self::remove_page_translation_placeholders( $content );
+		
+		return $content;
 	}
 }
 
