@@ -782,6 +782,9 @@ class Languages extends Abstract_Controller {
 			}
 		}
 
+		// Allow integrations to copy meta data after translation is created and linked
+		do_action( 'lmat_translation_created', $new_post_id, $source_id, $target_lang_slug );
+
 		return rest_ensure_response( array(
 			'success'   => true,
 			'id'        => (int) $new_post_id,

@@ -41,14 +41,23 @@ class LMAT_WPBakery {
 	 * @static
 	 */
 	private static function wpbakery_compatibility() {
-		// Copy WPBakery data while Linguator creates a translation copy.
-		add_filter( 'lmat_copy_post_metas', [ __CLASS__, 'save_wpbakery_meta' ], 10, 4 );
+		// Copy WPBakery meta when translation is created via REST API
+		add_action( 'lmat_translation_created', [ __CLASS__, 'copy_meta_on_translation_created' ], 10, 3 );
+		
+		// Set default content for new WPBakery translations
+		add_filter( 'default_content', [ __CLASS__, 'set_default_translation_content' ], 10, 2 );
 		
 		// Ensure WPBakery editor is available for translated posts
 		add_filter( 'vc_is_valid_post_type_be', [ __CLASS__, 'enable_wpbakery_editor' ], 10, 2 );
 		
 		// Mark WPBakery posts as "classic" editor type for translation but preserve structure
 		add_filter( 'lmat_editor_type', [ __CLASS__, 'set_wpbakery_editor_type' ], 10, 2 );
+		
+		// Disable Gutenberg for WPBakery translation creation
+		add_filter( 'use_block_editor_for_post', [ __CLASS__, 'disable_gutenberg_for_wpbakery' ], 10, 2 );
+		
+		// Modify edit links for WPBakery posts to open backend editor
+		add_filter( 'get_edit_post_link', [ __CLASS__, 'modify_edit_post_link' ], 10, 3 );
 		
 		// Intercept content fetching for translation to decode WPBakery content
 		add_action( 'wp_ajax_lmat_fetch_post_content', [ __CLASS__, 'intercept_fetch_content' ], 1 );
@@ -64,34 +73,6 @@ class LMAT_WPBakery {
 	}
 
 
-
-	/**
-	 * Save WPBakery Page Builder meta.
-	 *
-	 * Copy WPBakery Page Builder data while Linguator creates a translation copy.
-	 * This ensures all page builder content and settings are preserved in translations.
-	 *
-	 * Fired by `lmat_copy_post_metas` filter.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @static
-	 *
-	 * @param array $keys List of custom fields names.
-	 * @param bool  $sync True if it is synchronization, false if it is a copy.
-	 * @param int   $from ID of the post from which we copy information.
-	 * @param int   $to   ID of the post to which we paste information.
-	 *
-	 * @return array List of custom fields names.
-	 */
-	public static function save_wpbakery_meta( $keys, $sync, $from, $to ) {
-		// Copy only for a new post.
-		if ( ! $sync ) {
-			self::copy_wpbakery_meta( $from, $to );
-		}
-
-		return $keys;
-	}
 
 	/**
 	 * Copy WPBakery Page Builder meta.
@@ -113,17 +94,6 @@ class LMAT_WPBakery {
 		$core_meta = [
 			'_wp_page_template',
 			'_thumbnail_id',
-		];
-
-		// WPBakery specific meta keys to copy
-		$wpbakery_meta_keys = [
-			'_wpb_vc_js_status',           // Visual Composer JS status
-			'_wpb_shortcodes_custom_css',  // Custom CSS for page
-			'_wpb_post_custom_css',        // Post custom CSS
-			'_vc_post_settings',           // Visual Composer settings
-			'_vcv-pageContent',            // Visual Composer content
-			'vcv-settingsItemDataCollection', // Settings collection
-			'vcv-pageDesignOptionsData',   // Design options
 		];
 
 		foreach ( $from_post_meta as $meta_key => $values ) {
@@ -151,6 +121,90 @@ class LMAT_WPBakery {
 				update_metadata( 'post', $to_post_id, $meta_key, $value );
 			}
 		}
+	}
+
+	/**
+	 * Copy WPBakery meta when a translation is created.
+	 *
+	 * This hooks into the lmat_translation_created action that fires after
+	 * a translation is created via REST API and translations are linked.
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param int    $new_post_id      New translation post ID.
+	 * @param int    $source_id        Source post ID.
+	 * @param string $target_lang_slug Target language slug.
+	 */
+	public static function copy_meta_on_translation_created( $new_post_id, $source_id, $target_lang_slug ) {
+		// Check if source post uses WPBakery
+		$wpb_status = get_post_meta( $source_id, '_wpb_vc_js_status', true );
+		
+		// Only copy if source post has WPBakery enabled
+		if ( 'true' === $wpb_status || true === $wpb_status ) {
+			// Copy WPBakery meta fields
+			self::copy_wpbakery_meta( $source_id, $new_post_id );
+			
+			// Copy post content (which contains WPBakery shortcodes)
+			$source_post = get_post( $source_id );
+			if ( $source_post && ! empty( $source_post->post_content ) ) {
+				wp_update_post( array(
+					'ID'           => $new_post_id,
+					'post_content' => $source_post->post_content,
+				) );
+			}
+		}
+	}
+
+	/**
+	 * Set default content for new WPBakery translations.
+	 *
+	 * When creating a new post with from_post parameter (translation),
+	 * set the default content to the source post's content.
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param string  $content Default content.
+	 * @param WP_Post $post    Post object.
+	 * @return string Modified content.
+	 */
+	public static function set_default_translation_content( $content, $post ) {
+		// Only for new posts
+		if ( ! $post || 'auto-draft' !== $post->post_status ) {
+			return $content;
+		}
+		
+		// Check if we have from_post parameter
+		if ( ! isset( $_GET['from_post'] ) ) {
+			return $content;
+		}
+		
+		$from_post_id = absint( $_GET['from_post'] );
+		if ( ! $from_post_id ) {
+			return $content;
+		}
+		
+		// Check if source post uses WPBakery
+		$wpb_status = get_post_meta( $from_post_id, '_wpb_vc_js_status', true );
+		if ( 'true' !== $wpb_status && true !== $wpb_status ) {
+			return $content;
+		}
+		
+		// Get the source post content
+		$source_post = get_post( $from_post_id );
+		if ( ! $source_post || empty( $source_post->post_content ) ) {
+			return $content;
+		}
+		
+		// Also copy WPBakery meta to the new post
+		if ( $post->ID ) {
+			self::copy_wpbakery_meta( $from_post_id, $post->ID );
+		}
+		
+		return $source_post->post_content;
 	}
 
 	/**
@@ -215,6 +269,78 @@ class LMAT_WPBakery {
 	}
 
 	/**
+	 * Disable Gutenberg editor for WPBakery posts.
+	 *
+	 * When creating a translation from a WPBakery post, disable Gutenberg
+	 * and force classic editor mode so WPBakery can load.
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param bool    $use_block_editor Whether to use the block editor.
+	 * @param WP_Post $post             The post being edited.
+	 * @return bool Whether to use the block editor.
+	 */
+	public static function disable_gutenberg_for_wpbakery( $use_block_editor, $post ) {
+		// If already disabled, return
+		if ( ! $use_block_editor ) {
+			return $use_block_editor;
+		}
+		
+		// Check if this is a WPBakery post
+		if ( $post && $post->ID ) {
+			$wpb_status = get_post_meta( $post->ID, '_wpb_vc_js_status', true );
+			if ( 'true' === $wpb_status || true === $wpb_status ) {
+				return false; // Disable Gutenberg
+			}
+		}
+		
+		// Check if we're creating a translation from a WPBakery post
+		if ( isset( $_GET['from_post'] ) ) {
+			$from_post_id = absint( $_GET['from_post'] );
+			if ( $from_post_id ) {
+				$wpb_status = get_post_meta( $from_post_id, '_wpb_vc_js_status', true );
+				if ( 'true' === $wpb_status || true === $wpb_status ) {
+					return false; // Disable Gutenberg
+				}
+			}
+		}
+		
+		return $use_block_editor;
+	}
+
+	/**
+	 * Modify edit post links for WPBakery posts.
+	 *
+	 * Add the wpb-backend-editor parameter to edit links for WPBakery posts
+	 * so they open directly in the WPBakery backend editor.
+	 *
+	 * @since 1.0.5
+	 * @access public
+	 * @static
+	 *
+	 * @param string $url     The edit post link.
+	 * @param int    $post_id The post ID.
+	 * @param string $context The context (display or other).
+	 * @return string Modified edit link.
+	 */
+	public static function modify_edit_post_link( $url, $post_id, $context ) {
+		// Check if this is a WPBakery post
+		$wpb_status = get_post_meta( $post_id, '_wpb_vc_js_status', true );
+		
+		// If not a WPBakery post, return original URL
+		if ( 'true' !== $wpb_status && true !== $wpb_status ) {
+			return $url;
+		}
+		
+		// Add wpb-backend-editor parameter to the URL
+		$url = add_query_arg( 'wpb-backend-editor', '', $url );
+		
+		return $url;
+	}
+
+	/**
 	 * Intercept content fetching to decode WPBakery shortcodes.
 	 *
 	 * WPBakery stores content in base64-encoded format within shortcode attributes.
@@ -233,6 +359,7 @@ class LMAT_WPBakery {
 		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'decode_wpbakery_shortcodes' ], 10 );
 		// Priority 20: Expose attributes as content for translation
 		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'expose_translatable_attributes' ], 20 );
+		
 		
 		add_filter( 'get_post_field', [ __CLASS__, 'decode_post_content_field' ], 10, 3 );
 	}
@@ -288,8 +415,9 @@ class LMAT_WPBakery {
 				$quote = $matches[2];
 				$value = $matches[3];
 
-				// Skip attributes that are clearly not encoded (like el_class, css_animation, etc.)
-				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url' );
+				// Skip attributes that are clearly not encoded or contain IDs/references
+				// These should never be decoded or translated as they reference WordPress entities
+				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size', 'img_id', 'video_id', 'gallery', 'images', 'font_container', 'google_fonts', 'post_id', 'taxonomy', 'term_id' );
 				if ( in_array( $attribute, $skip_attributes, true ) ) {
 					return $matches[0];
 				}
@@ -333,12 +461,13 @@ class LMAT_WPBakery {
 			return $content;
 		}
 
-		$translatable_attributes = [ 'title', 'text', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title' ];
+		$translatable_attributes = [ 'title', 'text', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title', 'p' ];
+		$protected_attributes = [ 'image', 'img_size', 'img_id', 'video_id', 'gallery', 'images', 'post_id', 'taxonomy', 'term_id', 'el_id' ];
 
 		// Match shortcodes and their attributes 
 		$content = preg_replace_callback(
 			'/(\[vc_[\w-]+)([^\]]*)(\])/',
-			function( $matches ) use ( $translatable_attributes ) {
+			function( $matches ) use ( $translatable_attributes, $protected_attributes ) {
 				$tag_start = $matches[1];
 				$attributes_str = $matches[2];
 				$tag_end = $matches[3];
@@ -347,7 +476,7 @@ class LMAT_WPBakery {
 				// Find attributes in the string
 				$attributes_str = preg_replace_callback(
 					'/([\w-]+)=(["\'])(.*?)\2/',
-					function( $attr_matches ) use ( $translatable_attributes, &$append_content ) {
+					function( $attr_matches ) use ( $translatable_attributes, $protected_attributes, &$append_content ) {
 						$attr_name = $attr_matches[1];
 						$attr_quote = $attr_matches[2];
 						$attr_val = $attr_matches[3];
@@ -362,6 +491,15 @@ class LMAT_WPBakery {
 							// Replace the attribute value with the token
 							return $attr_name . '=' . $attr_quote . $token . $attr_quote;
 						}
+						
+						// Protect ID-based attributes by encoding them in a token
+						if ( in_array( $attr_name, $protected_attributes, true ) && ! empty( $attr_val ) ) {
+							// Encode the value in base64 so we can decode it later
+							// Format: ___LMAT_PROTECTED_{base64}___
+							$protected_token = '___LMAT_PROTECTED_' . base64_encode( $attr_val ) . '___';
+							return $attr_name . '=' . $attr_quote . $protected_token . $attr_quote;
+						}
+						
 						return $attr_matches[0];
 					},
 					$attributes_str
@@ -387,13 +525,17 @@ class LMAT_WPBakery {
 	 */
 	public static function restore_translatable_attributes( $content ) {
 		// Optimization check
-		if ( false === strpos( $content, '[lmat_val' ) ) {
+		if ( false === strpos( $content, '[lmat_val' ) && false === strpos( $content, '___LMAT' ) ) {
 			return $content;
 		}
 
 		// Normalize quotes first (fix smart quotes introduced by translation around tokens)
 		// We do this BEFORE restoring values, so that we don't accidentally normalize quotes *inside* the translated text.
 		$content = self::normalize_shortcode_quotes( $content );
+		
+		// Restore protected attributes that were tokenized to prevent translation
+		// These are ID-based attributes that should never be translated
+		$content = self::restore_protected_attributes( $content );
 		
 		// Find all translated values and their IDs
 		// Regex explanation:
@@ -429,6 +571,37 @@ class LMAT_WPBakery {
 		// Remove page translation placeholders that might have been left in the content
 		$content = self::remove_page_translation_placeholders( $content );
 
+		return $content;
+	}
+	
+	/**
+	 * Restore protected attributes that were tokenized to prevent translation.
+	 *
+	 * Protected attributes are those containing IDs and references that should never
+	 * be translated (like image IDs, post IDs, etc). These were encoded in base64
+	 * tokens to protect them during translation.
+	 *
+	 * @since 1.0.5
+	 * @access private
+	 * @static
+	 *
+	 * @param string $content Post content with protected tokens.
+	 * @return string Content with original attribute values restored.
+	 */
+	private static function restore_protected_attributes( $content ) {
+		// Pattern: ___LMAT_PROTECTED_{base64}___
+		// Find all protected tokens and decode them
+		$content = preg_replace_callback(
+			'/___LMAT_PROTECTED_([A-Za-z0-9+\/=]+)___/',
+			function( $matches ) {
+				$encoded_value = $matches[1];
+				// Decode the base64 value
+				$original_value = base64_decode( $encoded_value );
+				return $original_value;
+			},
+			$content
+		);
+		
 		return $content;
 	}
 
@@ -511,7 +684,9 @@ class LMAT_WPBakery {
 					return $matches[0];
 				}
 
-				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size', 'font_container', 'google_fonts' );
+				// Skip attributes that contain IDs, references, or shouldn't be encoded
+				// These must match the skip list in decode_wpbakery_shortcodes for consistency
+				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size', 'img_id', 'video_id', 'gallery', 'images', 'font_container', 'google_fonts', 'post_id', 'taxonomy', 'term_id' );
 				if ( in_array( $attribute, $skip_attributes, true ) ) {
 					return $matches[0];
 				}
