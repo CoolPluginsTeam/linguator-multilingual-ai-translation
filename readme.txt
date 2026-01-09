@@ -13,14 +13,12 @@ Translate your WordPress website into multiple languages with AI. LinguaAI makes
 
 == Description ==
 
-https://youtu.be/TNSWCCmHQPg?si=LQXRkszBIFPMG9vg
+This plugin is deprecated and is no longer actively maintained.
+All its functionality has been moved to [Linguator AI – Auto Translate & Create Multilingual Sites](https://wordpress.org/plugins/translate-words/)
 
 **LinguaAI**  is a powerful multilingual plugin that helps you create and manage multilingual content on your WordPress website. Easily translate your **posts, pages, menus,** and **categories** into different languages using AI and connect with visitors worldwide.
 
 **Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.**
-
-
-https://youtu.be/20MbjUb6AnM?si=-1qipV1fFH89KtgT
 
 [Check Live Demo](https://wordpress.org/plugins/LinguaAI-multilingual-ai-translation/?preview=1) | [Learn more](https://LinguaAI.com/?utm_source=lmat_plugin&utm_medium=readme&utm_campaign=view_plugin&utm_content=learn_more) 
 
