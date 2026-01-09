@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 No, LinguaAI is not in beta stage. The core features are ready to use, and we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
+
+= Version 1.0.4 | 03/01/2026 =
+* **Improved:** Minor Text improvements.
 
 = Version 1.0.3 | 03/01/2026 =
 * **Added:** Compatibility with the Translate Words plugin.
