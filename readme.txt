@@ -1,4 +1,4 @@
-=== Multilingual AI Translator – Multilingual AI Translation  ===
+=== Multilingual AI Translator ===
 
 Contributors: narinder-singh,satindersingh,coolplugins
 Tags: translation, multilingual, language, ai translation 
