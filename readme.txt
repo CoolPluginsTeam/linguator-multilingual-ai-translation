@@ -159,7 +159,7 @@ No, LinguaAI is not in beta stage. The core features are ready to use, and we’
 
 == Changelog ==
 
-= Version 1.0.4 | 03/01/2026 =
+= Version 1.0.4 | 09/01/2026 =
 * **Improved:** Minor Text improvements.
 
 = Version 1.0.3 | 03/01/2026 =
