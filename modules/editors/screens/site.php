@@ -5,6 +5,10 @@
 
 namespace Linguator\Modules\Editors\Screens;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Linguator\Includes\Base\LMAT_Base;
 use Linguator\Includes\Other\LMAT_Model;
 use WP_Screen;

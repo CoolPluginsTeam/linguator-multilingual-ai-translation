@@ -347,7 +347,8 @@ class LMAT_Admin_Filters_Term {
 		/*
 		 * Category metabox.
 		 */
-		if ( isset( $_POST['term_lang_choice'], $_REQUEST[ '_ajax_nonce-add-' . $taxonomy ] ) && wp_verify_nonce( $_REQUEST[ '_ajax_nonce-add-' . $taxonomy ], 'add-' . $taxonomy ) ) {
+		$nonce_key = '_ajax_nonce-add-' . $taxonomy;
+		if ( isset( $_POST['term_lang_choice'], $_REQUEST[ $nonce_key ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST[ $nonce_key ] ) ), 'add-' . $taxonomy ) ) {
 			$this->maybe_set_language( $term_id, sanitize_key( $_POST['term_lang_choice'] ) );
 			return;
 		}
@@ -364,7 +365,7 @@ class LMAT_Admin_Filters_Term {
 		/*
 		 *  *Post* bulk edit, in case a new term is created.
 		 */
-		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-posts' ) ) {
+		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-posts' ) ) {
 			/*
 			 * Bulk edit does not modify the language, so we possibly create a tag in several languages.
 			 */
@@ -409,7 +410,8 @@ class LMAT_Admin_Filters_Term {
 		 * Quick edit.
 		 */
 		if ( isset( $_POST['inline_lang_choice'], $_REQUEST['_inline_edit'] ) ) {
-			if ( ! wp_verify_nonce( $_REQUEST['_inline_edit'], 'inlineeditnonce' ) && ! wp_verify_nonce( $_REQUEST['_inline_edit'], 'taxinlineeditnonce' ) ) { // Post quick edit or tag quick edit?
+			$inline_edit_nonce = sanitize_text_field( wp_unslash( $_REQUEST['_inline_edit'] ) );
+			if ( ! wp_verify_nonce( $inline_edit_nonce, 'inlineeditnonce' ) && ! wp_verify_nonce( $inline_edit_nonce, 'taxinlineeditnonce' ) ) { // Post quick edit or tag quick edit?
 				return;
 			}
 

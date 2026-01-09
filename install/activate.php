@@ -7,6 +7,10 @@
 
 namespace Linguator\Install;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Linguator\Includes\Options\Options;
 use Linguator\Includes\Options\Registry as Options_Registry;
 use Linguator\Modules\Wizard\LMAT_Wizard;

@@ -90,6 +90,7 @@ class LMAT_Cache_Compat {
 	 */
 	public function do_not_cache_site_home() {
 		if ( ! defined( 'DONOTCACHEPAGE' ) && LMAT()->options['browser'] && LMAT()->options['hide_default'] && is_front_page() && lmat_current_language() === lmat_default_language() ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 			define( 'DONOTCACHEPAGE', true );
 		}
 	}

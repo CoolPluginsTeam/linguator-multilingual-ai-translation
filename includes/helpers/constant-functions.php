@@ -6,6 +6,10 @@
  * These functions make it easier to check, get, and define constants.
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Checks whether a given constant is defined.
  *
@@ -56,5 +60,6 @@ function lmat_set_constant( string $constant_name, $value ): bool {
 		return false;
 	}
 
-	return define( $constant_name, $value ); // phpcs:ignore WordPressVIPMinimum.Constants.ConstantString.NotCheckingConstantName
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound,WordPressVIPMinimum.Constants.ConstantString.NotCheckingConstantName
+	return define( $constant_name, $value );
 }

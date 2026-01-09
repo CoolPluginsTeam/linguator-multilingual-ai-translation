@@ -184,6 +184,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 			add_action(
 				"{$prefix}toplevel_page_{$parent}",
 				static function () use ( $prefix, $first_tab ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 					do_action( $prefix . self::get_screen_id( $first_tab ) );
 				}
 			);

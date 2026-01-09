@@ -94,9 +94,12 @@ if(!class_exists('Custom_Fields')) {
                 $s_no                        = 1;
                 ?>
                 <div class="lmat-custom-data-table-wrapper lmat-custom-fields">
-                    <h3><?php echo __('Custom Fields Translation Settings', 'linguator-multilingual-ai-translation'); ?>
+                    <h3><?php echo esc_html__('Custom Fields Translation Settings', 'linguator-multilingual-ai-translation'); ?>
                     <br>
-                    <p><?php echo sprintf(esc_html__('Select which custom fields will be translated by %s.', 'linguator-multilingual-ai-translation'), 'Linguator'); ?></p>
+                    <p><?php 
+						// translators: %s: Linguator.
+						printf( esc_html__( 'Select which custom fields will be translated by %s.', 'linguator-multilingual-ai-translation' ), 'Linguator' ); 
+					?></p>
                     </h3>
                     <button class="button button-primary lmat-save-custom-fields"><?php esc_html_e( 'Save Fields', 'linguator-multilingual-ai-translation' ); ?></button>
                     <div class="lmat-custom-data-table-filters">
@@ -151,11 +154,11 @@ if(!class_exists('Custom_Fields')) {
                     $value_type=isset($value['type']) && !empty($value['type']) ? $value['type'] : 'string';
                     
                     echo '<tr>';
-                    echo '<td>' . $s_no++ . '</td>';
-                    echo '<td>' . $meta_field . '</td>';
-                    echo '<td>' . $value_type . '</td>';
-                    echo '<td>' . $status . '</td>';
-                    echo '<td align="center"><input type="checkbox" name="lmat_fields_status" value="' . $meta_field . '" ' . $checked . '></td>';
+                    echo '<td>' . esc_html($s_no++) . '</td>';
+                    echo '<td>' . esc_html($meta_field) . '</td>';
+                    echo '<td>' . esc_html($value_type) . '</td>';
+                    echo '<td>' . esc_html($status) . '</td>';
+                    echo '<td align="center"><input type="checkbox" name="lmat_fields_status" value="' . esc_attr($meta_field) . '" ' . esc_attr($checked) . '></td>';
                     echo '</tr>';
                 }
             }
@@ -172,7 +175,7 @@ if(!class_exists('Custom_Fields')) {
                 wp_die( '0', 403 );
             }
             
-            $json = isset($_POST['save_custom_fields_data']) ? wp_unslash($_POST['save_custom_fields_data']) : false;
+            $json = isset($_POST['save_custom_fields_data']) ? sanitize_textarea_field( wp_unslash( $_POST['save_custom_fields_data'] ) ) : false;
             $updated_custom_fields_data = json_decode($json, true);
 
 			$updated_custom_fields_data=array_map('sanitize_text_field', $updated_custom_fields_data);
@@ -284,24 +287,23 @@ if(!class_exists('Custom_Fields')) {
              // Escape LIKE pattern for system meta (_%)
 			 $like_pattern = $wpdb->esc_like('_') . '%';
 
-			// SQL with DISTINCT + filtering
-			$sql = $wpdb->prepare(
-				"
-				SELECT DISTINCT pm.meta_key, pm.meta_value
-				FROM {$wpdb->postmeta} pm
-				WHERE pm.meta_key NOT LIKE %s
-				AND pm.meta_value <> ''                         -- skip empty
-				AND pm.meta_value NOT IN ('0','1')              -- skip boolean
-				AND pm.meta_value NOT REGEXP '^[0-9]+$'         -- skip integer
-				AND pm.meta_value NOT REGEXP '^[0-9]+\\.[0-9]+$' -- skip decimal
-				AND pm.meta_value NOT REGEXP '^(https?:\/\/|www\.)[A-Za-z0-9\.\-]+.*$' -- skip URLs
-				ORDER BY pm.meta_key ASC
-				",
-				$like_pattern
-			);
-
             // Get results
-            $results = $wpdb->get_results($sql, ARRAY_A);
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct DB query is required here because WordPress core does not provide an efficient or native way to fetch all objects (posts/terms/etc) that do NOT have a language assigned (i.e., not related to any language term_taxonomy_id) in bulk. This negative relationship cannot be expressed using get_terms()/wp_get_object_terms(), especially when type filtering is needed. Using a raw query here ensures both performance and compatibility.
+            $results = $wpdb->get_results(
+				$wpdb->prepare(
+					"
+					SELECT DISTINCT pm.meta_key, pm.meta_value
+					FROM {$wpdb->postmeta} pm
+					WHERE pm.meta_key NOT LIKE %s
+					AND pm.meta_value <> ''                         -- skip empty
+					AND pm.meta_value NOT IN ('0','1')              -- skip boolean
+					AND pm.meta_value NOT REGEXP '^[0-9]+$'         -- skip integer
+					AND pm.meta_value NOT REGEXP '^[0-9]+\\.[0-9]+$' -- skip decimal
+					AND pm.meta_value NOT REGEXP '^(https?:\/\/|www\.)[A-Za-z0-9\.\-]+.*$' -- skip URLs
+					ORDER BY pm.meta_key ASC
+					",
+					$like_pattern
+				), ARRAY_A);
 
 			return $results;
 		}

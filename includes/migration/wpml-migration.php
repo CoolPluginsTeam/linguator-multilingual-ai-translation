@@ -153,7 +153,9 @@ class WPML_Migration {
 		$icl_languages_table = $wpdb->prefix . 'icl_languages';
 		
 		// Check if tables exist
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$translations_table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $icl_translations_table ) ) === $icl_translations_table;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$languages_table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $icl_languages_table ) ) === $icl_languages_table;
 
 		if ( ! $translations_table_exists || ! $languages_table_exists ) {
@@ -161,9 +163,11 @@ class WPML_Migration {
 		}
 
 		// Count active languages
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$wpml_languages_count = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$icl_languages_table} WHERE active = 1"
 		);
+		// phpcs:enable
 
 		// Get WPML settings
 		$wpml_settings = get_option( 'icl_sitepress_settings', array() );
@@ -174,6 +178,7 @@ class WPML_Migration {
 		}
 
 		// Count post translations (grouped by trid)
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$post_translations_count = (int) $wpdb->get_var(
 			"SELECT COUNT(DISTINCT trid) 
 			FROM {$icl_translations_table} 
@@ -181,8 +186,10 @@ class WPML_Migration {
 			AND trid IS NOT NULL 
 			AND trid > 0"
 		);
+		// phpcs:enable
 
 		// Count term translations (grouped by trid)
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$term_translations_count = (int) $wpdb->get_var(
 			"SELECT COUNT(DISTINCT trid) 
 			FROM {$icl_translations_table} 
@@ -190,22 +197,28 @@ class WPML_Migration {
 			AND trid IS NOT NULL 
 			AND trid > 0"
 		);
+		// phpcs:enable
 
 		// Count posts with language assignments
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$posts_count = (int) $wpdb->get_var(
 			"SELECT COUNT(DISTINCT element_id) 
 			FROM {$icl_translations_table} 
 			WHERE element_type LIKE 'post_%'"
 		);
+		// phpcs:enable
 
 		// Count strings translations (if WPML String Translation is active)
 		$strings_count = 0;
 		$icl_strings_table = $wpdb->prefix . 'icl_string_translations';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$strings_table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $icl_strings_table ) ) === $icl_strings_table;
 		if ( $strings_table_exists ) {
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$strings_count = (int) $wpdb->get_var(
 				"SELECT COUNT(*) FROM {$icl_strings_table} WHERE value IS NOT NULL AND value != ''"
 			);
+			// phpcs:enable
 		}
 
 		return array(
@@ -237,9 +250,11 @@ class WPML_Migration {
 		$icl_flags_table = $wpdb->prefix . 'icl_flags';
 
 		// Get active WPML languages
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$wpml_languages = $wpdb->get_results(
 			"SELECT * FROM {$icl_languages_table} WHERE active = 1 ORDER BY id ASC"
 		);
+		// phpcs:enable
 
 		if ( empty( $wpml_languages ) ) {
 			$results['success'] = false;
@@ -406,12 +421,14 @@ class WPML_Migration {
 		$icl_translations_table = $wpdb->prefix . 'icl_translations';
 
 		// Migrate post language assignments
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$posts_with_language = $wpdb->get_results(
 			"SELECT DISTINCT element_id, language_code 
 			FROM {$icl_translations_table} 
 			WHERE element_type LIKE 'post_%' 
 			AND element_id IS NOT NULL"
 		);
+		// phpcs:enable
 
 		if ( ! empty( $posts_with_language ) ) {
 			foreach ( $posts_with_language as $post_data ) {
@@ -435,6 +452,7 @@ class WPML_Migration {
 		// Migrate term language assignments
 		// In WPML, terms are stored with element_type like 'tax_category', 'tax_post_tag', etc.
 		// The element_id is the term_taxonomy_id, not the term_id
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$terms_with_language = $wpdb->get_results(
 			"SELECT DISTINCT t.term_id, icl.language_code
 			FROM {$icl_translations_table} icl
@@ -443,6 +461,7 @@ class WPML_Migration {
 			WHERE icl.element_type LIKE 'tax_%'
 			AND icl.element_id IS NOT NULL"
 		);
+		// phpcs:enable
 
 		if ( ! empty( $terms_with_language ) ) {
 			foreach ( $terms_with_language as $term_data ) {
@@ -485,6 +504,7 @@ class WPML_Migration {
 
 		// Migrate post translations
 		// Group by trid to get translation groups
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$post_translation_groups = $wpdb->get_results(
 			"SELECT trid, GROUP_CONCAT(CONCAT(language_code, ':', element_id) SEPARATOR '|') as translations
 			FROM {$icl_translations_table}
@@ -494,6 +514,7 @@ class WPML_Migration {
 			GROUP BY trid
 			HAVING COUNT(*) > 1"
 		);
+		// phpcs:enable
 
 		if ( ! empty( $post_translation_groups ) ) {
 			foreach ( $post_translation_groups as $group ) {
@@ -525,6 +546,7 @@ class WPML_Migration {
 
 		// Migrate term translations
 		// Group by trid to get translation groups
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$term_translation_groups = $wpdb->get_results(
 			"SELECT trid, GROUP_CONCAT(CONCAT(icl.language_code, ':', t.term_id) SEPARATOR '|') as translations
 			FROM {$icl_translations_table} icl
@@ -536,6 +558,7 @@ class WPML_Migration {
 			GROUP BY icl.trid
 			HAVING COUNT(*) > 1"
 		);
+		// phpcs:enable
 
 		if ( ! empty( $term_translation_groups ) ) {
 			foreach ( $term_translation_groups as $group ) {
@@ -802,7 +825,9 @@ class WPML_Migration {
 		$icl_string_translations_table = $wpdb->prefix . 'icl_string_translations';
 
 		// Check if WPML String Translation tables exist
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$strings_table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $icl_strings_table ) ) === $icl_strings_table;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$translations_table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $icl_string_translations_table ) ) === $icl_string_translations_table;
 
 		if ( ! $strings_table_exists || ! $translations_table_exists ) {
@@ -810,6 +835,7 @@ class WPML_Migration {
 		}
 
 		// Get all WPML languages
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpml_languages = $wpdb->get_results(
 			"SELECT code FROM {$wpdb->prefix}icl_languages WHERE active = 1"
 		);
@@ -819,6 +845,7 @@ class WPML_Migration {
 		}
 
 		// Get all strings with their translations
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$strings_data = $wpdb->get_results(
 			"SELECT s.id, s.name, s.value as original, s.context,
 				st.language, st.value as translation, st.status
@@ -827,6 +854,7 @@ class WPML_Migration {
 			WHERE st.value IS NOT NULL AND st.value != '' AND st.status = 10
 			ORDER BY s.id, st.language"
 		);
+		// phpcs:enable
 
 		if ( empty( $strings_data ) ) {
 			return $results;

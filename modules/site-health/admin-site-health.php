@@ -3,6 +3,10 @@
  * @package Linguator
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class LMAT_Admin_Site_Health to add debug info in WP Site Health.
  *

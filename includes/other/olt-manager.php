@@ -105,6 +105,7 @@ class LMAT_OLT_Manager {
 
 		if ( ! empty( $GLOBALS['wp_locale_switcher'] ) ) {
 			/** This action is documented in wp-includes/class-wp-locale-switcher.php */
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			do_action( 'change_locale', $new_locale );
 		}
 	}

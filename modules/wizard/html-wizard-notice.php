@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly.
 }
 
-$wizard_url = add_query_arg(
+$lmat_wizard_url = add_query_arg(
 	array(
 		'page' => 'lmat_wizard',
 	),
@@ -34,7 +34,7 @@ $wizard_url = add_query_arg(
 </p>
 <p class="buttons">
 	<a
-		href="<?php echo esc_url( $wizard_url ); ?>"
+		href="<?php echo esc_url( $lmat_wizard_url ); ?>"
 		class="button button-primary"
 	>
 		<?php esc_html_e( 'Run the Setup Wizard', 'linguator-multilingual-ai-translation' ); ?>

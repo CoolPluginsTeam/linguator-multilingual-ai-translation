@@ -408,7 +408,7 @@ class Languages {
 		$updated_language = $this->get( $id );
 
 		if ( ! $updated_language ) {
-			return new WP_Error( 'pll_update_language', __( 'Could not update the language.', 'polylang' ) );
+			return new WP_Error( 'lmat_update_language', __( 'Could not update the language.', 'linguator-multilingual-ai-translation' ) );
 		}
 
 		// Refresh rewrite rules.

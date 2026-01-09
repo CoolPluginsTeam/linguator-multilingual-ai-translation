@@ -33,6 +33,7 @@ jQuery(document).ready(function($) {
     $addBtn.on('click', function() {
         $('#lmat-glossary-modal-add').removeClass('lmat-hidden').addClass('active');
         $('body').addClass('lmat-modal-open');
+        $('.lmat-glossary-modal-content h2').show();
         // Reset add form and translations section
         $addGlossaryForm.find('.lmat-add-translations').removeClass('lmat-show').css('display', 'none');
         $addGlossaryForm.find('.lmat-translation-field').show();

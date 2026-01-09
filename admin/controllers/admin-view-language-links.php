@@ -104,8 +104,9 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$draft_post_args = array('post_type'=>$post_type, 'post_status'=>'draft');
 			$pending_post_args = array('post_type'=>$post_type, 'post_status'=>'pending');
 
-			if($post_type === 'elementor_library'){
-				$library_type=isset($_GET['elementor_library_type']) ? sanitize_text_field(wp_unslash($_GET['elementor_library_type'])) : '';
+		if($post_type === 'elementor_library'){
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$library_type=isset($_GET['elementor_library_type']) ? sanitize_text_field(wp_unslash($_GET['elementor_library_type'])) : '';
 
 				if($library_type && !empty($library_type)){
 					$post_meta_query= array(
@@ -116,8 +117,11 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 						)
 					);
 					
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					$publish_post_args['meta_query'] = $post_meta_query;
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					$draft_post_args['meta_query'] = $post_meta_query;
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					$pending_post_args['meta_query'] = $post_meta_query;
 				};
 			};

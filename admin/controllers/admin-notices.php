@@ -192,7 +192,7 @@ class LMAT_Admin_Notices {
 			
 			if ( $this->can_display_notice( 'review' ) ) {
 				if(class_exists(LMAT_Translation_Dashboard::class)){
-					$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/?filter=5#new-post';
+					$review_url = 'https://wordpress.org/support/plugin/linguator-multilingual-ai-translation/reviews/#new-post';
 					LMAT_Translation_Dashboard::review_notice('lmat', 'Linguator', esc_url($review_url));
 				}
 			}
@@ -229,7 +229,7 @@ class LMAT_Admin_Notices {
 		printf(
 			'<a class="notice-dismiss" href="%s"><span class="screen-reader-text">%s</span></a>',
 			esc_url( wp_nonce_url( add_query_arg( 'lmat-hide-notice', $name ), $name, '_lmat_notice_nonce' ) ),
-			/* translators: accessibility text */
+			// translators: accessibility text
 			esc_html__( 'Dismiss this notice.', 'linguator-multilingual-ai-translation' )
 		);
 	}

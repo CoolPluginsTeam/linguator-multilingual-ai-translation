@@ -258,7 +258,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		/*
 		 * Edit Menus tab in Appearance -> Menus.
 		 */
-		if ( isset( $_POST['action'], $_REQUEST['update-nav-menu-nonce'] ) && wp_verify_nonce( $_REQUEST['update-nav-menu-nonce'], 'update-nav_menu' ) && 'update' === $_POST['action'] ) {
+		if ( isset( $_POST['action'], $_REQUEST['update-nav-menu-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['update-nav-menu-nonce'] ) ), 'update-nav_menu' ) && 'update' === $_POST['action'] ) {
 			$nav_menus = $this->options->get( 'nav_menus' );
 
 			$nav_menus[ $this->theme ] = array();
@@ -278,7 +278,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		if(isset($wp_customize) && method_exists($wp_customize, 'get_stylesheet')){
 			$action = 'save-customize_' . $wp_customize->get_stylesheet();
 
-			if ( isset( $_POST['action'], $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], $action ) && 'customize_save' == $_POST['action'] ) {
+			if ( isset( $_POST['action'], $_REQUEST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), $action ) && 'customize_save' == $_POST['action'] ) {
 				$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
 
 			}

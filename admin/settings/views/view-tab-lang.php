@@ -69,14 +69,20 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 							<option value=""></option>
 							<?php
 							// Get existing languages
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							$existing_languages = $list_table->items;
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							$existing_locales = array();
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							foreach ($existing_languages as $lang) {
+								// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 								$existing_locales[] = $lang->locale;
 							}
 
 							// Get predefined languages and filter out existing ones
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							$predefined_languages = LMAT_Settings::get_predefined_languages();
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							foreach ($predefined_languages as $language) {
 								// Skip if this language is already added
 								if (in_array($language['locale'], $existing_locales)) {
@@ -154,7 +160,9 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 						<select name="flag" id="flag_list">
 							<option value=""></option>
 							<?php
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							$flags = include __DIR__ . '/../controllers/flags.php';
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							foreach ($flags as $code => $label) {
 								printf(
 									'<option value="%s" data-flag-html="%s"%s>%s</option>' . "\n",

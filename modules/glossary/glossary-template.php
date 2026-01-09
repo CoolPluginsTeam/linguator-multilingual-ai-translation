@@ -1,5 +1,11 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template variables used for rendering.
+
 if(!isset($languages) && !is_array($languages) && empty($languages)){
     $languages = [];
 }
@@ -9,9 +15,6 @@ $glossary_data = get_option('lmat_glossary_data', []);
 if (!is_array($glossary_data)) {
     $glossary_data = [];
 }
-
-$text_domain = 'linguator-multilingual-ai-translation';
-
 
 // Build a map for quick lookup by code
 $language_map = [];
@@ -111,6 +114,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
 ?>
 
 <style>
+<?php // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $code is already escaped with esc_attr() and used in CSS selectors. ?>
 <?php foreach ($languages as $lang): 
     $code = esc_attr($lang['code']);
 ?>
@@ -119,39 +123,40 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
     display: none !important;
 }
 <?php endforeach; ?>
+<?php // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 </style>
 
 <div class="lmat-glossary">
     <div class="lmat-glossary-container">
         <?php wp_nonce_field('lmat_glossary_nonce', 'lmat_glossary_nonce'); ?>
         <header class="lmat-header">
-            <h1><?php esc_html_e('Glossary', $text_domain); ?></h1>
-            <p><?php esc_html_e('Define how you want to translate – or not translate – important words and phrases.', $text_domain); ?></p>
+            <h1><?php esc_html_e('Glossary', 'linguator-multilingual-ai-translation'); ?></h1>
+            <p><?php esc_html_e('Define how you want to translate – or not translate – important words and phrases.', 'linguator-multilingual-ai-translation'); ?></p>
             <ul>
-                <li><?php esc_html_e('Specific translations you want to use;', $text_domain); ?></li>
-                <li><?php esc_html_e('Terms you want to exclude from being translated;', $text_domain); ?></li>
-                <li><?php esc_html_e('Additional context for each term.', $text_domain); ?></li>
+                <li><?php esc_html_e('Specific translations you want to use;', 'linguator-multilingual-ai-translation'); ?></li>
+                <li><?php esc_html_e('Terms you want to exclude from being translated;', 'linguator-multilingual-ai-translation'); ?></li>
+                <li><?php esc_html_e('Additional context for each term.', 'linguator-multilingual-ai-translation'); ?></li>
             </ul>
-            <a href="<?php echo esc_url( 'https://linguator.com/docs/add-glossary-feature-linguator/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=glossary_management_free' ); ?>" target="_blank"><?php esc_html_e('Learn more about adding and managing glossary terms.', $text_domain); ?></a>
+            <a href="<?php echo esc_url( 'https://linguator.com/docs/add-glossary-feature-linguator/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=glossary_management_free' ); ?>" target="_blank"><?php esc_html_e('Learn more about adding and managing glossary terms.', 'linguator-multilingual-ai-translation'); ?></a>
         </header>
 
         <div class="lmat-controls">
-            <input type="text" class="lmat-search" placeholder="<?php esc_attr_e('Search', $text_domain); ?>" />
+            <input type="text" class="lmat-search" placeholder="<?php esc_attr_e('Search', 'linguator-multilingual-ai-translation'); ?>" />
 
             <select class="lmat-glossary-type" name="glossary_type">
-                <option value=""><?php esc_html_e('Glossary Type', $text_domain); ?></option>
-                <option value="name"><?php esc_html_e('Name', $text_domain); ?></option>
-                <option value="general"><?php esc_html_e('General', $text_domain); ?></option>
+                <option value=""><?php esc_html_e('Glossary Type', 'linguator-multilingual-ai-translation'); ?></option>
+                <option value="name"><?php esc_html_e('Name', 'linguator-multilingual-ai-translation'); ?></option>
+                <option value="general"><?php esc_html_e('General', 'linguator-multilingual-ai-translation'); ?></option>
             </select>
 
             <button class="lmat-add-btn button button-primary">
-                <?php esc_html_e('Add glossary entry', $text_domain); ?>
+                <?php esc_html_e('Add glossary entry', 'linguator-multilingual-ai-translation'); ?>
             </button>
             <button class="lmat-import-btn button button-primary">
-                <?php esc_html_e('Import glossary', $text_domain); ?>
+                <?php esc_html_e('Import glossary', 'linguator-multilingual-ai-translation'); ?>
             </button>
             <button class="lmat-export-btn button button-primary">
-                <?php esc_html_e('Export glossary', $text_domain); ?>
+                <?php esc_html_e('Export glossary', 'linguator-multilingual-ai-translation'); ?>
             </button>
 
             <!-- Modal -->
@@ -159,19 +164,19 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                 <div class="lmat-glossary-modal-content-wrapper">
                     <button type="button" class="lmat-modal-close-btn" aria-label="Close">&times;</button>
                     <div class="lmat-glossary-modal-content">
-                        <h2><?php esc_html_e('Add New Glossary Term', $text_domain); ?></h2>
+                        <h2><?php esc_html_e('Add New Glossary Term', 'linguator-multilingual-ai-translation'); ?></h2>
                         <form id="lmat-add-glossary-form">
-                            <label for="lmat-add-term"><?php esc_html_e('Term', $text_domain); ?></label>
-                            <textarea id="lmat-add-term" name="term" class="lmat-add-term" required placeholder="<?php esc_attr_e('Enter the term to be translated', $text_domain); ?>"></textarea>
+                            <label for="lmat-add-term"><?php esc_html_e('Term', 'linguator-multilingual-ai-translation'); ?></label>
+                            <textarea id="lmat-add-term" name="term" class="lmat-add-term" required placeholder="<?php esc_attr_e('Enter the term to be translated', 'linguator-multilingual-ai-translation'); ?>"></textarea>
                             <div class="lmat-translation-error"></div>
 
-                            <label for="lmat-add-desc"><?php esc_html_e('Description', $text_domain); ?></label>
-                            <textarea id="lmat-add-desc" name="description" class="lmat-add-desc" rows="3" placeholder="<?php esc_attr_e('Add a description to provide context for translators', $text_domain); ?>"></textarea>
+                            <label for="lmat-add-desc"><?php esc_html_e('Description', 'linguator-multilingual-ai-translation'); ?></label>
+                            <textarea id="lmat-add-desc" name="description" class="lmat-add-desc" rows="3" placeholder="<?php esc_attr_e('Add a description to provide context for translators', 'linguator-multilingual-ai-translation'); ?>"></textarea>
                             <div class="lmat-translation-error"></div>
 
-                            <label for="lmat-add-source-lang"><?php esc_html_e('Original Language', $text_domain); ?></label>
+                            <label for="lmat-add-source-lang"><?php esc_html_e('Original Language', 'linguator-multilingual-ai-translation'); ?></label>
                             <select id="lmat-add-source-lang" name="source_lang" class="lmat-add-source-lang" required>
-                                <option value=""><?php esc_html_e('Select language', $text_domain); ?></option>
+                                <option value=""><?php esc_html_e('Select language', 'linguator-multilingual-ai-translation'); ?></option>
                                 <?php foreach ($languages as $lang): ?>
                                     <option value="<?php echo esc_attr($lang['code']); ?>">
                                         <?php echo esc_html($lang['alt']); ?>
@@ -179,10 +184,10 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                 <?php endforeach; ?>
                             </select>
 
-                            <label for="lmat-add-type"><?php esc_html_e('Type', $text_domain); ?></label>
+                            <label for="lmat-add-type"><?php esc_html_e('Type', 'linguator-multilingual-ai-translation'); ?></label>
                             <select id="lmat-add-type" name="type" class="lmat-add-type" required>
-                                <option value="general"><?php esc_html_e('General', $text_domain); ?></option>
-                                <option value="name"><?php esc_html_e('Name', $text_domain); ?></option>
+                                <option value="general"><?php esc_html_e('General', 'linguator-multilingual-ai-translation'); ?></option>
+                                <option value="name"><?php esc_html_e('Name', 'linguator-multilingual-ai-translation'); ?></option>
                             </select>
                             <div class="lmat-add-translations lmat-translations-grid">
                                 <?php foreach ($languages as $lang): ?>
@@ -193,27 +198,28 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                                     <img src="<?php echo esc_attr($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" class="lmat-lang-flag">
                                                 <?php endif; ?>
                                                 <span class="lmat-lang-name"><?php echo esc_html($lang['alt']); ?></span>
-                                                <span class="lmat-lang-translation-label"><?php esc_html_e('Translation', $text_domain); ?></span>
+                                                <span class="lmat-lang-translation-label"><?php esc_html_e('Translation', 'linguator-multilingual-ai-translation'); ?></span>
                                             </div>
-                                            <textarea name="translation_<?php echo esc_attr($lang['code']); ?>" class="lmat-add-translation" rows="2" placeholder="<?php esc_attr_e('Custom Translation', $text_domain); ?>"></textarea>
-                                            <div class="lmat-translation-error"><?php esc_html_e('Too long, must be less than 240 characters', $text_domain); ?></div>
+                                            <textarea name="translation_<?php echo esc_attr($lang['code']); ?>" class="lmat-add-translation" rows="2" placeholder="<?php esc_attr_e('Custom Translation', 'linguator-multilingual-ai-translation'); ?>"></textarea>
+                                            <div class="lmat-translation-error"><?php esc_html_e('Too long, must be less than 240 characters', 'linguator-multilingual-ai-translation'); ?></div>
                                         </label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                             <div class="lmat-glossary-modal-actions" style="margin-top: 18px;">
-                                <span class="lmat-glossary-modal-actions-left" style="cursor:pointer;"><?php esc_html_e('Cancel', $text_domain); ?></span>
-                                <button type="submit" id="add-glossary-term-btn"  class="button button-primary"><?php esc_html_e('Add Term', $text_domain); ?></button>
+                                <span class="lmat-glossary-modal-actions-left" style="cursor:pointer;"><?php esc_html_e('Cancel', 'linguator-multilingual-ai-translation'); ?></span>
+                                <button type="submit" id="add-glossary-term-btn"  class="button button-primary"><?php esc_html_e('Add Term', 'linguator-multilingual-ai-translation'); ?></button>
                             </div>
                         </form>
                         <div id="add-glossary-success" class="lmat-import-success lmat-hidden">
                             <div class="import-success-icon">
-                                <img src="<?php echo plugins_url('assets/images/success.svg', LINGUATOR_ROOT_FILE); ?>" alt="Success Icon" />
+                                <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
+                                <img src="<?php echo esc_url(plugins_url('assets/images/success.svg', LINGUATOR_ROOT_FILE)); ?>" alt="Success Icon" />
                             </div>
                             <div class="lmat-import-success-message">
-                                <?php esc_html_e('Glossary term added successfully!', $text_domain); ?>
+                                <?php esc_html_e('Glossary term added successfully!', 'linguator-multilingual-ai-translation'); ?>
                             </div>
-                            <button id="lmat-glossary-success-close" class="lmat-close-button" type="button"><?php esc_html_e('Close', $text_domain); ?></button>
+                            <button id="lmat-glossary-success-close" class="lmat-close-button" type="button"><?php esc_html_e('Close', 'linguator-multilingual-ai-translation'); ?></button>
                         </div>
                     </div>
                 </div>
@@ -225,36 +231,39 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                     <button type="button" class="lmat-modal-close-btn" aria-label="Close">&times;</button>
                     <div class="lmat-glossary-modal-content">
                         <div class="lmat-import-glossary" id="lmat-import-glossary-ui">
-                            <h2 class="lmat-title"><?php esc_html_e( 'Import glossary', $text_domain ); ?></h2>
+                            <h2 class="lmat-title"><?php esc_html_e( 'Import glossary', 'linguator-multilingual-ai-translation' ); ?></h2>
 
                             <label class="lmat-upload-box" id="upload-label">
                                 <input type="file" accept=".csv" id="lmat-csv-upload" hidden>
                                 <div class="lmat-upload-area">
-                                    <img src="<?php echo plugins_url('assets/images/csv.svg', LINGUATOR_ROOT_FILE); ?>" alt="CSV Icon" />
-                                    <span id="file-name-display"><?php esc_html_e( 'Select a CSV file to upload', $text_domain ); ?></span>
+                                    <?php 
+                                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
+                                    <img src="<?php echo esc_url(plugins_url('assets/images/csv.svg', LINGUATOR_ROOT_FILE)); ?>" alt="CSV Icon" />
+                                    <span id="file-name-display"><?php esc_html_e( 'Select a CSV file to upload', 'linguator-multilingual-ai-translation' ); ?></span>
                                 </div>
                             </label>
                             <a
                                 href="<?php echo esc_url( plugins_url('assets/sample-glossary.csv', LINGUATOR_ROOT_FILE) ); ?>"
                                 class="lmat-download-link"
                                 download="sample-glossary.csv">
-                                <?php esc_html_e( 'Download sample glossary CSV file', $text_domain ); ?>
+                                <?php esc_html_e( 'Download sample glossary CSV file', 'linguator-multilingual-ai-translation' ); ?>
                             </a>
                         </div>
                         <!-- Success UI (hidden by default) -->
                         <div id="lmat-import-success-ui" class="lmat-hidden">
                             <div id="lmat-import-success" class="lmat-import-success">
                                 <div class="import-success-icon">
-                                    <img src="<?php echo plugins_url('assets/images/success.svg', LINGUATOR_ROOT_FILE); ?>" alt="Success Icon" />
+                                    <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
+                                    <img src="<?php echo esc_url(plugins_url('assets/images/success.svg', LINGUATOR_ROOT_FILE)); ?>" alt="Success Icon" />
                                 </div>
                                 <div class="import-success-file">
-                                    <span id="importing-file-label"><?php esc_html_e('Importing:', $text_domain); ?></span>
+                                    <span id="importing-file-label"><?php esc_html_e('Importing:', 'linguator-multilingual-ai-translation'); ?></span>
                                     <span id="importing-file-name"></span>
                                 </div>
                                 <div class="lmat-import-success-message">
-                                    <?php esc_html_e('Glossary terms imported successfully', $text_domain); ?>
+                                    <?php esc_html_e('Glossary terms imported successfully', 'linguator-multilingual-ai-translation'); ?>
                                 </div>
-                                <button class="lmat-import-close-btn lmat-close-button" type="button">Close</button>
+                                <button class="lmat-import-close-btn lmat-close-button" type="button"><?php esc_html_e('Close', 'linguator-multilingual-ai-translation'); ?></button>
                             </div>
                         </div>
                     </div>
@@ -262,7 +271,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
             </div>
         </div>
 
-        <nav class="lmat-alphabet" aria-label="<?php esc_attr_e('Glossary Alphabet Navigation', $text_domain); ?>">
+        <nav class="lmat-alphabet" aria-label="<?php esc_attr_e('Glossary Alphabet Navigation', 'linguator-multilingual-ai-translation'); ?>">
             <?php
             $alphabet = array_merge(['123'], range('A', 'Z'), ['#&à']);
 
@@ -290,8 +299,8 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                 }
                 printf(
                     '<button class="lmat-alphabet-btn%s" %s data-letter="%s">%s</button>',
-                    $active,
-                    $enabled,
+                    esc_attr($active),
+                    esc_attr($enabled),
                     esc_attr($char),
                     esc_html($char)
                 );
@@ -333,19 +342,23 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                     class="lmat-lang-header lmat-lang-col-<?php echo esc_attr($lang['code']); ?>" 
                                     data-lang="<?php echo esc_attr($lang['code']); ?>">
                                     <?php
+                                    // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $lang['flag'] contains pre-sanitized HTML.
                                     echo !empty($lang['flag'])
                                         ? $lang['flag']
                                         : '<img src="' . esc_attr($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
+                                    // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
                                     ?>
                                 </th>
                             <?php endforeach; ?>
                             <th class="lmat-actions-cell">
                                 <div class="lmat-action-buttons-header">
                                     <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-left" title="Scroll Left">
-                                        <img src="<?php echo plugins_url('assets/images/arrow-left.svg', LINGUATOR_ROOT_FILE); ?>" />
+                                        <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
+                                        <img src="<?php echo esc_url(plugins_url('assets/images/arrow-left.svg', LINGUATOR_ROOT_FILE)); ?>" />
                                     </button>
                                     <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-right" title="Scroll Right">
-                                        <img src="<?php echo plugins_url('assets/images/arrow-right.svg', LINGUATOR_ROOT_FILE); ?>" />
+                                        <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
+                                        <img src="<?php echo esc_url(plugins_url('assets/images/arrow-right.svg', LINGUATOR_ROOT_FILE)); ?>" />
                                     </button>
                                 </div>
                             </th>
@@ -374,8 +387,8 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                 return $str;
                             }
                         }
-
-                        $editing_term = isset($_GET['edit']) ? $_GET['edit'] : null;
+                        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                        $editing_term = isset($_GET['edit']) ? sanitize_text_field(wp_unslash($_GET['edit'])) : null;
                         
                         foreach ($grouped_entries as $composite_key => $data):
                             list($term, $original_language_code) = explode('||', $composite_key);
@@ -433,8 +446,9 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                                     <button type="button" class="lmat-edit-btn-svg" 
                                                             data-term="<?php echo esc_attr(sanitize_text_field($term)); ?>"
                                                             data-source-lang="<?php echo esc_attr(sanitize_key($original_language_code)); ?>">
-                                                        <img src="<?php echo plugins_url('assets/images/file.svg', LINGUATOR_ROOT_FILE); ?>" 
-                                                            alt="<?php esc_attr_e('No translation', $text_domain); ?>" />
+                                                        <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
+                                                        <img src="<?php echo esc_url(plugins_url('assets/images/file.svg', LINGUATOR_ROOT_FILE)); ?>" 
+                                                            alt="<?php esc_attr_e('No translation', 'linguator-multilingual-ai-translation'); ?>" />
                                                     </button>
                                                 </span>
                                             <?php endif; ?>
@@ -447,12 +461,12 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                         <button type="button" class="lmat-edit-btn" 
                                                 data-term="<?php echo esc_attr(sanitize_text_field($term)); ?>"
                                                 data-source-lang="<?php echo esc_attr(sanitize_key($original_language_code)); ?>">
-                                            <?php esc_html_e('Edit', $text_domain); ?>
+                                            <?php esc_html_e('Edit', 'linguator-multilingual-ai-translation'); ?>
                                         </button>
                                         <button type="button" class="lmat-delete-btn" 
                                                 data-term="<?php echo esc_attr(sanitize_text_field($term)); ?>"
                                                 data-source-lang="<?php echo esc_attr(sanitize_key($original_language_code)); ?>">
-                                            <?php esc_html_e('Delete', $text_domain); ?>
+                                            <?php esc_html_e('Delete', 'linguator-multilingual-ai-translation'); ?>
                                         </button>
                                     </div>
                                 </td>
@@ -465,38 +479,42 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
             <?php endif; ?>
         </div>
         <!-- Move the template outside the table wrapper so it is always present -->
+        <?php // phpcs:disable Generic.PHP.DisallowAlternativePHPTags -- JavaScript template syntax (Underscore.js), not PHP. ?>
         <script type="text/template" id="lmat-glossary-edit-row-template">
             <tr class="lmat-glossary-edit-row">
                 <td>
-                    <textarea class="lmat-edit-term" rows="3" placeholder="<?php esc_attr_e('String Translation', $text_domain); ?>"><%= term %></textarea>
+                    <textarea class="lmat-edit-term" rows="3" placeholder="<?php esc_attr_e('String Translation', 'linguator-multilingual-ai-translation'); ?>"><%= term %></textarea>
                     <div class="lmat-translation-error"></div>
-                    <textarea class="lmat-edit-desc" rows="4" placeholder="<?php esc_attr_e('Example: The name of the add-on that allows translating strings', $text_domain); ?>"><%= desc %></textarea>
+                    <textarea class="lmat-edit-desc" rows="4" placeholder="<?php esc_attr_e('Example: The name of the add-on that allows translating strings', 'linguator-multilingual-ai-translation'); ?>"><%= desc %></textarea>
                 </td>
                 <td>
                     <select class="lmat-edit-type">
-                        <option value="general" <%= type === 'general' ? 'selected' : '' %>><?php esc_html_e('General', $text_domain); ?></option>
-                        <option value="name" <%= type === 'name' ? 'selected' : '' %>><?php esc_html_e('Name', $text_domain); ?></option>
+                        <option value="general" <%= type === 'general' ? 'selected' : '' %>><?php esc_html_e('General', 'linguator-multilingual-ai-translation'); ?></option>
+                        <option value="name" <%= type === 'name' ? 'selected' : '' %>><?php esc_html_e('Name', 'linguator-multilingual-ai-translation'); ?></option>
                     </select>
                 </td>
                 <% for (var i = 0; i < languages.length; i++) { 
                     if (languages[i].code === source_lang) continue;
                 %>
                     <td colspan="2">
-                        <textarea class="lmat-edit-translation" data-lang="<%= languages[i].code %>" placeholder="<?php esc_attr_e('Custom Translation', $text_domain); ?>" rows="9"><%= translations[languages[i].code] || '' %></textarea>
-                        <div class="lmat-translation-error"><?php esc_html_e('Too long, must be less than 220 characters', $text_domain); ?></div>
+                        <textarea class="lmat-edit-translation" data-lang="<%= languages[i].code %>" placeholder="<?php esc_attr_e('Custom Translation', 'linguator-multilingual-ai-translation'); ?>" rows="9"><%= translations[languages[i].code] || '' %></textarea>
+                        <div class="lmat-translation-error"><?php esc_html_e('Too long, must be less than 220 characters', 'linguator-multilingual-ai-translation'); ?></div>
                     </td>
                 <% } %>
                 <td colspan="2" class="lmat-actions-cell">
                     <div class="lmat-action-buttons">
                         <button type="button" class="lmat-save-edit-btn button button-primary">
-                            <?php esc_html_e('Save', $text_domain); ?>
+                            <?php esc_html_e('Save', 'linguator-multilingual-ai-translation'); ?>
                         </button>
                         <button type="button" class="lmat-cancel-edit-btn">
-                            <?php esc_html_e('Cancel', $text_domain); ?>
+                            <?php esc_html_e('Cancel', 'linguator-multilingual-ai-translation'); ?>
                         </button>
                     </div>
                 </td>
             </tr>
         </script>
+        <?php // phpcs:enable Generic.PHP.DisallowAlternativePHPTags ?>
     </div>
 </div>
+<?php
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound

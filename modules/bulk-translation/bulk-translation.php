@@ -57,7 +57,8 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 				return;
 			}
 
-			$post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
             
             if('trash' === $post_status){
                 return;
@@ -125,13 +126,14 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			return;
 		}
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
 
         if('trash' === $post_status){
             return;
         }
 
-        $post_label=__("Pages", "autopoly-ai-translation-for-linguator-pro");
+        $post_label=__("Pages", "linguator-multilingual-ai-translation");
         $taxonomy_page=false;
 
         if(isset($current_screen->post_type)){
