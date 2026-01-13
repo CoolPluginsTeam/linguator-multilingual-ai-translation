@@ -359,30 +359,6 @@ class LMAT_WPBakery {
 		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'decode_wpbakery_shortcodes' ], 10 );
 		// Priority 20: Expose attributes as content for translation
 		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'expose_translatable_attributes' ], 20 );
-		
-		
-		add_filter( 'get_post_field', [ __CLASS__, 'decode_post_content_field' ], 10, 3 );
-	}
-
-	/**
-	 * Decode WPBakery shortcodes in post_content field.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @static
-	 *
-	 * @param mixed  $value The value of the field.
-	 * @param string $field The field name.
-	 * @param int    $post  The post object or ID.
-	 *
-	 * @return mixed The field value, decoded if it's post_content with WPBakery.
-	 */
-	public static function decode_post_content_field( $value, $field, $post ) {
-		if ( 'post_content' !== $field ) {
-			return $value;
-		}
-
-		return self::decode_wpbakery_shortcodes( $value );
 	}
 
 	/**
@@ -461,7 +437,7 @@ class LMAT_WPBakery {
 			return $content;
 		}
 
-		$translatable_attributes = [ 'title', 'text', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title', 'p' ];
+		$translatable_attributes = [ 'title', 'text', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title', 'p', 'div' ];
 		$protected_attributes = [ 'image', 'img_size', 'img_id', 'video_id', 'gallery', 'images', 'post_id', 'taxonomy', 'term_id', 'el_id' ];
 
 		// Match shortcodes and their attributes 
