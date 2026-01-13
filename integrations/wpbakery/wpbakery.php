@@ -42,7 +42,10 @@ class LMAT_WPBakery {
 	 */
 	private static function wpbakery_compatibility() {
 		// Copy WPBakery meta when translation is created via REST API
-		add_action( 'lmat_translation_created', [ __CLASS__, 'copy_meta_on_translation_created' ], 10, 3 );
+		add_action( 'lmat_translation_created', [ __CLASS__, 'copy_meta_on_translation_created' ], 10, 2 );
+		
+		// Copy WPBakery meta when translation is created via bulk translation (sync system)
+		add_action( 'lmat_created_sync_post', [ __CLASS__, 'copy_meta_on_sync_post_created' ], 10, 2 );
 		
 		// Set default content for new WPBakery translations
 		add_filter( 'default_content', [ __CLASS__, 'set_default_translation_content' ], 10, 2 );
@@ -59,8 +62,13 @@ class LMAT_WPBakery {
 		// Modify edit links for WPBakery posts to open backend editor
 		add_filter( 'get_edit_post_link', [ __CLASS__, 'modify_edit_post_link' ], 10, 3 );
 		
-		// Intercept content fetching for translation to decode WPBakery content
-		add_action( 'wp_ajax_lmat_fetch_post_content', [ __CLASS__, 'intercept_fetch_content' ], 1 );
+		// Filter post content for translation - decode and expose WPBakery content
+		// These filters work for both single page translation and bulk translation
+		// Priority 10: Decode base64 encoded attributes
+		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'decode_wpbakery_shortcodes' ], 10 );
+		// Priority 20: Expose translatable attributes as [lmat_val] tags
+		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'expose_translatable_attributes' ], 20 );
+		
 		
 		// Intercept content saving to re-encode WPBakery content
 		add_action( 'wp_ajax_lmat_update_classic_translate_status', [ __CLASS__, 'intercept_save_content' ], 1 );
@@ -135,9 +143,8 @@ class LMAT_WPBakery {
 	 *
 	 * @param int    $new_post_id      New translation post ID.
 	 * @param int    $source_id        Source post ID.
-	 * @param string $target_lang_slug Target language slug.
 	 */
-	public static function copy_meta_on_translation_created( $new_post_id, $source_id, $target_lang_slug ) {
+	public static function copy_meta_on_translation_created( $new_post_id, $source_id ) {
 		// Check if source post uses WPBakery
 		$wpb_status = get_post_meta( $source_id, '_wpb_vc_js_status', true );
 		
@@ -154,6 +161,33 @@ class LMAT_WPBakery {
 					'post_content' => $source_post->post_content,
 				) );
 			}
+		}
+	}
+
+	/**
+	 * Copy WPBakery meta when a translation is created via bulk translation.
+	 *
+	 * This hooks into the lmat_created_sync_post action that fires after
+	 * a translation is created via the sync system (bulk translation).
+	 *
+	 * @since 1.0.6
+	 * @access public
+	 * @static
+	 *
+	 * @param int    $source_id        Source post ID.
+	 * @param int    $new_post_id      New translation post ID.
+	 */
+	public static function copy_meta_on_sync_post_created( $source_id, $new_post_id ) {
+		// Check if source post uses WPBakery
+		$wpb_status = get_post_meta( $source_id, '_wpb_vc_js_status', true );
+		
+		// Only copy if source post has WPBakery enabled
+		if ( 'true' === $wpb_status || true === $wpb_status ) {
+			// Copy WPBakery meta fields
+			self::copy_wpbakery_meta( $source_id, $new_post_id );
+			
+			// Note: Content is already copied by the sync system,
+			// but we need to ensure WPBakery-specific meta is copied
 		}
 	}
 
@@ -340,26 +374,7 @@ class LMAT_WPBakery {
 		return $url;
 	}
 
-	/**
-	 * Intercept content fetching to decode WPBakery shortcodes.
-	 *
-	 * WPBakery stores content in base64-encoded format within shortcode attributes.
-	 * This intercepts the AJAX call to decode content before it's sent to the translation modal.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @static
-	 */
-	public static function intercept_fetch_content() {
-		// Don't check nonce yet - the actual handler will do that
-		// We just need to add a filter to modify the content before it's returned
 
-		// Use the custom filter we added to page-translation-helper.php
-		// Priority 10: Decode base64
-		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'decode_wpbakery_shortcodes' ], 10 );
-		// Priority 20: Expose attributes as content for translation
-		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'expose_translatable_attributes' ], 20 );
-	}
 
 	/**
 	 * Decode base64-encoded WPBakery shortcode attributes.

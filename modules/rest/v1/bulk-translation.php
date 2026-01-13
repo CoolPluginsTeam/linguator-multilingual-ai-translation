@@ -294,20 +294,19 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 						continue;
 					}
 
-					$elementor_enabled = get_post_meta( $postId, '_elementor_edit_mode', true );
+				$elementor_enabled = get_post_meta( $postId, '_elementor_edit_mode', true );
+				$wpbakery_enabled = get_post_meta( $postId, '_wpb_vc_js_status', true );
+				if ( ! $post_data ) {
+					continue;
+				}
 
-					if ( ! $post_data ) {
-						continue;
-					}
+				if ( $slug_translation_option === 'slug_translate' ) {
+					$posts_translate[ $postId ]['post_name'] = urldecode( get_post_field( 'post_name', $postId ) );
+				}
 
-					if ( $slug_translation_option === 'slug_translate' ) {
-						$posts_translate[ $postId ]['post_name'] = urldecode( get_post_field( 'post_name', $postId ) );
-					}
-
-					$posts_translate[ $postId ]['title']       = $post_data->post_title;
-					$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
-					$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
-					$posts_translate[ $postId ]['editor_type'] = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
+				$posts_translate[ $postId ]['title']       = $post_data->post_title;
+				$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
+				$posts_translate[ $postId ]['editor_type'] = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
 
 					if ( isset( $post_data->post_excerpt ) && ! empty( $post_data->post_excerpt ) ) {
 						$posts_translate[ $postId ]['excerpt'] = $post_data->post_excerpt;
@@ -329,25 +328,37 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 					$posts_translate[ $postId ]['post_link'] = get_the_permalink( $postId );
 
-					if ( $elementor_enabled && 'builder' === $elementor_enabled && defined( 'ELEMENTOR_VERSION' ) ) {
-						$elementor_data = get_post_meta( $postId, '_elementor_data', true );
+				if ( $elementor_enabled && 'builder' === $elementor_enabled && defined( 'ELEMENTOR_VERSION' ) ) {
+					$elementor_data = get_post_meta( $postId, '_elementor_data', true );
 
-						if ( $elementor_data && '' !== $elementor_data ) {
-							$posts_translate[ $postId ]['editor_type'] = 'elementor';
-							$elementor_data                            = array();
+					if ( $elementor_data && '' !== $elementor_data ) {
+						$posts_translate[ $postId ]['editor_type'] = 'elementor';
+						$elementor_data                            = array();
 
-							if ( class_exists( '\Elementor\Plugin' ) && property_exists( '\Elementor\Plugin', 'instance' ) ) {
-								$elementor_data = \Elementor\Plugin::$instance->documents->get( $postId )->get_elements_data();
-							}
-
-							$posts_translate[ $postId ]['content'] = $elementor_data;
-							unset( $posts_translate[ $postId ]['metaFields']['_elementor_data'] );
+						if ( class_exists( '\Elementor\Plugin' ) && property_exists( '\Elementor\Plugin', 'instance' ) ) {
+							$elementor_data = \Elementor\Plugin::$instance->documents->get( $postId )->get_elements_data();
 						}
-					}
 
-					if ( $posts_translate[ $postId ]['editor_type'] === 'block' && ! $gutenberg_block ) {
-						$gutenberg_block = true;
+						$posts_translate[ $postId ]['content'] = $elementor_data;
+						unset( $posts_translate[ $postId ]['metaFields']['_elementor_data'] );
 					}
+				}
+
+				// Handle WPBakery content - apply transformations for translation
+				if ( ( 'true' === $wpbakery_enabled || true === $wpbakery_enabled ) && $posts_translate[ $postId ]['editor_type'] === 'classic' ) {
+					// Apply WPBakery content filters to prepare for translation
+					// This decodes base64-encoded attributes and exposes translatable content
+					$wpbakery_content = $posts_translate[ $postId ]['content'];
+					
+					// Apply the lmat_post_content_for_translation filter that WPBakery hooks into
+					$wpbakery_content = apply_filters( 'lmat_post_content_for_translation', $wpbakery_content, $postId );
+					
+					$posts_translate[ $postId ]['content'] = $wpbakery_content;
+				}
+
+				if ( $posts_translate[ $postId ]['editor_type'] === 'block' && ! $gutenberg_block ) {
+					$gutenberg_block = true;
+				}
 
 					foreach ( $translate_lang as $lang ) {
 						if ( in_array( $lang, $lmat_langs_slugs ) ) {
