@@ -59,19 +59,12 @@ class LMAT_WPBakery {
 		// Disable Gutenberg for WPBakery translation creation
 		add_filter( 'use_block_editor_for_post', [ __CLASS__, 'disable_gutenberg_for_wpbakery' ], 10, 2 );
 		
-		// Modify edit links for WPBakery posts to open backend editor
-		add_filter( 'get_edit_post_link', [ __CLASS__, 'modify_edit_post_link' ], 10, 3 );
-		
 		// Filter post content for translation - decode and expose WPBakery content
 		// These filters work for both single page translation and bulk translation
 		// Priority 10: Decode base64 encoded attributes
 		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'decode_wpbakery_shortcodes' ], 10 );
 		// Priority 20: Expose translatable attributes as [lmat_val] tags
 		add_filter( 'lmat_post_content_for_translation', [ __CLASS__, 'expose_translatable_attributes' ], 20 );
-		
-		
-		// Intercept content saving to re-encode WPBakery content
-		add_action( 'wp_ajax_lmat_update_classic_translate_status', [ __CLASS__, 'intercept_save_content' ], 1 );
 		
 		// Filter post content before saving to re-encode WPBakery attributes
 		add_filter( 'wp_insert_post_data', [ __CLASS__, 'encode_wpbakery_content_before_save' ], 10, 2 );
@@ -345,38 +338,6 @@ class LMAT_WPBakery {
 	}
 
 	/**
-	 * Modify edit post links for WPBakery posts.
-	 *
-	 * Add the wpb-backend-editor parameter to edit links for WPBakery posts
-	 * so they open directly in the WPBakery backend editor.
-	 *
-	 * @since 1.0.5
-	 * @access public
-	 * @static
-	 *
-	 * @param string $url     The edit post link.
-	 * @param int    $post_id The post ID.
-	 * @param string $context The context (display or other).
-	 * @return string Modified edit link.
-	 */
-	public static function modify_edit_post_link( $url, $post_id, $context ) {
-		// Check if this is a WPBakery post
-		$wpb_status = get_post_meta( $post_id, '_wpb_vc_js_status', true );
-		
-		// If not a WPBakery post, return original URL
-		if ( 'true' !== $wpb_status && true !== $wpb_status ) {
-			return $url;
-		}
-		
-		// Add wpb-backend-editor parameter to the URL
-		$url = add_query_arg( 'wpb-backend-editor', '', $url );
-		
-		return $url;
-	}
-
-
-
-	/**
 	 * Decode base64-encoded WPBakery shortcode attributes.
 	 *
 	 * WPBakery uses rawurlencode(base64_encode()) for shortcode attributes.
@@ -594,21 +555,6 @@ class LMAT_WPBakery {
 		);
 		
 		return $content;
-	}
-
-	/**
-	 * Intercept content saving to encode WPBakery shortcodes.
-	 *
-	 * Before saving translated content back to the database, we need to
-	 * re-encode it in WPBakery's format (rawurlencode + base64).
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @static
-	 */
-	public static function intercept_save_content() {
-		// This runs before the actual save handler
-		// We don't need to do anything here as we use wp_insert_post_data filter
 	}
 
 	/**
