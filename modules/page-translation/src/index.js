@@ -15,7 +15,7 @@ import ElementorUpdatePage from "./create-translated-post/elementor/index.js";
 
 // WPBakery post fetch and update page
 import WPBakeryPostFetch from "./fetch-post/wpbakery/index.js";
-import WPBakeryUpdatePage from "./create-translated-post/wpbakery/index.js";
+import updateWPBakeryPage from "./create-translated-post/wpbakery/index.js";
 
 import ReactDOM from "react-dom/client";
 import MetaFieldsFetch from "./fetch-post/meta-fields/index.js";
@@ -153,7 +153,6 @@ const App = () => {
   const postType = window.lmatPageTranslationGlobal.post_type;
   let translatePost, fetchPost, translateWrpSelector;
   const sourceLang = window.lmatPageTranslationGlobal.source_lang;
-
   // Elementor post fetch and update page
   if (editorType === "elementor") {
     translateWrpSelector =
@@ -173,7 +172,7 @@ const App = () => {
   } else if (editorType === "wpbakery") {
     translateWrpSelector =
       'button#lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]';
-    translatePost = WPBakeryUpdatePage;
+    translatePost = updateWPBakeryPage;
     fetchPost = WPBakeryPostFetch;
   }
 

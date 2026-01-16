@@ -295,6 +295,8 @@ class LMAT_Page_Translation {
 				}
 
 				$editor = '';
+				$editor_type = 'classic'; // Default to classic
+				
 				if ( 'builder' === get_post_meta( $from_post_id, '_elementor_edit_mode', true ) && defined( 'ELEMENTOR_VERSION' ) ) {
 					$source_lang_name = lmat_get_post_language( $from_post_id, 'slug' );
 					$this->enqueue_elementor_confirm_box_assets( $from_post_id, $lang, $source_lang_name, 'classic' );
@@ -306,6 +308,12 @@ class LMAT_Page_Translation {
 
 				if ( in_array( $editor, array( 'Elementor', 'Divi' ), true ) ) {
 					return;
+				}
+				
+				// Check if this is a WPBakery post
+				$wpb_status = get_post_meta( $from_post_id, '_wpb_vc_js_status', true );
+				if ( 'true' === $wpb_status || true === $wpb_status ) {
+					$editor_type = 'wpbakery';
 				}
 
 				$languages = LMAT()->model->get_languages_list();
@@ -333,7 +341,7 @@ class LMAT_Page_Translation {
 						$data['blockCommentTag'] = 'true';
 					}
 
-					$this->enqueue_automatic_translate_assets( lmat_get_post_language( $from_post_id, 'slug' ), $lang, 'classic', $data );
+					$this->enqueue_automatic_translate_assets( lmat_get_post_language( $from_post_id, 'slug' ), $lang, $editor_type, $data );
 				}
 			}
 		}
@@ -437,7 +445,7 @@ class LMAT_Page_Translation {
 		if ( ! isset( LMAT()->options['sync'] ) || ( isset( LMAT()->options['sync'] ) && ! in_array( 'post_meta', LMAT()->options['sync'] ) ) ) {
 			$extra_data['postMetaSync'] = 'false';
 
-			if ( in_array( $editor_type, array( 'classic', 'gutenberg' ) ) ) {
+			if ( in_array( $editor_type, array( 'classic', 'gutenberg','wpbakery' ) ) ) {
 				$extra_data['update_post_meta_fields'] = 'lmat_update_post_meta_fields';
 				$extra_data['post_meta_fields_key']    = wp_create_nonce( 'lmat_update_post_meta_fields' );
 			}

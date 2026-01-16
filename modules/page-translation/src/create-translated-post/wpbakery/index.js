@@ -13,105 +13,69 @@ import translatedMetaFields from '../meta-fields/index.js';
 const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
     const postID = lmatPageTranslationGlobal.current_post_id;
     const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
-
     /**
-     * Extract and translate WPBakery shortcode attributes.
-     * Finds translatable attributes and prepares translations.
+     * Translate WPBakery content by replacing [lmat_val] tagged tokens with translations.
+     * The PHP filters wrap translatable content in [lmat_val id="token"]content[/lmat_val] tags.
+     * We extract translations and replace the tokens.
      * 
-     * @param {string} content - The post content with WPBakery shortcodes
-     * @returns {string} - Content with translated attributes
+     * @param {string} content - The post content with [lmat_val] tags
+     * @returns {string} - Content with translated values
      */
-    const translateShortcodeAttributes = (content) => {
+    const translateLmatValTags = (content) => {
         if (!content || content.trim() === '') {
             return content;
         }
 
-        // Translatable attributes in WPBakery shortcodes
-        const translatableAttributes = ['title', 'text', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title', 'p', 'div'];
-        
-        // Counter for unique keys
-        let attributeIndex = 0;
+        // Pattern to match [lmat_val id="token"]content[/lmat_val]
+        // The token format is: ___LMAT_{md5_hash}___
+        const lmatValRegex = /\[lmat_val[^\]]*?id=["'](___LMAT_[a-f0-9]{32}___)["'][^\]]*?\](.*?)\[\/lmat_val\]/gis;
 
-        // Process each vc_ shortcode
-        const updatedContent = content.replace(/(\[vc_[\w-]+)([^\]]*?)(\])/g, (match, tagStart, attributes, tagEnd) => {
-            let updatedAttributes = attributes;
+        let translatedContent = content;
+        let index = 0;
 
-            // Find and translate each translatable attribute
-            translatableAttributes.forEach(attrName => {
-                const attrRegex = new RegExp(`(${attrName})=(["\'])([^"\']*?)\\2`, 'g');
-                
-                updatedAttributes = updatedAttributes.replace(attrRegex, (attrMatch, attr, quote, value) => {
-                    // Skip empty values
-                    if (!value || value.trim() === '') {
-                        return attrMatch;
-                    }
+        // Find all [lmat_val] tags and replace tokens with translations
+        let match;
+        const replacements = [];
 
-                    // Create unique key for this attribute
-                    const uniqueKey = `wpbakery_attr_${attributeIndex}_${attr}`;
-                    attributeIndex++;
+        while ((match = lmatValRegex.exec(content)) !== null) {
+            const token = match[1]; // The unique token ID
+            const sourceText = match[2]; // The original content
 
-                    // Get translation from store
-                    const translatedValue = select('block-lmatPageTranslation/translate')
-                        .getTranslatedString('content', value, uniqueKey, service);
+            // Skip empty content
+            if (!sourceText || sourceText.trim() === '') {
+                continue;
+            }
 
-                    // Return updated attribute with translated value
-                    return `${attr}=${quote}${translatedValue}${quote}`;
+            // Create the same unique key used during storage
+            const uniqueKey = `wpbakery_lmat_val_${index}_${token}`;
+            
+            // Get the translated value from the store
+            const translatedValue = select('block-lmatPageTranslation/translate')
+                .getTranslatedString('content', sourceText, uniqueKey, service);
+
+            // Store replacement: replace the token in shortcode attributes with translated value
+            if (translatedValue) {
+                replacements.push({
+                    token: token,
+                    translatedValue: translatedValue
                 });
-            });
+            }
+            
+            index++;
+        }
 
-            return tagStart + updatedAttributes + tagEnd;
+        // Apply all token replacements
+        replacements.forEach(replacement => {
+            // Replace the token in shortcode attributes with the translated value
+            // The token appears in format: attribute="___LMAT_hash___"
+            const tokenRegex = new RegExp(replacement.token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+            translatedContent = translatedContent.replace(tokenRegex, replacement.translatedValue);
         });
 
-        return updatedContent;
-    };
+        // Remove all remaining [lmat_val] tags (cleanup)
+        translatedContent = translatedContent.replace(/\[lmat_val[^\]]*?\].*?\[\/lmat_val\]/gis, '');
 
-    /**
-     * Extract and translate content between shortcode tags.
-     * Handles content like: [vc_column_text]Content here[/vc_column_text]
-     * 
-     * @param {string} content - The post content
-     * @returns {string} - Content with translated inner content
-     */
-    const translateShortcodeContent = (content) => {
-        if (!content || content.trim() === '') {
-            return content;
-        }
-
-        let contentIndex = 0;
-
-        // Match shortcodes with content between tags
-        // Pattern: [shortcode]content[/shortcode]
-        const updatedContent = content.replace(/(\[vc_[\w-]+[^\]]*?\])([\s\S]*?)(\[\/vc_[\w-]+\])/g, 
-            (match, openTag, innerContent, closeTag) => {
-                // Skip if content is empty or only whitespace
-                if (!innerContent || innerContent.trim() === '') {
-                    return match;
-                }
-
-                // Skip if content contains nested shortcodes (will be handled recursively)
-                if (innerContent.includes('[vc_')) {
-                    return match;
-                }
-
-                // Skip HTML-only content (no translatable text)
-                const textContent = innerContent.replace(/<[^>]+>/g, '').trim();
-                if (!textContent) {
-                    return match;
-                }
-
-                // Create unique key
-                const uniqueKey = `wpbakery_content_${contentIndex}`;
-                contentIndex++;
-
-                // Get translation
-                const translatedContent = select('block-lmatPageTranslation/translate')
-                    .getTranslatedString('content', innerContent, uniqueKey, service);
-
-                return openTag + translatedContent + closeTag;
-            }
-        );
-
-        return updatedContent;
+        return translatedContent;
     };
 
     /**
@@ -292,20 +256,16 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
 
     /**
      * Update WPBakery content in the editor.
-     * This updates the actual content in the WordPress editor (TinyMCE or Text mode).
+     * This updates the actual content in the WordPress editor (TinyMCE or Text mode)
+     * and refreshes the WPBakery backend editor if it's active.
      */
     const updateWPBakeryContent = () => {
         if (!postContent.content || postContent.content.trim() === '') {
             return;
         }
 
-        let translatedContent = postContent.content;
-
-        // First pass: Translate shortcode attributes
-        translatedContent = translateShortcodeAttributes(translatedContent);
-
-        // Second pass: Translate content between shortcode tags
-        translatedContent = translateShortcodeContent(translatedContent);
+        // Translate content by replacing [lmat_val] tokens with translations
+        let translatedContent = translateLmatValTags(postContent.content);
 
         // Update in WordPress editor
         const contentWrapper = document.querySelector('#wp-content-wrap');
@@ -339,62 +299,98 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
         if (contentTextarea) {
             contentTextarea.value = translatedContent;
         }
+
+        // Update WPBakery Backend Editor if it's active
+        updateWPBakeryBackendEditor();
     };
 
     /**
-     * Save translated content and meta fields via AJAX.
+     * Update the WPBakery backend editor with translated content.
+     * This triggers WPBakery to reload and display the updated shortcodes.
+     * 
+     * @param {string} content - The translated content with WPBakery shortcodes
      */
-    const saveTranslatedContent = () => {
+    const updateWPBakeryBackendEditor = (content) => {
+        const savebtn= document.getElementById('save-post');
+        if (savebtn) {
+            savebtn.click();
+        }
+        
+    };
+
+    /**
+     * Save meta fields via AJAX (if sync is disabled).
+     */
+    const saveMetaFields = async () => {
+        if (!lmatPageTranslationGlobal.update_post_meta_fields || !lmatPageTranslationGlobal.post_meta_fields_key) {
+            return;
+        }
+
         const requestBody = {
-            action: lmatPageTranslationGlobal.update_classic_translate_status || 'lmat_update_classic_translate_status',
+            action: lmatPageTranslationGlobal.update_post_meta_fields,
             post_id: postID,
-            status: 'completed',
-            lmat_page_translation_nonce: lmatPageTranslationGlobal.ajax_nonce
+            meta_fields: JSON.stringify(translatedMetaFields(postContent.metaFields, service)),
+            post_meta_fields_key: lmatPageTranslationGlobal.post_meta_fields_key
         };
 
-        // Add slug if translation is enabled
-        if (postContent.slug_name && postContent.slug_name.trim() !== '') {
-            if (lmatPageTranslationGlobal.slug_translation_option === 'slug_translate') {
-                const translatedSlug = select('block-lmatPageTranslation/translate')
-                    .getTranslatedString('slug', postContent.slug_name, null, service);
-                
-                if (translatedSlug && translatedSlug.trim() !== '') {
-                    requestBody.post_name = translatedSlug;
-                }
-            }
-        }
-
-        // Add meta fields if sync is disabled
-        if (lmatPageTranslationGlobal.postMetaSync === 'false') {
-            requestBody.meta_fields = JSON.stringify(translatedMetaFields(postContent.metaFields, service));
-        }
-
-        fetch(lmatPageTranslationGlobal.ajax_url, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                'Accept': 'application/json',
-            },
-            body: new URLSearchParams(requestBody)
-        })
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const response = await fetch(lmatPageTranslationGlobal.ajax_url, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': 'application/json',
+                },
+                body: new URLSearchParams(requestBody)
+            });
+            
+            const data = await response.json();
+            
             if (data.success) {
-                const translateButton = document.querySelector('.lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]');
+                console.log('Meta fields saved successfully');
+            } else {
+                console.error('Failed to save meta fields:', data);
+            }
+        } catch (error) {
+            console.error('Error saving meta fields:', error);
+        }
+    };
+
+    /**
+     * Update translation status via AJAX.
+     */
+    const saveTranslationStatus = async () => {
+        const requestBody = {
+            action: lmatPageTranslationGlobal.action_update_status || 'lmat_update_classic_translate_status',
+            post_id: postID,
+            status: 'completed',
+            lmat_classic_translate_nonce: lmatPageTranslationGlobal.classic_status_key
+        };
+
+        try {
+            const response = await fetch(lmatPageTranslationGlobal.ajax_url, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': 'application/json',
+                },
+                body: new URLSearchParams(requestBody)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const translateButton = document.querySelector('button#lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]');
                 if (translateButton) {
                     translateButton.setAttribute('title', 'Translation process completed successfully.');
+                    translateButton.disabled = true;
                 }
-                console.log('WPBakery translation completed successfully');
+                console.log('WPBakery translation status updated successfully');
             } else {
-                console.error('Failed to save WPBakery translation:', data.data);
+                console.error('Failed to update translation status:', data);
             }
-
-            modalClose();
-        })
-        .catch(error => {
-            modalClose();
-            console.error('Error saving WPBakery translation:', error);
-        });
+        } catch (error) {
+            console.error('Error updating translation status:', error);
+        }
     };
 
     // Execute translation updates
@@ -417,9 +413,18 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
             updateACFFields();
         }
 
-        // Save everything via AJAX
-        setTimeout(() => {
-            saveTranslatedContent();
+        // Save meta fields and update status via AJAX
+        setTimeout(async () => {
+            // Save meta fields first (if sync is disabled)
+            if (lmatPageTranslationGlobal.postMetaSync === 'false') {
+                await saveMetaFields();
+            }
+            
+            // Then update translation status
+            await saveTranslationStatus();
+            
+            // Close modal
+            modalClose();
         }, 500);
 
     } catch (error) {

@@ -286,10 +286,9 @@ class LMAT_WPBakery {
 		// Check if this post uses WPBakery
 		$wpb_status = get_post_meta( $post_id, '_wpb_vc_js_status', true );
 		
-		// If WPBakery is active on this post, ensure it's treated as classic
-		// (since WPBakery stores shortcodes in post_content)
+		// If WPBakery is active on this post, set editor type to wpbakery
 		if ( 'true' === $wpb_status || true === $wpb_status ) {
-			return 'classic';
+			return 'wpbakery';
 		}
 
 		return $editor_type;
