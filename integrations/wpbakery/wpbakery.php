@@ -368,7 +368,12 @@ class LMAT_WPBakery {
 
 				// Skip attributes that are clearly not encoded or contain IDs/references
 				// These should never be decoded or translated as they reference WordPress entities
-				$skip_attributes = array( 'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size', 'img_id', 'video_id', 'gallery', 'images', 'font_container', 'google_fonts', 'post_id', 'taxonomy', 'term_id' );
+				$skip_attributes = array( 
+					'el_id', 'el_class', 'css', 'css_animation', 'link', 'url', 'image', 'img_size', 
+					'img_id', 'video_id', 'gallery', 'images', 'font_container', 'google_fonts', 
+					'post_id', 'taxonomy', 'term_id', 'color', 'custom_background', 'custom_text',
+					'outline_custom_color', 'outline_custom_hover_background', 'outline_custom_hover_text'
+				);
 				if ( in_array( $attribute, $skip_attributes, true ) ) {
 					return $matches[0];
 				}
@@ -412,27 +417,45 @@ class LMAT_WPBakery {
 			return $content;
 		}
 
-		$translatable_attributes = [ 'title', 'text', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title', 'p', 'div' ];
+		$translatable_attributes = [ 'title', 'text', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title' ];
 		$protected_attributes = [ 'image', 'img_size', 'img_id', 'video_id', 'gallery', 'images', 'post_id', 'taxonomy', 'term_id', 'el_id' ];
+		$skip_attributes = [ 'css', 'color', 'custom_background', 'custom_text', 'outline_custom_color', 'outline_custom_hover_background', 'outline_custom_hover_text', 'font_container', 'google_fonts', 'css_animation', 'el_class' ];
 
 		// Match shortcodes and their attributes 
 		$content = preg_replace_callback(
-			'/(\[vc_[\w-]+)([^\]]*)(\])/',
-			function( $matches ) use ( $translatable_attributes, $protected_attributes ) {
+			'/(\[vc_[\w-]+)([^\]]*)(\])/s',
+			function( $matches ) use ( $translatable_attributes, $protected_attributes, $skip_attributes ) {
 				$tag_start = $matches[1];
 				$attributes_str = $matches[2];
 				$tag_end = $matches[3];
 				$append_content = '';
 
-				// Find attributes in the string
+				// Find attributes in the string - using /s modifier to handle multiline values
 				$attributes_str = preg_replace_callback(
-					'/([\w-]+)=(["\'])(.*?)\2/',
-					function( $attr_matches ) use ( $translatable_attributes, $protected_attributes, &$append_content ) {
+					'/([\w-]+)=(["\'])((?:(?!\2).)*)\2/s',
+					function( $attr_matches ) use ( $translatable_attributes, $protected_attributes, $skip_attributes, &$append_content ) {
 						$attr_name = $attr_matches[1];
 						$attr_quote = $attr_matches[2];
 						$attr_val = $attr_matches[3];
 
+						// Skip attributes that should never be translated (colors, CSS, etc.)
+						if ( in_array( $attr_name, $skip_attributes, true ) ) {
+							return $attr_matches[0];
+						}
+
 						if ( in_array( $attr_name, $translatable_attributes, true ) && ! empty( $attr_val ) ) {
+							// Skip if already tokenized
+							if ( strpos( $attr_val, '___LMAT_' ) === 0 ) {
+								return $attr_matches[0];
+							}
+							
+							// Skip if value looks like a color code or CSS
+							if ( preg_match( '/^#[0-9a-fA-F]{3,6}$/', $attr_val ) || 
+							     preg_match( '/^%23[0-9a-fA-F]{3,6}$/', $attr_val ) ||
+							     strpos( $attr_val, 'vc_custom_' ) === 0 ) {
+								return $attr_matches[0];
+							}
+							
 							// Generate a unique token for this attribute
 							$token = '___LMAT_' . md5( $attr_name . $attr_val . mt_rand() ) . '___';
 							
@@ -445,6 +468,11 @@ class LMAT_WPBakery {
 						
 						// Protect ID-based attributes by encoding them in a token
 						if ( in_array( $attr_name, $protected_attributes, true ) && ! empty( $attr_val ) ) {
+							// Skip if already protected
+							if ( strpos( $attr_val, '___LMAT_PROTECTED_' ) === 0 ) {
+								return $attr_matches[0];
+							}
+							
 							// Encode the value in base64 so we can decode it later
 							// Format: ___LMAT_PROTECTED_{base64}___
 							$protected_token = '___LMAT_PROTECTED_' . base64_encode( $attr_val ) . '___';
@@ -460,7 +488,61 @@ class LMAT_WPBakery {
 			},
 			$content
 		);
+		
+		// Also handle content between shortcode tags (e.g., [vc_column_text]content[/vc_column_text])
+		$content = self::expose_shortcode_content( $content );
 
+		return $content;
+	}
+	
+	/**
+	 * Expose content between shortcode tags for translation.
+	 * 
+	 * @since 1.0.7
+	 * @access private
+	 * @static
+	 * 
+	 * @param string $content Post content.
+	 * @return string Content with shortcode content exposed.
+	 */
+	private static function expose_shortcode_content( $content ) {
+		// Match vc_column_text and similar shortcodes that contain HTML/text content
+		$content = preg_replace_callback(
+			'/\[(vc_column_text|vc_custom_heading)([^\]]*)\](.*?)\[\/\1\]/s',
+			function( $matches ) {
+				$shortcode_name = $matches[1];
+				$attributes = $matches[2];
+				$inner_content = $matches[3];
+				
+				// Skip if empty or contains only whitespace
+				if ( empty( trim( $inner_content ) ) ) {
+					return $matches[0];
+				}
+				
+				// Skip if content contains nested shortcodes or already has lmat_val tags
+				if ( strpos( $inner_content, '[vc_' ) !== false || 
+				     strpos( $inner_content, '[lmat_val' ) !== false ||
+				     strpos( $inner_content, '___LMAT_' ) !== false ) {
+					return $matches[0];
+				}
+				
+				// Strip HTML tags to check if there's actual text content
+				$text_content = strip_tags( $inner_content );
+				if ( empty( trim( $text_content ) ) ) {
+					return $matches[0];
+				}
+				
+				// Generate a unique token for this content
+				$token = '___LMAT_' . md5( $shortcode_name . $inner_content . mt_rand() ) . '___';
+				
+				// Wrap in lmat_val tag
+				$wrapped_content = '[lmat_val id="' . $token . '"]' . $inner_content . '[/lmat_val]';
+				
+				return '[' . $shortcode_name . $attributes . ']' . $wrapped_content . '[/' . $shortcode_name . ']';
+			},
+			$content
+		);
+		
 		return $content;
 	}
 
@@ -501,18 +583,29 @@ class LMAT_WPBakery {
 		// i modifier: Case insensitive (just in case)
 		if ( preg_match_all( '/\[lmat_val[^\]]*?(___LMAT_[a-f0-9]{32}___)[^\]]*?\](.*?)\[\/lmat_val\]/si', $content, $matches, PREG_SET_ORDER ) ) {
 			foreach ( $matches as $match ) {
+				$full_match = $match[0]; // The entire [lmat_val]...[/lmat_val]
 				$token = $match[1];
 				$translated_value = $match[2];
 				
 				// Decode entities in translation (e.g. &quot; -> ", &lt; -> <)
-				$translated_value = html_entity_decode( $translated_value );
+				$translated_value = html_entity_decode( $translated_value, ENT_QUOTES | ENT_HTML5 );
 				
-				// Escape attributes to prevent breaking shortcode syntax (e.g. quotes inside value)
-				$translated_value = esc_attr( $translated_value );
+				// Check if this token exists elsewhere in the content (as an attribute value)
+				$token_exists_separately = strpos( str_replace( $full_match, '', $content ), $token ) !== false;
 				
-				// Finds the token in the content and replaces it.
-				// The token is unique enough that global replacement is safe.
-				$content = str_replace( $token, $translated_value, $content );
+				if ( $token_exists_separately ) {
+					// Pattern 1: Token is used in an attribute (e.g., title="___TOKEN___")
+					// Replace the token with translation, and we'll remove the lmat_val wrapper later
+					$has_html = preg_match( '/<[^>]+>/', $translated_value );
+					if ( ! $has_html ) {
+						$translated_value = esc_attr( $translated_value );
+					}
+					$content = str_replace( $token, $translated_value, $content );
+				} else {
+					// Pattern 2: No separate token - this is direct content wrapping
+					// Replace the entire [lmat_val]...[/lmat_val] with the translated content
+					$content = str_replace( $full_match, $translated_value, $content );
+				}
 			}
 		}
 
@@ -653,11 +746,14 @@ class LMAT_WPBakery {
 	 * @return string Content cleaned of lmat_val tags.
 	 */
 	public static function remove_remaining_lmat_tags( $content ) {
-		// Clean up any stray/orphan lmat_val tags (safety)
+		// Clean up any lmat_val tags and their content
+		// These tags are just carriers for the original text - the translations
+		// have already been applied to the tokens in the shortcode attributes
 		if ( false !== strpos( $content, '[lmat_val' ) ) {
 			// Matches [lmat_val ...]content[/lmat_val]
 			// Supports newlines inside the tag or content
-			$content = preg_replace( '/\[lmat_val[^\]]*\](.*?)\[\/lmat_val\]/s', '', $content );
+			// Remove the entire tag and its content (it's already been translated in the token)
+			$content = preg_replace( '/\s*\[lmat_val[^\]]*\].*?\[\/lmat_val\]/s', '', $content );
 		}
 		return $content;
 	}

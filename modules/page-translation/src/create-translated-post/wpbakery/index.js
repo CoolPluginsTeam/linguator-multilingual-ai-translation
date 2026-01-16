@@ -33,11 +33,13 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
         let translatedContent = content;
         let index = 0;
 
-        // Find all [lmat_val] tags and replace tokens with translations
+        // Find all [lmat_val] tags and process them
         let match;
-        const replacements = [];
+        const directReplacements = []; // For content without separate tokens
+        const tokenReplacements = [];   // For tokens in attributes
 
         while ((match = lmatValRegex.exec(content)) !== null) {
+            const fullMatch = match[0]; // The entire [lmat_val]...[/lmat_val]
             const token = match[1]; // The unique token ID
             const sourceText = match[2]; // The original content
 
@@ -53,27 +55,42 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
             const translatedValue = select('block-lmatPageTranslation/translate')
                 .getTranslatedString('content', sourceText, uniqueKey, service);
 
-            // Store replacement: replace the token in shortcode attributes with translated value
             if (translatedValue) {
-                replacements.push({
-                    token: token,
-                    translatedValue: translatedValue
-                });
+                // Check if the token exists elsewhere in the content (not just in the lmat_val tag)
+                const contentWithoutThisTag = content.replace(fullMatch, '');
+                const tokenExistsSeparately = contentWithoutThisTag.includes(token);
+                
+                if (tokenExistsSeparately) {
+                    // Pattern 1: Token is used in an attribute - replace token and remove wrapper later
+                    tokenReplacements.push({
+                        token: token,
+                        translatedValue: translatedValue
+                    });
+                } else {
+                    // Pattern 2: Direct content wrapping - replace the entire lmat_val tag
+                    directReplacements.push({
+                        fullMatch: fullMatch,
+                        translatedValue: translatedValue
+                    });
+                }
             }
             
             index++;
         }
 
-        // Apply all token replacements
-        replacements.forEach(replacement => {
-            // Replace the token in shortcode attributes with the translated value
-            // The token appears in format: attribute="___LMAT_hash___"
+        // Apply direct replacements first (Pattern 2)
+        directReplacements.forEach(replacement => {
+            translatedContent = translatedContent.replace(replacement.fullMatch, replacement.translatedValue);
+        });
+
+        // Apply token replacements (Pattern 1)
+        tokenReplacements.forEach(replacement => {
             const tokenRegex = new RegExp(replacement.token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
             translatedContent = translatedContent.replace(tokenRegex, replacement.translatedValue);
         });
 
-        // Remove all remaining [lmat_val] tags (cleanup)
-        translatedContent = translatedContent.replace(/\[lmat_val[^\]]*?\].*?\[\/lmat_val\]/gis, '');
+        // Remove any remaining [lmat_val] tags (cleanup for Pattern 1)
+        translatedContent = translatedContent.replace(/\s*\[lmat_val[^\]]*?\].*?\[\/lmat_val\]/gis, '');
 
         return translatedContent;
     };
@@ -307,10 +324,8 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
     /**
      * Update the WPBakery backend editor with translated content.
      * This triggers WPBakery to reload and display the updated shortcodes.
-     * 
-     * @param {string} content - The translated content with WPBakery shortcodes
      */
-    const updateWPBakeryBackendEditor = (content) => {
+    const updateWPBakeryBackendEditor = () => {
         const savebtn= document.getElementById('save-post');
         if (savebtn) {
             savebtn.click();

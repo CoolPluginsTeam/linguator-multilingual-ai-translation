@@ -46,111 +46,12 @@ const WPBakerySaveSource = (post_data) => {
     };
 
     /**
-     * Extract translatable content from shortcode attributes.
-     * Handles decoded WPBakery attributes (title, text, heading, etc.)
-     * 
-     * @param {string} content - WPBakery shortcode content
-     */
-    const extractShortcodeAttributes = (content) => {
-        if (!content || content.trim() === '') {
-            return;
-        }
-
-        // Translatable attributes in WPBakery
-        const translatableAttributes = ['title', 'text', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'heading', 'btn_title', 'p', 'div'];
-        
-        let attributeIndex = 0;
-
-        // Process each vc_ shortcode
-        const shortcodeRegex = /\[vc_[\w-]+[^\]]*?\]/g;
-        let shortcodeMatch;
-
-        while ((shortcodeMatch = shortcodeRegex.exec(content)) !== null) {
-            const shortcode = shortcodeMatch[0];
-
-            // Extract attributes from this shortcode
-            translatableAttributes.forEach(attrName => {
-                const attrRegex = new RegExp(`${attrName}=["']([^"']+)["']`, 'gi');
-                let attrMatch;
-
-                while ((attrMatch = attrRegex.exec(shortcode)) !== null) {
-                    const value = attrMatch[1];
-
-                    // Skip empty values, tokens, and protected content
-                    if (!value || value.trim() === '' || value.includes('___LMAT_')) {
-                        continue;
-                    }
-
-                    // Create unique key
-                    const uniqueKey = `wpbakery_attr_${attributeIndex}_${attrName}`;
-                    
-                    // Store the source string
-                    dispatch('block-lmatPageTranslation/translate').contentSaveSource(uniqueKey, value);
-                    
-                    attributeIndex++;
-                }
-            });
-        }
-    };
-
-    /**
-     * Extract content between shortcode tags.
-     * Example: [vc_column_text]Content here[/vc_column_text]
-     * 
-     * @param {string} content - WPBakery content
-     */
-    const extractShortcodeContent = (content) => {
-        if (!content || content.trim() === '') {
-            return;
-        }
-
-        let contentIndex = 0;
-
-        // Match shortcodes with content between tags
-        const contentRegex = /\[vc_[\w-]+[^\]]*?\]([\s\S]*?)\[\/vc_[\w-]+\]/g;
-        let match;
-
-        while ((match = contentRegex.exec(content)) !== null) {
-            const innerContent = match[1];
-
-            // Skip empty content
-            if (!innerContent || innerContent.trim() === '') {
-                continue;
-            }
-
-            // Skip if content contains nested shortcodes or lmat_val tags (handled separately)
-            if (innerContent.includes('[vc_') || innerContent.includes('[lmat_val')) {
-                continue;
-            }
-
-            // Skip HTML-only content (no translatable text)
-            const textContent = innerContent.replace(/<[^>]+>/g, '').trim();
-            if (!textContent) {
-                continue;
-            }
-
-            // Create unique key
-            const uniqueKey = `wpbakery_content_${contentIndex}`;
-            
-            // Store the source string
-            dispatch('block-lmatPageTranslation/translate').contentSaveSource(uniqueKey, innerContent);
-            
-            contentIndex++;
-        }
-    };
-
-    /**
      * Process all post data fields.
      */
     Object.keys(post_data).forEach(key => {
         if (key === 'content') {
-            // Primary method: Extract [lmat_val] tagged content
-            // This is the main approach for WPBakery as the PHP filters add these tags
+            // Extract [lmat_val] tagged content added by PHP filters
             extractLmatValTags(post_data[key]);
-
-            // Fallback methods: Extract from shortcodes directly
-            // extractShortcodeAttributes(post_data[key]);
-            // extractShortcodeContent(post_data[key]);
             
         } else if (['title', 'excerpt'].includes(key)) {
             // Store title and excerpt
