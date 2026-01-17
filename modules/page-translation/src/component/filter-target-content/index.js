@@ -311,11 +311,38 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         string = replaceLineBreakPlaceholder(string);
 
         // Filter shortcode content
-        const shortcodePattern = /\[(.*?)\]/g;
+        // Updated pattern to match actual WordPress shortcodes more accurately
+        // WordPress shortcodes start with [word-chars] or [/word-chars]
+        // This prevents plain text like [hello-world] from being treated as shortcodes
+        // Pattern matches: [shortcode], [shortcode attr="val"], [/shortcode]
+        // But NOT plain text that happens to have brackets
+        const shortcodePattern = /\[(\/?[a-zA-Z_][\w-]*(?:\s+[^\]]+)?)\]/g;
         const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
 
         if (shortcodeMatches) {
-            string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
+            // Only protect actual registered WordPress shortcodes, not arbitrary bracket content
+            string = string.replace(shortcodePattern, (match) => {
+                // Additional check: skip if it looks like plain text (no attributes, no special syntax)
+                // If the content inside brackets is just plain words with special chars, don't protect it
+                const innerContent = match.slice(1, -1).trim();
+                
+                // Check if this looks like a real shortcode:
+                // 1. Has attributes (contains = or ")
+                // 2. Is a closing tag (starts with /)
+                // 3. Contains underscore or multiple words with underscore (common in WP shortcodes)
+                const looksLikeShortcode = 
+                    innerContent.includes('=') || 
+                    innerContent.includes('"') || 
+                    innerContent.startsWith('/') ||
+                    innerContent.includes('_');
+                
+                if (looksLikeShortcode) {
+                    return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
+                }
+                
+                // If it doesn't look like a shortcode, leave it as-is for translation
+                return match;
+            });
         }
 
         function replaceInnerTextWithSpan(doc) {

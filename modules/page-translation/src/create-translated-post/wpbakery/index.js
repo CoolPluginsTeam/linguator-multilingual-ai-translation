@@ -360,13 +360,11 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
             
             const data = await response.json();
             
-            if (data.success) {
-                console.log('Meta fields saved successfully');
-            } else {
-                console.error('Failed to save meta fields:', data);
+            if (!data.success) {
+                throw new Error('Failed to save meta fields');
             }
         } catch (error) {
-            console.error('Error saving meta fields:', error);
+            throw new Error('Error saving meta fields');
         }
     };
 
@@ -399,7 +397,6 @@ const updateWPBakeryPage = ({ postContent, modalClose, service }) => {
                     translateButton.setAttribute('title', 'Translation process completed successfully.');
                     translateButton.disabled = true;
                 }
-                console.log('WPBakery translation status updated successfully');
             } else {
                 console.error('Failed to update translation status:', data);
             }
