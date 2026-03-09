@@ -20,7 +20,7 @@ All its functionality has been moved to [Linguator AI – Auto Translate & Creat
 
 **Create a Multilingual WordPress Website 10X Faster – Powered by AI, Built for Global Reach.**
 
-[Check Live Demo](https://wordpress.org/plugins/Multilingual AI Translator-multilingual-ai-translation/?preview=1) | [Learn more](https://Multilingual AI Translator.com/?utm_source=lmat_plugin&utm_medium=readme&utm_campaign=view_plugin&utm_content=learn_more) 
+[Check Live Demo](https://wordpress.org/plugins/linguator-multilingual-ai-translation/?preview=1) | [Learn more](https://linguator.com/?utm_source=lmat_plugin&utm_medium=readme&utm_campaign=view_plugin&utm_content=learn_more)
 
 ### Why Use Multilingual AI Translator?
 
