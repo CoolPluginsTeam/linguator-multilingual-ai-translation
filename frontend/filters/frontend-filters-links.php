@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Filters\LMAT_Filters_Links;
-use Linguator\Includes\Helpers\LMAT_Cache;
+use Linguator\Includes\Filters\Linguator_Filters_Links;
+use Linguator\Includes\Helpers\Linguator_Cache;
 
 
 
@@ -18,17 +18,17 @@ use Linguator\Includes\Helpers\LMAT_Cache;
  *
  *  
  */
-class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
+class Linguator_Frontend_Filters_Links extends Linguator_Filters_Links {
 
 	/**
-	 * @var LMAT_Frontend_Links|null
+	 * @var Linguator_Frontend_Links|null
 	 */
 	public $links;
 
 	/**
 	 * Our internal non persistent cache object
 	 *
-	 * @var LMAT_Cache<string>
+	 * @var Linguator_Cache<string>
 	 */
 	public $cache;
 
@@ -59,7 +59,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 		parent::__construct( $linguator );
 
 		$this->curlang = &$linguator->curlang;
-		$this->cache = new LMAT_Cache();
+		$this->cache = new Linguator_Cache();
 
 		// Rewrites author and date links to filter them by language
 		foreach ( array( 'feed_link', 'author_link', 'search_link', 'year_link', 'month_link', 'day_link' ) as $filter ) {
@@ -70,7 +70,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 		add_action( 'wp_head', array( $this, 'wp_head' ), 1 );
 
 		// Modifies the home url
-		if ( lmat_get_constant( 'LMAT_FILTER_HOME_URL', true ) ) {
+		if ( linguator_get_constant( 'LINGUATOR_FILTER_HOME_URL', true ) ) {
 			add_filter( 'home_url', array( $this, 'home_url' ), 10, 2 );
 		}
 

@@ -19,16 +19,16 @@ use WP_Term;
  *
  *  
  */
-class LMAT_Frontend_Auto_Translate {
+class Linguator_Frontend_Auto_Translate {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -43,7 +43,7 @@ class LMAT_Frontend_Auto_Translate {
 		$this->model = &$linguator->model;
 		$this->curlang = &$linguator->curlang;
 
-		add_action( 'parse_query', array( $this, 'translate_included_ids_in_query' ), 100 ); // After all Linguator filters.
+		add_action( 'parse_query', array( $this, 'linguator_translate_included_ids_in_query' ), 100 ); // After all Linguator filters.
 		add_filter( 'get_terms_args', array( $this, 'get_terms_args' ), 20, 2 );
 	}
 
@@ -83,7 +83,7 @@ class LMAT_Frontend_Auto_Translate {
 	 * @param WP_Query $query WP_Query object
 	 * @return void
 	 */
-	public function translate_included_ids_in_query( $query ) {
+	public function linguator_translate_included_ids_in_query( $query ) {
 		global $wpdb;
 		$qv = &$query->query_vars;
 
@@ -108,7 +108,7 @@ class LMAT_Frontend_Auto_Translate {
 		$arr = array();
 		if ( ! empty( $qv['category_name'] ) ) {
 			foreach ( explode( ',', $qv['category_name'] ) as $slug ) {
-				$arr[] = $this->get_translated_term_by( 'slug', $slug, 'category' );
+				$arr[] = $this->linguator_get_translated_term_by( 'slug', $slug, 'category' );
 			}
 
 			$qv['category_name'] = implode( ',', $arr );
@@ -127,7 +127,7 @@ class LMAT_Frontend_Auto_Translate {
 
 		// Tag
 		if ( ! empty( $qv['tag'] ) ) {
-			$qv['tag'] = $this->translate_terms_list( $qv['tag'], 'post_tag' );
+			$qv['tag'] = $this->linguator_translate_terms_list( $qv['tag'], 'post_tag' );
 		}
 
 		// tag_id can only take one id
@@ -140,7 +140,7 @@ class LMAT_Frontend_Auto_Translate {
 			$arr = array();
 			if ( ! empty( $qv[ $key ] ) ) {
 				foreach ( $qv[ $key ] as $slug ) {
-					$arr[] = $this->get_translated_term_by( 'slug', $slug, 'post_tag' );
+					$arr[] = $this->linguator_get_translated_term_by( 'slug', $slug, 'post_tag' );
 				}
 
 				$qv[ $key ] = $arr;
@@ -151,14 +151,14 @@ class LMAT_Frontend_Auto_Translate {
 		foreach ( array_intersect( $this->model->get_translated_taxonomies(), get_taxonomies( array( '_builtin' => false ) ) ) as $taxonomy ) {
 			$tax = get_taxonomy( $taxonomy );
 			if ( ! empty( $tax ) && ! empty( $tax->query_var ) && ! empty( $qv[ $tax->query_var ] ) ) {
-				$qv[ $tax->query_var ] = $this->translate_terms_list( $qv[ $tax->query_var ], $taxonomy );
+				$qv[ $tax->query_var ] = $this->linguator_translate_terms_list( $qv[ $tax->query_var ], $taxonomy );
 			}
 		}
 
 		// Tax_query since WP 3.1
 		if ( ! empty( $qv['tax_query'] ) && is_array( $qv['tax_query'] ) ) {
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Intentionally using tax_query here to fetch posts associated with a term and all its translations, which is critical for correct multilingual syncing. No performant or reliable alternative exists in core WP for this multilingual logic; this is required for accurate results across languages.
-			$qv['tax_query'] = $this->translate_tax_query_recursive( $qv['tax_query'] );
+			$qv['tax_query'] = $this->linguator_translate_tax_query_recursive( $qv['tax_query'] );
 		}
 
 		// p, page_id, post_parent can only take one id
@@ -253,7 +253,7 @@ class LMAT_Frontend_Auto_Translate {
 	 * @param array $tax_queries An array of tax queries.
 	 * @return array Translated tax queries.
 	 */
-	protected function translate_tax_query_recursive( $tax_queries ) {
+	protected function linguator_translate_tax_query_recursive( $tax_queries ) {
 		foreach ( $tax_queries as $key => $q ) {
 			if ( ! is_array( $q ) ) {
 				continue;
@@ -263,13 +263,13 @@ class LMAT_Frontend_Auto_Translate {
 				$arr = array();
 				$field = isset( $q['field'] ) && in_array( $q['field'], array( 'slug', 'name' ) ) ? $q['field'] : 'term_id';
 				foreach ( (array) $q['terms'] as $t ) {
-					$arr[] = $this->get_translated_term_by( $field, $t, $q['taxonomy'] );
+					$arr[] = $this->linguator_get_translated_term_by( $field, $t, $q['taxonomy'] );
 				}
 
 				$tax_queries[ $key ]['terms'] = $arr;
 			} else {
 				// Nested queries.
-				$tax_queries[ $key ] = $this->translate_tax_query_recursive( $q );
+				$tax_queries[ $key ] = $this->linguator_translate_tax_query_recursive( $q );
 			}
 		}
 
@@ -286,7 +286,7 @@ class LMAT_Frontend_Auto_Translate {
 	 * @param string     $taxonomy Taxonomy name.
 	 * @return string|int Translated term slug, name, term_id or term_taxonomy_id
 	 */
-	protected function get_translated_term_by( $field, $term, $taxonomy ) {
+	protected function linguator_get_translated_term_by( $field, $term, $taxonomy ) {
 		if ( 'term_id' === $field ) {
 			if ( $tr_id = $this->get_term( $term ) ) {
 				return $tr_id;
@@ -319,7 +319,7 @@ class LMAT_Frontend_Auto_Translate {
 	 * @param string          $taxonomy  The taxonomy for terms.
 	 * @return string|string[] The translated list.
 	 */
-	protected function translate_terms_list( $query_var, $taxonomy ) {
+	protected function linguator_translate_terms_list( $query_var, $taxonomy ) {
 		$slugs = array();
 
 		if ( is_array( $query_var ) ) {
@@ -334,7 +334,7 @@ class LMAT_Frontend_Auto_Translate {
 				// We got an unexpected query var, let return it unchanged.
 				return $query_var;
 			}
-			$slug = $this->get_translated_term_by( 'slug', $slug, $taxonomy );
+			$slug = $this->linguator_get_translated_term_by( 'slug', $slug, $taxonomy );
 		}
 
 		if ( ! empty( $sep ) ) {

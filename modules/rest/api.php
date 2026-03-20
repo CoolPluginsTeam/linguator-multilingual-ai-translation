@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Other\Linguator_Model;
 
 
 
@@ -41,7 +41,7 @@ class API {
 	public $bulk_translate;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	private $model;
 
@@ -50,9 +50,9 @@ class API {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model Linguator's model.
+	 * @param Linguator_Model $model Linguator's model.
 	 */
-	public function __construct( LMAT_Model $model ) {
+	public function __construct( Linguator_Model $model ) {
 		$this->model = $model;
 	}
 

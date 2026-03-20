@@ -15,7 +15,7 @@ namespace Linguator\Install;
  *
  * @since 0.0.8
  */
-class LMAT_Deactivate extends LMAT_Abstract_Deactivate {
+class Linguator_Deactivate extends Linguator_Abstract_Deactivate {
 	/**
 	 * Runs tasks needed when the plugin is deactivated.
 	 *
@@ -30,3 +30,4 @@ class LMAT_Deactivate extends LMAT_Abstract_Deactivate {
 		wp_clear_scheduled_hook('lmat_extra_data_update');
 	}
 }
+

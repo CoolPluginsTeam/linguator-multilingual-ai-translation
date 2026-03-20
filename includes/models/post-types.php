@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Models\Translated\LMAT_Translated_Post;
+use Linguator\Includes\Models\Translated\Linguator_Translated_Post;
 
 
 /**
@@ -23,7 +23,7 @@ class Post_Types {
 	/**
 	 * Translated post model.
 	 *
-	 * @var LMAT_Translated_Post
+	 * @var Linguator_Translated_Post
 	 */
 	public $translated_object;
 
@@ -32,9 +32,9 @@ class Post_Types {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Translated_Post $translated_object Posts model.
+	 * @param Linguator_Translated_Post $translated_object Posts model.
 	 */
-	public function __construct( LMAT_Translated_Post $translated_object ) {
+	public function __construct( Linguator_Translated_Post $translated_object ) {
 		$this->translated_object = $translated_object;
 	}
 

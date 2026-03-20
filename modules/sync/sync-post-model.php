@@ -1,11 +1,12 @@
 <?php
-/**
- * @package Linguator
- */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+/**
+ * @package Linguator
+ */
 
 use Linguator\Custom_Fields\Custom_Fields;
 
@@ -14,7 +15,7 @@ use Linguator\Custom_Fields\Custom_Fields;
  *
  *  
  */
-class LMAT_Sync_Post_Model {
+class Linguator_Sync_Post_Model {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -23,17 +24,17 @@ class LMAT_Sync_Post_Model {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * @var LMAT_Sync
+	 * @var Linguator_Sync
 	 */
 	public $sync;
 
 	/**
-	 * @var LMAT_Sync_Content
+	 * @var Linguator_Sync_Content
 	 */
 	public $sync_content;
 
@@ -55,7 +56,7 @@ class LMAT_Sync_Post_Model {
 		$this->options      = &$linguator->options;
 		$this->model        = &$linguator->model;
 		$this->sync         = &$linguator->sync;
-		$this->sync_content = new LMAT_Sync_Post($linguator);
+		$this->sync_content = new Linguator_Sync_Post($linguator);
 
 		add_filter( 'lmat_copy_taxonomies', array( $this, 'copy_taxonomies' ), 5, 4 );
 		add_filter( 'lmat_copy_post_metas', array( $this, 'copy_post_metas' ), 5, 4 );
@@ -132,7 +133,7 @@ class LMAT_Sync_Post_Model {
 		
 		if(isset($post_data['post_content'])){
 			
-			$filtered_post_content=lmat_replace_links_with_translations($tr_post->post_content, $target_language, $source_language);
+			$filtered_post_content=linguator_replace_links_with_translations($tr_post->post_content, $target_language, $source_language);
 			
 			$default_allowed_tags=wp_kses_allowed_html('post');
 			
@@ -165,13 +166,13 @@ class LMAT_Sync_Post_Model {
             $allowed_tags=apply_filters('lmat/bulk_translation/allowed_tags', array_merge($default_allowed_tags, $existing_allowed_tags));
                 
             // Add the filter to allow the flex styles
-            add_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
+            add_filter( 'safe_style_css', array($this, 'linguator_allow_flex_styles'), 10, 1 );
 			
             // Apply the allowed tags
 			$filtered_post_content=wp_kses($filtered_post_content, $allowed_tags);
 			
             // Remove the filter to allow the flex styles
-            remove_filter( 'safe_style_css', array($this, 'lmat_allow_flex_styles'), 10, 1 );
+            remove_filter( 'safe_style_css', array($this, 'linguator_allow_flex_styles'), 10, 1 );
 			
 			$tr_post->post_content=$filtered_post_content;
 		}
@@ -284,7 +285,7 @@ class LMAT_Sync_Post_Model {
 		
 		$tr_post = array_intersect_key( (array) $tr_post, $columns );
 		
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update( $wpdb->posts, $tr_post, array( 'ID' => (int) $tr_id ) ); // Don't use wp_update_post to avoid conflict (reverse sync).
 		clean_post_cache( $tr_id );
 
@@ -540,11 +541,11 @@ class LMAT_Sync_Post_Model {
 		return $tags;
 	}
 
-	public function lmat_allow_flex_styles($styles){
-	   return $this->lmat_allow_flex_styles_callback($styles);
+	public function linguator_allow_flex_styles($styles){
+	   return $this->linguator_allow_flex_styles_callback($styles);
 	}
 
-	private function lmat_allow_flex_styles_callback($styles){
+	private function linguator_allow_flex_styles_callback($styles){
 		// Define the extra CSS properties you want to allow
 		$extra_allowed = [
 			'display',
@@ -560,3 +561,4 @@ class LMAT_Sync_Post_Model {
 		return $allowed_styles;
 	}
 }
+

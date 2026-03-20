@@ -251,7 +251,7 @@ jQuery(function ($) {
           // close only if there is no error
           case 'error':
             $('.settings-error').remove(); // remove previous messages if any
-            // The data comes from `lmat_add_notice()`, where message are passed through `wp_kses()`.
+            // The data comes from `linguator_add_notice()`, where message are passed through `wp_kses()`.
             $('h1').after(this.data); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after
 
             // Make notices dismissible

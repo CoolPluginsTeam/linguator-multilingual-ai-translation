@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Base\LMAT_Base;
-use Linguator\Includes\Services\Links\LMAT_Links;
-use Linguator\Includes\Filters\LMAT_Filters_Links;
-use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Admin\Controllers\LMAT_Admin_Links;
+use Linguator\Includes\Base\Linguator_Base;
+use Linguator\Includes\Services\Links\Linguator_Links;
+use Linguator\Includes\Filters\Linguator_Filters_Links;
+use Linguator\Includes\Filters\Linguator_Filters_Widgets_Options;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Admin\Controllers\Linguator_Admin_Links;
 use WP_Post;
 use WP_Term;
 
@@ -25,7 +25,7 @@ use WP_Term;
 
  */
 #[AllowDynamicProperties]
-abstract class LMAT_Admin_Base extends LMAT_Base {
+abstract class Linguator_Admin_Base extends Linguator_Base {
 	/**
 	 * @since 0.0.8
 	 */
@@ -34,46 +34,46 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Current language (used to filter the content).
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
 	/**
 	 * Language selected in the admin language filter.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $filter_lang;
 
 	/**
 	 * Preferred language to assign to new contents.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $pref_lang;
 
 	/**
-	 * @var LMAT_Filters_Links|null
+	 * @var Linguator_Filters_Links|null
 	 */
 	public $filters_links;
 
 	/**
-	 * @var LMAT_Admin_Links|null
+	 * @var Linguator_Admin_Links|null
 	 */
 	public $links;
 
 	/**
-	 * @var LMAT_Admin_Notices|null
+	 * @var Linguator_Admin_Notices|null
 	 */
 	public $notices;
 
 	/**
-	 * @var LMAT_Admin_Static_Pages|null
+	 * @var Linguator_Admin_Static_Pages|null
 	 */
 	public $static_pages;
 
 	/**
-	 * @var LMAT_Admin_Default_Term|null
+	 * @var Linguator_Admin_Default_Term|null
 	 */
 	public $default_term;
 
@@ -81,21 +81,21 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * Setups actions needed on all admin pages.
 	 *
 	 *
-	 * @param LMAT_Links_Model $links_model Reference to the links model.
+	 * @param Linguator_Links_Model $links_model Reference to the links model.
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
 		// Adds the link to the languages panel in the WordPress admin menu
-		add_action( 'admin_menu', array( $this, 'add_menus' ) );
+		add_action( 'admin_menu', array( $this, 'linguator_add_menus' ) );
 
-		add_action( 'admin_menu', array( $this, 'remove_customize_submenu' ) );
+		add_action( 'admin_menu', array( $this, 'linguator_remove_customize_submenu' ) );
 
 		// Setup js scripts and css styles
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 0 ); // High priority in case an ajax request is sent by an immediately invoked function
 
-		add_action( 'customize_controls_enqueue_scripts', array( $this, 'customize_controls_enqueue_scripts' ) );
+		add_action( 'customize_controls_enqueue_scripts', array( $this, 'linguator_customize_controls_enqueue_scripts' ) );
 		// Early instantiated to be able to correctly initialize language properties.
-		$this->static_pages = new LMAT_Admin_Static_Pages( $this );
+		$this->static_pages = new Linguator_Admin_Static_Pages( $this );
 		$this->model->set_languages_ready();
 	}
 
@@ -108,24 +108,24 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	public function init() {
 		parent::init();
 
-		$this->notices = new LMAT_Admin_Notices( $this );
+		$this->notices = new Linguator_Admin_Notices( $this );
 
-		$this->default_term = new LMAT_Admin_Default_Term( $this );
+		$this->default_term = new Linguator_Admin_Default_Term( $this );
 		$this->default_term->add_hooks();
 
 		if ( ! $this->model->has_languages() ) {
 			return;
 		}
 
-		$this->links = new LMAT_Admin_Links( $this );
-		$this->filters_links = new LMAT_Filters_Links( $this );
+		$this->links = new Linguator_Admin_Links( $this );
+		$this->filters_links = new Linguator_Filters_Links( $this );
 
 		// Add view language links
-		new LMAT_Admin_View_Language_Links();
+		new Linguator_Admin_View_Language_Links();
 
 		// Filter admin language for users
 		// We must not call user info before WordPress defines user roles in wp-settings.php
-		add_action( 'setup_theme', array( $this, 'init_user' ) );
+		add_action( 'setup_theme', array( $this, 'linguator_init_user' ) );
 		add_filter( 'request', array( $this, 'request' ) );
 
 		// Adds the languages in admin bar
@@ -139,17 +139,15 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function add_menus(): void {
-		global $admin_page_hooks;
-
+	public function linguator_add_menus(): void {
 		global $admin_page_hooks;
 
 		$parent    = '';
 		$first_tab = '';
 
-		foreach ( $this->get_menu_items() as $tab => $title ) {
-			$page = self::get_screen_slug( $tab );
-			$capa = $this->get_menu_capability( $tab );
+		foreach ( $this->linguator_get_menu_items() as $tab => $title ) {
+			$page = self::linguator_get_screen_slug( $tab );
+			$capa = $this->linguator_get_menu_capability( $tab );
 
 			if ( empty( $parent ) ) {
 				$parent    = $page;
@@ -233,6 +231,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	/**
 	 * Dummy method to display the 3 tabs pages: languages, strings translations, settings.
 	 * Overwritten in `LMAT_Settings`.
+	 * Overwritten in `Linguator_Settings`.
 	 *
 	 *  
 	 *
@@ -257,7 +256,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		wp_enqueue_script( 'lmat_admin', plugins_url( "admin/assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
-		$inline_script = sprintf( 'let lmat_admin = %s;', wp_json_encode( array( 'ajax_filter' => $this->get_ajax_filter_data() ) ) );
+		$inline_script = sprintf( 'let lmat_admin = %s;', wp_json_encode( array( 'ajax_filter' => $this->linguator_get_ajax_filter_data() ) ) );
 		wp_add_inline_script( 'lmat_admin', $inline_script, 'before' );
 
 		$screen = get_current_screen();
@@ -319,7 +318,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		$this->enqueue_linguator_font();
 
 		$this->add_inline_scripts();
-		$this->add_menu_redirect_script();
+		$this->linguator_add_menu_redirect_script();
 	}
 
 	/**
@@ -363,7 +362,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	private function add_menu_redirect_script() {
+	private function linguator_add_menu_redirect_script() {
 		$script = "
 		jQuery(document).ready(function($) {
 			// Find the main Linguator menu link (the one that points to the first submenu)
@@ -391,7 +390,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @return bool True if the screen is a block editor, false otherwise.
 	 */
 	protected function is_block_editor( $screen ) {
-		return method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() && !lmat_use_block_editor_plugin();
+		return method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor() && !linguator_use_block_editor_plugin();
 	}
 
 	/**
@@ -401,7 +400,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function customize_controls_enqueue_scripts() {
+	public function linguator_customize_controls_enqueue_scripts() {
 		if ( $this->model->has_languages() ) {
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			wp_enqueue_script( 'lmat_widgets', plugins_url( 'admin/assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
@@ -449,7 +448,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return array
 	 */
-	public function get_ajax_filter_data(): array {
+	public function linguator_get_ajax_filter_data(): array {
 		global $post, $tag;
 
 		$params = array( 'lmat_ajax_backend' => 1 );
@@ -478,26 +477,26 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function set_current_language() {
+	public function linguator_set_current_language() {
 		$this->curlang = $this->filter_lang;
 
 		// Edit Post
-		if ( isset( $_REQUEST['lmat_post_id'] ) && $lang = $this->model->post->get_language( (int) $_REQUEST['lmat_post_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( isset( $_REQUEST['lmat_post_id'] ) && $lang = $this->model->post->get_language( absint( wp_unslash( $_REQUEST['lmat_post_id'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->curlang = $lang;
-		} elseif ( 'post.php' === $GLOBALS['pagenow'] && isset( $_GET['post'] ) && $this->model->is_translated_post_type( get_post_type( (int) $_GET['post'] ) ) && $lang = $this->model->post->get_language( (int) $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		} elseif ( 'post.php' === $GLOBALS['pagenow'] && isset( $_GET['post'] ) && $this->model->is_translated_post_type( get_post_type( absint( wp_unslash( $_GET['post'] ) ) ) ) && $lang = $this->model->post->get_language( absint( wp_unslash( $_GET['post'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->curlang = $lang;
-		} elseif ( 'post-new.php' === $GLOBALS['pagenow'] && ( empty( $_GET['post_type'] ) || $this->model->is_translated_post_type( sanitize_key( $_GET['post_type'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->curlang = empty( $_GET['new_lang'] ) ? $this->pref_lang : $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		} elseif ( 'post-new.php' === $GLOBALS['pagenow'] && ( empty( $_GET['post_type'] ) || $this->model->is_translated_post_type( sanitize_key( wp_unslash( $_GET['post_type'] ) ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$this->curlang = empty( $_GET['new_lang'] ) ? $this->pref_lang : $this->model->get_language( sanitize_key( wp_unslash( $_GET['new_lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		// Edit Term
-		elseif ( isset( $_REQUEST['lmat_term_id'] ) && $lang = $this->model->term->get_language( (int) $_REQUEST['lmat_term_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		elseif ( isset( $_REQUEST['lmat_term_id'] ) && $lang = $this->model->term->get_language( absint( wp_unslash( $_REQUEST['lmat_term_id'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->curlang = $lang;
-		} elseif ( in_array( $GLOBALS['pagenow'], array( 'edit-tags.php', 'term.php' ) ) && isset( $_GET['taxonomy'] ) && $this->model->is_translated_taxonomy( sanitize_key( $_GET['taxonomy'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			if ( isset( $_GET['tag_ID'] ) && $lang = $this->model->term->get_language( (int) $_GET['tag_ID'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		} elseif ( in_array( $GLOBALS['pagenow'], array( 'edit-tags.php', 'term.php' ) ) && isset( $_GET['taxonomy'] ) && $this->model->is_translated_taxonomy( sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['tag_ID'] ) && $lang = $this->model->term->get_language( absint( wp_unslash( $_GET['tag_ID'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$this->curlang = $lang;
 			} elseif ( ! empty( $_GET['new_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$this->curlang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$this->curlang = $this->model->get_language( sanitize_key( wp_unslash( $_GET['new_lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			} elseif ( empty( $this->curlang ) ) {
 				$this->curlang = $this->pref_lang;
 			}
@@ -505,7 +504,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		// Ajax
 		if ( wp_doing_ajax() && ! empty( $_REQUEST['lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->curlang = $this->model->get_language( sanitize_key( $_REQUEST['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$this->curlang = $this->model->get_language( sanitize_key( wp_unslash( $_REQUEST['lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		/**
@@ -513,13 +512,13 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		 *
 		 *  
 		 *
-		 * @param LMAT_Language|false|null $curlang  Instance of the current language.
-		 * @param LMAT_Admin_Base          $linguator Instance of the main Linguator's object.
+		 * @param Linguator_Language|false|null $curlang  Instance of the current language.
+		 * @param Linguator_Admin_Base          $linguator Instance of the main Linguator's object.
 		 */
 		$this->curlang = apply_filters( 'lmat_admin_current_language', $this->curlang, $this );
 
 		// Inform that the admin language has been set.
-		if ( $this->curlang instanceof LMAT_Language ) {
+		if ( $this->curlang instanceof Linguator_Language ) {
 			/** This action is documented in frontend/choose-lang.php */
 			do_action( 'lmat_language_defined', $this->curlang->slug, $this->curlang );
 		} else {
@@ -535,15 +534,15 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function init_user() {
+	public function linguator_init_user() {
 		// Language for admin language filter: may be empty
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
 		// We intentionally don't use a nonce to update the language filter
 		// Don't update global filter when editing posts or terms (post.php, term.php)
 		$is_edit_page = in_array( $GLOBALS['pagenow'], array( 'post.php', 'term.php' ) );
 		
-		if ( ! wp_doing_ajax() && ! empty( $_GET['lang'] ) && ! is_numeric( sanitize_key( $_GET['lang'] ) ) && ! $is_edit_page && current_user_can( 'edit_user', $user_id = get_current_user_id() ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			update_user_meta( $user_id, 'lmat_filter_content', ( $lang = $this->model->get_language( sanitize_key( $_GET['lang'] ) ) ) ? $lang->slug : '' ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! wp_doing_ajax() && ! empty( $_GET['lang'] ) && ! is_numeric( sanitize_key( wp_unslash( $_GET['lang'] ) ) ) && ! $is_edit_page && current_user_can( 'edit_user', $user_id = get_current_user_id() ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			update_user_meta( $user_id, 'lmat_filter_content', ( $lang = $this->model->get_language( sanitize_key( wp_unslash( $_GET['lang'] ) ) ) ) ? $lang->slug : '' ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		$this->filter_lang = $this->model->get_language( get_user_meta( get_current_user_id(), 'lmat_filter_content', true ) );
@@ -557,11 +556,11 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		 *
 		 *  
 		 *
-		 * @param LMAT_Language $pref_lang Preferred language.
+		 * @param Linguator_Language $pref_lang Preferred language.
 		 */
 		$this->pref_lang = apply_filters( 'lmat_admin_preferred_language', $this->pref_lang );
 
-		$this->set_current_language();
+		$this->linguator_set_current_language();
 	}
 
 	/**
@@ -602,15 +601,14 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 
 		$title = sprintf(
 			'<span class="ab-label"%1$s><span class="screen-reader-text">%2$s</span>%3$s</span>',
-			$selected instanceof LMAT_Language ? sprintf( ' lang="%s"', esc_attr( $selected->get_locale( 'display' ) ) ) : '',
-			__( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
+			$selected instanceof Linguator_Language ? sprintf( ' lang="%s"', esc_attr( $selected->get_locale( 'display' ) ) ) : '',
 			esc_html( $selected->name )
 		);
 
 		$all_items = array_merge( array( $all_item ), $this->model->get_languages_list() );
 		$items     = $all_items;
 
-		if ( $this->should_hide_admin_bar_menu() ) {
+		if ( $this->linguator_should_hide_admin_bar_menu() ) {
 			$items = array();
 		}
 
@@ -629,7 +627,14 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 		$wp_admin_bar->add_menu(
 			array(
 				'id'    => 'languages',
-				'title' => $selected->flag . $title,
+				'title' => wp_kses(
+					(string) $selected->flag,
+					array(
+						'img'  => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true, 'decoding' => true, 'loading' => true, 'title' => true ),
+						'span' => array( 'class' => true, 'style' => true ),
+					),
+					array_merge( wp_allowed_protocols(), array( 'data' ) )
+				) . $title,
 				'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
 				'meta'  => array(
 					'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
@@ -666,8 +671,8 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function remove_customize_submenu() {
-		if ( ! $this->should_customize_menu_be_removed() ) {
+	public function linguator_remove_customize_submenu() {
+		if ( ! $this->linguator_should_customize_menu_be_removed() ) {
 			return;
 		}
 
@@ -688,7 +693,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @return bool
 	 */
-	public function should_hide_admin_bar_menu(): bool {
+	public function linguator_should_hide_admin_bar_menu(): bool {
 		global $pagenow, $typenow, $taxnow;
 
 		if ( in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
@@ -711,7 +716,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @return string
 	 */
 	public static function get_screen_id( string $tab ): string {
-		return sprintf( '%s_page_%s', self::SCREEN_PREFIX, self::get_screen_slug( $tab ) );
+		return sprintf( '%s_page_%s', self::SCREEN_PREFIX, self::linguator_get_screen_slug( $tab ) );
 	}
 
 	/**
@@ -722,7 +727,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @param string $tab The name of the screen (`lang`, `strings`, `settings`).
 	 * @return string
 	 */
-	public static function get_screen_slug( string $tab ): string {
+	public static function linguator_get_screen_slug( string $tab ): string {
 		return 'lang' === $tab ? 'lmat' : "lmat_$tab";
 	}
 
@@ -735,7 +740,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 *
 	 * @phpstan-return array<non-empty-string, string>
 	 */
-	protected function get_menu_items(): array {
+	protected function linguator_get_menu_items(): array {
 		$tabs = array(
 			'lang' => __( 'Manage Languages', 'linguator-multilingual-ai-translation' ),
 		);
@@ -762,7 +767,7 @@ abstract class LMAT_Admin_Base extends LMAT_Base {
 	 * @param string $menu Menu slug.
 	 * @return string
 	 */
-	protected function get_menu_capability( string $menu ): string {
+	protected function linguator_get_menu_capability( string $menu ): string {
 		switch ( $menu ) {
 			case 'lang':
 				return Capabilities::LANGUAGES;

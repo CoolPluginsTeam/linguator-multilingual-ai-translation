@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
+class Linguator_Sitemaps extends Linguator_Abstract_Sitemaps {
 	/**
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	protected $links_model;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -122,8 +122,9 @@ class LMAT_Sitemaps extends LMAT_Abstract_Sitemaps {
 	 */
 	public function replace_provider( $provider ) {
 		if ( $provider instanceof WP_Sitemaps_Provider ) {
-			$provider = new LMAT_Multilingual_Sitemaps_Provider( $provider, $this->links_model );
+			$provider = new Linguator_Multilingual_Sitemaps_Provider( $provider, $this->links_model );
 		}
 		return $provider;
 	}
 }
+

@@ -298,27 +298,32 @@ const TranslationRow = ( { row } ) => {
 
     const loadAllPages = useCallback(async () => {
         if (loadingPages || allPages.length > 0) return;
+        // Only load pages if we have a language
+        if (!lang?.slug) return;
         try {
             setLoadingPages(true);
-            const pages = await apiFetch({ path: '/lmat/v1/languages/utils/get_all_pages_data' });
+            // Pass language parameter to get only pages in the same language
+            const pages = await apiFetch({ 
+                path: `/lmat/v1/languages/utils/get_all_pages_data?lang=${lang.slug}` 
+            });
             setAllPages(Array.isArray(pages) ? pages : []);
         } catch (e) {
             // ignore
         } finally {
             setLoadingPages(false);
         }
-    }, [loadingPages, allPages.length]);
+    }, [loadingPages, allPages.length, lang?.slug]);
 
     const computeSuggestions = useCallback((query) => {
         const q = (query || '').trim().toLowerCase();
         if (!q) return [];
+        // No need to check sameLang since server already filters by language
         return allPages.filter((p) => {
-            const sameLang = p?.language?.slug === lang?.slug;
             const unlinked = !p?.is_linked;
             const matches = (p?.title || '').toLowerCase().includes(q) || (p?.slug || '').toLowerCase().includes(q);
-            return sameLang && unlinked && matches;
+            return unlinked && matches;
         }).slice(0, 10);
-    }, [allPages, lang?.slug]);
+    }, [allPages]);
 
     const handleTitleChange = (val) => {
         setTitle(val);

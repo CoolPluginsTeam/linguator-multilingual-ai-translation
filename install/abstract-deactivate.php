@@ -14,7 +14,7 @@ namespace Linguator\Install;
  *
  * @since 0.0.8
  */
-abstract class LMAT_Abstract_Deactivate extends LMAT_Abstract_Activable {
+abstract class Linguator_Abstract_Deactivate extends Linguator_Abstract_Activable {
 	/**
 	 * Register the deactivation hook so WordPress will call our code when the plugin is turned off.
 	 *
@@ -38,3 +38,4 @@ abstract class LMAT_Abstract_Deactivate extends LMAT_Abstract_Activable {
 		return isset( $_GET['action'], $_GET['plugin'] ) && 'deactivate' === $_GET['action'] && static::get_plugin_basename() === $_GET['plugin']; // phpcs:ignore WordPress.Security.NonceVerification
 	}
 }
+

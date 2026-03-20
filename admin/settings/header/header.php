@@ -79,7 +79,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 
 			// Check if Polylang data exists in database (works even if plugin is deactivated)
 			// Check for 'language' taxonomy terms directly in database
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct DB query is required here because WordPress core does not provide an efficient or native way to fetch all objects (posts/terms/etc) that do NOT have a language assigned (i.e., not related to any language term_taxonomy_id) in bulk. This negative relationship cannot be expressed using get_terms()/wp_get_object_terms(), especially when type filtering is needed. Using a raw query here ensures both performance and compatibility.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$polylang_languages_count = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",

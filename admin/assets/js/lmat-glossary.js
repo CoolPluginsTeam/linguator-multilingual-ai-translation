@@ -201,8 +201,7 @@ jQuery(document).ready(function($) {
         const safeSourceLang = typeof source_lang === 'string' ? source_lang : '';
 
         try {
-            const $templateScript = $('#lmat-glossary-edit-row-template');
-            const templateHtml = $templateScript.length ? $templateScript.html() : '';
+            const templateHtml = (typeof lmat_glossary !== 'undefined' && lmat_glossary.edit_row_template) ? lmat_glossary.edit_row_template : '';
 
             if (!templateHtml) {
                 console.error('Template not found or empty');

@@ -6,7 +6,7 @@
 namespace Linguator\Includes\Models;
 
 use Linguator\Includes\Models\Languages_Proxy_Interface;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 /**
  * This class helps to hide the default language from a list of languages.
@@ -29,8 +29,8 @@ class Hide_Default implements Languages_Proxy_Interface {
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param \LMAT_Language[] $languages List of languages you want to filter.
-	 * @return \LMAT_Language[] The result list, with the default language removed.
+	 * @param \Linguator_Language[] $languages List of languages you want to filter.
+	 * @return \Linguator_Language[] The result list, with the default language removed.
 	 */
 	public function filter( array $languages ): array {
 		// Go through each language and keep only the ones that are not set as default

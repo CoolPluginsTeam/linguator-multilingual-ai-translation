@@ -8,9 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Admin\Controllers\LMAT_Admin_Filters_Post_Base;
-use Linguator\Admin\Controllers\LMAT_Language;
-use Linguator\Includes\Other\LMAT_Query;
+use Linguator\Admin\Controllers\Linguator_Admin_Filters_Post_Base;
+use Linguator\Admin\Controllers\Linguator_Language;
+use Linguator\Includes\Other\Linguator_Query;
 use Linguator\Includes\Capabilities\User;
 
 /**
@@ -18,11 +18,11 @@ use Linguator\Includes\Capabilities\User;
  *
  *  
  */
-class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
+class Linguator_Admin_Filters_Post extends Linguator_Admin_Filters_Post_Base {
 	/**
 	 * Current language (used to filter the content).
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -44,14 +44,14 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 
 		// Adds actions and filters related to languages when creating, saving or deleting posts and pages
 		add_action( 'load-post.php', array( $this, 'edit_post' ) );
-		add_action( 'load-edit.php', array( $this, 'bulk_edit_posts' ) );
-		add_action( 'wp_ajax_inline-save', array( $this, 'inline_edit_post' ), 0 ); // Before WordPress
+		add_action( 'load-edit.php', array( $this, 'linguator_bulk_edit_posts' ) );
+		add_action( 'wp_ajax_inline-save', array( $this, 'linguator_inline_edit_post' ), 0 ); // Before WordPress
 
 		// Sets the language in Tiny MCE
-		add_filter( 'tiny_mce_before_init', array( $this, 'tiny_mce_before_init' ) );
+		add_filter( 'tiny_mce_before_init', array( $this, 'linguator_tiny_mce_before_init' ) );
 
 		// Add lang parameter to WordPress default edit links
-		add_filter( 'get_edit_post_link', array( $this, 'add_lang_to_edit_post_link' ), 10, 3 );
+		add_filter( 'get_edit_post_link', array( $this, 'linguator_add_lang_to_edit_post_link' ), 10, 3 );
 	}
 
 	/**
@@ -130,8 +130,8 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	 * @return void
 	 */
 	public function parse_query( $query ) {
-		$lmat_query = new LMAT_Query( $query, $this->model );
-		$lmat_query->filter_query( $this->curlang );
+		$linguator_query = new Linguator_Query( $query, $this->model );
+		$linguator_query->filter_query( $this->curlang );
 	}
 
 	/**
@@ -148,7 +148,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 
 			check_admin_referer( 'lmat_language', '_lmat_nonce' );
 
-			$post_id = (int) $_POST['post_ID'];
+			$post_id = absint( wp_unslash( $_POST['post_ID'] ) );
 			$post = get_post( $post_id );
 
 			if ( empty( $post ) ) {
@@ -166,7 +166,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 				return;
 			}
 
-			$language = $this->model->get_language( sanitize_key( $_POST['post_lang_choice'] ) );
+			$language = $this->model->get_language( sanitize_key( wp_unslash( $_POST['post_lang_choice'] ) ) );
 
 			if ( empty( $language ) ) {
 				return;
@@ -180,7 +180,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 				return;
 			}
 
-			$this->save_translations( $post_id, array_map( 'absint', $_POST['post_tr_lang'] ) );
+			$this->save_translations( $post_id, array_map( 'absint', wp_unslash( $_POST['post_tr_lang'] ) ) );
 	}
 
 	/**
@@ -190,20 +190,25 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	 *
 	 * @return void
 	 */
-	public function bulk_edit_posts() {
+	public function linguator_bulk_edit_posts() {
 		if ( ! isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['post'], $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
 
-		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-posts' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-posts' ) ) {
 			return;
 		}
 
-		if ( -1 === $_GET['inline_lang_choice'] ) {
+		$inline_lang_choice = isset( $_GET['inline_lang_choice'] ) 
+		? absint( wp_unslash( $_GET['inline_lang_choice'] ) ) 
+		: 0;
+
+
+		if ( -1 === $inline_lang_choice ) {
 			return;
 		}
 
-		$language = $this->model->get_language( sanitize_key( $_GET['inline_lang_choice'] ) );
+		$language = $this->model->get_language( sanitize_key( wp_unslash( $_GET['inline_lang_choice'] ) ) );
 
 		if ( empty( $language ) ) {
 			return;
@@ -212,7 +217,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 		$user = new User();
 		$user->can_translate_or_die( $language );
 
-		$post_ids = array_map( 'intval', (array) $_REQUEST['post'] );
+		$post_ids = array_map( 'intval', (array) wp_unslash( $_REQUEST['post'] ) );
 		foreach ( $post_ids as $post_id ) {
 			if ( $user->has_cap( 'edit_post', $post_id ) ) {
 				$this->model->post->set_language( $post_id, $language );
@@ -227,16 +232,16 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	 *
 	 * @return void
 	 */
-	public function inline_edit_post() {
+	public function linguator_inline_edit_post() {
 		if ( ! isset( $_POST['post_ID'], $_POST['inline_lang_choice'], $_REQUEST['_inline_edit'] ) ) {
 			return;
 		}
 
-		if ( ! isset( $_REQUEST['_inline_edit'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_inline_edit'] ) ), 'inlineeditnonce' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_inline_edit'] ) ), 'inlineeditnonce' ) ) {
 			return;
 		}
 
-		$language = $this->model->get_language( sanitize_key( $_POST['inline_lang_choice'] ) );
+		$language = $this->model->get_language( sanitize_key( wp_unslash( $_POST['inline_lang_choice'] ) ) );
 
 		if ( empty( $language ) ) {
 			return;
@@ -245,7 +250,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 		$user = new User();
 		$user->can_translate_or_die( $language );
 
-		$post_id = (int) $_POST['post_ID'];
+		$post_id = absint( wp_unslash( $_POST['post_ID'] ) );
 
 		if ( ! $post_id || ! $user->has_cap( 'edit_post', $post_id ) ) {
 			return;
@@ -262,7 +267,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	 * @param array $mce_init TinyMCE config.
 	 * @return array
 	 */
-	public function tiny_mce_before_init( $mce_init ) {
+	public function linguator_tiny_mce_before_init( $mce_init ) {
 		if ( ! empty( $this->curlang ) ) {
 			$mce_init['wp_lang_attr'] = $this->curlang->get_locale( 'display' );
 			$mce_init['directionality'] = $this->curlang->is_rtl ? 'rtl' : 'ltr';
@@ -280,7 +285,7 @@ class LMAT_Admin_Filters_Post extends LMAT_Admin_Filters_Post_Base {
 	 * @param string $context The link context.
 	 * @return string
 	 */
-	public function add_lang_to_edit_post_link( $link, $post_id, $context ) {
+	public function linguator_add_lang_to_edit_post_link( $link, $post_id, $context ) {
 		if ( empty( $link ) || ! $this->model->post_types->is_translated( get_post_type( $post_id ) ) ) {
 			return $link;
 		}

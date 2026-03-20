@@ -8,17 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
+use Linguator\Includes\Filters\Linguator_Filters_Widgets_Options;
 
 
 /**
- * Class LMAT_Widgets_Filters
+ * Class Linguator_Widgets_Filters
  *
  *  
  *
  * Adds new options to {@see https://developer.wordpress.org/reference/classes/wp_widget/ WP_Widget} and saves them.
  */
-class LMAT_Admin_Filters_Widgets_Options extends LMAT_Filters_Widgets_Options {
+class Linguator_Admin_Filters_Widgets_Options extends Linguator_Filters_Widgets_Options {
 	/**
 	 * Modifies the widgets forms to add our language dropdown list.
 	 *
@@ -36,7 +36,7 @@ class LMAT_Admin_Filters_Widgets_Options extends LMAT_Filters_Widgets_Options {
 
 		// Test the Widgets screen and the Customizer to avoid displaying the option in page builders
 		// Saving the widget reloads the form. And curiously the action is in $_REQUEST but neither in $_POST, nor in $_GET.
-		if ( ( isset( $screen ) && 'widgets' === $screen->base ) || ( isset( $_REQUEST['action'] ) && 'save-widget' === $_REQUEST['action'] ) || isset( $GLOBALS['wp_customize'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ( isset( $screen ) && 'widgets' === $screen->base ) || ( isset( $_REQUEST['action'] ) && 'save-widget' === sanitize_key( wp_unslash( $_REQUEST['action'] ) ) ) || isset( $GLOBALS['wp_customize'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			parent::in_widget_form( $widget, $return, $instance );
 		}
 	}

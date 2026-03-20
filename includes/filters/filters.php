@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Filters {
+class Linguator_Filters {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -23,21 +23,21 @@ class LMAT_Filters {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	public $links_model;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -57,17 +57,17 @@ class LMAT_Filters {
 		$this->curlang = &$linguator->curlang;
 
 		// Deletes our cache for sticky posts when the list is updated.
-		add_action( 'update_option_sticky_posts', array( $this, 'delete_sticky_posts_cache' ) );
-		add_action( 'add_option_sticky_posts', array( $this, 'delete_sticky_posts_cache' ) );
-		add_action( 'delete_option_sticky_posts', array( $this, 'delete_sticky_posts_cache' ) );
+		add_action( 'update_option_sticky_posts', array( $this, 'linguator_delete_sticky_posts_cache' ) );
+		add_action( 'add_option_sticky_posts', array( $this, 'linguator_delete_sticky_posts_cache' ) );
+		add_action( 'delete_option_sticky_posts', array( $this, 'linguator_delete_sticky_posts_cache' ) );
 
 		// Filters the comments according to the current language
-		add_action( 'parse_comment_query', array( $this, 'parse_comment_query' ) );
-		add_filter( 'comments_clauses', array( $this, 'comments_clauses' ), 10, 2 );
+		add_action( 'parse_comment_query', array( $this, 'linguator_parse_comment_query' ) );
+		add_filter( 'comments_clauses', array( $this, 'linguator_comments_clauses' ), 10, 2 );
 
 		// Filters the get_pages function according to the current language
 
-		add_filter( 'get_pages_query_args', array( $this, 'get_pages_query_args' ), 10, 2 );
+		add_filter( 'get_pages_query_args', array( $this, 'linguator_get_pages_query_args' ), 10, 2 );
 
 		// Rewrites next and previous post links to filter them by language
 		add_filter( 'get_previous_post_join', array( $this, 'posts_join' ), 10, 5 );
@@ -76,21 +76,21 @@ class LMAT_Filters {
 		add_filter( 'get_next_post_where', array( $this, 'posts_where' ), 10, 5 );
 
 		// Converts the locale to a valid W3C locale
-		add_filter( 'language_attributes', array( $this, 'language_attributes' ) );
+		add_filter( 'language_attributes', array( $this, 'linguator_language_attributes' ) );
 
 		// Translate the site title in emails sent to users
-		add_filter( 'password_change_email', array( $this, 'translate_user_email' ) );
-		add_filter( 'email_change_email', array( $this, 'translate_user_email' ) );
+		add_filter( 'password_change_email', array( $this, 'linguator_translate_user_email' ) );
+		add_filter( 'email_change_email', array( $this, 'linguator_translate_user_email' ) );
 
 		// Translates the privacy policy page
-		add_filter( 'option_wp_page_for_privacy_policy', array( $this, 'translate_page_for_privacy_policy' ), 20 ); // Since WP 4.9.6
-		add_filter( 'map_meta_cap', array( $this, 'fix_privacy_policy_page_editing' ), 10, 4 );
+		add_filter( 'option_wp_page_for_privacy_policy', array( $this, 'linguator_translate_page_for_privacy_policy' ), 20 ); // Since WP 4.9.6
+		add_filter( 'map_meta_cap', array( $this, 'linguator_fix_privacy_policy_page_editing' ), 10, 4 );
 
 		// Personal data exporter
-		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_personal_data_exporter' ), 0 ); // Since WP 4.9.6
+		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'linguator_register_personal_data_exporter' ), 0 ); // Since WP 4.9.6
 
 		// Fix for `term_exists()`.
-		add_filter( 'term_exists_default_query_args', array( $this, 'term_exists_default_query_args' ), 0, 3 ); // Since WP 6.0.0.
+		add_filter( 'term_exists_default_query_args', array( $this, 'linguator_term_exists_default_query_args' ), 0, 3 ); // Since WP 6.0.0.
 	}
 
 	/**
@@ -100,7 +100,7 @@ class LMAT_Filters {
 	 *
 	 * @return void
 	 */
-	public function delete_sticky_posts_cache() {
+	public function linguator_delete_sticky_posts_cache() {
 		wp_cache_delete( 'sticky_posts', 'options' );
 	}
 
@@ -111,9 +111,9 @@ class LMAT_Filters {
 	 *   Always returns an array. Renamed from get_comments_queried_language().
 	 *
 	 * @param WP_Comment_Query $query WP_Comment_Query object.
-	 * @return LMAT_Language[] The languages to use in the filter.
+	 * @return Linguator_Language[] The languages to use in the filter.
 	 */
-	protected function get_comments_queried_languages( $query ) {
+	protected function linguator_get_comments_queried_languages( $query ) {
 		// Don't filter comments if comment ids or post ids are specified.
 		$plucked = wp_array_slice_assoc( $query->query_vars, array( 'comment__in', 'parent', 'post_id', 'post__in', 'post_parent' ) );
 		$fields = array_filter( $plucked );
@@ -152,8 +152,8 @@ class LMAT_Filters {
 	 * @param WP_Comment_Query $query WP_Comment_Query object.
 	 * @return void
 	 */
-	public function parse_comment_query( $query ) {
-		$lang = $this->get_comments_queried_languages( $query );
+	public function linguator_parse_comment_query( $query ) {
+		$lang = $this->linguator_get_comments_queried_languages( $query );
 		if ( ! empty( $lang ) ) {
 			$lang = wp_list_pluck( $lang, 'slug' );
 			$key = '_' . implode( ',', $lang );
@@ -170,10 +170,10 @@ class LMAT_Filters {
 	 * @param WP_Comment_Query $query   WP_Comment_Query object.
 	 * @return string[] Modified $clauses.
 	 */
-	public function comments_clauses( $clauses, $query ) {
+	public function linguator_comments_clauses( $clauses, $query ) {
 		global $wpdb;
 
-		$lang = $this->get_comments_queried_languages( $query );
+		$lang = $this->linguator_get_comments_queried_languages( $query );
 
 		if ( ! empty( $lang ) ) {
 			$lang = wp_list_pluck( $lang, 'slug' );
@@ -216,7 +216,7 @@ class LMAT_Filters {
 			$once = true; // Avoid infinite loop.
 
 			// Take care that 'exclude' argument accepts integer or strings too.
-			$args['exclude'] = array_merge( wp_parse_id_list( $args['exclude'] ), $this->get_related_page_ids( $language, 'NOT IN', $args ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
+			$args['exclude'] = array_merge( wp_parse_id_list( $args['exclude'] ), $this->linguator_get_related_page_ids( $language, 'NOT IN', $args ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
 			$numbered_pages  = get_pages( $args );
 			$pages           = ! $numbered_pages ? $pages : $numbered_pages;
 		}
@@ -225,7 +225,7 @@ class LMAT_Filters {
 
 		if ( ! $once ) {
 			// Filters the queried list of pages by language.
-			$ids = array_intersect( $ids, $this->get_related_page_ids( $language, 'IN', $args ) );
+			$ids = array_intersect( $ids, $this->linguator_get_related_page_ids( $language, 'IN', $args ) );
 
 			foreach ( $pages as $key => $page ) {
 				if ( ! in_array( $page->ID, $ids ) ) {
@@ -252,7 +252,7 @@ class LMAT_Filters {
 	 * @param array $parsed_args Array of get_pages() arguments.
 	 * @return array Array of arguments passed to WP_Query with the language.
 	 */
-	public function get_pages_query_args( $query_args, $parsed_args ) {
+	public function linguator_get_pages_query_args( $query_args, $parsed_args ) {
 		if ( isset( $parsed_args['lmat_lang'] ) ) {
 			$query_args['lmat_lang'] = $parsed_args['lmat_lang'];
 		}
@@ -265,12 +265,12 @@ class LMAT_Filters {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $language The language to use in the relationship
+	 * @param Linguator_Language $language The language to use in the relationship
 	 * @param string       $relation 'IN' or 'NOT IN'.
 	 * @param array        $args     Array of get_pages() arguments.
 	 * @return int[]
 	 */
-	protected function get_related_page_ids( $language, $relation, $args ) {
+	protected function linguator_get_related_page_ids( $language, $relation, $args ) {
 		$r = array(
 			'lmat_lang'        => '', // Ensure this query is not filtered.
 			'numberposts' => -1,
@@ -332,7 +332,7 @@ class LMAT_Filters {
 	 * @param string $output language attributes
 	 * @return string
 	 */
-	public function language_attributes( $output ) {
+	public function linguator_language_attributes( $output ) {
 		$language = $this->model->get_language( determine_locale() );
 
 		if ( ! $language ) {
@@ -351,8 +351,8 @@ class LMAT_Filters {
 	 * @param string[] $email Email contents.
 	 * @return string[] Translated email contents.
 	 */
-	public function translate_user_email( $email ) {
-		$blog_name = wp_specialchars_decode( lmat__( get_option( 'blogname' ) ), ENT_QUOTES );
+	public function linguator_translate_user_email( $email ) {
+		$blog_name = wp_specialchars_decode( linguator__( get_option( 'blogname' ) ), ENT_QUOTES );
 		$email['subject'] = sprintf( $email['subject'], $blog_name );
 		$email['message'] = str_replace( '###SITENAME###', $blog_name, $email['message'] );
 		return $email;
@@ -366,7 +366,7 @@ class LMAT_Filters {
 	 * @param int $id Privacy policy page id
 	 * @return int
 	 */
-	public function translate_page_for_privacy_policy( $id ) {
+	public function linguator_translate_page_for_privacy_policy( $id ) {
 		return empty( $this->curlang ) ? $id : $this->model->post->get( $id, $this->curlang );
 	}
 
@@ -381,7 +381,7 @@ class LMAT_Filters {
 	 * @param array  $args    Adds the context to the cap. The category id.
 	 * @return array
 	 */
-	public function fix_privacy_policy_page_editing( $caps, $cap, $user_id, $args ) {
+	public function linguator_fix_privacy_policy_page_editing( $caps, $cap, $user_id, $args ) {
 		if ( in_array( $cap, array( 'edit_page', 'edit_post', 'delete_page', 'delete_post' ) ) ) {
 			$privacy_page = get_option( 'wp_page_for_privacy_policy' );
 			if ( $privacy_page && array_intersect( $args, $this->model->post->get_translations( $privacy_page ) ) ) {
@@ -400,10 +400,10 @@ class LMAT_Filters {
 	 * @param array $exporters Personal data exporters
 	 * @return array
 	 */
-	public function register_personal_data_exporter( $exporters ) {
+	public function linguator_register_personal_data_exporter( $exporters ) {
 		$exporters[] = array(
 			'exporter_friendly_name' => __( 'Translated user descriptions', 'linguator-multilingual-ai-translation' ),
-			'callback'               => array( $this, 'user_data_exporter' ),
+			'callback'               => array( $this, 'linguator_user_data_exporter' ),
 		);
 		return $exporters;
 	}
@@ -416,7 +416,7 @@ class LMAT_Filters {
 	 * @param string $email_address User email address
 	 * @return array Personal data
 	 */
-	public function user_data_exporter( $email_address ) {
+	public function linguator_user_data_exporter( $email_address ) {
 		$email_address       = trim( $email_address );
 		$data_to_export      = array();
 		$user_data_to_export = array();
@@ -460,7 +460,7 @@ class LMAT_Filters {
 	 * @param  string     $taxonomy The taxonomy name to use. An empty string indicates the search is against all taxonomies.
 	 * @return array
 	 */
-	public function term_exists_default_query_args( $defaults, $term, $taxonomy ) {
+	public function linguator_term_exists_default_query_args( $defaults, $term, $taxonomy ) {
 		if ( ! empty( $taxonomy ) && ! $this->model->is_translated_taxonomy( $taxonomy ) ) {
 			return $defaults;
 		}

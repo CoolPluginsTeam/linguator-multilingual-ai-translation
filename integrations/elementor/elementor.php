@@ -9,8 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Frontend\Controllers\LMAT_Frontend;
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Frontend\Controllers\Linguator_Frontend;
+use Linguator\Includes\Other\Linguator_Model;
+use WP_Error;
+use WP_REST_Request;
 
 
 /**
@@ -18,15 +20,15 @@ use Linguator\Includes\Other\LMAT_Model;
  *
  *  
  */
-class LMAT_Elementor {
+class Linguator_Elementor {
 	/**
 	 * Constructor
 	 *
 	 *  
 	 */
 	public function __construct() {
-		self::elementor_compatibility();
-		self::add_rest_routes();
+		self::linguator_elementor_compatibility();
+		self::linguator_add_rest_routes();
 	}
 
     /**
@@ -38,9 +40,9 @@ class LMAT_Elementor {
 	 * @access private
 	 * @static
 	 */
-	private static function elementor_compatibility() {
+	private static function linguator_elementor_compatibility() {
 		// Copy elementor data while linguator creates a translation copy.
-		add_filter( 'lmat_copy_post_metas', [ __CLASS__, 'save_elementor_meta' ], 10, 4 );
+		add_filter( 'lmat_copy_post_metas', [ __CLASS__, 'linguator_save_elementor_meta' ], 10, 4 );
 	}
 
 	/**
@@ -49,8 +51,8 @@ class LMAT_Elementor {
 	 * @access private
 	 * @static
 	 */
-	private static function add_rest_routes() {
-		add_action( 'rest_api_init', [ __CLASS__, 'register_rest_routes' ] );
+	private static function linguator_add_rest_routes() {
+		add_action( 'rest_api_init', [ __CLASS__, 'linguator_register_rest_routes' ] );
 	}
 
 	/**
@@ -59,15 +61,15 @@ class LMAT_Elementor {
 	 * @access public
 	 * @static
 	 */
-	public static function register_rest_routes() {
+	public static function linguator_register_rest_routes() {
 		register_rest_route( 'lmat/v1', '/post-language/(?P<post_id>\d+)', [
-			'methods' => 'GET',
-			'callback' => [ __CLASS__, 'get_post_language_rest' ],
-			'permission_callback' => [ __CLASS__, 'rest_permission_check' ],
-			'args' => [
+			'methods'             => 'GET',
+			'callback'            => [ __CLASS__, 'linguator_get_post_language_rest' ],
+			'permission_callback' => [ __CLASS__, 'linguator_check_rest_permission' ],
+			'args'                => [
 				'post_id' => [
-					'required' => true,
-					'type' => 'integer',
+					'required'          => true,
+					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
 				],
 			],
@@ -75,17 +77,10 @@ class LMAT_Elementor {
 	}
 
 	/**
-	 * Permission callback for REST API.
-	 *
-	 * @access public
-	 * @static
-	 *
-	 * @param WP_REST_Request $request The request object.
-	 * @return bool
+	 * Proper Permission Check
 	 */
-	public static function rest_permission_check( $request ) {
-		// Allow if user can edit posts or if it's a public request
-		return current_user_can( 'edit_posts' ) || true;
+	public static function linguator_check_rest_permission( $request ) {
+		return is_user_logged_in() && current_user_can( 'edit_posts' );
 	}
 
 	/**
@@ -97,7 +92,7 @@ class LMAT_Elementor {
 	 * @param WP_REST_Request $request The request object.
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public static function get_post_language_rest( $request ) {
+	public static function linguator_get_post_language_rest( $request ) {
 		$post_id = $request->get_param( 'post_id' );
 		
 		if ( ! $post_id ) {
@@ -105,7 +100,7 @@ class LMAT_Elementor {
 		}
 
 		// Get the post language
-		$language = lmat_get_post_language( $post_id );
+		$language = linguator_get_post_language( $post_id );
 		
 		if ( ! $language ) {
 			return new WP_Error( 'language_not_found', 'Language not found for this post', [ 'status' => 404 ] );
@@ -118,14 +113,17 @@ class LMAT_Elementor {
 			return new WP_Error( 'language_object_not_found', 'Language object not found', [ 'status' => 404 ] );
 		}
 
-		// Return language information
-		return rest_ensure_response( [
-			'language' => $language,
-			'flag_url' => $language_object->flag_url,
-			'name' => $language_object->name,
-			'locale' => $language_object->locale,
-			'post_id' => $post_id
-		] );
+		// Return language information (all fields sanitized for safe JSON output).
+		return new \WP_REST_Response(
+			[
+				'language' => sanitize_text_field( (string) $language ),
+				'flag_url' => esc_url_raw( (string) $language_object->flag_url ),
+				'name'     => sanitize_text_field( (string) $language_object->name ),
+				'locale'   => sanitize_text_field( (string) $language_object->locale ),
+				'post_id'  => absint( $post_id ),
+			],
+			200
+		);
 	}
 
     /**
@@ -146,7 +144,7 @@ class LMAT_Elementor {
 	 *
 	 * @return array List of custom fields names.
 	 */
-	public static function save_elementor_meta( $keys, $sync, $from, $to ) {
+	public static function linguator_save_elementor_meta( $keys, $sync, $from, $to ) {
 		// Copy only for a new post.
 		if ( ! $sync ) {
 			self::copy_elementor_meta( $from, $to );
@@ -193,3 +191,4 @@ class LMAT_Elementor {
 		}
 	}
 } 
+

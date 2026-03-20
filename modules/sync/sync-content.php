@@ -3,14 +3,14 @@
  * @package Linguator
  */
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 /**
  * Smart copy of post content
  *
  *  
  */
-class LMAT_Sync_Post {
+class Linguator_Sync_Post {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -19,19 +19,19 @@ class LMAT_Sync_Post {
 	protected $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	protected $links_model;
 
 	/**
-	 * @var LMAT_CRUD_Posts
+	 * @var Linguator_CRUD_Posts
 	 */
 	protected $posts;
 
@@ -45,14 +45,14 @@ class LMAT_Sync_Post {
 	/**
 	 * Language of the target post.
 	 *
-	 * @var LMAT_Language
+	 * @var Linguator_Language
 	 */
 	protected $target_language;
 
 	/**
 	 * Language of the source post.
 	 *
-	 * @var LMAT_Language
+	 * @var Linguator_Language
 	 */
 	protected $from_language;
 
@@ -61,7 +61,7 @@ class LMAT_Sync_Post {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Frontend|LMAT_Admin|LMAT_Settings|LMAT_REST_Request $linguator Linguator object.
+	 * @param Linguator_Frontend|Linguator_Admin|Linguator_Settings|Linguator_REST_Request $linguator Linguator object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->options = &$linguator->options;
@@ -75,7 +75,7 @@ class LMAT_Sync_Post {
 	 *
 	 * @param WP_Post             $from_post       The post to copy from.
 	 * @param WP_Post             $target_post     The post to copy to.
-	 * @param LMAT_Language|string $target_language The language of the post to copy to.
+	 * @param Linguator_Language|string $target_language The language of the post to copy to.
 	 * @return WP_Post|void
 	 */
 	public function copy_content( $from_post, $target_post, $target_language ) {
@@ -119,11 +119,11 @@ class LMAT_Sync_Post {
 	 *
 	 * @param string       $content         Text to translate.
 	 * @param WP_Post      $target_post     The post object to populate with translated content.
-	 * @param LMAT_Language $from_language   The source language .
-	 * @param LMAT_Language $target_language The language to translate to.
+	 * @param Linguator_Language $from_language   The source language .
+	 * @param Linguator_Language $target_language The language to translate to.
 	 * @return string Translated text
 	 */
-	public function translate_content( $content, $target_post, LMAT_Language $from_language, LMAT_Language $target_language ) {
+	public function translate_content( $content, $target_post, Linguator_Language $from_language, Linguator_Language $target_language ) {
 		global $shortcode_tags;
 
 		$this->target_post     = $target_post;
@@ -266,7 +266,7 @@ class LMAT_Sync_Post {
 		// Attach to the translated post
 		if ( ! wp_get_post_parent_id( $tr_id ) && 0 < $this->target_post->ID ) {
 			// Query inspired by wp_media_attach_action()
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->posts SET post_parent = %d WHERE post_type = 'attachment' AND ID = %d", $this->target_post->ID, $tr_id ) );
 			clean_attachment_cache( $tr_id );
 		}
@@ -286,17 +286,24 @@ class LMAT_Sync_Post {
 	 */
 	public function ids_list_shortcode( $attr, $null, $tag ) {
 		$out = array();
+		$tag = sanitize_key( $tag );
+		if ( ! in_array( $tag, array( 'gallery', 'playlist' ), true ) ) {
+			return '';
+		}
 
 		foreach ( $attr as $k => $v ) {
+			$k = sanitize_key( $k );
 			if ( 'ids' === $k ) {
-				$ids    = explode( ',', $v );
+				$ids    = array_filter( array_map( 'absint', explode( ',', (string) $v ) ) );
 				$tr_ids = array();
 				foreach ( $ids as $id ) {
-					$tr_ids[] = $this->translate_media( (int) $id );
+					$tr_ids[] = (int) $this->translate_media( (int) $id );
 				}
-				$v = implode( ',', $tr_ids );
+				$v = implode( ',', array_filter( $tr_ids ) );
+			} else {
+				$v = sanitize_text_field( (string) $v );
 			}
-			$out[] = $k . '="' . $v . '"';
+			$out[] = $k . '="' . esc_attr( $v ) . '"';
 		}
 
 		return '[' . $tag . ' ' . implode( ' ', $out ) . ']';
@@ -316,15 +323,26 @@ class LMAT_Sync_Post {
 	public function caption_shortcode( $attr, $content, $tag ) {
 		// Translate the caption id
 		$out = array();
+		$tag = sanitize_key( $tag );
+		if ( ! in_array( $tag, array( 'caption', 'wp_caption' ), true ) ) {
+			return '';
+		}
 
 		foreach ( $attr as $k => $v ) {
+			$k = sanitize_key( $k );
 			if ( 'id' === $k ) {
+				$v = sanitize_text_field( (string) $v );
 				$idarr = explode( '_', $v );
-				$id    = $idarr[1]; // Remember this
-				$tr_id = $idarr[1] = $this->translate_media( (int) $id );
-				$v     = implode( '_', $idarr );
+				if ( isset( $idarr[1] ) ) {
+					$id    = (int) $idarr[1]; // Remember this.
+					$tr_id = (int) $this->translate_media( $id );
+					$idarr[1] = (string) $tr_id;
+					$v        = implode( '_', $idarr );
+				}
+			} else {
+				$v = sanitize_text_field( (string) $v );
 			}
-			$out[] = $k . '="' . $v . '"';
+			$out[] = $k . '="' . esc_attr( $v ) . '"';
 		}
 
 		// Translate the caption content
@@ -335,6 +353,8 @@ class LMAT_Sync_Post {
 				$content = str_replace( $p->post_excerpt, $tr_p->post_excerpt, $content );
 			}
 		}
+
+		$content = wp_kses_post( $content );
 
 		return '[' . $tag . ' ' . implode( ' ', $out ) . ']' . $content . '[/' . $tag . ']';
 	}
@@ -621,3 +641,4 @@ class LMAT_Sync_Post {
 		return $block;
 	}
 }
+

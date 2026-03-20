@@ -9,7 +9,7 @@ namespace Linguator\Modules\Blocks;
  * Language switcher block.
  *
  */
-class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block {
+class Linguator_Language_Switcher_Block extends Linguator_Abstract_Language_Switcher_Block {
 
 	/**
 	 * Returns the language switcher block name with the Linguator's namespace.
@@ -33,7 +33,7 @@ class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block
 	public function render( $attributes, $content, $block ) { //phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		static $dropdown_id = 0;
 		++$dropdown_id;
-		// Sets a unique id for dropdown in LMAT_Switcher::the_language().
+		// Sets a unique id for dropdown in Linguator_Switcher::the_language().
 		// Only set dropdown ID if dropdown is actually enabled (truthy value)
 		if ( ! empty( $attributes['dropdown'] ) ) {
 			$attributes['dropdown'] = $dropdown_id;
@@ -42,12 +42,14 @@ class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block
 		$attributes = $this->set_attributes_for_block( $attributes );
 
 		$attributes['raw'] = false;
-		$switcher = new \Linguator\Includes\Controllers\LMAT_Switcher();
+		$switcher = new \Linguator\Includes\Controllers\Linguator_Switcher();
 		$switcher_output = $switcher->the_languages( $this->links, $attributes );
 
 		if ( empty( $switcher_output ) ) {
 			return '';
 		}
+
+		$switcher_output = wp_kses( $switcher_output, $this->get_allowed_switcher_html() );
 
 		$aria_label = __( 'Choose a language', 'linguator-multilingual-ai-translation' );
 		if ( $attributes['dropdown'] ) {
@@ -60,6 +62,7 @@ class LMAT_Language_Switcher_Block extends LMAT_Abstract_Language_Switcher_Block
 
 		$wrap_attributes = get_block_wrapper_attributes();
 
-		return sprintf( $wrap_tag, $wrap_attributes, $switcher_output );
+		return wp_kses( sprintf( $wrap_tag, $wrap_attributes, $switcher_output ), $this->get_allowed_switcher_html() );
 	}
 }
+

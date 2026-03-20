@@ -3,35 +3,35 @@ namespace Linguator\Admin\cpfm_feedback\cron;
 
 if ( ! defined( 'ABSPATH' )) exit;
 
-if (!class_exists('LMAT_cronjob')) {
-    class LMAT_cronjob
+if (!class_exists('Linguator_cronjob')) {
+    class Linguator_cronjob
     {
 
         public function __construct() {
           // Register cron jobs
-            add_filter('cron_schedules', array($this, 'lmat_cron_schedules'));
-            add_action('lmat_extra_data_update', array($this, 'lmat_cron_extra_data_autoupdater'));
+            add_filter('cron_schedules', array($this, 'linguator_cron_schedules'));
+            add_action('lmat_extra_data_update', array($this, 'linguator_cron_extra_data_autoupdater'));
         }
         
-        function lmat_cron_extra_data_autoupdater() {
-            self::lmat_send_data();
+        function linguator_cron_extra_data_autoupdater() {
+            self::linguator_send_data();
         }
            
-        static public function lmat_send_data() {
+        static public function linguator_send_data() {
                    
             $feedback_url = LINGUATOR_FEEDBACK_API . 'wp-json/coolplugins-feedback/v1/site';
             require_once LINGUATOR_DIR . '/admin/feedback/admin-feedback.php';
             
-            $extra_data         = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback();
+            $extra_data         = new \Linguator\Admin\Feedback\Linguator_Admin_Feedback();
             $extra_data_details = $extra_data->cpfm_get_user_info();
             
             $server_info    = $extra_data_details['server_info'];
             $extra_details  = $extra_data_details['extra_details'];
             $site_url       = esc_url( site_url() );
-            $install_date   = get_option('lmat_install_date');
-            $uni_id         = '53';
+            $install_date   = get_option('linguator_install_date');
+            $uni_id         = '153';
             $site_id        = $site_url . '-' . $install_date . '-' . $uni_id;
-            $initial_version = defined('LINGUATOR_VERSION') ? LINGUATOR_VERSION : 'N/A';
+            $initial_version = get_option('linguator_initial_version');
             $initial_version = is_string($initial_version) ? sanitize_text_field($initial_version) : 'N/A';
             $plugin_version = defined('LINGUATOR_VERSION') ? LINGUATOR_VERSION : 'N/A';
             $admin_email    = sanitize_email(get_option('admin_email') ?: 'N/A');
@@ -74,7 +74,7 @@ if (!class_exists('LMAT_cronjob')) {
         /**
          * Cron status schedule(s).
          */
-        public function lmat_cron_schedules($schedules)
+        public function linguator_cron_schedules($schedules)
         {
             // 30days schedule for update information
             if (!isset($schedules['every_30_days'])) {
@@ -90,3 +90,4 @@ if (!class_exists('LMAT_cronjob')) {
 
     }
 }
+

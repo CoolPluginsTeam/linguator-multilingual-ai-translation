@@ -11,16 +11,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use RankMath\Sitemap\Sitemap;
-use Linguator\Includes\Options\LMAT_Translate_Option;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Frontend\Controllers\LMAT_Frontend;
+use Linguator\Includes\Options\Linguator_Translate_Option;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Frontend\Controllers\Linguator_Frontend;
 
 /**
  * Manages the compatibility with the Rank Math plugin
  *
  * @since 1.0
  */
-class LMAT_RankMath {
+class Linguator_RankMath {
 
 	/**
 	 * Cached active languages for sitemap generation
@@ -38,7 +38,7 @@ class LMAT_RankMath {
 		add_action( 'wp_loaded', array( $this, 'rm_translate_options_keys' ) );
 		add_action( 'plugins_loaded', array( $this, 'rm_reset_rank_math_options' ) );
 
-		if ( LMAT() instanceof LMAT_Frontend ) {
+		if ( LMAT() instanceof Linguator_Frontend ) {
 			// Filters sitemap queries to remove inactive language or to get
 			// one sitemap per language when using multiple domains or subdomains
 			// because Rank Math does not accept several domains or subdomains in one sitemap
@@ -104,7 +104,7 @@ class LMAT_RankMath {
 			'toc_block_title',
 		);
 
-		new LMAT_Translate_Option( 'rank-math-options-general', array_fill_keys( $keys, 1 ), array( 'context' => 'rank-math' ) );
+		new Linguator_Translate_Option( 'rank-math-options-general', array_fill_keys( $keys, 1 ), array( 'context' => 'rank-math' ) );
 
 		// Keys for rank-math-options-titles
 		$keys = array(
@@ -129,7 +129,7 @@ class LMAT_RankMath {
 			'pt_product_default_snippet_*',
 		);
 
-		new LMAT_Translate_Option( 'rank-math-options-titles', array_fill_keys( $keys, 1 ), array( 'context' => 'rank-math' ) );
+		new Linguator_Translate_Option( 'rank-math-options-titles', array_fill_keys( $keys, 1 ), array( 'context' => 'rank-math' ) );
 	}
 
 	/**
@@ -140,7 +140,7 @@ class LMAT_RankMath {
 	 * @return string
 	 */
 	public function rank_math_home_url( $url, $path ) {
-		$uri = empty( $path ) ? ltrim( (string) wp_parse_url( lmat_get_requested_url(), PHP_URL_PATH ), '/' ) : $path;
+		$uri = empty( $path ) ? ltrim( (string) wp_parse_url( linguator_get_requested_url(), PHP_URL_PATH ), '/' ) : $path;
 		if ( 'sitemap_index.xml' === $uri || preg_match( '#([^/]+?)-sitemap([0-9]+)?\.xml|([a-z]+)?-?sitemap\.xsl#', $uri ) ) {
 			$url = LMAT()->links_model->switch_language_in_link( $url, LMAT()->curlang );
 		}
@@ -170,7 +170,7 @@ class LMAT_RankMath {
 	 * @return string
 	 */
 	public function rank_math_sitemap_join_clause( $sql, $post_type ) {
-		return lmat_is_translated_post_type( $post_type ) ? $sql . LMAT()->model->post->join_clause( 'p' ) : $sql;
+		return linguator_is_translated_post_type( $post_type ) ? $sql . LMAT()->model->post->join_clause( 'p' ) : $sql;
 	}
 
 	/**
@@ -182,17 +182,17 @@ class LMAT_RankMath {
 	 * @return string
 	 */
 	public function rank_math_sitemap_where_clause( $sql, $post_type ) {
-		if ( ! lmat_is_translated_post_type( $post_type ) ) {
+		if ( ! linguator_is_translated_post_type( $post_type ) ) {
 			return $sql;
 		}
 
-		if ( LMAT()->options['force_lang'] > 1 && LMAT()->curlang instanceof LMAT_Language ) {
+		if ( LMAT()->options['force_lang'] > 1 && LMAT()->curlang instanceof Linguator_Language ) {
 			return $sql . LMAT()->model->post->where_clause( LMAT()->curlang );
 		}
 
 		$languages = $this->rank_math_get_active_languages();
 		if ( empty( $languages ) ) { // Empty when all languages are active.
-			$languages = lmat_languages_list();
+			$languages = linguator_languages_list();
 		}
 
 		return $sql . LMAT()->model->post->where_clause( $languages );
@@ -277,7 +277,7 @@ class LMAT_RankMath {
 	 * @return bool
 	 */
 	public function update_sitemap_contents( $exclude, $type ) {
-		if ( lmat_is_translated_post_type( $type ) && ( 'post' !== $type || ! get_option( 'page_on_front' ) ) ) {
+		if ( linguator_is_translated_post_type( $type ) && ( 'post' !== $type || ! get_option( 'page_on_front' ) ) ) {
 			// Include post, post type archives, and the homepages in all languages to the sitemap when the front page displays posts!
 			add_action(
 				"rank_math/sitemap/{$type}_content",
@@ -291,13 +291,13 @@ class LMAT_RankMath {
 					if ( 'post' === $type ) {
 						if ( ! empty( LMAT()->options['hide_default'] ) ) {
 							// The home url is of course already added by Rank Math.
-							$languages = wp_list_filter( $languages, array( 'slug' => lmat_default_language() ), 'NOT' );
+							$languages = wp_list_filter( $languages, array( 'slug' => linguator_default_language() ), 'NOT' );
 						}
 
 						foreach ( $languages as $lang ) {
 							$output .= $generator->sitemap_url(
 								array(
-									'loc' => lmat_home_url( $lang->slug ),
+									'loc' => linguator_home_url( $lang->slug ),
 									'mod' => $mod,
 								)
 							);
@@ -308,7 +308,7 @@ class LMAT_RankMath {
 
 						if ( ! wpcom_vip_get_page_by_path( $slug ) ) {
 							// The post type archive in the current language is already added by Rank Math.
-							$languages = wp_list_filter( $languages, array( 'slug' => lmat_current_language() ), 'NOT' );
+							$languages = wp_list_filter( $languages, array( 'slug' => linguator_current_language() ), 'NOT' );
 
 							foreach ( $languages as $lang ) {
 								LMAT()->curlang = $lang; // Switch the language to get the correct archive link.
@@ -341,11 +341,11 @@ class LMAT_RankMath {
 
 		$post_id = (int) get_option( 'page_on_front' );
 
-		if ( ! is_home() && isset( $post->ID ) && $post->ID !== lmat_get_post( $post_id ) ) {
+		if ( ! is_home() && isset( $post->ID ) && $post->ID !== linguator_get_post( $post_id ) ) {
 			return $canonical;
 		}
 
-		$path = ltrim( (string) wp_parse_url( lmat_get_requested_url(), PHP_URL_PATH ), '/' );
+		$path = ltrim( (string) wp_parse_url( linguator_get_requested_url(), PHP_URL_PATH ), '/' );
 
 		return $canonical . $path;
 	}
@@ -456,7 +456,7 @@ class LMAT_RankMath {
 			return $value;
 		}
 
-		return lmat_get_term( $value, $lang );
+		return linguator_get_term( $value, $lang );
 	}
 
 	/**
@@ -488,4 +488,5 @@ class LMAT_RankMath {
 		return array_merge( $metas, $rm_metas );
 	}
 }
+
 

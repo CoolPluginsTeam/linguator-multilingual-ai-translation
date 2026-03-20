@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Domain_Mapping {
+class Linguator_Domain_Mapping {
 
 	/**
 	 * Setups actions.
@@ -25,7 +25,7 @@ class LMAT_Domain_Mapping {
 			$options = get_option( 'linguator' );
 
 			if ( is_array( $options ) && $options['force_lang'] < 2 ) {
-				lmat_set_constant( 'LMAT_CACHE_HOME_URL', false );
+				linguator_set_constant( 'LMAT_CACHE_HOME_URL', false );
 			}
 
 			if ( ! get_site_option( 'dm_no_primary_domain' ) ) {
@@ -61,12 +61,12 @@ class LMAT_Domain_Mapping {
 			}
 
 			// Don't redirect theme customizer
-			if ( isset( $_POST['customize'] ) && isset( $_POST['theme'] ) && 'on' === $_POST['customize'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_POST['customize'] ) && isset( $_POST['theme'] ) && 'on' === sanitize_key( wp_unslash( $_POST['customize'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				return;
 			}
 
 			// If we can't associate the requested domain to a language, redirect to the default domain
-			$requested_url  = lmat_get_requested_url();
+			$requested_url  = linguator_get_requested_url();
 			$requested_host = wp_parse_url( $requested_url, PHP_URL_HOST );
 
 			$hosts = LMAT()->links_model->get_hosts();
@@ -84,3 +84,4 @@ class LMAT_Domain_Mapping {
 		}
 	}
 }
+

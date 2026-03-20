@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *     default_alias: non-empty-string
  * }
  */
-interface LMAT_Translatable_Object_With_Types_Interface {
+interface Linguator_Translatable_Object_With_Types_Interface {
 
 	/**
 	 * Returns object types that need to be translated.

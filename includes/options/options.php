@@ -166,7 +166,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 			return;
 		}
 
-		if ( ! lmat_is_plugin_active( LINGUATOR_BASENAME ) && ! doing_action( 'activate_' . LINGUATOR_BASENAME ) ) {
+		if ( ! linguator_is_plugin_active( LINGUATOR_BASENAME ) && ! doing_action( 'activate_' . LINGUATOR_BASENAME ) ) {
 			return;
 		}
 
@@ -626,7 +626,7 @@ class Options implements ArrayAccess, IteratorAggregate {
 			return $this->is_plugin_active[ $this->current_blog_id ];
 		}
 
-		$this->is_plugin_active[ $this->current_blog_id ] = lmat_is_plugin_active( LINGUATOR_BASENAME ) || doing_action( 'activate_' . LINGUATOR_BASENAME );
+		$this->is_plugin_active[ $this->current_blog_id ] = linguator_is_plugin_active( LINGUATOR_BASENAME ) || doing_action( 'activate_' . LINGUATOR_BASENAME );
 
 		return $this->is_plugin_active[ $this->current_blog_id ];
 	}

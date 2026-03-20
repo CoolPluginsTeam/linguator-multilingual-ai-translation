@@ -44,20 +44,19 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		public function __construct( $model ) {
 			$this->namespace = 'lmat/v1';
 			$this->rest_base = 'bulk-translate';
-			add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		}
 
 		/**
 		 * Register the routes
 		 */
-		public function register_routes() {
+		public function register_routes(): void {
 			register_rest_route(
 				$this->namespace,
 				'/' . $this->rest_base . '/(?P<slug>[\w-]+):bulk-translate-entries',
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_entries' ),
-					'permission_callback' => array( $this, 'permission_only_admins' ),
+					'permission_callback' => array( $this, 'linguator_permission_only_admins' ),
 					'args'                => array(
 						'ids'        => array(
 							'type'     => 'string',
@@ -83,7 +82,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'bulk_translate_taxonomy_entries' ),
-					'permission_callback' => array( $this, 'permission_only_admins' ),
+					'permission_callback' => array( $this, 'linguator_permission_only_admins' ),
 					'args'                => array(
 						'taxonomy'   => array(
 							'type'     => 'string',
@@ -112,8 +111,8 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				'/' . $this->rest_base . '/(?P<post_id>[\w-]+):create-translate-post',
 				array(
 					'methods'             => 'POST',
-					'callback'            => array( $this, 'create_translate_post' ),
-					'permission_callback' => array( $this, 'permission_only_admins' ),
+					'callback'            => array( $this, 'linguator_create_translate_post' ),
+					'permission_callback' => array( $this, 'linguator_permission_only_admins' ),
 					'args'                => array(
 						'privateKey'      => array(
 							'type'              => 'string',
@@ -160,7 +159,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_translate_taxonomy' ),
-					'permission_callback' => array( $this, 'permission_only_admins' ),
+					'permission_callback' => array( $this, 'linguator_permission_only_admins' ),
 					'args'                => array(
 						'term_id'              => array(
 							'required'          => true,
@@ -211,16 +210,31 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			);
 		}
 
-		public function permission_only_admins( $request ) {
+		public function linguator_permission_only_admins( $request ) {
+
+			if ( ! is_user_logged_in() ) {
+				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 401 ) );
+			}
+
 			$nonce = $request->get_header( 'X-WP-Nonce' );
 
 			if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
 				return new WP_Error( 'rest_forbidden', __( 'Invalid nonce.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
 			}
 
-			if ( ! is_user_logged_in() ) {
-				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 401 ) );
+			$taxonomy = $request->get_param( 'taxonomy' );
+			if ( ! empty( $taxonomy ) ) {
+				$taxonomy = sanitize_key( $taxonomy );
+				$tax_obj  = get_taxonomy( $taxonomy );
+				if ( ! $tax_obj || empty( $tax_obj->cap ) || empty( $tax_obj->cap->manage_terms ) ) {
+					return new \WP_Error( 'rest_invalid_param', __( 'Invalid taxonomy.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+				}
+				if ( ! current_user_can( $tax_obj->cap->manage_terms ) ) {
+					return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+				}
+				return true;
 			}
+
 			if ( ! current_user_can( 'edit_posts' ) ) {
 				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
 			}
@@ -294,26 +308,37 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 						continue;
 					}
 
-					$elementor_enabled = get_post_meta( $postId, '_elementor_edit_mode', true );
+			$elementor_enabled = get_post_meta( $postId, '_elementor_edit_mode', true );
+			$wpbakery_enabled = get_post_meta( $postId, '_wpb_vc_js_status', true );
+			if ( ! $post_data ) {
+				continue;
+			}
 
-					if ( ! $post_data ) {
-						continue;
-					}
+			if ( $slug_translation_option === 'slug_translate' ) {
+				$posts_translate[ $postId ]['post_name'] = urldecode( get_post_field( 'post_name', $postId ) );
+			}
 
-					if ( $slug_translation_option === 'slug_translate' ) {
-						$posts_translate[ $postId ]['post_name'] = urldecode( get_post_field( 'post_name', $postId ) );
-					}
-
-					$posts_translate[ $postId ]['title']       = $post_data->post_title;
-					$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
-					$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
-					$posts_translate[ $postId ]['editor_type'] = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
+			$posts_translate[ $postId ]['title']       = $post_data->post_title;
+			
+			// Check for WPBakery first - if enabled, treat as classic even if has_blocks() returns true
+			// This prevents vc_gutenberg element from incorrectly setting editor type to 'block'
+			$is_wpbakery_page = ( 'true' === $wpbakery_enabled || true === $wpbakery_enabled );
+			
+			if ( $is_wpbakery_page ) {
+				// For WPBakery pages, always use raw content and set editor to 'classic'
+				$posts_translate[ $postId ]['content']     = $post_data->post_content;
+				$posts_translate[ $postId ]['editor_type'] = 'classic';
+			} else {
+				// For non-WPBakery pages, check for Gutenberg blocks
+				$posts_translate[ $postId ]['content']     = has_blocks( $post_data->post_content ) ? parse_blocks( $post_data->post_content ) : $post_data->post_content;
+				$posts_translate[ $postId ]['editor_type'] = has_blocks( $post_data->post_content ) ? 'block' : 'classic';
+			}
 
 					if ( isset( $post_data->post_excerpt ) && ! empty( $post_data->post_excerpt ) ) {
 						$posts_translate[ $postId ]['excerpt'] = $post_data->post_excerpt;
 					}
 
-					$posts_translate[ $postId ]['sourceLanguage'] = ! isset( $posts_translate[ $postId ]['sourceLanguage'] ) ? lmat_default_language() : $posts_translate[ $postId ]['sourceLanguage'];
+					$posts_translate[ $postId ]['sourceLanguage'] = ! isset( $posts_translate[ $postId ]['sourceLanguage'] ) ? linguator_default_language() : $posts_translate[ $postId ]['sourceLanguage'];
 
 					if ( ! $post_meta_sync ) {
 						$post_meta_fields    = get_post_meta( $postId );
@@ -329,25 +354,37 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 					$posts_translate[ $postId ]['post_link'] = get_the_permalink( $postId );
 
-					if ( $elementor_enabled && 'builder' === $elementor_enabled && defined( 'ELEMENTOR_VERSION' ) ) {
-						$elementor_data = get_post_meta( $postId, '_elementor_data', true );
+				if ( $elementor_enabled && 'builder' === $elementor_enabled && defined( 'ELEMENTOR_VERSION' ) ) {
+					$elementor_data = get_post_meta( $postId, '_elementor_data', true );
 
-						if ( $elementor_data && '' !== $elementor_data ) {
-							$posts_translate[ $postId ]['editor_type'] = 'elementor';
-							$elementor_data                            = array();
+					if ( $elementor_data && '' !== $elementor_data ) {
+						$posts_translate[ $postId ]['editor_type'] = 'elementor';
+						$elementor_data                            = array();
 
-							if ( class_exists( '\Elementor\Plugin' ) && property_exists( '\Elementor\Plugin', 'instance' ) ) {
-								$elementor_data = \Elementor\Plugin::$instance->documents->get( $postId )->get_elements_data();
-							}
-
-							$posts_translate[ $postId ]['content'] = $elementor_data;
-							unset( $posts_translate[ $postId ]['metaFields']['_elementor_data'] );
+						if ( class_exists( '\Elementor\Plugin' ) && property_exists( '\Elementor\Plugin', 'instance' ) ) {
+							$elementor_data = \Elementor\Plugin::$instance->documents->get( $postId )->get_elements_data();
 						}
-					}
 
-					if ( $posts_translate[ $postId ]['editor_type'] === 'block' && ! $gutenberg_block ) {
-						$gutenberg_block = true;
+						$posts_translate[ $postId ]['content'] = $elementor_data;
+						unset( $posts_translate[ $postId ]['metaFields']['_elementor_data'] );
 					}
+				}
+
+			// Handle WPBakery content - apply transformations for translation
+			if ( $is_wpbakery_page ) {
+				// Apply WPBakery content filters to prepare for translation
+				// This decodes base64-encoded attributes and exposes translatable content
+				$wpbakery_content = $posts_translate[ $postId ]['content'];
+				
+				// Apply the lmat_post_content_for_translation filter that WPBakery hooks into
+				$wpbakery_content = apply_filters( 'lmat_post_content_for_translation', $wpbakery_content, $postId );
+				
+				$posts_translate[ $postId ]['content'] = $wpbakery_content;
+			}
+
+				if ( $posts_translate[ $postId ]['editor_type'] === 'block' && ! $gutenberg_block ) {
+					$gutenberg_block = true;
+				}
 
 					foreach ( $translate_lang as $lang ) {
 						if ( in_array( $lang, $lmat_langs_slugs ) ) {
@@ -385,7 +422,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			}
 		}
 
-		public function create_translate_post( $params ) {
+		public function linguator_create_translate_post( $params ) {
 			if ( ! isset( $params['source_language'] ) || empty( $params['source_language'] ) ) {
 				wp_send_json_error( 'Invalid source language' );
 			}
@@ -462,7 +499,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
             }
 
 			global $linguator;
-			$post_clone = new \LMAT_Sync_Post_Model( $linguator );
+			$post_clone = new \Linguator_Sync_Post_Model( $linguator );
 			$post_id    = $post_clone->copy_post( $post_id, $source_language, $target_language, false, $post_data, $editor_type );
 
 			if ( ! $post_id ) {
@@ -533,7 +570,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				$taxonomy_ids = json_decode( $params['ids'] );
 
 				foreach ( $taxonomy_ids as $taxonomy_id ) {
-					$taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] = lmat_get_term_language( $taxonomy_id );
+					$taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] = linguator_get_term_language( $taxonomy_id );
 					$taxonomy_data                                        = get_term( $taxonomy_id, $taxonomy );
 
 					if ( ! $taxonomy_translate[ $taxonomy_id ]['sourceLanguage'] ) {
@@ -558,7 +595,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 
 					foreach ( $translate_lang as $lang ) {
 						if ( in_array( $lang, $lmat_langs_slugs ) ) {
-							$post_translate_status = lmat_get_term( $taxonomy_id, $lang );
+							$post_translate_status = linguator_get_term( $taxonomy_id, $lang );
 
 							if ( ! $post_translate_status ) {
 								$taxonomy_translate[ $taxonomy_id ]['languages'][] = $lang;

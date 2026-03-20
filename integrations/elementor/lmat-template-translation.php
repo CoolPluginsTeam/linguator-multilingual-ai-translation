@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class LMAT_Template_Translation
+ * Class Linguator_Template_Translation
  *
  * Handles the template translation for Elementor.
  */
-class LMAT_Template_Translation {
+class Linguator_Template_Translation {
 	/**
 	 * Template ID for current template
 	 *
@@ -34,19 +34,21 @@ class LMAT_Template_Translation {
 	 *  
 	 */
 	public function __construct() {
-		add_filter('lmat_get_post_types', [$this, 'lmat_register_supported_post_types'], 10, 2);
-        add_filter('elementor/theme/get_location_templates/template_id', [$this, 'lmat_translate_template_id']);
-        add_filter('elementor/theme/get_location_templates/condition_sub_id', [$this, 'lmat_translate_condition_sub_id'], 10, 2);
-        add_filter('pre_do_shortcode_tag', [$this, 'lmat_handle_shortcode_translation'], 10, 3);
-        add_action('elementor/frontend/widget/before_render', [$this, 'lmat_translate_widget_template_id']);
-        add_action('elementor/documents/register_controls', [$this, 'lmat_add_language_panel_controls']);
+		add_filter('lmat_get_post_types', [$this, 'linguator_register_supported_post_types'], 10, 2);
+        add_filter('elementor/theme/get_location_templates/template_id', [$this, 'linguator_translate_template_id']);
+        add_filter('elementor/theme/get_location_templates/condition_sub_id', [$this, 'linguator_translate_condition_sub_id'], 10, 2);
+        add_filter('pre_do_shortcode_tag', [$this, 'linguator_handle_shortcode_translation'], 10, 3);
+        add_action('elementor/frontend/widget/before_render', [$this, 'linguator_translate_widget_template_id']);
+        add_action('elementor/documents/register_controls', [$this, 'linguator_add_language_panel_controls']);
 
-        if (lmat_is_plugin_active('elementor-pro/elementor-pro.php')) {
-            add_action('set_object_terms', [$this, 'lmat_update_conditions_on_translation_change'], 10, 4);
+        if (linguator_is_plugin_active('elementor-pro/elementor-pro.php')) {
+            add_action('set_object_terms', [$this, 'linguator_update_conditions_on_translation_change'], 10, 4);
         }
 
         // Auto-assign existing Elementor templates to default language after Linguator is ready
-        add_action('lmat_init', [$this, 'lmat_assign_templates_to_default_language']);
+        add_action('lmat_init', function() {
+            add_action('init', [$this, 'linguator_assign_templates_to_default_language']);
+        });
 	}
 
     /**
@@ -58,7 +60,7 @@ class LMAT_Template_Translation {
      * @param bool  $is_settings  Whether this is called from settings page.
      * @return array Modified array of post types.
      */
-    public function lmat_register_supported_post_types($types, $is_settings) {
+    public function linguator_register_supported_post_types($types, $is_settings) {
         $custom_post_types = ['elementor_library'];
         return array_merge($types, array_combine($custom_post_types, $custom_post_types));
     }
@@ -72,7 +74,7 @@ class LMAT_Template_Translation {
      *
      * @return void
      */
-    public function lmat_assign_templates_to_default_language() {
+    public function linguator_assign_templates_to_default_language() {
         // Check if we've already run this process
         if (get_option('lmat_elementor_templates_assigned', false)) {
             return;
@@ -105,20 +107,20 @@ class LMAT_Template_Translation {
      * @param int $post_id The template post ID.
      * @return int Translated template ID.
      */
-    public function lmat_translate_template_id($post_id) {
+    public function linguator_translate_template_id($post_id) {
         // Get the language of the current page
-        $page_lang = lmat_get_post_language(get_the_ID());
+        $page_lang = linguator_get_post_language(get_the_ID());
         
         // Get the translated template in current page's language (if exists)
-        $translated_post_id = lmat_get_post($post_id, $page_lang);
+        $translated_post_id = linguator_get_post($post_id, $page_lang);
     
         // If translated template exists, use it. Otherwise, fallback to default language template
         if ($translated_post_id) {
             $post_id = $translated_post_id;
         } else {
             // Fallback: get the template in the default language
-            $default_lang = lmat_default_language();
-            $default_template_id = lmat_get_post($post_id, $default_lang);
+            $default_lang = linguator_default_language();
+            $default_template_id = linguator_get_post($post_id, $default_lang);
             
             if ($default_template_id) {
                 $post_id = $default_template_id;
@@ -140,21 +142,21 @@ class LMAT_Template_Translation {
      * @param array $condition  The condition data.
      * @return int Translated sub ID.
      */
-    public function lmat_translate_condition_sub_id($sub_id, $condition) {
+    public function linguator_translate_condition_sub_id($sub_id, $condition) {
         if (!$sub_id) {
             return $sub_id;
         }
 
-        $default_lang = lmat_default_language();
+        $default_lang = linguator_default_language();
         // Get current page/template ID from context
         $current_template_id = get_the_ID() ?: (is_singular() ? get_queried_object_id() : 0);
-        $current_lang = $current_template_id ? lmat_get_post_language($current_template_id) : null;
+        $current_lang = $current_template_id ? linguator_get_post_language($current_template_id) : null;
 
-        if ($current_lang && $current_lang !== $default_lang && $current_template_id && lmat_get_post($current_template_id, $default_lang)) {
+        if ($current_lang && $current_lang !== $default_lang && $current_template_id && linguator_get_post($current_template_id, $default_lang)) {
             if (in_array($condition['sub_name'], get_post_types(), true)) {
-                $sub_id = lmat_get_post($sub_id) ?: $sub_id;
+                $sub_id = linguator_get_post($sub_id) ?: $sub_id;
             } else {
-                $sub_id = lmat_get_term($sub_id) ?: $sub_id;
+                $sub_id = linguator_get_term($sub_id) ?: $sub_id;
             }
         }
 
@@ -171,12 +173,12 @@ class LMAT_Template_Translation {
      * @param array  $attrs  Shortcode attributes.
      * @return string|bool Processed shortcode or false.
      */
-    public function lmat_handle_shortcode_translation($false, $tag, $attrs) {
+    public function linguator_handle_shortcode_translation($false, $tag, $attrs) {
         if ('elementor-template' !== $tag || isset($attrs['skip'])) {
             return $false;
         }
 
-        $attrs['id'] = lmat_get_post(absint($attrs['id'])) ?: $attrs['id'];
+        $attrs['id'] = linguator_get_post(absint($attrs['id'])) ?: $attrs['id'];
         $attrs['skip'] = 1;
 
         $output = '';
@@ -197,7 +199,7 @@ class LMAT_Template_Translation {
      * @param array  $tt_ids   Term taxonomy IDs.
      * @param string $taxonomy Taxonomy name.
      */
-    public function lmat_update_conditions_on_translation_change($post_id, $terms, $tt_ids, $taxonomy) {
+    public function linguator_update_conditions_on_translation_change($post_id, $terms, $tt_ids, $taxonomy) {
         if ( 'post_translations' === $taxonomy && 'elementor_library' === get_post_type( $post_id ) ) {
 
 			$theme_builder = \ElementorPro\Plugin::instance()->modules_manager->get_modules( 'theme-builder' );
@@ -213,12 +215,12 @@ class LMAT_Template_Translation {
      *
      * @param \Elementor\Element_Base $element Element instance.
      */
-    public function lmat_translate_widget_template_id($element) {
+    public function linguator_translate_widget_template_id($element) {
         if ('template' !== $element->get_name()) {
             return;
         }
 
-        $template_id = lmat_get_post($element->get_settings('template_id')) ?: $element->get_settings('template_id');
+        $template_id = linguator_get_post($element->get_settings('template_id')) ?: $element->get_settings('template_id');
         $element->set_settings('template_id', $template_id);
     }
 
@@ -229,7 +231,7 @@ class LMAT_Template_Translation {
      *
      * @param \Elementor\Core\Base\Document $document Document instance.
      */
-    public function lmat_add_language_panel_controls($document) {
+    public function linguator_add_language_panel_controls($document) {
         if (!method_exists($document, 'get_main_id')) {
             return;
         }
@@ -237,10 +239,10 @@ class LMAT_Template_Translation {
         // require_once LINGUATOR_DIR . 'helpers/lmat-helpers.php';
 
         $post_id = $document->get_main_id();
-        $languages = lmat_languages_list(['fields' => '']);
-        $translations = lmat_get_post_translations($post_id);
-        $current_lang_slug = lmat_get_post_language($post_id);
-        $current_lang_name = lmat_get_post_language($post_id, 'name');
+        $languages = linguator_languages_list(['fields' => '']);
+        $translations = linguator_get_post_translations($post_id);
+        $current_lang_slug = linguator_get_post_language($post_id);
+        $current_lang_name = linguator_get_post_language($post_id, 'name');
 
         $document->start_controls_section(
             'lmat_language_panel_controls',
@@ -268,7 +270,25 @@ class LMAT_Template_Translation {
                 }
 
                 // Get the flag HTML for the language
-                $flag_html = method_exists($lang, 'get_display_flag') ? $lang->get_display_flag('no-alt') : '';
+                $flag_html = method_exists( $lang, 'get_display_flag' ) ? $lang->get_display_flag( 'no-alt' ) : '';
+                $flag_html = wp_kses(
+                    (string) $flag_html,
+                    array(
+                        'img'  => array(
+                            'src'      => true,
+                            'alt'      => true,
+                            'class'    => true,
+                            'width'    => true,
+                            'height'   => true,
+                            'style'    => true,
+                            'decoding' => true,
+                            'loading'  => true,
+                            'title'    => true,
+                        ),
+                        'span' => array( 'class' => true, 'style' => true ),
+                    ),
+                    array_merge( wp_allowed_protocols(), array( 'data' ) )
+                );
 
                 $document->add_control(
                     "lmat_elementor_edit_lang_{$lang_slug}",
@@ -293,7 +313,25 @@ class LMAT_Template_Translation {
                 ], admin_url('post-new.php'));
 
                 // Get the flag HTML for the language
-                $flag_html = method_exists($lang, 'get_display_flag') ? $lang->get_display_flag('no-alt') : '';
+                $flag_html = method_exists( $lang, 'get_display_flag' ) ? $lang->get_display_flag( 'no-alt' ) : '';
+                $flag_html = wp_kses(
+                    (string) $flag_html,
+                    array(
+                        'img'  => array(
+                            'src'      => true,
+                            'alt'      => true,
+                            'class'    => true,
+                            'width'    => true,
+                            'height'   => true,
+                            'style'    => true,
+                            'decoding' => true,
+                            'loading'  => true,
+                            'title'    => true,
+                        ),
+                        'span' => array( 'class' => true, 'style' => true ),
+                    ),
+                    array_merge( wp_allowed_protocols(), array( 'data' ) )
+                );
 
                 $document->add_control(
                     "lmat_elementor_add_lang_{$lang_slug}",
@@ -318,3 +356,4 @@ class LMAT_Template_Translation {
         $document->end_controls_section();
     }
 }
+

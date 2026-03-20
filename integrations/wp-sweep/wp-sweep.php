@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_WP_Sweep {
+class Linguator_WP_Sweep {
 	/**
 	 * Setups actions.
 	 *
@@ -49,7 +49,7 @@ class LMAT_WP_Sweep {
 		$_term_ids = array();
 
 		foreach ( $excluded_term_ids as $excluded_term_id ) {
-			$_term_ids = array_merge( $_term_ids, array_values( lmat_get_term_translations( $excluded_term_id ) ) );
+			$_term_ids = array_merge( $_term_ids, array_values( linguator_get_term_translations( $excluded_term_id ) ) );
 		}
 
 		$excluded_term_ids = array_merge( $excluded_term_ids, $_term_ids );
@@ -65,3 +65,4 @@ class LMAT_WP_Sweep {
 		return array_unique( $excluded_term_ids );
 	}
 }
+

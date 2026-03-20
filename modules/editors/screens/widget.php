@@ -5,15 +5,16 @@
 
 namespace Linguator\Modules\Editors\Screens;
 
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Base\LMAT_Base;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Base\Linguator_Base;
 use WP_Screen;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Admin\Controllers\LMAT_Admin_Block_Editor;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Admin\Controllers\Linguator_Admin_Block_Editor;
 
 /**
  * Class to manage Widget editor scripts.
@@ -81,12 +82,12 @@ class Widget extends Abstract_Screen {
 	 * Returns the language to use in the Widget editor.
 	 *
 	 *
-	 * @return LMAT_Language|null
+	 * @return Linguator_Language|null
 	 */
-	protected function get_language(): ?LMAT_Language {
+	protected function get_language(): ?Linguator_Language {
 		$language = $this->model->languages->get_default();
 
-		return $language instanceof LMAT_Language ? $language : null;
+		return $language instanceof Linguator_Language ? $language : null;
 	}
 
 	/**

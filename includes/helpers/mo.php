@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 /**
@@ -24,11 +24,11 @@ use Linguator\Includes\Other\LMAT_Language;
  *   Stores the strings in a post meta instead of post content to avoid unserialize issues
  *   Stores the strings into language taxonomy term meta instead of a post meta.
  */
-class LMAT_MO extends \MO {
+class Linguator_MO extends \MO {
 	/**
 	 * Static cache for the translations.
 	 *
-	 * @var LMAT_Cache<array>
+	 * @var Linguator_Cache<array>
 	 */
 	private static $cache;
 
@@ -39,7 +39,7 @@ class LMAT_MO extends \MO {
 	 */
 	public function __construct() {
 		if ( empty( self::$cache ) ) {
-			self::$cache = new LMAT_Cache();
+			self::$cache = new Linguator_Cache();
 		}
 	}
 
@@ -48,7 +48,7 @@ class LMAT_MO extends \MO {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $lang The language in which we want to export strings.
+	 * @param Linguator_Language $lang The language in which we want to export strings.
 	 * @return void
 	 */
 	public function export_to_db( $lang ) {
@@ -71,12 +71,12 @@ class LMAT_MO extends \MO {
 	}
 
 	/**
-	 * Reads a LMAT_MO object from the term meta.
+	 * Reads a Linguator_MO object from the term meta.
 	 *
 	 *  
-	 *   Reads a LMAT_MO from the term meta.
+	 *   Reads a Linguator_MO from the term meta.
 	 *
-	 * @param LMAT_Language $lang The language in which we want to get strings.
+	 * @param Linguator_Language $lang The language in which we want to get strings.
 	 * @return void
 	 */
 	public function import_from_db( $lang ) {

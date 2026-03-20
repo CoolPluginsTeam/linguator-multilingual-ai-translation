@@ -18,7 +18,7 @@ use WP_Term;
  *
  *  
  */
-class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
+class Linguator_Choose_Lang_Content extends Linguator_Choose_Lang {
 
 	/**
 	 * Defers the language choice to the 'wp' action (when the content is known)
@@ -35,7 +35,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 			add_action( 'wp', array( $this, 'wp' ), 5 ); // Priority 5 for post types and taxonomies registered in wp hook with default priority
 
 			// If no language found, choose the preferred one
-			add_filter( 'lmat_get_current_language', array( $this, 'lmat_get_current_language' ) );
+			add_filter( 'lmat_get_current_language', array( $this, 'linguator_get_current_language' ) );
 		}
 	}
 
@@ -44,7 +44,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $curlang Current language.
+	 * @param Linguator_Language $curlang Current language.
 	 * @return void
 	 */
 	protected function set_language( $curlang ) {
@@ -57,9 +57,9 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	 *
 	 *  
 	 *
-	 * @return LMAT_Language|false detected language, false if none was found
+	 * @return Linguator_Language|false detected language, false if none was found
 	 */
-	protected function get_language_from_content() {
+	protected function linguator_get_language_from_content() {
 		// No language set for 404
 		if ( is_404() || ( is_attachment() && ! $this->options['media_support'] ) ) {
 			return $this->get_preferred_language();
@@ -103,7 +103,7 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 		 *
 		 *  
 		 *
-		 * @param LMAT_Language|false $lang Language object or false if none was found.
+		 * @param Linguator_Language|false $lang Language object or false if none was found.
 		 */
 		return apply_filters( 'lmat_get_current_language', $lang ?? false );
 	}
@@ -156,20 +156,20 @@ class LMAT_Choose_Lang_Content extends LMAT_Choose_Lang {
 	 */
 	public function wp() {
 		// Nothing to do if the language has already been set ( although normally the filter has been removed )
-		if ( empty( $this->curlang ) && $curlang = $this->get_language_from_content() ) {
+		if ( empty( $this->curlang ) && $curlang = $this->linguator_get_language_from_content() ) {
 			parent::set_language( $curlang );
 		}
 	}
 
 	/**
-	 * If no language is found by {@see LMAT_Choose_Lang_Content::get_language_from_content()}, returns the preferred one.
+	 * If no language is found by {@see Linguator_Choose_Lang_Content::linguator_get_language_from_content()}, returns the preferred one.
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|false $lang Language found by {@see LMAT_Choose_Lang_Content::get_language_from_content()}.
-	 * @return LMAT_Language|false
+	 * @param Linguator_Language|false $lang Language found by {@see Linguator_Choose_Lang_Content::linguator_get_language_from_content()}.
+	 * @return Linguator_Language|false
 	 */
-	public function lmat_get_current_language( $lang ) {
+	public function linguator_get_current_language( $lang ) {
 		return ! $lang ? $this->get_preferred_language() : $lang;
 	}
 }

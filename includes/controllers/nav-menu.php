@@ -20,7 +20,7 @@ use Linguator\Includes\Options\Options;
  *
  *  	
  */
-class LMAT_Nav_Menu {
+class Linguator_Nav_Menu {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -29,7 +29,7 @@ class LMAT_Nav_Menu {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
@@ -60,13 +60,13 @@ class LMAT_Nav_Menu {
 
 		$this->theme = get_option( 'stylesheet' );
 
-		add_filter( 'wp_setup_nav_menu_item', array( $this, 'wp_setup_nav_menu_item' ) );
+		add_filter( 'wp_setup_nav_menu_item', array( $this, 'linguator_wp_setup_nav_menu_item' ) );
 
 		// Integration with WP customizer
 		add_action( 'customize_register', array( $this, 'create_nav_menu_locations' ), 5 );
 
 		// Filter _wp_auto_add_pages_to_menu by language
-		add_action( 'transition_post_status', array( $this, 'auto_add_pages_to_menu' ), 5, 3 ); // before _wp_auto_add_pages_to_menu
+		add_action( 'transition_post_status', array( $this, 'linguator_auto_add_pages_to_menu' ), 5, 3 ); // before _wp_auto_add_pages_to_menu
 	}
 
 	/**
@@ -77,7 +77,7 @@ class LMAT_Nav_Menu {
 	 * @param stdClass $item Menu item.
 	 * @return stdClass
 	 */
-	public function wp_setup_nav_menu_item( $item ) {
+	public function linguator_wp_setup_nav_menu_item( $item ) {
 		if ( isset( $item->url ) && '#lmat_switcher' === $item->url ) {
 			$item->post_title = __( 'Languages', 'linguator-multilingual-ai-translation' );
 			$item->type_label = __( 'Language switcher', 'linguator-multilingual-ai-translation' );
@@ -126,7 +126,7 @@ class LMAT_Nav_Menu {
 	 *  
 	 *
 	 * @param string       $loc  Nav menu location.
-	 * @param LMAT_Language $lang Language object.
+	 * @param Linguator_Language $lang Language object.
 	 * @return string
 	 */
 	public function combine_location( $loc, $lang ) {
@@ -153,14 +153,14 @@ class LMAT_Nav_Menu {
 	}
 
 	/**
-	 * Filters the option nav_menu_options for auto added pages to menu.
+	 * Filters the option linguator_nav_menu_options for auto added pages to menu.
 	 *
 	 *  
 	 *
-	 * @param array $options Options stored in the option nav_menu_options.
+	 * @param array $options Options stored in the option linguator_nav_menu_options.
 	 * @return array Modified options.
 	 */
-	public function nav_menu_options( $options ) {
+	public function linguator_nav_menu_options( $options ) {
 		$options['auto_add'] = array_intersect( $options['auto_add'], $this->auto_add_menus );
 		return $options;
 	}
@@ -175,7 +175,7 @@ class LMAT_Nav_Menu {
 	 * @param WP_Post $post       Post object.
 	 * @return void
 	 */
-	public function auto_add_pages_to_menu( $new_status, $old_status, $post ) {
+	public function linguator_auto_add_pages_to_menu( $new_status, $old_status, $post ) {
 		if ( 'publish' != $new_status || 'publish' == $old_status || 'page' != $post->post_type || ! empty( $post->post_parent ) ) {
 			return;
 		}
@@ -191,7 +191,7 @@ class LMAT_Nav_Menu {
 				}
 			}
 
-			add_filter( 'option_nav_menu_options', array( $this, 'nav_menu_options' ) );
+			add_filter( 'option_nav_menu_options', array( $this, 'linguator_nav_menu_options' ) );
 		}
 	}
 }

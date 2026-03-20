@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Controllers\LMAT_Static_Pages;
+use Linguator\Includes\Controllers\Linguator_Static_Pages;
 
 
 
@@ -18,16 +18,16 @@ use Linguator\Includes\Controllers\LMAT_Static_Pages;
  *
  *  
  */
-class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
+class Linguator_Frontend_Static_Pages extends Linguator_Static_Pages {
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	protected $links_model;
 
 	/**
-	 * @var LMAT_Frontend_Links|null
+	 * @var Linguator_Frontend_Links|null
 	 */
 	protected $links;
 
@@ -52,16 +52,16 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 		$this->links       = &$linguator->links;
 		$this->options     = &$linguator->options;
 
-		add_action( 'lmat_home_requested', array( $this, 'lmat_home_requested' ) );
+		add_action( 'lmat_home_requested', array( $this, 'linguator_home_requested' ) );
 
 		// Manages the redirection of the homepage.
 		add_filter( 'redirect_canonical', array( $this, 'redirect_canonical' ) );
 
-		add_filter( 'lmat_pre_translation_url', array( $this, 'lmat_pre_translation_url' ), 10, 3 );
-		add_filter( 'lmat_check_canonical_url', array( $this, 'lmat_check_canonical_url' ) );
+		add_filter( 'lmat_pre_translation_url', array( $this, 'linguator_pre_translation_url' ), 10, 3 );
+		add_filter( 'lmat_check_canonical_url', array( $this, 'linguator_check_canonical_url' ) );
 
-		add_filter( 'lmat_set_language_from_query', array( $this, 'page_on_front_query' ), 10, 2 );
-		add_filter( 'lmat_set_language_from_query', array( $this, 'page_for_posts_query' ), 10, 2 );
+		add_filter( 'lmat_set_language_from_query', array( $this, 'linguator_page_on_front_query' ), 10, 2 );
+		add_filter( 'lmat_set_language_from_query', array( $this, 'linguator_page_for_posts_query' ), 10, 2 );
 
 		// Specific cases for the customizer.
 		add_action( 'customize_register', array( $this, 'filter_customizer' ) );
@@ -74,7 +74,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 *
 	 * @return void
 	 */
-	public function lmat_home_requested() {
+	public function linguator_home_requested() {
 		set_query_var( 'page_id', $this->curlang->page_on_front );
 	}
 
@@ -110,11 +110,11 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 *  
 	 *
 	 * @param string       $url               Empty string or the url of the translation of the current page.
-	 * @param LMAT_Language $language          Language of the translation.
+	 * @param Linguator_Language $language          Language of the translation.
 	 * @param int          $queried_object_id Queried object ID.
 	 * @return string The translation url.
 	 */
-	public function lmat_pre_translation_url( $url, $language, $queried_object_id ) {
+	public function linguator_pre_translation_url( $url, $language, $queried_object_id ) {
 		if ( empty( $queried_object_id ) ) {
 			return $url;
 		}
@@ -148,7 +148,7 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 * @param string $redirect_url The redirect url.
 	 * @return string|false
 	 */
-	public function lmat_check_canonical_url( $redirect_url ) {
+	public function linguator_check_canonical_url( $redirect_url ) {
 		return $this->options['redirect_lang'] && ! $this->options['force_lang'] && ! empty( $this->curlang->page_on_front ) && is_page( $this->curlang->page_on_front ) ? false : $redirect_url;
 	}
 
@@ -170,11 +170,11 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|false $lang  The current language, false if it is not set yet.
+	 * @param Linguator_Language|false $lang  The current language, false if it is not set yet.
 	 * @param WP_Query           $query The main WP query.
-	 * @return LMAT_Language|false
+	 * @return Linguator_Language|false
 	 */
-	public function page_on_front_query( $lang, $query ) {
+	public function linguator_page_on_front_query( $lang, $query ) {
 		if ( ! empty( $lang ) || ! $this->page_on_front ) {
 			return $lang;
 		}
@@ -231,11 +231,11 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|false $lang  The current language, false if it is not set yet.
+	 * @param Linguator_Language|false $lang  The current language, false if it is not set yet.
 	 * @param WP_Query           $query The main WP query.
-	 * @return LMAT_Language|false
+	 * @return Linguator_Language|false
 	 */
-	public function page_for_posts_query( $lang, $query ) {
+	public function linguator_page_for_posts_query( $lang, $query ) {
 		if ( ! empty( $lang ) || ! $this->page_for_posts ) {
 			return $lang;
 		}
@@ -287,10 +287,10 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 * @return void
 	 */
 	public function filter_customizer() {
-		add_filter( 'pre_option_page_on_front', array( $this, 'customize_page' ), 20 ); // After the customizer.
-		add_filter( 'pre_option_page_for_post', array( $this, 'customize_page' ), 20 );
+		add_filter( 'pre_option_page_on_front', array( $this, 'linguator_customize_page' ), 20 ); // After the customizer.
+		add_filter( 'pre_option_page_for_post', array( $this, 'linguator_customize_page' ), 20 );
 
-		add_filter( 'lmat_pre_translation_url', array( $this, 'customize_translation_url' ), 20, 2 ); // After the generic hook in this class.
+		add_filter( 'lmat_pre_translation_url', array( $this, 'linguator_customize_translation_url' ), 20, 2 ); // After the generic hook in this class.
 	}
 
 	/**
@@ -301,8 +301,8 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 * @param int|false $pre A page ID if the setting is customized, false otherwise.
 	 * @return int|false
 	 */
-	public function customize_page( $pre ) {
-		return is_numeric( $pre ) ? lmat_get_post( (int) $pre ) : $pre;
+	public function linguator_customize_page( $pre ) {
+		return is_numeric( $pre ) ? linguator_get_post( (int) $pre ) : $pre;
 	}
 
 	/**
@@ -311,10 +311,10 @@ class LMAT_Frontend_Static_Pages extends LMAT_Static_Pages {
 	 *  
 	 *
 	 * @param string       $url      An empty string or the URL of the translation of the current page.
-	 * @param LMAT_Language $language The language of the translation.
+	 * @param Linguator_Language $language The language of the translation.
 	 * @return string
 	 */
-	public function customize_translation_url( $url, $language ) {
+	public function linguator_customize_translation_url( $url, $language ) {
 		if ( 'posts' === get_option( 'show_on_front' ) && is_front_page() ) {
 			// When the page on front displays posts, the home URL is the same as the search URL.
 			return $language->get_search_url();

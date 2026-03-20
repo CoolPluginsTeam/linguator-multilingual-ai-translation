@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Options\LMAT_Translate_Option;
-use Linguator\Frontend\Controllers\LMAT_Frontend;
+use Linguator\Includes\Options\Linguator_Translate_Option;
+use Linguator\Frontend\Controllers\Linguator_Frontend;
 
 
 
@@ -18,7 +18,7 @@ use Linguator\Frontend\Controllers\LMAT_Frontend;
  *
  *  
  */
-class LMAT_Twenty_Seventeen {
+class Linguator_Twenty_Seventeen {
 	/**
 	 * Translates the front page panels and the header video.
 	 *
@@ -26,7 +26,7 @@ class LMAT_Twenty_Seventeen {
 	 */
 	public function init() {
 		if ( 'twentyseventeen' === get_template() && did_action( 'lmat_init' ) ) {
-			if ( function_exists( 'twentyseventeen_panel_count' ) && LMAT() instanceof LMAT_Frontend ) {
+			if ( function_exists( 'twentyseventeen_panel_count' ) && LMAT() instanceof Linguator_Frontend ) {
 				$num_sections = twentyseventeen_panel_count();
 				for ( $i = 1; $i < ( 1 + $num_sections ); $i++ ) {
 					add_filter( 'theme_mod_panel_' . $i, 'lmat_get_post' );
@@ -34,7 +34,8 @@ class LMAT_Twenty_Seventeen {
 			}
 
 			$theme_slug = get_option( 'stylesheet' ); // In case we are using a child theme.
-			new LMAT_Translate_Option( "theme_mods_$theme_slug", array( 'external_header_video' => 1 ), array( 'context' => 'Twenty Seventeen' ) );
+			new Linguator_Translate_Option( "theme_mods_$theme_slug", array( 'external_header_video' => 1 ), array( 'context' => 'Twenty Seventeen' ) );
 		}
 	}
 }
+

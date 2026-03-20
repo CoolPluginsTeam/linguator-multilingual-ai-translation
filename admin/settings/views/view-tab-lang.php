@@ -5,7 +5,7 @@
  *
  * @package Linguator
  *
- * @var LMAT_Table_Languages $list_table An object representing the languages list table.
+ * @var Linguator_Table_Languages $list_table An object representing the languages list table.
  */
 
 
@@ -14,9 +14,9 @@ if (! defined('ABSPATH')) {
 }
 
 
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Settings\Controllers\LMAT_Settings;
-use Linguator\Admin\Controllers\LMAT_Admin_Base;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Settings\Controllers\Linguator_Settings;
+use Linguator\Admin\Controllers\Linguator_Admin_Base;
 
 ?>
 <div id="col-container">
@@ -30,7 +30,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 			<div class="metabox-holder">
 				<?php
 				wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
-				do_meta_boxes( LMAT_Admin_Base::get_screen_id( 'lang' ), 'normal', array() );
+				do_meta_boxes( Linguator_Admin_Base::get_screen_id( 'lang' ), 'normal', array() );
 				?>
 			</div>
 		</div>
@@ -81,7 +81,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 
 							// Get predefined languages and filter out existing ones
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-							$predefined_languages = LMAT_Settings::get_predefined_languages();
+							$predefined_languages = Linguator_Settings::get_predefined_languages();
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 							foreach ($predefined_languages as $language) {
 								// Skip if this language is already added
@@ -95,7 +95,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 									'rtl' == $language['dir'] ? '1' : '0',
 									esc_attr($language['flag']),
 									esc_html($language['name']),
-									esc_attr(LMAT_Language::get_predefined_flag($language['flag']))
+									esc_attr(Linguator_Language::get_predefined_flag($language['flag']))
 								);
 							}
 							?>
@@ -167,7 +167,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 								printf(
 									'<option value="%s" data-flag-html="%s"%s>%s</option>' . "\n",
 									esc_attr($code),
-									esc_html(LMAT_Language::get_flag_html(LMAT_Language::get_flag_information($code))),
+									esc_html(Linguator_Language::get_flag_html(Linguator_Language::get_flag_information($code))),
 									selected(isset($edit_lang->flag_code) && $edit_lang->flag_code === $code, true, false),
 									esc_html($label)
 								);
@@ -194,7 +194,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 						 *
 						 *  
 						 *
-						 * @param LMAT_Language $lang language being edited.
+						 * @param Linguator_Language $lang language being edited.
 						 */
 						do_action('lmat_language_edit_form_fields', $edit_lang);
 					} else {

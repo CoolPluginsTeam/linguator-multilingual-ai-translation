@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Helpers\LMAT_Term_Slug;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Helpers\Linguator_Term_Slug;
 use Linguator\Modules\REST\Request;
 use Linguator\Includes\Capabilities\User;
 use Linguator\Includes\Capabilities\Create\Term as Create_Term;
@@ -22,30 +22,30 @@ use Linguator\Includes\Capabilities\Create\Term as Create_Term;
  *
  *  
  */
-class LMAT_CRUD_Terms {
+class Linguator_CRUD_Terms {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
 	 * Current language (used to filter the content).
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
 	/**
 	 * Language selected in the admin language filter.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $filter_lang;
 
 	/**
 	 * Preferred language to assign to new contents.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $pref_lang;
 
@@ -94,7 +94,7 @@ class LMAT_CRUD_Terms {
 
 		// Saving terms.
 		add_action( 'create_term', array( $this, 'save_term' ), 999, 3 );
-		add_action( 'edit_term', array( $this, 'save_term' ), 999, 3 ); // After LMAT_Admin_Filters_Term
+		add_action( 'edit_term', array( $this, 'save_term' ), 999, 3 ); // After Linguator_Admin_Filters_Term
 		add_filter( 'pre_term_name', array( $this, 'set_pre_term_name' ) );
 		add_filter( 'pre_term_slug', array( $this, 'set_pre_term_slug' ), 10, 2 );
 
@@ -121,8 +121,8 @@ class LMAT_CRUD_Terms {
 		$term_language = new Create_Term(
 			$this->model,
 			$this->request,
-			$this->pref_lang instanceof LMAT_Language ? $this->pref_lang : null, // Can be `false` as well...
-			$this->curlang instanceof LMAT_Language ? $this->curlang : null // Can be `false` as well...
+			$this->pref_lang instanceof Linguator_Language ? $this->pref_lang : null, // Can be `false` as well...
+			$this->curlang instanceof Linguator_Language ? $this->curlang : null // Can be `false` as well...
 		);
 
 		$this->model->term->set_language(
@@ -176,7 +176,7 @@ class LMAT_CRUD_Terms {
 	 *
 	 * @param string[] $taxonomies Queried taxonomies.
 	 * @param array    $args       WP_Term_Query arguments.
-	 * @return LMAT_Language[] The language(s) to use in the filter, false otherwise.
+	 * @return Linguator_Language[] The language(s) to use in the filter, false otherwise.
 	 */
 	protected function get_queried_languages( $taxonomies, $args ): array {
 		global $pagenow;
@@ -312,7 +312,7 @@ class LMAT_CRUD_Terms {
 			return $slug;
 		}
 
-		$term_slug = new LMAT_Term_Slug( $this->model, $slug, $taxonomy, $this->pre_term_name );
+		$term_slug = new Linguator_Term_Slug( $this->model, $slug, $taxonomy, $this->pre_term_name );
 
 		return $term_slug->get_suffixed_slug( '-' );
 	}

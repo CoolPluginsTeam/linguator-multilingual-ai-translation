@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Sync_Tax {
+class Linguator_Sync_Tax {
 
 	/**
 	 * Stores the plugin options.
@@ -22,7 +22,7 @@ class LMAT_Sync_Tax {
 	protected $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -313,3 +313,4 @@ class LMAT_Sync_Tax {
 		add_action( 'set_object_terms', array( $this, 'set_object_terms' ), 10, 5 );
 	}
 }
+

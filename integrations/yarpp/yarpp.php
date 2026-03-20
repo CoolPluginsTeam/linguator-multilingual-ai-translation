@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Yarpp {
+class Linguator_Yarpp {
 	/**
 	 * Just makes YARPP aware of the language taxonomy ( after Linguator registered it ).
 	 *
@@ -23,3 +23,4 @@ class LMAT_Yarpp {
 		$GLOBALS['wp_taxonomies']['lmat_language']->yarpp_support = 1;
 	}
 }
+

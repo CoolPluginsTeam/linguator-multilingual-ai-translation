@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Walkers\Linguator_Walker_Dropdown;
 use WP_Ajax_Response;
 
 
@@ -20,28 +20,28 @@ use WP_Ajax_Response;
  *
  *  
  */
-class LMAT_Admin_Classic_Editor {
+class Linguator_Admin_Classic_Editor {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * @var LMAT_Admin_Links
+	 * @var Linguator_Admin_Links
 	 */
 	public $links;
 
 	/**
 	 * Current language (used to filter the content).
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
 	/**
 	 * Preferred language to assign to new contents.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $pref_lang;
 
@@ -50,7 +50,7 @@ class LMAT_Admin_Classic_Editor {
 	 *
 	 *  
 	 *
-	 * @param object $linguator The Linguator object.
+	 * @param object $linguator The Linguator_Admin object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->model = &$linguator->model;
@@ -59,17 +59,17 @@ class LMAT_Admin_Classic_Editor {
 		$this->pref_lang = &$linguator->pref_lang;
 		
 		// Adds the Languages box in the 'Edit Post' and 'Edit Page' panels
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'add_meta_boxes', array( $this, 'linguator_add_meta_boxes' ) );
 
 		// Ajax response for changing the language in the post metabox
 		add_action( 'wp_ajax_lmat_post_lang_choice', array( $this, 'post_lang_choice' ) );
-		add_action( 'wp_ajax_lmat_posts_not_translated', array( $this, 'ajax_posts_not_translated' ) );
+		add_action( 'wp_ajax_lmat_posts_not_translated', array( $this, 'linguator_ajax_posts_not_translated' ) );
 
 		// Filters the pages by language in the parent dropdown list in the page attributes metabox
-		add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'page_attributes_dropdown_pages_args' ), 10, 2 );
+		add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'linguator_page_attributes_dropdown_pages_args' ), 10, 2 );
 
 		// Notice
-		add_action( 'edit_form_top', array( $this, 'edit_form_top' ) );
+		add_action( 'edit_form_top', array( $this, 'linguator_edit_form_top' ) );
 	}
 
 	/**
@@ -80,7 +80,7 @@ class LMAT_Admin_Classic_Editor {
 	 * @param string $post_type Current post type
 	 * @return void
 	 */
-	public function add_meta_boxes( $post_type ) {
+	public function linguator_add_meta_boxes( $post_type ) {
 		if ( $this->model->is_translated_post_type( $post_type ) ) {
 			add_meta_box(
 				'ml_box',
@@ -90,7 +90,7 @@ class LMAT_Admin_Classic_Editor {
 				'side',
 				'high',
 				array(
-					'__back_compat_meta_box' => lmat_use_block_editor_plugin(),
+					'__back_compat_meta_box' => linguator_use_block_editor_plugin(),
 				)
 			);
 		}
@@ -108,13 +108,13 @@ class LMAT_Admin_Classic_Editor {
 		$post_type     = $post->post_type;
 
 		// phpcs:ignore WordPress.Security.NonceVerification, VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		$from_post_id = isset( $_GET['from_post'] ) ? (int) $_GET['from_post'] : 0;
+		$from_post_id = isset( $_GET['from_post'] ) ? absint( wp_unslash( $_GET['from_post'] ) ) : 0;
 
 		$lang = ( $lg = $this->model->post->get_language( $post_ID ) ) ? $lg :
-			( isset( $_GET['new_lang'] ) ? $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification
+			( isset( $_GET['new_lang'] ) ? $this->model->get_language( sanitize_key( wp_unslash( $_GET['new_lang'] ) ) ) : // phpcs:ignore WordPress.Security.NonceVerification
 			$this->pref_lang );
 
-		$dropdown = new LMAT_Walker_Dropdown();
+		$dropdown = new Linguator_Walker_Dropdown();
 
 		$id = ( 'attachment' === $post_type ) ? sprintf( 'attachments[%d][language]', (int) $post_ID ) : 'post_lang_choice';
 
@@ -205,10 +205,10 @@ class LMAT_Admin_Classic_Editor {
 		}
 
 		global $post_ID; // Obliged to use the global variable for wp_popular_terms_checklist
-		$post_ID   = (int) $_POST['post_id'];
-		$lang_slug     = sanitize_key( $_POST['lang'] );
+		$post_ID   = absint( wp_unslash( $_POST['post_id'] ) );
+		$lang_slug = sanitize_key( wp_unslash( $_POST['lang'] ) );
 		$lang      = $this->model->get_language( $lang_slug );
-		$post_type = sanitize_key( $_POST['post_type'] );
+		$post_type = sanitize_key( wp_unslash( $_POST['post_type'] ) );
 
 		if ( empty( $lang ) ) {
 			wp_die( esc_html( "{$lang_slug} is not a valid language code." ) );
@@ -238,10 +238,10 @@ class LMAT_Admin_Classic_Editor {
 		ob_end_clean();
 
 		// Categories
-		if ( isset( $_POST['taxonomies'] ) ) { // Not set for pages
+		if ( isset( $_POST['taxonomies'] ) && is_array( array_map( 'sanitize_key', wp_unslash( $_POST['taxonomies'] ) ) ) ) { // Not set for pages
 			$supplemental = array();
 
-			foreach ( array_map( 'sanitize_key', $_POST['taxonomies'] ) as $taxname ) {
+			foreach ( array_map( 'sanitize_key', wp_unslash( $_POST['taxonomies'] ) ) as $taxname ) {
 				$taxonomy = get_taxonomy( $taxname );
 
 				if ( ! empty( $taxonomy ) ) {
@@ -289,9 +289,9 @@ class LMAT_Admin_Classic_Editor {
 					'echo'             => 0,
 				);
 
-			/** This filter is documented in wp-admin/includes/meta-boxes.php */
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-			$dropdown_args = (array) apply_filters( 'page_attributes_dropdown_pages_args', $dropdown_args, $post ); // Since WP 3.3.
+				/** This filter is documented in wp-admin/includes/meta-boxes.php */
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				$dropdown_args = (array) apply_filters( 'page_attributes_dropdown_pages_args', $dropdown_args, $post ); // Since WP 3.3.
 				$dropdown_args['echo'] = 0; // Make sure to not print it.
 
 				/** @var string $data */
@@ -302,7 +302,21 @@ class LMAT_Admin_Classic_Editor {
 		}
 
 		// Flag
-		$x->Add( array( 'what' => 'flag', 'data' => empty( $lang->flag ) ? esc_html( $lang->slug ) : $lang->flag ) );
+		$x->Add(
+			array(
+				'what' => 'flag',
+				'data' => empty( $lang->flag )
+					? esc_html( $lang->slug )
+					: wp_kses(
+						(string) $lang->flag,
+						array(
+							'img'  => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true, 'decoding' => true, 'loading' => true, 'title' => true ),
+							'span' => array( 'class' => true, 'style' => true ),
+						),
+						array_merge( wp_allowed_protocols(), array( 'data' ) )
+					),
+			)
+		);
 
 		// Sample permalink
 		$x->Add( array( 'what' => 'permalink', 'data' => get_sample_permalink_html( $post_ID ) ) );
@@ -317,14 +331,14 @@ class LMAT_Admin_Classic_Editor {
 	 *
 	 * @return void
 	 */
-	public function ajax_posts_not_translated() {
+	public function linguator_ajax_posts_not_translated() {
 		check_ajax_referer( 'lmat_language', '_lmat_nonce' );
 
 		if ( ! isset( $_GET['post_type'], $_GET['post_language'], $_GET['translation_language'], $_GET['term'], $_GET['lmat_post_id'] ) ) {
 			wp_die( 0 );
 		}
 
-		$post_type = sanitize_key( $_GET['post_type'] );
+		$post_type = sanitize_key( wp_unslash( $_GET['post_type'] ) );
 
 		if ( ! post_type_exists( $post_type ) ) {
 			wp_die( 0 );
@@ -332,8 +346,8 @@ class LMAT_Admin_Classic_Editor {
 
 		$term = sanitize_text_field( wp_unslash( $_GET['term'] ) );
 
-		$post_language = $this->model->get_language( sanitize_key( $_GET['post_language'] ) );
-		$translation_language = $this->model->get_language( sanitize_key( $_GET['translation_language'] ) );
+		$post_language        = $this->model->get_language( sanitize_key( wp_unslash( $_GET['post_language'] ) ) );
+		$translation_language = $this->model->get_language( sanitize_key( wp_unslash( $_GET['translation_language'] ) ) );
 
 		$return = array();
 
@@ -349,7 +363,7 @@ class LMAT_Admin_Classic_Editor {
 		}
 
 		// Add current translation in list
-		if ( $post_id = $this->model->post->get_translation( (int) $_GET['lmat_post_id'], $translation_language ) ) {
+		if ( $post_id = $this->model->post->get_translation( absint( wp_unslash( $_GET['lmat_post_id'] ) ), $translation_language ) ) {
 			$post = get_post( $post_id );
 
 			if ( ! empty( $post ) ) {
@@ -376,8 +390,25 @@ class LMAT_Admin_Classic_Editor {
 	 * @param WP_Post $post          The page being edited.
 	 * @return array Modified arguments.
 	 */
-	public function page_attributes_dropdown_pages_args( $dropdown_args, $post ) {
-		$language = isset( $_POST['lang'] ) ? $this->model->get_language( sanitize_key( $_POST['lang'] ) ) : $this->model->post->get_language( $post->ID ); // phpcs:ignore WordPress.Security.NonceVerification
+	public function linguator_page_attributes_dropdown_pages_args( $dropdown_args, $post ) {
+
+		$language = null;
+
+		if ( isset( $_POST['lang'], $_POST['_lmat_nonce'] ) ) {
+
+			$nonce = sanitize_text_field( wp_unslash( $_POST['_lmat_nonce'] ) );
+
+			if ( wp_verify_nonce( $nonce, 'lmat_language' ) ) {
+
+				$lang_slug = sanitize_key( wp_unslash( $_POST['lang'] ) );
+
+				$language = $this->model->get_language( $lang_slug );
+			}
+		}
+
+		if ( empty( $language ) ) {
+			$language = $this->model->post->get_language( $post->ID );
+		}
 
 		if ( empty( $language ) ) {
 			$language = $this->pref_lang;
@@ -398,7 +429,7 @@ class LMAT_Admin_Classic_Editor {
 	 * @param WP_Post $post the post currently being edited.
 	 * @return void
 	 */
-	public function edit_form_top( $post ) {
+	public function linguator_edit_form_top( $post ) {
 		if ( ! $this->model->post->current_user_can_synchronize( $post->ID ) ) {
 			?>
 			<div class="lmat-notice notice notice-warning">

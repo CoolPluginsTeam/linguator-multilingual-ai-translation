@@ -313,7 +313,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         // Filter shortcode content
         const shortcodePattern = /\[(.*?)\]/g;
         const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
-
+        
         if (shortcodeMatches) {
             string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
         }

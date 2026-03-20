@@ -7,13 +7,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WP_Term;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 /**
  * Displays the translations fields for terms
  *
  * @package Linguator
  *
- * @var LMAT_Admin_Filters_Term $this      LMAT_Admin_Filters_Term object.
- * @var LMAT_Language           $lang      The post language. Default language if no language assigned yet.
+ * @var Linguator_Admin_Filters_Term $this      Linguator_Admin_Filters_Term object.
+ * @var Linguator_Language           $lang      The post language. Default language if no language assigned yet.
  * @var string                 $taxonomy  Taxonomy name.
  * @var string                 $post_type Post type.
  */
@@ -37,7 +39,6 @@ else {
 ?>
 <table class="widefat term-translations"  id="<?php echo isset( $term_id ) ? 'edit' : 'add'; ?>-term-translations">
 	<?php
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	foreach ( $this->model->get_languages_list() as $language ) {
 		if ( $language->term_id == $lang->term_id ) {
 			continue;
@@ -45,22 +46,15 @@ else {
 
 		// Look for any existing translation in this language
 		// Take care not to propose a self link
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$translation = null;
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		if ( isset( $term_id ) && ( $translation_id = $this->model->term->get_translation( $term_id, $language ) ) && $translation_id != $term_id ) {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation = get_term( $translation_id, $taxonomy );
 		}
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		if ( ! empty( $from_term_id ) && ( $translation_id = $this->model->term->get( $from_term_id, $language ) ) && ! $this->model->term->get_translation( $translation_id, $lang ) ) {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation = get_term( $translation_id, $taxonomy );
 		}
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$translation_exists = $translation instanceof WP_Term;
 
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$add_link = isset( $term_id ) ? $this->links->new_term_translation_link( $term_id, $taxonomy, $post_type, $language ) : ''; // Do not display the add new link in add term form ($term_id not set).
 		$link = $add_link;
 

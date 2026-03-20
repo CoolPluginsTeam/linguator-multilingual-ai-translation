@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Sync {
+class Linguator_Sync {
 	/**
-	 * @var LMAT_Sync_Tax
+	 * @var Linguator_Sync_Tax
 	 */
 	public $taxonomies;
 
 	/**
-	 * @var LMAT_Sync_Post_Metas
+	 * @var Linguator_Sync_Post_Metas
 	 */
 	public $post_metas;
 
 	/**
-	 * @var LMAT_Sync_Term_Metas
+	 * @var Linguator_Sync_Term_Metas
 	 */
 	public $term_metas;
 
@@ -36,7 +36,7 @@ class LMAT_Sync {
 	protected $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -51,14 +51,14 @@ class LMAT_Sync {
 		$this->model   = &$linguator->model;
 		$this->options = &$linguator->options;
 
-		$this->taxonomies = new LMAT_Sync_Tax( $linguator );
-		$this->post_metas = new LMAT_Sync_Post_Metas( $linguator );
-		$this->term_metas = new LMAT_Sync_Term_Metas( $linguator );
+		$this->taxonomies = new Linguator_Sync_Tax( $linguator );
+		$this->post_metas = new Linguator_Sync_Post_Metas( $linguator );
+		$this->term_metas = new Linguator_Sync_Term_Metas( $linguator );
 
 		add_filter( 'wp_insert_post_parent', array( $this, 'can_sync_post_parent' ), 10, 3 );
 		add_filter( 'wp_insert_post_data', array( $this, 'can_sync_post_data' ), 10, 2 );
 
-		add_action( 'lmat_save_post', array( $this, 'lmat_save_post' ), 10, 3 );
+		add_action( 'lmat_save_post', array( $this, 'linguator_save_post' ), 10, 3 );
 		add_action( 'created_term', array( $this, 'sync_term_parent' ), 10, 3 );
 		add_action( 'edited_term', array( $this, 'sync_term_parent' ), 10, 3 );
 
@@ -157,7 +157,7 @@ class LMAT_Sync {
 	 * @param int[]   $translations Post translations.
 	 * @return void
 	 */
-	public function lmat_save_post( $post_id, $post, $translations ) {
+	public function linguator_save_post( $post_id, $post, $translations ) {
 		global $wpdb;
 
 		if ( $this->model->post->current_user_can_synchronize( $post_id ) ) {
@@ -252,7 +252,7 @@ class LMAT_Sync {
 	 * @return void
 	 */
 	public function edit_attachment( $post_id ) {
-		$this->lmat_save_post( $post_id, get_post( $post_id ), $this->model->post->get_translations( $post_id ) );
+		$this->linguator_save_post( $post_id, get_post( $post_id ), $this->model->post->get_translations( $post_id ) );
 	}
 
 	/**
@@ -282,3 +282,4 @@ class LMAT_Sync {
 		return $value;
 	}
 }
+

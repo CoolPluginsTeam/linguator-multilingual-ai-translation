@@ -9,18 +9,18 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 
 /**
- * LMAT_Language factory.
+ * Linguator_Language factory.
  *
  *  
  *
- * @phpstan-import-type LanguageData from LMAT_Language
+ * @phpstan-import-type LanguageData from Linguator_Language
  */
-class LMAT_Language_Factory {
+class Linguator_Language_Factory {
 	/**
 	 * Predefined languages.
 	 *
@@ -54,15 +54,15 @@ class LMAT_Language_Factory {
 	 *
 	 *  
 	 *
-	 * @param array $language_data Language object properties stored as an array. See `LMAT_Language::__construct()`
+	 * @param array $language_data Language object properties stored as an array. See `Linguator_Language::__construct()`
 	 *                             for information on accepted properties.
 	 *
-	 * @return LMAT_Language A language object if given data pass sanitization.
+	 * @return Linguator_Language A language object if given data pass sanitization.
 	 *
 	 * @phpstan-param LanguageData $language_data
 	 */
 	public function get( $language_data ) {
-		return new LMAT_Language( $this->sanitize_data( $language_data ) );
+		return new Linguator_Language( $this->sanitize_data( $language_data ) );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class LMAT_Language_Factory {
 	 * @param WP_Term[] $terms List of language terms, with the language taxonomy names as array keys.
 	 *                         `lmat_language` is a mandatory key for the object to be created,
 	 *                         `lmat_term_language` should be too in a fully operational environment.
-	 * @return LMAT_Language|null Language object on success, `null` on failure.
+	 * @return Linguator_Language|null Language object on success, `null` on failure.
 	 *
 	 * @phpstan-param array{lmat_language?:WP_Term}&array<string, WP_Term> $terms
 	 */
@@ -157,7 +157,7 @@ class LMAT_Language_Factory {
 
 		$data = array_merge( $data, array_intersect_key( $additional_data, $allowed_additional_data ) );
 
-		return new LMAT_Language( $this->sanitize_data( $data ) );
+		return new Linguator_Language( $this->sanitize_data( $data ) );
 	}
 
 	/**
@@ -166,7 +166,7 @@ class LMAT_Language_Factory {
 	 *
 	 *  
 	 *
-	 * @param array $data Data to process. See `LMAT_Language::__construct()` for information on accepted data.
+	 * @param array $data Data to process. See `Linguator_Language::__construct()` for information on accepted data.
 	 * @return array Sanitized Data.
 	 *
 	 * @phpstan-return LanguageData
@@ -240,7 +240,7 @@ class LMAT_Language_Factory {
 	 */
 	private function get_flag( $flag_code, $name, $slug, $locale ) {
 		$flags = array(
-			'flag' => LMAT_Language::get_flag_information( $flag_code ),
+			'flag' => Linguator_Language::get_flag_information( $flag_code ),
 		);
 
 		// Custom flags?
@@ -328,7 +328,7 @@ class LMAT_Language_Factory {
 			 */
 			$return[ $key ] = apply_filters(
 				'lmat_get_flag',
-				LMAT_Language::get_flag_html( $flag, $title, $name ),
+				Linguator_Language::get_flag_html( $flag, $title, $name ),
 				$slug
 			);
 		}

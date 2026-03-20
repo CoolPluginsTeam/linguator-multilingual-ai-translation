@@ -11,10 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
-use Linguator\Includes\Walkers\LMAT_Walker_List;
-use Linguator\Frontend\Services\LMAT_Frontend_Links;
-use Linguator\Admin\Controllers\LMAT_Admin_Links;
+use Linguator\Includes\Walkers\Linguator_Walker_Dropdown;
+use Linguator\Includes\Walkers\Linguator_Walker_List;
+use Linguator\Frontend\Services\Linguator_Frontend_Links;
+use Linguator\Admin\Controllers\Linguator_Admin_Links;
 use WP_Post;
 
 
@@ -24,7 +24,7 @@ use WP_Post;
  *
  *  
  */
-class LMAT_Switcher {
+class Linguator_Switcher {
 	public const DEFAULTS = array(
 		'dropdown'               => 0, // Display as list and not as dropdown.
 		'echo'                   => 1, // Echoes the list.
@@ -43,7 +43,7 @@ class LMAT_Switcher {
 	);
 
 	/**
-	 * @var LMAT_Links|null
+	 * @var Linguator_Links|null
 	 */
 	protected $links;
 
@@ -74,7 +74,7 @@ class LMAT_Switcher {
 	 *
 	 *  
 	 *
-	 * @param array $args Arguments passed to {@see LMAT_Switcher::the_languages()}.
+	 * @param array $args Arguments passed to {@see Linguator_Switcher::the_languages()}.
 	 * @return string
 	 */
 	protected function get_current_language( $args ) {
@@ -94,8 +94,8 @@ class LMAT_Switcher {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $language Language.
-	 * @param array        $args     Arguments passed to {@see LMAT_Switcher::the_languages()}.
+	 * @param Linguator_Language $language Language.
+	 * @param array        $args     Arguments passed to {@see Linguator_Switcher::the_languages()}.
 	 * @return string|null
 	 */
 	protected function get_link( $language, $args ) {
@@ -110,7 +110,7 @@ class LMAT_Switcher {
 		}
 
 		// If we are on frontend.
-		if ( $this->links instanceof LMAT_Frontend_Links ) {
+		if ( $this->links instanceof Linguator_Frontend_Links ) {
 			return $this->links->get_translation_url( $language );
 		}
 
@@ -130,7 +130,7 @@ class LMAT_Switcher {
 	 *
 	 *  
 	 *
-	 * @param array $args  Arguments passed to {@see LMAT_Switcher::the_languages()}.
+	 * @param array $args  Arguments passed to {@see Linguator_Switcher::the_languages()}.
 	 * @return array Language switcher elements.
 	 */
 	protected function get_elements( $args ) {
@@ -213,7 +213,7 @@ class LMAT_Switcher {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Links $links Instance of LMAT_Links.
+	 * @param Linguator_Links $links Instance of Linguator_Links.
 	 * @param array     $args {
 	 *   Optional array of arguments.
 	 *
@@ -251,7 +251,7 @@ class LMAT_Switcher {
 		$args = apply_filters( 'lmat_the_languages_args', $args );
 
 		// Force not to hide the language for the widget preview even if the option is checked.
-		if ( $this->links instanceof LMAT_Admin_Links ) {
+		if ( $this->links instanceof Linguator_Admin_Links ) {
 			$args['hide_if_no_translation'] = 0;
 		}
 
@@ -271,9 +271,9 @@ class LMAT_Switcher {
 			$args['class'] = 'lmat-switcher-select';
 			$args['value'] = 'url';
 			$args['selected'] = $this->get_link( $this->links->model->get_language( $this->get_current_language( $args ) ), $args );
-			$walker = new LMAT_Walker_Dropdown();
+			$walker = new Linguator_Walker_Dropdown();
 		} else {
-			$walker = new LMAT_Walker_List();
+			$walker = new Linguator_Walker_List();
 		}
 
 		// Cast each element to stdClass because $walker::walk() expects an array of objects.
@@ -282,7 +282,7 @@ class LMAT_Switcher {
 		}
 
 		/**
-		 * Filter the whole html markup returned by the 'lmat_the_languages' template tag
+		 * Filter the whole html markup returned by the 'linguator_the_languages' template tag
 		 *
 		 *  
 		 *
@@ -305,7 +305,20 @@ class LMAT_Switcher {
 		}
 
 		if ( $args['echo'] ) {
-			echo $out; // phpcs:ignore WordPress.Security.EscapeOutput
+			echo wp_kses(
+				$out,
+				array(
+					'nav'    => array( 'aria-label' => true, 'class' => true ),
+					'ul'     => array( 'class' => true ),
+					'li'     => array( 'class' => true ),
+					'a'      => array( 'href' => true, 'class' => true, 'title' => true, 'hreflang' => true, 'lang' => true ),
+					'span'   => array( 'class' => true, 'style' => true ),
+					'img'    => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ),
+					'label'  => array( 'for' => true, 'class' => true ),
+					'select' => array( 'id' => true, 'name' => true, 'class' => true, 'aria-label' => true ),
+					'option' => array( 'value' => true, 'selected' => true ),
+				)
+			);
 		}
 		return $out;
 	}

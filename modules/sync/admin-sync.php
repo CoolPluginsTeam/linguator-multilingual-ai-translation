@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Admin_Sync extends LMAT_Sync {
+class Linguator_Admin_Sync extends Linguator_Sync {
 	/**
-	 * @var LMAT_Admin_Links
+	 * @var Linguator_Admin_Links
 	 */
 	private $links;
 
@@ -169,7 +169,7 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 			$post_type = $GLOBALS['post_type'];
 		} elseif ( isset( $_REQUEST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// 2nd case for quick edit.
-			$post_type = sanitize_key( $_REQUEST['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$post_type = sanitize_key( wp_unslash( $_REQUEST['post_type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		// Make sure not to impact media translations when creating them at the same time as post
@@ -189,13 +189,13 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 	 * @param WP_Post $post         Post object.
 	 * @param int[]   $translations Post translations.
 	 */
-	public function lmat_save_post( $post_id, $post, $translations ) {
-		parent::lmat_save_post( $post_id, $post, $translations );
+	public function linguator_save_post( $post_id, $post, $translations ) {
+		parent::linguator_save_post( $post_id, $post, $translations );
 
 		// Sticky posts
 		if ( in_array( 'sticky_posts', $this->options['sync'] ) ) {
 			$stickies = get_option( 'sticky_posts' );
-			if ( isset( $_REQUEST['sticky'] ) && 'sticky' === $_REQUEST['sticky'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['sticky'] ) && 'sticky' === sanitize_key( wp_unslash( $_REQUEST['sticky'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$stickies = array_merge( $stickies, array_values( $translations ) );
 			} else {
 				$stickies = array_diff( $stickies, array_values( $translations ) );
@@ -206,3 +206,4 @@ class LMAT_Admin_Sync extends LMAT_Sync {
 
 
 }
+

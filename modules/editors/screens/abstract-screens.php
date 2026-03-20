@@ -5,15 +5,17 @@
 
 namespace Linguator\Modules\Editors\Screens;
 
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Base\LMAT_Base;
+
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Base\Linguator_Base;
 use WP_Screen;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Admin\Controllers\LMAT_Admin_Block_Editor;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Admin\Controllers\Linguator_Admin_Block_Editor;
 
 /**
  * Template class to manage editors scripts.
@@ -28,12 +30,12 @@ abstract class Abstract_Screen {
 	protected $suffix = '';
 
 	/**
-	 * @var LMAT_Admin_Block_Editor|null
+	 * @var Linguator_Admin_Block_Editor|null
 	 */
 	protected $block_editor;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -41,7 +43,7 @@ abstract class Abstract_Screen {
 	 * Constructor.
 	 *
 	 *
-	 * @param LMAT_Base $linguator Linguator main object.
+	 * @param Linguator_Base $linguator Linguator main object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->suffix = '';
@@ -142,9 +144,9 @@ abstract class Abstract_Screen {
 	 * Returns the current editor language.
 	 *
 	 *
-	 * @return LMAT_Language|null The language object if found, `null` otherwise.
+	 * @return Linguator_Language|null The language object if found, `null` otherwise.
 	 */
-	abstract protected function get_language(): ?LMAT_Language;
+	abstract protected function get_language(): ?Linguator_Language;
 
 	/**
 	 * Returns the screen name to use across all process.

@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Models\Translated\LMAT_Translated_Term;
+use Linguator\Includes\Models\Translated\Linguator_Translated_Term;
 
 
 
@@ -24,7 +24,7 @@ class Taxonomies {
 	/**
 	 * Translated term model.
 	 *
-	 * @var LMAT_Translated_Term
+	 * @var Linguator_Translated_Term
 	 */
 	public $translated_object;
 
@@ -33,9 +33,9 @@ class Taxonomies {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Translated_Term $translated_object Terms model.
+	 * @param Linguator_Translated_Term $translated_object Terms model.
 	 */
-	public function __construct( LMAT_Translated_Term $translated_object ) {
+	public function __construct( Linguator_Translated_Term $translated_object ) {
 		$this->translated_object = $translated_object;
 	}
 

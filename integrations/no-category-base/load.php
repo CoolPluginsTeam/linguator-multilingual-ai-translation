@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/no-category-base.php';
 
-use Linguator\Integrations\no_category_base\LMAT_No_Category_Base;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\no_category_base\Linguator_No_Category_Base;
+use Linguator\Integrations\Linguator_Integrations;
 
-LMAT_Integrations::instance()->no_category_base = new LMAT_No_Category_Base();
-LMAT_Integrations::instance()->no_category_base->init();
+Linguator_Integrations::instance()->no_category_base = new Linguator_No_Category_Base();
+Linguator_Integrations::instance()->no_category_base->init();

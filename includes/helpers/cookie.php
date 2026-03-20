@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Cookie {
+class Linguator_Cookie {
 	/**
 	 * Parses the cookie parameters.
 	 *
 	 *  
 	 *
-	 * @param array $args {@see LMAT_Cookie::set()}
+	 * @param array $args {@see Linguator_Cookie::set()}
 	 * @return array
 	 */
 	protected static function parse_args( $args ) {

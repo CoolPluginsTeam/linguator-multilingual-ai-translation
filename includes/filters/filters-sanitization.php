@@ -12,11 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Setup specific filters useful for sanitization.
  *
- * Extract from LMAT_Admin_Filters to be able to use in a REST API context.
+ * Extract from Linguator_Admin_Filters to be able to use in a REST API context.
  *
  *  
  */
-class LMAT_Filters_Sanitization {
+class Linguator_Filters_Sanitization {
 	/**
 	 * Language used for the sanitization depending on the context.
 	 *

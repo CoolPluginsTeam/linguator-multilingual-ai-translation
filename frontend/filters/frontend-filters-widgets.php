@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Helpers\LMAT_Cache;
+use Linguator\Includes\Helpers\Linguator_Cache;
 
 
 
@@ -18,18 +18,18 @@ use Linguator\Includes\Helpers\LMAT_Cache;
  *
  *  
  */
-class LMAT_Frontend_Filters_Widgets {
+class Linguator_Frontend_Filters_Widgets {
 	/**
 	 * Internal non persistent cache object.
 	 *
-	 * @var LMAT_Cache<array>
+	 * @var Linguator_Cache<array>
 	 */
 	public $cache;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -42,7 +42,7 @@ class LMAT_Frontend_Filters_Widgets {
 	 */
 	public function __construct( &$linguator ) {
 		$this->curlang = &$linguator->curlang;
-		$this->cache = new LMAT_Cache();
+		$this->cache = new Linguator_Cache();
 
 		add_filter( 'sidebars_widgets', array( $this, 'sidebars_widgets' ) );
 	}
@@ -71,7 +71,7 @@ class LMAT_Frontend_Filters_Widgets {
 			return $_sidebars_widgets;
 		}
 
-		$sidebars_widgets = $this->filter_widgets_sidebars( $sidebars_widgets, $wp_registered_widgets );
+		$sidebars_widgets = $this->linguator_filter_widgets_sidebars( $sidebars_widgets, $wp_registered_widgets );
 
 		return $this->cache->set( $cache_key, $sidebars_widgets );
 	}
@@ -87,7 +87,7 @@ class LMAT_Frontend_Filters_Widgets {
 	 * @param int    $key              Widget number
 	 * @return array                   An associative array of sidebars and their widgets
 	 */
-	public function handle_widget_in_sidebar_callback( $widget_data, $sidebars_widgets, $sidebar, $key ) {
+	public function linguator_handle_widget_in_sidebar_callback( $widget_data, $sidebars_widgets, $sidebar, $key ) {
 		// Remove the widget if not visible in the current language
 		if ( ! empty( $widget_data['settings'][ $widget_data['number'] ]['lmat_lang'] ) && $widget_data['settings'][ $widget_data['number'] ]['lmat_lang'] !== $this->curlang->slug ) {
 			unset( $sidebars_widgets[ $sidebar ][ $key ] );
@@ -104,20 +104,20 @@ class LMAT_Frontend_Filters_Widgets {
 	 * @param  array $wp_registered_widgets  Array of all registered widgets.
 	 * @return array                         An associative array of sidebars and their widgets
 	 */
-	public function filter_widgets_sidebars( $sidebars_widgets, $wp_registered_widgets ) {
+	public function linguator_filter_widgets_sidebars( $sidebars_widgets, $wp_registered_widgets ) {
 		foreach ( $sidebars_widgets as $sidebar => $widgets ) {
 			if ( 'wp_inactive_widgets' === $sidebar || empty( $widgets ) ) {
 				continue;
 			}
 
 			foreach ( $widgets as $key => $widget ) {
-				if ( ! $this->is_widget_object( $wp_registered_widgets, $widget ) ) {
+				if ( ! $this->linguator_is_widget_object( $wp_registered_widgets, $widget ) ) {
 					continue;
 				}
 
-				$widget_data = $this->get_widget_data( $wp_registered_widgets, $widget );
+				$widget_data = $this->linguator_get_widget_data( $wp_registered_widgets, $widget );
 
-				$sidebars_widgets = $this->handle_widget_in_sidebar_callback( $widget_data, $sidebars_widgets, $sidebar, $key );
+				$sidebars_widgets = $this->linguator_handle_widget_in_sidebar_callback( $widget_data, $sidebars_widgets, $sidebar, $key );
 			}
 		}
 		return $sidebars_widgets;
@@ -132,7 +132,7 @@ class LMAT_Frontend_Filters_Widgets {
 	 * @param  string $widget                String that identifies the widget.
 	 * @return bool                          True if object, false otherwise.
 	 */
-	protected function is_widget_object( $wp_registered_widgets, $widget ) {
+	protected function linguator_is_widget_object( $wp_registered_widgets, $widget ) {
 		// Nothing can be done if the widget is created using pre WP2.8 API :(
 		// There is no object, so we can't access it to get the widget options
 		return isset( $wp_registered_widgets[ $widget ]['callback'] ) &&
@@ -151,7 +151,7 @@ class LMAT_Frontend_Filters_Widgets {
 	 * @param string $widget                String that identifies the widget.
 	 * @return array An array containing the widget settings and number.
 	 */
-	protected function get_widget_data( $wp_registered_widgets, $widget ) {
+	protected function linguator_get_widget_data( $wp_registered_widgets, $widget ) {
 		$widget_settings = $wp_registered_widgets[ $widget ]['callback'][0]->get_settings();
 		$number          = $wp_registered_widgets[ $widget ]['params'][0]['number'];
 

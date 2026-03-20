@@ -16,13 +16,13 @@ if (! defined('ABSPATH')) {
 }
 
 /**
- * Class LMAT_Widget
+ * Class Linguator_Widget
  *
  * Main widget class for the Language Switcher Linguator Elementor widget.
  *
  *  
  */
-class LMAT_Widget extends Widget_Base
+class Linguator_Widget extends Widget_Base
 {
 
     /**
@@ -41,10 +41,10 @@ class LMAT_Widget extends Widget_Base
             LINGUATOR_VERSION
         );
 
-        add_action('elementor/editor/after_enqueue_scripts', [$this, 'lmat_language_switcher_icon_css']);
+        add_action('elementor/editor/after_enqueue_scripts', [$this, 'linguator_language_switcher_icon_css']);
     }
 
-    public function lmat_language_switcher_icon_css()
+    public function linguator_language_switcher_icon_css()
     {
         wp_enqueue_style('lmat-style');
 
@@ -648,18 +648,23 @@ class LMAT_Widget extends Widget_Base
     {
         try {
                 // Try different approach - get languages without show_flags first
-                $languages_raw = lmat_the_languages(['raw' => 1, 'show_flags' => 0]);
+                $languages_raw = linguator_the_languages(['raw' => 1, 'show_flags' => 0]);
                 if (empty($languages_raw)) {
                     return $data; // If no languages, exit early
                 }
-                $lang_curr = strtolower(lmat_current_language());
+                $lang_curr = strtolower(linguator_current_language());
                 if (empty($lang_curr)) {
-                    $lang_curr = strtolower(lmat_default_language());
+                    $lang_curr = strtolower(linguator_default_language());
                 }
 
                 
                 $languages = array_map(
                     function ($language) {
+                        $allowed_flag_html = array(
+                            'span' => array( 'class' => true, 'style' => true ),
+                            'img'  => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true, 'decoding' => true, 'loading' => true, 'title' => true ),
+                        );
+
                         // Get flag HTML directly from language object if available
                         $flag_html = '';
                         if (function_exists('LMAT') && !empty(LMAT()->model)) {
@@ -677,12 +682,17 @@ class LMAT_Widget extends Widget_Base
                             $flag_html = $language['flag'];
                         }
                         
+                        $flag_html = wp_kses(
+                            $flag_html,
+                            $allowed_flag_html,
+                            array_merge( wp_allowed_protocols(), array( 'data' ) )
+                        );
 
                         
                         return $language['name'] = [
                             'slug'           => esc_html($language['slug']),
                             'name'           => esc_html($language['name']),
-                            'no_translation' => esc_html($language['no_translation']),
+                            'no_translation' => (bool) $language['no_translation'],
                             'url'            => esc_url($language['url']),
                             'flag'           => $flag_html, // Use our generated flag HTML
                         ];
@@ -870,3 +880,4 @@ class LMAT_Widget extends Widget_Base
         return $html;
     }
 }
+

@@ -1,6 +1,6 @@
 <?php
 namespace Linguator\Supported_Blocks;
-use Linguator\Modules\Page_Translation\LMAT_Page_Translation_Helper;
+use Linguator\Modules\Page_Translation\Linguator_Page_Translation_Helper;
 
 /**
  * Do not access the page directly
@@ -41,10 +41,10 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 		 * Constructor.
 		 */
 		private function __construct() {
-			add_action( 'init', array( $this, 'register_custom_post_type' ) );
-			add_action( 'save_post', array( $this, 'on_save_post' ), 10, 3 );
+			add_action( 'init', array( $this, 'linguator_register_custom_post_type' ) );
+			add_action( 'save_post', array( $this, 'linguator_on_save_post' ), 10, 3 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-			add_action( 'wp_ajax_lmat_get_custom_blocks_content', array( $this, 'get_custom_blocks_content' ) );
+			add_action( 'wp_ajax_lmat_get_custom_blocks_content', array( $this, 'linguator_get_custom_blocks_content' ) );
 			add_action( 'wp_ajax_lmat_update_custom_blocks_content', array( $this, 'update_custom_blocks_content' ) );
 		}
 
@@ -85,7 +85,7 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 		 * @param WP_Post|null $post The post object.
 		 * @param bool         $update Whether this is an existing post being updated.
 		 */
-		public function on_save_post( $post_id, $post, $update ) {
+		public function linguator_on_save_post( $post_id, $post, $update ) {
 			if(!current_user_can('edit_post', $post_id)){
 				return;
 			}
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 		/**
 		 * Register custom post type.
 		 */
-		public function register_custom_post_type() {
+		public function linguator_register_custom_post_type() {
 		$labels = array(
 			'name'               => _x( 'Automatic Translations', 'post type general name', 'linguator-multilingual-ai-translation' ),
 			'singular_name'      => _x( 'Automatic Translation', 'post type singular name', 'linguator-multilingual-ai-translation' ),
@@ -161,7 +161,7 @@ if ( ! class_exists( 'Custom_Block_Post' ) ) {
 			register_post_type( 'lmat_add_blocks', $args );
 		}
 
-		public function get_custom_blocks_content() {
+		public function linguator_get_custom_blocks_content() {
 			if ( ! check_ajax_referer( 'lmat_block_update_nonce', 'lmat_nonce', false ) ) {
 				wp_send_json_error( __( 'Invalid security token sent.', 'linguator-multilingual-ai-translation' ) );
 				wp_die( '0', 400 );

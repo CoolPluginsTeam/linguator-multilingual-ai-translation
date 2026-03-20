@@ -9,10 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Includes\Other\Linguator_Model;
 use Linguator\Modules\REST\Abstract_Controller;
-use Linguator\Includes\Models\Translatable\LMAT_Translatable_Objects;
+use Linguator\Includes\Models\Translatable\Linguator_Translatable_Objects;
+use ReflectionClass;
 use stdClass;
 use WP_Error;
 use WP_REST_Request;
@@ -34,14 +35,14 @@ class Languages extends Abstract_Controller {
 	private $languages;
 
 	/**
-	 * @var LMAT_Translatable_Objects
+	 * @var Linguator_Translatable_Objects
 	 */
 	private $translatable_objects;
 
 	/**
 	 * Reference to the model object
 	 *
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -52,9 +53,9 @@ class Languages extends Abstract_Controller {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model Linguator's model.
+	 * @param Linguator_Model $model Linguator's model.
 	 */
-	public function __construct( LMAT_Model $model ) {
+	public function __construct( Linguator_Model $model ) {
 		$this->namespace            = 'lmat/v1';
 		$this->rest_base            = 'languages';
 		$this->model                = $model;
@@ -99,6 +100,13 @@ class Languages extends Abstract_Controller {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_all_pages_data' ),
 				'permission_callback' => array( $this, 'get_all_post_data_permissions_check' ),
+				'args'                => array(
+					'lang' => array(
+						'description' => __( 'Language slug to filter pages by.', 'linguator-multilingual-ai-translation' ),
+						'type'        => 'string',
+						'required'    => false,
+					),
+				),
 			)
 			);
 
@@ -276,41 +284,109 @@ class Languages extends Abstract_Controller {
 	public function get_all_pages_data( $request ) {
 		$response = array();
 
+		// Get language filter from request
+		$lang_slug = $request->get_param( 'lang' );
+		$filter_language = null;
+		
+		if ( ! empty( $lang_slug ) ) {
+			$filter_language = $this->model->languages->get( $lang_slug );
+			if ( ! $filter_language ) {
+				return rest_ensure_response( array(
+					'error' => 'Invalid language slug provided.',
+				) );
+			}
+		}
+
 		// Get post types managed by Linguator
 		$post_types = array( 'page' );
 		if ( empty( $post_types ) ) {
 			return rest_ensure_response( $response );
 		}
 
-		$posts = get_posts( array(
+		// Build query args - optimized to filter by language at database level
+		$query_args = array(
 			'post_type'        => 'page',
 			'post_status'      => array( 'publish' ),
 			'posts_per_page'   => -1,
 			'suppress_filters' => false,
-		) );
+		);
 
+		// Add language filter using tax_query (database-level filtering)
+		if ( $filter_language ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Necessary for language filtering in multilingual functionality
+			$query_args['tax_query'] = array(
+				array(
+					'taxonomy'         => $this->model->post->get_tax_language(),
+					'terms'            => $filter_language->get_tax_prop( $this->model->post->get_tax_language(), 'term_id' ),
+					'field'            => 'term_id',
+					'include_children' => false,
+				),
+			);
+		}
+
+		$posts = get_posts( $query_args );
+		// Optimize: Bulk fetch languages and translations for all posts at once
+		$post_ids = wp_list_pluck( $posts, 'ID' );
+		
+		if ( empty( $post_ids ) ) {
+			return rest_ensure_response( $response );
+		}
+
+		// Bulk fetch all languages (single query)
+		$language_terms = array();
+		if ( method_exists( $this->model->post, 'get_object_terms' ) ) {
+			// Use reflection to call protected method for bulk language fetching
+			$reflection = new ReflectionClass( $this->model->post );
+			$method = $reflection->getMethod( 'get_object_terms' );
+			$method->setAccessible( true );
+			$language_terms = $method->invoke( $this->model->post, $post_ids, $this->model->post->get_tax_language() );
+		}
+
+		// Bulk fetch all translations (single query)
+		$all_translations = array();
+		if ( method_exists( $this->model->post, 'get_raw_objects_translations' ) ) {
+			$reflection = new ReflectionClass( $this->model->post );
+			$method = $reflection->getMethod( 'get_raw_objects_translations' );
+			$method->setAccessible( true );
+			$raw_translations = $method->invoke( $this->model->post, $post_ids );
+			
+			// Validate translations for each post
+			foreach ( $raw_translations as $post_id => $translations ) {
+				if ( method_exists( $this->model->post, 'validate_translations' ) ) {
+					$validate_method = $reflection->getMethod( 'validate_translations' );
+					$validate_method->setAccessible( true );
+					$all_translations[ $post_id ] = $validate_method->invoke( $this->model->post, $translations, $post_id, 'display' );
+				} else {
+					$all_translations[ $post_id ] = $translations;
+				}
+			}
+		}
+
+		// Now build response using pre-fetched data
 		foreach ( $posts as $post ) {
-			$language = $this->model->post->get_language( $post->ID );
-			// Translations mapping: language slug/locale => post ID
-			$translations = (array) $this->model->post->get_translations( $post->ID );
+			// Get language from bulk-fetched data
+			$language = false;
+			if ( isset( $language_terms[ $post->ID ] ) && ! empty( $language_terms[ $post->ID ] ) ) {
+				$language = $this->model->languages->get( $language_terms[ $post->ID ]->term_id );
+			}
+
+
+			// Get translations from bulk-fetched data
+			$translations = isset( $all_translations[ $post->ID ] ) ? (array) $all_translations[ $post->ID ] : array();
+			
 			$linked_ids = array();
 			foreach ( $translations as $lang_key => $tr_post_id ) {
 				if ( $tr_post_id && (int) $tr_post_id !== (int) $post->ID ) {
 					$linked_ids[ $lang_key ] = (int) $tr_post_id;
 				}
 			}
+
+			// Only send fields that frontend actually uses
 			$response[] = array(
-				'ID'       => $post->ID,
-				'title'    => $post->post_title,
-				'slug'     => $post->post_name,
-				'type'     => $post->post_type,
-				'status'   => $post->post_status,
-				'date'     => $post->post_date,
-				'modified' => $post->post_modified,
-				'language' => $language ? $language->to_array() : null,
-				'translations' => $translations,
+				'ID'        => $post->ID,
+				'title'     => $post->post_title,
+				'slug'      => $post->post_name,
 				'is_linked' => ! empty( $linked_ids ),
-				'linked_ids' => $linked_ids,
 			);
 		}
 
@@ -401,7 +477,7 @@ class Languages extends Abstract_Controller {
 			return $this->add_status_to_error( $language );
 		}
 
-		/** @var LMAT_Language */
+		/** @var Linguator_Language */
 		// Try to get the language by locale first, then by slug if not found
 		$language = $this->languages->get( $args['locale'] );
 		if ( ! $language ) {
@@ -470,7 +546,7 @@ class Languages extends Abstract_Controller {
 			}
 
 			// Get the created language and prepare response
-			/** @var LMAT_Language */
+			/** @var Linguator_Language */
 			// Try to get the language by locale first, then by slug if not found
 			$language = $this->languages->get( $args['locale'] );
 			if ( ! $language ) {
@@ -623,7 +699,7 @@ class Languages extends Abstract_Controller {
 		
 		$lang = sanitize_text_field( $request['slug'] );
 		$language = $this->model->get_language( $lang );
-		if ( ! ( $language instanceof LMAT_Language ) ) {
+		if ( ! ( $language instanceof Linguator_Language ) ) {
 			return new WP_Error(
 				'lmat_invalid_language',
 				__( 'Invalid language locale provided.', 'linguator-multilingual-ai-translation' ),
@@ -767,7 +843,7 @@ class Languages extends Abstract_Controller {
 		}
 
 		// Assign language and link translations.
-		lmat_set_post_language( $new_post_id, $target_lang_slug );
+		linguator_set_post_language( $new_post_id, $target_lang_slug );
 
 		$translations = $this->model->post->get_translations( $source_id );
 		$source_lang  = $this->model->post->get_language( $source_id );
@@ -781,6 +857,9 @@ class Languages extends Abstract_Controller {
 				$this->model->post->save_translations( $post_id, $translations );
 			}
 		}
+
+		// Allow integrations to copy meta data after translation is created and linked
+		do_action( 'lmat_translation_created', $new_post_id, $source_id, $target_lang_slug );
 
 		return rest_ensure_response( array(
 			'success'   => true,
@@ -800,9 +879,18 @@ class Languages extends Abstract_Controller {
 		if ( $source_id && ! current_user_can( 'edit_post', $source_id ) ) {
 			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create a translation for this post.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
 		}
-		if ( ! current_user_can( 'edit_posts' ) ) {
+
+		$post_type = $request->get_param( 'post_type' );
+		$post_type = ! empty( $post_type ) ? sanitize_key( $post_type ) : 'page';
+		$pto       = get_post_type_object( $post_type );
+		if ( ! $pto || empty( $pto->cap ) ) {
+			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create this type of content.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		$create_cap = ! empty( $pto->cap->create_posts ) ? $pto->cap->create_posts : ( ! empty( $pto->cap->edit_posts ) ? $pto->cap->edit_posts : 'edit_posts' );
+		if ( ! current_user_can( $create_cap ) ) {
 			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create posts.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
 		}
+
 		$nonce_check = $this->verify_nonce( $request );
 		if ( is_wp_error( $nonce_check ) ) {
 			return $nonce_check;
@@ -893,7 +981,7 @@ class Languages extends Abstract_Controller {
 		$created_pages = [];
 		
 		// Get source language
-		$source_language = $this->model->get_language(lmat_get_post_language($source_id));
+		$source_language = $this->model->get_language(linguator_get_post_language($source_id));
 		if (!$source_language) {
 			return new WP_Error(
 				'lmat_invalid_source',
@@ -908,14 +996,14 @@ class Languages extends Abstract_Controller {
 		);
 
 		// Get and merge existing translations
-		$existing_translations = lmat_get_post_translations($source_id);
+		$existing_translations = linguator_get_post_translations($source_id);
 		if (!empty($existing_translations)) {
 			$all_translations = array_merge($all_translations, $existing_translations);
 		}
 		
 		// Create pages for each language
 		foreach ($languages as $language_data) {
-			// Convert language data to LMAT_Language object if needed
+			// Convert language data to Linguator_Language object if needed
 			$language = $this->model->get_language($language_data['locale']);
 			
 			if (!$language) {
@@ -939,7 +1027,7 @@ class Languages extends Abstract_Controller {
 			
 			if (!is_wp_error($new_page)) {
 				// Set language for new page
-				lmat_set_post_language($new_page, $language->locale);
+				linguator_set_post_language($new_page, $language->locale);
 				
 				// Add to translations array
 				$all_translations[$language->locale] = $new_page;
@@ -956,15 +1044,15 @@ class Languages extends Abstract_Controller {
 		if (!empty($created_pages)) {
 			// Ensure all pages have their languages set
 			foreach ($all_translations as $locale => $page_id) {
-				lmat_set_post_language($page_id, $locale);
+				linguator_set_post_language($page_id, $locale);
 			}
 
 			// Save translations multiple times to ensure all links are created
-			lmat_save_post_translations($all_translations);
+			linguator_save_post_translations($all_translations);
 			// Second pass to ensure bidirectional links
 			foreach ($all_translations as $page_id) {
-				$page_translations = lmat_get_post_translations($page_id);
-				lmat_save_post_translations(array_merge($page_translations, $all_translations));
+				$page_translations = linguator_get_post_translations($page_id);
+				linguator_save_post_translations(array_merge($page_translations, $all_translations));
 			}
 		}
 		
@@ -1163,7 +1251,7 @@ class Languages extends Abstract_Controller {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language    $item    Language object.
+	 * @param Linguator_Language    $item    Language object.
 	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response Response object.
 	 *
@@ -1447,7 +1535,7 @@ class Languages extends Abstract_Controller {
 	 *  
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return LMAT_Language|WP_Error Language object if the ID or slug is valid, WP_Error otherwise.
+	 * @return Linguator_Language|WP_Error Language object if the ID or slug is valid, WP_Error otherwise.
 	 *
 	 * @phpstan-template T of array
 	 * @phpstan-param WP_REST_Request<T> $request
@@ -1466,7 +1554,7 @@ class Languages extends Abstract_Controller {
 
 			$language = $this->languages->get( (int) $request['term_id'] );
 
-			if ( ! $language instanceof LMAT_Language ) {
+			if ( ! $language instanceof Linguator_Language ) {
 				return $error;
 			}
 
@@ -1476,7 +1564,7 @@ class Languages extends Abstract_Controller {
 		if ( isset( $request['slug'] ) ) {
 			$language = $this->languages->get( (string) $request['slug'] );
 
-			if ( ! $language instanceof LMAT_Language ) {
+			if ( ! $language instanceof Linguator_Language ) {
 				return new WP_Error(
 					'rest_invalid_slug',
 					__( 'Invalid language slug', 'linguator-multilingual-ai-translation' ),

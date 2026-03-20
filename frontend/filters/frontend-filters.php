@@ -7,8 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use Linguator\Includes\Core\Linguator;
-use Linguator\Includes\Filters\LMAT_Filters;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Filters\Linguator_Filters;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 
@@ -21,7 +21,7 @@ use Linguator\Includes\Other\LMAT_Language;
  *
  *  
  */
-class LMAT_Frontend_Filters extends LMAT_Filters {
+class Linguator_Frontend_Filters extends Linguator_Filters {
 	/**
 	 * Constructor: setups filters and actions
 	 *
@@ -34,28 +34,28 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 
 		// Filters the WordPress locale
 		add_filter( 'locale', array( $this, 'get_locale' ) );
-
+		
 		// Filter sticky posts by current language
 		add_filter( 'option_sticky_posts', array( $this, 'option_sticky_posts' ) );
 
 		// Rewrites archives links to filter them by language
-		add_filter( 'getarchives_join', array( $this, 'getarchives_join' ), 10, 2 );
-		add_filter( 'getarchives_where', array( $this, 'getarchives_where' ), 10, 2 );
+		add_filter( 'getarchives_join', array( $this, 'linguator_getarchives_join' ), 10, 2 );
+		add_filter( 'getarchives_where', array( $this, 'linguator_getarchives_where' ), 10, 2 );
 
 		// Filters the widgets according to the current language
-		add_filter( 'widget_display_callback', array( $this, 'widget_display_callback' ) );
+		add_filter( 'widget_display_callback', array( $this, 'linguator_widget_display_callback' ) );
 
 		if ( $this->options['media_support'] ) {
-			add_filter( 'widget_media_image_instance', array( $this, 'widget_media_instance' ), 1 ); // Since WP 4.8
+			add_filter( 'widget_media_image_instance', array( $this, 'linguator_widget_media_instance' ), 1 ); // Since WP 4.8
 		}
 
 		// Strings translation ( must be applied before WordPress applies its default formatting filters )
 		foreach ( array( 'widget_text', 'widget_title' ) as $filter ) {
-			add_filter( $filter, 'lmat__', 1 );
+			add_filter( $filter, 'linguator__', 1 );
 		}
 
 		// Translates biography
-		add_filter( 'get_user_metadata', array( $this, 'get_user_metadata' ), 10, 4 );
+		add_filter( 'get_user_metadata', array( $this, 'linguator_get_user_metadata' ), 10, 4 );
 
 		if ( Linguator::is_ajax_on_front() ) {
 			add_filter( 'load_textdomain_mofile', array( $this, 'load_textdomain_mofile' ) );
@@ -98,33 +98,43 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 		if ( defined( 'REST_REQUEST' ) || empty( $this->curlang ) || empty( $posts ) ) {
 			return $posts;
 		}
-
+		
 		$_posts = wp_cache_get( 'sticky_posts', 'options' ); // This option is usually cached in 'all_options' by WP.
 		$tt_id  = $this->curlang->get_tax_prop( 'lmat_language', 'term_taxonomy_id' );
-
+		
 		if ( ! empty( $_posts ) && is_array( $_posts ) && ! empty( $_posts[ $tt_id ] ) && is_array( $_posts[ $tt_id ] ) ) {
 			return $_posts[ $tt_id ];
 		}
-
+		
 		$languages = array();
 		foreach ( $this->model->get_languages_list() as $language ) {
 			$languages[] = $language->get_tax_prop( 'lmat_language', 'term_taxonomy_id' );
 		}
-
-		$relations = array();
-		foreach ( $posts as $post_id ) {
-			$post_languages = wp_get_object_terms( $post_id, 'lmat_language', array( 'fields' => 'tt_ids' ) );
-			if ( ! is_wp_error( $post_languages ) ) {
-				foreach ( $post_languages as $tt_id ) {
-					if ( in_array( $tt_id, $languages, true ) ) {
-						$relations[] = (object) array(
-							'object_id' => $post_id,
-							'term_taxonomy_id' => $tt_id,
-						);
-					}
-				}
-			}
+		
+		if($posts && count($posts) > 0){
+			$posts=array_map('intval', $posts);
+		}else{
+			return $posts;
 		}
+
+		if($languages && count($languages) > 0){
+			$languages=array_map('intval', $languages);
+		}else{
+			return $posts;
+		}
+		
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.NoCaching -- use this query instead of wp_get_object_terms to avoid server load by wp_get_object_terms for each post with long list of languages & large number of posts.
+		$relations = $wpdb->get_results(
+			$wpdb->prepare(
+				sprintf(
+					"SELECT object_id, term_taxonomy_id FROM %s WHERE object_id IN (%s) AND term_taxonomy_id IN (%s)",
+					esc_sql(sanitize_text_field($wpdb->term_relationships)),
+					implode( ',', array_fill( 0, count( $posts ), '%d' ) ),
+					implode( ',', array_fill( 0, count( $languages ), '%d' ) )
+				),
+				array_merge( $posts, $languages )
+			)
+		);
 
 		$_posts = array_fill_keys( $languages, array() ); // Init with empty arrays.
 
@@ -133,6 +143,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 		}
 
 		wp_cache_add( 'sticky_posts', $_posts, 'options' );
+		
 		return $_posts[ $tt_id ];
 	}
 
@@ -145,7 +156,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * @param array  $r   wp_get_archives arguments
 	 * @return string modified JOIN clause
 	 */
-	public function getarchives_join( $sql, $r ) {
+	public function linguator_getarchives_join( $sql, $r ) {
 		return ! empty( $r['post_type'] ) && $this->model->is_translated_post_type( $r['post_type'] ) ? $sql . $this->model->post->join_clause() : $sql;
 	}
 
@@ -158,8 +169,8 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * @param array  $r   wp_get_archives arguments
 	 * @return string modified WHERE clause
 	 */
-	public function getarchives_where( $sql, $r ) {
-		if ( ! $this->curlang instanceof LMAT_Language ) {
+	public function linguator_getarchives_where( $sql, $r ) {
+		if ( ! $this->curlang instanceof Linguator_Language ) {
 			return $sql;
 		}
 
@@ -180,7 +191,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * @param array $instance Widget settings
 	 * @return bool|array false if we hide the widget, unmodified $instance otherwise
 	 */
-	public function widget_display_callback( $instance ) {
+	public function linguator_widget_display_callback( $instance ) {
 		return ! empty( $instance['lmat_lang'] ) && $instance['lmat_lang'] != $this->curlang->slug ? false : $instance;
 	}
 
@@ -192,8 +203,8 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * @param array $instance Widget instance data
 	 * @return array
 	 */
-	public function widget_media_instance( $instance ) {
-		if ( empty( $instance['lmat_lang'] ) && $instance['attachment_id'] && $tr_id = lmat_get_post( $instance['attachment_id'] ) ) {
+	public function linguator_widget_media_instance( $instance ) {
+		if ( empty( $instance['lmat_lang'] ) && $instance['attachment_id'] && $tr_id = linguator_get_post( $instance['attachment_id'] ) ) {
 			$instance['attachment_id'] = $tr_id;
 			$attachment = get_post( $tr_id );
 
@@ -223,7 +234,7 @@ class LMAT_Frontend_Filters extends LMAT_Filters {
 	 * @param bool   $single   Whether to return only the first value of the specified $meta_key.
 	 * @return string|null
 	 */
-	public function get_user_metadata( $null, $id, $meta_key, $single ) {
+	public function linguator_get_user_metadata( $null, $id, $meta_key, $single ) {
 		return 'description' === $meta_key && ! empty( $this->curlang ) && ! $this->curlang->is_default ? get_user_meta( $id, 'description_' . $this->curlang->slug, $single ) : $null;
 	}
 

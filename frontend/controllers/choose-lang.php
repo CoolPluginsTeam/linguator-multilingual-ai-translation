@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Linguator\Includes\Core\Linguator;
-use Linguator\Frontend\Services\LMAT_Accept_Languages_Collection;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Includes\Helpers\LMAT_Cookie;
-use Linguator\Includes\Other\LMAT_Query;
+use Linguator\Frontend\Services\Linguator_Accept_Languages_Collection;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Includes\Helpers\Linguator_Cookie;
+use Linguator\Includes\Other\Linguator_Query;
 
 
 
@@ -21,7 +21,7 @@ use Linguator\Includes\Other\LMAT_Query;
  *
  *  
  */
-abstract class LMAT_Choose_Lang {
+abstract class Linguator_Choose_Lang {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -30,21 +30,21 @@ abstract class LMAT_Choose_Lang {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	public $links_model;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -74,12 +74,12 @@ abstract class LMAT_Choose_Lang {
 	 */
 	public function init() {
 		if ( Linguator::is_ajax_on_front() || ! wp_using_themes() ) {
-			$this->set_language( empty( $_REQUEST['lmat_lang'] ) ? $this->get_preferred_language() : $this->model->get_language( sanitize_key( $_REQUEST['lmat_lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$this->set_language( empty( $_REQUEST['lmat_lang'] ) ? $this->get_preferred_language() : $this->model->get_language( sanitize_key( wp_unslash( $_REQUEST['lmat_lang'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
-		add_action( 'pre_comment_on_post', array( $this, 'pre_comment_on_post' ) ); // sets the language of comment
+		add_action( 'pre_comment_on_post', array( $this, 'linguator_pre_comment_on_post' ) ); // sets the language of comment
 		add_action( 'parse_query', array( $this, 'parse_main_query' ), 2 ); // sets the language in special cases
-		add_action( 'wp', array( $this, 'maybe_setcookie' ), 7 );
+		add_action( 'wp', array( $this, 'linguator_maybe_setcookie' ), 7 );
 	}
 
 	/**
@@ -88,7 +88,7 @@ abstract class LMAT_Choose_Lang {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|false $curlang Current language.
+	 * @param Linguator_Language|false $curlang Current language.
 	 * @return void
 	 */
 	protected function set_language( $curlang ) {
@@ -99,10 +99,10 @@ abstract class LMAT_Choose_Lang {
 		
 		// Final check in case $curlang has an unexpected value
 		// See https://wordpress.org/support/topic/detect-browser-language-sometimes-setting-null-language
-		if ( ! $curlang instanceof LMAT_Language ) {
+		if ( ! $curlang instanceof Linguator_Language ) {
 			$curlang = $this->model->get_default_language();
 
-			if ( ! $curlang instanceof LMAT_Language ) {
+			if ( ! $curlang instanceof Linguator_Language ) {
 				return;
 			}
 		}
@@ -120,27 +120,27 @@ abstract class LMAT_Choose_Lang {
 		 *  
 		 *
 		 * @param string       $slug    Current language code.
-		 * @param LMAT_Language $curlang Current language object.
+		 * @param Linguator_Language $curlang Current language object.
 		 */
 		do_action( 'lmat_language_defined', $this->curlang->slug, $this->curlang );
 	}
 
 	/**
 	 * Set a cookie to remember the language.
-	 * Setting LMAT_COOKIE to false will disable cookie although it will break some functionalities
+	 * Setting Linguator_COOKIE to false will disable cookie although it will break some functionalities
 	 *
 	 *  
 	 *
 	 * @return void
 	 */
-	public function maybe_setcookie() {
+	public function linguator_maybe_setcookie() {
 		// Don't set cookie in javascript when a cache plugin is active.
-		if ( ! lmat_is_cache_active() && ! empty( $this->curlang ) && ! is_404() ) {
+		if ( ! linguator_is_cache_active() && ! empty( $this->curlang ) && ! is_404() ) {
 			$args = array(
 				'domain'   => 2 === $this->options['force_lang'] ? wp_parse_url( $this->links_model->home, PHP_URL_HOST ) : COOKIE_DOMAIN,
 				'samesite' => 3 === $this->options['force_lang'] ? 'None' : 'Lax',
 			);
-			LMAT_Cookie::set( $this->curlang->slug, $args );
+			Linguator_Cookie::set( $this->curlang->slug, $args );
 		}
 	}
 
@@ -151,9 +151,9 @@ abstract class LMAT_Choose_Lang {
 	 *
 	 * @return string|bool The preferred language slug or false.
 	 */
-	public function get_preferred_browser_language() {
+	public function linguator_get_preferred_browser_language() {
 		if ( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) {
-			$accept_langs = LMAT_Accept_Languages_Collection::from_accept_language_header( sanitize_text_field( wp_unslash( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) );
+			$accept_langs = Linguator_Accept_Languages_Collection::from_accept_language_header( sanitize_text_field( wp_unslash( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) );
 
 			$accept_langs->bubble_sort();
 
@@ -164,7 +164,7 @@ abstract class LMAT_Choose_Lang {
 			 *
 			 *  
 			 *
-			 * @param array $languages Array of LMAT_Language objects.
+			 * @param array $languages Array of Linguator_Language objects.
 			 */
 			$languages = apply_filters( 'lmat_languages_for_browser_preferences', $languages );
 
@@ -182,7 +182,7 @@ abstract class LMAT_Choose_Lang {
 	 *
 	 *  
 	 *
-	 * @return LMAT_Language|false browser preferred language or default language
+	 * @return Linguator_Language|false browser preferred language or default language
 	 */
 	public function get_preferred_language() {
 		$language = false;
@@ -193,7 +193,7 @@ abstract class LMAT_Choose_Lang {
 			$language = sanitize_key( $_COOKIE[ LMAT_COOKIE ] );
 			$cookie   = true;
 		} elseif ( $this->options['browser'] ) {
-			$language = $this->get_preferred_browser_language();
+			$language = $this->linguator_get_preferred_browser_language();
 		}
 
 		/**
@@ -222,7 +222,7 @@ abstract class LMAT_Choose_Lang {
 	 * @return void
 	 */
 	protected function home_language() {
-		// Test referer in case LMAT_COOKIE is set to false. Since WP 3.6.1, wp_get_referer() validates the host which is exactly what we want
+		// Test referer in case Linguator_COOKIE is set to false. Since WP 3.6.1, wp_get_referer() validates the host which is exactly what we want
 		$language = $this->options['hide_default'] && ( wp_get_referer() || ! $this->options['browser'] ) ?
 			$this->model->get_default_language() :
 			$this->get_preferred_language(); // Sets the language according to browser preference or default language
@@ -260,7 +260,7 @@ abstract class LMAT_Choose_Lang {
 		// Don't redirect if $_POST is not empty as it could break other plugins
 		elseif ( is_string( $redirect = $this->curlang->get_home_url() ) && empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			// Don't forget the query string which may be added by plugins
-			$query_string = wp_parse_url( lmat_get_requested_url(), PHP_URL_QUERY );
+			$query_string = wp_parse_url( linguator_get_requested_url(), PHP_URL_QUERY );
 			if ( ! empty( $query_string ) ) {
 				$redirect .= ( $this->links_model->using_permalinks ? '?' : '&' ) . $query_string;
 			}
@@ -276,7 +276,7 @@ abstract class LMAT_Choose_Lang {
 			 */
 			$redirect = apply_filters( 'lmat_redirect_home', $redirect );
 			if ( $redirect && wp_validate_redirect( $redirect ) ) {
-				$this->maybe_setcookie();
+				$this->linguator_maybe_setcookie();
 				header( 'Vary: Accept-Language' );
 				wp_safe_redirect( $redirect, 302, LINGUATOR );
 				exit;
@@ -292,7 +292,7 @@ abstract class LMAT_Choose_Lang {
 	 * @param int $post_id the post being commented
 	 * @return void
 	 */
-	public function pre_comment_on_post( $post_id ) {
+	public function linguator_pre_comment_on_post( $post_id ) {
 		$this->set_language( $this->model->post->get_language( $post_id ) );
 	}
 
@@ -315,7 +315,7 @@ abstract class LMAT_Choose_Lang {
 		 *
 		 *  
 		 *
-		 * @param LMAT_Language|false $lang  Language object or false.
+		 * @param Linguator_Language|false $lang  Language object or false.
 		 * @param WP_Query           $query WP_Query object.
 		 */
 		if ( $lang = apply_filters( 'lmat_set_language_from_query', false, $query ) ) {
@@ -331,7 +331,7 @@ abstract class LMAT_Choose_Lang {
 			$query->is_archive = false;
 
 			// Filters is_front_page() in case a static front page is not translated in this language.
-			add_filter( 'option_show_on_front', array( $this, 'filter_option_show_on_front' ) );
+			add_filter( 'option_show_on_front', array( $this, 'linguator_filter_option_show_on_front' ) );
 		}
 	}
 
@@ -342,7 +342,7 @@ abstract class LMAT_Choose_Lang {
 	 *
 	 * @return string
 	 */
-	public function filter_option_show_on_front() {
+	public function linguator_filter_option_show_on_front() {
 		return 'posts';
 	}
 
@@ -356,8 +356,9 @@ abstract class LMAT_Choose_Lang {
 	 */
 	protected function set_curlang_in_query( &$query ) {
 		if ( ! empty( $this->curlang ) ) {
-			$lmat_query = new LMAT_Query( $query, $this->model );
-			$lmat_query->set_language( $this->curlang );
+			$linguator_query = new Linguator_Query( $query, $this->model );
+			$linguator_query->set_language( $this->curlang );
 		}
 	}
 }
+

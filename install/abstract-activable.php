@@ -17,7 +17,7 @@ namespace Linguator\Install;
  * 
  * @since 0.0.8
  */
-abstract class LMAT_Abstract_Activable {
+abstract class Linguator_Abstract_Activable {
 	/**
 	 * Perform activation or deactivation for all sites.
 	 * 
@@ -52,7 +52,7 @@ abstract class LMAT_Abstract_Activable {
 	 * @return string The plugin's basename, or empty string if not defined.
 	 */
 	public static function get_plugin_basename(): string {
-		return LMAT_get_constant( 'LINGUATOR_BASENAME', '' );
+		return linguator_get_constant( 'LINGUATOR_BASENAME', '' );
 	}
 
 	/**
@@ -62,7 +62,7 @@ abstract class LMAT_Abstract_Activable {
 	 * @return string The version number of the plugin, or empty string if not defined.
 	 */
 	public static function get_plugin_version(): string {
-		return LMAT_get_constant( 'LINGUATOR_VERSION', '' );
+		return linguator_get_constant( 'LINGUATOR_VERSION', '' );
 	}
 
 	/**
@@ -75,3 +75,4 @@ abstract class LMAT_Abstract_Activable {
 	 */
 	abstract protected static function process(): void;
 }
+
