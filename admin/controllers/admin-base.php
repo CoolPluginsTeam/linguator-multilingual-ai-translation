@@ -230,7 +230,6 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 
 	/**
 	 * Dummy method to display the 3 tabs pages: languages, strings translations, settings.
-	 * Overwritten in `LMAT_Settings`.
 	 * Overwritten in `Linguator_Settings`.
 	 *
 	 *  
