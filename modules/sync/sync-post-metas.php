@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Sync_Post_Metas extends LMAT_Sync_Metas {
+class Linguator_Sync_Post_Metas extends Linguator_Sync_Metas {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -96,3 +96,4 @@ class LMAT_Sync_Post_Metas extends LMAT_Sync_Metas {
 		return ( $this->options['media_support'] && '_thumbnail_id' === $key && $to_value = $this->model->post->get_translation( $value, $lang ) ) ? $to_value : $value;
 	}
 }
+

@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/as3cf.php';
 
-use Linguator\Integrations\wp_offload_media\LMAT_AS3CF;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\wp_offload_media\Linguator_AS3CF;
+use Linguator\Integrations\Linguator_Integrations;
 
 add_action(
 	'plugins_loaded',
 	function () {
-		if ( function_exists( 'as3cf_init' ) && class_exists( 'LMAT_AS3CF' ) ) {
-			add_action( 'lmat_init', array( LMAT_Integrations::instance()->as3cf = new LMAT_AS3CF(), 'init' ) );
+		if ( function_exists( 'as3cf_init' ) && class_exists( 'Linguator_AS3CF' ) ) {
+			add_action( 'lmat_init', array( Linguator_Integrations::instance()->as3cf = new Linguator_AS3CF(), 'init' ) );
 		}
 	},
 	0

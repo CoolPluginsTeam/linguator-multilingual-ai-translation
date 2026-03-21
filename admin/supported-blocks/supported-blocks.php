@@ -1,7 +1,7 @@
 <?php
 namespace Linguator\Supported_Blocks;
 
-use Linguator\Modules\Page_Translation\LMAT_Page_Translation_Helper;
+use Linguator\Modules\Page_Translation\Linguator_Page_Translation_Helper;
 
 use Linguator\Settings\Header\Header;
 use WP_Block_Type_Registry;
@@ -19,7 +19,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 	 *
 	 * This class handles the supported blocks for the Linguator plugin.
 	 *
-	 * @package LMATP
+	 * @package Linguator
 	 */
 	class Supported_Blocks {
 		/**
@@ -38,11 +38,11 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		private $custom_block_data_array = array();
 
 		/**
-		 * LMATP plugin category.
+		 * Linguator plugin category.
 		 *
 		 * @var array
 		 */
-		private $lmat_plugin_category = array();
+		private $linguator_plugin_category = array();
 
 		/**
 		 * Get the singleton instance of the class.
@@ -63,8 +63,8 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		 */
 		public function __construct(){
 			add_filter('lmat_frontend_settings_assets', array($this, 'stop_frontend_setting_assets'), 10, 3);
-			add_filter('lmat_admin_settings_assets', array($this, 'lmat_supported_blocks_assets'), 10, 3);
-			add_filter('lmat_render_languages_page', array($this, 'lmat_render_supported_blocks_page'), 10, 3);
+			add_filter('lmat_admin_settings_assets', array($this, 'linguator_supported_blocks_assets'), 10, 3);
+			add_filter('lmat_render_languages_page', array($this, 'linguator_render_supported_blocks_page'), 10, 3);
 		}
 
 		/*
@@ -74,16 +74,15 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		@param bool $is_settings_tab
 		@return bool
 		*/
-		public function lmat_supported_blocks_assets($status, $tab, $is_settings_tab){
+		public function linguator_supported_blocks_assets($status, $tab, $is_settings_tab){
 			if($is_settings_tab && $tab === 'supported-blocks' && function_exists('LMAT')){
 
 				$header = Header::get_instance('supported-blocks', LMAT()->model);
 				$header->header_assets();
 
 				wp_enqueue_script( 'lmat-datatable-script', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
-				wp_enqueue_script( 'lmat-datatable-style', plugins_url( 'admin/assets/js/dataTables.min.js', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, true );
 				wp_enqueue_style( 'lmat-custom-data-table', plugins_url( 'admin/assets/css/lmat-custom-data-table.min.css', LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
-				wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.min.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
+				wp_enqueue_script( 'lmat-custom-data-table', plugins_url( 'admin/assets/js/lmat-custom-data-table.js', LINGUATOR_ROOT_FILE ), array('lmat-datatable-script'), LINGUATOR_VERSION, true );
 				
 				return false;
 			}
@@ -113,7 +112,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		@param string $active_tab
 		@return bool
 		*/
-		public function lmat_render_supported_blocks_page($status, $selected_tab, $active_tab) {
+		public function linguator_render_supported_blocks_page($status, $selected_tab, $active_tab) {
 			if($selected_tab === 'supported-blocks' && $active_tab === 'settings'){
 
 				$header = Header::get_instance('supported-blocks', LMAT()->model);
@@ -135,7 +134,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		<div class="lmat-custom-data-table-wrapper">
 			<h3><?php echo esc_html__('Supported Blocks Translation Settings', 'linguator-multilingual-ai-translation'); ?>
 			<br><p>
-			<?php
+			<?php 
 				// translators: %s: Linguator.
 				printf( esc_html__( 'Manage Gutenberg blocks to make them translation-ready with %s.', 'linguator-multilingual-ai-translation' ), 'Linguator' ); 
 			?></p>
@@ -146,7 +145,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 					<select id="lmat-blocks-category" name="lmat_blocks_category">
 						<option value="all"><?php esc_html_e( 'All', 'linguator-multilingual-ai-translation' ); ?></option>
 						<option value="core">Core</option>
-						<?php $this->lmat_get_blocks_category(); ?>
+						<?php $this->linguator_get_blocks_category(); ?>
 					</select>
 				</div>
 				<div class="lmat-filter-tab" data-column="3" data-default="all">
@@ -172,7 +171,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 						</thead>
 						<tbody>
 							<?php 
-								$this->lmat_get_supported_blocks_table()
+								$this->linguator_get_supported_blocks_table()
 							?>
 						</tbody>
 					</table>
@@ -185,7 +184,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		/**
 		 * Get the blocks category.
 		 */
-		public function lmat_get_blocks_category() {
+		public function linguator_get_blocks_category() {
 			$blocks_data                 = WP_Block_Type_Registry::get_instance()->get_all_registered();
 
 			$filter_blocks_data = array_filter( $blocks_data, function( $block ) {
@@ -196,15 +195,15 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 				$plugin_name = isset($plugin_name[0]) ? $plugin_name[0] : '';
 
 				if(!empty($plugin_name)){
-					$filter_plugin_name = $this->lmat_supported_block_name($plugin_name);
+					$filter_plugin_name = $this->linguator_supported_block_name($plugin_name);
 					$filter_plugin_name=str_replace('-',' ',$filter_plugin_name);
 					$filter_plugin_name=ucwords($filter_plugin_name);
 
-					if(in_array($plugin_name, $this->lmat_plugin_category) || $plugin_name === 'core'){
+					if(in_array($plugin_name, $this->linguator_plugin_category) || $plugin_name === 'core'){
 						continue;
 					}
 
-					$this->lmat_plugin_category[] = $plugin_name;
+					$this->linguator_plugin_category[] = $plugin_name;
 					echo '<option value="' . esc_attr( $plugin_name ) . '">' . esc_html( $filter_plugin_name ) . '</option>';
 				}
 			}
@@ -213,16 +212,16 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		/**
 		 * Get the supported blocks.
 		 */
-		public function lmat_get_supported_blocks_table() {
+		public function linguator_get_supported_blocks_table() {
 			if ( class_exists( WP_Block_Type_Registry::class ) && method_exists( WP_Block_Type_Registry::class, 'get_all_registered' ) ) {
-				$lmat_block_parse_rules       = $this->block_parsing_rules();
+				$linguator_block_parse_rules       = $this->block_parsing_rules();
 
 				$blocks_data                 = WP_Block_Type_Registry::get_instance()->get_all_registered();
 
-				$lmat_supported_blocks       = isset($lmat_block_parse_rules['LmatBlockParseRules']) ? $lmat_block_parse_rules['LmatBlockParseRules'] : array();
-				$lmat_supported_blocks_names = array_keys( $lmat_supported_blocks );
+				$linguator_supported_blocks       = isset($linguator_block_parse_rules['LmatBlockParseRules']) ? $linguator_block_parse_rules['LmatBlockParseRules'] : array();
+				$linguator_supported_blocks_names = array_keys( $linguator_supported_blocks );
 				$s_no                        = 1;
-				$lmat_post_id                = self::get_custom_block_post_id();
+				$linguator_post_id                = self::linguator_get_custom_block_post_id();
 
 				$filter_blocks_data=$blocks_data;
 
@@ -231,10 +230,10 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 					$block_name  = esc_html( $block->name );
 					$block_title = esc_html( $block->title );
 
-					$status      = ! in_array( $block_name, $lmat_supported_blocks_names ) ? 'Unsupported' : 'Supported'; // You can modify this logic based on your requirements
-					$modify_text = ! in_array( $block_name, $lmat_supported_blocks_names ) ? esc_html__( 'Add', 'linguator-multilingual-ai-translation' ) : esc_html__( 'Edit', 'linguator-multilingual-ai-translation' );
-					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $lmat_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
-					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $lmat_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
+					$status      = ! in_array( $block_name, $linguator_supported_blocks_names ) ? 'Unsupported' : 'Supported'; // You can modify this logic based on your requirements
+					$modify_text = ! in_array( $block_name, $linguator_supported_blocks_names ) ? esc_html__( 'Add', 'linguator-multilingual-ai-translation' ) : esc_html__( 'Edit', 'linguator-multilingual-ai-translation' );
+					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $linguator_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
+					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $linguator_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
 
 					echo '<tr data-block-name="' . esc_attr( strtolower( $block_name ) ) . '" data-block-status="' . esc_attr( strtolower( $status ) ) . '" >';
 					echo '<td>' . esc_html($s_no++) . '</td>';
@@ -248,7 +247,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 
 		}
 
-		private function lmat_supported_block_name($block_name){
+		private function linguator_supported_block_name($block_name){
 			$predfined_blocks = array(
 				'ub' => 'Ultimate Blocks',
 				'uagb' => 'Spectra',
@@ -262,7 +261,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			return $block_name;
 		}
 
-		private static function get_custom_block_post_id()
+		private static function linguator_get_custom_block_post_id()
 		{
 			$first_post_id = null;
 
@@ -302,12 +301,12 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		 */
 		public function block_parsing_rules() {
 			$this->custom_block_data_array = array();
-			$block_parse_rules = $this->get_block_parse_rules();
+			$block_parse_rules = $this->linguator_get_block_parse_rules();
 			
 			return $block_parse_rules;
 		}
 
-		public function get_block_parse_rules() {
+		public function linguator_get_block_parse_rules() {
 			$path_url = plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
 			$response = wp_remote_get(
 				esc_url_raw( $path_url ),
@@ -349,7 +348,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			if ( ! empty( $custom_block_translation ) && is_array( $custom_block_translation ) ) {
 				foreach ( $custom_block_translation as $key => $block_data ) {
 					$block_rules = isset( $block_translation_rules['LmatBlockParseRules'][ $key ] ) ? $block_translation_rules['LmatBlockParseRules'][ $key ] : null;
-					$this->filter_custom_block_rules( array( $key ), $block_data, $block_rules );
+					$this->linguator_filter_custom_block_rules( array( $key ), $block_data, $block_rules );
 				}
 			}
 
@@ -358,29 +357,29 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 			return $block_translation_rules;
 		}
 
-		private function filter_custom_block_rules( array $id_keys, $value, $block_rules, $attr_key = false ) {
+		private function linguator_filter_custom_block_rules( array $id_keys, $value, $block_rules, $attr_key = false ) {
 			$block_rules = is_object( $block_rules ) ? json_decode( json_encode( $block_rules ) ) : $block_rules;
 
 			if ( ! isset( $block_rules ) ) {
-				return $this->merge_nested_attribute( $id_keys, $value );
+				return $this->linguator_merge_nested_attribute( $id_keys, $value );
 			}
 			if ( is_object( $value ) && isset( $block_rules ) ) {
 				foreach ( $value as $key => $item ) {
 					if ( isset( $block_rules[ $key ] ) && is_object( $item ) ) {
-						$this->filter_custom_block_rules( array_merge( $id_keys, array( $key ) ), $item, $block_rules[ $key ], false );
+						$this->linguator_filter_custom_block_rules( array_merge( $id_keys, array( $key ) ), $item, $block_rules[ $key ], false );
 						continue;
 					} elseif ( ! isset( $block_rules[ $key ] ) && true === $item ) {
-						$this->merge_nested_attribute( array_merge( $id_keys, array( $key ) ), true );
+						$this->linguator_merge_nested_attribute( array_merge( $id_keys, array( $key ) ), true );
 						continue;
 					} elseif ( ! isset( $block_rules[ $key ] ) && is_object( $item ) ) {
-						$this->merge_nested_attribute( array_merge( $id_keys, array( $key ) ), $item );
+						$this->linguator_merge_nested_attribute( array_merge( $id_keys, array( $key ) ), $item );
 						continue;
 					}
 				}
 			}
 		}
 
-		private function merge_nested_attribute( array $id_keys, $value ) {
+		private function linguator_merge_nested_attribute( array $id_keys, $value ) {
 			$value = is_object( $value ) ? json_decode( json_encode( $value ), true ) : $value;
 
 			$current_array = &$this->custom_block_data_array;
@@ -414,7 +413,7 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 					}
 
 					foreach ( $updated_blocks_data as $key => $block_data ) {
-						$this->filter_custom_block_rules( array( $key ), $block_data, $block_parse_rules['LmatBlockParseRules'][ $key ] );
+						$this->linguator_filter_custom_block_rules( array( $key ), $block_data, $block_parse_rules['LmatBlockParseRules'][ $key ] );
 					}
 
 					if ( count( $this->custom_block_data_array ) > 0 ) {

@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Cft {
+class Linguator_Cft {
 	/**
 	 * Setups actions.
 	 *
 	 *  
 	 */
 	public function init() {
-		add_action( 'add_meta_boxes', array( $this, 'cft_copy' ), 10, 2 );
+		add_action( 'add_meta_boxes', array( $this, 'linguator_cft_copy' ), 10, 2 );
 	}
 
 	/**
@@ -31,10 +31,12 @@ class LMAT_Cft {
 	 * @param string  $post_type Unused.
 	 * @param WP_Post $post      Current post object.
 	 */
-	public function cft_copy( $post_type, $post ) {
-		global $custom_field_template; // WordPress core global variable from Custom Field Template plugin
+	public function linguator_cft_copy( $post_type, $post ) {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Required: Custom Field Template plugin's global.
+		global $custom_field_template;
 		if ( isset( $custom_field_template, $_REQUEST['from_post'], $_REQUEST['new_lang'] ) && ! empty( $post ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$_REQUEST['post'] = $post->ID;
 		}
 	}
 }
+

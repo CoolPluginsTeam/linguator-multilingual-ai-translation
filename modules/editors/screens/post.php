@@ -5,17 +5,17 @@
 
 namespace Linguator\Modules\Editors\Screens;
 
-use Linguator\Includes\Base\LMAT_Base;
+use Linguator\Includes\Base\Linguator_Base;
 use WP_Screen;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Includes\Services\Crud\LMAT_CRUD_Posts;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Includes\Services\Crud\Linguator_CRUD_Posts;
 
 /**
  * Class to manage Post editor scripts.
  */
 class Post extends Abstract_Screen {
 	/**
-	 * @var LMAT_CRUD_Posts|null
+	 * @var Linguator_CRUD_Posts|null
 	 */
 	protected $posts;
 
@@ -23,9 +23,9 @@ class Post extends Abstract_Screen {
 	 * Constructor
 	 *
 	 *
-	 * @param LMAT_Base $linguator Linguator object.
+	 * @param Linguator_Base $linguator Linguator object.
 	 */
-	public function __construct( LMAT_Base &$linguator ) {
+	public function __construct( Linguator_Base &$linguator ) {
 		parent::__construct( $linguator );
 
 		$this->posts = &$linguator->posts;
@@ -52,9 +52,9 @@ class Post extends Abstract_Screen {
 	 * Returns the language to use in the Post editor.
 	 *
 	 *
-	 * @return LMAT_Language|null
+	 * @return Linguator_Language|null
 	 */
-	protected function get_language(): ?LMAT_Language {
+	protected function get_language(): ?Linguator_Language {
 		global $post;
 
 

@@ -40,23 +40,35 @@ const Switcher = ({ data, setData }) => {
     };
     function SaveSettings() {
         try {
-            let apiBody = {
-                lmat_language_switcher_options : selectedLanguageSwitchers
+            const apiBody = {
+                lmat_language_switcher_options: selectedLanguageSwitchers,
             }
 
             const response = apiFetch({
                 path: 'lmat/v1/settings',
                 method: 'POST',
-                'headers': {
+                headers: {
                     'Content-Type': 'application/json',
-                    'X-WP-Nonce': getNonce()
+                    'X-WP-Nonce': getNonce(),
                 },
-                body: JSON.stringify(apiBody)
-            }).then((response) => {
-                    setData(prev => ({ ...prev, ...response }))
-                    setHandleButtonDisabled(true);
+                body: JSON.stringify(apiBody),
+            })
+                .then((response) => {
+                    setData((prev) => ({ ...prev, ...response }))
+                    setHandleButtonDisabled(true)
+                })
+                .catch((error) => {
+                    if (error?.message) {
+                        throw new Error(error.message)
+                    }
+                    throw new Error(__("Something went wrong", 'linguator-multilingual-ai-translation'))
                 })
 
+            toast.promise(response, {
+                loading: __('Saving Settings', 'linguator-multilingual-ai-translation'),
+                success: __('Settings Saved', 'linguator-multilingual-ai-translation'),
+                error: (error) => error.message,
+            })
         } catch (error) {
             toast.error(error.message || __("Something went wrong", "linguator-multilingual-ai-translation"));
         }

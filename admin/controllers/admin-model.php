@@ -8,13 +8,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Other\Linguator_Model;
 
 
 
 /**
- * Extends the LMAT_Model class with methods needed only in Linguator settings pages.
+ * Extends the Linguator_Model class with methods needed only in Linguator settings pages.
  *
  *  
  */
-class LMAT_Admin_Model extends LMAT_Model {}
+class Linguator_Admin_Model extends Linguator_Model {}

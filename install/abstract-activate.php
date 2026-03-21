@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 /**
  * This abstract class helps you manage plugin activation steps.
  * It works with both regular WordPress sites and Multisite networks.
@@ -18,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 0.0.8
  */
-abstract class LMAT_Abstract_Activate extends LMAT_Abstract_Activable {
+abstract class Linguator_Abstract_Activate extends Linguator_Abstract_Activable {
 	/**
 	 * Register activation hooks for your plugin.
 	 *
@@ -56,3 +57,4 @@ abstract class LMAT_Abstract_Activate extends LMAT_Abstract_Activable {
 		restore_current_blog();
 	}
 }
+

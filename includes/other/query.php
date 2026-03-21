@@ -18,9 +18,9 @@ use WP_Tax_Query;
  *
  *  
  */
-class LMAT_Query {
+class Linguator_Query {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
@@ -35,7 +35,7 @@ class LMAT_Query {
 	 *  
 	 *
 	 * @param WP_Query  $query Reference to the WP_Query object.
-	 * @param LMAT_Model $model Instance of LMAT_Model.
+	 * @param Linguator_Model $model Instance of Linguator_Model.
 	 */
 	public function __construct( &$query, &$model ) {
 		$this->query = &$query;
@@ -112,7 +112,7 @@ class LMAT_Query {
 	 *  
 	 *   Accepts now an array of languages.
 	 *
-	 * @param LMAT_Language|LMAT_Language[] $languages Language object(s).
+	 * @param Linguator_Language|Linguator_Language[] $languages Language object(s).
 	 * @return void
 	 */
 	public function set_language( $languages ) {
@@ -157,7 +157,7 @@ class LMAT_Query {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|false $lang Language.
+	 * @param Linguator_Language|false $lang Language.
 	 * @return void
 	 */
 	public function filter_query( $lang ) {

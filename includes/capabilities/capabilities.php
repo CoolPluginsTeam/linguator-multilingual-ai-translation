@@ -25,7 +25,7 @@ class Capabilities {
 	 */
 	public function __construct() {
 		// Add a filter so we can change how WordPress checks capabilities for Linguator.
-		add_filter( 'map_meta_cap', array( $this, 'map_custom_caps' ), 1, 2 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName
+		add_filter( 'map_meta_cap', array( $this, 'linguator_map_custom_caps' ), 1, 2 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Capabilities {
 	 * @param string   $cap  The name of the capability being checked right now.
 	 * @return string[]      The final list of capabilities WordPress will actually check for.
 	 */
-	public function map_custom_caps( $caps, $cap ) {
+	public function linguator_map_custom_caps( $caps, $cap ) {
 		// If we're asking for one of Linguator's custom caps,
 		// remove it and instead require 'manage_options' (admin permission).
 		if ( in_array( $cap, array( self::TRANSLATIONS, self::LANGUAGES ), true ) ) {

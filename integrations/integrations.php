@@ -16,14 +16,14 @@ use Linguator\Includes\Core\Linguator;
  * This class is available as soon as the plugin is loaded.
  *
  *  
- *   Renamed from LMAT_Plugins_Compat to LMAT_Integrations.
+ *   Renamed from Linguator_Plugins_Compat to Linguator_Integrations.
  */
 #[AllowDynamicProperties]
-class LMAT_Integrations {
+class Linguator_Integrations {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var LMAT_Integrations|null
+	 * @var Linguator_Integrations|null
 	 */
 	protected static $instance = null;
 
@@ -144,4 +144,4 @@ class LMAT_Integrations {
 	}
 }
 
-class_alias( 'Linguator\Integrations\LMAT_Integrations', 'LMAT_Integrations' ); // For global access.
+

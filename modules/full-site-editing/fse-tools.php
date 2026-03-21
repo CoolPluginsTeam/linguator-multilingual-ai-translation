@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * Main class that handles the translation of the templates in full site editing.
  *
  */
-class LMAT_FSE_Tools {
+class Linguator_FSE_Tools {
 
 	/**
 	 * Returns the name of the template post types that are translated by Linguator.
@@ -18,7 +18,7 @@ class LMAT_FSE_Tools {
 	 *
 	 * @return string[] Array keys and array values are identical.
 	 */
-	public static function get_template_post_types() {
+	public static function linguator_get_template_post_types() {
 		return array(
 			'wp_template_part' => 'wp_template_part',
 		);
@@ -32,7 +32,7 @@ class LMAT_FSE_Tools {
 	 * @return bool
 	 */
 	public static function is_template_post_type( string $post_type ) {
-		return in_array( $post_type, self::get_template_post_types(), true );
+		return in_array( $post_type, self::linguator_get_template_post_types(), true );
 	}
 
 	/**
@@ -84,13 +84,13 @@ class LMAT_FSE_Tools {
 			return null;
 		}
 
-		$template_id = wp_unslash( $_GET['postId'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$template_id = sanitize_text_field( wp_unslash( $_GET['postId'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( ! preg_match( '@^.+//[a-zA-Z0-9_-]+$@', $template_id ) ) {
 			return null;
 		}
 
-		$template_type = sanitize_key( $_GET['postType'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$template_type = sanitize_key( wp_unslash( $_GET['postType'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( ! self::is_template_post_type( $template_type ) ) {
 			return null;
@@ -202,7 +202,7 @@ class LMAT_FSE_Tools {
 	 */
 	public static function get_translatable_post_types() {
 		return array_merge(
-			self::get_template_post_types(),
+			self::linguator_get_template_post_types(),
 			array(
 				'wp_block'      => 'wp_block',
 				'wp_navigation' => 'wp_navigation',
@@ -210,3 +210,4 @@ class LMAT_FSE_Tools {
 		);
 	}
 }
+

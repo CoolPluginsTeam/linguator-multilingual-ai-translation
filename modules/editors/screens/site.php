@@ -9,18 +9,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Linguator\Includes\Base\LMAT_Base;
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Base\Linguator_Base;
+use Linguator\Includes\Other\Linguator_Model;
 use WP_Screen;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Modules\Full_Site_Editing\LMAT_FSE_Tools;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Modules\Full_Site_Editing\Linguator_FSE_Tools;
 
 /**
  * Class to manage Site editor scripts.
  */
 class Site extends Abstract_Screen {
 	/**
-	 * @var LMAT_Language|false|null
+	 * @var Linguator_Language|false|null
 	 */
 	protected $curlang;
 
@@ -28,9 +28,9 @@ class Site extends Abstract_Screen {
 	 * Constructor
 	 *
 	 *
-	 * @param LMAT_Base $linguator Linguator object.
+	 * @param Linguator_Base $linguator Linguator object.
 	 */
-	public function __construct( LMAT_Base &$linguator ) {
+	public function __construct( Linguator_Base &$linguator ) {
 		parent::__construct( $linguator );
 
 		$this->curlang = &$linguator->curlang;
@@ -98,10 +98,10 @@ class Site extends Abstract_Screen {
 	 * Returns the language to use in the Site editor.
 	 *
 	 *
-	 * @return LMAT_Language|null
+	 * @return Linguator_Language|null
 	 */
-	protected function get_language(): ?LMAT_Language {
-		if ( ! empty( $this->curlang ) && LMAT_FSE_Tools::is_site_editor() ) {
+	protected function get_language(): ?Linguator_Language {
+		if ( ! empty( $this->curlang ) && Linguator_FSE_Tools::is_site_editor() ) {
 			return $this->curlang;
 		}
 

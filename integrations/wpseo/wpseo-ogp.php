@@ -16,7 +16,7 @@ use Yoast\WP\SEO\Presenters\Abstract_Indexable_Presenter;
  *
  *  
  */
-final class LMAT_WPSEO_OGP extends Abstract_Indexable_Presenter {
+final class Linguator_WPSEO_OGP extends Abstract_Indexable_Presenter {
 	/**
 	 * Facebook locale
 	 *
@@ -57,3 +57,4 @@ final class LMAT_WPSEO_OGP extends Abstract_Indexable_Presenter {
 		return $this->locale;
 	}
 }
+

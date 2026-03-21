@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Other\Linguator_Model;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -39,7 +39,7 @@ class Settings extends Abstract_Controller {
 	private $languages;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	private $model;
 
@@ -79,9 +79,9 @@ class Settings extends Abstract_Controller {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model Linguator's model.
+	 * @param Linguator_Model $model Linguator's model.
 	 */
-	public function __construct( LMAT_Model $model ) {
+	public function __construct( Linguator_Model $model ) {
 		$this->namespace = 'lmat/v1';
 		$this->rest_base = 'settings';
 		$this->model     = $model;

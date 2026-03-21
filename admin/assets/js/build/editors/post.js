@@ -602,40 +602,46 @@ var TranslationRow = function TranslationRow(_ref4) {
           }
           return _context4.a(2);
         case 1:
-          _context4.p = 1;
-          setLoadingPages(true);
-          _context4.n = 2;
-          return external_wp_apiFetch_namespaceObject({
-            path: '/lmat/v1/languages/utils/get_all_pages_data'
-          });
+          if (lang !== null && lang !== void 0 && lang.slug) {
+            _context4.n = 2;
+            break;
+          }
+          return _context4.a(2);
         case 2:
+          _context4.p = 2;
+          setLoadingPages(true);
+          // Pass language parameter to get only pages in the same language
+          _context4.n = 3;
+          return external_wp_apiFetch_namespaceObject({
+            path: "/lmat/v1/languages/utils/get_all_pages_data?lang=".concat(lang.slug)
+          });
+        case 3:
           pages = _context4.v;
           setAllPages(Array.isArray(pages) ? pages : []);
-          _context4.n = 4;
+          _context4.n = 5;
           break;
-        case 3:
-          _context4.p = 3;
-          _t3 = _context4.v;
         case 4:
           _context4.p = 4;
-          setLoadingPages(false);
-          return _context4.f(4);
+          _t3 = _context4.v;
         case 5:
+          _context4.p = 5;
+          setLoadingPages(false);
+          return _context4.f(5);
+        case 6:
           return _context4.a(2);
       }
-    }, _callee4, null, [[1, 3, 4, 5]]);
-  })), [loadingPages, allPages.length]);
+    }, _callee4, null, [[2, 4, 5, 6]]);
+  })), [loadingPages, allPages.length, lang === null || lang === void 0 ? void 0 : lang.slug]);
   var computeSuggestions = (0,external_wp_element_namespaceObject.useCallback)(function (query) {
     var q = (query || '').trim().toLowerCase();
     if (!q) return [];
+    // No need to check sameLang since server already filters by language
     return allPages.filter(function (p) {
-      var _p$language;
-      var sameLang = (p === null || p === void 0 || (_p$language = p.language) === null || _p$language === void 0 ? void 0 : _p$language.slug) === (lang === null || lang === void 0 ? void 0 : lang.slug);
       var unlinked = !(p !== null && p !== void 0 && p.is_linked);
       var matches = ((p === null || p === void 0 ? void 0 : p.title) || '').toLowerCase().includes(q) || ((p === null || p === void 0 ? void 0 : p.slug) || '').toLowerCase().includes(q);
-      return sameLang && unlinked && matches;
+      return unlinked && matches;
     }).slice(0, 10);
-  }, [allPages, lang === null || lang === void 0 ? void 0 : lang.slug]);
+  }, [allPages]);
   var handleTitleChange = function handleTitleChange(val) {
     setTitle(val);
     setSelectedSuggestion(null);

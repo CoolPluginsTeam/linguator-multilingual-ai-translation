@@ -14,7 +14,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Don't access directly.
+	exit;
 }
 
 /**
@@ -29,9 +29,10 @@ if ( in_array( 'translate-words/translate-wp-words.php', $active_plugins, true )
 }
 
 use Linguator\Includes\Core\Linguator;
-use Linguator\Install\LMAT_Activate;
-use Linguator\Install\LMAT_Deactivate;
-use Linguator\Install\LMAT_Usable;
+use Linguator\Install\Linguator_Activate;
+use Linguator\Install\Linguator_Deactivate;
+use Linguator\Install\Linguator_Usable;
+
 
 
 // Linguator constants - wrapped in checks to prevent redeclaration
@@ -56,7 +57,6 @@ if ( ! defined( 'LINGUATOR_URL' ) ) {
 if ( ! defined( 'LINGUATOR_FEEDBACK_API' ) ) {
 	define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
 }
-
 // Whether we are using Linguator, get the filename of the plugin in use.
 if ( ! defined( 'LINGUATOR_ROOT_FILE' ) ) {
 	define( 'LINGUATOR_ROOT_FILE', __FILE__ );
@@ -72,9 +72,30 @@ if ( ! defined( 'LINGUATOR' ) ) {
 }
 
 // Initialize the plugin
-if ( ! empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-	return;
+if ( isset( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+	$linguator_deactivate_linguator = sanitize_key( wp_unslash( $_GET['deactivate-linguator'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+
+	if ( ! empty( $linguator_deactivate_linguator ) ) {
+		return;
+	}
 }
+
+
+// Load legacy Translate Words functionality only for legacy users
+add_action( 'init', function() {
+
+	if(!get_option('linguator_install_date')){
+		add_option('linguator_install_date', gmdate('Y-m-d h:i:s'));
+	}
+
+	if(!get_option('linguator_initial_version')){
+		add_option('linguator_initial_version', LINGUATOR_VERSION);
+	}
+
+	if(get_option('linguator_initial_version')>'1.2.6'){
+		update_option('linguator_initial_version', '1.2.6');
+	}
+}, 1 );
 
 // Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
@@ -141,7 +162,7 @@ add_action('admin_init', function() {
 if ( ! function_exists( 'lmat_has_constant' ) ) {
 	require __DIR__ . '/includes/helpers/constant-functions.php';
 }
-if ( ! LMAT_Usable::can_activate() ) {
+if ( ! Linguator_Usable::can_activate() ) {
 	// WP version or php version is too old.
 	return;
 }
@@ -150,13 +171,13 @@ if ( ! defined( 'LMAT_ACTIVE' ) ) {
 	define( 'LMAT_ACTIVE', true );
 }
 
-if ( LMAT_Deactivate::is_deactivation() ) {
+if ( Linguator_Deactivate::is_deactivation() ) {
 	// Stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules).
-	LMAT_Deactivate::add_hooks();
+	Linguator_Deactivate::add_hooks();
 	return;
 }
 
-LMAT_Activate::add_hooks();
+Linguator_Activate::add_hooks();
 
 new Linguator();
 

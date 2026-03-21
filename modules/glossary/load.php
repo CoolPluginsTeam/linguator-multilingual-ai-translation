@@ -5,7 +5,7 @@
  * @package Linguator
  */
 namespace Linguator\Modules\Glossary;
-use Linguator\Admin\Controllers\LMAT_Admin;
+use Linguator\Admin\Controllers\Linguator_Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly

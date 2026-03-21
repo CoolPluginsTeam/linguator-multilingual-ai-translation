@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class LMAT_Register_Widget
+ * Class Linguator_Register_Widget
  *
  * Handles the registration of custom Elementor widget.
  */
-class LMAT_Register_Widget {
+class Linguator_Register_Widget {
 
 	/**
 	 * Constructor
@@ -26,7 +26,7 @@ class LMAT_Register_Widget {
 	 * Initialize the class and set up hooks.
 	 */
 	public function __construct() {
-		add_action( 'elementor/widgets/register', array( $this, 'lmat_register_widgets' ) );
+		add_action( 'elementor/widgets/register', array( $this, 'linguator_register_widgets' ) );
 	}
 
 	/**
@@ -34,8 +34,9 @@ class LMAT_Register_Widget {
 	 *
 	 * @return void
 	 */
-	public function lmat_register_widgets() {
+	public function linguator_register_widgets() {
 		require_once LINGUATOR_DIR . '/integrations/elementor/lmat-widget.php';
-		\Elementor\Plugin::instance()->widgets_manager->register( new LMAT_Widget() );
+		\Elementor\Plugin::instance()->widgets_manager->register( new Linguator_Widget() );
 	}
 }
+

@@ -8,17 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Services\Links\LMAT_Links;
+use Linguator\Includes\Services\Links\Linguator_Links;
 use Linguator\Includes\Capabilities\User;
-use Linguator\Includes\Base\LMAT_Base;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Base\Linguator_Base;
+use Linguator\Includes\Other\Linguator_Language;
 
 /**
  * Manages links related functions.
  *
  *  	
  */
-class LMAT_Admin_Links extends LMAT_Links {
+class Linguator_Admin_Links extends Linguator_Links {
 	/**
 	 * Current user.
 	 *
@@ -31,9 +31,9 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param LMAT_Base $linguator Reference to the linguator object.
+	 * @param Linguator_Base $linguator Reference to the linguator object.
 	 */
-	public function __construct( LMAT_Base $linguator ) {
+	public function __construct( Linguator_Base $linguator ) {
 		parent::__construct( $linguator );
 		$this->user = new User();
 	}
@@ -43,10 +43,10 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *
 	 *
 	 * @param string       $link     The new translation link.
-	 * @param LMAT_Language $language The language of the new translation.
+	 * @param Linguator_Language $language The language of the new translation.
 	 * @return string
 	 */
-	protected function new_translation_link( string $link, LMAT_Language $language ): string {
+	protected function linguator_new_translation_link( string $link, Linguator_Language $language ): string {
 		if ( empty( $link ) ) {
 			return sprintf(
 				'<span title="%s" class="lmat_icon_add wp-ui-text-icon"></span>',
@@ -71,10 +71,10 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *  
 	 *
 	 * @param string       $link     The translation link.
-	 * @param LMAT_Language $language The language of the translation.
+	 * @param Linguator_Language $language The language of the translation.
 	 * @return string
 	 */
-	protected function edit_translation_link( string $link, LMAT_Language $language ): string {
+	protected function linguator_edit_translation_link( string $link, Linguator_Language $language ): string {
 		if ( empty( $link ) ) {
 			return sprintf(
 				'<span title="%s" class="lmat_icon_edit wp-ui-text-icon"></span>',
@@ -98,12 +98,12 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *
 	 *
 	 * @param int          $post_id  The source post id.
-	 * @param LMAT_Language $language The language of the new translation.
+	 * @param Linguator_Language $language The language of the new translation.
 	 * @param string       $context  Optional. Defaults to 'display' which encodes '&' to '&amp;'.
 	 *                               Otherwise, preserves '&'.
 	 * @return string
 	 */
-	public function get_new_post_translation_link( int $post_id, LMAT_Language $language, string $context = 'display' ): string {
+	public function get_new_post_translation_link( int $post_id, Linguator_Language $language, string $context = 'display' ): string {
 		if ( ! $this->user->can_translate( $language ) ) {
 			return '';
 		}
@@ -166,7 +166,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 		 *
 		 *
 		 * @param string       $link     The new post translation link.
-		 * @param LMAT_Language $language The language of the new translation.
+		 * @param Linguator_Language $language The language of the new translation.
 		 * @param int          $post_id  The source post id.
 		 */
 		return apply_filters( 'lmat_get_new_post_translation_link', $link, $language, $post_id );
@@ -177,12 +177,12 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *
 	 *
 	 * @param int          $post_id  The source post id.
-	 * @param LMAT_Language $language The language of the new translation.
+	 * @param Linguator_Language $language The language of the new translation.
 	 * @return string
 	 */
-	public function new_post_translation_link( int $post_id, LMAT_Language $language ): string {
+	public function new_post_translation_link( int $post_id, Linguator_Language $language ): string {
 		$link = $this->get_new_post_translation_link( $post_id, $language );
-		return $this->new_translation_link( $link, $language );
+		return $this->linguator_new_translation_link( $link, $language );
 	}
 
 	/**
@@ -202,7 +202,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 		}
 
 		$link = (string) get_edit_post_link( $post_id );
-		return $this->edit_translation_link( $link, $language );
+		return $this->linguator_edit_translation_link( $link, $language );
 	}
 
 	/**
@@ -213,10 +213,10 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param int          $term_id   Source term id.
 	 * @param string       $taxonomy  Taxonomy name.
 	 * @param string       $post_type Post type name.
-	 * @param LMAT_Language $language  The language of the new translation.
+	 * @param Linguator_Language $language  The language of the new translation.
 	 * @return string
 	 */
-	public function get_new_term_translation_link( int $term_id, string $taxonomy, string $post_type, LMAT_Language $language ): string {
+	public function get_new_term_translation_link( int $term_id, string $taxonomy, string $post_type, Linguator_Language $language ): string {
 		if ( ! $this->user->can_translate( $language ) ) {
 			return '';
 		}
@@ -240,7 +240,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 		 *
 		 *
 		 * @param string       $link      The new term translation link.
-		 * @param LMAT_Language $language  The language of the new translation.
+		 * @param Linguator_Language $language  The language of the new translation.
 		 * @param int          $term_id   The source term id.
 		 * @param string       $taxonomy  Taxonomy name.
 		 * @param string       $post_type Post type name.
@@ -256,12 +256,12 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param int          $term_id   Source term id.
 	 * @param string       $taxonomy  Taxonomy name.
 	 * @param string       $post_type Post type name.
-	 * @param LMAT_Language $language  The language of the new translation.
+	 * @param Linguator_Language $language  The language of the new translation.
 	 * @return string
 	 */
-	public function new_term_translation_link( int $term_id, string $taxonomy, string $post_type, LMAT_Language $language ): string {
+	public function new_term_translation_link( int $term_id, string $taxonomy, string $post_type, Linguator_Language $language ): string {
 		$link = $this->get_new_term_translation_link( $term_id, $taxonomy, $post_type, $language );
-		return $this->new_translation_link( $link, $language );
+		return $this->linguator_new_translation_link( $link, $language );
 	}
 
 	/**
@@ -283,7 +283,7 @@ class LMAT_Admin_Links extends LMAT_Links {
 		}
 
 		$link = (string) get_edit_term_link( $term_id, $taxonomy, $post_type );
-		return $this->edit_translation_link( $link, $language );
+		return $this->linguator_edit_translation_link( $link, $language );
 	}
 
 	/**
@@ -294,10 +294,10 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param string $post_type A post type.
 	 * @return array {
 	 *     @type WP_Post      $from_post The source post.
-	 *     @type LMAT_Language $new_lang  The target language.
+	 *     @type Linguator_Language $new_lang  The target language.
 	 * }
 	 *
-	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: LMAT_Language}|never
+	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: Linguator_Language}|never
 	 */
 	public function get_data_from_new_post_translation_request( string $post_type ): array {
 		if ( 'attachment' === $post_type ) {
@@ -312,13 +312,14 @@ class LMAT_Admin_Links extends LMAT_Links {
 			return array();
 		}
 
-		if ( empty( $post_type ) || $post_type !== $_GET['post_type'] || ! $this->model->is_translated_post_type( $post_type ) ) {
+		$request_post_type = sanitize_key( wp_unslash( $_GET['post_type'] ) );
+		if ( empty( $post_type ) || $post_type !== $request_post_type || ! $this->model->is_translated_post_type( $post_type ) ) {
 			return array();
 		}
 
 		// Capability check already done in post-new.php.
 		check_admin_referer( 'new-post-translation' );
-		return $this->get_objects_from_new_post_translation_request( (int) $_GET['from_post'], sanitize_key( $_GET['new_lang'] ) );
+		return $this->linguator_get_objects_from_new_post_translation_request( absint( wp_unslash( $_GET['from_post'] ) ), sanitize_key( wp_unslash( $_GET['new_lang'] ) ) );
 	}
 
 	/**
@@ -328,22 +329,22 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 *
 	 * @return array {
 	 *     @type WP_Post      $from_post The source media.
-	 *     @type LMAT_Language $new_lang  The target language.
+	 *     @type Linguator_Language $new_lang  The target language.
 	 * }
 	 *
-	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: LMAT_Language}|never
+	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: Linguator_Language}|never
 	 */
 	public function get_data_from_new_media_translation_request(): array {
 		if ( ! $this->options['media_support'] ) {
 			return array();
 		}
 
-		if ( ! isset( $_GET['action'], $_GET['_wpnonce'], $_GET['from_media'], $_GET['new_lang'] ) || 'translate_media' !== $_GET['action'] ) {
+		if ( ! isset( $_GET['action'], $_GET['_wpnonce'], $_GET['from_media'], $_GET['new_lang'] ) || 'translate_media' !== sanitize_key( wp_unslash( $_GET['action'] ) ) ) {
 			return array();
 		}
 
 		check_admin_referer( 'translate_media' );
-		return $this->get_objects_from_new_post_translation_request( (int) $_GET['from_media'], sanitize_key( $_GET['new_lang'] ) );
+		return $this->linguator_get_objects_from_new_post_translation_request( absint( wp_unslash( $_GET['from_media'] ) ), sanitize_key( wp_unslash( $_GET['new_lang'] ) ) );
 	}
 
 	/**
@@ -355,12 +356,12 @@ class LMAT_Admin_Links extends LMAT_Links {
 	 * @param string $lang_slug The new translation language provided
 	 * @return array {
 	 *     @type WP_Post      $from_post The source post.
-	 *     @type LMAT_Language $new_lang  The target language.
+	 *     @type Linguator_Language $new_lang  The target language.
 	 * }
 	 *
-	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: LMAT_Language}|never
+	 * @phpstan-return array{}|array{from_post: WP_Post, new_lang: Linguator_Language}|never
 	 */
-	private function get_objects_from_new_post_translation_request( int $post_id, string $lang_slug ): array {
+	private function linguator_get_objects_from_new_post_translation_request( int $post_id, string $lang_slug ): array {
 		if ( $post_id <= 0 || empty( $lang_slug ) ) {
 			return array();
 		}

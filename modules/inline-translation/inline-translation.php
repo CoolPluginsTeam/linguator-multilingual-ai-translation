@@ -6,20 +6,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class LMAT_Inline_Translation {
+class Linguator_Inline_Translation {
 
 
 	/**
-	 * Singleton instance of LMAT_Inline_Translation.
+	 * Singleton instance of Linguator_Inline_Translation.
 	 *
-	 * @var LMAT_Inline_Translation
+	 * @var Linguator_Inline_Translation
 	 */
 	private static $instance;
 
 	/**
-	 * Get the singleton instance of LMAT_Inline_Translation.
+	 * Get the singleton instance of Linguator_Inline_Translation.
 	 *
-	 * @return LMAT_Inline_Translation
+	 * @return Linguator_Inline_Translation
 	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
@@ -29,28 +29,28 @@ class LMAT_Inline_Translation {
 	}
 
 	/**
-	 * Constructor for LMAT_Inline_Translation.
+	 * Constructor for Linguator_Inline_Translation.
 	 */
 	public function __construct() {
-		add_action( 'enqueue_block_assets', array( $this, 'block_inline_translation_assets' ) );
-		add_action('admin_enqueue_scripts', array($this, 'classic_inline_translation_assets'));
-		add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'elementor_inline_translation_assets' ) );
+		add_action( 'enqueue_block_assets', array( $this, 'linguator_block_inline_translation_assets' ) );
+		add_action('admin_enqueue_scripts', array($this, 'linguator_classic_inline_translation_assets'));
+		add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'linguator_elementor_inline_translation_assets' ) );
 	}
 
 	/**
 	 * Register block translator assets.
 	 */
-	public function block_inline_translation_assets() {
+	public function linguator_block_inline_translation_assets() {
 
 		if ( defined( 'LINGUATOR_VERSION' ) ) {
-			$this->enqueue_inline_translation_assets( 'gutenberg' );
+			$this->linguator_enqueue_inline_translation_assets( 'gutenberg' );
 		}
 	}
 
 	/**
 	 * Enqueue the classic inline translation assets.
 	 */
-	public function classic_inline_translation_assets() {
+	public function linguator_classic_inline_translation_assets() {
 		if ( defined( 'LINGUATOR_VERSION' ) ) {
 
 			if(!function_exists('get_current_screen')){
@@ -64,7 +64,7 @@ class LMAT_Inline_Translation {
 			}
 
 			if ( method_exists( $current_screen, 'is_block_editor' ) && ! $current_screen->is_block_editor() ) {
-				$this->enqueue_inline_translation_assets( 'classic' );
+				$this->linguator_enqueue_inline_translation_assets( 'classic' );
 			}
 		}
 	}
@@ -72,11 +72,12 @@ class LMAT_Inline_Translation {
 	/**
 	 * Enqueue the elementor widget translator script.
 	 */
-	public function elementor_inline_translation_assets() {
+	public function linguator_elementor_inline_translation_assets() {
 		if ( defined( 'LINGUATOR_VERSION' ) ) {
-			$this->enqueue_inline_translation_assets(
+			$this->linguator_enqueue_inline_translation_assets(
 				'elementor',
 				array(
+					'wp-api-fetch',
 					'backbone-marionette',
 					'elementor-common',
 					'elementor-web-cli',
@@ -86,7 +87,7 @@ class LMAT_Inline_Translation {
 		}
 	}
 
-	private function enqueue_inline_translation_assets( $type = 'gutenberg', $extra_dependencies = array() ) {
+	private function linguator_enqueue_inline_translation_assets( $type = 'gutenberg', $extra_dependencies = array() ) {
 
 		global $post;
 
@@ -98,10 +99,10 @@ class LMAT_Inline_Translation {
 			return;
 		}
 
-		if ( function_exists( 'lmat_current_language' ) ) {
-			$current_language      = lmat_current_language();
-			$current_language_name = lmat_current_language( 'name' );
-			$current_language_code = lmat_current_language( 'code' );
+		if ( function_exists( 'linguator_current_language' ) ) {
+			$current_language      = linguator_current_language();
+			$current_language_name = linguator_current_language( 'name' );
+			$current_language_code = linguator_current_language( 'code' );
 		} else {
 			$current_language      = '';
 			$current_language_name = '';
@@ -150,3 +151,4 @@ class LMAT_Inline_Translation {
 		}
 	}
 }
+

@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/wizard.php';
 
-use Linguator\Admin\Controllers\LMAT_Admin_Base;
-use Linguator\Modules\Wizard\LMAT_Wizard;
+use Linguator\Admin\Controllers\Linguator_Admin_Base;
+use Linguator\Modules\Wizard\Linguator_Wizard;
 
-if ( $linguator instanceof LMAT_Admin_Base ) {
-	$linguator->wizard = new LMAT_Wizard( $linguator );
+if ( $linguator instanceof Linguator_Admin_Base ) {
+	$linguator->wizard = new Linguator_Wizard( $linguator );
 }

@@ -11,15 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/wp-sweep.php';
 
-use Linguator\Integrations\wp_sweep\LMAT_WP_Sweep;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\wp_sweep\Linguator_WP_Sweep;
+use Linguator\Integrations\Linguator_Integrations;
 
 add_action(
 	'plugins_loaded',
 	function () {
 		if ( defined( 'WP_SWEEP_VERSION' ) ) {
-			LMAT_Integrations::instance()->wp_sweep = new LMAT_WP_Sweep();
-			LMAT_Integrations::instance()->wp_sweep->init();
+			Linguator_Integrations::instance()->wp_sweep = new Linguator_WP_Sweep();
+			Linguator_Integrations::instance()->wp_sweep->init();
 		}
 	},
 	0

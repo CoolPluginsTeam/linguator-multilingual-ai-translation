@@ -5,7 +5,7 @@
 
 namespace Linguator\Includes\Capabilities\Create;
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 use Linguator\Includes\Capabilities\User;
 
 /**
@@ -37,18 +37,18 @@ class Post extends Abstract_Object {
 	 *
 	 * @param User $user The user doing the action.
 	 * @param int  $id   The post ID (0 for new posts).
-	 * @return LMAT_Language The selected language to assign to the post.
+	 * @return Linguator_Language The selected language to assign to the post.
 	 */
-	public function get_language( User $user, int $id = 0 ): LMAT_Language {
+	public function get_language( User $user, int $id = 0 ): Linguator_Language {
 		/** Get the default language from the system as a final fallback. */
 		$default_language = $this->model->get_default_language();
 
 		// 1. If a language is directly picked in admin (in GET['new_lang']), use it.
-		if ( ! empty( $_GET['new_lang'] ) && $lang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_GET['new_lang'] ) && $lang = $this->model->get_language( sanitize_key( wp_unslash( $_GET['new_lang'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return $lang;
 		}
 		// 2. If there’s no preferred language but 'lang' is present (commonly on frontend), use that.
-		if ( ! isset( $this->pref_lang ) && ! empty( $_REQUEST['lang'] ) && $lang = $this->model->get_language( sanitize_key( $_REQUEST['lang'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! isset( $this->pref_lang ) && ! empty( $_REQUEST['lang'] ) && $lang = $this->model->get_language( sanitize_key( wp_unslash( $_REQUEST['lang'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return $lang;
 		}
 		// 3. If this is a REST API request and the request has a language, use it.

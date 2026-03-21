@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Choose_Lang_Domain extends LMAT_Choose_Lang_Url {
+class Linguator_Choose_Lang_Domain extends Linguator_Choose_Lang_Url {
 
 	/**
 	 * Don't set any language cookie
@@ -29,7 +29,7 @@ class LMAT_Choose_Lang_Domain extends LMAT_Choose_Lang_Url {
 	 *
 	 *  
 	 *
-	 * @return LMAT_Language
+	 * @return Linguator_Language
 	 */
 	public function get_preferred_language() {
 		return $this->model->get_language( $this->links_model->get_language_from_url() );

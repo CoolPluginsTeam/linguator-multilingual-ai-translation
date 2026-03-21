@@ -1,14 +1,14 @@
 <?php
 namespace Linguator\Modules\Bulk_Translation;
 
-use Linguator\Admin\Controllers\LMAT_Admin;
+use Linguator\Admin\Controllers\Linguator_Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
-	class LMAT_Bulk_Translation {
+if ( ! class_exists( 'Linguator_Bulk_Translation' ) ) :
+	class Linguator_Bulk_Translation {
 
 		private static $instance;
 
@@ -22,14 +22,14 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 		public function __construct() {
 			global $linguator;
 			
-			if ( $linguator instanceof LMAT_Admin ) {
-				add_action( 'current_screen', array( $this, 'bulk_translate_btn' ) );
-				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_bulk_translate_assets' ) );
+			if ( $linguator instanceof Linguator_Admin ) {
+				add_action( 'current_screen', array( $this, 'linguator_bulk_translate_btn' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'linguator_enqueue_bulk_translate_assets' ) );
 			}
 			
 		}
 
-		public function bulk_translate_btn( $current_screen ) {
+		public function linguator_bulk_translate_btn( $current_screen ) {
 			global $linguator;
 
 			if ( ! $linguator || ! property_exists( $linguator, 'model' ) ) {
@@ -58,18 +58,18 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
+			$post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
             
             if('trash' === $post_status){
                 return;
             }
 
-			add_filter( "views_{$current_screen->id}", array( $this, 'lmat_bulk_translate_button' ) );
+			add_filter( "views_{$current_screen->id}", array( $this, 'linguator_bulk_translate_button' ) );
 
-			add_action( 'admin_footer', array( $this, 'bulk_translate_container' ) );
+			add_action( 'admin_footer', array( $this, 'linguator_bulk_translate_container' ) );
 		}
 
-		public function lmat_bulk_translate_button( $views ) {
+		public function linguator_bulk_translate_button( $views ) {
 			$providers_config_class=' providers-config-no-active';
 
 			if(property_exists(LMAT(), 'options') && isset(LMAT()->options['ai_translation_configuration']['provider'])){
@@ -88,11 +88,11 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			return $views;
 		}
 
-		public function bulk_translate_container() {
+		public function linguator_bulk_translate_container() {
 			echo "<div id='lmat-bulk-translate-wrapper'></div>";
 		}
 
-		public function enqueue_bulk_translate_assets() {
+		public function linguator_enqueue_bulk_translate_assets() {
 			global $linguator;
         
         if(!$linguator || !property_exists($linguator, 'model')){
@@ -126,7 +126,7 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 			return;
 		}
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $post_status=isset($_GET['post_status']) ? sanitize_text_field(wp_unslash($_GET['post_status'])) : '';
 
         if('trash' === $post_status){
@@ -246,3 +246,4 @@ if ( ! class_exists( 'LMAT_Bulk_Translation' ) ) :
 		}
 	}
 endif;
+

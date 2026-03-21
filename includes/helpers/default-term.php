@@ -16,19 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Default_Term {
+class Linguator_Default_Term {
 
 	/**
-	 * A reference to the LMAT_Model instance.
+	 * A reference to the Linguator_Model instance.
 	 *
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
 	/**
 	 * Preferred language to assign to new contents.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	protected $curlang;
 
@@ -63,17 +63,17 @@ class LMAT_Default_Term {
 		foreach ( $this->taxonomies as $taxonomy ) {
 			if ( 'category' === $taxonomy ) {
 				// Allows to get the default terms in all languages.
-				add_filter( 'option_default_' . $taxonomy, array( $this, 'option_default_term' ) );
-				add_action( 'update_option_default_' . $taxonomy, array( $this, 'update_option_default_term' ), 10, 2 );
+				add_filter( 'option_default_' . $taxonomy, array( $this, 'linguator_option_default_term' ) );
+				add_action( 'update_option_default_' . $taxonomy, array( $this, 'linguator_update_option_default_term' ), 10, 2 );
 			}
 		}
-		add_action( 'lmat_add_language', array( $this, 'handle_default_term_on_create_language' ) );
+		add_action( 'lmat_add_language', array( $this, 'linguator_handle_default_term_on_create_language' ) );
 
 		// The default term should be in the default language.
-		add_action( 'lmat_update_default_lang', array( $this, 'update_default_term_language' ) );
+		add_action( 'lmat_update_default_lang', array( $this, 'linguator_update_default_term_language' ) );
 
 		// Prevents deleting all the translations of the default term.
-		add_filter( 'map_meta_cap', array( $this, 'fix_delete_default_term' ), 10, 4 );
+		add_filter( 'map_meta_cap', array( $this, 'linguator_fix_delete_default_term' ), 10, 4 );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class LMAT_Default_Term {
 	 * @param  int $taxonomy_term_id The taxonomy term id.
 	 * @return int                   A taxonomy term id.
 	 */
-	public function option_default_term( $taxonomy_term_id ) {
+	public function linguator_option_default_term( $taxonomy_term_id ) {
 		if ( isset( $this->curlang ) && $tr = $this->model->term->get( $taxonomy_term_id, $this->curlang ) ) {
 			$taxonomy_term_id = $tr;
 		}
@@ -101,7 +101,7 @@ class LMAT_Default_Term {
 	 * @param  int $value     The new option value.
 	 * @return void
 	 */
-	public function update_option_default_term( $old_value, $value ) {
+	public function linguator_update_option_default_term( $old_value, $value ) {
 		$default_cat_lang = $this->model->term->get_language( $value );
 
 		// Assign a default language to default term.
@@ -118,7 +118,7 @@ class LMAT_Default_Term {
 
 		foreach ( $this->model->get_languages_list() as $language ) {
 			if ( $language->slug != $default_cat_lang->slug && ! $this->model->term->get_translation( $value, $language ) ) {
-				$this->create_default_term( $language, $taxonomy );
+				$this->linguator_create_default_term( $language, $taxonomy );
 			}
 		}
 	}
@@ -128,11 +128,11 @@ class LMAT_Default_Term {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|string|int $lang     Language.
+	 * @param Linguator_Language|string|int $lang     Language.
 	 * @param string                  $taxonomy The current taxonomy.
 	 * @return void
 	 */
-	public function create_default_term( $lang, $taxonomy ) {
+	public function linguator_create_default_term( $lang, $taxonomy ) {
 		$lang = $this->model->get_language( $lang );
 		
 		if (!$lang) {
@@ -166,7 +166,7 @@ class LMAT_Default_Term {
 	 * @param  array $args Argument used to create the language. @see `Model\Languages::add()`.
 	 * @return void
 	 */
-	public function handle_default_term_on_create_language( $args ) {
+	public function linguator_handle_default_term_on_create_language( $args ) {
 		foreach ( $this->taxonomies as $taxonomy ) {
 			if ( 'category' === $taxonomy ) {
 				$default = (int) get_option( 'default_' . $taxonomy );
@@ -175,7 +175,7 @@ class LMAT_Default_Term {
 				if ( ! $this->model->term->get_language( $default ) ) {
 					$this->model->term->set_language( $default, $args['locale'] );
 				} elseif ( empty( $args['no_default_cat'] ) && ! $this->model->term->get( $default, $args['locale'] ) ) {
-					$this->create_default_term( $args['locale'], $taxonomy );
+					$this->linguator_create_default_term( $args['locale'], $taxonomy );
 				}
 			}
 		}
@@ -192,7 +192,7 @@ class LMAT_Default_Term {
 	 * @param  array  $args    Adds the context to the cap. The term id.
 	 * @return array
 	 */
-	public function fix_delete_default_term( $caps, $cap, $user_id, $args ) {
+	public function linguator_fix_delete_default_term( $caps, $cap, $user_id, $args ) {
 		if ( 'delete_term' === $cap && $this->is_default_term( reset( $args ) ) ) {
 			$caps[] = 'do_not_allow';
 		}
@@ -225,7 +225,7 @@ class LMAT_Default_Term {
 	 * @param  string $slug Language slug.
 	 * @return void
 	 */
-	public function update_default_term_language( $slug ) {
+	public function linguator_update_default_term_language( $slug ) {
 		foreach ( $this->taxonomies as $taxonomy ) {
 			if ( 'category' === $taxonomy ) {
 				$default_cats = $this->model->term->get_translations( get_option( 'default_' . $taxonomy ) );

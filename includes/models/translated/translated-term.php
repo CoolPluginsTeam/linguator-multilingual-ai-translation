@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use Linguator\Includes\Options\Options;
-use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object_With_Types_Interface;
-use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object_With_Types_Trait;
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Models\Translatable\Linguator_Translatable_Object_With_Types_Interface;
+use Linguator\Includes\Models\Translatable\Linguator_Translatable_Object_With_Types_Trait;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Other\Linguator_Language;
 use WP_Term;
 use WP_Error;
 
@@ -25,10 +25,10 @@ use WP_Error;
  *
  *  
  *
- * @phpstan-import-type DBInfoWithType from LMAT_Translatable_Object_With_Types_Interface
+ * @phpstan-import-type DBInfoWithType from Linguator_Translatable_Object_With_Types_Interface
  */
-class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Translatable_Object_With_Types_Interface {
-	use LMAT_Translatable_Object_With_Types_Trait;
+class Linguator_Translated_Term extends Linguator_Translated_Object implements Linguator_Translatable_Object_With_Types_Interface {
+	use Linguator_Translatable_Object_With_Types_Trait;
 
 	/**
 	 * Taxonomy name for the languages.
@@ -82,9 +82,9 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model Instance of `LMAT_Model`.
+	 * @param Linguator_Model $model Instance of `Linguator_Model`.
 	 */
-	public function __construct( LMAT_Model $model ) {
+	public function __construct( Linguator_Model $model ) {
 		parent::__construct( $model );
 
 		$this->init();
@@ -110,7 +110,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *   Renamed the parameter $term_id into $id.
 	 *
 	 * @param int                     $id   Term ID.
-	 * @param LMAT_Language|string|int $lang Language (object, slug, or term ID).
+	 * @param Linguator_Language|string|int $lang Language (object, slug, or term ID).
 	 * @return bool True when successfully assigned. False otherwise (or if the given language is already assigned to
 	 *              the object).
 	 */
@@ -119,7 +119,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 			return false;
 		}
 
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		// Add translation group for correct WXR export.
 		$translations = $this->get_translations( $id );
@@ -144,7 +144,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	public function delete_translation( $id ) {
 		global $wpdb;
 
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return;
@@ -255,7 +255,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * @phpstan-param array<positive-int> $ids
 	 */
 	public function clean_term_cache( $ids ) {
-		clean_object_term_cache( lmat_sanitize_ids( $ids ), 'term' );
+		clean_object_term_cache( linguator_sanitize_ids( $ids ), 'term' );
 	}
 
 	/**
@@ -288,7 +288,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *  
 	 *
 	 * @param int[]        $ids  Array of post ids or term ids.
-	 * @param LMAT_Language $lang Language to assign to the posts or terms.
+	 * @param Linguator_Language $lang Language to assign to the posts or terms.
 	 * @return void
 	 */
 	public function set_language_in_mass( $ids, $lang ) {
@@ -321,8 +321,8 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 * Returns database-related information that can be used in some of this class methods.
 	 * These are specific to the table containing the objects.
 	 *
-	 * @see LMAT_Translatable_Object::join_clause()
-	 * @see LMAT_Translatable_Object::get_raw_objects_with_no_lang()
+	 * @see Linguator_Translatable_Object::join_clause()
+	 * @see Linguator_Translatable_Object::get_raw_objects_with_no_lang()
 	 *
 	 *  
 	 *
@@ -350,7 +350,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 * @param string       $term     The term name to add.
 	 * @param string       $taxonomy The taxonomy to which to add the term.
-	 * @param LMAT_Language $language The term language.
+	 * @param Linguator_Language $language The term language.
 	 * @param array        $args {
 	 *     Optional. Array of arguments for inserting a term.
 	 *
@@ -368,7 +368,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *     @type int|string $term_taxonomy_id The new term taxonomy ID. Can be a numeric string.
 	 * }
 	 */
-	public function insert( string $term, string $taxonomy, LMAT_Language $language, $args = array() ) {
+	public function insert( string $term, string $taxonomy, Linguator_Language $language, $args = array() ) {
 		$parent = $args['parent'] ?? 0;
 		$this->toggle_inserted_term_filters( $language, $parent );
 		$term = wp_insert_term( $term, $taxonomy, $args );
@@ -402,7 +402,7 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *     @type string       $description  The term description. Default empty string.
 	 *     @type int          $parent       The id of the parent term. Default 0.
 	 *     @type string       $slug         The term slug to use. Default empty string.
-	 *     @type LMAT_Language $lang         The term language object.
+	 *     @type Linguator_Language $lang         The term language object.
 	 *     @type string[]     $translations The translation group to assign to the term with language slug as keys and `term_id` as values.
 	 * }
 	 * @return array|WP_Error An array containing the `term_id` and `term_taxonomy_id`,
@@ -414,11 +414,11 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 			return new WP_Error( 'invalid_term', __( 'Empty Term.', 'linguator-multilingual-ai-translation' ) );
 		}
 
-		/** @var LMAT_Language $language */
+		/** @var Linguator_Language $language */
 		$language = $this->get_language( $term_id );
 		if ( ! empty( $args['lang'] ) ) {
 			$language = $this->languages->get( $args['lang'] );
-			if ( ! $language instanceof LMAT_Language ) {
+			if ( ! $language instanceof Linguator_Language ) {
 				return new WP_Error( 'invalid_language', __( 'Please provide a valid language.', 'linguator-multilingual-ai-translation' ) );
 			}
 
@@ -448,11 +448,11 @@ class LMAT_Translated_Term extends LMAT_Translated_Object implements LMAT_Transl
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $language The language to use.
+	 * @param Linguator_Language $language The language to use.
 	 * @param int          $parent   The parent term id to use.
 	 * @return void
 	 */
-	private function toggle_inserted_term_filters( LMAT_Language $language, int $parent ): void {
+	private function toggle_inserted_term_filters( Linguator_Language $language, int $parent ): void {
 		static $callbacks = array();
 		if ( isset( $callbacks[ $language->slug ], $callbacks[ (string) $parent ] ) ) {
 			// Clean up!

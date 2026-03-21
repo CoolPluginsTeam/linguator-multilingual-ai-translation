@@ -50,8 +50,7 @@ class CPFM_Feedback_Notice {
 
         }
        
-
-       // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for page identification
        $current_page   = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
         
@@ -82,7 +81,7 @@ class CPFM_Feedback_Notice {
             true
 
         );
-        wp_localize_script('cpfm-common-review-script', 'adminNotice', [
+        wp_localize_script('cpfm-common-review-script', 'cpfmAdminNotice', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('dismiss_admin_notice'),
             'autoShowPages' => array_unique(
@@ -135,7 +134,7 @@ class CPFM_Feedback_Notice {
             foreach ($registered_notices[$category] as $notice) {
                    $plugin_name = isset($notice['plugin_name'])?sanitize_key($notice['plugin_name']):'';
                    if($plugin_name){
-                       // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                        do_action('cpfm_after_opt_in_' . $plugin_name, $category);
                    }
              
@@ -154,7 +153,7 @@ class CPFM_Feedback_Notice {
         }
 
         $screen         = get_current_screen();
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for page identification
         $current_page   = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
        

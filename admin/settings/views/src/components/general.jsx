@@ -639,7 +639,7 @@ const General = ({ data, setData }) => {
                             <Milestone className="flex-shrink-0 size-5 text-icon-secondary" />
                             {__('Custom Post Types', 'linguator-multilingual-ai-translation')}
                         </Label>
-                        <p>{__("Choose the custom post types you want to enable for translation.For example, if you have a 'Portfolio' post type, check the box to enable it for translation.", 'linguator-multilingual-ai-translation')}</p>
+                        <p>{__("Choose the custom post types you want to enable for translation. For example, if you have a 'Portfolio' post type, check the box to enable it for translation.", 'linguator-multilingual-ai-translation')}</p>
                        </div>
                         {AvailablePostTypes.length > 0 && (
                             <div className='flex justify-end gap-2' style={{paddingRight: '30%'}}>

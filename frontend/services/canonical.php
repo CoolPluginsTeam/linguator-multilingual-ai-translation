@@ -18,7 +18,7 @@ use WP_Post;
  *
  *  
  */
-class LMAT_Canonical {
+class Linguator_Canonical {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -27,21 +27,21 @@ class LMAT_Canonical {
 	protected $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	protected $links_model;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language
+	 * @var Linguator_Language
 	 */
 	protected $curlang;
 
@@ -94,7 +94,7 @@ class LMAT_Canonical {
 		}
 
 		if ( empty( $requested_url ) ) {
-			$requested_url = lmat_get_requested_url();
+			$requested_url = linguator_get_requested_url();
 		}
 
 		if ( ( is_single() && ( ! is_attachment() || get_option( 'wp_attachment_pages_enabled' ) ) ) || ( is_page() && ! is_front_page() ) ) {
@@ -105,8 +105,8 @@ class LMAT_Canonical {
 		}
 
 		if ( ! empty( $wp_query->tax_query ) ) {
-			if ( $this->model->is_translated_taxonomy( $this->get_queried_taxonomy( $wp_query->tax_query ) ) ) {
-				$term_id = $this->get_queried_term_id( $wp_query->tax_query );
+			if ( $this->model->is_translated_taxonomy( $this->linguator_get_queried_taxonomy( $wp_query->tax_query ) ) ) {
+				$term_id = $this->linguator_get_queried_term_id( $wp_query->tax_query );
 				if ( $term_id ) {
 					$language = $this->model->term->get_language( $term_id );
 				}
@@ -150,7 +150,7 @@ class LMAT_Canonical {
 		 *  
 		 *
 		 * @param string|false $redirect_url False or the url to redirect to.
-		 * @param LMAT_Language $language The language detected.
+		 * @param Linguator_Language $language The language detected.
 		 */
 		$redirect_url = apply_filters( 'lmat_check_canonical_url', $redirect_url, $language );
 
@@ -177,9 +177,9 @@ class LMAT_Canonical {
 	 * @param WP_Tax_Query $tax_query An instance of WP_Tax_Query.
 	 * @return int
 	 */
-	protected function get_queried_term_id( $tax_query ) {
+	protected function linguator_get_queried_term_id( $tax_query ) {
 		$queried_terms = $tax_query->queried_terms;
-		$taxonomy = $this->get_queried_taxonomy( $tax_query );
+		$taxonomy = $this->linguator_get_queried_taxonomy( $tax_query );
 
 		if ( ! isset( $queried_terms[ $taxonomy ]['terms'] ) || ! is_array( $queried_terms[ $taxonomy ]['terms'] ) ) {
 			return 0;
@@ -242,7 +242,7 @@ class LMAT_Canonical {
 	 * @param WP_Tax_Query $tax_query An instance of WP_Tax_Query.
 	 * @return string A taxonomy slug
 	 */
-	protected function get_queried_taxonomy( $tax_query ) {
+	protected function linguator_get_queried_taxonomy( $tax_query ) {
 		$queried_terms = $tax_query->queried_terms;
 		unset( $queried_terms['lmat_language'] );
 
@@ -257,7 +257,7 @@ class LMAT_Canonical {
 	 * @global WP_Query $wp_query WordPress Query object.
 	 *
 	 * @param string       $url      Requested url.
-	 * @param LMAT_Language $language Language of the queried object.
+	 * @param Linguator_Language $language Language of the queried object.
 	 * @return string
 	 */
 	protected function redirect_canonical( $url, $language ) {

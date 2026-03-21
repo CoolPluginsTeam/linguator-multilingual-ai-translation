@@ -5,8 +5,8 @@
 
 namespace Linguator\Includes\Capabilities\Create;
 
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Other\Linguator_Language;
 use Linguator\Modules\REST\Request;
 use Linguator\Includes\Capabilities\User;
 
@@ -21,7 +21,7 @@ abstract class Abstract_Object {
 	/**
 	 * Main model instance. Used to access language data and helpers.
 	 *
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -29,7 +29,7 @@ abstract class Abstract_Object {
 	 * User's preferred language, if available.
 	 * This is usually chosen in the admin area.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	protected $pref_lang;
 
@@ -37,7 +37,7 @@ abstract class Abstract_Object {
 	 * Current language in use on the site, or the "active" language.
 	 * Can come from frontend or admin filters.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	protected $curlang;
 
@@ -51,12 +51,12 @@ abstract class Abstract_Object {
 	/**
 	 * Set up the object and store the main properties.
 	 *
-	 * @param LMAT_Model         $model     Main model, used for lookups and helpers.
+	 * @param Linguator_Model         $model     Main model, used for lookups and helpers.
 	 * @param Request            $request   The current request, may have language info.
-	 * @param LMAT_Language|null $pref_lang The preferred language of the user (if set).
-	 * @param LMAT_Language|null $curlang   The currently active language (if any).
+	 * @param Linguator_Language|null $pref_lang The preferred language of the user (if set).
+	 * @param Linguator_Language|null $curlang   The currently active language (if any).
 	 */
-	public function __construct( LMAT_Model $model, Request $request, ?LMAT_Language $pref_lang, ?LMAT_Language $curlang ) {
+	public function __construct( Linguator_Model $model, Request $request, ?Linguator_Language $pref_lang, ?Linguator_Language $curlang ) {
 		$this->model     = $model;   // Model gives access to language utilities.
 		$this->request   = $request; // Holds request data (can include language).
 		$this->pref_lang = $pref_lang; // User's preferred language, or null.
@@ -71,7 +71,7 @@ abstract class Abstract_Object {
 	 * @param User    $user The user creating or updating the object.
 	 * @param int     $id   The object's ID (usually 0 when creating new).
 	 *
-	 * @return LMAT_Language The language to assign.
+	 * @return Linguator_Language The language to assign.
 	 */
-	abstract public function get_language( User $user, int $id = 0 ): LMAT_Language;
+	abstract public function get_language( User $user, int $id = 0 ): Linguator_Language;
 }

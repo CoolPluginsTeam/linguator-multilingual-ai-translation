@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Sync_Term_Metas extends LMAT_Sync_Metas {
+class Linguator_Sync_Term_Metas extends Linguator_Sync_Metas {
 
 	/**
 	 * Constructor.
@@ -27,3 +27,4 @@ class LMAT_Sync_Term_Metas extends LMAT_Sync_Metas {
 		parent::__construct( $linguator );
 	}
 }
+

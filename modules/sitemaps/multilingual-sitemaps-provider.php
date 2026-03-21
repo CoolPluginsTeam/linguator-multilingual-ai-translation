@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
+class Linguator_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	/**
 	 * The decorated sitemaps provider.
 	 *
@@ -23,20 +23,20 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	protected $provider;
 
 	/**
-	 * The LMAT_Links_Model instance.
+	 * The Linguator_Links_Model instance.
 	 *
 	 *  
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	protected $links_model;
 
 	/**
-	 * The LMAT_Model instance.
+	 * The Linguator_Model instance.
 	 *
 	 *  
 	 *
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
@@ -56,7 +56,7 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 	 *  
 	 *
 	 * @param WP_Sitemaps_Provider $provider    An instance of a WP_Sitemaps_Provider child class.
-	 * @param LMAT_Links_Model      $links_model The LMAT_Links_Model instance.
+	 * @param Linguator_Links_Model      $links_model The Linguator_Links_Model instance.
 	 */
 	public function __construct( $provider, &$links_model ) {
 		$this->name = $provider->name;
@@ -220,3 +220,4 @@ class LMAT_Multilingual_Sitemaps_Provider extends WP_Sitemaps_Provider {
 		return $this->provider->get_object_subtypes();
 	}
 }
+

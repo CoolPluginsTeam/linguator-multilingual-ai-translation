@@ -10,31 +10,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class to handle site language switch.
  */
-class LMAT_Switch_Language {
+class Linguator_Switch_Language {
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	private static $model;
 
 	/**
 	 * The previous language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public static $previous_language;
 
 	/**
 	 * The original language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	private static $original_language;
 
 	/**
 	 * The current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	private static $current_language;
 
@@ -42,13 +42,13 @@ class LMAT_Switch_Language {
 	 * Setups filters.
 	 *
 	 *
-	 * @param LMAT_Model $model Instance of `LMAT_Model`.
+	 * @param Linguator_Model $model Instance of `Linguator_Model`.
 	 * @return void
 	 */
-	public static function init( LMAT_Model $model ): void {
+	public static function init( Linguator_Model $model ): void {
 		self::$model = $model;
 
-		add_action( 'lmat_language_defined', array( static::class, 'set_current_language' ), -1000 );
+		add_action( 'lmat_language_defined', array( static::class, 'linguator_set_current_language' ), -1000 );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class LMAT_Switch_Language {
 	 * @param string $slug Current language slug.
 	 * @return void
 	 */
-	public static function set_current_language( $slug ): void {
+	public static function linguator_set_current_language( $slug ): void {
 		$language = self::$model->languages->get( $slug );
 		self::$current_language = ! empty( $language ) ? $language : null;
 	}
@@ -96,7 +96,7 @@ class LMAT_Switch_Language {
 	 * Switches the site to the given language.
 	 *
 	 *
-	 * @param LMAT_Language|string|null $language The language we want to switch to.
+	 * @param Linguator_Language|string|null $language The language we want to switch to.
 	 * @return void
 	 */
 	public static function switch_language( $language = null ): void {
@@ -106,7 +106,7 @@ class LMAT_Switch_Language {
 		}
 
 		$language = self::$model->languages->get( $language );
-		if ( ! $language instanceof LMAT_Language ) {
+		if ( ! $language instanceof Linguator_Language ) {
 			return;
 		}
 
@@ -131,7 +131,7 @@ class LMAT_Switch_Language {
 		 * Fires when the language is switched.
 		 *
 		 *
-		 * @param LMAT_Language $language The new language.
+		 * @param Linguator_Language $language The new language.
 		 */
 		do_action( 'lmat_switch_language', $language );
 	}
@@ -161,7 +161,7 @@ class LMAT_Switch_Language {
 		$language = self::$model->get_language( $locale );
 
 		if ( ! empty( $language ) ) {
-			$mo = new LMAT_MO();
+			$mo = new Linguator_MO();
 			$mo->import_from_db( $language );
 			$GLOBALS['l10n']['lmat_string'] = &$mo;
 		} else {

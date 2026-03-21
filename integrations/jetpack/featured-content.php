@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Frontend\Controllers\LMAT_Frontend;
+use Linguator\Frontend\Controllers\Linguator_Frontend;
 use Featured_Content;
 
 
@@ -18,15 +18,15 @@ use Featured_Content;
  *
  *  
  */
-class LMAT_Featured_Content {
+class Linguator_Featured_Content {
 	/**
 	 * Constructor
 	 *
 	 *  
 	 */
 	public function init() {
-		add_filter( 'transient_featured_content_ids', array( $this, 'featured_content_ids' ) );
-		add_filter( 'option_featured-content', array( $this, 'option_featured_content' ) );
+		add_filter( 'transient_featured_content_ids', array( $this, 'linguator_featured_content_ids' ) );
+		add_filter( 'option_featured-content', array( $this, 'linguator_option_featured_content' ) );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class LMAT_Featured_Content {
 	 * @param array $featured_ids Featured posts ids
 	 * @return array modified featured posts ids ( include all languages )
 	 */
-	public function featured_content_ids( $featured_ids ) {
+	public function linguator_featured_content_ids( $featured_ids ) {
 		if ( ! $this->is_active() || false !== $featured_ids ) {
 			return $featured_ids;
 		}
@@ -122,11 +122,12 @@ class LMAT_Featured_Content {
 	 * @param array $settings featured content settings
 	 * @return array modified $settings
 	 */
-	public function option_featured_content( $settings ) {
-		if ( $this->is_active() && LMAT() instanceof LMAT_Frontend && $settings['tag-id'] && $tr = lmat_get_term( $settings['tag-id'] ) ) {
+	public function linguator_option_featured_content( $settings ) {
+		if ( $this->is_active() && LMAT() instanceof Linguator_Frontend && $settings['tag-id'] && $tr = linguator_get_term( $settings['tag-id'] ) ) {
 			$settings['tag-id'] = $tr;
 		}
 
 		return $settings;
 	}
 }
+

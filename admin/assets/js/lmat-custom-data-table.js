@@ -80,8 +80,15 @@ class BlockFilterSorter {
 
       if (this.saveButtonEnabled && '' !== this.saveButtonText && 'false' !== this.saveButtonText) {
         const saveButton = this.appendSaveButton();
-        const lastRow = tableWrp.querySelector('.dt-layout-row:last-child');
-        lastRow.before(saveButton);
+        // DataTables adds .dt-autosize as last child, so use the row that contains .dt-paging (not :last-child)
+        const pagingEl = tableWrp.querySelector('.dt-paging');
+        const pagingRow = pagingEl ? pagingEl.closest('.dt-layout-row') : null;
+        if (pagingRow) {
+          pagingRow.before(saveButton);
+        } else {
+          // Fallback if paging not in DOM yet or structure changed: append to wrapper
+          tableWrp.appendChild(saveButton);
+        }
 
         jQuery(`.${this.saveButtonClass}`).on('click', this.saveButtonHandler.bind(this));
       }

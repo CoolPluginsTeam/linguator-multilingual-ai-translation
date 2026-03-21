@@ -9,32 +9,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Some common code for LMAT_Admin_Filters_Post and LMAT_Admin_Filters_Media
+ * Some common code for Linguator_Admin_Filters_Post and Linguator_Admin_Filters_Media
  *
  *  
  */
-abstract class LMAT_Admin_Filters_Post_Base {
+abstract class Linguator_Admin_Filters_Post_Base {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * @var LMAT_Admin_Links
+	 * @var Linguator_Admin_Links
 	 */
 	public $links;
 
 	/**
 	 * Language selected in the admin language filter.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $filter_lang;
 
 	/**
 	 * Preferred language to assign to new contents.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $pref_lang;
 

@@ -13,18 +13,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Frontend_Filters_Search {
+class Linguator_Frontend_Filters_Search {
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	public $links_model;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -47,7 +47,7 @@ class LMAT_Frontend_Filters_Search {
 		add_filter( 'render_block_core/search', array( $this, 'get_search_form' ) );
 
 		// Adds the language information in admin bar search form
-		add_action( 'add_admin_bar_menus', array( $this, 'add_admin_bar_menus' ) );
+		add_action( 'add_admin_bar_menus', array( $this, 'linguator_add_admin_bar_menus' ) );
 
 	}
 
@@ -93,9 +93,9 @@ class LMAT_Frontend_Filters_Search {
 	 *
 	 * @return void
 	 */
-	public function add_admin_bar_menus() {
+	public function linguator_add_admin_bar_menus() {
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_search_menu', 9999 );
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar_search_menu' ), 9999 );
+		add_action( 'admin_bar_menu', array( $this, 'linguator_admin_bar_search_menu' ), 9999 );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class LMAT_Frontend_Filters_Search {
 	 * @param WP_Admin_Bar $wp_admin_bar The WP_Admin_Bar instance, passed by reference.
 	 * @return void
 	 */
-	public function admin_bar_search_menu( $wp_admin_bar ) {
+	public function linguator_admin_bar_search_menu( $wp_admin_bar ) {
 		$form  = '<form action="' . esc_url( home_url( '/' ) ) . '" method="get" id="adminbarsearch">';
 		$form .= '<input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150" />';
 		$form .= '<label for="adminbar-search" class="screen-reader-text">' .

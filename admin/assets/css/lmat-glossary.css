@@ -757,12 +757,6 @@
         grid-template-columns: 1fr !important;
     }
 }
-  
-.lmat-glossary-table.lmat-hide-lang-xx th.lmat-lang-header.lmat-lang-col-xx,
-.lmat-glossary-table.lmat-hide-lang-xx td.lmat-lang-col-xx {
-    display: none !important;
-}
-
 
 .lmat-modal-close-btn {
     position: absolute;
@@ -788,16 +782,6 @@
 
 .lmat-language-filters:empty {
     display: none;
-}
-
-.lmat-glossary-table[class*="lmat-hide-lang-"] th.lmat-lang-header,
-.lmat-glossary-table[class*="lmat-hide-lang-"] td[class^="lmat-lang-col-"] {
-    display: table-cell;
-}
-
-.lmat-glossary-table.lmat-hide-lang-xx th.lmat-lang-header.lmat-lang-col-xx,
-.lmat-glossary-table.lmat-hide-lang-xx td.lmat-lang-col-xx {
-    display: none !important;
 }
 
 .lmat-controls .lmat-glossary-type {

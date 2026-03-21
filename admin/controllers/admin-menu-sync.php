@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class LMAT_Admin_Menu_Sync
+ * Class Linguator_Admin_Menu_Sync
  * 
  * Provides functionality to sync menu structure across multiple languages
  */
-class LMAT_Admin_Menu_Sync {
+class Linguator_Admin_Menu_Sync {
 
 	/**
 	 * Flag to track if AJAX handler has been registered
@@ -68,7 +68,7 @@ class LMAT_Admin_Menu_Sync {
 
 		// Register AJAX handler only once
 		if ( ! self::$ajax_registered ) {
-		add_action( 'wp_ajax_lmat_sync_menu', array( $this, 'ajax_sync_menu' ) );
+		add_action( 'wp_ajax_lmat_sync_menu', array( $this, 'linguator_ajax_sync_menu' ) );
 			self::$ajax_registered = true;
 		}
 		
@@ -148,7 +148,16 @@ class LMAT_Admin_Menu_Sync {
 			'name'            => $english_name,
 			'native_name'     => $native_name,
 			'locale'          => isset( $lang->locale ) ? $lang->locale : $lang->slug,
-			'flag'            => isset( $lang->flag ) ? $lang->flag : '',
+			'flag'            => isset( $lang->flag )
+				? wp_kses(
+					(string) $lang->flag,
+					array(
+						'img'  => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true, 'decoding' => true, 'loading' => true, 'title' => true ),
+						'span' => array( 'class' => true, 'style' => true ),
+					),
+					array_merge( wp_allowed_protocols(), array( 'data' ) )
+				)
+				: '',
 			'has_synced_menu' => false,
 		);
 		}
@@ -181,7 +190,7 @@ class LMAT_Admin_Menu_Sync {
 	$existing_menu_langs = array();
 	
 	// Get the locations of the current menu being edited
-	$current_menu_locations = $this->get_menu_locations( $nav_menu_selected_id );
+	$current_menu_locations = $this->linguator_get_menu_locations( $nav_menu_selected_id );
 	
 	// Only check for conflicts if the current menu is assigned to at least one location
 	if ( ! empty( $current_menu_locations ) ) {
@@ -193,11 +202,11 @@ class LMAT_Admin_Menu_Sync {
 			}
 			
 			// Get the language assigned to this menu using its ID
-			$menu_lang = $this->get_menu_language( $menu->term_id );
+			$menu_lang = $this->linguator_get_menu_language( $menu->term_id );
 			
 			// If this menu has a language, check if it's in the same location(s)
 			if ( $menu_lang ) {
-				$menu_locations = $this->get_menu_locations( $menu->term_id );
+				$menu_locations = $this->linguator_get_menu_locations( $menu->term_id );
 				
 				// Check if there's any overlap in locations
 				$has_common_location = ! empty( array_intersect( $current_menu_locations, $menu_locations ) );
@@ -219,7 +228,7 @@ class LMAT_Admin_Menu_Sync {
 	$source_items = wp_get_nav_menu_items( $nav_menu_selected_id );
 	
 	// Get current menu's language to exclude it from the list
-	$current_menu_lang = $this->get_menu_language( $nav_menu_selected_id );
+	$current_menu_lang = $this->linguator_get_menu_language( $nav_menu_selected_id );
 	
 	// Load predefined languages for English labels
 	$predefined_languages = include LINGUATOR_DIR . '/admin/settings/controllers/languages.php';
@@ -232,7 +241,7 @@ class LMAT_Admin_Menu_Sync {
 		}
 		
 		// Check if this language has translated content in general
-		if ( ! $this->language_has_content( $lang->slug ) ) {
+		if ( ! $this->linguator_language_has_content( $lang->slug ) ) {
 			continue;
 		}
 		
@@ -241,7 +250,7 @@ class LMAT_Admin_Menu_Sync {
 		
 		if ( ! empty( $source_items ) ) {
 			foreach ( $source_items as $item ) {
-				if ( $this->can_sync_item( $item, $lang ) ) {
+				if ( $this->linguator_can_sync_item( $item, $lang ) ) {
 					$has_translations = true;
 					break; // Found at least one, no need to check more
 				}
@@ -278,7 +287,7 @@ class LMAT_Admin_Menu_Sync {
 
 		// Get menu ID and language for sync button
 		$menu_id = $nav_menu_selected_id ? absint( $nav_menu_selected_id ) : 0;
-		$menu_lang = $menu_id ? $this->get_menu_language( $menu_id ) : '';
+		$menu_lang = $menu_id ? $this->linguator_get_menu_language( $menu_id ) : '';
 
 		// Localize script
 		wp_localize_script(
@@ -317,7 +326,7 @@ class LMAT_Admin_Menu_Sync {
 	 *
 	 * @return void
 	 */
-	public function ajax_sync_menu() {
+	public function linguator_ajax_sync_menu() {
 		try {
 		// Verify nonce
 		check_ajax_referer( 'lmat_sync_menu', 'nonce' );
@@ -331,8 +340,8 @@ class LMAT_Admin_Menu_Sync {
 		}
 
 		// Get parameters
-		$menu_id = isset( $_POST['menu_id'] ) ? absint( $_POST['menu_id'] ) : 0;
-		$target_langs = isset( $_POST['target_langs'] ) && is_array( $_POST['target_langs'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['target_langs'] ) ) : array();
+		$menu_id = ! empty( $_POST['menu_id'] ) ? absint( wp_unslash( $_POST['menu_id'] ) ) : 0;
+		$target_langs = ! empty( $_POST['target_langs'] ) && is_array( array_map( 'sanitize_text_field', wp_unslash( $_POST['target_langs'] ) ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['target_langs'] ) ) : array();
 
 			if ( empty( $menu_id ) ) {
 				wp_send_json_error( array( 
@@ -348,7 +357,7 @@ class LMAT_Admin_Menu_Sync {
 				) );
 		}
 		// Perform sync
-		$result = $this->sync_menu_to_languages( $menu_id, $target_langs );
+		$result = $this->linguator_sync_menu_to_languages( $menu_id, $target_langs );
 		if ( $result['success'] ) {
 			wp_send_json_success( $result );
 		} else {
@@ -369,7 +378,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param array $target_langs   Target language slugs.
 	 * @return array Result data.
 	 */
-	private function sync_menu_to_languages( $source_menu_id, $target_langs ) {
+	private function linguator_sync_menu_to_languages( $source_menu_id, $target_langs ) {
 		$result = array(
 			'success' => true,
 			'synced_languages' => array(),
@@ -399,7 +408,7 @@ class LMAT_Admin_Menu_Sync {
 		}
 
 		// Get menu locations for source menu
-		$menu_locations = $this->get_menu_locations( $source_menu_id );
+		$menu_locations = $this->linguator_get_menu_locations( $source_menu_id );
 
 		// Sync to each target language
 		foreach ( $target_langs as $lang_slug ) {
@@ -409,7 +418,7 @@ class LMAT_Admin_Menu_Sync {
 				continue;
 			}
 
-			$sync_result = $this->sync_menu_for_language( $source_menu, $source_items, $lang, $menu_locations );
+			$sync_result = $this->linguator_sync_menu_for_language( $source_menu, $source_items, $lang, $menu_locations );
 			
 			if ( $sync_result['synced'] > 0 ) {
 				$result['synced_languages'][] = $lang->name;
@@ -443,7 +452,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param array  $menu_locations Menu locations.
 	 * @return array Sync result.
 	 */
-	private function sync_menu_for_language( $source_menu, $source_items, $lang, $menu_locations ) {
+	private function linguator_sync_menu_for_language( $source_menu, $source_items, $lang, $menu_locations ) {
 		$result = array(
 			'synced' => 0,
 			'skipped' => 0,
@@ -453,7 +462,7 @@ class LMAT_Admin_Menu_Sync {
 		// First, check if there are any items that can be synced
 		$items_to_sync = array();
 		foreach ( $source_items as $item ) {
-			if ( $this->can_sync_item( $item, $lang ) ) {
+			if ( $this->linguator_can_sync_item( $item, $lang ) ) {
 				$items_to_sync[] = $item;
 			}
 		}
@@ -470,11 +479,11 @@ class LMAT_Admin_Menu_Sync {
 
 		if ( $target_menu ) {
 			// Menu already exists - verify it's not assigned to a different language
-			$existing_menu_lang = $this->get_menu_language( $target_menu->term_id );
+			$existing_menu_lang = $this->linguator_get_menu_language( $target_menu->term_id );
 			
 			if ( $existing_menu_lang && $existing_menu_lang !== $lang->slug ) {
 				// Menu exists but assigned to different language - generate unique name
-				$target_menu_name = $this->generate_unique_menu_name( $source_menu->name, $lang->name );
+				$target_menu_name = $this->linguator_generate_unique_menu_name( $source_menu->name, $lang->name );
 				$target_menu_id = wp_create_nav_menu( $target_menu_name );
 				if ( is_wp_error( $target_menu_id ) ) {
 					return $result;
@@ -506,7 +515,7 @@ class LMAT_Admin_Menu_Sync {
 
 		// Sync menu items
 		foreach ( $source_items as $item ) {
-			$new_item_id = $this->sync_menu_item( $item, $target_menu_id, $lang, $item_id_map );
+			$new_item_id = $this->linguator_sync_menu_item( $item, $target_menu_id, $lang, $item_id_map );
 			
 			if ( $new_item_id ) {
 				$result['synced']++;
@@ -524,7 +533,7 @@ class LMAT_Admin_Menu_Sync {
 
 		// Assign menu to locations
 		if ( ! empty( $menu_locations ) ) {
-			$this->assign_menu_to_locations( $target_menu_id, $lang->slug, $menu_locations );
+			$this->linguator_assign_menu_to_locations( $target_menu_id, $lang->slug, $menu_locations );
 		}
 
 		return $result;
@@ -537,7 +546,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param object $lang Target language.
 	 * @return bool True if item can be synced, false otherwise.
 	 */
-	private function can_sync_item( $item, $lang ) {
+	private function linguator_can_sync_item( $item, $lang ) {
 		// Custom links can always be synced (we translate the label)
 		if ( $item->type === 'custom' ) {
 			return true;
@@ -556,7 +565,7 @@ class LMAT_Admin_Menu_Sync {
 				return false;
 			}
 			
-			$translations = lmat_get_post_translations( $item->object_id );
+			$translations = linguator_get_post_translations( $item->object_id );
 			
 			// If no translations array exists, the post isn't in a translation group yet
 			if ( empty( $translations ) ) {
@@ -580,7 +589,7 @@ class LMAT_Admin_Menu_Sync {
 
 		// Check if taxonomy item has translation
 		if ( $item->type === 'taxonomy' ) {
-			$translations = lmat_get_term_translations( $item->object_id );
+			$translations = linguator_get_term_translations( $item->object_id );
 			
 			if ( ! isset( $translations[ $lang->slug ] ) ) {
 				return false;
@@ -610,7 +619,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param array  &$item_id_map Item ID mapping.
 	 * @return int|false New menu item ID or false.
 	 */
-	private function sync_menu_item( $item, $menu_id, $lang, &$item_id_map ) {
+	private function linguator_sync_menu_item( $item, $menu_id, $lang, &$item_id_map ) {
 		// Build base item data
 		$item_data = array(
 			'menu-item-title' => $item->title,
@@ -640,7 +649,7 @@ class LMAT_Admin_Menu_Sync {
 			}
 			
 			// Get translated post (supports all post types including custom)
-			$translations = lmat_get_post_translations( $item->object_id );
+			$translations = linguator_get_post_translations( $item->object_id );
 			
 			if ( ! isset( $translations[ $lang->slug ] ) ) {
 				return false; // No translation available
@@ -664,7 +673,7 @@ class LMAT_Admin_Menu_Sync {
 			// Check if navigation label is customized (different from original post title)
 			if ( $original_post && $item->title !== $original_post->post_title ) {
 				// Navigation label is custom, translate it
-				$translated_title = $this->translate_custom_link_title( $item->title, $lang );
+				$translated_title = $this->linguator_translate_custom_link_title( $item->title, $lang );
 				$item_data['menu-item-title'] = $translated_title ? $translated_title : $item->title;
 			} else {
 				// Use translated post title
@@ -672,7 +681,7 @@ class LMAT_Admin_Menu_Sync {
 			}
 		} elseif ( $item->type === 'taxonomy' ) {
 			// Get translated term
-			$translations = lmat_get_term_translations( $item->object_id );
+			$translations = linguator_get_term_translations( $item->object_id );
 			
 			if ( ! isset( $translations[ $lang->slug ] ) ) {
 				return false; // No translation available
@@ -696,7 +705,7 @@ class LMAT_Admin_Menu_Sync {
 			// Check if navigation label is customized (different from original term name)
 			if ( $original_term && ! is_wp_error( $original_term ) && $item->title !== $original_term->name ) {
 				// Navigation label is custom, translate it
-				$translated_title = $this->translate_custom_link_title( $item->title, $lang );
+				$translated_title = $this->linguator_translate_custom_link_title( $item->title, $lang );
 				$item_data['menu-item-title'] = $translated_title ? $translated_title : $item->title;
 			} else {
 				// Use translated term name
@@ -704,7 +713,7 @@ class LMAT_Admin_Menu_Sync {
 			}
 		} elseif ( $item->type === 'custom' ) {
 			// Handle custom links - translate navigation label
-			$translated_title = $this->translate_custom_link_title( $item->title, $lang );
+			$translated_title = $this->linguator_translate_custom_link_title( $item->title, $lang );
 			if ( $translated_title ) {
 				$item_data['menu-item-title'] = $translated_title;
 			}
@@ -738,7 +747,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param int $menu_id Menu ID.
 	 * @return array Menu locations.
 	 */
-	private function get_menu_locations( $menu_id ) {
+	private function linguator_get_menu_locations( $menu_id ) {
 		$locations = array();
 		$nav_menus = $this->options->get( 'nav_menus' );
 		
@@ -766,7 +775,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param array  $locations Locations to assign.
 	 * @return void
 	 */
-	private function assign_menu_to_locations( $menu_id, $lang_slug, $locations ) {
+	private function linguator_assign_menu_to_locations( $menu_id, $lang_slug, $locations ) {
 		$nav_menus = $this->options->get( 'nav_menus' );
 		
 		foreach ( $locations as $location ) {
@@ -784,7 +793,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param string $lang_name Language name.
 	 * @return string Unique menu name.
 	 */
-	private function generate_unique_menu_name( $base_name, $lang_name ) {
+	private function linguator_generate_unique_menu_name( $base_name, $lang_name ) {
 		$menu_name = $base_name . ' (' . $lang_name . ')';
 		$counter = 1;
 		
@@ -809,7 +818,7 @@ class LMAT_Admin_Menu_Sync {
 	 *
 	 * @return void
 	 */
-	private function build_menu_language_cache() {
+	private function linguator_build_menu_language_cache() {
 		if ( $this->menu_language_cache !== null ) {
 			return; // Already cached
 		}
@@ -836,9 +845,9 @@ class LMAT_Admin_Menu_Sync {
 	 * @param int $menu_id Menu ID.
 	 * @return string Language slug or empty string if not found.
 	 */
-	private function get_menu_language( $menu_id ) {
+	private function linguator_get_menu_language( $menu_id ) {
 		// Build cache on first call
-		$this->build_menu_language_cache();
+		$this->linguator_build_menu_language_cache();
 		
 		// Return from cache
 		return isset( $this->menu_language_cache[ $menu_id ] ) 
@@ -860,7 +869,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param object $lang Target language object.
 	 * @return string Translated title or original if translation fails.
 	 */
-	private function translate_custom_link_title( $title, $lang ) {
+	private function linguator_translate_custom_link_title( $title, $lang ) {
 		// Get source language (default language)
 		$default_lang = $this->model->languages->get_default();
 		if ( ! $default_lang ) {
@@ -871,13 +880,13 @@ class LMAT_Admin_Menu_Sync {
 		$target_lang_code = $lang->slug;
 		
 		// First, check glossary for existing translation
-		$glossary_translation = $this->get_glossary_translation( $title, $source_lang_code, $target_lang_code );
+		$glossary_translation = $this->linguator_get_glossary_translation( $title, $source_lang_code, $target_lang_code );
 		if ( $glossary_translation ) {
 			return $glossary_translation;
 		}
 		
 		// No glossary entry found, use AI translation
-		$ai_translation = $this->translate_with_ai( $title, $lang );
+		$ai_translation = $this->linguator_translate_with_ai( $title, $lang );
 		if ( $ai_translation && $ai_translation !== $title ) {
 			return $ai_translation;
 		}
@@ -894,7 +903,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param string $target_lang_code Target language code.
 	 * @return string|false Translated title or false if not found.
 	 */
-	private function get_glossary_translation( $title, $source_lang_code, $target_lang_code ) {
+	private function linguator_get_glossary_translation( $title, $source_lang_code, $target_lang_code ) {
 		$glossary_data = get_option( 'lmat_glossary_data', array() );
 		
 		if ( empty( $glossary_data ) || ! is_array( $glossary_data ) ) {
@@ -933,7 +942,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param object $lang Target language object.
 	 * @return string|false Translated text or false if translation fails.
 	 */
-	private function translate_with_ai( $text, $lang ) {
+	private function linguator_translate_with_ai( $text, $lang ) {
 		// Get translation configuration
 		$ai_config = $this->options->get( 'ai_translation_configuration' );
 		
@@ -949,7 +958,7 @@ class LMAT_Admin_Menu_Sync {
 		}
 		
 		// Use Google Translate
-		return $this->translate_with_google( $text, $default_lang->locale, $lang->locale );
+		return $this->linguator_translate_with_google( $text, $default_lang->locale, $lang->locale );
 	}
 	
 	/**
@@ -960,7 +969,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param string $target_locale Target language locale.
 	 * @return string|false Translated text or false.
 	 */
-	private function translate_with_google( $text, $source_locale, $target_locale ) {
+	private function linguator_translate_with_google( $text, $source_locale, $target_locale ) {
 		// Extract language codes (first 2 letters)
 		$source_lang = substr( $source_locale, 0, 2 );
 		$target_lang = substr( $target_locale, 0, 2 );
@@ -1007,7 +1016,7 @@ class LMAT_Admin_Menu_Sync {
 	 * @param string $lang_slug Language slug.
 	 * @return bool True if language has content, false otherwise.
 	 */
-	private function language_has_content( $lang_slug ) {
+	private function linguator_language_has_content( $lang_slug ) {
 		global $wpdb;
 		
 		// Get all translatable post types (includes custom post types)

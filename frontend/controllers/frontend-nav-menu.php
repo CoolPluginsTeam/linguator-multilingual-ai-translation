@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Controllers\LMAT_Nav_Menu;
-use Linguator\Includes\Controllers\LMAT_Switcher;
+use Linguator\Includes\Controllers\Linguator_Nav_Menu;
+use Linguator\Includes\Controllers\Linguator_Switcher;
 
 
 
@@ -18,11 +18,11 @@ use Linguator\Includes\Controllers\LMAT_Switcher;
  *
  *  
  */
-class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
+class Linguator_Frontend_Nav_Menu extends Linguator_Nav_Menu {
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null|false
+	 * @var Linguator_Language|null|false
 	 */
 	public $curlang;
 
@@ -40,17 +40,17 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 
 		// Split the language switcher menu item in several language menu items
 		add_filter( 'wp_get_nav_menu_items', array( $this, 'wp_get_nav_menu_items' ), 20 ); // after the customizer menus
-		add_filter( 'wp_nav_menu_objects', array( $this, 'wp_nav_menu_objects' ) );
-		add_filter( 'nav_menu_link_attributes', array( $this, 'nav_menu_link_attributes' ), 10, 2 );
+		add_filter( 'wp_nav_menu_objects', array( $this, 'linguator_wp_nav_menu_objects' ) );
+		add_filter( 'nav_menu_link_attributes', array( $this, 'linguator_nav_menu_link_attributes' ), 10, 2 );
 
 		// Filters menus by language
 		add_filter( 'theme_mod_nav_menu_locations', array( $this, 'nav_menu_locations' ), 20 );
-		add_filter( 'wp_nav_menu_args', array( $this, 'wp_nav_menu_args' ) );
+		add_filter( 'wp_nav_menu_args', array( $this, 'linguator_wp_nav_menu_args' ) );
 
 		// The customizer
 		if ( isset( $_POST['wp_customize'], $_POST['customized'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			add_filter( 'wp_nav_menu_args', array( $this, 'filter_args_before_customizer' ) );
-			add_filter( 'wp_nav_menu_args', array( $this, 'filter_args_after_customizer' ), 2000 );
+			add_filter( 'wp_nav_menu_args', array( $this, 'linguator_filter_args_before_customizer' ) );
+			add_filter( 'wp_nav_menu_args', array( $this, 'linguator_filter_args_after_customizer' ), 2000 );
 		}
 	}
 
@@ -63,7 +63,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param stdClass $b The second object to compare.
 	 * @return int -1 or 1 if $a is considered to be respectively less than or greater than $b.
 	 */
-	protected function usort_menu_items( $a, $b ) {
+	protected function linguator_usort_menu_items( $a, $b ) {
 		return ( $a->menu_order < $b->menu_order ) ? -1 : 1;
 	}
 
@@ -77,7 +77,15 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array  $options Language switcher options
 	 * @return string Formatted menu item title
 	 */
-	protected function get_item_title( $flag, $name, $options ) {
+	protected function linguator_get_item_title( $flag, $name, $options ) {
+		$flag = wp_kses(
+			(string) $flag,
+			array(
+				'span' => array( 'class' => true, 'style' => true ),
+				'img'  => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true, 'decoding' => true, 'loading' => true, 'title' => true ),
+			)
+		);
+
 		if ( $options['show_flags'] ) {
 			if ( $options['show_names'] ) {
 				$title = sprintf( '%1$s<span style="margin-%2$s:0.3em;">%3$s</span>', $flag, is_rtl() ? 'right' : 'left', esc_html( $name ) );
@@ -109,7 +117,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 		}
 
 		// The customizer menus does not sort the items and we need them to be sorted before splitting the language switcher
-		usort( $items, array( $this, 'usort_menu_items' ) );
+		usort( $items, array( $this, 'linguator_usort_menu_items' ) );
 
 		$new_items = array();
 
@@ -120,7 +128,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 				/** This filter is documented in include/switcher.php */
 				$options = apply_filters( 'lmat_the_languages_args', $options ); // Honor the filter here for 'show_flags', 'show_names' and 'dropdown'.
 
-				$switcher = new LMAT_Switcher();
+				$switcher = new Linguator_Switcher();
 				$args = array_merge( array( 'raw' => 1 ), $options );
 
 				/** @var array */
@@ -129,7 +137,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 				// parent item for dropdown
 				if ( ! empty( $options['dropdown'] ) ) {
 					$name = isset( $options['display_names_as'] ) && 'slug' === $options['display_names_as'] ? $this->curlang->slug : $this->curlang->name;
-					$item->title = $this->get_item_title( $this->curlang->get_display_flag( empty( $options['show_names'] ) ? 'alt' : 'no-alt' ), $name, $options );
+					$item->title = $this->linguator_get_item_title( $this->curlang->get_display_flag( empty( $options['show_names'] ) ? 'alt' : 'no-alt' ), $name, $options );
 					$item->attr_title = '';
 					$item->classes = array( 'lmat-parent-menu-item' );
 					$item->menu_order += $offset;
@@ -142,11 +150,11 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 					++$i;
 					$lang_item = clone $item;
 					$lang_item->ID = $lang_item->ID . '-' . $lang['slug']; // A unique ID
-					$lang_item->title = $this->get_item_title( $lang['flag'], $lang['name'], $options );
+					$lang_item->title = $this->linguator_get_item_title( $lang['flag'], $lang['name'], $options );
 					$lang_item->attr_title = '';
-					$lang_item->url = $lang['url'];
-					$lang_item->lang = $lang['locale']; // Save this for use in nav_menu_link_attributes
-					$lang_item->classes = $lang['classes'];
+					$lang_item->url = esc_url_raw( (string) $lang['url'] );
+					$lang_item->lang = sanitize_text_field( (string) $lang['locale'] ); // Save this for use in linguator_nav_menu_link_attributes
+					$lang_item->classes = array_map( 'sanitize_html_class', (array) $lang['classes'] );
 					if ( ! empty( $options['dropdown'] ) ) {
 						$lang_item->menu_order = $item->menu_order + $i;
 						$lang_item->menu_item_parent = $item->db_id;
@@ -191,7 +199,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param stdClass[] $items An array of menu items.
 	 * @return stdClass[]
 	 */
-	public function wp_nav_menu_objects( $items ) {
+	public function linguator_wp_nav_menu_objects( $items ) {
 		$r_ids = $k_ids = array();
 
 		foreach ( $items as $item ) {
@@ -227,7 +235,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param stdClass $item Menu item.
 	 * @return string[] Modified attributes.
 	 */
-	public function nav_menu_link_attributes( $atts, $item ) {
+	public function linguator_nav_menu_link_attributes( $atts, $item ) {
 		if ( isset( $item->lang ) ) {
 			$atts['lang'] = $atts['hreflang'] = esc_attr( $item->lang );
 		}
@@ -279,7 +287,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array $args Array of `wp_nav_menu()` arguments.
 	 * @return array
 	 */
-	public function wp_nav_menu_args( $args ) {
+	public function linguator_wp_nav_menu_args( $args ) {
 		$theme = get_option( 'stylesheet' );
 
 		if ( empty( $this->curlang ) || empty( $this->options['nav_menus'][ $theme ] ) ) {
@@ -326,7 +334,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array $args wp_nav_menu $args
 	 * @return array modified $args
 	 */
-	public function filter_args_before_customizer( $args ) {
+	public function linguator_filter_args_before_customizer( $args ) {
 		if ( ! empty( $this->curlang ) ) {
 			$args['theme_location'] = $this->combine_location( $args['theme_location'], $this->curlang );
 		}
@@ -341,7 +349,7 @@ class LMAT_Frontend_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array $args wp_nav_menu $args
 	 * @return array modified $args
 	 */
-	public function filter_args_after_customizer( $args ) {
+	public function linguator_filter_args_after_customizer( $args ) {
 		$infos = $this->explode_location( $args['theme_location'] );
 		$args['theme_location'] = $infos['location'];
 		return $args;

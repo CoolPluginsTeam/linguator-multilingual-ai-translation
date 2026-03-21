@@ -27,10 +27,8 @@ if ( ! empty( $transient_errors ) && is_array( $transient_errors ) ) {
 	// delete the transient errors
 }
 
-require ABSPATH . 'wp-admin/options-head.php'; 
-
-
-// display the errors 
+// Display settings errors.
+settings_errors();
 ?>
 <div class="wrap">
 	<?php

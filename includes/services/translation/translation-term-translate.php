@@ -5,7 +5,7 @@
 
 namespace Linguator\Includes\Services\Translation;
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 use WP_Error;
 use WP_Term;
 use Translation_Entry;
@@ -24,7 +24,7 @@ class Translation_Term_Model {
 	/**
 	 * Main model for managing languages and translations.
 	 *
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	private $model;
 
@@ -33,7 +33,7 @@ class Translation_Term_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param LMAT_Settings|LMAT_Admin $linguator Main plugin object containing model and sync references.
+	 * @param Linguator_Settings|Linguator_Admin $linguator Main plugin object containing model and sync references.
 	 */
 	public function __construct( &$linguator ) {
 		$this->model           = &$linguator->model;
@@ -45,10 +45,10 @@ class Translation_Term_Model {
 	 * @since 1.0.0
 	 *
 	 * @param array         $entry           Array containing term properties and translation data.
-	 * @param LMAT_Language $target_language Target language object.
+	 * @param Linguator_Language $target_language Target language object.
 	 * @return int|WP_Error The translated term ID, or WP_Error on failure.
 	 */
-	public function translate( array $entry, LMAT_Language $target_language ) {
+	public function translate( array $entry, Linguator_Language $target_language ) {
 		if ( ! $entry['data'] instanceof Translations ) {
 			/* translators: %d is a term ID. */
 			return new WP_Error( 'lmat_translate_term_no_translations', sprintf( __( 'The term with ID %d could not be translated.', 'linguator-multilingual-ai-translation' ), (int) $entry['id'] ) );
@@ -62,10 +62,10 @@ class Translation_Term_Model {
 		}
 
 		$source_language = $this->model->term->get_language( $source_term->term_id );
-		$tr_term_name        = $this->get_translated_term_name( $source_term, $entry['data'] );
+		$tr_term_name        = $this->linguator_get_translated_term_name( $source_term, $entry['data'] );
 		$tr_term_description = $this->get_translated_term_description( $source_term, $entry['data'] );
 		$tr_term_id          = $this->model->term->get( $entry['id'], $target_language );
-		$tr_term_slug        = $this->get_translated_term_slug( $source_term, $entry['data'] );
+		$tr_term_slug        = $this->linguator_get_translated_term_slug( $source_term, $entry['data'] );
 
 		$language_link=apply_filters('lmat_bulk_term_language_link', true);
 
@@ -122,7 +122,7 @@ class Translation_Term_Model {
 		 */
 		if($language_link){
 			do_action( 'lmat_save_term', $tr_term_id, $source_term->taxonomy, $this->model->term->get_translations( $tr_term_id ) );
-			$this->assign_parents( [ $entry['id'] ], $target_language );
+			$this->linguator_assign_parents( [ $entry['id'] ], $target_language );
 		}
 
 		return $tr_term_id;
@@ -137,7 +137,7 @@ class Translation_Term_Model {
 	 * @param Translations $translations  Translation data object.
 	 * @return string The translated name.
 	 */
-	private function get_translated_term_name( WP_Term $source_term, Translations $translations ) {
+	private function linguator_get_translated_term_name( WP_Term $source_term, Translations $translations ) {
 		$entry = new Translation_Entry( array( 'singular' => $source_term->name, 'context' => 'name' ) );
 
 		$translated_entry = $translations->translate_entry( $entry );
@@ -175,7 +175,7 @@ class Translation_Term_Model {
 	 * @param Translations $translations  Translation data object.
 	 * @return string The translated slug.
 	 */
-	private function get_translated_term_slug( WP_Term $source_term, Translations $translations ) {
+	private function linguator_get_translated_term_slug( WP_Term $source_term, Translations $translations ) {
 		$entry = new Translation_Entry( array( 'singular' => $source_term->slug, 'context' => 'slug' ) );
 
 		$translated_entry = $translations->translate_entry( $entry );
@@ -191,10 +191,10 @@ class Translation_Term_Model {
 	 * @since 1.0.0
 	 *
 	 * @param int[]         $ids             Array of source term IDs.
-	 * @param LMAT_Language  $target_language Target language object.
+	 * @param Linguator_Language  $target_language Target language object.
 	 * @return void
 	 */
-	public function assign_parents( array $ids, LMAT_Language $target_language ) {
+	public function linguator_assign_parents( array $ids, Linguator_Language $target_language ) {
 		// Get the terms with their parents (or 0).
 		$terms = get_terms(
 			array(
