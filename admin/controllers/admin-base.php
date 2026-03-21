@@ -601,6 +601,7 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 		$title = sprintf(
 			'<span class="ab-label"%1$s><span class="screen-reader-text">%2$s</span>%3$s</span>',
 			$selected instanceof Linguator_Language ? sprintf( ' lang="%s"', esc_attr( $selected->get_locale( 'display' ) ) ) : '',
+			__( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
 			esc_html( $selected->name )
 		);
 

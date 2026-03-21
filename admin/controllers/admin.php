@@ -172,7 +172,7 @@ class Linguator_Admin extends Linguator_Admin_Base {
 	 * @param string[] $links List of links associated to the plugin.
 	 * @return string[] Modified list of links.
 	 */
-	public function plugin_action_links( $links ) {
+	public function linguator_plugin_action_links( $links ) {
 		array_unshift( $links, '<a href="admin.php?page=lmat_settings">' . __( 'Settings', 'linguator-multilingual-ai-translation' ) . '</a>' );
 		array_unshift( $links, '<a href="https://linguator.com/documentation/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=plugins_page" target="_blank">' . __( 'Learn More', 'linguator-multilingual-ai-translation' ) . '</a>' );
 		return $links;
