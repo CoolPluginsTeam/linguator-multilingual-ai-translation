@@ -517,9 +517,9 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
 
-			// Verify the nonce
+			// Verify the nonce.
 			$private_key = isset( $params['privateKey'] ) ? sanitize_text_field( wp_unslash( (string) $params['privateKey'] ) ) : '';
-			if ( '' === $private_key || ! wp_verify_nonce( $private_key, 'lmat_create_translate_post_nonce' ) ) {
+			if ( '' === $private_key || ! wp_verify_nonce( $private_key, 'lmat_bulk_translate_entries_nonce' ) ) {
 				wp_send_json_error( 'You are not authorized to perform this action.' );
 			}
 
