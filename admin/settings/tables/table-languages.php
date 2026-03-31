@@ -248,6 +248,8 @@ class Linguator_Table_Languages extends WP_List_Table {
 	 */
 	protected function usort_reorder( $a, $b ) {
 		$orderby = ! empty( $_GET['orderby'] ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : 'name'; // phpcs:ignore WordPress.Security.NonceVerification
+		$order   = ! empty( $_GET['order'] ) ? sanitize_key( wp_unslash( $_GET['order'] ) ) : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification
+		$order   = in_array( $order, array( 'asc', 'desc' ), true ) ? $order : 'asc';
 		// Determine sort order
 		if ( is_numeric( $a->$orderby ) ) {
 			$result = $a->$orderby > $b->$orderby ? 1 : -1;
@@ -255,7 +257,7 @@ class Linguator_Table_Languages extends WP_List_Table {
 			$result = strcmp( $a->$orderby, $b->$orderby );
 		}
 		// Send final sort direction to usort.
-		return ( empty( $_GET['order'] ) || 'asc' === $_GET['order'] ) ? $result : -$result; // phpcs:ignore WordPress.Security.NonceVerification
+		return ( 'asc' === $order ) ? $result : -$result;
 	}
 
 	/**

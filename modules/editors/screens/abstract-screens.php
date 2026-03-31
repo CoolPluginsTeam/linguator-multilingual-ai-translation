@@ -232,11 +232,15 @@ abstract class Abstract_Screen {
 
 			// Get translated post ID
 			$translation_id = $this->model->post->get_translation( $post->ID, $language );
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-			if ( empty( $translation_id ) && ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) ) {
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-				$from_post = sanitize_text_field( wp_unslash( $_GET['from_post'] ) );
-				$translation_id = $this->model->post->get_translation( $from_post, $language );
+			// Only trust from_post for UI lookup when the new-translation nonce is valid (same flow as post-new.php).
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( empty( $translation_id ) && ! empty( $_GET['from_post'] ) && ! empty( $_GET['new_lang'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$nonce = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) );
+				if ( wp_verify_nonce( $nonce, 'new-post-translation' ) ) {
+					$from_post = absint( wp_unslash( $_GET['from_post'] ) );
+					$translation_id = $this->model->post->get_translation( $from_post, $language );
+				}
 			}
 			$translated_post = null;
 			$edit_link = '';

@@ -342,7 +342,7 @@ class Polylang_Migration {
 		return $results;
 	}
 
-	public function migration_post_language_assignment( &$results, $lang_map ) {
+	public function linguator_migration_post_language_assignment( &$results, $lang_map ) {
 		global $wpdb;
 	
 		if ( ! isset( $results['errors'] ) ) {

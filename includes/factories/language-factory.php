@@ -252,10 +252,13 @@ class Linguator_Language_Factory {
 
 		foreach ( $directories as $dir ) {
 			if ( is_readable( $file = "{$dir}/{$locale}.png" ) || is_readable( $file = "{$dir}/{$locale}.jpg" ) || is_readable( $file = "{$dir}/{$locale}.jpeg" ) || is_readable( $file = "{$dir}/{$locale}.svg" ) ) {
-				$flags['custom_flag'] = array(
-					'url' => content_url( '/' . str_replace( WP_CONTENT_DIR, '', $file ) ),
-				);
-				break;
+				$custom_flag_url = linguator_content_path_to_url( $file );
+				if ( '' !== $custom_flag_url ) {
+					$flags['custom_flag'] = array(
+						'url' => $custom_flag_url,
+					);
+					break;
+				}
 			}
 		}
 

@@ -26,15 +26,47 @@ use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
 use Linguator\Includes\Other\Linguator_Translation_Dashboard;
 
-// Default directory to store user data such as custom flags
+// Define directory safely
 if ( ! defined( 'LMAT_LOCAL_DIR' ) ) {
-	define( 'LMAT_LOCAL_DIR', WP_CONTENT_DIR . '/linguator' );
+	$lmat_upload_dir = wp_upload_dir();
+
+	if ( empty( $lmat_upload_dir['basedir'] ) || ! empty( $lmat_upload_dir['error'] ) ) {
+		// Fallback (may vary if custom uploads path is used)
+		$lmat_base_dir = path_join( wp_content_dir(), 'uploads' );
+	} else {
+		$lmat_base_dir = $lmat_upload_dir['basedir'];
+	}
+
+	define( 'LMAT_LOCAL_DIR', path_join( $lmat_base_dir, 'linguator' ) );
 }
 
-// Includes local config file if exists
-if ( is_readable( LMAT_LOCAL_DIR . '/lmat-config.php' ) ) {
-	include_once LMAT_LOCAL_DIR . '/lmat-config.php';
+// Ensure directory exists
+if ( ! file_exists( LMAT_LOCAL_DIR ) ) {
+	wp_mkdir_p( LMAT_LOCAL_DIR );
 }
+
+// Load config safely
+$lmat_config = array();
+
+$lmat_config_file = path_join( LMAT_LOCAL_DIR, 'lmat-config.json' );
+
+if ( is_readable( $lmat_config_file ) ) {
+
+	if ( function_exists( 'wp_json_file_decode' ) ) {
+		$lmat_decoded = wp_json_file_decode( $lmat_config_file, array( 'associative' => true ) );
+	} else {
+		$lmat_content = file_get_contents( $lmat_config_file );
+		$lmat_decoded = ( is_string( $lmat_content ) && $lmat_content !== '' )
+			? json_decode( $lmat_content, true )
+			: null;
+	}
+
+	if ( is_array( $lmat_decoded ) ) {
+		$lmat_config = $lmat_decoded;
+	}
+}
+
+$GLOBALS['lmat_local_config'] = $lmat_config;
 
 /**
  * Controls the plugin, as well as activation, and deactivation

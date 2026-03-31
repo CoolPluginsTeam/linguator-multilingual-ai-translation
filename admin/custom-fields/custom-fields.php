@@ -168,18 +168,18 @@ if(!class_exists('Custom_Fields')) {
                 wp_die( '0', 400 );
             }
 
-            if(!current_user_can('edit_posts')){
+            // Plugin-level configuration should be admin-only (not editor-level).
+            if ( ! current_user_can( 'manage_options' ) ) {
                 wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
                 wp_die( '0', 403 );
             }
             
-            $json = isset($_POST['save_custom_fields_data']) ? sanitize_textarea_field( wp_unslash( $_POST['save_custom_fields_data'] ) ) : false;
-            $updated_custom_fields_data = json_decode($json, true);
-
-			$updated_custom_fields_data=array_map('sanitize_text_field', $updated_custom_fields_data);
-			$existing_fields=get_option('lmat_allowed_custom_fields', false);
-
-			if(json_last_error() !== JSON_ERROR_NONE){ 
+            // Decode first to avoid corrupting valid JSON payloads.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Raw JSON payload; validated via json_decode() + type checks below.
+			$raw_json = isset( $_POST['save_custom_fields_data'] ) ? wp_unslash( $_POST['save_custom_fields_data'] ) : '';
+			$raw_json = is_string( $raw_json ) ? $raw_json : '';
+            $updated_custom_fields_data = json_decode( $raw_json, true );
+			if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $updated_custom_fields_data ) ) {
                 wp_send_json_error( __( 'Invalid JSON', 'linguator-multilingual-ai-translation' ) );
                 wp_die( '0', 400 );
             }
@@ -190,7 +190,10 @@ if(!class_exists('Custom_Fields')) {
 				wp_send_json_error( __( 'Invalid allowed fields', 'linguator-multilingual-ai-translation' ) );
 				wp_die( '0', 400 );
 			}
+			$existing_fields=get_option('lmat_allowed_custom_fields', false);
+			$updated_custom_fields_data = array_map( 'sanitize_text_field', $updated_custom_fields_data );
 
+			// json_last_error() already handled above.
 			$allowed_fields_values=array_keys($allowed_fields);
 
 			$valid_fields=array_intersect($updated_custom_fields_data, $allowed_fields_values);
@@ -365,37 +368,24 @@ if(!class_exists('Custom_Fields')) {
 		}
 
 		private static function linguator_get_default_allowed_fields(){
-			$found=false;
+			global $wp_filesystem;
 
-			$response = wp_remote_get( esc_url_raw( LINGUATOR_URL . 'modules/page-translation/block-translation-rules/default-allow-metafields.json' ), array(
-				'timeout' => 15,
-			) );
-
-			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
-				global $wp_filesystem;
-
-				// Initialize the WordPress filesystem
-				if ( ! function_exists( 'WP_Filesystem' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/file.php';
-				}
-
-				WP_Filesystem();
-
-				$local_path = LINGUATOR_DIR . '/modules/page-translation/block-translation-rules/default-allow-metafields.json';
-				if($wp_filesystem->exists($local_path) && $wp_filesystem->is_readable( $local_path )){
-					$found=true;
-					$default_allowed_fields = $wp_filesystem->get_contents( $local_path );
-				}
-			}else{
-				$found=true;
-				$default_allowed_fields = wp_remote_retrieve_body( $response );
+			// Initialize the WordPress filesystem.
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
 
-			if(!$found){
+			WP_Filesystem();
+
+			$local_path = trailingslashit( LINGUATOR_DIR ) . 'modules/page-translation/block-translation-rules/default-allow-metafields.json';
+			if ( $wp_filesystem && $wp_filesystem->exists( $local_path ) && $wp_filesystem->is_readable( $local_path ) ) {
+				$default_allowed_fields = $wp_filesystem->get_contents( $local_path );
+			} else {
 				return array();
 			}
 
-			return json_decode($default_allowed_fields, true)	;
+			$decoded = json_decode( (string) $default_allowed_fields, true );
+			return is_array( $decoded ) ? $decoded : array();
 		}
     }
 }

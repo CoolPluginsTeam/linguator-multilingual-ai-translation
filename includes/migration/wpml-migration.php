@@ -1180,7 +1180,7 @@ class WPML_Migration {
 
 		// Always migrate language assignments after languages are migrated
 		if ( $migrate_languages && $results['success'] ) {
-			$assignments_results = $this->migrate_language_assignments();
+			$assignments_results = $this->linguator_migrate_language_assignments();
 			$results['language_assignments'] = $assignments_results;
 			if ( ! $assignments_results['success'] ) {
 				$results['success'] = false;

@@ -341,7 +341,10 @@ class Linguator_Admin_Menu_Sync {
 
 		// Get parameters
 		$menu_id = ! empty( $_POST['menu_id'] ) ? absint( wp_unslash( $_POST['menu_id'] ) ) : 0;
-		$target_langs = ! empty( $_POST['target_langs'] ) && is_array( array_map( 'sanitize_text_field', wp_unslash( $_POST['target_langs'] ) ) ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['target_langs'] ) ) : array();
+		$target_langs = array();
+		if ( ! empty( $_POST['target_langs'] ) && is_array( $_POST['target_langs'] ) ) {
+			$target_langs = array_filter( array_map( 'sanitize_key', wp_unslash( $_POST['target_langs'] ) ) );
+		}
 
 			if ( empty( $menu_id ) ) {
 				wp_send_json_error( array( 

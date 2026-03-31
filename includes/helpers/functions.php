@@ -60,11 +60,6 @@ function linguator_get_requested_url() {
 		return $home_url;
 	}
 
-	if ( WP_DEBUG ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions
-		trigger_error( '$_SERVER[\'HTTP_HOST\'] or $_SERVER[\'REQUEST_URI\'] are required but not set.' );
-	}
-
 	return '';
 }
 
@@ -311,4 +306,42 @@ function linguator_is_switcher_type_enabled( $switcher_type ) {
 		$enabled_switchers = array( 'default' );
 	}
 	return in_array( $switcher_type, $enabled_switchers, true );
+}
+
+/**
+ * Converts an absolute filesystem path under the WordPress content directory to its public URL.
+ *
+ * @param string $file Absolute path to a file.
+ * @return string URL, or empty string if the path is not under wp_content_dir().
+ */
+function linguator_content_path_to_url( $file ) {
+	if ( '' === $file || ! is_string( $file ) ) {
+		return '';
+	}
+
+	$content_root = wp_normalize_path( untrailingslashit( wp_content_dir() ) );
+	$normalized   = wp_normalize_path( $file );
+
+	if ( 0 !== strpos( $normalized, $content_root ) ) {
+		return '';
+	}
+
+	$relative = substr( $normalized, strlen( $content_root ) );
+	$relative = '/' . ltrim( str_replace( '\\', '/', $relative ), '/' );
+
+	return content_url( $relative );
+}
+
+/**
+ * Optional site-local JSON config from `LMAT_LOCAL_DIR/lmat-config.json`.
+ * Populated on `plugins_loaded` priority 0; returns an empty array before that hook runs.
+ *
+ * @return array<string, mixed>
+ */
+function linguator_get_local_config() {
+	if ( isset( $GLOBALS['lmat_local_config'] ) && is_array( $GLOBALS['lmat_local_config'] ) ) {
+		return $GLOBALS['lmat_local_config'];
+	}
+
+	return array();
 }

@@ -105,6 +105,8 @@ class Languages extends Abstract_Controller {
 						'description' => __( 'Language slug to filter pages by.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => false,
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => array( $this, 'validate_optional_slug_param' ),
 					),
 				),
 			)
@@ -118,6 +120,8 @@ class Languages extends Abstract_Controller {
 					'term_id' => array(
 						'description' => __( 'Unique identifier for the language.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'integer',
+						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_positive_int_param' ),
 					),
 				),
 				array(
@@ -151,6 +155,8 @@ class Languages extends Abstract_Controller {
 					'slug'    => array(
 						'description' => __( 'Language code - preferably 2-letters ISO 639-1 (for example: en).', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => array( $this, 'validate_required_slug_param' ),
 					),
 				),
 				array(
@@ -177,6 +183,8 @@ class Languages extends Abstract_Controller {
 						'description' => __( 'Locale of the language to assign.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_text_field',
+						'validate_callback' => array( $this, 'validate_required_slug_param' ),
 					),
 				),
 			)
@@ -194,16 +202,22 @@ class Languages extends Abstract_Controller {
 						'description' => __( 'ID of the source post (current).', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'integer',
 						'required'    => true,
+						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_positive_int_param' ),
 					),
 					'target_id' => array(
 						'description' => __( 'ID of the existing page to link.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'integer',
 						'required'    => true,
+						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_positive_int_param' ),
 					),
 					'target_lang' => array(
 						'description' => __( 'Language slug of the target page.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => array( $this, 'validate_required_slug_param' ),
 					),
 				),
 			)
@@ -215,6 +229,29 @@ class Languages extends Abstract_Controller {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'create_home_page_translation' ),
 				'permission_callback' => array( $this, 'create_home_page_translation_permissions_check' ),
+				'args'                => array(
+					'source_id' => array(
+						'description'       => __( 'ID of the source post.', 'linguator-multilingual-ai-translation' ),
+						'type'              => 'integer',
+						'required'          => true,
+						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_positive_int_param' ),
+					),
+					'title'     => array(
+						'description'       => __( 'Base title for generated translations.', 'linguator-multilingual-ai-translation' ),
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+						'validate_callback' => array( $this, 'validate_required_text_param' ),
+					),
+					'languages' => array(
+						'description'       => __( 'List of target languages.', 'linguator-multilingual-ai-translation' ),
+						'type'              => 'array',
+						'required'          => true,
+						'sanitize_callback' => array( $this, 'sanitize_home_translation_languages' ),
+						'validate_callback' => array( $this, 'validate_home_translation_languages' ),
+					),
+				),
 			)
 		);
 		// Create and link a new translation from a typed title (no redirect)
@@ -230,21 +267,29 @@ class Languages extends Abstract_Controller {
 						'description' => __( 'ID of the source post (current).', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'integer',
 						'required'    => true,
+						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_positive_int_param' ),
 					),
 					'target_lang' => array(
 						'description' => __( 'Language slug for the new translation.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => array( $this, 'validate_required_slug_param' ),
 					),
 					'title' => array(
 						'description' => __( 'Title for the new translation post.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_text_field',
+						'validate_callback' => array( $this, 'validate_required_text_param' ),
 					),
 					'post_type' => array(
 						'description' => __( 'Post type for the new translation (default page).', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => false,
+						'sanitize_callback' => array( $this, 'sanitize_post_type_param' ),
+						'validate_callback' => array( $this, 'validate_post_type_param' ),	
 					),
 				),
 			)
@@ -262,11 +307,15 @@ class Languages extends Abstract_Controller {
 						'description' => __( 'ID of the post to update.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'integer',
 						'required'    => true,
+						'sanitize_callback' => 'absint',
+						'validate_callback' => array( $this, 'validate_positive_int_param' ),
 					),
 					'lang' => array(
 						'description' => __( 'Language slug to assign to the post.', 'linguator-multilingual-ai-translation' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => array( $this, 'validate_required_slug_param' ),
 					),
 				),
 			)
@@ -285,7 +334,7 @@ class Languages extends Abstract_Controller {
 		$response = array();
 
 		// Get language filter from request
-		$lang_slug = $request->get_param( 'lang' );
+		$lang_slug = sanitize_key( (string) $request->get_param( 'lang' ) );
 		$filter_language = null;
 		
 		if ( ! empty( $lang_slug ) ) {
@@ -383,9 +432,9 @@ class Languages extends Abstract_Controller {
 
 			// Only send fields that frontend actually uses
 			$response[] = array(
-				'ID'        => $post->ID,
-				'title'     => $post->post_title,
-				'slug'      => $post->post_name,
+				'ID'        => absint( $post->ID ),
+				'title'     => sanitize_text_field( (string) $post->post_title ),
+				'slug'      => sanitize_title( (string) $post->post_name ),
 				'is_linked' => ! empty( $linked_ids ),
 			);
 		}
@@ -400,7 +449,7 @@ class Languages extends Abstract_Controller {
 	 * @return true|WP_Error
 	 */
 	public function get_all_post_data_permissions_check( $request ) {
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( Capabilities::TRANSLATIONS ) ) {
 			return new WP_Error(
 				'rest_forbidden',
 				__( 'Sorry, you are not allowed to view posts data.', 'linguator-multilingual-ai-translation' ),
@@ -715,7 +764,7 @@ class Languages extends Abstract_Controller {
 		return rest_ensure_response( array(
 			'success'  => true,
 			// translators: %s is the language name being assigned to untranslated content.
-			'message'  => sprintf( __( 'Language %s assigned to untranslated content.', 'linguator-multilingual-ai-translation' ), $language->name ),
+			'message'  => sprintf( __( 'Language %s assigned to untranslated content.', 'linguator-multilingual-ai-translation' ), sanitize_text_field( (string) $language->name ) ),
 			'language' => $language->to_array(),
 		) );
 	}
@@ -727,8 +776,8 @@ class Languages extends Abstract_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function link_translation( $request ) {
-		$source_id = (int) $request['source_id'];
-		$target_id = (int) $request['target_id'];
+		$source_id = absint( $request['source_id'] );
+		$target_id = absint( $request['target_id'] );
 		$target_lang_slug = sanitize_key( $request['target_lang'] );
 
 		if ( ! $source_id || ! $target_id || ! $target_lang_slug ) {
@@ -801,7 +850,7 @@ class Languages extends Abstract_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function create_translation_from_title( $request ) {
-		$source_id       = (int) $request['source_id'];
+		$source_id       = absint( $request['source_id'] );
 		$target_lang_slug = sanitize_key( $request['target_lang'] );
 		$title           = sanitize_text_field( (string) $request['title'] );
 		$post_type       = sanitize_key( $request['post_type'] ?: 'page' );
@@ -827,7 +876,7 @@ class Languages extends Abstract_Controller {
 				'success'   => true,
 				'already'   => true,
 				'id'        => (int) $existing_tr_id,
-				'edit_link' => get_edit_post_link( $existing_tr_id, 'raw' ),
+				'edit_link' => esc_url_raw( (string) get_edit_post_link( $existing_tr_id, 'raw' ) ),
 			) );
 		}
 
@@ -864,7 +913,7 @@ class Languages extends Abstract_Controller {
 		return rest_ensure_response( array(
 			'success'   => true,
 			'id'        => (int) $new_post_id,
-			'edit_link' => get_edit_post_link( $new_post_id, 'raw' ),
+			'edit_link' => esc_url_raw( (string) get_edit_post_link( $new_post_id, 'raw' ) ),
 		) );
 	}
 
@@ -875,7 +924,7 @@ class Languages extends Abstract_Controller {
 	 * @return true|WP_Error
 	 */
 	public function create_translation_permissions_check( $request ) {
-		$source_id = (int) $request['source_id'];
+		$source_id = absint( $request['source_id'] );
 		if ( $source_id && ! current_user_can( 'edit_post', $source_id ) ) {
 			return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create a translation for this post.', 'linguator-multilingual-ai-translation' ), array( 'status' => rest_authorization_required_code() ) );
 		}
@@ -905,7 +954,7 @@ class Languages extends Abstract_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function update_post_language( $request ) {
-		$post_id = (int) $request['post_id'];
+		$post_id = absint( $request['post_id'] );
 		$lang_slug = sanitize_key( $request['lang'] );
 
 		if ( ! $post_id || ! $lang_slug ) {
@@ -942,7 +991,7 @@ class Languages extends Abstract_Controller {
 
 		return rest_ensure_response( array(
 			'success' => true,
-			'post_id' => $post_id,
+			'post_id' => absint( $post_id ),
 			'language' => $updated_lang ? $updated_lang->to_array() : null,
 		) );
 	}
@@ -974,9 +1023,17 @@ class Languages extends Abstract_Controller {
 	 * @return array|WP_Error Response data or WP_Error object on failure.
 	 */
 	public function create_home_page_translation($request) {
-		$source_id = $request['source_id'];
-		$languages = $request['languages']; // Array of languages
-		$base_title = $request['title'];
+		$source_id  = absint( $request['source_id'] );
+		$languages  = $this->sanitize_home_translation_languages( $request['languages'], $request, 'languages' );
+		$base_title = sanitize_text_field( (string) $request['title'] );
+
+		if ( $source_id <= 0 || '' === $base_title || empty( $languages ) || ! is_array( $languages ) ) {
+			return new WP_Error(
+				'lmat_invalid_request',
+				__( 'Invalid request payload.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => 400 )
+			);
+		}
 		
 		$created_pages = [];
 		
@@ -1004,7 +1061,11 @@ class Languages extends Abstract_Controller {
 		// Create pages for each language
 		foreach ($languages as $language_data) {
 			// Convert language data to Linguator_Language object if needed
-			$language = $this->model->get_language($language_data['locale']);
+			$locale = isset( $language_data['locale'] ) ? sanitize_text_field( (string) $language_data['locale'] ) : '';
+			if ( '' === $locale ) {
+				continue;
+			}
+			$language = $this->model->get_language($locale);
 			
 			if (!$language) {
 				continue; // Skip if language not found
@@ -1016,11 +1077,11 @@ class Languages extends Abstract_Controller {
 			}
 			
 			// Create title with language
-			$title = sprintf('%s - %s', $base_title, $language->name);
+			$title = sanitize_text_field( sprintf('%s - %s', $base_title, (string) $language->name) );
 			
 			// Create new page as translation
 			$new_page = wp_insert_post([
-				'post_title' => $title,
+				'post_title' => sanitize_text_field( $title ),
 				'post_type' => 'page',
 				'post_status' => 'publish'
 			]);
@@ -1090,6 +1151,133 @@ class Languages extends Abstract_Controller {
 	}
 	
 	/**
+	 * Validates integer parameters that must be positive.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_positive_int_param( $value ) {
+		return is_numeric( $value ) && absint( $value ) > 0;
+	}
+
+	/**
+	 * Validates required slug/locale-style parameters.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_required_slug_param( $value ) {
+		return is_scalar( $value ) && '' !== sanitize_key( (string) $value );
+	}
+
+	/**
+	 * Validates optional slug-style parameters.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_optional_slug_param( $value ) {
+		if ( null === $value || '' === $value ) {
+			return true;
+		}
+
+		return $this->validate_required_slug_param( $value );
+	}
+
+	/**
+	 * Validates required text parameters.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_required_text_param( $value ) {
+		return is_scalar( $value ) && '' !== sanitize_text_field( (string) $value );
+	}
+
+	/**
+	 * Sanitizes post type request parameter.
+	 *
+	 * @param mixed $value Raw request value.
+	 * @return string
+	 */
+	public function sanitize_post_type_param( $value ) {
+		if ( null === $value || '' === $value ) {
+			return 'page';
+		}
+
+		return sanitize_key( (string) $value );
+	}
+
+	/**
+	 * Validates post type request parameter.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_post_type_param( $value ) {
+		if ( null === $value || '' === $value ) {
+			return true;
+		}
+
+		$post_type = sanitize_key( (string) $value );
+		return '' !== $post_type && post_type_exists( $post_type );
+	}
+
+	/**
+	 * Sanitizes language payload for home page translation creation.
+	 *
+	 * @param mixed           $languages Raw languages payload.
+	 * @param WP_REST_Request $request   Full request.
+	 * @param string          $param     Parameter name.
+	 * @return array
+	 */
+	public function sanitize_home_translation_languages( $languages, $request = null, $param = '' ) {
+		if ( ! is_array( $languages ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+		foreach ( $languages as $language_data ) {
+			if ( ! is_array( $language_data ) ) {
+				continue;
+			}
+
+			$locale = isset( $language_data['locale'] ) ? sanitize_text_field( (string) $language_data['locale'] ) : '';
+			if ( '' === $locale ) {
+				continue;
+			}
+
+			$sanitized[] = array(
+				'locale' => $locale,
+			);
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Validates language payload for home page translation creation.
+	 *
+	 * @param mixed           $languages Raw languages payload.
+	 * @param WP_REST_Request $request   Full request.
+	 * @param string          $param     Parameter name.
+	 * @return bool
+	 */
+	public function validate_home_translation_languages( $languages, $request = null, $param = '' ) {
+		if ( ! is_array( $languages ) || empty( $languages ) ) {
+			return false;
+		}
+
+		foreach ( $languages as $language_data ) {
+			if ( ! is_array( $language_data ) || empty( $language_data['locale'] ) || ! is_scalar( $language_data['locale'] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks if a given request has access to get the languages.
 	 *
 	 *  
@@ -1101,10 +1289,10 @@ class Languages extends Abstract_Controller {
 	 * @phpstan-param WP_REST_Request<T> $request
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( 'edit' === $request['context'] && ! $this->check_update_permission() ) {
+		if ( ! is_user_logged_in() || ! $this->check_update_permission() ) {
 			return new WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to edit languages.', 'linguator-multilingual-ai-translation' ),
+				__( 'Sorry, you are not allowed to view languages.', 'linguator-multilingual-ai-translation' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -1552,7 +1740,7 @@ class Languages extends Abstract_Controller {
 				return $error;
 			}
 
-			$language = $this->languages->get( (int) $request['term_id'] );
+			$language = $this->languages->get( absint( $request['term_id'] ) );
 
 			if ( ! $language instanceof Linguator_Language ) {
 				return $error;
@@ -1562,7 +1750,7 @@ class Languages extends Abstract_Controller {
 		}
 
 		if ( isset( $request['slug'] ) ) {
-			$language = $this->languages->get( (string) $request['slug'] );
+			$language = $this->languages->get( sanitize_key( $request['slug'] ) );
 
 			if ( ! $language instanceof Linguator_Language ) {
 				return new WP_Error(

@@ -139,7 +139,7 @@ class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 			return;
 		}
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix = '.min';
 		wp_enqueue_script( 'lmat_nav_menu', plugins_url( "admin/assets/js/build/nav-menu{$suffix}.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
 		wp_enqueue_style( 'lmat_nav_menu_filter', plugins_url( "admin/assets/css/admin-nav-menu-filter.css", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		wp_enqueue_script( 'lmat_nav_menu_filter_js', plugins_url( "admin/assets/js/admin-nav-menu-filter.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
@@ -258,7 +258,7 @@ class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 
 
 			// Manage Locations tab in Appearance -> Menus
-			if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['action'] ) && 'locations' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				check_admin_referer( 'save-menu-locations' );
 
 
@@ -428,6 +428,10 @@ class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 					$all_url_args['action'] = $current_action;
 				}
 				$all_url = 'all' !== $current_lang ? add_query_arg( $all_url_args, $base_url ) : '';
+				// Language links must include nonce so admin language filter can update user meta safely.
+				if ( ! empty( $all_url ) ) {
+					$all_url = wp_nonce_url( $all_url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
+				}
 				// Get total count directly from database - count nav menu terms
 				$total_menus = wp_count_terms( array( 'taxonomy' => 'nav_menu' ) );
 				?>
@@ -447,6 +451,10 @@ class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 						$lang_url_args['action'] = $current_action;
 					}
 					$lang_url = $lang->slug !== $current_lang ? add_query_arg( $lang_url_args, $base_url ) : '';
+					// Language links must include nonce so admin language filter can update user meta safely.
+					if ( ! empty( $lang_url ) ) {
+						$lang_url = wp_nonce_url( $lang_url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
+					}
 					$flag_url = isset( $lang->flag_url ) ? $lang->flag_url : '';
 					
 					$menu_count = 0;
@@ -632,7 +640,7 @@ class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 	public function linguator_maybe_update_selected_menu() {
 		// Only run on Edit Menus tab, not Manage Locations.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
+		if ( isset( $_GET['action'] ) && 'locations' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) {
 			return;
 		}
 
@@ -688,7 +696,7 @@ class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 
 		// Only run on Edit Menus tab, not Manage Locations.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
+		if ( isset( $_GET['action'] ) && 'locations' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) {
 			return;
 		}
 

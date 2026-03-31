@@ -168,7 +168,7 @@ if (!class_exists('Glossary')) {
             $glossary_type = sanitize_text_field($glossary_data['type'] ?? '');
             $glossary_term = sanitize_text_field($glossary_data['term'] ?? '');
             $glossary_desc = sanitize_textarea_field($glossary_data['description'] ?? '');
-            $source_language_code = sanitize_text_field($glossary_data['source_lang'] ?? '');
+            $source_language_code = sanitize_key($glossary_data['source_lang'] ?? '');
 
             // Support single or multiple translations
             $target_langs = (array) ($glossary_data['target_lang'] ?? []);
@@ -188,7 +188,7 @@ if (!class_exists('Glossary')) {
                     }
                     $existing_langs = array_column($entry['translations'], 'target_language_code');
                     foreach ($target_langs as $idx => $lang) {
-                        $lang = sanitize_text_field($lang);
+                        $lang = sanitize_key($lang);
                         // SKIP if $lang is the same as $source_language_code
                         if ($lang === $source_language_code) continue;
                         $term = sanitize_text_field($translated_terms[$idx] ?? '');
@@ -215,7 +215,7 @@ if (!class_exists('Glossary')) {
                 // New entry
                 $translations = [];
                 foreach ($target_langs as $idx => $lang) {
-                    $lang = sanitize_text_field($lang);
+                    $lang = sanitize_key($lang);
                     if ($lang === $source_language_code) continue;
                     
                     $translated_term = sanitize_text_field($translated_terms[$idx] ?? '');
@@ -295,19 +295,25 @@ if (!class_exists('Glossary')) {
             if ( empty( $_FILES['csv_file']['tmp_name'] ) ) {
                 wp_send_json_error('No file uploaded');
             }
-            if ( ! isset( $_FILES['csv_file']['type'] ) || ! isset( $_FILES['csv_file']['name'] ) ) {
+            if ( ! isset( $_FILES['csv_file']['name'] ) || ! isset( $_FILES['csv_file']['tmp_name'] ) ) {
                 wp_send_json_error('Invalid file data');
             }
             $file_name = sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) );
-            $file_type = sanitize_mime_type( wp_unslash( $_FILES['csv_file']['type'] ) );
-            if ( 'text/csv' !== $file_type && pathinfo( $file_name, PATHINFO_EXTENSION ) !== 'csv' ) {
+            $csv_path  = sanitize_text_field( wp_unslash( $_FILES['csv_file']['tmp_name'] ) );
+            $file_type = wp_check_filetype_and_ext( $csv_path, $file_name );
+
+            if (
+                empty( $file_type['ext'] ) ||
+                empty( $file_type['type'] ) ||
+                'csv' !== strtolower( (string) $file_type['ext'] ) ||
+                'text/csv' !== strtolower( (string) $file_type['type'] )
+            ) {
                 wp_send_json_error('Invalid file type');
             }
             $file_size = isset( $_FILES['csv_file']['size'] ) ? absint( wp_unslash( $_FILES['csv_file']['size'] ) ) : 0;
             if ( ! $file_size || $file_size > 2 * 1024 * 1024 ) { // 2MB limit
                 wp_send_json_error('File too large');
             }
-            $csv_path = isset( $_FILES['csv_file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['csv_file']['tmp_name'] ) ) : '';
             if (empty($csv_path)) {
                 wp_send_json_error('Invalid file path');
             }
@@ -327,7 +333,7 @@ if (!class_exists('Glossary')) {
             $glossary_type = sanitize_text_field($glossary_data['type'] ?? '');
             $glossary_term = sanitize_text_field($glossary_data['term'] ?? '');
             $glossary_desc = sanitize_textarea_field($glossary_data['description'] ?? '');
-            $source_language_code = sanitize_text_field($glossary_data['source_lang'] ?? '');
+            $source_language_code = sanitize_key($glossary_data['source_lang'] ?? '');
             $translations = $glossary_data['translations'] ?? [];
 
             $all_glossaries = get_option('lmat_glossary_data', array());
@@ -352,6 +358,7 @@ if (!class_exists('Glossary')) {
                         // ✅ Add the updated entry now
                         $translations_arr = [];
                         foreach ($translations as $lang => $translated_term) {
+                            $lang = sanitize_key($lang);
                             if ($lang === $source_language_code) continue;
                             $sanitized_term = sanitize_text_field($translated_term);
                             // Only save non-empty translations
@@ -382,6 +389,7 @@ if (!class_exists('Glossary')) {
                         $entry['translations'] = [];
 
                         foreach ($translations as $lang => $translated_term) {
+                            $lang = sanitize_key($lang);
                             if ($lang === $source_language_code) continue;
                             $sanitized_term = sanitize_text_field($translated_term);
                             // Only save non-empty translations
@@ -419,8 +427,14 @@ if (!class_exists('Glossary')) {
 
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $data = ! empty( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : [];
-            $source_lang = ! empty( $data['source_lang'] ) ? sanitize_text_field( wp_unslash( $data['source_lang'] ) ) : '';
-            $translations = ! empty( $data['translations'] ) && is_array( $data['translations'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['translations'] ) ) : [];
+            $source_lang = ! empty( $data['source_lang'] ) ? sanitize_key( $data['source_lang'] ) : '';
+            $translations = array();
+            if ( ! empty( $data['translations'] ) && is_array( $data['translations'] ) ) {
+                foreach ( $data['translations'] as $lang_code => $translated_term ) {
+                    $translations[ sanitize_key( $lang_code ) ] = sanitize_text_field( $translated_term );
+                }
+                $data['translations'] = $translations;
+            }
             // Remove translation for original language if present
             if (! empty( $translations[$source_lang] )) {
                 unset($translations[$source_lang]);
@@ -549,8 +563,17 @@ if (!class_exists('Glossary')) {
             $type = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : '';
             $term = isset($_POST['term']) ? sanitize_text_field(wp_unslash($_POST['term'])) : '';
             $description = ! empty( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-            $source_lang = ! empty( $_POST['source_lang'] ) ? sanitize_text_field( wp_unslash( $_POST['source_lang'] ) ) : '';
-            $translations = ! empty( $_POST['translations'] ) && is_array( $_POST['translations'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['translations'] ) ) : [];
+            $source_lang = ! empty( $_POST['source_lang'] ) ? sanitize_key( wp_unslash( $_POST['source_lang'] ) ) : '';
+            $translations = array();
+
+            // Normalize to an array before iterating.
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We sanitize individual translation values below after wp_unslash().
+            $raw_translations = isset( $_POST['translations'] ) ? wp_unslash( $_POST['translations'] ) : array();
+            $raw_translations = is_array( $raw_translations ) ? $raw_translations : array();
+
+            foreach ( $raw_translations as $lang_code => $translated_term ) {
+                $translations[ sanitize_key( $lang_code ) ] = sanitize_text_field( $translated_term );
+            }
             // Remove translation for original language if present
             if (isset($translations[$source_lang])) {
                 unset($translations[$source_lang]);
@@ -677,10 +700,10 @@ if (!class_exists('Glossary')) {
                 wp_send_json_error('Permission denied');
             }
 
-            $source_lang = isset($_POST['source_lang']) ? sanitize_text_field(wp_unslash($_POST['source_lang'])) : '';
+            $source_lang = isset($_POST['source_lang']) ? sanitize_key(wp_unslash($_POST['source_lang'])) : '';
             $target_langs = isset($_POST['target_lang']) ? sanitize_text_field(wp_unslash($_POST['target_lang'])) : '';
 
-            $target_langs = explode(',', $target_langs);
+            $target_langs = array_filter( array_map( 'sanitize_key', array_map( 'trim', explode(',', $target_langs) ) ) );
 
             $glossary_data = self::get_all_glossaries();
             $filtered = [];

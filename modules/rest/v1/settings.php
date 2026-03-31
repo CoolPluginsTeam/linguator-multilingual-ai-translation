@@ -105,7 +105,7 @@ class Settings extends Abstract_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				),
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
@@ -129,8 +129,10 @@ class Settings extends Abstract_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
 						'status' => array(
-							'required' => true,
-							'type'     => 'boolean',
+							'required'          => true,
+							'type'              => 'boolean',
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 					),
 				),
@@ -148,8 +150,10 @@ class Settings extends Abstract_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
 						'complete' => array(
-							'required' => true,
-							'type'     => 'boolean',
+							'required'          => true,
+							'type'              => 'boolean',
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 					),
 				),
@@ -167,8 +171,10 @@ class Settings extends Abstract_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
 						'completed' => array(
-							'required' => true,
-							'type'     => 'boolean',
+							'required'          => true,
+							'type'              => 'boolean',
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 					),
 				),
@@ -186,9 +192,11 @@ class Settings extends Abstract_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
 						'plugin' => array(
-							'required' => true,
-							'type'     => 'string',
-							'enum'     => array( 'polylang', 'wpml' ),
+							'required'          => true,
+							'type'              => 'string',
+							'enum'              => array( 'polylang', 'wpml' ),
+							'sanitize_callback' => 'sanitize_key',
+							'validate_callback' => array( $this, 'validate_migration_plugin_param' ),
 						),
 					),
 				),
@@ -205,34 +213,116 @@ class Settings extends Abstract_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
 						'plugin' => array(
-							'required' => true,
-							'type'     => 'string',
-							'enum'     => array( 'polylang', 'wpml' ),
+							'required'          => true,
+							'type'              => 'string',
+							'enum'              => array( 'polylang', 'wpml' ),
+							'sanitize_callback' => 'sanitize_key',
+							'validate_callback' => array( $this, 'validate_migration_plugin_param' ),
 						),
 						'migrate_languages'    => array(
-							'required' => false,
-							'type'     => 'boolean',
-							'default'  => true,
+							'required'          => false,
+							'type'              => 'boolean',
+							'default'           => true,
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 						'migrate_translations' => array(
-							'required' => false,
-							'type'     => 'boolean',
-							'default'  => true,
+							'required'          => false,
+							'type'              => 'boolean',
+							'default'           => true,
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 						'migrate_settings'     => array(
-							'required' => false,
-							'type'     => 'boolean',
-							'default'  => true,
+							'required'          => false,
+							'type'              => 'boolean',
+							'default'           => true,
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 						'migrate_strings'     => array(
-							'required' => false,
-							'type'     => 'boolean',
-							'default'  => true,
+							'required'          => false,
+							'type'              => 'boolean',
+							'default'           => true,
+							'sanitize_callback' => array( $this, 'sanitize_boolean_param' ),
+							'validate_callback' => array( $this, 'validate_boolean_param' ),
 						),
 					),
 				),
 			)
 		);
+	}
+
+	/**
+	 * Sanitizes boolean-like request values.
+	 *
+	 * @param mixed $value Raw request value.
+	 * @return bool
+	 */
+	public function sanitize_boolean_param( $value ) {
+		if ( function_exists( 'rest_sanitize_boolean' ) ) {
+			return \rest_sanitize_boolean( $value );
+		}
+
+		// Fallback for WP installs that don't provide rest_sanitize_boolean().
+		if ( function_exists( 'wp_validate_boolean' ) ) {
+			// wp_validate_boolean() returns bool on valid values, null on invalid.
+			$validated = wp_validate_boolean( $value );
+			return null !== $validated ? (bool) $validated : false;
+		}
+
+		if ( is_bool( $value ) ) {
+			return $value;
+		}
+
+		if ( is_numeric( $value ) ) {
+			return (int) $value === 1;
+		}
+
+		if ( ! is_string( $value ) ) {
+			return false;
+		}
+
+		$v = strtolower( trim( $value ) );
+		return in_array( $v, array( '1', 'true', 'yes', 'on' ), true );
+	}
+
+	/**
+	 * Validates boolean-like request values.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_boolean_param( $value ) {
+		if ( function_exists( 'wp_validate_boolean' ) ) {
+			return null !== wp_validate_boolean( $value );
+		}
+
+		if ( is_bool( $value ) ) {
+			return true;
+		}
+
+		if ( is_numeric( $value ) ) {
+			$n = (int) $value;
+			return (string) $n === (string) (int) $value && ( $n === 0 || $n === 1 );
+		}
+
+		if ( ! is_string( $value ) ) {
+			return false;
+		}
+
+		$v = strtolower( trim( $value ) );
+		return in_array( $v, array( '1', '0', 'true', 'false', 'yes', 'no', 'on', 'off' ), true );
+	}
+
+	/**
+	 * Validates migration plugin identifier.
+	 *
+	 * @param mixed $value Request value.
+	 * @return bool
+	 */
+	public function validate_migration_plugin_param( $value ) {
+		return in_array( sanitize_key( (string) $value ), array( 'polylang', 'wpml' ), true );
 	}
 
 	/**
@@ -602,9 +692,15 @@ class Settings extends Abstract_Controller {
 		// Ping all URLs to make sure they are accessible - moved from Domains.php
 		$failed_urls = array();
 		foreach ( array_filter( $domains ) as $url ) {
-			$test_url = add_query_arg( 'deactivate-linguator', 1, $url );
+			$ping_token = wp_hash( 'lmat_domain_ping|' . gmdate( 'YmdH' ) );
+			$test_url   = add_query_arg(
+				array(
+					'lmat_ping_token'      => $ping_token,
+				),
+				$url
+			);
 			// Don't redefine vip_safe_wp_remote_get() as it has not the same signature as wp_remote_get().
-			$response = function_exists( 'vip_safe_wp_remote_get' ) ? vip_safe_wp_remote_get( $test_url ) : wp_remote_get( $test_url );
+			$response = wp_remote_get( sanitize_url( $test_url ) );
 
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				$failed_urls[] = $url;
@@ -659,6 +755,25 @@ class Settings extends Abstract_Controller {
 
 		return true;
 	}
+
+	/**
+	 * Checks if a given request has access to read the options.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to read options, WP_Error object otherwise.
+	 */
+	public function get_item_permissions_check( $request ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error(
+				'rest_forbidden_context',
+				__( 'Sorry, you are not allowed to view options.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * Prepares the option value for the REST response.

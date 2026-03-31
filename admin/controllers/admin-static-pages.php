@@ -117,7 +117,7 @@ class Linguator_Admin_Static_Pages extends Linguator_Static_Pages {
 			if ( ! empty( $message ) ) {
 				printf(
 					'<div class="error"><p>%s</p></div>',
-					$message // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					wp_kses_post( $message )
 				);
 			}
 		}

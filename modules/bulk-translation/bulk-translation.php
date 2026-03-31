@@ -83,7 +83,7 @@ if ( ! class_exists( 'Linguator_Bulk_Translation' ) ) :
 				}
 			}
 
-			echo "<button class='button lmat-bulk-translate-btn".esc_attr($providers_config_class)."' style='display:none;'>Bulk Translate</button>";
+			echo "<button class='button lmat-bulk-translate-btn".esc_attr($providers_config_class)."' style='display:none;'>".esc_html__("Bulk Translate", "linguator-multilingual-ai-translation")."</button>";
 
 			return $views;
 		}

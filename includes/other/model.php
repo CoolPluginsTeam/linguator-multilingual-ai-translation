@@ -184,16 +184,7 @@ class Linguator_Model {
 			return call_user_func_array( $methods[ $name ], $arguments );
 		}
 
-		$debug = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-		trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-			sprintf(
-				'Call to undefined function LMAT()->model->%1$s() in %2$s on line %3$s' . "\nError handler",
-				esc_html( $name ),
-				esc_html( $debug[0]['file'] ?? '' ),
-				absint( $debug[0]['line'] ?? 0 )
-			),
-			E_USER_ERROR
-		);
+		return null;
 	}
 
 	/**
