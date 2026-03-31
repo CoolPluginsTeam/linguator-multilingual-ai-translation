@@ -44,8 +44,6 @@ class Registry {
 
 		// AI Translation.
 		Business\Ai_Translation_Configuration::class,
-		// Static Strings Visibility.
-		Business\Static_Strings_Visibility::class,
 		// Menu Sync Visibility.
 		Business\Menu_Sync_Visibility::class,
 	);

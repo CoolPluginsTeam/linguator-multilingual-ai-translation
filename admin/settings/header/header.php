@@ -132,14 +132,9 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 
         $languages = $this->model->get_languages_list();
         
-        // Only show Glossary tab if languages exist
-        if(!empty($languages)){
-            $tabs['glossary'] = array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' );
-        }
-        
-        $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
-        if(!empty($languages) && $static_strings_visibility){
-            $tabs['strings']     = array(
+        if ( ! empty( $languages ) ) {
+			$tabs['glossary'] = array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' );
+			$tabs['strings']  = array(
 				'title'        => __( 'Static Strings', 'linguator-multilingual-ai-translation' ),
 				'redirect'     => true,
 				'redirect_url' => 'lmat_settings&tab=strings',

@@ -155,7 +155,6 @@ class ComposerStaticInitccc319e267efc807f0f35d0c7ed56335
         'Linguator\\Includes\\Options\\Business\\Previous_Version' => __DIR__ . '/../..' . '/includes/options/business/previous-version.php',
         'Linguator\\Includes\\Options\\Business\\Redirect_Lang' => __DIR__ . '/../..' . '/includes/options/business/redirect-lang.php',
         'Linguator\\Includes\\Options\\Business\\Rewrite' => __DIR__ . '/../..' . '/includes/options/business/rewrite.php',
-        'Linguator\\Includes\\Options\\Business\\Static_Strings_Visibility' => __DIR__ . '/../..' . '/includes/options/business/static-string-visibility.php',
         'Linguator\\Includes\\Options\\Business\\Sync' => __DIR__ . '/../..' . '/includes/options/business/sync.php',
         'Linguator\\Includes\\Options\\Business\\Taxonomies' => __DIR__ . '/../..' . '/includes/options/business/taxonomies.php',
         'Linguator\\Includes\\Options\\Business\\Version' => __DIR__ . '/../..' . '/includes/options/business/version.php',

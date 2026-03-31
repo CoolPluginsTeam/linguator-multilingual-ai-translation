@@ -104,7 +104,6 @@ return array(
     'Linguator\\Includes\\Options\\Business\\Previous_Version' => $baseDir . '/includes/options/business/previous-version.php',
     'Linguator\\Includes\\Options\\Business\\Redirect_Lang' => $baseDir . '/includes/options/business/redirect-lang.php',
     'Linguator\\Includes\\Options\\Business\\Rewrite' => $baseDir . '/includes/options/business/rewrite.php',
-    'Linguator\\Includes\\Options\\Business\\Static_Strings_Visibility' => $baseDir . '/includes/options/business/static-string-visibility.php',
     'Linguator\\Includes\\Options\\Business\\Sync' => $baseDir . '/includes/options/business/sync.php',
     'Linguator\\Includes\\Options\\Business\\Taxonomies' => $baseDir . '/includes/options/business/taxonomies.php',
     'Linguator\\Includes\\Options\\Business\\Version' => $baseDir . '/includes/options/business/version.php',
