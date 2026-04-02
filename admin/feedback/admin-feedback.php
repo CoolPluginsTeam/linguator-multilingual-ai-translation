@@ -234,8 +234,8 @@ class Linguator_Admin_Feedback {
 				array(
 					'timeout' => 30,
 					'body'    => array(
-						'server_info' => wp_json_encode( $user_info['server_info'] ),
-						'extra_details' => wp_json_encode( $user_info['extra_details'] ),
+						'server_info' => serialize($this->cpfm_get_user_info()['server_info']), 
+						'extra_details' => serialize($this->cpfm_get_user_info()['extra_details']),
 						'plugin_initial'  => sanitize_text_field(get_option('linguator_initial_version')),
 						'plugin_version' => sanitize_text_field($this->plugin_version),
 						'plugin_name'    => sanitize_text_field($this->plugin_name),
@@ -248,7 +248,7 @@ class Linguator_Admin_Feedback {
 				)
 			);
 
-			wp_send_json( array( 'response' => $response ) );
+			die( json_encode( array( 'response' => $response ) ) );
 		}
 
 	}
