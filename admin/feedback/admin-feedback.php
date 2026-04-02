@@ -115,7 +115,7 @@ class Linguator_Admin_Feedback {
 					<?php endforeach; ?>
 					
 					<div class="cp-feedback-terms">
-					<input class="cp-feedback-terms-input" id="cp-feedback-terms-input" type="checkbox"><label for="cp-feedback-terms-input"><?php echo esc_html__( 'I agree to share anonymous usage data and basic site details (such as server, PHP, and WordPress versions) to support Linguator – Multilingual AI Translation improvement efforts. Additionally, I allow Cool Plugins to store all information provided through this form and to respond to my inquiry.', 'linguator-multilingual-ai-translation' ); ?></label>
+					<input class="cp-feedback-terms-input" id="cp-feedback-terms-input" type="checkbox"><label for="cp-feedback-terms-input"><?php echo esc_html__( 'I agree to share anonymous usage data and basic site details (such as server, PHP, and WordPress versions) to support Multilingual AI Translator improvement efforts. Additionally, I allow Cool Plugins to store all information provided through this form and to respond to my inquiry.', 'linguator-multilingual-ai-translation' ); ?></label>
 					</div>
 
 					<div class="cp-feedback-button-wrapper">
@@ -195,15 +195,6 @@ class Linguator_Admin_Feedback {
 		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), '_cool-plugins_deactivate_feedback_nonce' ) ) {
 			wp_send_json_error();
 		} else {
-			$agree_to_terms = isset( $_POST['agree_to_terms'] ) ? sanitize_text_field( wp_unslash( $_POST['agree_to_terms'] ) ) : '';
-			if ( '1' !== $agree_to_terms ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Consent is required before submitting feedback.', 'linguator-multilingual-ai-translation' ),
-					),
-					403
-				);
-			}
 			$reason             = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '';
 			$deactivate_reasons = array(
 				'didnt_work_as_expected'         => array(

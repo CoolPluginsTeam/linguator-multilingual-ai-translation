@@ -874,7 +874,7 @@ const General = ({ data, setData }) => {
                                     {__('Usage Data Sharing', 'linguator-multilingual-ai-translation')}
                                 </h3>
                                 <div>
-                                    <p>{__('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'linguator-multilingual-ai-translation')}</p>
+                                    <span>{__('Help us make this plugin more compatible with your site by sharing non-sensitive site data. ', 'linguator-multilingual-ai-translation')}</span>
                                     <a href="#" className="lmat-see-terms" onClick={handleTermsToggle}>[{showTerms ? 'Hide terms' : 'See terms'}]</a>
                                     <div id="termsBox" className="lmat-terms-box" style={{display: showTerms ? 'block' : 'none', paddingLeft: '20px', marginTop: '10px', fontSize: '12px', color: '#999'}}>
                                         <p>{__("Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We'll collect:", 'linguator-multilingual-ai-translation')} <a href='https://my.coolplugins.net/terms/usage-tracking/' target='_blank' rel="noopener noreferrer">Click Here</a></p>
