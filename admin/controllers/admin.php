@@ -173,8 +173,17 @@ class Linguator_Admin extends Linguator_Admin_Base {
 	 * @return string[] Modified list of links.
 	 */
 	public function linguator_plugin_action_links( $links ) {
-		array_unshift( $links, '<a href="admin.php?page=lmat_settings">' . __( 'Settings', 'linguator-multilingual-ai-translation' ) . '</a>' );
-		array_unshift( $links, '<a href="https://linguator.com/documentation/?utm_source=lmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=plugins_page" target="_blank">' . __( 'Learn More', 'linguator-multilingual-ai-translation' ) . '</a>' );
+		$settings_url = admin_url( 'admin.php?page=lmat_settings' );
+		$docs_url     = 'https://linguator.com/documentation/?utm_source=twlmat_plugin&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list';
+
+		array_unshift(
+			$links,
+			'<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'linguator-multilingual-ai-translation' ) . '</a>'
+		);
+		array_unshift(
+			$links,
+			'<a href="' . esc_url( $docs_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'linguator-multilingual-ai-translation' ) . '</a>'
+		);
 		return $links;
 	}
 

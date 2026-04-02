@@ -83,7 +83,24 @@ class Linguator_Table_Languages extends WP_List_Table {
 				return $item->get_tax_prop( 'lmat_language', $column_name );
 
 			default:
-				return $item->$column_name; // Flag.
+				// Flag HTML is stored on the language object; keep output safe.
+				return wp_kses(
+					(string) $item->$column_name,
+					array(
+						'img' => array(
+							'src'   => true,
+							'alt'   => true,
+							'class' => true,
+							'width' => true,
+							'height'=> true,
+							'title' => true,
+						),
+						'span' => array(
+							'class' => true,
+							'title' => true,
+						),
+					)
+				);
 		}
 	}
 

@@ -222,38 +222,6 @@ class Languages extends Abstract_Controller {
 				),
 			)
 		);
-		register_rest_route(
-			$this->namespace,
-			"/{$this->rest_base}/create-home-page-translation",
-			array(
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'create_home_page_translation' ),
-				'permission_callback' => array( $this, 'create_home_page_translation_permissions_check' ),
-				'args'                => array(
-					'source_id' => array(
-						'description'       => __( 'ID of the source post.', 'linguator-multilingual-ai-translation' ),
-						'type'              => 'integer',
-						'required'          => true,
-						'sanitize_callback' => 'absint',
-						'validate_callback' => array( $this, 'validate_positive_int_param' ),
-					),
-					'title'     => array(
-						'description'       => __( 'Base title for generated translations.', 'linguator-multilingual-ai-translation' ),
-						'type'              => 'string',
-						'required'          => true,
-						'sanitize_callback' => 'sanitize_text_field',
-						'validate_callback' => array( $this, 'validate_required_text_param' ),
-					),
-					'languages' => array(
-						'description'       => __( 'List of target languages.', 'linguator-multilingual-ai-translation' ),
-						'type'              => 'array',
-						'required'          => true,
-						'sanitize_callback' => array( $this, 'sanitize_home_translation_languages' ),
-						'validate_callback' => array( $this, 'validate_home_translation_languages' ),
-					),
-				),
-			)
-		);
 		// Create and link a new translation from a typed title (no redirect)
 		register_rest_route(
 			$this->namespace,
@@ -449,7 +417,7 @@ class Languages extends Abstract_Controller {
 	 * @return true|WP_Error
 	 */
 	public function get_all_post_data_permissions_check( $request ) {
-		if ( ! current_user_can( Capabilities::TRANSLATIONS ) ) {
+		if ( !is_user_logged_in() || ! current_user_can( Capabilities::TRANSLATIONS ) ) {
 			return new WP_Error(
 				'rest_forbidden',
 				__( 'Sorry, you are not allowed to view posts data.', 'linguator-multilingual-ai-translation' ),
@@ -1013,142 +981,6 @@ class Languages extends Abstract_Controller {
 		}
 		return true;
 	}
-
-	/**
-	 * Creates a Home Page translation.
-	 *
-	 *  
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return array|WP_Error Response data or WP_Error object on failure.
-	 */
-	public function create_home_page_translation($request) {
-		$source_id  = absint( $request['source_id'] );
-		$languages  = $this->sanitize_home_translation_languages( $request['languages'], $request, 'languages' );
-		$base_title = sanitize_text_field( (string) $request['title'] );
-
-		if ( $source_id <= 0 || '' === $base_title || empty( $languages ) || ! is_array( $languages ) ) {
-			return new WP_Error(
-				'lmat_invalid_request',
-				__( 'Invalid request payload.', 'linguator-multilingual-ai-translation' ),
-				array( 'status' => 400 )
-			);
-		}
-		
-		$created_pages = [];
-		
-		// Get source language
-		$source_language = $this->model->get_language(linguator_get_post_language($source_id));
-		if (!$source_language) {
-			return new WP_Error(
-				'lmat_invalid_source',
-				__('Source page has no language assigned', 'linguator-multilingual-ai-translation'),
-				array('status' => 400)
-			);
-		}
-
-		// Initialize translations with source
-		$all_translations = array(
-			$source_language->locale => $source_id
-		);
-
-		// Get and merge existing translations
-		$existing_translations = linguator_get_post_translations($source_id);
-		if (!empty($existing_translations)) {
-			$all_translations = array_merge($all_translations, $existing_translations);
-		}
-		
-		// Create pages for each language
-		foreach ($languages as $language_data) {
-			// Convert language data to Linguator_Language object if needed
-			$locale = isset( $language_data['locale'] ) ? sanitize_text_field( (string) $language_data['locale'] ) : '';
-			if ( '' === $locale ) {
-				continue;
-			}
-			$language = $this->model->get_language($locale);
-			
-			if (!$language) {
-				continue; // Skip if language not found
-			}
-			
-			// Skip if translation already exists
-			if (isset($all_translations[$language->locale])) {
-				continue;
-			}
-			
-			// Create title with language
-			$title = sanitize_text_field( sprintf('%s - %s', $base_title, (string) $language->name) );
-			
-			// Create new page as translation
-			$new_page = wp_insert_post([
-				'post_title' => sanitize_text_field( $title ),
-				'post_type' => 'page',
-				'post_status' => 'publish'
-			]);
-			
-			if (!is_wp_error($new_page)) {
-				// Set language for new page
-				linguator_set_post_language($new_page, $language->locale);
-				
-				// Add to translations array
-				$all_translations[$language->locale] = $new_page;
-				
-				$created_pages[] = [
-					'id' => $new_page,
-					'language' => $language->to_array(),
-					'title' => $title
-				];
-			}
-		}
-		
-		// Save all translations together
-		if (!empty($created_pages)) {
-			// Ensure all pages have their languages set
-			foreach ($all_translations as $locale => $page_id) {
-				linguator_set_post_language($page_id, $locale);
-			}
-
-			// Save translations multiple times to ensure all links are created
-			linguator_save_post_translations($all_translations);
-			// Second pass to ensure bidirectional links
-			foreach ($all_translations as $page_id) {
-				$page_translations = linguator_get_post_translations($page_id);
-				linguator_save_post_translations(array_merge($page_translations, $all_translations));
-			}
-		}
-		
-		return [
-			'success' => true,
-			'pages' => $created_pages,
-			'translations' => $all_translations // Include for debugging
-		];
-	}
-
-	/**
-	 * Checks if the user has permission to create a home page translation.
-	 *
-	 *  
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return true|WP_Error True if the request has access to create a home page translation, WP_Error object otherwise.
-	 */
-	public function create_home_page_translation_permissions_check( $request ) {
-		if ( ! $this->check_update_permission() ) {
-			return new WP_Error(
-				'rest_cannot_create',
-				__( 'Sorry, you are not allowed to create a home page translation.', 'linguator-multilingual-ai-translation' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		// Verify nonce for non-GET requests
-		$nonce_check = $this->verify_nonce( $request );
-		if ( is_wp_error( $nonce_check ) ) {
-			return $nonce_check;
-		}
-
-		return true;
-	}
 	
 	/**
 	 * Validates integer parameters that must be positive.
@@ -1221,60 +1053,6 @@ class Languages extends Abstract_Controller {
 
 		$post_type = sanitize_key( (string) $value );
 		return '' !== $post_type && post_type_exists( $post_type );
-	}
-
-	/**
-	 * Sanitizes language payload for home page translation creation.
-	 *
-	 * @param mixed           $languages Raw languages payload.
-	 * @param WP_REST_Request $request   Full request.
-	 * @param string          $param     Parameter name.
-	 * @return array
-	 */
-	public function sanitize_home_translation_languages( $languages, $request = null, $param = '' ) {
-		if ( ! is_array( $languages ) ) {
-			return array();
-		}
-
-		$sanitized = array();
-		foreach ( $languages as $language_data ) {
-			if ( ! is_array( $language_data ) ) {
-				continue;
-			}
-
-			$locale = isset( $language_data['locale'] ) ? sanitize_text_field( (string) $language_data['locale'] ) : '';
-			if ( '' === $locale ) {
-				continue;
-			}
-
-			$sanitized[] = array(
-				'locale' => $locale,
-			);
-		}
-
-		return $sanitized;
-	}
-
-	/**
-	 * Validates language payload for home page translation creation.
-	 *
-	 * @param mixed           $languages Raw languages payload.
-	 * @param WP_REST_Request $request   Full request.
-	 * @param string          $param     Parameter name.
-	 * @return bool
-	 */
-	public function validate_home_translation_languages( $languages, $request = null, $param = '' ) {
-		if ( ! is_array( $languages ) || empty( $languages ) ) {
-			return false;
-		}
-
-		foreach ( $languages as $language_data ) {
-			if ( ! is_array( $language_data ) || empty( $language_data['locale'] ) || ! is_scalar( $language_data['locale'] ) ) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -1417,7 +1195,7 @@ class Languages extends Abstract_Controller {
 	 */
 	public function assign_language_permissions_check( $request ) {
 		// Check user capabilities first
-		if ( ! $this->check_update_permission() ) {
+		if ( !is_user_logged_in() || ! $this->check_update_permission() ) {
 			return new WP_Error(
 				'rest_cannot_assign',
 				__( 'Sorry, you are not allowed to assign languages.', 'linguator-multilingual-ai-translation' ),

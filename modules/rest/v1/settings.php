@@ -342,12 +342,12 @@ class Settings extends Abstract_Controller {
 			return rest_ensure_response( array(
 				'success' => true,
 				'lmat_video_status' => $status,
-				'message' => 'Video status updated successfully'
+				'message' => esc_html__( 'Video status updated successfully', 'linguator-multilingual-ai-translation' )
 			) );
 		} else {
 			return new WP_Error(
 				'update_failed',
-				'Failed to update video status',
+				esc_html__( 'Failed to update video status', 'linguator-multilingual-ai-translation' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -372,12 +372,12 @@ class Settings extends Abstract_Controller {
 			return rest_ensure_response( array(
 				'success' => true,
 				'lmat_setup_complete' => $complete,
-				'message' => 'Setup completion status updated successfully'
+				'message' => esc_html__( 'Setup completion status updated successfully', 'linguator-multilingual-ai-translation' )
 			) );
 		} else {
 			return new WP_Error(
 				'update_failed',
-				'Failed to update setup completion status',
+				esc_html__( 'Failed to update setup completion status', 'linguator-multilingual-ai-translation' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -400,12 +400,12 @@ class Settings extends Abstract_Controller {
 			return rest_ensure_response( array(
 				'success' => true,
 				'lmat_migration_completed' => $completed,
-				'message' => 'Migration status updated successfully'
+				'message' => esc_html__( 'Migration status updated successfully', 'linguator-multilingual-ai-translation' )
 			) );
 		} else {
 			return new WP_Error(
 				'update_failed',
-				'Failed to update migration status',
+				esc_html__( 'Failed to update migration status', 'linguator-multilingual-ai-translation' ),
 				array( 'status' => 500 )
 			);
 		}

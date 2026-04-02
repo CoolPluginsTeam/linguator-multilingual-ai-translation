@@ -66,7 +66,14 @@ if ( is_readable( $lmat_config_file ) ) {
 	}
 }
 
-$GLOBALS['lmat_local_config'] = $lmat_config;
+/**
+ * Raw JSON config loaded from `LMAT_LOCAL_DIR/lmat-config.json`.
+ *
+ * Allow third parties to adjust/augment the local config.
+ *
+ * @param array<string,mixed> $lmat_config Local config array.
+ */
+$GLOBALS['lmat_local_config'] = apply_filters( 'lmat_local_config', $lmat_config );
 
 /**
  * Controls the plugin, as well as activation, and deactivation
@@ -203,7 +210,11 @@ class Linguator {
 		}
 		
 		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( wp_unslash( $_REQUEST['action'] ) ), $excluded_actions ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_ajax_on_front = wp_doing_ajax() && empty( $_REQUEST['lmat_ajax_backend'] ) && ! $in; // phpcs:ignore WordPress.Security.NonceVerification
+		// Treat presence of lmat_ajax_backend as "backend" ajax.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag.
+		$lmat_ajax_backend = isset( $_REQUEST['lmat_ajax_backend'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['lmat_ajax_backend'] ) ) : '';
+
+		$is_ajax_on_front = wp_doing_ajax() && '' === $lmat_ajax_backend && ! $in;
 
 		/**
 		 * Filters whether the current request is an ajax request on front.

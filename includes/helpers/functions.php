@@ -160,6 +160,35 @@ function linguator_sanitize_ids( $ids ) {
 	
 }
 
+if ( ! function_exists( 'linguator_extract_taxonomy_name' ) ) {
+	/**
+	 * Extracts taxonomy name from a URL path (helper for linguator_replace_links_with_translations).
+	 *
+	 * @param string               $path       URL path relative to home (may include language prefix).
+	 * @param array<string,string> $terms_data Map of rewrite slug / taxonomy keys.
+	 * @return string|false|null Taxonomy name, false if not resolved, null if path is empty after language strip.
+	 */
+	function linguator_extract_taxonomy_name( $path, $terms_data ) {
+		// Remove the language prefix if using Linguator.
+		$languages = linguator_languages_list();
+		$segments  = explode( '/', $path );
+		if ( in_array( $segments[0], $languages, true ) ) {
+			array_shift( $segments );
+		}
+
+		if ( empty( $segments ) ) {
+			return null;
+		}
+
+		$possible_tax = $segments[0];
+
+		if ( taxonomy_exists( $possible_tax ) || ( isset( $terms_data[ $possible_tax ] ) && taxonomy_exists( $terms_data[ $possible_tax ] ) ) ) {
+			return isset( $terms_data[ $possible_tax ] ) ? $terms_data[ $possible_tax ] : $possible_tax;
+		}
+
+		return false;
+	}
+}
 
 /**
  * Replaces links with their translated versions.
@@ -183,28 +212,6 @@ function linguator_replace_links_with_translations($content, $locale, $current_l
 		 }else{
 			 $terms_data[$key]=$key;
 		 }
-	 }
- 
-	 function linguator_extract_taxonomy_name($path, $terms_data){
-		 // Remove the language prefix if using Linguator
-		 $languages = linguator_languages_list(); // e.g., ['en', 'fr']
-		 $segments = explode('/', $path);
-		 if (in_array($segments[0], $languages)) {
-			 array_shift($segments); // remove 'en', 'fr', etc.
-		 }
-		 
-		 if (empty($segments)) {
-			 return null;
-		 }
- 
-		 // First segment after language is usually the taxonomy slug
-		 $possible_tax = $segments[0];
- 
-		 if (taxonomy_exists($possible_tax) || (isset($terms_data[$possible_tax]) && taxonomy_exists($terms_data[$possible_tax]))) {
-				return isset($terms_data[$possible_tax]) ? $terms_data[$possible_tax] : $possible_tax;
-		 }
- 
-		 return false;
 	 }
  
  

@@ -337,7 +337,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                     <?php
                                     echo !empty($lang['flag'])
                                         ? wp_kses_post( $lang['flag'] )
-                                        : '<img src="' . esc_attr($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
+                                        : '<img src="' . esc_url($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
                                     ?>
                                 </th>
                             <?php endforeach; ?>

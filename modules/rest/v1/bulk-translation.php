@@ -166,6 +166,11 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 							'required'          => false,
 							'sanitize_callback' => array( $this, 'sanitize_post_content_for_builders' ),
 							'validate_callback' => array( $this, 'validate_optional_string_param' ),
+						),'post_meta_fields' => array(
+							'type'              => 'string',
+							'required'          => false,
+							'sanitize_callback' => array( $this, 'sanitize_post_meta_fields_param' ),
+							'validate_callback' => array( $this, 'validate_post_meta_fields_param' ),
 						),
 					),
 				)
@@ -256,6 +261,38 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				if ( ! current_user_can( $tax_obj->cap->manage_terms ) ) {
 					return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
 				}
+				// Object-level checks: if a term (or list of terms) is provided, require edit capability for it.
+				$term_id_param = $request->get_param( 'term_id' );
+				if ( null !== $term_id_param && '' !== $term_id_param ) {
+					// Creating a translated term (create-translate-taxonomy) will create a new term; require create capability too.
+					if ( ! empty( $tax_obj->cap->create_terms ) && ! current_user_can( $tax_obj->cap->create_terms ) ) {
+						return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to create terms for this taxonomy.', 'translate-words' ), array( 'status' => 403 ) );
+					}
+					$term_id = absint( $term_id_param );
+					if ( $term_id <= 0 ) {
+						return new \WP_Error( 'rest_invalid_param', __( 'Invalid term id.', 'translate-words' ), array( 'status' => 400 ) );
+					}
+					if ( ! current_user_can( 'edit_term', $term_id ) ) {
+						return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to edit this term.', 'translate-words' ), array( 'status' => 403 ) );
+					}
+				}
+
+				$ids_param = $request->get_param( 'ids' );
+				if ( null !== $ids_param && '' !== $ids_param ) {
+					// Bulk taxonomy translation can create new terms; require create capability too.
+					if ( ! empty( $tax_obj->cap->create_terms ) && ! current_user_can( $tax_obj->cap->create_terms ) ) {
+						return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to create terms for this taxonomy.', 'translate-words' ), array( 'status' => 403 ) );
+					}
+					$decoded_ids = json_decode( (string) $ids_param, true );
+					if ( is_array( $decoded_ids ) ) {
+						foreach ( $decoded_ids as $maybe_id ) {
+							$term_id = absint( $maybe_id );
+							if ( $term_id > 0 && ! current_user_can( 'edit_term', $term_id ) ) {
+								return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to edit one or more requested terms.', 'translate-words' ), array( 'status' => 403 ) );
+							}
+						}
+					}
+				}
 				return true;
 			}
 			// Creating a translated post: must edit source and be allowed to create new content of that post type.
@@ -279,6 +316,57 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				if ( ! current_user_can( $post_type_object->cap->create_posts ) ) {
 					return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
 				}
+				return true;
+			}
+			// Bulk post translation (`bulk-translate-entries`): body `ids` are post IDs — require edit + create (and publish when source is public).
+			$ids_param = $request->get_param( 'ids' );
+			if ( null !== $ids_param && '' !== $ids_param ) {
+				$decoded_ids = json_decode( (string) $ids_param, true );
+				if ( ! is_array( $decoded_ids ) || empty( $decoded_ids ) ) {
+					return new \WP_Error( 'rest_invalid_param', __( 'Invalid post ids.', 'translate-words' ), array( 'status' => 400 ) );
+				}
+
+				if ( ! current_user_can( Capabilities::TRANSLATIONS ) ) {
+					return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'translate-words' ), array( 'status' => 403 ) );
+				}
+
+				foreach ( $decoded_ids as $maybe_id ) {
+					$post_id = absint( $maybe_id );
+					if ( $post_id <= 0 ) {
+						continue;
+					}
+
+					$post = get_post( $post_id );
+					if ( ! $post ) {
+						continue;
+					}
+
+					if ( ! current_user_can( 'edit_post', $post_id ) ) {
+						return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to translate one or more of the selected posts.', 'translate-words' ), array( 'status' => 403 ) );
+					}
+
+					$post_type_object = get_post_type_object( $post->post_type );
+					if ( ! $post_type_object || empty( $post_type_object->cap ) ) {
+						return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'translate-words' ), array( 'status' => 403 ) );
+					}
+
+					$create_cap = ! empty( $post_type_object->cap->create_posts )
+						? $post_type_object->cap->create_posts
+						: ( ! empty( $post_type_object->cap->edit_posts ) ? $post_type_object->cap->edit_posts : '' );
+
+					if ( '' === $create_cap || ! current_user_can( $create_cap ) ) {
+						return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to create translations for one or more of the selected post types.', 'translate-words' ), array( 'status' => 403 ) );
+					}
+
+					// Translations may inherit publish status from source.
+					if ( 'publish' === $post->post_status || 'private' === $post->post_status ) {
+						$publish_cap = ! empty( $post_type_object->cap->publish_posts ) ? $post_type_object->cap->publish_posts : '';
+						if ( '' !== $publish_cap && ! current_user_can( $publish_cap ) ) {
+							return new \WP_Error( 'rest_forbidden', __( 'You are not allowed to publish translations for one or more of the selected posts.', 'translate-words' ), array( 'status' => 403 ) );
+						}
+					}
+				}
+
 				return true;
 			}
 			if ( ! current_user_can( Capabilities::TRANSLATIONS ) ) {
@@ -366,6 +454,44 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			}
 
 			return is_scalar( $value );
+		}
+		
+		/**
+		 * Validates optional JSON payload for post meta fields.
+		 *
+		 * @param mixed $value Request value.
+		 * @return bool
+		 */
+		public function validate_post_meta_fields_param( $value ) {
+			if ( null === $value || '' === $value ) {
+				return true;
+			}
+
+			if ( ! is_string( $value ) ) {
+				return false;
+			}
+
+			$decoded = json_decode( $value, true );
+			return JSON_ERROR_NONE === json_last_error() && is_array( $decoded );
+		}
+
+		/**
+		 * Sanitizes optional JSON payload for post meta fields.
+		 *
+		 * @param mixed $value Raw request value.
+		 * @return string
+		 */
+		public function sanitize_post_meta_fields_param( $value ) {
+			if ( null === $value || '' === $value || ! is_string( $value ) ) {
+				return '';
+			}
+
+			$decoded = json_decode( $value, true );
+			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $decoded ) ) {
+				return '';
+			}
+
+			return wp_json_encode( $decoded );
 		}
 
 		/**
@@ -806,7 +932,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				return new WP_Error(
 					'create_failed_exception',
 					// Avoid exposing too much, but keep message for debugging.
-					(string) $e->getMessage(),
+					__( 'Failed to create the translated post.', 'translate-words' ),
 					array( 'status' => 500 )
 				);
 			}

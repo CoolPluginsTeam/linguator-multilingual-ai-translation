@@ -426,20 +426,33 @@ if (!class_exists('Glossary')) {
             }
 
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            $data = ! empty( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : [];
-            $source_lang = ! empty( $data['source_lang'] ) ? sanitize_key( $data['source_lang'] ) : '';
+            $raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_unslash() applied; payload is sanitized field-by-field below.
+            $data     = is_array( $raw_data ) ? $raw_data : array();
+
+            // Sanitize expected fields at the boundary.
+            $data['type']        = isset( $data['type'] ) ? sanitize_text_field( (string) $data['type'] ) : '';
+            $data['term']        = isset( $data['term'] ) ? sanitize_text_field( (string) $data['term'] ) : '';
+            $data['description'] = isset( $data['description'] ) ? sanitize_textarea_field( (string) $data['description'] ) : '';
+
+            $source_lang         = ! empty( $data['source_lang'] ) ? sanitize_key( (string) $data['source_lang'] ) : '';
+            $data['source_lang'] = $source_lang;
+
+            // These are used as lookup keys in update_glossary_data().
+            $data['original_term']        = isset( $data['original_term'] ) ? sanitize_text_field( (string) $data['original_term'] ) : '';
+            $data['original_source_lang'] = isset( $data['original_source_lang'] ) ? sanitize_key( (string) $data['original_source_lang'] ) : '';
             $translations = array();
             if ( ! empty( $data['translations'] ) && is_array( $data['translations'] ) ) {
                 foreach ( $data['translations'] as $lang_code => $translated_term ) {
-                    $translations[ sanitize_key( $lang_code ) ] = sanitize_text_field( $translated_term );
+                    $translations[ sanitize_key( (string) $lang_code ) ] = sanitize_text_field( (string) $translated_term );
                 }
-                $data['translations'] = $translations;
             }
             // Remove translation for original language if present
-            if (! empty( $translations[$source_lang] )) {
-                unset($translations[$source_lang]);
+            if ( '' !== $source_lang && isset( $translations[ $source_lang ] ) ) {
+                unset( $translations[ $source_lang ] );
             }
-            $result = self::update_glossary_data($data);
+            $data['translations'] = $translations;
+
+            $result = self::update_glossary_data( $data );
 
             if ($result) {
                 // Get the updated entry from database
