@@ -203,8 +203,7 @@ class CPFM_Feedback_Notice {
             $output .= '<p>' . esc_html__('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'linguator-multilingual-ai-translation') . '</p>';
             $output .= '<ul>';
             $output .= '<li>' . esc_html__('Your website home URL and WordPress admin email.', 'linguator-multilingual-ai-translation') . '</li>';
-            $output .= '<li>' . esc_html__('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'linguator-multilingual-ai-translation') . '</li>';
-            $output .= '<a href="' . esc_url('https://my.coolplugins.net/terms/usage-tracking/') . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Click Here', 'linguator-multilingual-ai-translation') . '</a>';
+            $output .= '<li>' . esc_html__('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'linguator-multilingual-ai-translation') . ' <a href="' . esc_url('https://my.coolplugins.net/terms/usage-tracking/') . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Click Here', 'linguator-multilingual-ai-translation') . '</a></li>';
             $output .= '</ul>';
             
             $output .= '</div>';

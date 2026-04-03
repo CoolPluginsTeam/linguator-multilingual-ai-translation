@@ -60,11 +60,6 @@ function linguator_get_requested_url() {
 		return $home_url;
 	}
 
-	if ( WP_DEBUG ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions
-		trigger_error( '$_SERVER[\'HTTP_HOST\'] or $_SERVER[\'REQUEST_URI\'] are required but not set.' );
-	}
-
 	return '';
 }
 
@@ -165,6 +160,35 @@ function linguator_sanitize_ids( $ids ) {
 	
 }
 
+if ( ! function_exists( 'linguator_extract_taxonomy_name' ) ) {
+	/**
+	 * Extracts taxonomy name from a URL path (helper for linguator_replace_links_with_translations).
+	 *
+	 * @param string               $path       URL path relative to home (may include language prefix).
+	 * @param array<string,string> $terms_data Map of rewrite slug / taxonomy keys.
+	 * @return string|false|null Taxonomy name, false if not resolved, null if path is empty after language strip.
+	 */
+	function linguator_extract_taxonomy_name( $path, $terms_data ) {
+		// Remove the language prefix if using Linguator.
+		$languages = linguator_languages_list();
+		$segments  = explode( '/', $path );
+		if ( in_array( $segments[0], $languages, true ) ) {
+			array_shift( $segments );
+		}
+
+		if ( empty( $segments ) ) {
+			return null;
+		}
+
+		$possible_tax = $segments[0];
+
+		if ( taxonomy_exists( $possible_tax ) || ( isset( $terms_data[ $possible_tax ] ) && taxonomy_exists( $terms_data[ $possible_tax ] ) ) ) {
+			return isset( $terms_data[ $possible_tax ] ) ? $terms_data[ $possible_tax ] : $possible_tax;
+		}
+
+		return false;
+	}
+}
 
 /**
  * Replaces links with their translated versions.
@@ -188,28 +212,6 @@ function linguator_replace_links_with_translations($content, $locale, $current_l
 		 }else{
 			 $terms_data[$key]=$key;
 		 }
-	 }
- 
-	 function linguator_extract_taxonomy_name($path, $terms_data){
-		 // Remove the language prefix if using Linguator
-		 $languages = linguator_languages_list(); // e.g., ['en', 'fr']
-		 $segments = explode('/', $path);
-		 if (in_array($segments[0], $languages)) {
-			 array_shift($segments); // remove 'en', 'fr', etc.
-		 }
-		 
-		 if (empty($segments)) {
-			 return null;
-		 }
- 
-		 // First segment after language is usually the taxonomy slug
-		 $possible_tax = $segments[0];
- 
-		 if (taxonomy_exists($possible_tax) || (isset($terms_data[$possible_tax]) && taxonomy_exists($terms_data[$possible_tax]))) {
-				return isset($terms_data[$possible_tax]) ? $terms_data[$possible_tax] : $possible_tax;
-		 }
- 
-		 return false;
 	 }
  
  
@@ -311,4 +313,42 @@ function linguator_is_switcher_type_enabled( $switcher_type ) {
 		$enabled_switchers = array( 'default' );
 	}
 	return in_array( $switcher_type, $enabled_switchers, true );
+}
+
+/**
+ * Converts an absolute filesystem path under the WordPress content directory to its public URL.
+ *
+ * @param string $file Absolute path to a file.
+ * @return string URL, or empty string if the path is not under wp_content_dir().
+ */
+function linguator_content_path_to_url( $file ) {
+	if ( '' === $file || ! is_string( $file ) ) {
+		return '';
+	}
+
+	$content_root = wp_normalize_path( untrailingslashit( wp_content_dir() ) );
+	$normalized   = wp_normalize_path( $file );
+
+	if ( 0 !== strpos( $normalized, $content_root ) ) {
+		return '';
+	}
+
+	$relative = substr( $normalized, strlen( $content_root ) );
+	$relative = '/' . ltrim( str_replace( '\\', '/', $relative ), '/' );
+
+	return content_url( $relative );
+}
+
+/**
+ * Optional site-local JSON config from `LMAT_LOCAL_DIR/lmat-config.json`.
+ * Populated on `plugins_loaded` priority 0; returns an empty array before that hook runs.
+ *
+ * @return array<string, mixed>
+ */
+function linguator_get_local_config() {
+	if ( isset( $GLOBALS['lmat_local_config'] ) && is_array( $GLOBALS['lmat_local_config'] ) ) {
+		return $GLOBALS['lmat_local_config'];
+	}
+
+	return array();
 }

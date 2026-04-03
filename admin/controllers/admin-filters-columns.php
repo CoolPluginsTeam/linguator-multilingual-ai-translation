@@ -400,7 +400,7 @@ class Linguator_Admin_Filters_Columns {
 		$x = new WP_Ajax_Response();
 
 		// Collect old translations
-		$translations = empty( $_POST['translations'] ) ? array() : explode( ',', sanitize_text_field( wp_unslash( $_POST['translations'] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$translations = empty( $_POST['translations'] ) ? array() : explode( ',', sanitize_text_field( wp_unslash( $_POST['translations'] ) ) );
 		$translations = array_map( 'intval', $translations );
 
 		$translations = array_merge( $translations, array( $post_id ) ); // Add current post
@@ -449,7 +449,7 @@ class Linguator_Admin_Filters_Columns {
 		$x = new WP_Ajax_Response();
 
 		// Collect old translations
-		$translations = empty( $_POST['translations'] ) ? array() : explode( ',', sanitize_text_field( wp_unslash( $_POST['translations'] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$translations = empty( $_POST['translations'] ) ? array() : explode( ',', sanitize_text_field( wp_unslash( $_POST['translations'] ) ) );
 		$translations = array_map( 'intval', $translations );
 
 		$translations = array_merge( $translations, $this->model->term->get_translations( $term_id ) ); // Add current translations

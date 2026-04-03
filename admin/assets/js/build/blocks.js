@@ -120,9 +120,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       setAttributes(enforceNamesOrFlags(patch, attributes));
     };
     return wp.element.createElement(InspectorControls, {}, wp.element.createElement(PanelBody, {
-      title: __('Language switcher settings', 'linguator')
+      title: __('Language switcher settings', 'linguator-multilingual-ai-translation')
     }, wp.element.createElement(ToggleControl, {
-      label: __('Display as dropdown', 'linguator'),
+      label: __('Display as dropdown', 'linguator-multilingual-ai-translation'),
       checked: !!dropdown,
       onChange: function onChange(v) {
         return update({
@@ -130,7 +130,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
     }), (!dropdown || showHideCurrentEvenInDropdown) && wp.element.createElement(ToggleControl, {
-      label: __('Show language names', 'linguator'),
+      label: __('Show language names', 'linguator-multilingual-ai-translation'),
       checked: !!show_names,
       onChange: function onChange(v) {
         return update({
@@ -138,7 +138,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
     }), (!dropdown || showHideCurrentEvenInDropdown) && wp.element.createElement(ToggleControl, {
-      label: __('Show flags', 'linguator'),
+      label: __('Show flags', 'linguator-multilingual-ai-translation'),
       checked: !!show_flags,
       onChange: function onChange(v) {
         return update({
@@ -146,7 +146,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
     }), wp.element.createElement(ToggleControl, {
-      label: __('Force switch to homepage', 'linguator'),
+      label: __('Force switch to homepage', 'linguator-multilingual-ai-translation'),
       checked: !!force_home,
       onChange: function onChange(v) {
         return update({
@@ -154,7 +154,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
     }), !attributes.dropdown && wp.element.createElement(ToggleControl, {
-      label: __('Hide current language', 'linguator'),
+      label: __('Hide current language', 'linguator-multilingual-ai-translation'),
       checked: !!hide_current,
       onChange: function onChange(v) {
         return update({
@@ -162,7 +162,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
     }), wp.element.createElement(ToggleControl, {
-      label: __('Hide languages without translation', 'linguator'),
+      label: __('Hide languages without translation', 'linguator-multilingual-ai-translation'),
       checked: !!hide_if_no_translation,
       onChange: function onChange(v) {
         return update({
@@ -176,8 +176,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   // Regular block: linguator/language-switcher
   // ---------------------------------------------------------------------------
   registerBlockType('linguator/language-switcher', {
-    title: __('Language switcher', 'linguator'),
-    description: __('Add a language switcher so visitors can select their preferred language.', 'linguator'),
+    title: __('Language switcher', 'linguator-multilingual-ai-translation'),
+    description: __('Add a language switcher so visitors can select their preferred language.', 'linguator-multilingual-ai-translation'),
     icon: TranslationIcon,
     category: 'widgets',
     attributes: _objectSpread({}, sharedAttributes),
@@ -192,7 +192,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }), wp.element.createElement(Disabled, {}, ServerSideRender ? wp.element.createElement(ServerSideRender, {
         block: 'linguator/language-switcher',
         attributes: props.attributes
-      }) : wp.element.createElement('div', blockProps, __('Language Switcher preview (SSR not available).', 'linguator'))));
+      }) : wp.element.createElement('div', blockProps, __('Language Switcher preview (SSR not available).', 'linguator-multilingual-ai-translation'))));
     },
     save: function save() {
       return null;
@@ -204,8 +204,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   // ---------------------------------------------------------------------------
   var NAV_BLOCK = 'linguator/navigation-language-switcher';
   registerBlockType(NAV_BLOCK, {
-    title: __('Language switcher', 'linguator'),
-    description: __('Add a language switcher to the Navigation block.', 'linguator'),
+    title: __('Language switcher', 'linguator-multilingual-ai-translation'),
+    description: __('Add a language switcher to the Navigation block.', 'linguator-multilingual-ai-translation'),
     icon: TranslationIcon,
     category: 'widgets',
     parent: ['core/navigation'],
@@ -242,7 +242,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         block: NAV_BLOCK,
         attributes: attributes,
         className: 'wp-block-navigation__container block-editor-block-list__layout'
-      }) : wp.element.createElement('div', {}, __('Language Switcher (Navigation) preview (SSR not available).', 'linguator')), maybeSubmenuIcon)));
+      }) : wp.element.createElement('div', {}, __('Language Switcher (Navigation) preview (SSR not available).', 'linguator-multilingual-ai-translation')), maybeSubmenuIcon)));
     },
     save: function save() {
       return null;

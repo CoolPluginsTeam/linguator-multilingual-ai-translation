@@ -182,7 +182,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                         <label>
                                             <div class="lmat-translation-label-row">
                                                 <?php if (!empty($lang['img'])): ?>
-                                                    <img src="<?php echo esc_attr($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" class="lmat-lang-flag">
+                                                    <img src="<?php echo esc_url($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" class="lmat-lang-flag">
                                                 <?php endif; ?>
                                                 <span class="lmat-lang-name"><?php echo esc_html($lang['alt']); ?></span>
                                                 <span class="lmat-lang-translation-label"><?php esc_html_e('Translation', 'linguator-multilingual-ai-translation'); ?></span>
@@ -307,11 +307,17 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                     }
                     $lang = $language_map[$code];
                     ?>
-                    <button class="lmat-lang-filter-btn<?php echo $i === 0 ? ' active' : ''; ?>" data-lang="<?php echo esc_attr($code); ?>">
+                    <button class="lmat-lang-filter-btn<?php echo esc_attr( 0 === $i ? ' active' : '' ); ?>" data-lang="<?php echo esc_attr( $code ); ?>">
                         <?php if (!empty($lang['img'])): ?>
                             <img src="<?php echo esc_url($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" />
                         <?php endif; ?>
-                        <?php echo esc_html($lang['alt']) . ' Terms'; ?>
+                         <?php
+                        printf(
+                            '%s %s',
+                            esc_html( $lang['alt'] ),
+                            esc_html__( 'Terms', 'linguator-multilingual-ai-translation' )
+                        );
+                        ?>
                     </button>
                 <?php endforeach; ?>
             </div>
@@ -331,17 +337,17 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                     <?php
                                     echo !empty($lang['flag'])
                                         ? wp_kses_post( $lang['flag'] )
-                                        : '<img src="' . esc_attr($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
+                                        : '<img src="' . esc_url($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
                                     ?>
                                 </th>
                             <?php endforeach; ?>
                             <th class="lmat-actions-cell">
                                 <div class="lmat-action-buttons-header">
-                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-left" title="Scroll Left">
+                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-left" title="<?php esc_attr_e( 'Scroll left', 'linguator-multilingual-ai-translation' ); ?>">
                                         <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
                                         <img src="<?php echo esc_url(plugins_url('assets/images/arrow-left.svg', LINGUATOR_ROOT_FILE)); ?>" />
                                     </button>
-                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-right" title="Scroll Right">
+                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-right" title="<?php esc_attr_e( 'Scroll right', 'linguator-multilingual-ai-translation' ); ?>">
                                         <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
                                         <img src="<?php echo esc_url(plugins_url('assets/images/arrow-right.svg', LINGUATOR_ROOT_FILE)); ?>" />
                                     </button>
@@ -460,7 +466,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                     </tbody>
                 </table>
             <?php else: ?>
-                <div id="lmat-no-results">No glossary entries found.</div>
+                <div id="lmat-no-results"><?php esc_html_e('No glossary entries found.', 'linguator-multilingual-ai-translation'); ?></div>
             <?php endif; ?>
         </div>
     </div>

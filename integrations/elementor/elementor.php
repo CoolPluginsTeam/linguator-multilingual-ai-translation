@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use Linguator\Frontend\Controllers\Linguator_Frontend;
+use Linguator\Includes\Capabilities\Capabilities;
 use Linguator\Includes\Other\Linguator_Model;
 use WP_Error;
 use WP_REST_Request;
@@ -71,6 +72,7 @@ class Linguator_Elementor {
 					'required'          => true,
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
+					'validate_callback' => [ __CLASS__, 'linguator_validate_post_id_param' ],
 				],
 			],
 		] );
@@ -80,8 +82,44 @@ class Linguator_Elementor {
 	 * Proper Permission Check
 	 */
 	public static function linguator_check_rest_permission( $request ) {
-		return is_user_logged_in() && current_user_can( 'edit_posts' );
+		if ( ! is_user_logged_in() || ! current_user_can( Capabilities::TRANSLATIONS ) ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to access this resource.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$post_id = absint( $request->get_param( 'post_id' ) );
+		if ( $post_id <= 0 ) {
+			return new WP_Error(
+				'invalid_post_id',
+				__( 'Invalid post ID.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) && ! current_user_can( 'read_post', $post_id ) ) {
+			return new WP_Error(
+				'rest_forbidden_post',
+				__( 'Sorry, you are not allowed to access this post.', 'linguator-multilingual-ai-translation' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
 	}
+
+	/**
+	 * Validates the REST route `post_id` param.
+	 *
+	 * @param mixed $value
+	 * @return bool
+	 */
+	public static function linguator_validate_post_id_param( $value ): bool {
+		return is_numeric( $value ) && absint( $value ) > 0;
+	}
+
 
 	/**
 	 * REST API handler to get post language information.

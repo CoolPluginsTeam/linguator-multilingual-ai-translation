@@ -24,8 +24,8 @@ add_action( 'admin_init', function() {
 	// Only register AJAX handler, no UI loading
 	// Check if this is an AJAX request OR if we're on the menu page
 	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$is_menu_page = isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], 'nav-menus.php' ) !== false;
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$is_menu_page = ! empty( $request_uri ) && strpos( $request_uri, 'nav-menus.php' ) !== false;
 	
 	if ( ! $is_ajax && ! $is_menu_page ) {
 		return; // Not AJAX and not menu page, skip

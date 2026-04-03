@@ -141,7 +141,8 @@ if ( ! class_exists( 'Linguator_Admin_View_Language_Links' ) ) :
 						$current_class=$linguator_active_languages && $linguator_active_languages == $language_slug ? 'current' : '';
 						$translated_post_count=linguator_count_posts($language_slug, $publish_post_args);
 						$url=function_exists('add_query_arg') ? add_query_arg('lang', $language_slug) : 'edit.php?post_type='.esc_attr($post_type).'&lang='.esc_attr($language_slug);
-
+						// Language links must include nonce so admin language filter can update user meta safely.	
+						$url = wp_nonce_url( $url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
 						if('publish' === $post_status){
 							$draft_post_count=linguator_count_posts($language_slug, $draft_post_args);
 							$translated_post_count+=$draft_post_count;
@@ -160,6 +161,8 @@ if ( ! class_exists( 'Linguator_Admin_View_Language_Links' ) ) :
 					}
 
 					$all_url=function_exists('add_query_arg') ? add_query_arg('lang', 'all') : 'edit.php?post_type='.esc_attr($post_type).'&lang=all';
+					// Language links must include nonce so admin language filter can update user meta safely.
+					$all_url = wp_nonce_url( $all_url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
 					$current_lang_link='all' !== $linguator_active_languages ? esc_url($all_url) : '';
 
 					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($linguator_active_languages == 'all' ? 'current' : '')."	'>All <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";

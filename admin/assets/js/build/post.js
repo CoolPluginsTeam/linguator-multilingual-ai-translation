@@ -38,18 +38,24 @@ jQuery(function ($) {
           if (post_id > 0) {
             // Get the language dropdown.
             var select = form.querySelector('select[name="inline_lang_choice"]');
-            var _lang = document.querySelector('#lang_' + String(post_id)).innerHTML;
-            select.value = _lang; // Populates the dropdown with the post language.
+            var langEl = document.querySelector('#lang_' + String(post_id));
+            var _lang = langEl && langEl.innerHTML ? langEl.innerHTML : langEl ? langEl.textContent : '';
 
-            filter_terms(_lang); // Initial filter for category checklist.
-            filter_pages(_lang); // Initial filter for parent dropdown.
+            // Posts without assigned source language may not have #lang_<id>.
+            // In that case, keep WP defaults and just avoid filtering.
+            if (_lang) {
+              select.value = _lang; // Populates the dropdown with the post language.
 
-            // Modify category checklist and parent dropdown on language change.
-            select.addEventListener('change', function (event) {
-              var newLang = event.target.value;
-              filter_terms(newLang);
-              filter_pages(newLang);
-            });
+              filter_terms(_lang); // Initial filter for category checklist.
+              filter_pages(_lang); // Initial filter for parent dropdown.
+
+              // Modify category checklist and parent dropdown on language change.
+              select.addEventListener('change', function (event) {
+                var newLang = event.target.value;
+                filter_terms(newLang);
+                filter_pages(newLang);
+              });
+            }
           }
         }
         /**

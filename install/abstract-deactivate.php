@@ -35,7 +35,7 @@ abstract class Linguator_Abstract_Deactivate extends Linguator_Abstract_Activabl
 	 */
 	public static function is_deactivation(): bool {
 		// Looks at the request and checks if the user is deactivating this exact plugin.
-		return isset( $_GET['action'], $_GET['plugin'] ) && 'deactivate' === $_GET['action'] && static::get_plugin_basename() === $_GET['plugin']; // phpcs:ignore WordPress.Security.NonceVerification
+		return isset( $_GET['action'], $_GET['plugin'] ) && 'deactivate' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) && static::get_plugin_basename() === sanitize_text_field( wp_unslash( $_GET['plugin'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
 }
 

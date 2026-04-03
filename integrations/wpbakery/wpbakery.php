@@ -69,11 +69,29 @@ class Linguator_WPBakery {
 		// Filter post content before saving to re-encode WPBakery attributes
 		add_filter( 'wp_insert_post_data', [ __CLASS__, 'linguator_encode_wpbakery_content_before_save' ], 10, 2 );
 		
-		// Clean up page translation placeholders on frontend display (priority 5 - before shortcodes)
-		add_filter( 'the_content', [ __CLASS__, 'linguator_cleanup_content_on_frontend' ], 5 );
+		// Clean up translation markers on frontend output only (not wp-admin).
+		add_action( 'wp', [ __CLASS__, 'linguator_register_frontend_the_content_cleanup' ], 0 );
 	}
 
-
+	/**
+	 * Attach `the_content` cleanup only on public requests.
+	 *
+	 * Avoids registering a global `the_content` filter while wp-admin is loading.
+	 * The callback still returns unchanged content unless markers are present
+	 * (`#lmat_page_translation*`, `[lmat_val`, `___LMAT_`), so non-WPBakery posts
+	 * pay only a few strpos checks per `the_content` run (singular, archives, feeds).
+	 *
+	 * @since 1.0.10
+	 *
+	 * @return void
+	 */
+	public static function linguator_register_frontend_the_content_cleanup() {
+		if ( is_admin() ) {
+			return;
+		}
+		// Priority 5: before shortcodes so stray markers never reach VC parsing.
+		add_filter( 'the_content', [ __CLASS__, 'linguator_cleanup_content_on_frontend' ], 5 );
+	}
 
 	/**
 	 * Copy WPBakery Page Builder meta.
@@ -1151,24 +1169,28 @@ class Linguator_WPBakery {
 	 * @access private
 	 * @static
 	 *
-	 * @param string $content Post content with protected tokens.
+	 * @param string $content            Post content with protected tokens.
+	 * @param bool   $escape_for_display When true (e.g. the_content), escape decoded values for safe HTML attributes. When false (save/translation pipeline), return raw restored values.
 	 * @return string Content with original attribute values restored.
 	 */
-	private static function linguator_restore_protected_attributes( $content ) {
+	private static function linguator_restore_protected_attributes( $content, $escape_for_display = false ) {
 		// Pattern: ___LMAT_PROTECTED_{base64}___
 		// Find all protected tokens and decode them
 		// Base64 strings can contain A-Z, a-z, 0-9, +, /, and = (for padding)
 		// Handle both complete tokens (___LMAT_PROTECTED_...___) and potentially truncated ones
 		$content = preg_replace_callback(
 			'/___LMAT_PROTECTED_([A-Za-z0-9+\/=]+)(?:___|__|$)/',
-			function( $matches ) {
+			function( $matches ) use ( $escape_for_display ) {
 				$encoded_value = $matches[1];
 				// Decode the base64 value
 				$original_value = base64_decode( $encoded_value, true );
 				// If decoding fails, return empty string to remove the broken token
 				// This prevents broken tokens from appearing in the content
-				if ( false === $original_value || empty( $original_value ) ) {
+				if ( false === $original_value || '' === $original_value ) {
 					return '';
+				}
+				if ( $escape_for_display ) {
+					return esc_attr( $original_value );
 				}
 				return $original_value;
 			},
@@ -1416,7 +1438,7 @@ class Linguator_WPBakery {
 		
 		// Restore any protected attributes that might still be tokenized
 		if ( false !== strpos( $content, '___LMAT_PROTECTED_' ) ) {
-			$content = self::linguator_restore_protected_attributes( $content );
+			$content = self::linguator_restore_protected_attributes( $content, true );
 		}
 		
 		// Remove standalone LMAT tokens that weren't properly replaced

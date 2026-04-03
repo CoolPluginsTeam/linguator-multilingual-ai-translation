@@ -18,7 +18,10 @@ if (!class_exists('Linguator_cronjob')) {
         }
            
         static public function linguator_send_data() {
-                   
+            // Respect explicit user consent before collecting/transmitting telemetry.
+            if ( 'yes' !== get_option( 'cpfm_opt_in_choice_lmat' ) ) {
+                return;
+            }
             $feedback_url = LINGUATOR_FEEDBACK_API . 'wp-json/coolplugins-feedback/v1/site';
             require_once LINGUATOR_DIR . '/admin/feedback/admin-feedback.php';
             
@@ -66,7 +69,7 @@ if (!class_exists('Linguator_cronjob')) {
             $decoded        = json_decode($response_body, true);
             
             // Schedule the cron job for future updates
-            if (!wp_next_scheduled('lmat_extra_data_update')) {
+            if ( 'yes' === get_option( 'cpfm_opt_in_choice_lmat' ) && !wp_next_scheduled('lmat_extra_data_update') ) {
                 wp_schedule_event(time(), 'every_30_days', 'lmat_extra_data_update');
             }
         }

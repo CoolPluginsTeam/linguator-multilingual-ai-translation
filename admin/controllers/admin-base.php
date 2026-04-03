@@ -252,7 +252,7 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 			return;
 		}
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix = '.min';
 
 		wp_enqueue_script( 'lmat_admin', plugins_url( "admin/assets/js/build/admin{$suffix}.js", LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 		$inline_script = sprintf( 'let lmat_admin = %s;', wp_json_encode( array( 'ajax_filter' => $this->linguator_get_ajax_filter_data() ) ) );
@@ -305,7 +305,7 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 			if ( in_array( $screen->base, $v[0] ) && ( $v[2] || $this->model->has_languages() ) ) {
 				wp_enqueue_script( "lmat_{$script}", plugins_url( "admin/assets/js/build/{$script}{$suffix}.js", LINGUATOR_ROOT_FILE ), $v[1], LINGUATOR_VERSION, $v[3] );
 				if ( 'classic-editor' === $script || 'block-editor' === $script ) {
-					wp_set_script_translations( "lmat_{$script}", 'linguator' );
+					wp_set_script_translations( "lmat_{$script}", 'linguator-multilingual-ai-translation' );
 				}
 			}
 		}
@@ -401,7 +401,7 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 	 */
 	public function linguator_customize_controls_enqueue_scripts() {
 		if ( $this->model->has_languages() ) {
-			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			$suffix = '.min';
 			wp_enqueue_script( 'lmat_widgets', plugins_url( 'admin/assets/js/build/widgets' . $suffix . '.js', LINGUATOR_ROOT_FILE ), array( 'jquery' ), LINGUATOR_VERSION, true );
 			$this->add_inline_scripts();
 		}
@@ -536,12 +536,14 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 	public function linguator_init_user() {
 		// Language for admin language filter: may be empty
 		// $_GET['lang'] is numeric when editing a language, not when selecting a new language in the filter
-		// We intentionally don't use a nonce to update the language filter
+		// Require a nonce because this updates user meta from query args.
 		// Don't update global filter when editing posts or terms (post.php, term.php)
 		$is_edit_page = in_array( $GLOBALS['pagenow'], array( 'post.php', 'term.php' ) );
 		
-		if ( ! wp_doing_ajax() && ! empty( $_GET['lang'] ) && ! is_numeric( sanitize_key( wp_unslash( $_GET['lang'] ) ) ) && ! $is_edit_page && current_user_can( 'edit_user', $user_id = get_current_user_id() ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			update_user_meta( $user_id, 'lmat_filter_content', ( $lang = $this->model->get_language( sanitize_key( wp_unslash( $_GET['lang'] ) ) ) ) ? $lang->slug : '' ); // phpcs:ignore WordPress.Security.NonceVerification
+		$has_valid_lang_nonce = isset( $_GET['_lmat_lang_nonce'] ) && false !== wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_lmat_lang_nonce'] ) ), 'lmat_set_admin_filter_lang' );
+
+		if ( ! wp_doing_ajax() && ! empty( $_GET['lang'] ) && ! is_numeric( sanitize_key( wp_unslash( $_GET['lang'] ) ) ) && ! $is_edit_page && $has_valid_lang_nonce && current_user_can( 'edit_user', $user_id = get_current_user_id() ) ) {
+			update_user_meta( $user_id, 'lmat_filter_content', ( $lang = $this->model->get_language( sanitize_key( wp_unslash( $_GET['lang'] ) ) ) ) ? $lang->slug : '' ); 
 		}
 
 		$this->filter_lang = $this->model->get_language( get_user_meta( get_current_user_id(), 'lmat_filter_content', true ) );
@@ -635,7 +637,13 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 					),
 					array_merge( wp_allowed_protocols(), array( 'data' ) )
 				) . $title,
-				'href'  => esc_url( add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ) ),
+				'href'  => esc_url(
+					wp_nonce_url(
+						add_query_arg( 'lang', $selected->slug, remove_query_arg( 'paged' ) ),
+						'lmat_set_admin_filter_lang',
+						'_lmat_lang_nonce'
+					)
+				),
 				'meta'  => array(
 					'title' => __( 'Filters content by language', 'linguator-multilingual-ai-translation' ),
 					'class' => 'all' === $selected->slug ? '' : 'lmat-filtered-languages',
@@ -653,7 +661,13 @@ abstract class Linguator_Admin_Base extends Linguator_Base {
 					'parent' => 'languages',
 					'id'     => $lang->slug,
 					'title'  => wp_kses( $lang->flag, array( 'img' => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ) ), array_merge( wp_allowed_protocols(), array( 'data' ) ) ) . esc_html( $lang->name ),
-					'href'   => esc_url( add_query_arg( 'lang', $lang->slug, remove_query_arg( 'paged' ) ) ),
+					'href'   => esc_url(
+						wp_nonce_url(
+							add_query_arg( 'lang', $lang->slug, remove_query_arg( 'paged' ) ),
+							'lmat_set_admin_filter_lang',
+							'_lmat_lang_nonce'
+						)
+					),
 					'meta'   => 'all' === $lang->slug ? array() : array( 'lang' => esc_attr( $lang->get_locale( 'display' ) ) ),
 				)
 			);

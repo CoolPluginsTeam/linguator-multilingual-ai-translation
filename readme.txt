@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,7 +93,7 @@ While the core of this plugin is a fork of the free version, it incorporates the
 
 This plugin is distributed under the terms of the GNU General Public License, version 3 (GPLv3). We are grateful to the original authors, Frédéric Demarle and the WP SYNTEX team, for their foundational work in the WordPress multilingual space.
 
-**Use of 3rd Party Services:** This plugin connects to the Cool Plugins API to display information about related plugins inside the dashboard. It offers optional usage tracking and feedback submission on deactivation only after explicit user consent. Additionally, it connects to Google Translate (Google LLC) via [translate.googleapis.com](translate.googleapis.com) and [translate.google.com](translate.google.com) to translate post, page, and taxonomy content.Please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/), [Google Terms](https://policies.google.com/terms) of Service and [Google Privacy Policy](https://policies.google.com/privacy).
+**Use of 3rd Party Services:** This plugin connects to the Cool Plugins API to display information about related plugins inside the dashboard. It offers optional usage tracking and feedback submission on deactivation only after explicit user consent. Additionally, it connects to Google Translate (Google LLC) via [translate.googleapis.com](translate.googleapis.com) and [translate.google.com](translate.google.com) to translate post, page, and taxonomy content. This plugin also uses the [DataTables](https://datatables.net/) library in the admin interface to display/manage tabular data. DataTables is licensed under the [MIT License](https://datatables.net/license/mit). Please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/), [Google Terms](https://policies.google.com/terms) of Service and [Google Privacy Policy](https://policies.google.com/privacy).
 
 == Screenshots ==
 1. Multilingual AI Translator Language Switcher Preview.
@@ -168,6 +168,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 No, Multilingual AI Translator is not in beta stage. The core features are ready to use, and we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
+= Version 1.1.1 | 03/04/2026 =
+* **Improved:** General code improvements and optimizations.
+* **Improved:** Minor text improvements.
+
 = Version 1.1.0 | 21/03/2026 =
 * **Added:** Compatibility with WPBakery Page Builder.
 * **Fixed:** PHP error when updating Gutenberg page translation meta fields.

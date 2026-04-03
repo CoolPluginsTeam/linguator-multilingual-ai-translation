@@ -32,21 +32,21 @@ settings_errors();
 ?>
 <div class="wrap">
 	<?php
-	switch ( $active_tab ) {
-		case 'lang':     // Languages tab
-		case 'strings':  // String translations tab
-			include __DIR__ . '/view-tab-' . $active_tab . '.php';
-			break;
+	$lmat_languages_tab_views = array(
+		'lang'    => __DIR__ . '/view-tab-lang.php',
+		'strings' => __DIR__ . '/view-tab-strings.php',
+	);
 
-		default:
-			/**
-			 * Fires when loading the active Linguator settings tab
-			 * Allows plugins to add their own tab
-			 *
-			 *  
-			 */
-			do_action( 'lmat_settings_active_tab_' . $active_tab );
-			break;
+	if ( isset( $lmat_languages_tab_views[ $active_tab ] ) ) {
+		include $lmat_languages_tab_views[ $active_tab ];
+	} else {
+		/**
+		 * Fires when loading the active Linguator settings tab
+		 * Allows plugins to add their own tab
+		 *
+		 *  
+		 */
+		do_action( 'lmat_settings_active_tab_' . sanitize_key( (string) $active_tab ) );
 	}
 	?>
 </div>

@@ -133,7 +133,7 @@ abstract class Linguator_Abstract_Language_Switcher_Block {
 			return;
 		}
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix = '.min';
 
 		// Build output lives under admin/assets/js/build per webpack config
 		$script_filename = 'admin/assets/js/build/blocks' . $suffix . '.js';

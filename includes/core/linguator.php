@@ -26,15 +26,54 @@ use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
 use Linguator\Includes\Other\Linguator_Translation_Dashboard;
 
-// Default directory to store user data such as custom flags
+// Define directory safely
 if ( ! defined( 'LMAT_LOCAL_DIR' ) ) {
-	define( 'LMAT_LOCAL_DIR', WP_CONTENT_DIR . '/linguator' );
+	$lmat_upload_dir = wp_upload_dir();
+
+	if ( empty( $lmat_upload_dir['basedir'] ) || ! empty( $lmat_upload_dir['error'] ) ) {
+		// Fallback (may vary if custom uploads path is used)
+		$lmat_base_dir = path_join( wp_content_dir(), 'uploads' );
+	} else {
+		$lmat_base_dir = $lmat_upload_dir['basedir'];
+	}
+
+	define( 'LMAT_LOCAL_DIR', path_join( $lmat_base_dir, 'linguator' ) );
 }
 
-// Includes local config file if exists
-if ( is_readable( LMAT_LOCAL_DIR . '/lmat-config.php' ) ) {
-	include_once LMAT_LOCAL_DIR . '/lmat-config.php';
+// Ensure directory exists
+if ( ! file_exists( LMAT_LOCAL_DIR ) ) {
+	wp_mkdir_p( LMAT_LOCAL_DIR );
 }
+
+// Load config safely
+$lmat_config = array();
+
+$lmat_config_file = path_join( LMAT_LOCAL_DIR, 'lmat-config.json' );
+
+if ( is_readable( $lmat_config_file ) ) {
+
+	if ( function_exists( 'wp_json_file_decode' ) ) {
+		$lmat_decoded = wp_json_file_decode( $lmat_config_file, array( 'associative' => true ) );
+	} else {
+		$lmat_content = file_get_contents( $lmat_config_file );
+		$lmat_decoded = ( is_string( $lmat_content ) && $lmat_content !== '' )
+			? json_decode( $lmat_content, true )
+			: null;
+	}
+
+	if ( is_array( $lmat_decoded ) ) {
+		$lmat_config = $lmat_decoded;
+	}
+}
+
+/**
+ * Raw JSON config loaded from `LMAT_LOCAL_DIR/lmat-config.json`.
+ *
+ * Allow third parties to adjust/augment the local config.
+ *
+ * @param array<string,mixed> $lmat_config Local config array.
+ */
+$GLOBALS['lmat_local_config'] = apply_filters( 'lmat_local_config', $lmat_config );
 
 /**
  * Controls the plugin, as well as activation, and deactivation
@@ -171,7 +210,11 @@ class Linguator {
 		}
 		
 		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( wp_unslash( $_REQUEST['action'] ) ), $excluded_actions ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_ajax_on_front = wp_doing_ajax() && empty( $_REQUEST['lmat_ajax_backend'] ) && ! $in; // phpcs:ignore WordPress.Security.NonceVerification
+		// Treat presence of lmat_ajax_backend as "backend" ajax.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag.
+		$lmat_ajax_backend = isset( $_REQUEST['lmat_ajax_backend'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['lmat_ajax_backend'] ) ) : '';
+
+		$is_ajax_on_front = wp_doing_ajax() && '' === $lmat_ajax_backend && ! $in;
 
 		/**
 		 * Filters whether the current request is an ajax request on front.

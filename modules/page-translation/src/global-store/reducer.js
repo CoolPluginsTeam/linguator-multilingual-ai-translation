@@ -91,8 +91,6 @@ const reducer = (state = TranslateDefaultState, action) => {
             return state; // Return the current state if no match
 
         case LmatActionTypes.filteredContentString: // Action to save the filtered content
-        // console.log('action.text', action.text);
-        // console.log('action.id', action.id);
             // Update the state with the new filtered content
             return { ...state, content: { ...state.content, [action.id]: { ...(state.content[action.id] || []), filteredString: action.text } } };
 

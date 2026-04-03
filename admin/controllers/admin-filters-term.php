@@ -508,13 +508,23 @@ class Linguator_Admin_Filters_Term {
 			return;
 		}
 
+		$has_tax_input_for_taxonomy = isset( $_POST['tax_input'] ) && is_array( $_POST['tax_input'] ) && array_key_exists( $taxonomy, $_POST['tax_input'] );
+		$has_term_language_payload  = isset( $_POST['term_lang_choice'] ) || isset( $_POST['term_tr_lang'] );
+
+		// Explicit nonce guard for term-language updates from form submissions.
+		if ( $has_term_language_payload ) {
+			$nonce = isset( $_POST['_lmat_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_lmat_nonce'] ) ) : '';
+			if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'lmat_language' ) ) {
+				return;
+			}
+		}
 		// Capability check
 		// As 'wp_update_term' can be called from outside WP admin
 		// 2nd test for creating tags when creating / editing a post
-		if ( current_user_can( $tax->cap->edit_terms ) || ( isset( $_POST['tax_input'][ $taxonomy ] ) && current_user_can( $tax->cap->assign_terms ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( current_user_can( $tax->cap->edit_terms ) || ( $has_tax_input_for_taxonomy && current_user_can( $tax->cap->assign_terms ) ) ) {
 			$this->save_language( $term_id, $taxonomy );
 
-			if ( isset( $_POST['term_tr_lang'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_POST['term_tr_lang'] ) ) {
 				$this->save_translations( $term_id );
 			}
 		}

@@ -115,7 +115,7 @@ class Linguator_Admin_Feedback {
 					<?php endforeach; ?>
 					
 					<div class="cp-feedback-terms">
-					<input class="cp-feedback-terms-input" id="cp-feedback-terms-input" type="checkbox"><label for="cp-feedback-terms-input"><?php echo esc_html__( 'I agree to share anonymous usage data and basic site details (such as server, PHP, and WordPress versions) to support Linguator – Multilingual AI Translation improvement efforts. Additionally, I allow Cool Plugins to store all information provided through this form and to respond to my inquiry.', 'linguator-multilingual-ai-translation' ); ?></label>
+					<input class="cp-feedback-terms-input" id="cp-feedback-terms-input" type="checkbox"><label for="cp-feedback-terms-input"><?php echo esc_html__( 'I agree to share anonymous usage data and basic site details (such as server, PHP, and WordPress versions) to support Multilingual AI Translator improvement efforts. Additionally, I allow Cool Plugins to store all information provided through this form and to respond to my inquiry.', 'linguator-multilingual-ai-translation' ); ?></label>
 					</div>
 
 					<div class="cp-feedback-button-wrapper">
@@ -228,6 +228,7 @@ class Linguator_Admin_Feedback {
 			$install_date 		= get_option('linguator_install_date');
             $site_id        	= $site_url . '-' . $install_date . '-' . $unique_key;
 			$feedback_url      = LINGUATOR_FEEDBACK_API .'wp-json/coolplugins-feedback/v1/feedback';
+			$user_info         = $this->cpfm_get_user_info();
 			$response          = wp_remote_post(
 				$feedback_url,
 				array(

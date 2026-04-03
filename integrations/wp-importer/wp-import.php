@@ -128,6 +128,9 @@ class Linguator_WP_Import extends WP_Import {
 
 		foreach ( $terms as $term ) {
 			$translations = maybe_unserialize( $term['term_description'] );
+			if ( ! is_array( $translations ) ) {
+				continue;
+			}
 			foreach ( $translations as $slug => $old_id ) {
 				if ( $old_id && ! empty( $this->processed_terms[ $old_id ] ) && $lang = LMAT()->model->get_language( $slug ) ) {
 					$object_id = $this->processed_terms[ $old_id ];
@@ -180,10 +183,14 @@ class Linguator_WP_Import extends WP_Import {
 		$u = array();
 
 		foreach ( $terms as $term ) {
+			if ( ! is_array( $translations ) ) {
+				continue;
+			}
 			$translations = maybe_unserialize( $term['term_description'] );
 			$new_translations = array();
 
 			foreach ( $translations as $slug => $old_id ) {
+				$slug = sanitize_key( (string) $slug );
 				if ( $old_id && ! empty( $processed_objects[ $old_id ] ) ) {
 					$new_translations[ $slug ] = $processed_objects[ $old_id ];
 				}

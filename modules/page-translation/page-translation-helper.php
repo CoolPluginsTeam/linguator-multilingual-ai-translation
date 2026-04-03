@@ -181,7 +181,12 @@ if ( ! class_exists( 'Linguator_Page_Translation_Helper' ) ) {
 
 		$post_id     = isset( $_POST['post_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : 0;
 		$editor_type = isset( $_POST['editorType'] ) ? sanitize_text_field( wp_unslash( $_POST['editorType'] ) ) : '';
-		$extra_data  = isset( $_POST['extraData'] ) ? json_decode( sanitize_textarea_field( wp_unslash( $_POST['extraData'] ) ), true ) : array();
+		$extra_data = array();
+		if ( isset( $_POST['extraData'] ) ) {
+			$extra_data_raw = wp_unslash( $_POST['extraData'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON is decoded then sanitized key/value before use.
+			$decoded        = json_decode( is_string( $extra_data_raw ) ? $extra_data_raw : '', true );
+			$extra_data     = is_array( $decoded ) ? $decoded : array();
+		}
 
 			// Require capability based on context
 			if ( $post_id > 0 ) {

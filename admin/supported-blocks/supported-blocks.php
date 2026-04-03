@@ -233,7 +233,6 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 					$status      = ! in_array( $block_name, $linguator_supported_blocks_names ) ? 'Unsupported' : 'Supported'; // You can modify this logic based on your requirements
 					$modify_text = ! in_array( $block_name, $linguator_supported_blocks_names ) ? esc_html__( 'Add', 'linguator-multilingual-ai-translation' ) : esc_html__( 'Edit', 'linguator-multilingual-ai-translation' );
 					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $linguator_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
-					$modify_link = '<a href="' . esc_url( admin_url( 'post.php?post=' . esc_attr( $linguator_post_id ) . '&action=edit&lmat_new_block=' ) . esc_attr( $block_name ) ) . '">' . $modify_text . '</a>'; // Modify link
 
 					echo '<tr data-block-name="' . esc_attr( strtolower( $block_name ) ) . '" data-block-status="' . esc_attr( strtolower( $status ) ) . '" >';
 					echo '<td>' . esc_html($s_no++) . '</td>';
@@ -307,32 +306,21 @@ if ( ! class_exists( 'Supported_Blocks' ) ) {
 		}
 
 		public function linguator_get_block_parse_rules() {
-			$path_url = plugins_url( '/modules/page-translation/block-translation-rules/block-rules.json', LINGUATOR_ROOT_FILE );
-			$response = wp_remote_get(
-				esc_url_raw( $path_url ),
-				array(
-					'timeout' => 15,
-				)
-			);
+			$relative_path = 'modules/page-translation/block-translation-rules/block-rules.json';
+			global $wp_filesystem;
 
-			if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
-				global $wp_filesystem;
+			// Initialize the WordPress filesystem.
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
 
-				// Initialize the WordPress filesystem
-				if ( ! function_exists( 'WP_Filesystem' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/file.php';
-				}
+			WP_Filesystem();
 
-				WP_Filesystem();
-
-				$local_path = esc_url_raw( $path_url );
-				if ( $wp_filesystem->exists( $local_path ) && $wp_filesystem->is_readable( $local_path ) ) {
-					$block_rules = $wp_filesystem->get_contents( $local_path );
-				} else {
-					$block_rules = array();
-				}
+			$local_path = trailingslashit( plugin_dir_path( LINGUATOR_ROOT_FILE ) ) . $relative_path;
+			if ( $wp_filesystem && $wp_filesystem->exists( $local_path ) && $wp_filesystem->is_readable( $local_path ) ) {
+				$block_rules = $wp_filesystem->get_contents( $local_path );
 			} else {
-				$block_rules = wp_remote_retrieve_body( $response );
+				$block_rules = array();
 			}
 
 			if ( empty( $block_rules ) ) {

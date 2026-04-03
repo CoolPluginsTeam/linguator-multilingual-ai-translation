@@ -728,23 +728,6 @@ function linguator_update_term( int $term_id, array $args = array() ) {
 }
 
 /**
- * Wraps `wp_cache_get_multiple` with language feature.
- *
- *  
- *
- * @param array $keys Array of keys to retrieve.
- * @param string $group Optional. The group to retrieve the value from.
- * @param bool $force Optional. Whether to force the cache to be updated.
- * @return array Array of values.	
- */
-if ( ! function_exists( 'wp_cache_get_multiple' ) ) {
-	function wp_cache_get_multiple( $keys, $group = '', $force = false ) {
-		global $wp_object_cache;
-		return $wp_object_cache->get_multiple( $keys, $group, $force );
-	}
-}
-
-/**
  * Allows to access the Linguator instance.
  * However, it is always preferable to use API functions
  * as internal methods may be changed without prior notice.

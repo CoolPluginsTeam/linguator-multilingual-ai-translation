@@ -27,7 +27,7 @@ class Linguator_Display_Conditions {
 	 */
 	public function __construct() {
 		add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'linguator_enqueue_conditions_note_style' ] );
-		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'linguator_enqueue_conditions_note_script' ] );
+		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'linguator_add_conditions_note_inline_data' ] );
 	}
 
 	/**
@@ -73,68 +73,28 @@ class Linguator_Display_Conditions {
 	}
 
 	/**
-	 * Enqueue script and inline JS for the conditions note (WordPress way: register → enqueue → add_inline_script).
+	 * Pass connected template IDs to the Elementor editor inline-translation bundle
 	 *
 	 * @return void
 	 */
-	public function linguator_enqueue_conditions_note_script() {
+	public function linguator_add_conditions_note_inline_data() {
 		$connected_ids = $this->linguator_get_connected_template_ids();
+
 		if ( null === $connected_ids ) {
 			return;
 		}
 
-		wp_register_script( 'lmat_elementor_conditions_note', '', array( 'jquery' ), LINGUATOR_VERSION, true );
-		wp_enqueue_script( 'lmat_elementor_conditions_note' );
+		$handle = 'lmat-elementor-inline-translation';
+
+		if ( ! wp_script_is( $handle, 'enqueued' ) ) {
+			return;
+		}
+
 		wp_add_inline_script(
-			'lmat_elementor_conditions_note',
+			$handle,
 			'var lmatConnectedIds = ' . wp_json_encode( $connected_ids ) . ';',
 			'before'
 		);
-		wp_add_inline_script(
-			'lmat_elementor_conditions_note',
-			$this->linguator_get_conditions_note_inline_js(),
-			'after'
-		);
-	}
-
-	/**
-	 * Returns the inline JavaScript for the conditions note (no PHP interpolation).
-	 *
-	 * @return string
-	 */
-	private function linguator_get_conditions_note_inline_js() {
-		return <<<'JS'
-			jQuery(function($) {
-				'use strict';
-				var lmatAddConditionsNote = function() {
-					var conditionsContainer = $('#elementor-theme-builder-conditions');
-					if (conditionsContainer.length === 0) return;
-					var conflictEls = $('.elementor-conditions-conflict-message:visible');
-					if (conflictEls.length === 0) return;
-					var conflictIds = [];
-					conflictEls.find('a[href*="post="]').each(function() {
-						var href = $(this).attr('href');
-						if (!href) return;
-						var match = href.match(/[?&]post=(\d+)/);
-						if (match && match[1]) {
-							var id = parseInt(match[1], 10);
-							if (!isNaN(id)) conflictIds.push(id);
-						}
-					});
-					if (!conflictIds.some(function(id){ return lmatConnectedIds.indexOf(id) !== -1; })) return;
-					if (conditionsContainer.find('.lmat-conditions-note').length > 0) return;
-					conditionsContainer.prepend('<div class="lmat-conditions-note">Note: The Conditions applied on its connected templates will be automatically applied to this template. So please ignore the below conflict notice.</div>');
-				};
-				var observer = new MutationObserver(function() { lmatAddConditionsNote(); });
-				observer.observe(document.body, { childList: true, subtree: true });
-				$(document).ready(lmatAddConditionsNote);
-				$(document).on('click', '.elementor-button.elementor-repeater-add', function() {
-					setTimeout(lmatAddConditionsNote, 100);
-					setTimeout(lmatAddConditionsNote, 400);
-					setTimeout(lmatAddConditionsNote, 900);
-				});
-			});
-		JS;
 	}
 }
 

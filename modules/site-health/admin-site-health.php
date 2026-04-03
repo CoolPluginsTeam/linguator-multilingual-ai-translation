@@ -346,7 +346,7 @@ class Linguator_Admin_Site_Health {
 		if ( ! empty( $message ) ) {
 			$result['status']      = 'critical';
 			$result['label']       = __( 'The homepage is not translated in all languages', 'linguator-multilingual-ai-translation' );
-			$result['description'] = sprintf( '<p>%s</p>', $message );
+			$result['description'] = sprintf( '<p>%s</p>', wp_kses_post( $message ) );
 		}
 		return $result;
 	}
