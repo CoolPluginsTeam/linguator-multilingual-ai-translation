@@ -5,7 +5,7 @@ Tags: translation, multilingual, language, ai translation
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -168,6 +168,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 No, Multilingual AI Translator is not in beta stage. The core features are ready to use, and we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
+= Version 1.1.1 | 03/04/2026 =
+* **Improved:** General code improvements and optimizations.
+* **Improved:** Minor text improvements.
+
 = Version 1.1.0 | 21/03/2026 =
 * **Added:** Compatibility with WPBakery Page Builder.
 * **Fixed:** PHP error when updating Gutenberg page translation meta fields.
