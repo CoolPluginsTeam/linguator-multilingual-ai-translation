@@ -479,6 +479,18 @@ class Settings extends Abstract_Controller {
 			$response['lmat_feedback_data'] = $this->options->get( 'lmat_feedback_data' );
 		}
 		
+		// Never return raw API keys over REST; return masked values so the UI can show "configured".
+		if ( isset( $response['api_keys'] ) && is_array( $response['api_keys'] ) ) {
+			foreach ( array( 'openai', 'gemini', 'anthropic' ) as $provider ) {
+				$raw = isset( $response['api_keys'][ $provider ] ) ? (string) $response['api_keys'][ $provider ] : '';
+				if ( '' === $raw ) {
+					$response['api_keys'][ $provider ] = '';
+					continue;
+				}
+				$tail = substr( $raw, -4 );
+				$response['api_keys'][ $provider ] = '••••••••' . $tail;
+			}
+		}
 		return $response;
 		// return $this->prepare_item_for_response( $this->options->get_all(), $request);
 	}

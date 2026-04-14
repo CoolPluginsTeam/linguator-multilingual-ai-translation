@@ -1,0 +1,7 @@
+{
+    "require": {
+        "wordpress/ai-provider-for-anthropic": "^1.0",
+        "wordpress/ai-provider-for-google": "^1.0",
+        "wordpress/ai-provider-for-openai": "^1.0"
+    }
+}

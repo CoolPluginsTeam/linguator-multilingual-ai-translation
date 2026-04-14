@@ -235,6 +235,501 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 					),
 				)
 			);
+
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base . '/ai-translate-batch',
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( $this, 'ai_translate_batch' ),
+					'permission_callback' => array( $this, 'ai_translate_batch_permissions_check' ),
+				)
+			);
+		}
+
+		/**
+		 * REST permission for AI string batch translation (post or taxonomy term as object).
+		 *
+		 * @param \WP_REST_Request $request Request.
+		 * @return true|\WP_Error
+		 */
+		public function ai_translate_batch_permissions_check( $request ) {
+			if ( ! is_user_logged_in() ) {
+				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 401 ) );
+			}
+
+			$nonce = sanitize_text_field( wp_unslash( (string) $request->get_header( 'X-WP-Nonce' ) ) );
+			if ( '' === $nonce || ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+				return new WP_Error( 'rest_forbidden', __( 'Invalid nonce.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+			}
+
+			if ( ! current_user_can( Capabilities::TRANSLATIONS ) ) {
+				return new \WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+			}
+
+			return true;
+		}
+
+		/**
+		 * Batch-translate string map via configured LLM (OpenAI / Gemini / Anthropic).
+		 *
+		 * @param \WP_REST_Request $request Request.
+		 * @return \WP_REST_Response|\WP_Error
+		 */
+		public function ai_translate_batch( $request ) {
+			if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
+				return new WP_Error(
+					'lmat_ai_unavailable',
+					__( 'WordPress AI Client is not available. Install or enable the AI Client and provider packages.', 'linguator-multilingual-ai-translation' ),
+					array( 'status' => 501 )
+				);
+			}
+
+			$params = $request->get_json_params();
+			if ( ! is_array( $params ) ) {
+				$params = array();
+			}
+
+			$provider    = isset( $params['provider'] ) ? sanitize_key( (string) $params['provider'] ) : '';
+			$post_id     = isset( $params['post_id'] ) ? absint( $params['post_id'] ) : 0;
+			$source_lang = isset( $params['source_lang'] ) ? sanitize_key( (string) $params['source_lang'] ) : '';
+			$target_lang = isset( $params['target_lang'] ) ? sanitize_key( (string) $params['target_lang'] ) : '';
+			$strings     = isset( $params['strings'] ) && is_array( $params['strings'] ) ? $params['strings'] : array();
+			$object_type = isset( $params['object_type'] ) ? sanitize_key( (string) $params['object_type'] ) : 'post';
+			$model       = isset( $params['model'] ) ? sanitize_text_field( (string) $params['model'] ) : '';
+
+			if ( ! in_array( $provider, array( 'openai', 'gemini', 'anthropic' ), true ) ) {
+				return new WP_Error( 'lmat_ai_invalid_provider', __( 'Invalid translation provider.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+			}
+
+			if ( $post_id <= 0 || '' === $source_lang || '' === $target_lang || empty( $strings ) ) {
+				return new WP_Error( 'lmat_ai_invalid_params', __( 'Missing required translation parameters.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+			}
+
+			$access = $this->ai_translate_batch_verify_object_access( $post_id, $object_type );
+			if ( is_wp_error( $access ) ) {
+				return $access;
+			}
+
+			$ai_config = array();
+			if ( property_exists( LMAT(), 'options' ) && isset( LMAT()->options['ai_translation_configuration'] ) && is_array( LMAT()->options['ai_translation_configuration'] ) ) {
+				$ai_config = LMAT()->options['ai_translation_configuration'];
+			}
+
+			$enabled = isset( $ai_config['provider'][ $provider ] ) && $ai_config['provider'][ $provider ];
+			if ( ! $enabled ) {
+				return new WP_Error( 'lmat_ai_provider_disabled', __( 'This AI provider is not enabled in translation settings.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+			}
+
+			$key_option = 'connectors_ai_' . $provider . '_key';
+			$api_key    = (string) get_option( $key_option, '' );
+			if ( '' === trim( $api_key ) ) {
+				return new WP_Error( 'lmat_ai_no_key', __( 'API key is not configured for this provider.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+			}
+
+			$sanitized_strings = array();
+			foreach ( $strings as $k => $v ) {
+				$key = sanitize_text_field( (string) $k );
+				if ( '' === $key ) {
+					continue;
+				}
+				if ( ! is_string( $v ) ) {
+					$v = wp_json_encode( $v );
+				}
+				$sanitized_strings[ $key ] = $v;
+			}
+
+			if ( empty( $sanitized_strings ) ) {
+				return new WP_Error( 'lmat_ai_invalid_params', __( 'No translatable strings in request.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
+			}
+
+			$lang_names = $this->ai_translate_language_labels( $source_lang, $target_lang );
+
+			$result = $this->ai_translate_strings_with_llm(
+				$provider,
+				$source_lang,
+				$target_lang,
+				$lang_names['source_name'],
+				$lang_names['target_name'],
+				$sanitized_strings,
+				$api_key,
+				$model
+			);
+
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+
+			return rest_ensure_response( array( 'translations' => $result ) );
+		}
+
+		private function ai_translate_batch_verify_object_access( int $object_id, string $object_type ) {
+			if ( 'term' === $object_type ) {
+				$term = get_term( $object_id );
+				if ( ! $term || is_wp_error( $term ) ) {
+					return new WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+				}
+				if ( ! current_user_can( 'edit_term', $object_id ) ) {
+					return new WP_Error( 'rest_forbidden', __( 'You are not authorized to edit this term.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+				}
+				return true;
+			}
+
+			$post = get_post( $object_id );
+			if ( ! $post ) {
+				return new WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+			}
+			if ( ! current_user_can( 'edit_post', $object_id ) ) {
+				return new WP_Error( 'rest_forbidden', __( 'You are not allowed to edit this content.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+			}
+			$post_type_object = get_post_type_object( $post->post_type );
+			if ( ! $post_type_object || empty( $post_type_object->cap->create_posts ) ) {
+				return new WP_Error( 'rest_forbidden', __( 'You are not authorized to perform this action.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+			}
+			if ( ! current_user_can( $post_type_object->cap->create_posts ) ) {
+				return new WP_Error( 'rest_forbidden', __( 'You are not allowed to create translations for this post type.', 'linguator-multilingual-ai-translation' ), array( 'status' => 403 ) );
+			}
+			return true;
+		}
+
+		/**
+		 * @param string $source_slug Source language slug.
+		 * @param string $target_slug Target language slug.
+		 * @return array{source_name:string,target_name:string}
+		 */
+		private function ai_translate_language_labels( string $source_slug, string $target_slug ): array {
+			$default = array(
+				'source_name' => $source_slug,
+				'target_name' => $target_slug,
+			);
+			if ( ! function_exists( 'LMAT' ) || ! LMAT() || ! property_exists( LMAT(), 'model' ) ) {
+				return $default;
+			}
+			$list = LMAT()->model->get_languages_list();
+			if ( ! is_array( $list ) ) {
+				return $default;
+			}
+			$source_name = $source_slug;
+			$target_name = $target_slug;
+			foreach ( $list as $lang ) {
+				if ( ! is_object( $lang ) || ! isset( $lang->slug ) ) {
+					continue;
+				}
+				$name = isset( $lang->name ) ? (string) $lang->name : $lang->slug;
+				if ( $lang->slug === $source_slug ) {
+					$source_name = $name;
+				}
+				if ( $lang->slug === $target_slug ) {
+					$target_name = $name;
+				}
+			}
+			return array(
+				'source_name' => $source_name,
+				'target_name' => $target_name,
+			);
+		}
+
+		/**
+		 * @param string               $provider     openai|gemini|anthropic.
+		 * @param string               $source_lang  Slug.
+		 * @param string               $target_lang  Slug.
+		 * @param string               $source_label Human label.
+		 * @param string               $target_label Human label.
+		 * @param array<string,string> $strings      Key => source text.
+		 * @return array<string,string>|\WP_Error
+		 */
+		private function ai_translate_strings_with_llm( string $provider, string $source_lang, string $target_lang, string $source_label, string $target_label, array $strings, string $api_key, string $model_override = '' ) {
+			$models = array();
+			$ai_config = array();
+			if ( property_exists( LMAT(), 'options' ) ) {
+				$m = LMAT()->model->options->get( 'api_keys' );
+				if ( is_array( $m ) ) {
+					$models = $m;
+				}
+
+				$cfg = LMAT()->model->options->get( 'ai_translation_configuration' );
+				if ( is_array( $cfg ) ) {
+					$ai_config = $cfg;
+				}
+			}
+
+			$model_key = 'openai_model';
+			if ( 'gemini' === $provider ) {
+				$model_key = 'gemini_model';
+			} elseif ( 'anthropic' === $provider ) {
+				$model_key = 'anthropic_model';
+			}
+			$model_id = trim( $model_override );
+			if ( '' === $model_id ) {
+				$model_id = isset( $models[ $model_key ] ) ? trim( (string) $models[ $model_key ] ) : '';
+			}
+
+			// Ensure the selected provider is actually configured in the WP AI Client registry.
+			$provider_id = ( 'gemini' === $provider ) ? 'google' : $provider;
+			if ( ! class_exists( '\WordPress\AiClient\AiClient' ) ) {
+				return new WP_Error(
+					'lmat_ai_client_missing',
+					__( 'AI client is not available.', 'linguator-multilingual-ai-translation' ),
+					array( 'status' => 400 )
+				);
+			}
+
+			$registry = \WordPress\AiClient\AiClient::defaultRegistry();
+			if ( ! $registry || ! method_exists( $registry, 'hasProvider' ) || ! $registry->hasProvider( $provider_id ) ) {
+				return new WP_Error(
+					'lmat_ai_provider_invalid',
+					__( 'Invalid AI provider.', 'linguator-multilingual-ai-translation' ),
+					array( 'status' => 400 )
+				);
+			}
+
+			$auth_class = '\WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication';
+			if ( ! class_exists( $auth_class ) ) {
+				return new WP_Error(
+					'lmat_ai_client_missing',
+					__( 'AI client is not available.', 'linguator-multilingual-ai-translation' ),
+					array( 'status' => 400 )
+				);
+			}
+
+			// Inject key for this request so prompt builder can resolve models.
+			$registry->setProviderRequestAuthentication( $provider_id, new $auth_class( trim( $api_key ) ) );
+
+			$payload = wp_json_encode( $strings, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+			if ( false === $payload ) {
+				return new WP_Error( 'lmat_ai_encode_error', __( 'Could not prepare translation payload.', 'linguator-multilingual-ai-translation' ), array( 'status' => 500 ) );
+			}
+
+			$glossary_data         = get_option( 'lmat_glossary_data', array() );
+			$glossary_instructions = '';
+			$matched_terms         = array();
+			$has_glossary_terms    = false;
+
+			if ( ! empty( $glossary_data ) && is_array( $glossary_data ) ) {
+				foreach ( $strings as $string ) {
+					foreach ( $glossary_data as $entry ) {
+						if (
+							is_array( $entry ) &&
+							! empty( $entry['original_term'] ) &&
+							isset( $entry['original_language_code'] ) &&
+							$entry['original_language_code'] === $source_lang &&
+							stripos( (string) $string, (string) $entry['original_term'] ) !== false
+						) {
+							$has_glossary_terms = true;
+							break 2;
+						}
+					}
+				}
+
+				if ( $has_glossary_terms ) {
+					foreach ( $glossary_data as $entry ) {
+						if (
+							! is_array( $entry ) ||
+							empty( $entry['original_language_code'] ) ||
+							empty( $entry['original_term'] ) ||
+							empty( $entry['translations'] ) ||
+							$entry['original_language_code'] !== $source_lang
+						) {
+							continue;
+						}
+
+						$translations_by_code = array();
+						foreach ( $entry['translations'] as $translation ) {
+							if (
+								is_array( $translation ) &&
+								! empty( $translation['target_language_code'] ) &&
+								! empty( $translation['translated_term'] )
+							) {
+								$translations_by_code[ $translation['target_language_code'] ] = $translation['translated_term'];
+							}
+						}
+
+						$term_found = false;
+						foreach ( $strings as $string ) {
+							if ( stripos( (string) $string, (string) $entry['original_term'] ) !== false ) {
+								$term_found = true;
+								break;
+							}
+						}
+
+						if ( $term_found && isset( $translations_by_code[ $target_lang ] ) ) {
+							$matched_terms[] = array(
+								'term'        => $entry['original_term'],
+								'translation' => $translations_by_code[ $target_lang ],
+								'description' => $entry['description'] ?? '',
+							);
+						}
+					}
+				}
+			}
+
+			if ( $has_glossary_terms && ! empty( $matched_terms ) ) {
+				$glossary_instructions = "Please use the following glossary terms in your translation:\n";
+
+				foreach ( $matched_terms as $term ) {
+					$src_term    = isset( $term['term'] ) ? (string) $term['term'] : '';
+					$translation = isset( $term['translation'] ) ? (string) $term['translation'] : '';
+					$description = isset( $term['description'] ) ? (string) $term['description'] : '';
+
+					$glossary_instructions .= '- "' . $src_term . '" -> "' . $translation . '"';
+					if ( '' !== $description ) {
+						$glossary_instructions .= ' - Note: ' . $description;
+					}
+					$glossary_instructions .= "\n";
+				}
+			}
+
+			$custom_prompt = '';
+			if ( isset( $ai_config['custom_prompt'] ) && is_string( $ai_config['custom_prompt'] ) ) {
+				$custom_prompt = trim( $ai_config['custom_prompt'] );
+			}
+
+			$instruction = sprintf(
+				'You are a professional translator.
+				Source Language: %s
+				Target Language: %s
+				Instruction 1: Translate visible text content semantically from %s into %s language. Provide a proper meaning-based translation.
+				Instruction 2: Do not translate or modify any content inside square brackets [] and Do not translate any URL. These are shortcodes or dynamic placeholders and must remain exactly as they are.
+				Instruction 3: Preserve all HTML tags and their attributes such as class, id, data-*, etc. Do not alter any part of the HTML structure.
+				Instruction 4: Return the translation in the format of a JSON object with the keys being numeric values (matching the source keys), and the values being the translated strings.
+				Instruction 5: Do not escape double quotes with backslashes. Output must be valid JSON without extra slashes.
+				Instruction 6: Translate the provided JSON array from %s into %s language, regardless of whether the values are the same, and ensure the JSON is well-formed and complete.
+				Instruction 7: Decode any &lt; and &gt; HTML entities back to < and > symbols in the output and preserve and maintain whitespace.
+				Instruction 8: Return the output as a valid JSON object. Do not wrap the output in a string or markdown code block. Ensure the JSON is clean, parseable, and properly formatted.
+
+				Please ensure that the output follows the format: {"key(numeric value)": "(translations of the strings in %s language)"}
+
+				Strings are :- %s',
+				sanitize_text_field( $source_label ),
+				sanitize_text_field( $target_label ),
+				sanitize_text_field( $source_label ),
+				sanitize_text_field( $target_label ),
+				sanitize_text_field( $source_label ),
+				sanitize_text_field( $target_label ),
+				sanitize_text_field( $target_label ),
+				$payload
+			);
+
+			if ( '' !== $custom_prompt ) {
+				$instruction .= 'Instruction 9: ' . sanitize_text_field( $custom_prompt );
+			}
+
+			if ( '' !== $glossary_instructions ) {
+				$instruction_number = '' !== $custom_prompt ? 10 : 9;
+				$instruction       .= 'Instruction ' . $instruction_number . ': ' . $glossary_instructions;
+			}
+
+			$builder = wp_ai_client_prompt();
+			if ( method_exists( $builder, 'using_system_instruction' ) ) {
+				$builder = $builder->using_system_instruction( __( 'You are a professional translator. Output only valid JSON objects.', 'linguator-multilingual-ai-translation' ) );
+			}
+			if ( method_exists( $builder, 'with_text' ) ) {
+				$builder = $builder->with_text( $instruction );
+			} else {
+				$builder = wp_ai_client_prompt( $instruction );
+			}
+
+			if ( '' !== $model_id && method_exists( $builder, 'using_model_preference' ) ) {
+				$builder = $builder->using_model_preference( $model_id );
+			}
+
+			try {
+				$text = $builder->generate_text();
+			} catch ( \Exception $e ) {
+				$msg = (string) $e->getMessage();
+				if ( false !== stripos( $msg, 'No models found' ) ) {
+					return new WP_Error(
+						'lmat_ai_no_models',
+						__( 'No compatible text-generation model is available for the selected provider. Please ensure the provider is installed, an API key is saved, and a text model is selected.', 'linguator-multilingual-ai-translation' ),
+						array( 'status' => 400 )
+					);
+				}
+				if (
+					false !== stripos( $msg, '429' ) ||
+					false !== stripos( $msg, 'quota exceeded' ) ||
+					false !== stripos( $msg, 'rate limit' ) ||
+					false !== stripos( $msg, 'too many requests' )
+				) {
+					return new WP_Error(
+						'lmat_ai_rate_limited',
+						__( 'Gemini API quota/rate limit exceeded. Please check billing/quotas, then retry with smaller batches.', 'linguator-multilingual-ai-translation' ),
+						array( 'status' => 429 )
+					);
+				}
+				return new WP_Error(
+					'lmat_ai_request_failed',
+					__( 'AI translation request failed. Please try again shortly.', 'linguator-multilingual-ai-translation' ),
+					array( 'status' => 502 )
+				);
+			}
+
+			if ( is_wp_error( $text ) ) {
+				return $text;
+			}
+
+			$clean_text = preg_replace( '/(^```json\n|```$)/', '', (string) $text );
+			$clean_text = str_replace( '<ATFPP_NEW_L>', '\n', (string) $clean_text );
+			$clean_text = str_replace( '<ATFPP_NEW_R>', '\r', (string) $clean_text );
+			$final_text = preg_replace( '/\\\\{2,}([\'"n])/', '\\\$1', (string) $clean_text );
+
+			if ( is_string( $final_text ) ) {
+				$maybe_decoded = json_decode( $final_text, true );
+				if ( is_array( $maybe_decoded ) && 1 === count( $maybe_decoded ) ) {
+					$key = array_keys( $maybe_decoded )[0];
+					if ( isset( $maybe_decoded[ $key ] ) && is_string( $maybe_decoded[ $key ] ) ) {
+						$inner = json_decode( $maybe_decoded[ $key ], true );
+						if ( is_array( $inner ) && isset( $inner[ $key ] ) && ! is_array( $inner[ $key ] ) ) {
+							$maybe_decoded[ $key ] = (string) $inner[ $key ];
+							$final_text            = wp_json_encode( $maybe_decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+						}
+					}
+				}
+			}
+
+			if ( is_string( $final_text ) && ( str_starts_with( $final_text, '"' ) || str_ends_with( $final_text, '"' ) ) ) {
+				$final_text = trim( $final_text, '"' );
+			}
+
+			$decoded = $this->ai_translate_parse_json_object( (string) $final_text );
+			if ( is_wp_error( $decoded ) ) {
+				return $decoded;
+			}
+
+			$out = array();
+			foreach ( array_keys( $strings ) as $key ) {
+				if ( isset( $decoded[ $key ] ) && is_scalar( $decoded[ $key ] ) ) {
+					$out[ $key ] = (string) $decoded[ $key ];
+				} else {
+					$out[ $key ] = $strings[ $key ];
+				}
+			}
+
+			return $out;
+		}
+
+		/**
+		 * @param string $text Raw model output.
+		 * @return array<string,mixed>|\WP_Error
+		 */
+		private function ai_translate_parse_json_object( string $text ) {
+			$text = trim( $text );
+			$text = html_entity_decode( $text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' );
+			if ( preg_match( '/```(?:json)?\s*(\{.*\})\s*```/s', $text, $m ) ) {
+				$text = $m[1];
+			} elseif ( preg_match( '/\{[\s\S]*\}/', $text, $m ) ) {
+				$text = $m[0];
+			}
+
+			$decoded = json_decode( $text, true );
+			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $decoded ) ) {
+				return new WP_Error(
+					'lmat_ai_bad_response',
+					__( 'The AI returned an invalid translation response. Please try again.', 'linguator-multilingual-ai-translation' ),
+					array( 'status' => 502 )
+				);
+			}
+
+			return $decoded;
 		}
 
 		public function linguator_permission_only_admins( $request ) {

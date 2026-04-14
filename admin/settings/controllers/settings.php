@@ -630,7 +630,13 @@ class Linguator_Settings extends Linguator_Admin_Base {
 
 			$translations_data=array('total_string_count' => 0, 'total_character_count' => 0, 'total_time_taken' => 0, 'service_providers' => array());
 			if(Linguator_Translation_Dashboard::class){
-				$avilable_service_providers = array('google'=>'Google', 'localAiTranslator'=>'Chrome AI Translator');
+				$avilable_service_providers = array(
+					'google'              => 'Google',
+					'localAiTranslator'   => 'Chrome AI Translator',
+					'openai'              => 'OpenAI',
+					'anthropic'           => 'Anthropic',
+					'gemini'              => 'Gemini',
+				);
 				$cpt_dashboard_data=Linguator_Translation_Dashboard::get_translation_data('lmat');
 				$translation_providers=(isset($cpt_dashboard_data['service_providers']) && is_array($cpt_dashboard_data['service_providers'])) ? $cpt_dashboard_data['service_providers'] : array();
 				$translations_data['total_string']=isset($cpt_dashboard_data['total_string_count']) ? $this->linguator_format_number($cpt_dashboard_data['total_string_count']) : 0;
@@ -638,7 +644,11 @@ class Linguator_Settings extends Linguator_Admin_Base {
 				$translations_data['total_time']=isset($cpt_dashboard_data['total_time_taken']) ? $this->linguator_format_time_taken($cpt_dashboard_data['total_time_taken']) : 0;
 				$translations_data['total_pages']=isset($cpt_dashboard_data['data']) ? count($cpt_dashboard_data['data']) : 0;
 				$translations_data['service_providers']=array_map(function($item) use ($avilable_service_providers){
-					return $avilable_service_providers[$item];
+					$key = is_string( $item ) ? $item : '';
+					if ( isset( $avilable_service_providers[ $key ] ) ) {
+						return $avilable_service_providers[ $key ];
+					}
+					return '' !== $key ? ucfirst( $key ) : '';
 				}, $translation_providers);
 			}
 
@@ -669,6 +679,7 @@ class Linguator_Settings extends Linguator_Admin_Base {
 					'sync_options'   => $this->linguator_get_sync_options(),
 					'language_switcher_options' => $this->get_language_switcher_options(),
 					'translations_data' => $translations_data,
+					'wp_ai_client_available' => function_exists( 'linguator_is_wp_ai_client_exist' ) ? (bool) linguator_is_wp_ai_client_exist() : false,
 				)
 			);
 			wp_localize_script(

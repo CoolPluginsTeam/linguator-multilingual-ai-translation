@@ -44,6 +44,8 @@ class Registry {
 
 		// AI Translation.
 		Business\Ai_Translation_Configuration::class,
+		// API Keys (AI providers).
+		Business\Api_Keys::class,
 		// Menu Sync Visibility.
 		Business\Menu_Sync_Visibility::class,
 	);

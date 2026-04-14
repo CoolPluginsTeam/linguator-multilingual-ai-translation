@@ -352,3 +352,7 @@ function linguator_get_local_config() {
 
 	return array();
 }
+
+function linguator_is_wp_ai_client_exist(){
+	return function_exists('wp_ai_client_prompt') && class_exists('WordPress\AiClient\AiClient');
+}

@@ -117,6 +117,30 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
 		);
 
+		// Only show API Keys tab when WP AI Client is available and at least one AI provider is enabled.
+		if ( function_exists( 'linguator_is_wp_ai_client_exist' ) && linguator_is_wp_ai_client_exist() ) {
+			$ai_config  = $this->model->options->get( 'ai_translation_configuration' );
+			$providers  = isset( $ai_config['provider'] ) && is_array( $ai_config['provider'] ) ? $ai_config['provider'] : array();
+			$ai_enabled = ! empty( $providers['gemini'] ) || ! empty( $providers['openai'] ) || ! empty( $providers['anthropic'] );
+
+			if ( $ai_enabled ) {
+				$new_tabs = array();
+		
+				foreach ( $tabs as $key => $tab ) {
+					$new_tabs[ $key ] = $tab;
+		
+					// Insert API Keys right after AI Translation tab
+					if ( $key === 'translation' ) {
+						$new_tabs['api-keys'] = array(
+							'title' => __( 'API Keys', 'linguator-multilingual-ai-translation' )
+						);
+					}
+				}
+		
+				$tabs = $new_tabs;
+			}
+		}
+
 		// Advanced Settings (migration UI) only when migration is not completed and Polylang or WPML data exists.
 		$migration_completed = get_option( 'lmat_migration_completed', false );
 		if ( ! $migration_completed && $this->has_migration_source_data() ) {
@@ -139,7 +163,10 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 				$tabs['general']['redirect_url']     = $default_url . '&tab=general';
 				$tabs['translation']['redirect']     = true;
 				$tabs['translation']['redirect_url'] = $default_url . '&tab=translation';
-
+				if ( isset( $tabs['api-keys'] ) ) {
+					$tabs['api-keys']['redirect']     = true;
+					$tabs['api-keys']['redirect_url'] = $default_url . '&tab=api-keys';
+				}
 				$tabs['switcher']['redirect']     = true;
 				$tabs['switcher']['redirect_url'] = $default_url . '&tab=switcher';
 				

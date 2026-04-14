@@ -28,6 +28,9 @@
             "admin/settings/",
             "install/"
         ],
+        "exclude-from-classmap": [
+            "includes/ai-providers/"
+        ],
         "files": [
             "includes/helpers/functions.php",
             "includes/api/language-api.php",

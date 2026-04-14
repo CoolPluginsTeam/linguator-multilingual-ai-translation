@@ -4,7 +4,9 @@ const Providers = (props) => {
     const service = props.Service;
     const buttonDisable = props[service + "Disabled"];
     const ActiveService = TranslateService({ Service: service, [service + "ButtonDisabled"]: buttonDisable, openErrorModalHandler: props.openErrorModalHandler });
-
+    if (!ActiveService) {
+      return null;
+    }
     const serviceId = service.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/[^a-z0-9-]/g, '');
     const btnId = `lmat-page-translation-${serviceId}-btn`;
 
@@ -21,7 +23,7 @@ const Providers = (props) => {
       onClick={props.fetchContent}
       className="lmat-page-translation-service-btn button button-primary"
       data-service={service}
-      data-service-label={ActiveService.ServiceLabel}
+      data-service-label={ActiveService.serviceLabel}
     >
       {ActiveService.SettingBtnText}
     </div>

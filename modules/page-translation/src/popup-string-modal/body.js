@@ -32,8 +32,56 @@ const StringPopUpBody = (props) => {
     const [selectedSourceText, setSelectedSourceText] = useState('');
     const [activePopupCell, setActivePopupCell] = useState(null);
     const [savedValues, setSavedValues] = useState({});
+    const [translationError, setTranslationError] = useState(null);
     const showGlossary = activePopupType === 'glossary';
     const showAddGlossary = activePopupType === 'add-glossary';
+
+    useEffect(() => {
+        const onTranslationError = (e) => {
+            const msg = e?.detail?.message;
+            if (typeof msg === 'string' && msg.trim() !== '') {
+                setTranslationError(msg);
+            }
+        };
+        const onTranslationErrorClear = () => setTranslationError(null);
+
+        document.addEventListener('lmat-page-translation:translation-error', onTranslationError);
+        document.addEventListener('lmat-page-translation:translation-error-clear', onTranslationErrorClear);
+
+        return () => {
+            document.removeEventListener('lmat-page-translation:translation-error', onTranslationError);
+            document.removeEventListener('lmat-page-translation:translation-error-clear', onTranslationErrorClear);
+        };
+    }, []);
+
+    useEffect(() => {
+        setTranslationError(null);
+    }, [props.modalRender]);
+
+    /** While an error is shown, disable provider translate buttons (e.g. “Translate by Gemini”). */
+    useEffect(() => {
+        if (!translationError) {
+            return undefined;
+        }
+        const root = document.getElementById(`lmat_page_translation_${props.service}_translate_element`);
+        if (!root) {
+            return undefined;
+        }
+        const disableButtons = () => {
+            root.querySelectorAll('button').forEach((el) => {
+                el.disabled = true;
+            });
+        };
+        disableButtons();
+        const observer = new MutationObserver(() => disableButtons());
+        observer.observe(root, { childList: true, subtree: true });
+        return () => {
+            observer.disconnect();
+            root.querySelectorAll('button').forEach((el) => {
+                el.disabled = false;
+            });
+        };
+    }, [translationError, props.service]);
 
     const saveFilteredString = (type, id, filteredString) => {
         const action = `${type}SaveFiltered`;
@@ -360,7 +408,10 @@ const StringPopUpBody = (props) => {
 
         if (translateContent.length > 0 && props.postDataFetchStatus) {
             const ServiceSetting = TranslateService({ Service: service });
-            ServiceSetting.Provider({ sourceLang: props.sourceLang, targetLang: props.targetLang, translateStatusHandler: props.translateStatusHandler, ID: id, translateStatus: props.translateStatus, modalRenderId: props.modalRender, destroyUpdateHandler: props.updateDestroyHandler });
+            const run = ServiceSetting.Provider({ sourceLang: props.sourceLang, targetLang: props.targetLang, translateStatusHandler: props.translateStatusHandler, ID: id, translateStatus: props.translateStatus, modalRenderId: props.modalRender, destroyUpdateHandler: props.updateDestroyHandler });
+            if (run && typeof run.then === "function") {
+                run.catch(() => {});
+            }
         }
     }, [props.modalRender, props.postDataFetchStatus]);
 
@@ -599,7 +650,7 @@ const StringPopUpBody = (props) => {
         } else if (translation) {
             return translation;
         } else {
-            if (['google', 'yandex', 'localAiTranslator'].includes(props.service)) {
+            if (['google', 'yandex', 'localAiTranslator', 'openai', 'gemini', 'anthropic'].includes(props.service)) {
                 // Use FilterTargetContent for pending translations with supported services
                 if (props.translatePendingStatus && !props.service.includes('_ai')) {
                     if (data.filteredString) {
@@ -633,7 +684,21 @@ const StringPopUpBody = (props) => {
                             {__("Please do not leave this window or browser tab while translation is in progress...", 'linguator-multilingual-ai-translation')}
                         </div>
                     )}
-                    <div className={`translator-widget ${service}`} style={{ display: 'flex' }}>
+                    {translationError && (
+                        <div
+                            className="lmat_page_translation_error_popup_overlay"
+                            role="alertdialog"
+                            aria-modal="true"
+                            aria-labelledby="lmat_page_translation_error_popup_title"
+                        >
+                            <div className="lmat_page_translation_error_popup_card notice notice-error">
+                                <p id="lmat_page_translation_error_popup_title" className="lmat_page_translation_error_popup_message">
+                                    {translationError}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    <div className={`translator-widget ${service}`} style={{ display: 'flex', alignItems: 'center' }}>
                         <h3 className="choose-lang">{TranslateService({ Service: props.service }).heading} <span className="dashicons-before dashicons-translation"></span></h3>
 
                         <div className={`lmat_page_translation_translate_element_wrapper ${props.translateStatus ? 'translate-completed' : ''}`}>
@@ -641,16 +706,18 @@ const StringPopUpBody = (props) => {
                         </div>
                     </div>
 
-                    <div className="lmat_page_translation_string_container">
-                        <table className="scrolldown" id="stringTemplate" ref={tableRef}>
-                            <thead>
-                                <tr>
-                                    <th className="notranslate">{__("S.No", 'linguator-multilingual-ai-translation')}</th>
-                                    <th className="notranslate">{__("Source Text", 'linguator-multilingual-ai-translation')}</th>
-                                    <th className="notranslate">{__("Translation", 'linguator-multilingual-ai-translation')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <div className="lmat_page_translation_string_section">
+                        <div className="lmat_page_translation_string_container">
+                            <table className="scrolldown" id="stringTemplate" ref={tableRef}>
+                                <thead>
+                                    <tr>
+                                        <th className="notranslate">{__("S.No", 'linguator-multilingual-ai-translation')}</th>
+                                        <th className="notranslate">{__("Source Text", 'linguator-multilingual-ai-translation')}</th>
+                                        <th className="notranslate">{__("Translation", 'linguator-multilingual-ai-translation')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
                                 {props.postDataFetchStatus &&
                                     <>
                                         {translateContent.map((data, index) => {
@@ -686,7 +753,7 @@ const StringPopUpBody = (props) => {
                                                                     }}
                                                                     style={{ cursor: 'pointer' }}
                                                                     translate={(savedValues[cellKey] && props.service === 'google' || savedValues[cellKey] && props.service === 'yandex') ? "no" : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? "yes" : 'yes'}
-                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''}`}
+                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['openai', 'gemini', 'anthropic'].includes(props.service)) ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''}`}
                                                                     data-translate-status={props.translatePendingStatus ? 'pending' : 'translated'}
                                                                 >
                                                                     {isEditingThisCell ? (
@@ -717,8 +784,9 @@ const StringPopUpBody = (props) => {
                                         })}
                                     </>
                                 }
-                            </tbody>
-                        </table>
+                             </tbody>
+                            </table>
+                        </div>
                     </div>
                 </> :
                 props.postDataFetchStatus ?

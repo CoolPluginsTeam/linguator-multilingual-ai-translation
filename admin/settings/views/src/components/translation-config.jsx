@@ -8,7 +8,9 @@ import { getNonce } from '../utils'
 import { toast } from 'sonner'
 import { ChromeIcon } from '../../../../../assets/logo/chrome';
 import { GoogleIcon } from '../../../../../assets/logo/google';
-
+import { GeminiIcon } from '../../../../../assets/logo/gemini';
+import { OpenAIIcon } from '../../../../../assets/logo/openai';
+import { AnthropicIcon } from '../../../../../assets/logo/anthropic';
 
 
 const ChromeLocalAINotice = () => {
@@ -109,9 +111,13 @@ const TranslationConfig = ({ data, setData }) => {
 
     const aiTranslation = data?.ai_translation_configuration; //store the media option
     const provider = aiTranslation?.provider;
+    const wpAiClientAvailable = Boolean(window?.lmat_settings?.wp_ai_client_available);
     const [googleMachineTranslation, setGoogleMachineTranslation] = useState(provider?.google)
     const [chromeLocalAITranslation, setChromeLocalAITranslation] = useState(provider?.chrome_local_ai)
-    const [lastUpdatedValue, setLastUpdatedValue] = useState({ googleMachineTranslation, chromeLocalAITranslation })
+    const [geminiTranslation, setGeminiTranslation] = useState(provider?.gemini)
+    const [openAITranslation, setOpenAITranslation] = useState(provider?.openai)
+    const [anthropicTranslation, setAnthropicTranslation] = useState(provider?.anthropic)
+    const [lastUpdatedValue, setLastUpdatedValue] = useState({ googleMachineTranslation, chromeLocalAITranslation, geminiTranslation, openAITranslation, anthropicTranslation })
     const [bulkTranslationPostStatus, setBulkTranslationPostStatus] = useState(aiTranslation?.bulk_translation_post_status || 'draft')
     const [slugTranslationOption, setSlugTranslationOption] = useState(aiTranslation?.slug_translation_option || 'title_translate')
     const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
@@ -120,6 +126,9 @@ const TranslationConfig = ({ data, setData }) => {
         let sameChecker = {
             googleMachineTranslation: true,
             chromeLocalAITranslation: true,
+            geminiTranslation: true,
+            openAITranslation: true,
+            anthropicTranslation: true,
             bulkTranslationPostStatus: true,
             slugTranslationOption: true,
         }
@@ -131,6 +140,18 @@ const TranslationConfig = ({ data, setData }) => {
 
         if (chromeLocalAITranslation !== provider?.chrome_local_ai) {
             sameChecker.chromeLocalAITranslation = false
+        }
+
+        if (wpAiClientAvailable && geminiTranslation !== provider?.gemini) {
+            sameChecker.geminiTranslation = false
+        }
+
+        if (wpAiClientAvailable && openAITranslation !== provider?.openai) {
+            sameChecker.openAITranslation = false
+        }
+
+        if (wpAiClientAvailable && anthropicTranslation !== provider?.anthropic) {
+            sameChecker.anthropicTranslation = false
         }
 
         if (bulkTranslationPostStatus !== aiTranslation?.bulk_translation_post_status) {
@@ -152,7 +173,7 @@ const TranslationConfig = ({ data, setData }) => {
         if (flag) {
             setHandleButtonDisabled(true)
         }
-    }, [chromeLocalAITranslation, googleMachineTranslation, bulkTranslationPostStatus, slugTranslationOption])
+    }, [chromeLocalAITranslation, googleMachineTranslation, geminiTranslation, openAITranslation, anthropicTranslation, bulkTranslationPostStatus, slugTranslationOption])
 
 
     //Save Setting Function 
@@ -165,14 +186,27 @@ const TranslationConfig = ({ data, setData }) => {
                     provider: {
                         google: googleMachineTranslation,
                         chrome_local_ai: chromeLocalAITranslation,
+                        ...(wpAiClientAvailable ? {
+                            gemini: geminiTranslation,
+                            openai: openAITranslation,
+                            anthropic: anthropicTranslation,
+                        } : {}),
                     },
                     bulk_translation_post_status: bulkTranslationPostStatus,
                     slug_translation_option: slugTranslationOption
                 }
             }
 
-            setLastUpdatedValue({ googleMachineTranslation, chromeLocalAITranslation, bulkTranslationPostStatus, slugTranslationOption })
-            if (aiTranslation && (lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation || lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation || lastUpdatedValue.bulkTranslationPostStatus !== bulkTranslationPostStatus || lastUpdatedValue.slugTranslationOption !== slugTranslationOption)) {
+            setLastUpdatedValue({ googleMachineTranslation, chromeLocalAITranslation, geminiTranslation, openAITranslation, anthropicTranslation, bulkTranslationPostStatus, slugTranslationOption })
+            if (aiTranslation && (
+                lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation ||
+                lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation ||
+                (wpAiClientAvailable && lastUpdatedValue.geminiTranslation !== geminiTranslation) ||
+                (wpAiClientAvailable && lastUpdatedValue.openAITranslation !== openAITranslation) ||
+                (wpAiClientAvailable && lastUpdatedValue.anthropicTranslation !== anthropicTranslation) ||
+                lastUpdatedValue.bulkTranslationPostStatus !== bulkTranslationPostStatus ||
+                lastUpdatedValue.slugTranslationOption !== slugTranslationOption
+            )) {
                 setData(prev => ({
                     ...prev,
                     ...apiBody
@@ -320,6 +354,82 @@ const TranslationConfig = ({ data, setData }) => {
                         </div>
                         {chromeLocalAITranslation && <ChromeLocalAINotice />}
                     </div>
+                    {wpAiClientAvailable && (
+                        <>
+                            <div style={{ backgroundColor: "#fbfbfb" }}>
+                                <div className='switcher p-6 rounded-lg'>
+                                    <Container.Item>
+                                        <h3 className='flex items-center gap-2'>
+                                            <GeminiIcon className='w-5 h-5' />
+                                            {__('Gemini', 'linguator-multilingual-ai-translation')}
+                                        </h3>
+                                        <p>
+                                            {__('Gemini uses your configured API key to translate text.', 'linguator-multilingual-ai-translation')}
+                                        </p>
+                                    </Container.Item>
+                                    <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
+                                        <Switch
+                                            aria-label="Switch Element"
+                                            id="gemini-translation"
+                                            onChange={() => {
+                                                setGeminiTranslation(!geminiTranslation)
+                                            }}
+                                            value={geminiTranslation}
+                                            size="sm"
+                                        />
+                                    </Container.Item>
+                                </div>
+                            </div>
+                            <div style={{ backgroundColor: "#fbfbfb" }}>
+                                <div className='switcher p-6 rounded-lg'>
+                                    <Container.Item>
+                                        <h3 className='flex items-center gap-2'>
+                                            <OpenAIIcon className='w-5 h-5' />
+                                            {__('OpenAI', 'linguator-multilingual-ai-translation')}
+                                        </h3>
+                                        <p>
+                                            {__('OpenAI uses your configured API key to translate text.', 'linguator-multilingual-ai-translation')}
+                                        </p>
+                                    </Container.Item>
+                                    <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
+                                        <Switch
+                                            aria-label="Switch Element"
+                                            id="openai-translation"
+                                            onChange={() => {
+                                                setOpenAITranslation(!openAITranslation)
+                                            }}
+                                            value={openAITranslation}
+                                            size="sm"
+                                        />
+                                    </Container.Item>
+                                </div>
+                            </div>
+                            <div style={{ backgroundColor: "#fbfbfb" }}>
+                                <div className='switcher p-6 rounded-lg'>
+                                    <Container.Item>
+                                        <h3 className='flex items-center gap-2'>
+                                            <AnthropicIcon className='w-5 h-5' />
+                                            {__('Anthropic', 'linguator-multilingual-ai-translation')}
+                                        </h3>
+                                        <p>
+                                            {__('Anthropic uses your configured API key to translate text.', 'linguator-multilingual-ai-translation')}
+                                        </p>
+                                    </Container.Item>
+                                    <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
+                                        <Switch
+                                            aria-label="Switch Element"
+                                            id="anthropic-translation"
+                                            onChange={() => {
+                                                setAnthropicTranslation(!anthropicTranslation)
+                                            }}
+                                            value={anthropicTranslation}
+                                            size="sm"
+                                        />
+                                    </Container.Item>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </Container.Item>
             <hr className="w-full border-b-0 border-x-0 border-t border-solid border-t-border-subtle" />

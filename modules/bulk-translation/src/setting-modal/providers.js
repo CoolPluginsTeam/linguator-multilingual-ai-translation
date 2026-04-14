@@ -6,7 +6,9 @@ const Providers = (props) => {
 
     const buttonDisable = props[service + "Disabled"];
     const ActiveService = TranslateService({ Service: service, [service + "ButtonDisabled"]: buttonDisable, openErrorModalHandler: props.openErrorModalHandler, prefix });
-
+    if (!ActiveService) {
+      return null;
+    }
     const serviceId = service.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/[^a-z0-9-]/g, '');
     const btnId = `${prefix}-${serviceId}-btn`;
 
@@ -23,7 +25,7 @@ const Providers = (props) => {
               onClick={props.startTranslationHandler}
               className={`${prefix}-service-btn button button-primary`}
               data-service={service}
-              data-service-label={ActiveService.ServiceLabel}
+              data-service-label={ActiveService.serviceLabel}
             >
               {ActiveService.SettingBtnText}
             </button>

@@ -178,7 +178,7 @@ const SettingModal = (props) => {
         const activeServiceObject = TranslateService({ Service: activeService, [activeService + "ButtonDisabled"]: false });
 
         const service = activeService;
-        const serviceLabel = activeServiceObject && activeServiceObject.ServiceLabel;
+        const serviceLabel = activeServiceObject && activeServiceObject.serviceLabel;
 
         const postId = props.postId;
 

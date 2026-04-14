@@ -15,6 +15,7 @@ const popStringModal = (props) => {
     const [popupVisibility, setPopupVisibility] = useState(true);
     const [refPostData, setRefPostData] = useState('');
     const [translatePending, setTranslatePending] = useState(true);
+    const [hasTranslateError, setHasTranslateError] = useState(false);
     const [characterCount, setCharacterCount] = useState(translateData?.targetCharacterCount || 0);
     const [onDestroy, setOnDestroy] = useState([]);
     const [translateButtonStatus, setTranslateButtonStatus] = useState(false);
@@ -35,6 +36,24 @@ const popStringModal = (props) => {
         }
     }, [popupVisibility, onDestroy]);
 
+    useEffect(() => {
+        const onTranslationError = (e) => {
+            const msg = e?.detail?.message;
+            if (typeof msg === 'string' && msg.trim() !== '') {
+                setHasTranslateError(true);
+            }
+        };
+        const onTranslationErrorClear = () => setHasTranslateError(false);
+
+        document.addEventListener('lmat-page-translation:translation-error', onTranslationError);
+        document.addEventListener('lmat-page-translation:translation-error-clear', onTranslationErrorClear);
+
+        return () => {
+            document.removeEventListener('lmat-page-translation:translation-error', onTranslationError);
+            document.removeEventListener('lmat-page-translation:translation-error-clear', onTranslationErrorClear);
+        };
+    }, []);
+    
     /**
      * Returns the label for the service provider.
      * @returns {string} The label for the service provider.
@@ -82,6 +101,7 @@ const popStringModal = (props) => {
         }
 
         setTranslatePending(true);
+        setHasTranslateError(false);
         setPopupVisibility(false);
     }
 
@@ -104,7 +124,8 @@ const popStringModal = (props) => {
         let service=props.service;
         
         setTranslateButtonStatus(true);
-
+        setTranslatePending(true);
+        setHasTranslateError(false);
         props.translatePost({ postContent: postContent, modalClose: modalClose, service: service });
         props.pageTranslate(true);
         updateTranslateData({ provider: service, sourceLang: props.sourceLang, targetLang: props.targetLang, postId: props.currentPostId });
@@ -135,6 +156,7 @@ const popStringModal = (props) => {
                         setPopupVisibility={setPopupVisibilityHandler}
                         postContent={refPostData}
                         translatePendingStatus={translatePending}
+                        hasTranslateError={hasTranslateError}
                         pageTranslate={props.pageTranslate}
                         service={props.service}
                         serviceLabel={serviceLabel()}
@@ -161,6 +183,7 @@ const popStringModal = (props) => {
                         setPopupVisibility={setPopupVisibilityHandler}
                         postContent={refPostData}
                         translatePendingStatus={translatePending}
+                        hasTranslateError={hasTranslateError}
                         pageTranslate={props.pageTranslate}
                         service={props.service}
                         serviceLabel={serviceLabel()}

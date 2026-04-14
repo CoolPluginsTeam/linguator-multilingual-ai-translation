@@ -43,6 +43,9 @@ class Ai_Translation_Configuration extends Abstract_Option {
             'provider' => array(
                 'chrome_local_ai' => false,
                 'google' => true,
+                'gemini' => false,
+                'openai' => false,
+                'anthropic' => false,
             ),
             'bulk_translation_post_status' => 'draft',
             'slug_translation_option' => 'title_translate',
@@ -62,7 +65,16 @@ class Ai_Translation_Configuration extends Abstract_Option {
         return array(
             'type' => 'object',
             'properties' => array(
-                'provider' => array('type' => 'object', 'properties' => array('chrome_local_ai'=>array('type' => 'boolean'), 'google'=>array('type' => 'boolean'))),
+                'provider' => array(
+                    'type' => 'object',
+                    'properties' => array(
+                        'chrome_local_ai' => array('type' => 'boolean'),
+                        'google' => array('type' => 'boolean'),
+                        'gemini' => array('type' => 'boolean'),
+                        'openai' => array('type' => 'boolean'),
+                        'anthropic' => array('type' => 'boolean'),
+                    )
+                ),
                 'bulk_translation_post_status' => array('type' => 'string', 'enum' => array('draft', 'publish')),
                 'slug_translation_option' => array('type' => 'string', 'enum' => array('title_translate', 'slug_translate', 'slug_keep')),
             ),

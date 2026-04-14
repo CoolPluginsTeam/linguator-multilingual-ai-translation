@@ -431,6 +431,7 @@ class Linguator_Wizard
 					'language_switcher_options' => $this->get_language_switcher_options(),
 					'polylang_detection' => $polylang_detection,
 					'wpml_detection' => $wpml_detection,
+					'wp_ai_client_available' => function_exists( 'linguator_is_wp_ai_client_exist' ) ? (bool) linguator_is_wp_ai_client_exist() : false,
 				)
 			);
 
