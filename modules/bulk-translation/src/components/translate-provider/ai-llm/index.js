@@ -58,7 +58,7 @@ class AiLlmBulkTranslator {
     };
 
     async createLlmTranslator(targetLang, index) {
-        if (this.stopTranslation) {
+        if (this.stopTranslation || window.lmatBulkTranslationQuotaExceeded) {
             return;
         }
 
@@ -72,7 +72,7 @@ class AiLlmBulkTranslator {
                     [`${this.postId}_${targetLang}`]: {
                         status: "error",
                         messageClass: "error",
-                        errorMessage: __("No content to translate", "linguator-multilingual-ai-translation"),
+                        errorMessage: __("No content to translate", "translate-words"),
                         errorHtml: false,
                     },
                 })
@@ -91,7 +91,7 @@ class AiLlmBulkTranslator {
                         : "";
                 let done = 0;
                 for (const chunk of chunks) {
-                    if (this.stopTranslation) {
+                    if (this.stopTranslation || window.lmatBulkTranslationQuotaExceeded) {
                         break;
                     }
                     const translations = await requestAiBatch({
@@ -106,7 +106,7 @@ class AiLlmBulkTranslator {
                         nonce: lmatBulkTranslationGlobal.nonce,
                     });
                     if (Object.keys(translations).length === 0 && Object.keys(chunk).length > 0) {
-                        throw new Error(__("The AI returned an empty translation response. Please try again.", "linguator-multilingual-ai-translation"));
+                        throw new Error(__("The AI returned an empty translation response. Please try again.", "translate-words"));
                     }
                     for (const key of Object.keys(chunk)) {
                         const value = translations[key] !== undefined ? translations[key] : chunk[key];
@@ -130,7 +130,14 @@ class AiLlmBulkTranslator {
                     await this.updateContent(targetLang);
                 }
             } catch (err) {
-                const msg = err && err.message ? err.message : __("Translation failed.", "linguator-multilingual-ai-translation");
+                const msg = err && err.message ? err.message : __("Translation failed.", "translate-words");
+                const isQuotaError = err?.code === "LLM_QUOTA_EXCEEDED";
+
+                if (isQuotaError) {
+                    this.stopTranslation = true;
+                    window.lmatBulkTranslationQuotaExceeded = true;
+                }
+
                 this.storeDispatch(unsetPendingPost(`${this.postId}_${targetLang}`));
                 this.storeDispatch(updateProgressStatus(100 / this.totalPosts));
                 this.storeDispatch(
@@ -146,7 +153,7 @@ class AiLlmBulkTranslator {
             }
         }
 
-        if (index < this.targetLangs.length - 1 && !this.stopTranslation) {
+        if (index < this.targetLangs.length - 1 && !this.stopTranslation && !window.lmatBulkTranslationQuotaExceeded) {
             await this.createLlmTranslator(this.targetLangs[index + 1], index + 1);
         }
     }
@@ -163,7 +170,7 @@ class AiLlmBulkTranslator {
                         [`${this.postId}_${lang}`]: {
                             status: "error",
                             messageClass: "error",
-                            errorMessage: __("No content to translate", "linguator-multilingual-ai-translation"),
+                            errorMessage: __("No content to translate", "translate-words"),
                             errorHtml: false,
                         },
                     })

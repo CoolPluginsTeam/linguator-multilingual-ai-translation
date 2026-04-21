@@ -58,7 +58,7 @@ const StringPopUpBody = (props) => {
         setTranslationError(null);
     }, [props.modalRender]);
 
-    /** While an error is shown, disable provider translate buttons (e.g. “Translate by Gemini”). */
+    /** While an error is shown, disable provider translate buttons (e.g. “Translate with Gemini”). */
     useEffect(() => {
         if (!translationError) {
             return undefined;

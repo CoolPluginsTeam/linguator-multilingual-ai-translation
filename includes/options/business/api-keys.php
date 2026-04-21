@@ -34,7 +34,7 @@ class Api_Keys extends Abstract_Option {
 	protected function get_default() {
 		return array(
 			'openai_model'    => 'gpt-4o-mini',
-			'gemini_model'    => 'gemini-2.0-flash',
+			'gemini_model'    => 'gemini-2.5-flash',
 			'anthropic_model' => 'claude-3-5-sonnet-latest',
 		);
 	}

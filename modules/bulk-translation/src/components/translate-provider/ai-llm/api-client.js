@@ -42,7 +42,7 @@ export async function requestAiBatch({ provider, postId, objectType = 'post', so
                 await wait(backoffMs(attempt));
                 continue;
             }
-            throw new Error(`Translation request failed: ${networkMessage}`);
+            throw createTranslationError(`Translation request failed: ${networkMessage}`);
         }
 
         let data = {};
@@ -53,12 +53,19 @@ export async function requestAiBatch({ provider, postId, objectType = 'post', so
         }
 
         if (!res.ok) {
+            if (isQuotaExceededResponse(data, res.status)) {
+                throw createTranslationError(
+                    'API quota exceeded (429). Please check your plan/billing and retry later.',
+                    'LLM_QUOTA_EXCEEDED'
+                );
+            }
+
             if (isRetryableStatus(res.status) && attempt < maxRetries) {
                 await wait(backoffMs(attempt, res.headers.get('Retry-After')));
                 continue;
             }
             const errorMessage = resolveErrorMessage(data, res.status, res.statusText);
-            throw new Error(errorMessage);
+            throw createTranslationError(errorMessage);
         }
 
         return data.translations && typeof data.translations === 'object' ? data.translations : {};
@@ -72,7 +79,7 @@ function wait(ms) {
 }
 
 function isRetryableStatus(status) {
-    return status === 429 || status === 503 || status === 502;
+    return status === 503 || status === 502;
 }
 
 function backoffMs(attempt, retryAfterHeader = '') {
@@ -84,28 +91,23 @@ function backoffMs(attempt, retryAfterHeader = '') {
 }
 
 function resolveErrorMessage(data, status, statusText) {
-    if (typeof data?.message === 'string' && data.message.trim() !== '') {
-        return data.message;
+    const messageFromBody = firstNonEmptyString(
+        data?.message,
+        data?.data,
+        data?.data?.message,
+        data?.data?.error
+    );
+
+    if (isQuotaExceededResponse(data, status)) {
+        return 'API quota exceeded (429). Please check your plan/billing and retry later.';
     }
 
-    if (typeof data?.data === 'string' && data.data.trim() !== '') {
-        return data.data;
-    }
-
-    if (typeof data?.data?.message === 'string' && data.data.message.trim() !== '') {
-        return data.data.message;
-    }
-
-    if (typeof data?.data?.error === 'string' && data.data.error.trim() !== '') {
-        return data.data.error;
+    if (messageFromBody) {
+        return sanitizeErrorMessage(messageFromBody);
     }
 
     if (status === 401 || status === 403) {
         return 'You are not authorized to translate this content.';
-    }
-
-    if (status === 429) {
-        return 'Rate limit/quota exceeded for Gemini. Please check billing and limits, then retry with smaller batches.';
     }
 
     if (status >= 500) {
@@ -113,6 +115,62 @@ function resolveErrorMessage(data, status, statusText) {
     }
 
     return statusText || 'Translation request failed';
+}
+
+function createTranslationError(message, code = 'LLM_REQUEST_FAILED') {
+    const error = new Error(message);
+    error.code = code;
+    return error;
+}
+
+function firstNonEmptyString(...values) {
+    for (const value of values) {
+        if (typeof value === 'string' && value.trim() !== '') {
+            return value.trim();
+        }
+    }
+    return '';
+}
+
+function sanitizeErrorMessage(message) {
+    if (!message) {
+        return 'Translation request failed';
+    }
+
+    // Keep only the primary line and remove verbose docs/traces.
+    const firstLine = message
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)[0] || message;
+
+    const compact = firstLine.replace(/\s+/g, ' ').trim();
+    const trimmedAtDocs = compact.split(/\s+For more information/i)[0].trim();
+    const trimmed = trimmedAtDocs || compact;
+
+    return trimmed.length > 220 ? `${trimmed.slice(0, 217)}...` : trimmed;
+}
+
+function isQuotaExceededResponse(data, status) {
+    if (status === 429) {
+        return true;
+    }
+
+    const probe = [
+        data?.message,
+        data?.data,
+        data?.data?.message,
+        data?.data?.error,
+    ]
+        .filter((value) => typeof value === 'string')
+        .join(' ')
+        .toLowerCase();
+
+    return (
+        probe.includes('quota exceeded') ||
+        probe.includes('too many requests') ||
+        probe.includes('rate limit') ||
+        probe.includes('free_tier')
+    );
 }
 
 // Keep AI batch payload smaller to reduce server/gateway 5xx errors.

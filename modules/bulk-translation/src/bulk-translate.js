@@ -9,9 +9,9 @@ import updateGlossaryString from './components/filter-content/update-glossary-st
 import { selectGlossaryTerms } from './redux-store/features/selectors.js';
 
 const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, updateDestoryHandler)=>{
-
+    window.lmatBulkTranslationQuotaExceeded = false;
     const pendingPosts=store.getState().pendingPosts;
-
+    const totalPendingCount = Math.max(1, pendingPosts.length);
     if(pendingPosts.length < 1){
         return;
     }
@@ -24,9 +24,39 @@ const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, update
         }
     )
 
+    const markRemainingPendingAsQuotaError = () => {
+        if (!window.lmatBulkTranslationQuotaExceeded) {
+            return;
+        }
+
+        const pendingNow = [...store.getState().pendingPosts];
+        pendingNow.forEach((pendingKey) => {
+            const existingInfo = store.getState().translatePostInfo[pendingKey] || {};
+            storeDispatch(unsetPendingPost(pendingKey));
+            storeDispatch(updateCompletedPosts([pendingKey]));
+            storeDispatch(updateProgressStatus(100 / totalPendingCount));
+            storeDispatch(
+                updateTranslatePostInfo({
+                    [pendingKey]: {
+                        ...existingInfo,
+                        status: 'error',
+                        messageClass: 'error',
+                        errorMessage: __('API quota exceeded (429). Please check your plan/billing and retry later.', 'translate-words'),
+                        errorHtml: false,
+                    },
+                })
+            );
+        });
+    };
+
     const translatePost=async (index) => {
         const postId=postKeys[index];
-    
+
+        if(window.lmatBulkTranslationQuotaExceeded){
+            markRemainingPendingAsQuotaError();
+            return;
+        }
+
         if(!postId || modalClosed){
             return;
         }
@@ -56,7 +86,12 @@ const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, update
         }
     
         index++;
-    
+        
+        if(window.lmatBulkTranslationQuotaExceeded){
+            markRemainingPendingAsQuotaError();
+            return;
+        }
+        
         if(index > postKeys.length-1 || modalClosed){
             return;
         }

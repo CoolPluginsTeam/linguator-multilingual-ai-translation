@@ -438,7 +438,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		 * @param array<string,string> $strings      Key => source text.
 		 * @return array<string,string>|\WP_Error
 		 */
-		private function ai_translate_strings_with_llm( string $provider, string $source_lang, string $target_lang, string $source_label, string $target_label, array $strings, string $api_key, string $model_override = '' ) {
+		private function ai_translate_strings_with_llm( string $provider, string $source_lang, string $target_lang, string $source_label, string $target_label, array $strings, string $api_key, string $model_override = '', int $split_depth = 0 ) {
 			$models = array();
 			$ai_config = array();
 			if ( property_exists( LMAT(), 'options' ) ) {
@@ -459,11 +459,18 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			} elseif ( 'anthropic' === $provider ) {
 				$model_key = 'anthropic_model';
 			}
+			$model_defaults = array(
+				'openai_model'    => 'gpt-4o-mini',
+				'gemini_model'    => 'gemini-2.5-flash',
+				'anthropic_model' => 'claude-3-5-sonnet-latest',
+			);
 			$model_id = trim( $model_override );
 			if ( '' === $model_id ) {
 				$model_id = isset( $models[ $model_key ] ) ? trim( (string) $models[ $model_key ] ) : '';
 			}
-
+			if ( '' === $model_id && isset( $model_defaults[ $model_key ] ) ) {
+				$model_id = $model_defaults[ $model_key ];
+			}
 			// Ensure the selected provider is actually configured in the WP AI Client registry.
 			$provider_id = ( 'gemini' === $provider ) ? 'google' : $provider;
 			if ( ! class_exists( '\WordPress\AiClient\AiClient' ) ) {
@@ -664,6 +671,52 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			}
 
 			if ( is_wp_error( $text ) ) {
+				if ( $this->ai_translate_is_timeout_error( $text ) ) {
+					$string_count = count( $strings );
+					if ( $string_count > 1 && $split_depth < 3 ) {
+						$chunks = $this->ai_translate_split_string_map( $strings );
+						if ( 2 === count( $chunks ) ) {
+							$left = $this->ai_translate_strings_with_llm(
+								$provider,
+								$source_lang,
+								$target_lang,
+								$source_label,
+								$target_label,
+								$chunks[0],
+								$api_key,
+								$model_override,
+								$split_depth + 1
+							);
+							if ( is_wp_error( $left ) ) {
+								return $left;
+							}
+
+							$right = $this->ai_translate_strings_with_llm(
+								$provider,
+								$source_lang,
+								$target_lang,
+								$source_label,
+								$target_label,
+								$chunks[1],
+								$api_key,
+								$model_override,
+								$split_depth + 1
+							);
+							if ( is_wp_error( $right ) ) {
+								return $right;
+							}
+
+							return $left + $right;
+						}
+					}
+
+					return new WP_Error(
+						'lmat_ai_request_timeout',
+						__( 'The AI provider request timed out. Please retry in a moment or translate fewer strings at once.', 'translate-words' ),
+						array( 'status' => 503 )
+					);
+				}
+
 				return $text;
 			}
 
@@ -732,6 +785,65 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			return $decoded;
 		}
 
+		/**
+		 * Determines whether an AI client error indicates a request timeout.
+		 *
+		 * @param \WP_Error $error Error returned by the AI client.
+		 * @return bool
+		 */
+		private function ai_translate_is_timeout_error( WP_Error $error ): bool {
+			$codes = $error->get_error_codes();
+			foreach ( $codes as $code ) {
+				$code_str = strtolower( (string) $code );
+				if ( false !== stripos( $code_str, 'timeout' ) || false !== stripos( $code_str, 'network_error' ) ) {
+					return true;
+				}
+
+				$data = $error->get_error_data( $code );
+				if ( is_array( $data ) && isset( $data['status'] ) && 503 === absint( $data['status'] ) ) {
+					$exception_class = isset( $data['exception_class'] ) ? strtolower( (string) $data['exception_class'] ) : '';
+					if ( false !== stripos( $exception_class, 'networkexception' ) ) {
+						return true;
+					}
+				}
+			}
+
+			$message = strtolower( $error->get_error_message() );
+			return false !== stripos( $message, 'timed out' ) || false !== stripos( $message, 'cURL error 28' );
+		}
+
+		/**
+		 * Split an associative string map into two balanced chunks.
+		 *
+		 * @param array<string,string> $strings Source strings.
+		 * @return array<int,array<string,string>>
+		 */
+		private function ai_translate_split_string_map( array $strings ): array {
+			$keys  = array_keys( $strings );
+			$count = count( $keys );
+			if ( $count < 2 ) {
+				return array( $strings );
+			}
+
+			$left_count = (int) ceil( $count / 2 );
+			$left       = array();
+			$right      = array();
+
+			foreach ( $keys as $index => $key ) {
+				if ( $index < $left_count ) {
+					$left[ $key ] = $strings[ $key ];
+					continue;
+				}
+				$right[ $key ] = $strings[ $key ];
+			}
+
+			if ( empty( $left ) || empty( $right ) ) {
+				return array( $strings );
+			}
+
+			return array( $left, $right );
+		}
+		
 		public function linguator_permission_only_admins( $request ) {
 
 			if ( ! is_user_logged_in() ) {

@@ -34,9 +34,9 @@ export default function createAiLlmPageTranslator(providerId) {
         }
 
         const buttonTextMap = {
-            openai: __("Translate by OpenAI", "linguator-multilingual-ai-translation"),
-            gemini: __("Translate by Gemini", "linguator-multilingual-ai-translation"),
-            anthropic: __("Translate by Anthropic", "linguator-multilingual-ai-translation"),
+            openai: __("Translate with OpenAI", "linguator-multilingual-ai-translation"),
+            gemini: __("Translate with Gemini", "linguator-multilingual-ai-translation"),
+            anthropic: __("Translate with Anthropic", "linguator-multilingual-ai-translation"),
         };
 
         // Render button (and avoid duplicating on re-renders)
@@ -45,7 +45,7 @@ export default function createAiLlmPageTranslator(providerId) {
         btn.type = "button";
         // Reuse Chrome AI button classes for identical styling
         btn.className = "local_ai_translator_btn button button-primary";
-        btn.textContent = buttonTextMap[providerId] || sprintf(__("Translate by %s", "linguator-multilingual-ai-translation"), providerId);
+        btn.textContent = buttonTextMap[providerId] || sprintf(__("Translate with %s", "linguator-multilingual-ai-translation"), providerId);
         if (translateStatus) {
             btn.disabled = true;
         }

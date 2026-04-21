@@ -60,13 +60,13 @@ const ApiKey = ({ data, setData }) => {
   const [availableModels, setAvailableModels] = useState({ openai: [], gemini: [], anthropic: [] })
   const [models, setModels] = useState({
     openai_model: 'gpt-4o-mini',
-    gemini_model: 'gemini-2.0-flash',
+    gemini_model: 'gemini-2.5-flash',
     anthropic_model: 'claude-3-5-sonnet-latest',
   })
   const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
   const initialModelsRef = useRef({
     openai_model: 'gpt-4o-mini',
-    gemini_model: 'gemini-2.0-flash',
+    gemini_model: 'gemini-2.5-flash',
     anthropic_model: 'claude-3-5-sonnet-latest',
   })
 
@@ -100,7 +100,7 @@ const ApiKey = ({ data, setData }) => {
         })
         const nextModels = {
           openai_model: m?.openai_model || 'gpt-4o-mini',
-          gemini_model: m?.gemini_model || 'gemini-2.0-flash',
+          gemini_model: m?.gemini_model || 'gemini-2.5-flash',
           anthropic_model: m?.anthropic_model || 'claude-3-5-sonnet-latest',
         }
         setModels(nextModels)
