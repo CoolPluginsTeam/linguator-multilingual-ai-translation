@@ -11,7 +11,7 @@ composer.lock export-ignore
 package-lock.json export-ignore
 package.json export-ignore
 tailwind.config.js export-ignore
-postcss.config.js export-ignore
+postcss.config.cjs export-ignore
 webpack.config.js export-ignore
 .vscode/ export-ignore
 README.md export-ignore

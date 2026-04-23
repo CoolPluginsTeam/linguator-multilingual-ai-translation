@@ -33,7 +33,7 @@ class Api_Keys extends Abstract_Option {
 	 */
 	protected function get_default() {
 		return array(
-			'gemini_model'    => 'gemini-2.5-flash',
+			'gemini_model' => 'gemini-2.5-flash',
 		);
 	}
 
@@ -46,13 +46,13 @@ class Api_Keys extends Abstract_Option {
 		return array(
 			'type'       => 'object',
 			'properties' => array(
-				'gemini_model'    => array( 'type' => 'string' ),
+				'gemini_model' => array( 'type' => 'string' ),
 			),
 		);
 	}
 
 	/**
-	 * Sanitizes models while preserving existing values for unknown keys.
+	 * Sanitizes stored Gemini model id.
 	 *
 	 * @param mixed   $value   Incoming value.
 	 * @param Options $options Options registry instance.
@@ -61,32 +61,28 @@ class Api_Keys extends Abstract_Option {
 	protected function sanitize( $value, Options $options ) {
 		$current = $options->get( self::key() );
 		if ( ! is_array( $current ) ) {
-			$current = $this->get_default();
+			$current = array();
 		}
 
-		if ( ! is_array( $value ) ) {
-			return $current;
-		}
+		$default = $this->get_default();
+		$gemini  = isset( $current['gemini_model'] ) && is_scalar( $current['gemini_model'] )
+			? sanitize_text_field( (string) $current['gemini_model'] )
+			: $default['gemini_model'];
 
-		$filtered = $current;
-
-		foreach ( array( 'gemini_model' ) as $k ) {
-			if ( array_key_exists( $k, $value ) ) {
-				$v = $value[ $k ];
-				if ( null === $v ) {
-					$filtered[ $k ] = '';
-					continue;
-				}
-
-				if ( is_scalar( $v ) ) {
-					$filtered[ $k ] = sanitize_text_field( (string) $v );
-				} else {
-					$filtered[ $k ] = '';
-				}
+		if ( is_array( $value ) && array_key_exists( 'gemini_model', $value ) ) {
+			$v = $value['gemini_model'];
+			if ( null === $v ) {
+				$gemini = '';
+			} elseif ( is_scalar( $v ) ) {
+				$gemini = sanitize_text_field( (string) $v );
+			} else {
+				$gemini = '';
 			}
 		}
 
-		return $filtered;
+		return array(
+			'gemini_model' => $gemini,
+		);
 	}
 
 	/**
@@ -101,7 +97,7 @@ class Api_Keys extends Abstract_Option {
 	 */
 	public static function discover_provider_models(): array {
 		$result = array(
-			'gemini'     => array(),
+			'gemini' => array(),
 		);
 
 		// Only attempt discovery when WP AI Client is present.
@@ -129,7 +125,8 @@ class Api_Keys extends Abstract_Option {
 			// Without this, model listing can work right after "test" calls but fail after page reload.
 			$auth_class = '\WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication';
 			if ( class_exists( $auth_class ) && method_exists( $registry, 'setProviderRequestAuthentication' ) ) {
-				$gemini_key    = $get_provider_key( 'gemini' );
+				$gemini_key = $get_provider_key( 'gemini' );
+
 				if ( '' !== $gemini_key ) {
 					// WP AI Client provider id is "google" for Gemini.
 					$registry->setProviderRequestAuthentication( 'google', new $auth_class( $gemini_key ) );
@@ -191,7 +188,6 @@ class Api_Keys extends Abstract_Option {
 				}
 			};
 
-			// WP AI Client provider id for Gemini is "google".
 			if ( '' !== $get_provider_key( 'gemini' ) ) {
 				$result['gemini'] = $load_models( 'google' );
 			}
@@ -211,4 +207,3 @@ class Api_Keys extends Abstract_Option {
 		return __( 'API keys for AI translation providers.', 'linguator-multilingual-ai-translation' );
 	}
 }
-

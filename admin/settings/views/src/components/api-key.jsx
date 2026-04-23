@@ -6,8 +6,6 @@ import { __, sprintf } from '@wordpress/i18n'
 import { getNonce } from '../utils'
 import { GeminiIcon } from '../../../../../assets/logo/gemini'
 
-const RESET_SENTINEL = '__RESET__'
-
 const providerIcons = {
   gemini: GeminiIcon,
 }
@@ -178,8 +176,8 @@ const ApiKey = ({ data, setData }) => {
     <Container className='bg-white p-10 rounded-lg shadow-sm' cols="1" containerType='grid'>
       <Container.Item className="flex items-start justify-between gap-6">
         <div>
-          <h2 className="m-0 text-lg font-semibold">{__('AI API Keys & Models', 'linguator-multilingual-ai-translation')}</h2>
-          <p className="mt-1 mb-0 text-sm text-gray-600">{__('Configure your API keys and models for the AI translation providers.', 'linguator-multilingual-ai-translation')}</p>
+          <h2 className="m-0 text-lg font-semibold">{__('Gemini API Key & Model', 'linguator-multilingual-ai-translation')}</h2>
+          <p className="mt-1 mb-0 text-sm text-gray-600">{__('Configure Gemini API key and model for the AI translation.', 'linguator-multilingual-ai-translation')}</p>
         </div>
         <Button
           disabled={handleButtonDisabled}

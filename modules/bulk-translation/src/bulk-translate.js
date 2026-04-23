@@ -41,7 +41,7 @@ const initBulkTranslate=async (postKeys=[], nonce, storeDispatch, prefix, update
                         ...existingInfo,
                         status: 'error',
                         messageClass: 'error',
-                        errorMessage: __('API quota exceeded (429). Please check your plan/billing and retry later.', 'translate-words'),
+                        errorMessage: __('API quota exceeded (429). Please check your plan/billing and retry later.', 'linguator-multilingual-ai-translation'),
                         errorHtml: false,
                     },
                 })

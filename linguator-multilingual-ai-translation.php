@@ -84,7 +84,7 @@ if(function_exists('wp_ai_client_prompt') && class_exists('WordPress\AiClient\Ai
 			}
 
 			$providers = array(
-				'google'     => '\WordPress\GoogleAiProvider\Provider\GoogleProvider',
+				'google' => '\WordPress\GoogleAiProvider\Provider\GoogleProvider',
 			);
 
 			foreach ( $providers as $provider_id => $provider_class ) {

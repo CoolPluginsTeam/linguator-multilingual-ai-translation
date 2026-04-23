@@ -210,7 +210,7 @@ if ( ! class_exists( 'Linguator_Bulk_Translation' ) ) :
 			} elseif ( 'google' === $provider ) {
 				$active_providers[] = 'google';
 			} elseif ( function_exists( 'linguator_is_wp_ai_client_exist' ) && linguator_is_wp_ai_client_exist() ) {
-				if ( in_array( $provider, array( 'gemini' ), true ) ) {
+				if ( 'gemini' === $provider ) {
 					$active_providers[] = $provider;
 				}
 			}

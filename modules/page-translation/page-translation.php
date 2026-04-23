@@ -492,7 +492,7 @@ class Linguator_Page_Translation {
 				'post_type'                => $post_type,
 				'editor_type'              => $editor_type,
 				'current_post_id'          => $post_id,
-				
+				'providers'                => $active_providers,
 				'api_keys_status'          => $api_keys_status,
 				'ai_models'               => ( property_exists( LMAT(), 'model' ) && isset( LMAT()->model->options ) ) ? ( LMAT()->model->options->get( 'api_keys' ) ?: array() ) : array(),
 				'get_meta_fields'          => 'lmat_fetch_post_meta_fields',

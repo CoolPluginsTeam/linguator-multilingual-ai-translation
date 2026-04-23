@@ -40,7 +40,7 @@ node_modules
 *.sql
 *.tar.gz
 *.zip
-postcss.config.js
+postcss.config.cjs
 .wordpress-org
 tailwind.config.js
 webpack.config.js

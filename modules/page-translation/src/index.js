@@ -452,7 +452,7 @@ if (editorType === "wpbakery") {
 
     const sourceLang = window.lmatPageTranslationGlobal.source_lang;
     const providers = window.lmatPageTranslationGlobal.providers;
-
+    console.log(providers);
     if (sourceLang && "" !== sourceLang && providers.length > 0) {
       insertMessagePopup();
     }

@@ -24,6 +24,10 @@ use WordPress\GoogleAiProvider\Provider\GoogleProvider;
 /**
  * Class for the Google model metadata directory.
  *
+ * Extends {@see \WordPress\AiClient\Providers\OpenAiCompatibleImplementation\AbstractOpenAiCompatibleModelMetadataDirectory} from `wordpress/php-ai-client`:
+ * that base implements shared HTTP/listing behavior for APIs that follow the same response shape.
+ * It is not tied to the OpenAI vendor product; Gemini uses it here with Google endpoints and auth.
+ *
  * @since 1.0.0
  *
  * @phpstan-type ModelsResponseData array{
