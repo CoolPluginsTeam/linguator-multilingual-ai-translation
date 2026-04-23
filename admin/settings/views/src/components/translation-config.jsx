@@ -9,8 +9,6 @@ import { toast } from 'sonner'
 import { ChromeIcon } from '../../../../../assets/logo/chrome';
 import { GoogleIcon } from '../../../../../assets/logo/google';
 import { GeminiIcon } from '../../../../../assets/logo/gemini';
-import { OpenAIIcon } from '../../../../../assets/logo/openai';
-import { AnthropicIcon } from '../../../../../assets/logo/anthropic';
 
 
 const ChromeLocalAINotice = () => {
@@ -115,9 +113,7 @@ const TranslationConfig = ({ data, setData }) => {
     const [googleMachineTranslation, setGoogleMachineTranslation] = useState(provider?.google)
     const [chromeLocalAITranslation, setChromeLocalAITranslation] = useState(provider?.chrome_local_ai)
     const [geminiTranslation, setGeminiTranslation] = useState(provider?.gemini)
-    const [openAITranslation, setOpenAITranslation] = useState(provider?.openai)
-    const [anthropicTranslation, setAnthropicTranslation] = useState(provider?.anthropic)
-    const [lastUpdatedValue, setLastUpdatedValue] = useState({ googleMachineTranslation, chromeLocalAITranslation, geminiTranslation, openAITranslation, anthropicTranslation })
+    const [lastUpdatedValue, setLastUpdatedValue] = useState({ googleMachineTranslation, chromeLocalAITranslation, geminiTranslation })
     const [bulkTranslationPostStatus, setBulkTranslationPostStatus] = useState(aiTranslation?.bulk_translation_post_status || 'draft')
     const [slugTranslationOption, setSlugTranslationOption] = useState(aiTranslation?.slug_translation_option || 'title_translate')
     const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
@@ -127,8 +123,6 @@ const TranslationConfig = ({ data, setData }) => {
             googleMachineTranslation: true,
             chromeLocalAITranslation: true,
             geminiTranslation: true,
-            openAITranslation: true,
-            anthropicTranslation: true,
             bulkTranslationPostStatus: true,
             slugTranslationOption: true,
         }
@@ -144,14 +138,6 @@ const TranslationConfig = ({ data, setData }) => {
 
         if (wpAiClientAvailable && geminiTranslation !== provider?.gemini) {
             sameChecker.geminiTranslation = false
-        }
-
-        if (wpAiClientAvailable && openAITranslation !== provider?.openai) {
-            sameChecker.openAITranslation = false
-        }
-
-        if (wpAiClientAvailable && anthropicTranslation !== provider?.anthropic) {
-            sameChecker.anthropicTranslation = false
         }
 
         if (bulkTranslationPostStatus !== aiTranslation?.bulk_translation_post_status) {
@@ -173,7 +159,7 @@ const TranslationConfig = ({ data, setData }) => {
         if (flag) {
             setHandleButtonDisabled(true)
         }
-    }, [chromeLocalAITranslation, googleMachineTranslation, geminiTranslation, openAITranslation, anthropicTranslation, bulkTranslationPostStatus, slugTranslationOption])
+    }, [chromeLocalAITranslation, googleMachineTranslation, geminiTranslation, bulkTranslationPostStatus, slugTranslationOption])
 
 
     //Save Setting Function 
@@ -188,8 +174,6 @@ const TranslationConfig = ({ data, setData }) => {
                         chrome_local_ai: chromeLocalAITranslation,
                         ...(wpAiClientAvailable ? {
                             gemini: geminiTranslation,
-                            openai: openAITranslation,
-                            anthropic: anthropicTranslation,
                         } : {}),
                     },
                     bulk_translation_post_status: bulkTranslationPostStatus,
@@ -197,13 +181,11 @@ const TranslationConfig = ({ data, setData }) => {
                 }
             }
 
-            setLastUpdatedValue({ googleMachineTranslation, chromeLocalAITranslation, geminiTranslation, openAITranslation, anthropicTranslation, bulkTranslationPostStatus, slugTranslationOption })
+            setLastUpdatedValue({ googleMachineTranslation, chromeLocalAITranslation, geminiTranslation, bulkTranslationPostStatus, slugTranslationOption })
             if (aiTranslation && (
                 lastUpdatedValue.googleMachineTranslation !== googleMachineTranslation ||
                 lastUpdatedValue.chromeLocalAITranslation !== chromeLocalAITranslation ||
                 (wpAiClientAvailable && lastUpdatedValue.geminiTranslation !== geminiTranslation) ||
-                (wpAiClientAvailable && lastUpdatedValue.openAITranslation !== openAITranslation) ||
-                (wpAiClientAvailable && lastUpdatedValue.anthropicTranslation !== anthropicTranslation) ||
                 lastUpdatedValue.bulkTranslationPostStatus !== bulkTranslationPostStatus ||
                 lastUpdatedValue.slugTranslationOption !== slugTranslationOption
             )) {
@@ -375,54 +357,6 @@ const TranslationConfig = ({ data, setData }) => {
                                                 setGeminiTranslation(!geminiTranslation)
                                             }}
                                             value={geminiTranslation}
-                                            size="sm"
-                                        />
-                                    </Container.Item>
-                                </div>
-                            </div>
-                            <div style={{ backgroundColor: "#fbfbfb" }}>
-                                <div className='switcher p-6 rounded-lg'>
-                                    <Container.Item>
-                                        <h3 className='flex items-center gap-2'>
-                                            <OpenAIIcon className='w-5 h-5' />
-                                            {__('OpenAI', 'linguator-multilingual-ai-translation')}
-                                        </h3>
-                                        <p>
-                                            {__('OpenAI uses your configured API key to translate text.', 'linguator-multilingual-ai-translation')}
-                                        </p>
-                                    </Container.Item>
-                                    <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
-                                        <Switch
-                                            aria-label="Switch Element"
-                                            id="openai-translation"
-                                            onChange={() => {
-                                                setOpenAITranslation(!openAITranslation)
-                                            }}
-                                            value={openAITranslation}
-                                            size="sm"
-                                        />
-                                    </Container.Item>
-                                </div>
-                            </div>
-                            <div style={{ backgroundColor: "#fbfbfb" }}>
-                                <div className='switcher p-6 rounded-lg'>
-                                    <Container.Item>
-                                        <h3 className='flex items-center gap-2'>
-                                            <AnthropicIcon className='w-5 h-5' />
-                                            {__('Anthropic', 'linguator-multilingual-ai-translation')}
-                                        </h3>
-                                        <p>
-                                            {__('Anthropic uses your configured API key to translate text.', 'linguator-multilingual-ai-translation')}
-                                        </p>
-                                    </Container.Item>
-                                    <Container.Item className='flex items-center justify-end' style={{ paddingRight: '30%' }}>
-                                        <Switch
-                                            aria-label="Switch Element"
-                                            id="anthropic-translation"
-                                            onChange={() => {
-                                                setAnthropicTranslation(!anthropicTranslation)
-                                            }}
-                                            value={anthropicTranslation}
                                             size="sm"
                                         />
                                     </Container.Item>

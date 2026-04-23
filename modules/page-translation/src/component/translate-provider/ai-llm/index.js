@@ -7,7 +7,7 @@ import AddProgressBar from "../../progress-bar/index.js";
 import ShowStringCount from "../../progress-bar/show-string-count.js";
 
 /**
- * @param {string} providerId openai|gemini|anthropic
+ * @param {string} providerId gemini
  * @returns {(props: Object) => Promise<void>}
  */
 export default function createAiLlmPageTranslator(providerId) {
@@ -34,9 +34,7 @@ export default function createAiLlmPageTranslator(providerId) {
         }
 
         const buttonTextMap = {
-            openai: __("Translate with OpenAI", "linguator-multilingual-ai-translation"),
             gemini: __("Translate with Gemini", "linguator-multilingual-ai-translation"),
-            anthropic: __("Translate with Anthropic", "linguator-multilingual-ai-translation"),
         };
 
         // Render button (and avoid duplicating on re-renders)
@@ -115,7 +113,7 @@ export default function createAiLlmPageTranslator(providerId) {
                 let totalStrings = 0;
 
                 for (const chunk of chunks) {
-                    const modelKey = providerId === 'gemini' ? 'gemini_model' : providerId === 'anthropic' ? 'anthropic_model' : 'openai_model';
+                    const modelKey = 'gemini_model';
                     const selectedModel = (lmatPageTranslationGlobal?.ai_models && lmatPageTranslationGlobal.ai_models[modelKey]) ? String(lmatPageTranslationGlobal.ai_models[modelKey]) : '';
                     const translations = await requestAiBatch({
                         provider: providerId,

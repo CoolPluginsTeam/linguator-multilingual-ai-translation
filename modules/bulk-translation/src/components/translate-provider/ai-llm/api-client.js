@@ -1,5 +1,5 @@
 /**
- * Server-side LLM batch translation (OpenAI / Gemini / Anthropic via WordPress AI Client).
+ * Server-side LLM batch translation (Gemini via WordPress AI Client).
  *
  * @param {Object} opts
  * @param {string} opts.provider

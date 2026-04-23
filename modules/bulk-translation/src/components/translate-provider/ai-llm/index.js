@@ -84,7 +84,7 @@ class AiLlmBulkTranslator {
             try {
                 const chunks = chunkStringMap(this.textContentObject);
                 const p = this.serviceProvider;
-                const modelKey = p === "gemini" ? "gemini_model" : p === "anthropic" ? "anthropic_model" : "openai_model";
+                const modelKey = "gemini_model";
                 const selectedModel =
                     lmatBulkTranslationGlobal?.ai_models && lmatBulkTranslationGlobal.ai_models[modelKey]
                         ? String(lmatBulkTranslationGlobal.ai_models[modelKey])

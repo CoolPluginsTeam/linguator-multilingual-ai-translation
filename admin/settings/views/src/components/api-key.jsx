@@ -5,27 +5,19 @@ import { toast } from 'sonner'
 import { __, sprintf } from '@wordpress/i18n'
 import { getNonce } from '../utils'
 import { GeminiIcon } from '../../../../../assets/logo/gemini'
-import { OpenAIIcon } from '../../../../../assets/logo/openai'
-import { AnthropicIcon } from '../../../../../assets/logo/anthropic'
 
 const RESET_SENTINEL = '__RESET__'
 
 const providerIcons = {
   gemini: GeminiIcon,
-  openai: OpenAIIcon,
-  anthropic: AnthropicIcon,
 }
 
 const providerKeyLinks = {
   gemini: 'https://aistudio.google.com/app/api-keys',
-  openai: 'https://platform.openai.com/api-keys',
-  anthropic: 'https://platform.claude.com/',
 }
 
 const providerKeyLabels = {
   gemini: 'Gemini',
-  openai: 'OpenAI',
-  anthropic: 'Anthropic',
 }
 
 const providerMeta = [
@@ -36,38 +28,20 @@ const providerMeta = [
     modelHeading: __('Select Gemini Model', 'linguator-multilingual-ai-translation'),
     placeholder: 'AIza…',
   },
-  {
-    key: 'openai',
-    modelKey: 'openai_model',
-    heading: __('Add OpenAI API key', 'linguator-multilingual-ai-translation'),
-    modelHeading: __('Select OpenAI Model', 'linguator-multilingual-ai-translation'),
-    placeholder: 'sk-…',
-  },
-  {
-    key: 'anthropic',
-    modelKey: 'anthropic_model',
-    heading: __('Add Anthropic API key', 'linguator-multilingual-ai-translation'),
-    modelHeading: __('Select Anthropic Model', 'linguator-multilingual-ai-translation'),
-    placeholder: 'sk-ant-…',
-  },
 ]
 
 const ApiKey = ({ data, setData }) => {
   const [loading, setLoading] = useState(true)
-  const [masked, setMasked] = useState({ openai: '', gemini: '', anthropic: '' })
-  const [configured, setConfigured] = useState({ openai: false, gemini: false, anthropic: false })
-  const [keyDrafts, setKeyDrafts] = useState({ openai: '', gemini: '', anthropic: '' })
-  const [availableModels, setAvailableModels] = useState({ openai: [], gemini: [], anthropic: [] })
+  const [masked, setMasked] = useState({ gemini: '' })
+  const [configured, setConfigured] = useState({ gemini: false })
+  const [keyDrafts, setKeyDrafts] = useState({ gemini: '' })
+  const [availableModels, setAvailableModels] = useState({ gemini: [] })
   const [models, setModels] = useState({
-    openai_model: 'gpt-4o-mini',
     gemini_model: 'gemini-2.5-flash',
-    anthropic_model: 'claude-3-5-sonnet-latest',
   })
   const [handleButtonDisabled, setHandleButtonDisabled] = useState(true)
   const initialModelsRef = useRef({
-    openai_model: 'gpt-4o-mini',
     gemini_model: 'gemini-2.5-flash',
-    anthropic_model: 'claude-3-5-sonnet-latest',
   })
 
   useEffect(() => {
@@ -87,28 +61,20 @@ const ApiKey = ({ data, setData }) => {
         const discovered = resp?.available_models || {}
 
         const nextMasked = {
-          openai: keys?.openai || '',
           gemini: keys?.gemini || '',
-          anthropic: keys?.anthropic || '',
         }
 
         setMasked(nextMasked)
         setConfigured({
-          openai: Boolean(nextMasked.openai),
           gemini: Boolean(nextMasked.gemini),
-          anthropic: Boolean(nextMasked.anthropic),
         })
         const nextModels = {
-          openai_model: m?.openai_model || 'gpt-4o-mini',
           gemini_model: m?.gemini_model || 'gemini-2.5-flash',
-          anthropic_model: m?.anthropic_model || 'claude-3-5-sonnet-latest',
         }
         setModels(nextModels)
         initialModelsRef.current = nextModels
         setAvailableModels({
-          openai: Array.isArray(discovered?.openai) ? discovered.openai : [],
           gemini: Array.isArray(discovered?.gemini) ? discovered.gemini : [],
-          anthropic: Array.isArray(discovered?.anthropic) ? discovered.anthropic : [],
         })
       } finally {
         setLoading(false)
@@ -122,20 +88,16 @@ const ApiKey = ({ data, setData }) => {
     const hasKeyChanges = Object.values(keyDrafts).some((v) => (v || '').trim() !== '')
     const initial = initialModelsRef.current || {}
     const hasModelChanges =
-      (models.openai_model || '') !== (initial.openai_model || '') ||
-      (models.gemini_model || '') !== (initial.gemini_model || '') ||
-      (models.anthropic_model || '') !== (initial.anthropic_model || '')
+      (models.gemini_model || '') !== (initial.gemini_model || '')
 
     setHandleButtonDisabled(!(hasKeyChanges || hasModelChanges))
-  }, [keyDrafts, models, configured.openai, configured.gemini, configured.anthropic])
+  }, [keyDrafts, models, configured.gemini])
 
   async function SaveSettings({ resetProvider } = {}) {
     try {
       const keys = {}
       const modelsBody = {
-        openai_model: models.openai_model,
         gemini_model: models.gemini_model,
-        anthropic_model: models.anthropic_model,
       }
 
       for (const { key } of providerMeta) {
@@ -164,31 +126,23 @@ const ApiKey = ({ data, setData }) => {
       })
         .then((resp) => {
           const nextMasked = {
-            openai: resp?.keys?.openai || '',
             gemini: resp?.keys?.gemini || '',
-            anthropic: resp?.keys?.anthropic || '',
           }
           setMasked(nextMasked)
           setConfigured({
-            openai: Boolean(nextMasked.openai),
             gemini: Boolean(nextMasked.gemini),
-            anthropic: Boolean(nextMasked.anthropic),
           })
           const m = resp?.models || {}
           const nextModels = {
-            openai_model: m?.openai_model || models.openai_model,
             gemini_model: m?.gemini_model || models.gemini_model,
-            anthropic_model: m?.anthropic_model || models.anthropic_model,
           }
           setModels(nextModels)
           initialModelsRef.current = nextModels
           const discovered = resp?.available_models || {}
           setAvailableModels({
-            openai: Array.isArray(discovered?.openai) ? discovered.openai : [],
             gemini: Array.isArray(discovered?.gemini) ? discovered.gemini : [],
-            anthropic: Array.isArray(discovered?.anthropic) ? discovered.anthropic : [],
           })
-          setKeyDrafts({ openai: '', gemini: '', anthropic: '' })
+          setKeyDrafts({ gemini: '' })
           setHandleButtonDisabled(true)
           return resp
         })
@@ -275,8 +229,12 @@ const ApiKey = ({ data, setData }) => {
                     size="md"
                     type="text"
                     placeholder={p.placeholder}
+                    disabled={isConfigured}
                     value={displayValue}
-                    onChange={(v) => setKeyDrafts((prev) => ({ ...prev, [p.key]: v }))}
+                    onChange={(v) => {
+                      if (isConfigured) return
+                      setKeyDrafts((prev) => ({ ...prev, [p.key]: v }))
+                    }}
                   />
                   {providerKeyLinks[p.key] ? (
                     <div className="mt-2 text-sm text-gray-600">

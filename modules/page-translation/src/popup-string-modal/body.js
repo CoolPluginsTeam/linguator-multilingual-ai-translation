@@ -650,7 +650,7 @@ const StringPopUpBody = (props) => {
         } else if (translation) {
             return translation;
         } else {
-            if (['google', 'yandex', 'localAiTranslator', 'openai', 'gemini', 'anthropic'].includes(props.service)) {
+            if (['google', 'yandex', 'localAiTranslator', 'gemini'].includes(props.service)) {
                 // Use FilterTargetContent for pending translations with supported services
                 if (props.translatePendingStatus && !props.service.includes('_ai')) {
                     if (data.filteredString) {
@@ -753,7 +753,7 @@ const StringPopUpBody = (props) => {
                                                                     }}
                                                                     style={{ cursor: 'pointer' }}
                                                                     translate={(savedValues[cellKey] && props.service === 'google' || savedValues[cellKey] && props.service === 'yandex') ? "no" : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? "yes" : 'yes'}
-                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['openai', 'gemini', 'anthropic'].includes(props.service)) ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''}`}
+                                                                    className={`${!isEditingThisCell && !savedValues[cellKey] && !originalTranslation ? 'lmat-page-translation-empty-translation-cell' : ''} ${savedValues[cellKey] && props.service === 'localAiTranslator' || savedValues[cellKey] && props.service === 'google' ? 'notranslate' : (props.translatePendingStatus && ['gemini'].includes(props.service)) ? 'notranslate' : (props.translatePendingStatus && ['google', 'yandex', 'localAiTranslator'].includes(props.service) && !props.service.includes('_ai')) ? 'translate' : 'translate'} ${isEditingThisCell ? 'lmat-page-translation-editing-cell' : ''}`}
                                                                     data-translate-status={props.translatePendingStatus ? 'pending' : 'translated'}
                                                                 >
                                                                     {isEditingThisCell ? (

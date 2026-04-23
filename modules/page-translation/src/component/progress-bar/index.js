@@ -5,9 +5,7 @@
  */
 const AddProgressBar = (provider) => {
     const providerName = {
-        openai: "OpenAI",
         gemini: "Gemini",
-        anthropic: "Anthropic",
         google: "Google",
     }
     const progressBarSelector = "#lmat_page_translation_strings_model .lmat_page_translation_translate_progress";

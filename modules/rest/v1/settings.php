@@ -481,7 +481,7 @@ class Settings extends Abstract_Controller {
 		
 		// Never return raw API keys over REST; return masked values so the UI can show "configured".
 		if ( isset( $response['api_keys'] ) && is_array( $response['api_keys'] ) ) {
-			foreach ( array( 'openai', 'gemini', 'anthropic' ) as $provider ) {
+			foreach ( array( 'gemini' ) as $provider ) {
 				$raw = isset( $response['api_keys'][ $provider ] ) ? (string) $response['api_keys'][ $provider ] : '';
 				if ( '' === $raw ) {
 					$response['api_keys'][ $provider ] = '';

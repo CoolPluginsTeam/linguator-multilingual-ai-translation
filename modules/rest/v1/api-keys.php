@@ -20,9 +20,7 @@ use WP_REST_Server;
  * API Keys REST controller.
  *
  * Stores provider keys in dedicated WP options:
- * - connectors_ai_openai_key
  * - connectors_ai_gemini_key
- * - connectors_ai_anthropic_key
  *
  * Stores selected models in Linguator option `api_keys` via Options registry.
  */
@@ -60,18 +58,14 @@ class Api_Keys extends Abstract_Controller {
 							'required' => false,
 							'type'     => 'object',
 							'properties' => array(
-								'openai'     => array( 'type' => 'string' ),
 								'gemini'     => array( 'type' => 'string' ),
-								'anthropic'  => array( 'type' => 'string' ),
 							),
 						),
 						'models' => array(
 							'required' => false,
 							'type'     => 'object',
 							'properties' => array(
-								'openai_model'    => array( 'type' => 'string' ),
 								'gemini_model'    => array( 'type' => 'string' ),
-								'anthropic_model' => array( 'type' => 'string' ),
 							),
 						),
 					),
@@ -158,7 +152,7 @@ class Api_Keys extends Abstract_Controller {
 	/**
 	 * Validate provider API key before saving.
 	 *
-	 * @param string $provider Provider slug used by this endpoint (openai|gemini|anthropic).
+	 * @param string $provider Provider slug used by this endpoint (gemini).
 	 * @param string $api_key  Raw API key.
 	 * @return true|WP_Error
 	 */
@@ -193,22 +187,6 @@ class Api_Keys extends Abstract_Controller {
 		}
 
 		// Provider-specific format hints.
-		if ( 'openai' === $provider && ! preg_match( '/^sk-[a-zA-Z0-9_-]{20,}$/', $key_trimmed ) ) {
-			return new WP_Error(
-				'lmat_api_key_invalid',
-				__( 'OpenAI API keys must start with sk- and be in the correct format.', 'linguator-multilingual-ai-translation' ),
-				array( 'status' => 400 )
-			);
-		}
-
-		if ( 'anthropic' === $provider && ! preg_match( '/^sk-ant-[a-zA-Z0-9_-]{20,}$/', $key_trimmed ) ) {
-			return new WP_Error(
-				'lmat_api_key_invalid',
-				__( 'Anthropic API keys must start with sk-ant- and be in the correct format.', 'linguator-multilingual-ai-translation' ),
-				array( 'status' => 400 )
-			);
-		}
-
 		if ( 'gemini' === $provider && ! preg_match( '/^AIza[0-9A-Za-z\-_]{20,}$/', $key_trimmed ) ) {
 			return new WP_Error(
 				'lmat_api_key_invalid',
@@ -223,10 +201,6 @@ class Api_Keys extends Abstract_Controller {
 		if ( 'gemini' === $provider ) {
 			$provider_id    = 'google';
 			$provider_label = 'Gemini';
-		} elseif ( 'openai' === $provider ) {
-			$provider_label = 'OpenAI';
-		} elseif ( 'anthropic' === $provider ) {
-			$provider_label = 'Anthropic';
 		}
 
 		if ( ! class_exists( '\WordPress\AiClient\AiClient' ) ) {
@@ -289,7 +263,7 @@ class Api_Keys extends Abstract_Controller {
 					return new WP_Error(
 						'lmat_api_key_invalid',
 						sprintf(
-							/* translators: %s: AI provider name (e.g. OpenAI, Gemini, Anthropic). */
+							/* translators: %s: AI provider name (e.g. Gemini). */
 							__( 'API key is not configured for %s.', 'linguator-multilingual-ai-translation' ),
 							$provider_label
 						),
@@ -331,7 +305,7 @@ class Api_Keys extends Abstract_Controller {
 	 * @return \WP_REST_Response
 	 */
 	public function get_item( $request ) {
-		$providers = array( 'openai', 'gemini', 'anthropic' );
+		$providers = array( 'gemini' );
 		$keys      = array();
 
 		foreach ( $providers as $provider ) {
@@ -365,7 +339,7 @@ class Api_Keys extends Abstract_Controller {
 			$params = array();
 		}
 
-		$providers = array( 'openai', 'gemini', 'anthropic' );
+		$providers = array( 'gemini' );
 
 		// Save keys to dedicated WP options.
 		$incoming_keys = isset( $params['keys'] ) && is_array( $params['keys'] ) ? $params['keys'] : array();

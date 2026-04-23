@@ -271,7 +271,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		}
 
 		/**
-		 * Batch-translate string map via configured LLM (OpenAI / Gemini / Anthropic).
+		 * Batch-translate string map via configured LLM (Gemini).
 		 *
 		 * @param \WP_REST_Request $request Request.
 		 * @return \WP_REST_Response|\WP_Error
@@ -298,7 +298,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 			$object_type = isset( $params['object_type'] ) ? sanitize_key( (string) $params['object_type'] ) : 'post';
 			$model       = isset( $params['model'] ) ? sanitize_text_field( (string) $params['model'] ) : '';
 
-			if ( ! in_array( $provider, array( 'openai', 'gemini', 'anthropic' ), true ) ) {
+			if ( 'gemini' !== $provider ) {
 				return new WP_Error( 'lmat_ai_invalid_provider', __( 'Invalid translation provider.', 'linguator-multilingual-ai-translation' ), array( 'status' => 400 ) );
 			}
 
@@ -430,7 +430,7 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 		}
 
 		/**
-		 * @param string               $provider     openai|gemini|anthropic.
+		 * @param string               $provider     gemini.
 		 * @param string               $source_lang  Slug.
 		 * @param string               $target_lang  Slug.
 		 * @param string               $source_label Human label.
@@ -453,16 +453,9 @@ if ( ! class_exists( 'Bulk_Translation' ) ) :
 				}
 			}
 
-			$model_key = 'openai_model';
-			if ( 'gemini' === $provider ) {
-				$model_key = 'gemini_model';
-			} elseif ( 'anthropic' === $provider ) {
-				$model_key = 'anthropic_model';
-			}
+			$model_key = 'gemini_model';
 			$model_defaults = array(
-				'openai_model'    => 'gpt-4o-mini',
 				'gemini_model'    => 'gemini-2.5-flash',
-				'anthropic_model' => 'claude-3-5-sonnet-latest',
 			);
 			$model_id = trim( $model_override );
 			if ( '' === $model_id ) {

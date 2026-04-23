@@ -8,11 +8,9 @@ import { setupContext } from '../pages/setup-page';
 import SetupContinueButton, { SetupBackButton } from './setup-continue-button';
 import { getNonce } from '../utils';
 
-import { AnthropicIcon } from '../../../../assets/logo/anthropic';
 import { ChromeIcon } from '../../../../assets/logo/chrome';
 import { GeminiIcon } from '../../../../assets/logo/gemini';
 import { GoogleIcon } from '../../../../assets/logo/google';
-import { OpenAIIcon } from '../../../../assets/logo/openai';
 
 const ChromeLocalAINotice = () => {
 	const noticeType = useMemo(() => {
@@ -162,30 +160,22 @@ const AiTranslation = () => {
 	const [ googleMachineTranslation, setGoogleMachineTranslation ] = useState( Boolean( provider?.google ) );
 	const [ chromeLocalAITranslation, setChromeLocalAITranslation ] = useState( Boolean( provider?.chrome_local_ai ) );
 	const [ geminiTranslation, setGeminiTranslation ] = useState( Boolean( provider?.gemini ) );
-	const [ openAITranslation, setOpenAITranslation ] = useState( Boolean( provider?.openai ) );
-	const [ anthropicTranslation, setAnthropicTranslation ] = useState( Boolean( provider?.anthropic ) );
 
 	const lastSavedRef = useRef( {
 		chrome_local_ai: Boolean( provider?.chrome_local_ai ),
 		google: Boolean( provider?.google ),
 		gemini: Boolean( provider?.gemini ),
-		openai: Boolean( provider?.openai ),
-		anthropic: Boolean( provider?.anthropic ),
 	} );
 
 	useEffect( () => {
 		setGoogleMachineTranslation( Boolean( provider?.google ) );
 		setChromeLocalAITranslation( Boolean( provider?.chrome_local_ai ) );
 		setGeminiTranslation( Boolean( provider?.gemini ) );
-		setOpenAITranslation( Boolean( provider?.openai ) );
-		setAnthropicTranslation( Boolean( provider?.anthropic ) );
 
 		lastSavedRef.current = {
 			chrome_local_ai: Boolean( provider?.chrome_local_ai ),
 			google: Boolean( provider?.google ),
 			gemini: Boolean( provider?.gemini ),
-			openai: Boolean( provider?.openai ),
-			anthropic: Boolean( provider?.anthropic ),
 		};
 	}, [ provider ] );
 
@@ -210,8 +200,6 @@ const AiTranslation = () => {
 				...( wpAiClientAvailable
 					? {
 							gemini: geminiTranslation,
-							openai: openAITranslation,
-							anthropic: anthropicTranslation,
 						}
 					: {} ),
 			};
@@ -220,9 +208,7 @@ const AiTranslation = () => {
 			const hasChanges =
 				prevProvider.google !== nextProvider.google ||
 				prevProvider.chrome_local_ai !== nextProvider.chrome_local_ai ||
-				( wpAiClientAvailable && prevProvider.gemini !== nextProvider.gemini ) ||
-				( wpAiClientAvailable && prevProvider.openai !== nextProvider.openai ) ||
-				( wpAiClientAvailable && prevProvider.anthropic !== nextProvider.anthropic );
+				( wpAiClientAvailable && prevProvider.gemini !== nextProvider.gemini );
 
 			if ( hasChanges ) {
 				const response = await apiFetch( {
@@ -317,40 +303,6 @@ const AiTranslation = () => {
 								onChange={ () => setGeminiTranslation( ( prev ) => ! prev ) }
 								size="sm"
 								value={ geminiTranslation }
-							/>
-						</div>
-
-						<div
-							className="flex justify-between items-center p-6 rounded-lg"
-							style={ { border: '1px solid #e5e7eb', marginTop: '10px' } }
-						>
-							<div className="flex items-center gap-2">
-								<OpenAIIcon className="w-4 h-4" />
-								<p className="text-sm/6">{ __( 'OpenAI', 'linguator-multilingual-ai-translation' ) }</p>
-							</div>
-							<Switch
-								aria-label={ __( 'OpenAI', 'linguator-multilingual-ai-translation' ) }
-								id="openai-translation"
-								onChange={ () => setOpenAITranslation( ( prev ) => ! prev ) }
-								size="sm"
-								value={ openAITranslation }
-							/>
-						</div>
-
-						<div
-							className="flex justify-between items-center p-6 rounded-lg"
-							style={ { border: '1px solid #e5e7eb', marginTop: '10px' } }
-						>
-							<div className="flex items-center gap-2">
-								<AnthropicIcon className="w-4 h-4" />
-								<p className="text-sm/6">{ __( 'Anthropic', 'linguator-multilingual-ai-translation' ) }</p>
-							</div>
-							<Switch
-								aria-label={ __( 'Anthropic', 'linguator-multilingual-ai-translation' ) }
-								id="anthropic-translation"
-								onChange={ () => setAnthropicTranslation( ( prev ) => ! prev ) }
-								size="sm"
-								value={ anthropicTranslation }
 							/>
 						</div>
 					</>

@@ -15,7 +15,7 @@ import ApiKey from './api-key'
 const ComponentSelector = ({currentPage,data, setData})=>{
   const wpAiClientAvailable = Boolean(window?.lmat_settings?.wp_ai_client_available)
   const providers = data?.ai_translation_configuration?.provider
-  const aiProvidersEnabled = Boolean(providers?.gemini || providers?.openai || providers?.anthropic)
+  const aiProvidersEnabled = Boolean(providers?.gemini)
   if(currentPage === 'general') return <General data={data} setData={setData} />
   if(currentPage === 'translation') return <TranslationConfig data={data} setData={setData} />
   if(currentPage === 'api-keys') return (wpAiClientAvailable && aiProvidersEnabled) ? <ApiKey data={data} setData={setData} /> : <TranslationConfig data={data} setData={setData} />

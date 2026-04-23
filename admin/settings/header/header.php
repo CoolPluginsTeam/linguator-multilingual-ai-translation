@@ -121,7 +121,7 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		if ( function_exists( 'linguator_is_wp_ai_client_exist' ) && linguator_is_wp_ai_client_exist() ) {
 			$ai_config  = $this->model->options->get( 'ai_translation_configuration' );
 			$providers  = isset( $ai_config['provider'] ) && is_array( $ai_config['provider'] ) ? $ai_config['provider'] : array();
-			$ai_enabled = ! empty( $providers['gemini'] ) || ! empty( $providers['openai'] ) || ! empty( $providers['anthropic'] );
+			$ai_enabled = ! empty( $providers['gemini'] );
 
 			if ( $ai_enabled ) {
 				$new_tabs = array();

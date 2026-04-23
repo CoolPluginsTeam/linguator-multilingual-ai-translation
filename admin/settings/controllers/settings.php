@@ -633,8 +633,6 @@ class Linguator_Settings extends Linguator_Admin_Base {
 				$avilable_service_providers = array(
 					'google'              => 'Google',
 					'localAiTranslator'   => 'Chrome AI Translator',
-					'openai'              => 'OpenAI',
-					'anthropic'           => 'Anthropic',
 					'gemini'              => 'Gemini',
 				);
 				$cpt_dashboard_data=Linguator_Translation_Dashboard::get_translation_data('lmat');
