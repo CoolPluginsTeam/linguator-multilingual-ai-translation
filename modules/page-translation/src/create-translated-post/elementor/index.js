@@ -5,13 +5,37 @@ import translatedMetaFields from '../meta-fields/index.js';
 
 // Update widget content with translations
 const lmatUpdateWidgetContent = (translations) => {
-
     translations.forEach(translation => {
         // Find the model by ID using the lmatFindModelById function
         const model = lmatFindModelById(elementor.elements.models, translation.ID);
         if (model) {
+            const isAtomic = translation?.isAtomic;
             const settings = model.get('settings');
-            
+
+            if (isAtomic) {
+                const settingKey = translation.key.split('_lmat_page_translation_');
+                let totalKeys = settingKey.length - 1;
+
+                if (settingKey && settingKey.length > 0) {
+                    const atomicAttributes = settings.get(settingKey[0]);
+                    if (atomicAttributes) {
+                        let currentObject = atomicAttributes;
+                        const lastKey = settingKey[totalKeys];
+                        for (let i = 1; i < totalKeys; i++) {
+                            currentObject = currentObject[settingKey[i]];
+                        }
+
+                        if (currentObject && lastKey && currentObject[lastKey]) {
+                            currentObject[lastKey] = translation.translatedContent;
+
+                            settings.set(settingKey[0], atomicAttributes);
+                            model?.renderRemoteServer();
+                        }
+                    }
+                }
+
+            }
+
             // Check for normal fields (title, text, editor, etc.)
             if (settings.get(translation.key)) {
                 settings.set(translation.key, translation.translatedContent);  // Set the translated content
@@ -45,30 +69,46 @@ const lmatUpdateWidgetContent = (translations) => {
 const lmatUpdateMetaFields = (metaFields, service) => {
     const AllowedMetaFields = select('block-lmatPageTranslation/translate').getAllowedMetaFields();
 
-        if(!metaFields){
-            return;
-        }
+    if (!metaFields || Object.keys(metaFields).length < 1) {
+        return;
+    }
 
-        Object.keys(metaFields).forEach(key => {
-            // Update yoast seo meta fields
-            if (Object.keys(AllowedMetaFields).includes(key)) {
-                const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', metaFields[key], key, service);
-                if (key.startsWith('_yoast_wpseo_') && AllowedMetaFields[key].inputType === 'string') {
-                    YoastSeoFields({ key: key, value: translatedMetaFields });
-                } else if (key.startsWith('rank_math_') && AllowedMetaFields[key].inputType === 'string') {
-                    RankMathSeo({ key: key, value: translatedMetaFields });
-                } else if (key.startsWith('_seopress_') && AllowedMetaFields[key].inputType === 'string') {
-                    elementor?.settings?.page?.model?.setExternalChange(key, translatedMetaFields);
-                }
-            };
-        });
+    Object.keys(metaFields).forEach(key => {
+        // Update yoast seo meta fields
+        if (Object.keys(AllowedMetaFields).includes(key)) {
+            const translatedMetaFields = select('block-lmatPageTranslation/translate').getTranslatedString('metaFields', metaFields[key], key, service);
+            if (key.startsWith('_yoast_wpseo_') && AllowedMetaFields[key].inputType === 'string') {
+                YoastSeoFields({ key: key, value: translatedMetaFields });
+            } else if (key.startsWith('rank_math_') && AllowedMetaFields[key].inputType === 'string') {
+                RankMathSeo({ key: key, value: translatedMetaFields });
+            } else if (key.startsWith('_seopress_') && AllowedMetaFields[key].inputType === 'string') {
+                elementor?.settings?.page?.model?.setExternalChange(key, translatedMetaFields);
+            }
+        };
+    });
 }
 
 const lmatUpdateTitle = (title, service) => {
-    if(title && '' !== title){
-        const translatedTitle = select('block-lmatPageTranslation/translate').getTranslatedString('title', title, null, service);
+    if (title && '' !== title) {
+        const sourceTitle = select('block-lmatPageTranslation/translate').getTranslationEntry({type: 'title'});
 
-        if(translatedTitle && '' !== translatedTitle){
+        if(!sourceTitle || !sourceTitle.source || '' === sourceTitle.source){
+            return;
+        }
+
+        const translatedTitle = select('block-lmatPageTranslation/translate').getTranslatedString('title', sourceTitle.source, null, service);
+
+        if (translatedTitle && '' !== translatedTitle) {
+            const previousTitle = document.querySelector('.wp-block-post-title');
+
+            if (sourceTitle === translatedTitle) {
+                return;
+            }
+
+            if (previousTitle && previousTitle.textContent === title) {
+                previousTitle.textContent = translatedTitle;
+            }
+
             elementor?.settings?.page?.model?.setExternalChange('post_title', translatedTitle);
         }
     }
@@ -102,14 +142,45 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         'opacity', 'width', 'height', 'display', 'position', 'z_index', 'visibility', 'align', 'max_width', 'content_typography_typography', 'flex_justify_content', 'title_color', 'description_color', 'email_content'
     ];
 
-    const subStringsToCheck=(strings)=>{
-        const dynamicSubStrings=['title', 'description', 'editor', 'text', 'content', 'label'];
-        const staticSubStrings=['caption','heading','sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
+    const subStringsToCheck = (strings) => {
+        const dynamicSubStrings = ['title', 'description', 'editor', 'text', 'content', 'label'];
+        const staticSubStrings = ['caption', 'heading', 'sub_heading', 'testimonial_content', 'testimonial_job', 'testimonial_name', 'name'];
 
         return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
     }
 
-    const storeSourceStrings = (element,index, ids=[]) => {
+    const storeAtomicWidgetStrings = (element, ids = [], widgetId = null) => {
+        const currentKey = ids[ids.length - 1];
+        const validAtomicKeys = ['placeholder', 'paragraph'];
+
+        if (!subStringsToCheck(currentKey) && !validAtomicKeys.includes(currentKey)) {
+            return;
+        }
+
+        if (element?.$$type === 'html-v3') {
+            if (element.value && element.value.content && element.value.content?.$$type === 'string' && element.value.content.value && '' !== element.value.content.value) {
+                const translatedData = select('block-lmatPageTranslation/translate').getTranslatedString('content', element.value.content.value, ids.join('_lmat_page_translation_') + '_lmat_page_translation_value_lmat_page_translation_content_lmat_page_translation_value', service);
+                translations.push({
+                    ID: widgetId,
+                    key: `${currentKey}_lmat_page_translation_value_lmat_page_translation_content_lmat_page_translation_value`,
+                    translatedContent: translatedData,
+                    isAtomic: true
+                })
+            }
+        } else if (element?.$$type === 'string') {
+            if (element.value && '' !== element.value) {
+                const translatedData = select('block-lmatPageTranslation/translate').getTranslatedString('content', element.value, ids.join('_lmat_page_translation_') + '_lmat_page_translation_value', service);
+                translations.push({
+                    ID: widgetId,
+                    key: `${currentKey}_lmat_page_translation_value`,
+                    translatedContent: translatedData,
+                    isAtomic: true
+                })
+            }
+        }
+    }
+
+    const storeSourceStrings = (element, index, ids = []) => {
         const widgetId = element.id;
         const settings = element.settings;
         ids.push(index)
@@ -137,10 +208,9 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
                         key: key,
                         translatedContent: translatedData
                     })
-                }
-
-                // Check for arrays (possible repeater fields) within settings
-                if (Array.isArray(settings[key])) {
+                } else if (settings[key] && typeof settings[key] === 'object' && settings[key].hasOwnProperty('$$type')) {
+                    storeAtomicWidgetStrings(settings[key], [...ids, 'settings', key], widgetId);
+                } else if (Array.isArray(settings[key])) {
                     settings[key].forEach((item, index) => {
                         if (typeof item === 'object' && item !== null) {
                             // Check for translatable content in repeater fields
@@ -173,52 +243,61 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
 
         // If there are nested elements, process them recursively
         if (element.elements && Array.isArray(element.elements)) {
-            element.elements.forEach((nestedElement,index) => {
-                storeSourceStrings(nestedElement,index, [...ids, 'elements']);
+            element.elements.forEach((nestedElement, index) => {
+                storeSourceStrings(nestedElement, index, [...ids, 'elements']);
             });
         }
     }
 
-    postContent.widgetsContent.map((widget,index) => storeSourceStrings(widget,index,[]));
+    if(postContent.widgetsContent && postContent.widgetsContent.length > 0){
+        postContent.widgetsContent.map((widget, index) => storeSourceStrings(widget, index, []));
+    }
+
 
     // Update widget content with translations
     lmatUpdateWidgetContent(translations);
-    
+
     // Update Meta Fields
     lmatUpdateMetaFields(postContent.metaFields, service);
 
     // Update Title
     lmatUpdateTitle(postContent.title, service);
 
-    const replaceSourceString=()=>{
+    const replaceSourceString = () => {
+
+        if(!postContent.widgetsContent || postContent.widgetsContent.length < 1){
+            return false;
+        }
+
         const elementorData = lmatPageTranslationGlobal.elementorData;
-        const translateStrings=wp.data.select('block-lmatPageTranslation/translate').getTranslationEntries();
+
+        const translateStrings = select('block-lmatPageTranslation/translate').getTranslationEntries();
 
         translateStrings.forEach(translation => {
             const sourceString = translation.source;
             const ids = translation.id;
             const translatedContent = translation.translatedData;
-            const type=translation.type;
+            const type = translation.type;
 
-            if(!sourceString || '' === sourceString || 'content' !== type){
+            if (!sourceString || '' === sourceString || 'content' !== type) {
                 return;
             }
-            
+
             const keyArray = ids.split('_lmat_page_translation_');
-            
+
             const translateValue = translatedContent[service];
             let parentElement = null;
             let parentKey = null;
 
             let currentElement = elementorData;
-               
+
             keyArray.forEach(key => {
                 parentElement = currentElement;
                 parentKey = key;
                 currentElement = currentElement ? currentElement[key] : null;
             });
 
-            if(parentElement && parentKey && parentElement[parentKey] && parentElement[parentKey] === sourceString){
+            if (parentElement && parentKey && parentElement[parentKey] && parentElement[parentKey] === sourceString) {
                 parentElement[parentKey] = translateValue;
             }
         });
@@ -226,10 +305,10 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         return elementorData;
     }
 
-    
-    const elementorData = replaceSourceString();
 
-    const requestBody={
+    const elementorData = replaceSourceString();
+    
+    const requestBody = {
         action: lmatPageTranslationGlobal.update_elementor_data,
         post_id: postID,
         elementor_data: JSON.stringify(elementorData),
@@ -237,17 +316,25 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         parent_post_id: lmatPageTranslationGlobal.parent_post_id
     }
 
-    if(postContent.slug_name && '' !== postContent.slug_name && lmatPageTranslationGlobal.slug_translation_option === 'slug_translate'){
-        const slug_name=postContent.slug_name;
-        const translatedSlug=select('block-lmatPageTranslation/translate').getTranslatedString('slug', slug_name, null, service);
+    if (postContent.slug_name && '' !== postContent.slug_name && lmatPageTranslationGlobal.slug_translation_option === 'slug_translate') {
+        const slug_name = postContent.slug_name;
+        const translatedSlug = select('block-lmatPageTranslation/translate').getTranslatedString('slug', slug_name, null, service);
 
-        if(translatedSlug && '' !== translatedSlug){
-            requestBody.post_name=translatedSlug;
+        if (translatedSlug && '' !== translatedSlug) {
+            requestBody.post_name = translatedSlug;
         }
     }
 
-    if("false" === lmatPageTranslationGlobal.postMetaSync){
-        requestBody.meta_fields=JSON.stringify(translatedMetaFields(postContent.metaFields, service));
+    if(postContent.title && '' !== postContent.title){
+        const translatedTitle = select('block-lmatPageTranslation/translate').getTranslatedString('title', postContent.title, null, service);
+
+        if (translatedTitle && '' !== translatedTitle) {
+            requestBody.post_title = translatedTitle;
+        }
+    }
+
+    if ("false" === lmatPageTranslationGlobal.postMetaSync && postContent.metaFields) {
+        requestBody.meta_fields = JSON.stringify(translatedMetaFields(postContent.metaFields, service));
     }
 
     fetch(lmatPageTranslationGlobal.ajax_url, {
@@ -262,7 +349,7 @@ const updateElementorPage = ({ postContent, modalClose, service }) => {
         .then(data => {
             if (data.success) {
                 const translateButton = document.querySelector('.lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]');
-                if(translateButton){
+                if (translateButton) {
                     translateButton.setAttribute('title', 'Translation process completed successfully.');
                 }
             } else {

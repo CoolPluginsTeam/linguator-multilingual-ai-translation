@@ -57,6 +57,25 @@ const FilterElementorContent = async({content, service, postId, storeDispatch, f
         return dynamicSubStrings.some(substring => strings.toLowerCase().includes(substring)) || staticSubStrings.some(substring => strings === substring);
     }
 
+    const storeAtomicWidgetStrings = (element, ids=[]) => {
+        const currentKey = ids[ids.length - 1];
+        const validAtomicKeys=['placeholder', 'paragraph'];
+
+        if(!subStringsToCheck(currentKey) && !validAtomicKeys.includes(currentKey)){
+            return;
+        }
+
+        if(element?.$$type === 'html-v3' ){
+            if(element.value && element.value.content && element.value.content?.$$type === 'string' && element.value.content.value && '' !== element.value.content.value){
+                translateContent([...ids, 'value', 'content', 'value'], element.value.content.value);
+            }
+        }else if(element?.$$type === 'string'){
+            if(element.value && '' !== element.value){
+                translateContent([...ids, 'value'], element.value);
+            }
+        }
+    }
+
     const storeWidgetStrings = async(element, index, ids=[]) => {
         const settings = element.settings;
         ids.push(index);
@@ -73,9 +92,9 @@ const FilterElementorContent = async({content, service, postId, storeDispatch, f
                 if (subStringsToCheck(key) &&
                     typeof settings[key] === 'string' && settings[key].trim() !== '') {
                     await translateContent([...ids, 'settings', key],settings[key]);
-                }
-
-                if(Array.isArray(settings[key]) && settings[key].length > 0){
+                }else if(settings[key] && typeof settings[key] === 'object' && settings[key].hasOwnProperty('$$type') ){
+                    storeAtomicWidgetStrings(settings[key], [...ids, 'settings', key]);
+                }else if(Array.isArray(settings[key]) && settings[key].length > 0){
                     const settingsLoop=async(item, index)=>{
                         if(typeof item === 'object' && item !== null){
                             const settingsItemsLoop=async (repeaterKey)=>{
@@ -87,6 +106,8 @@ const FilterElementorContent = async({content, service, postId, storeDispatch, f
                                 if(subStringsToCheck(repeaterKey) &&
                                     typeof item[repeaterKey] === 'string' && item[repeaterKey].trim() !== '') {
                                     await translateContent([...ids, 'settings', key, index, repeaterKey],item[repeaterKey]);
+                                }else if(item[repeaterKey] && typeof item[repeaterKey] === 'object' && item[repeaterKey].hasOwnProperty('$$type') ){
+                                    storeAtomicWidgetStrings(item[repeaterKey], [...ids, 'settings', key, index, repeaterKey]);
                                 }
                             }
 
