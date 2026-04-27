@@ -30,7 +30,7 @@ const updateMetaFields = (source, lang, serviceProvider, postId) => {
                 }
             }
             if(typeof value[key] === 'object' && Object.keys(value[key]).length > 0){
-                metaFields[uniqueKey] = translateObjectMetaFields(keyArr, value[key]);
+                translateObjectMetaFields(keyArr, value[key]);
             }
         });
     }

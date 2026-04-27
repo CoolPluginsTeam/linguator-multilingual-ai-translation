@@ -1,6 +1,7 @@
 const FilterTargetContent = (props, storeUpdateContent) => {
     const { item, saveFilteredString } = props;
     const skipTags = props.skipTags || [];
+    const placeholderPrefix = '#lmat_page_translation_';
     const OpenSpanPlaceholder = '#lmat_page_translation_open_translate_span#';
     const CloseSpanPlaceholder = '#lmat_page_translation_close_translate_span#';
     const OpenTempTagPlaceholder = '#lmat_page_translation_temp_tag_open#';
@@ -33,7 +34,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
     }
 
     const removeLineBreakPlaceholder = (content) => {
-        return content.replace(new RegExp(lineBreakNOpenPlaceholder+lineBreakNClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\n${CloseSpanPlaceholder}`).replace(new RegExp(lineBreakROpenPlaceholder+lineBreakRClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\r${CloseSpanPlaceholder}`);
+        return content.replace(new RegExp(lineBreakNOpenPlaceholder + lineBreakNClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\n${CloseSpanPlaceholder}`).replace(new RegExp(lineBreakROpenPlaceholder + lineBreakRClosePlaceholder, 'g'), `${OpenSpanPlaceholder}\r${CloseSpanPlaceholder}`);
     }
 
     const fixHtmlTags = (content) => {
@@ -102,7 +103,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
      */
     const wrapFirstAndMatchingClosingTag = (html) => {
         // Create a temporary element to parse the HTML string
-        const tempElement = document.createElement('div');
+        let tempElement = document.createElement('div');
         tempElement.innerHTML = html;
 
         // Get the first element
@@ -140,7 +141,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         // Get the opening tag of the first element
         // const firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
         let firstElementOpeningTag = firstElement.outerHTML.match(/^<[^>]+>/)[0];
-        
+
         const pattern = new RegExp(
             `${OpenSpanPlaceholder}|${CloseSpanPlaceholder}`,
             'g'
@@ -199,8 +200,10 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
         firstElement.outerHTML = filterContent;
 
+        const output=tempElement.innerHTML;
+        tempElement=null;
         // Return the modified HTML
-        return tempElement.innerHTML;
+        return output;
     }
 
     /**
@@ -310,12 +313,32 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         // Replace line break with placeholder
         string = replaceLineBreakPlaceholder(string);
 
-        // Filter shortcode content
-        const shortcodePattern = /\[(.*?)\]/g;
-        const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
-        
-        if (shortcodeMatches) {
-            string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
+        if (
+            typeof string === 'string'
+        ) {
+            // Filter shortcode content
+            const shortcodePattern = /\[(.*?)\]/g;
+            const shortcodeMatches = typeof string === 'string' ? string.match(shortcodePattern) : false;
+
+            if (shortcodeMatches) {
+                string = string.replace(shortcodePattern, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
+            }
+
+            // Improved: If URL contains "lmat_page_translation_" or "[", add CloseSpanPlaceholder *before* this, else wrap URL in span as normal
+            const urlPattern = /(https?:\/\/|www\.)[^\s\[\]]+/gi;
+            string = string.replace(urlPattern, (match) => {
+                if(match.includes("#lmat_page_translation_")){
+                    const filterUrl=match.split(placeholderPrefix);
+                    if(filterUrl.length > 1){
+                        filterUrl[0]=OpenSpanPlaceholder+removeInnerSpanPlaceholder(filterUrl[0])+CloseSpanPlaceholder;
+                    }
+
+                    const updatedUrl = filterUrl.join(placeholderPrefix);
+
+                    return updatedUrl;
+                }
+                return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
+            });
         }
 
         function replaceInnerTextWithSpan(doc) {
@@ -383,31 +406,57 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         }
 
         let content = string;
+
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
         
         if (isEmptyOrUnclosedTag(string)) {
-            content = string.replace(/<([a-z][a-z0-9]*)\b[^>]*>(\s*(?:<!--.*?-->\s*)*<\/\1>)?/gi, (match) => `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`);
+
+            const openPH = escapeRegex(OpenSpanPlaceholder);
+            const closePH = escapeRegex(CloseSpanPlaceholder);
+
+            const openingTagRegex = new RegExp(
+                `(?<!${openPH})<([a-z][a-z0-9]*)(\\b[^>]*)?>(?!${closePH})`,
+                'gi'
+            );
+            
+            const closingTagRegex = new RegExp(
+                `(?<!${openPH})</([a-z][a-z0-9]*)>(?!${closePH})`,
+                'gi'
+            );
+            
+            content = string
+                .replace(openingTagRegex, (match) => {
+                    return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
+                })
+                .replace(closingTagRegex, (match) => {
+                    return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
+                });
         } else {
-            const tempElement = document.createElement('div');
+            let tempElement = document.createElement('div');
             tempElement.innerHTML = fixHtmlTags(string);
             replaceInnerTextWithSpan(tempElement);
-            
+
             content = tempElement.innerText;
 
             content = content.replace(new RegExp(LessThanSymbol, 'g'), '<').replace(new RegExp(GreaterThanSymbol, 'g'), '>');
 
             content = syncTRTDFromFirstToSecond(string, content);
+
+            tempElement=null;
         }
-        
+
         // remoove all the ${OpenTempTagPlaceholder} and ${CloseTempTagPlaceholder}
         const tempTagPattern = new RegExp(
             `${OpenTempTagPlaceholder}([\\s\\S]*?)(${CloseTempTagPlaceholder})`,
             'g'
         );
-        
+
         content = content.replace(tempTagPattern, '');
-
+        
         content = removeLineBreakPlaceholder(content);
-
+        
         content = removeEntityPlaceholder(content);
 
         return splitContent(content);
@@ -434,16 +483,20 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         return updatedContent;
     }
 
-    const getFilteredString=()=>{
-        if(saveFilteredString && item && item.id && item.type && item.source && !item.filteredString){
+    const getFilteredString = () => {
+        const shouldFilterForService = ['google', 'localAiTranslator'].includes(props.service);
+
+        if (shouldFilterForService && saveFilteredString && item && item.id && item.type && item.source && !item.filteredString) {
             const filteredString = filterSourceData(item.source);
 
             const filteredStringContent = filteredString.map((data, index) => {
                 const notTranslate = notTranslatePattern.test(data);
                 if (notTranslate) {
-                    const pTemp=document.createElement('p');
+                    let pTemp = document.createElement('p');
                     pTemp.innerText = filterContent(data);
-                    return `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${pTemp.innerHTML}</span>`;
+                    const output=pTemp.innerHTML;
+                    pTemp=null;
+                    return `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${output}</span>`;
                 } else {
                     return data;
                 }
@@ -457,22 +510,24 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
     /**
      * The content to be filtered based on the service type.
-     * If the service is 'google' & 'localAiTranslator' the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
+     * If the service is 'google' or 'localAiTranslator', the content is filtered
+     * using filterSourceData; otherwise, the content remains unchanged.
      */
     const content = ['google', 'localAiTranslator'].includes(props.service) ? filterSourceData(props.content) : props.content;
 
     return (
         <>
-            {['localAiTranslator', 'google'].includes(props.service) ?
-                content.map((data, index) => {
-                    const notTranslate = notTranslatePattern.test(data);
-                    if (notTranslate) {
-                        return <span key={index} className="notranslate lmat-page-translation-notraslate-tag" translate="no">{filterContent(data)}</span>;
-                    } else {
-                        return data;
-                    }
-                })
-                : content}
+            {
+            ['localAiTranslator', 'google'].includes(props.service) ? content.map((data, index) => {
+                const notTranslate = notTranslatePattern.test(data);
+                if (notTranslate) {
+                    return <span key={index} className="notranslate lmat-page-translation-notraslate-tag" translate="no">{filterContent(data)}</span>;
+                } else {
+                    return data;
+                }
+            }) :
+            content
+            }
         </>
     );
 }
