@@ -12,6 +12,13 @@ const ErrorModalBox = ({ message, onClose, Title, prefix, children }) => {
 
     useEffect(() => {
         const clipboardElements = document.querySelectorAll('.chrome-ai-translator-flags');
+        const reloadButton = document.querySelector(`.${prefix}-error-reload-btn`);
+        
+        if(reloadButton){
+            reloadButton.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
 
         if (clipboardElements.length > 0) {
             clipboardElements.forEach(element => {
@@ -41,12 +48,18 @@ const ErrorModalBox = ({ message, onClose, Title, prefix, children }) => {
                 });
             });
 
-            return () => {
+        }
+        return () => {
+            if(clipboardElements.length > 0){
                 clipboardElements.forEach(element => {
                     element.removeEventListener('click', () => { });
                 });
-            };
-        }
+            }
+
+            if(reloadButton){
+                reloadButton.removeEventListener('click', () => {});
+            }
+        };
     }, []);
 
     return (

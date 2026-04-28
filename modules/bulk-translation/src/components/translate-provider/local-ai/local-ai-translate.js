@@ -7,7 +7,7 @@ class ChromeAiTranslator {
 
     // Constructor to initialize the translator with options
     constructor(options) {
-        this.textContentObject=options.textContentObject;
+        this.textContentObject = options.textContentObject;
         this.onStartTranslationProcess = options.onStartTranslationProcess || (() => { }); // Callback for when translation starts
         this.onComplete = options.onComplete || (() => { }); // Callback for when translation completes
         this.onLanguageError = options.onLanguageError || (() => { }); // Callback for language errors
@@ -41,6 +41,8 @@ class ChromeAiTranslator {
         };
     }
 
+    static supportedLanguages = ['en', 'es', 'ja', 'ar', 'de', 'bn', 'fr', 'hi', 'it', 'ko', 'nl', 'pl', 'pt', 'ru', 'th', 'tr', 'vi', 'zh', 'zh-hant', 'bg', 'cs', 'da', 'el', 'fi', 'hr', 'hu', 'id', 'iw', 'lt', 'no', 'ro', 'sk', 'sl', 'sv', 'uk', 'kn', 'ta', 'te', 'mr'].map(lang => lang.toLowerCase());
+
     /**
      * Checks if the specified source and target languages are supported by the Local Translator AI modal.
      * 
@@ -50,14 +52,14 @@ class ChromeAiTranslator {
      * @returns {Promise<boolean|jQuery>} - Returns true if the languages are supported, or a jQuery message if not.
      */
     static languageSupportedStatus = async (sourceLanguage, targetLanguage, targetLanguageLabel, sourceLanguageLabel) => {
-        const supportedLanguages = ['en', 'es', 'ja', 'ar', 'de', 'bn', 'fr', 'hi', 'it', 'ko', 'nl', 'pl', 'pt', 'ru', 'th', 'tr', 'vi', 'zh', 'zh-hant', 'bg', 'cs', 'da', 'el', 'fi', 'hr', 'hu', 'id', 'iw', 'lt', 'no', 'ro', 'sk', 'sl', 'sv', 'uk','kn','ta','te','mr' ].map(lang => lang.toLowerCase());
+        const supportedLanguages =  ChromeAiTranslator.supportedLanguages;
 
         const safeBrowser = window.location.protocol === 'https:';
-        const browserContentSecure=window?.isSecureContext;
+        const browserContentSecure = window?.isSecureContext;
 
         // Browser check
         if (!window.hasOwnProperty('chrome') || !navigator.userAgent.includes('Chrome') || navigator.userAgent.includes('Edg')) {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+            const message = jQuery(`<span style="display: inline-block;">
                 <strong>Important Notice:</strong>
                 <ol>
                     <li>The Translator API, which leverages Chrome local AI models, is designed specifically for use with the Chrome browser.</li>
@@ -65,11 +67,11 @@ class ChromeAiTranslator {
                 </ol>
                 <p>Please ensure you are using the Chrome browser for optimal performance and compatibility.</p>
             </span>`);
-            return {html:message, message: 'Browser not supported', type: 'browser-not-supported'};
+            return { html: message, message: 'Browser not supported', type: 'browser-not-supported' };
         }
 
-        if (!('translation' in self && 'createTranslator' in self.translation) && !('ai' in self && 'translator' in self.ai ) && !("Translator" in self && "create" in self.Translator) && !safeBrowser && !browserContentSecure) {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+        if (!('translation' in self && 'createTranslator' in self.translation) && !('ai' in self && 'translator' in self.ai) && !("Translator" in self && "create" in self.Translator) && !safeBrowser && !browserContentSecure) {
+            const message = jQuery(`<span style="display: inline-block;">
                 <strong>Important Notice:</strong>
                 <ol>
                     <li>
@@ -83,13 +85,16 @@ class ChromeAiTranslator {
                         Click on the URL to copy it, then open a new window and paste this URL to access the settings.
                     </li>
                 </ol>
+                <div style="text-align: right;">
+                    <button class="lmat-bulk-translate-error-reload-btn button button-primary">Reload Page</button>
+                </div>
             </span>`);
-            return {html:message, message: 'Browser not supported', type: 'browser-not-supported'};
+            return { html: message, message: 'Browser not supported', type: 'browser-not-supported' };
         }
 
         // Check if the translation API is available
-        if (!('translation' in self && 'createTranslator' in self.translation) && !('ai' in self && 'translator' in self.ai ) && !("Translator" in self && "create" in self.Translator)) {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+        if (!('translation' in self && 'createTranslator' in self.translation) && !('ai' in self && 'translator' in self.ai) && !("Translator" in self && "create" in self.Translator)) {
+            const message = jQuery(`<span style="display: inline-block;">
                 <h4>Steps to Enable the Translator AI Modal:</h4>
                 <ol>
                     <li>Open this URL in a new Chrome tab: <strong><span data-clipboard-text="chrome://flags/#translation-api" target="_blank" class="chrome-ai-translator-flags">chrome://flags/#translation-api ${ChromeAiTranslator.svgIcons('copy')}</span></strong>. Click on the URL to copy it, then open a new window and paste this URL to access the settings.</li>
@@ -100,13 +105,16 @@ class ChromeAiTranslator {
                 <p>For more information, please refer to the <a href="https://developer.chrome.com/docs/ai/translator-api" target="_blank">documentation</a>.</p>   
                 <p>If the issue persists, please ensure that your browser is up to date and restart your browser.</p>
                 <p>If you continue to experience issues after following the above steps, please <a href="https://my.coolplugins.net/account/support-tickets/" target="_blank" rel="noopener">open a support ticket</a> with our team. We are here to help you resolve any problems and ensure a smooth translation experience.</p>
+                <div style="text-align: right;">
+                    <button class="lmat-bulk-translate-error-reload-btn button button-primary">Reload Page</button>
+                </div>
             </span>`);
-            return {html:message, message: 'Translation API not available', type: 'translation-api-not-available'};
+            return { html: message, message: 'Translation API not available', type: 'translation-api-not-available' };
         }
 
         // Check if the target language is supported
-        if (!supportedLanguages.includes(targetLanguage.toLowerCase())) {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+        if (!supportedLanguages.includes(targetLanguage.toLowerCase()) && !supportedLanguages.includes(targetLanguage.split('-')[0])) {
+            const message = jQuery(`<span style="display: inline-block;">
                 <strong>Language Support Information:</strong>
                 <ol>
                     <li>The current version of Chrome AI Translator does not support the Target Language <strong>${targetLanguageLabel} (${targetLanguage})</strong></li>
@@ -114,12 +122,12 @@ class ChromeAiTranslator {
                     <li>Ensure your Chrome browser is updated to the latest version for optimal performance.</li>
                 </ol>
             </span>`);
-            return {html:message, message: `Target Language not supported: ${targetLanguageLabel} (${targetLanguage})`, type: 'language-not-supported'};
+            return { html: message, message: `Target Language not supported: ${targetLanguageLabel} (${targetLanguage})`, type: 'language-not-supported' };
         }
 
         // Check if the source language is supported
-        if (!supportedLanguages.includes(sourceLanguage.toLowerCase())) {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+        if (!supportedLanguages.includes(sourceLanguage.toLowerCase()) && !supportedLanguages.includes(sourceLanguage.split('-')[0])) {
+            const message = jQuery(`<span style="display: inline-block;">
                 <strong>Language Support Information:</strong>
                 <ol>
                     <li>The current version of Chrome AI Translator does not support the Source Language <strong>${sourceLanguageLabel} (${sourceLanguage})</strong></li>
@@ -127,7 +135,7 @@ class ChromeAiTranslator {
                     <li>Ensure your Chrome browser is updated to the latest version for optimal performance.</li>
                 </ol>
             </span>`);
-            return {html:message, message: `Source Language not supported: ${sourceLanguageLabel} (${sourceLanguage})`, type: 'language-not-supported'};
+            return { html: message, message: `Source Language not supported: ${sourceLanguageLabel} (${sourceLanguage})`, type: 'language-not-supported' };
         }
 
         // Check if translation can be performed
@@ -135,7 +143,7 @@ class ChromeAiTranslator {
 
         // Handle case for language pack after download
         if (status === "after-download" || status === "downloadable" || status === "unavailable") {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+            const message = jQuery(`<span style="display: inline-block;">
                 <h4>Installation Instructions for Language Packs:</h4>
                 <ol>
                     <li>
@@ -154,20 +162,23 @@ class ChromeAiTranslator {
                         </strong>. Click on the URL to copy it, then open a new window and paste this URL to access the settings.
                     </li>
                     <li>
-                        Please check if both your source <strong>(<span style="color:#2271b1">${sourceLanguage}</span>)</strong> and target <strong>(<span style="color:#2271b1">${targetLanguage}</span>)</strong> languages are available in the language packs list.
+                        Please check if both your source <strong>(${sourceLanguage})</strong> and target <strong>(${targetLanguage})</strong> languages are available in the language packs list.
                     </li>
                     <li>
                         You need to install both language packs for translation to work. You can search for each language by its language code: <strong>${sourceLanguage}</strong> and <strong>${targetLanguage}</strong>.
                     </li>
                     <li>For more help, refer to the <a href="https://developer.chrome.com/docs/ai/translator-api#supported-languages" target="_blank">documentation to check supported languages</a>.</li>
                 </ol>
+                <div style="text-align: right;">
+                    <button class="lmat-bulk-translate-error-reload-btn button button-primary">Reload Page</button>
+                </div>
             </span>`);
-            return {html:message, message: `Language pack not installed: ${targetLanguageLabel} (${targetLanguage}) or ${sourceLanguageLabel} (${sourceLanguage})`, type: 'language-pack-not-installed'};
+            return { html: message, message: `Language pack not installed: ${targetLanguageLabel} (${targetLanguage}) or ${sourceLanguageLabel} (${sourceLanguage})`, type: 'language-pack-not-installed' };
         }
 
         // Handle case for language pack downloading
         if (status === "downloading") {
-           const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+            const message = jQuery(`<span style="display: inline-block;">
                 <h4>Language Pack Download In Progress:</h4>
                 <ol>
                     <li>
@@ -197,15 +208,15 @@ class ChromeAiTranslator {
                     </li>
                 </ol>
                 <div style="text-align: right;">
-                    <button onclick="location.reload()" class="lmat-bulk-translate-error-reload-btn">Reload Page</button>
+                    <button class="lmat-bulk-translate-error-reload-btn button button-primary">Reload Page</button>
                 </div>
             </span>`);
-            return {html:message, message: `Language pack downloading please wait or try again...`, type: 'language-pack-downloading'};
+            return { html: message, message: `Language pack downloading please wait or try again...`, type: 'language-pack-downloading' };
         }
 
         // Handle case for language pack not readily available
         if (status !== 'readily' && status !== 'available') {
-            const message = jQuery(`<span style="color: #ff4646; display: inline-block;">
+            const message = jQuery(`<span style="display: inline-block;">
                 <h4>Language Pack Installation Required</h4>
                 <ol>
                     <li>Please ensure that the language pack for <strong>${targetLanguageLabel} (${targetLanguage})</strong> or <strong>${sourceLanguageLabel} (${sourceLanguage})</strong> is installed and set as a preferred language in your browser.</li>
@@ -213,67 +224,84 @@ class ChromeAiTranslator {
                     <li>If you encounter any issues, please refer to the <a href="https://developer.chrome.com/docs/ai/translator-api#supported-languages" target="_blank">documentation to check supported languages</a> for further assistance.</li>
                 </ol>
             </span>`);
-            return {html:message, message: `Language pack missing for ${targetLanguageLabel} (${targetLanguage}) or ${sourceLanguageLabel} (${sourceLanguage})`, type: 'language-pack-missing'};
+            return { html: message, message: `Language pack missing for ${targetLanguageLabel} (${targetLanguage}) or ${sourceLanguageLabel} (${sourceLanguage})`, type: 'language-pack-missing' };
         }
 
         return true;
     }
 
-    static languagePairAvality=async (source, target)=>{
-
-        try {
-            const translator = await self.Translator.create({
-                sourceLanguage: source,
-                targetLanguage: target,
-                monitor(m) {
-                    m.addEventListener('downloadprogress', (e) => {
-                        console.log(`Downloaded ${e.loaded * 100}%`);
-                    });
-                },
-            });
-
-        } catch (err) { console.log('err', err) }
-
-        if(('translation' in self && 'createTranslator' in self.translation)){
+    static languagePairAvality = async (source, target) => {
+        if (('translation' in self && 'createTranslator' in self.translation)) {
             const status = await self.translation.canTranslate({
                 sourceLanguage: source,
                 targetLanguage: target,
             });
 
             return status;
-        }else if(('ai' in self && 'translator' in self.ai )){
+        } else if (('ai' in self && 'translator' in self.ai)) {
             const translatorCapabilities = await self.ai.translator.capabilities();
             const status = await translatorCapabilities.languagePairAvailable(source, target);
 
             return status;
-        }else if("Translator" in self && "create" in self.Translator){
-            const status = await self.Translator.availability({
+        } else if ("Translator" in self && "create" in self.Translator) {
+
+            let status = await self.Translator.availability({
                 sourceLanguage: source,
                 targetLanguage: target,
             });
+        
+            if (status !== "available") {
+                try {
+                    // MUST be triggered by a user gesture (button click)
+                    const translator = await self.Translator.create({
+                        sourceLanguage: source,
+                        targetLanguage: target,
+                        monitor(monitor) {
+                            monitor.addEventListener("downloadprogress", (e) => {
+                                console.log(`Downloaded ${Math.round(e.loaded * 100)}%`);
+                            });
+                        },
+                    });
+        
+                    // Re-check availability AFTER model creation
+                    status = await self.Translator.availability({
+                        sourceLanguage: source,
+                        targetLanguage: target,
+                    });
+        
+                } catch (err) {
+                    console.warn(`Translator init for ${source} to ${target} error:`, err);
 
+                    if(status.includes('Requires a user gesture when availability')){
+                        return 'requires-user-gesture';
+                    }
+
+                   return status;
+                }
+            }
+        
             return status;
         }
 
         return false;
     }
 
-    AITranslator=async (targetLanguage)=>{
-        if(('translation' in self && 'createTranslator' in self.translation)){
-            const translator=await self.translation.createTranslator({
+    AITranslator = async (targetLanguage) => {
+        if (('translation' in self && 'createTranslator' in self.translation)) {
+            const translator = await self.translation.createTranslator({
                 sourceLanguage: this.sourceLanguage,
                 targetLanguage,
             });
 
             return translator;
-        }else if(('ai' in self && 'translator' in self.ai )){
+        } else if (('ai' in self && 'translator' in self.ai)) {
             const translator = await self.ai.translator.create({
                 sourceLanguage: this.sourceLanguage,
                 targetLanguage,
-              });
+            });
 
             return translator;
-        }else if("Translator" in self && "create" in self.Translator){
+        } else if ("Translator" in self && "create" in self.Translator) {
             const translator = await self.Translator.create({
                 sourceLanguage: this.sourceLanguage,
                 targetLanguage,
@@ -288,9 +316,9 @@ class ChromeAiTranslator {
     // Method to initialize the translation process
     init = async (textContentArray) => {
         this.textContent = textContentArray;
-        this.textContentKeys=Object.keys(this.textContent);
+        this.textContentKeys = Object.keys(this.textContent);
         this.translationStart = false; // Flag to indicate if translation has started
-        this.completedTranslateIndex=0;
+        this.completedTranslateIndex = 0;
         this.completedCharacterCount = 0; // Count of characters translated
     };
 
@@ -304,7 +332,7 @@ class ChromeAiTranslator {
         // Create a translator instance
         this.translator = await this.AITranslator(langCode);
 
-        if(this.textContentKeys.length > 0 && this.textContentKeys.length > this.completedTranslateIndex){
+        if (this.textContentKeys.length > 0 && this.textContentKeys.length > this.completedTranslateIndex) {
             await this.stringTranslation(this.completedTranslateIndex);
         }
     };
@@ -327,8 +355,8 @@ class ChromeAiTranslator {
                     !/^\d+$/.test(child.nodeValue.trim())
                 ) {
                     originalString.push(child);
-                }else if(child.childNodes.length > 0){
-                    // this.translateChildNodes(child, originalString);
+                } else if (child.classList && !child.classList.contains('notranslate')) {
+                    this.filterInnerTextNodes(child, originalString);
                 }
             });
         } else if (ele.querySelector('.notranslate')) {
@@ -339,6 +367,8 @@ class ChromeAiTranslator {
                     !/^\d+$/.test(child.nodeValue.trim())
                 ) {
                     originalString.push(child);
+                } else if (child.classList && !child.classList.contains('notranslate')) {
+                    this.filterInnerTextNodes(child, originalString);
                 }
             });
         }
@@ -347,51 +377,50 @@ class ChromeAiTranslator {
             await this.stringTranslationBatch(originalString, 0);
         }
 
-        this.completedTranslateIndex=index;
+        this.completedTranslateIndex = index;
         this.completedCharacterCount += orignalText.length; // Update character count
 
-        this.textContent[this.textContentKeys[index]]=ele.innerText;
+        this.textContent[this.textContentKeys[index]] = ele.innerText;
 
         this.onAfterTranslate(this.textContentKeys[index], this.textContent[this.textContentKeys[index]]); // Call the after translation callback
 
         ele.remove();
-        ele=null;
+        ele = null;
 
-        if(this.textContentKeys.length > this.completedTranslateIndex + 1){
+        if (this.textContentKeys.length > this.completedTranslateIndex + 1) {
             await this.stringTranslation(this.completedTranslateIndex + 1);
         }
 
-        if(index === this.textContentKeys.length - 1){
+        if (index === this.textContentKeys.length - 1) {
             this.onComplete({ characterCount: this.completedCharacterCount }); // Call the complete callback
         }
     };
 
-    translateChildNodes = async (ele, originalString) => {
-        if(ele.childNodes.length > 0 && !ele.querySelector('.notranslate')){
-            ele.childNodes.forEach(child => {
-                if(child.nodeType === 3 && child.nodeValue.trim() !== '' && !/^\d+$/.test(child.nodeValue.trim())){
-                    originalString.push(child);
-                }else if(child.childNodes.length > 0){
-                    this.translateChildNodes(child, originalString);
-                }
-            });
-        }else if(ele.querySelector('.notranslate')){
-            ele.childNodes.forEach(child => {
-                if(child.nodeType === 3 && child.nodeValue.trim() !== '' && !/^\d+$/.test(child.nodeValue.trim())){
-                    originalString.push(child);
-                }else if(child.childNodes.length > 0){
-                    this.translateChildNodes(child, originalString);
-                }
-            });
-        }
+    filterInnerTextNodes = (ele, updatedArray) => {
+        const childElements = ele.childNodes;
+
+        if (ele.classList && ele.classList.contains('notranslate')) return;
+
+        childElements.forEach(child => {
+            if (child.nodeType === 3 && child.nodeValue.trim() !== '') {
+                updatedArray.push(child);
+            } else if (child.classList && !child.classList.contains('notranslate')) {
+                this.filterInnerTextNodes(child, updatedArray);
+            }
+        });
     }
 
     stringTranslationBatch = async (originalString, index) => {
-        const translatedString = await this.translator.translate(originalString[index].nodeValue); // Translate the string
-
-        if (translatedString && '' !== translatedString) {
-            originalString[index].nodeValue = translatedString; // Set the translated string
+        if(['`', '`', '`','!','#','$','%','^','&','*','(',')','-','_','+','=','[',']','{','}','|','\\',':',';','"','\'','<','>','?','/'].includes(originalString[index].nodeValue)) {
+            originalString[index].nodeValue=originalString[index].nodeValue;
+        }else{
+            const translatedString = await this.translator.translate(originalString[index].nodeValue); // Translate the string
+    
+            if (translatedString && '' !== translatedString) {
+                originalString[index].nodeValue = translatedString; // Set the translated string
+            }
         }
+        
 
         if (index < originalString.length - 1) {
             await this.stringTranslationBatch(originalString, index + 1);
@@ -416,10 +445,10 @@ class ChromeAiTranslator {
         await this.startTranslationProcess(); // Start translation process
     }
 
-    
-    static svgIcons=(iconName)=>{
-        const Icons={
-            'copy':`<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg" fill="#2271b1"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"></path></svg>`
+
+    static svgIcons = (iconName) => {
+        const Icons = {
+            'copy': `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg" fill="#2271b1"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"></path></svg>`
         }
 
         return Icons[iconName] || '';

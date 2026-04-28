@@ -200,8 +200,8 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
         firstElement.outerHTML = filterContent;
 
-        const output=tempElement.innerHTML;
-        tempElement=null;
+        const output = tempElement.innerHTML;
+        tempElement = null;
         // Return the modified HTML
         return output;
     }
@@ -326,18 +326,25 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
             // Improved: If URL contains "lmat_page_translation_" or "[", add CloseSpanPlaceholder *before* this, else wrap URL in span as normal
             const urlPattern = /(https?:\/\/|www\.)[^\s\[\]]+/gi;
-            string = string.replace(urlPattern, (match) => {
-                if(match.includes("#lmat_page_translation_")){
-                    const filterUrl=match.split(placeholderPrefix);
-                    if(filterUrl.length > 1){
-                        filterUrl[0]=OpenSpanPlaceholder+removeInnerSpanPlaceholder(filterUrl[0])+CloseSpanPlaceholder;
+            string = string.replace(urlPattern, (match) => {        
+                let urlQuoteRemoved = false;
+                if ( match.endsWith( '"' ) ) {
+                    urlQuoteRemoved = true;
+                    match = match.slice(0, -1);
+                }
+
+                if (match.includes("#lmat_page_translation_")) {
+                    const filterUrl = match.split(placeholderPrefix);
+                    if (filterUrl.length > 1) {
+                        filterUrl[0] = OpenSpanPlaceholder + removeInnerSpanPlaceholder(filterUrl[0]) + CloseSpanPlaceholder;
                     }
 
                     const updatedUrl = filterUrl.join(placeholderPrefix);
 
-                    return updatedUrl;
+                    return `${updatedUrl}${urlQuoteRemoved ? '"' : ''}`;
                 }
-                return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
+
+                return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}${urlQuoteRemoved ? '"' : ''}`;
             });
         }
 
@@ -410,7 +417,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         function escapeRegex(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
-        
+
         if (isEmptyOrUnclosedTag(string)) {
 
             const openPH = escapeRegex(OpenSpanPlaceholder);
@@ -420,12 +427,12 @@ const FilterTargetContent = (props, storeUpdateContent) => {
                 `(?<!${openPH})<([a-z][a-z0-9]*)(\\b[^>]*)?>(?!${closePH})`,
                 'gi'
             );
-            
+
             const closingTagRegex = new RegExp(
                 `(?<!${openPH})</([a-z][a-z0-9]*)>(?!${closePH})`,
                 'gi'
             );
-            
+
             content = string
                 .replace(openingTagRegex, (match) => {
                     return `${OpenSpanPlaceholder}${removeInnerSpanPlaceholder(match)}${CloseSpanPlaceholder}`;
@@ -444,7 +451,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
             content = syncTRTDFromFirstToSecond(string, content);
 
-            tempElement=null;
+            tempElement = null;
         }
 
         // remoove all the ${OpenTempTagPlaceholder} and ${CloseTempTagPlaceholder}
@@ -454,9 +461,9 @@ const FilterTargetContent = (props, storeUpdateContent) => {
         );
 
         content = content.replace(tempTagPattern, '');
-        
+
         content = removeLineBreakPlaceholder(content);
-        
+
         content = removeEntityPlaceholder(content);
 
         return splitContent(content);
@@ -484,9 +491,7 @@ const FilterTargetContent = (props, storeUpdateContent) => {
     }
 
     const getFilteredString = () => {
-        const shouldFilterForService = ['google', 'localAiTranslator'].includes(props.service);
-
-        if (shouldFilterForService && saveFilteredString && item && item.id && item.type && item.source && !item.filteredString) {
+        if (saveFilteredString && item && item.id && item.type && item.source && !item.filteredString) {
             const filteredString = filterSourceData(item.source);
 
             const filteredStringContent = filteredString.map((data, index) => {
@@ -494,8 +499,8 @@ const FilterTargetContent = (props, storeUpdateContent) => {
                 if (notTranslate) {
                     let pTemp = document.createElement('p');
                     pTemp.innerText = filterContent(data);
-                    const output=pTemp.innerHTML;
-                    pTemp=null;
+                    const output = pTemp.innerHTML;
+                    pTemp = null;
                     return `<span class="notranslate lmat-page-translation-notraslate-tag" translate="no">${output}</span>`;
                 } else {
                     return data;
@@ -510,23 +515,22 @@ const FilterTargetContent = (props, storeUpdateContent) => {
 
     /**
      * The content to be filtered based on the service type.
-     * If the service is 'google' or 'localAiTranslator', the content is filtered
-     * using filterSourceData; otherwise, the content remains unchanged.
+     * If the service is 'google' & 'localAiTranslator' the content is filtered using filterSourceData function, otherwise, the content remains unchanged.
      */
     const content = ['google', 'localAiTranslator'].includes(props.service) ? filterSourceData(props.content) : props.content;
 
     return (
         <>
             {
-            ['localAiTranslator', 'google'].includes(props.service) ? content.map((data, index) => {
-                const notTranslate = notTranslatePattern.test(data);
-                if (notTranslate) {
-                    return <span key={index} className="notranslate lmat-page-translation-notraslate-tag" translate="no">{filterContent(data)}</span>;
-                } else {
-                    return data;
-                }
-            }) :
-            content
+                ['localAiTranslator', 'google'].includes(props.service) ? content.map((data, index) => {
+                    const notTranslate = notTranslatePattern.test(data);
+                    if (notTranslate) {
+                        return <span key={index} className="notranslate lmat-page-translation-notraslate-tag" translate="no">{filterContent(data)}</span>;
+                    } else {
+                        return data;
+                    }
+                }) :
+                    content
             }
         </>
     );

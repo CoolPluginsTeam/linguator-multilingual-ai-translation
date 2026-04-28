@@ -11,6 +11,13 @@ const ErrorModalBox = ({ message, onClose, Title }) => {
 
     useEffect(() => {
         const clipboardElements = document.querySelectorAll('.chrome-ai-translator-flags');
+        const reloadButton = document.querySelector('.lmat-page-translation-error-reload-btn');
+        
+        if(reloadButton){
+            reloadButton.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
 
         if (clipboardElements.length > 0) {
             clipboardElements.forEach(element => {
@@ -35,23 +42,45 @@ const ErrorModalBox = ({ message, onClose, Title }) => {
                     }, endCopyStatus: () => {
                         setTimeout(() => {
                             toolTipElement.remove();
+                            toolTipElement=null;
                         }, 800);
                     } });
                 });
             });
+        }
 
-            return () => {
+        if(window.atfp_global_object.editor_type === 'divi'){
+            document.querySelectorAll('.lmat-page-translation-error-modal-box-container a').forEach(element => {
+                element.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.open(e.currentTarget.href, '_blank');
+                });
+            });
+        }
+
+        return () => {
+            if(clipboardElements.length > 0){
                 clipboardElements.forEach(element => {
                     element.removeEventListener('click', () => { });
                 });
-            };
+            }
+
+            if(reloadButton){
+                reloadButton.removeEventListener('click', () => {});
+            }
+            
+            if(window.atfp_global_object.editor_type === 'divi'){
+                document.querySelectorAll('.lmat-page-translation-error-modal-box-container a').forEach(element => {
+                    element.removeEventListener('click', () => { });
+                });
+            }
         }
     }, []);
 
     return (
         <div className="lmat-page-translation-error-modal-box-container">
             <div className="lmat-page-translation-error-modal-box">
-                <div className="lmat-page-translation-error-modal-box-header">
+            <div className="lmat-page-translation-error-modal-box-header">
                     <span className="lmat-page-translation-error-modal-box-close" onClick={onClose}>×</span>
                     {Title && <h3>{Title}</h3>}
                 </div>
