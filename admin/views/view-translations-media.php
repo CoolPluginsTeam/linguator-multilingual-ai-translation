@@ -6,8 +6,8 @@ namespace Linguator\Admin\Views;
  *
  * @package Linguator
  *
- * @var LMAT_Admin_Classic_Editor $this    LMAT_Admin_Classic_Editor object.
- * @var LMAT_Language             $lang    The media language. Default language if no language assigned yet.
+ * @var Linguator_Admin_Classic_Editor $this    Linguator_Admin_Classic_Editor object.
+ * @var Linguator_Language             $lang    The media language. Default language if no language assigned yet.
  * @var int                      $post_ID The media Id.
  */
 

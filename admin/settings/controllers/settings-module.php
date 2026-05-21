@@ -17,7 +17,7 @@ use Linguator\Includes\Options\Options;
  *
  *  
  */
-class LMAT_Settings_Module {
+class Linguator_Settings_Module {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -26,14 +26,14 @@ class LMAT_Settings_Module {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	public $links_model;
 
@@ -256,7 +256,7 @@ class LMAT_Settings_Module {
 	 * @param array $options Raw values to save.
 	 * @return array
 	 */
-	protected function prepare_raw_data( array $options ): array {
+	protected function linguator_prepare_raw_data( array $options ): array {
 		return $options;
 	}
 
@@ -273,10 +273,10 @@ class LMAT_Settings_Module {
 			wp_die( -1 );
 		}
 
-		if ( isset( $_POST['module'] ) && $this->module === $_POST['module'] ) {
+		if ( isset( $_POST['module'] ) && ! empty( $_POST['module'] ) && $this->module === sanitize_key( wp_unslash( $_POST['module'] ) ) ) {
 			// It's up to the child class to decide which options are saved, whether there are errors or not
-			$posted_options   = array_diff_key( map_deep( $_POST, 'sanitize_text_field' ), array_flip( array( 'action', 'module', 'lmat_ajax_backend', 'lmat_ajax_settings', '_lmat_nonce' ) ) );
-			$errors           = $this->options->merge( $this->prepare_raw_data( $posted_options ) );
+			$posted_options   = array_diff_key( map_deep( wp_unslash( $_POST ), 'sanitize_text_field' ), array_flip( array( 'action', 'module', 'lmat_ajax_backend', 'lmat_ajax_settings', '_lmat_nonce' ) ) );
+			$errors           = $this->options->merge( $this->linguator_prepare_raw_data( $posted_options ) );
 
 			// Refresh language cache in case home urls have been modified
 			$this->model->clean_languages_cache();
@@ -289,14 +289,14 @@ class LMAT_Settings_Module {
 
 			if ( ! $errors->has_errors() ) {
 				// Send update message
-				lmat_add_notice( new WP_Error( 'settings_updated', __( 'Settings saved.', 'linguator-multilingual-ai-translation' ), 'success' ) );
-				$notice_html = $this->render_settings_errors_html( 'linguator' );
+				linguator_add_notice( new WP_Error( 'settings_updated', __( 'Settings saved.', 'linguator-multilingual-ai-translation' ), 'success' ) );
+				$notice_html = $this->linguator_render_settings_errors_html( 'linguator' );
 				$x = new WP_Ajax_Response( array( 'what' => 'success', 'data' => $notice_html ) );
 				$x->send();
 			} else {
 				// Send error messages
-				lmat_add_notice( $errors );
-				$notice_html = $this->render_settings_errors_html( 'linguator' );
+				linguator_add_notice( $errors );
+				$notice_html = $this->linguator_render_settings_errors_html( 'linguator' );
 				$x = new WP_Ajax_Response( array( 'what' => 'error', 'data' => $notice_html ) );
 				$x->send();
 			}
@@ -311,7 +311,7 @@ class LMAT_Settings_Module {
 	 * @param string $setting Settings group name used with add_settings_error/get_settings_errors.
 	 * @return string HTML markup for admin notices.
 	 */
-	protected function render_settings_errors_html( $setting ) {
+	protected function linguator_render_settings_errors_html( $setting ) {
 		$errors = \get_settings_errors( $setting );
 		if ( empty( $errors ) ) {
 			return '';
@@ -339,7 +339,7 @@ class LMAT_Settings_Module {
 	 *
 	 * @return string[]
 	 */
-	protected function get_actions() {
+	protected function linguator_get_actions() {
 		$actions = array();
 
 		if ( $this->is_active() && $this->get_form() ) {
@@ -365,7 +365,7 @@ class LMAT_Settings_Module {
 	 * @return string[] Action links.
 	 */
 	public function get_action_links() {
-		return array_intersect_key( $this->action_links, array_flip( $this->get_actions() ) );
+		return array_intersect_key( $this->action_links, array_flip( $this->linguator_get_actions() ) );
 	}
 
 	/**

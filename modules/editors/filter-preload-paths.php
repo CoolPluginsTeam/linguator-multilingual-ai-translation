@@ -5,15 +5,16 @@
 
 namespace Linguator\Modules\Editors;
 
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use WP_Post;
-use Linguator\Includes\Base\LMAT_Base;
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Admin\Controllers\LMAT_Admin_Block_Editor;
+use Linguator\Includes\Base\Linguator_Base;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Admin\Controllers\Linguator_Admin_Block_Editor;
 use WP_Block_Editor_Context;
 
 /**
@@ -22,17 +23,17 @@ use WP_Block_Editor_Context;
  */
 class Filter_Preload_Paths {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
 	/**
-	 * @var LMAT_Language|false|null
+	 * @var Linguator_Language|false|null
 	 */
 	protected $curlang;
 
 	/**
-	 * @var LMAT_Admin_Block_Editor|null
+	 * @var Linguator_Admin_Block_Editor|null
 	 */
 	protected $block_editor;
 
@@ -40,9 +41,9 @@ class Filter_Preload_Paths {
 	 * Constructor
 	 *
 	 *
-	 * @param LMAT_Base $linguator Linguator object.
+	 * @param Linguator_Base $linguator Linguator object.
 	 */
-	public function __construct( LMAT_Base &$linguator ) {
+	public function __construct( Linguator_Base &$linguator ) {
 		$this->model        = &$linguator->model;
 		$this->curlang      = &$linguator->curlang;
 		$this->block_editor = &$linguator->block_editor;
@@ -80,7 +81,7 @@ class Filter_Preload_Paths {
 
 		$preload_paths = (array) $preload_paths;
 
-		// Do nothing if in post editor since `LMAT_Admin_Block_Editor` has already filtered.
+		// Do nothing if in post editor since `Linguator_Admin_Block_Editor` has already filtered.
 		if ( 'core/edit-post' !== $context->name ) {
 			$lang = ! empty( $this->curlang ) ? $this->curlang->slug : null;
 

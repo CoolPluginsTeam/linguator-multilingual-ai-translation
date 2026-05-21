@@ -15,15 +15,15 @@ use Linguator\Includes\Models\Taxonomies;
 use Linguator\Includes\Options\Options;
 
 // Link model classes
-use Linguator\Includes\Services\Links\LMAT_Links_Model;
-use Linguator\Includes\Services\Links\LMAT_Links_Default;
-use Linguator\Includes\Services\Links\LMAT_Links_Directory;
-use Linguator\Includes\Services\Links\LMAT_Links_Subdomain;
-use Linguator\Includes\Services\Links\LMAT_Links_Domain;
-use Linguator\Includes\Helpers\LMAT_Cache;
-use Linguator\Includes\Models\Translatable\LMAT_Translatable_Objects;
-use Linguator\Includes\Models\Translated\LMAT_Translated_Post;
-use Linguator\Includes\Models\Translated\LMAT_Translated_Term;
+use Linguator\Includes\Services\Links\Linguator_Links_Model;
+use Linguator\Includes\Services\Links\Linguator_Links_Default;
+use Linguator\Includes\Services\Links\Linguator_Links_Directory;
+use Linguator\Includes\Services\Links\Linguator_Links_Subdomain;
+use Linguator\Includes\Services\Links\Linguator_Links_Domain;
+use Linguator\Includes\Helpers\Linguator_Cache;
+use Linguator\Includes\Models\Translatable\Linguator_Translatable_Objects;
+use Linguator\Includes\Models\Translated\Linguator_Translated_Post;
+use Linguator\Includes\Models\Translated\Linguator_Translated_Term;
 use Linguator\Includes\Models\Hide_Empty;
 use Linguator\Includes\Models\Hide_Default;
 
@@ -37,10 +37,10 @@ use Linguator\Includes\Models\Hide_Default;
  * @method bool                  are_languages_ready()                               Tells if get_languages_list() can be used. See `Model\Languages::are_ready()`.
  * @method void                  set_languages_ready()                               Sets the internal property `$languages_ready` to `true`, telling that get_languages_list() can be used. See `Model\Languages::set_ready()`.
  * @method `LMA`T_Language|false    get_language(mixed $value)                          Returns the language by its term_id, tl_term_id, slug or locale. See `Model\Languages::get()`.
- * @method LMAT_Language|WP_Error add_language(array $args)                           Adds a new language and creates a default category for this language. See `Model\Languages::add()`.
+ * @method Linguator_Language|WP_Error add_language(array $args)                           Adds a new language and creates a default category for this language. See `Model\Languages::add()`.
  * @method bool                  delete_language(int $lang_id)                       Deletes a language. See `Model\Languages::delete()`.
- * @method LMAT_Language|WP_Error update_language(array $args)                        Updates language properties. See `Model\Languages::update()`.
- * @method LMAT_Language|false    get_default_language()                              Returns the default language. See `Model\Languages::get_default()`.
+ * @method Linguator_Language|WP_Error update_language(array $args)                        Updates language properties. See `Model\Languages::update()`.
+ * @method Linguator_Language|false    get_default_language()                              Returns the default language. See `Model\Languages::get_default()`.
  * @method void                  update_default_lang(string $slug)                   Updates the default language. See `Model\Languages::update_default()`.
  * @method void                  maybe_create_language_terms()                       Maybe adds the missing language terms for 3rd party language taxonomies. See `Model\Languages::maybe_create_terms()`.
  * @method string[]              get_translated_post_types(bool $filter = true)      Returns post types that need to be translated. See `Model\Post_Types::get_translated()`.
@@ -51,11 +51,11 @@ use Linguator\Includes\Models\Hide_Default;
  * @method bool                  is_filtered_taxonomy(string|string[] $tax)          Returns true if Polylang filters this taxonomy per language. See `Model\Taxonomies::is_filtered()`.
  * @method string[]              get_filtered_taxonomies_query_vars()                Returns the query vars of all filtered taxonomies. See `Model\Taxonomies::get_filtered_query_vars()`.
  */
-class LMAT_Model {
+class Linguator_Model {
 	/**
 	 * Internal non persistent cache object.
 	 *
-	 * @var LMAT_Cache<mixed>
+	 * @var Linguator_Cache<mixed>
 	 */
 	public $cache;
 
@@ -71,21 +71,21 @@ class LMAT_Model {
 	 *
 	 *  
 	 *
-	 * @var LMAT_Translatable_Objects
+	 * @var Linguator_Translatable_Objects
 	 */
 	public $translatable_objects;
 
 	/**
 	 * Translated post model.
 	 *
-	 * @var LMAT_Translated_Post
+	 * @var Linguator_Translated_Post
 	 */
 	public $post;
 
 	/**
 	 * Translated term model.
 	 *
-	 * @var LMAT_Translated_Term
+	 * @var Linguator_Translated_Term
 	 */
 	public $term;
 
@@ -122,15 +122,15 @@ class LMAT_Model {
 	 */
 	public function __construct( Options &$options ) {
 		$this->options              = &$options;
-		$this->cache                = new LMAT_Cache();
-		$this->translatable_objects = new LMAT_Translatable_Objects();
+		$this->cache                = new Linguator_Cache();
+		$this->translatable_objects = new Linguator_Translatable_Objects();
 		$this->languages            = new Languages( $this->options, $this->translatable_objects, $this->cache );
 
 		$this->languages->register_proxy( new Hide_Empty() );
 		$this->languages->register_proxy( new Hide_Default() );
 
-		$this->post = $this->translatable_objects->register( new LMAT_Translated_Post( $this ) ); // Translated post sub model.
-		$this->term = $this->translatable_objects->register( new LMAT_Translated_Term( $this ) ); // Translated term sub model.
+		$this->post = $this->translatable_objects->register( new Linguator_Translated_Post( $this ) ); // Translated post sub model.
+		$this->term = $this->translatable_objects->register( new Linguator_Translated_Term( $this ) ); // Translated term sub model.
 
 		$this->post_types = new Post_Types( $this->post );
 		$this->taxonomies = new Taxonomies( $this->term );
@@ -184,16 +184,7 @@ class LMAT_Model {
 			return call_user_func_array( $methods[ $name ], $arguments );
 		}
 
-		$debug = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-		trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-			sprintf(
-				'Call to undefined function LMAT()->model->%1$s() in %2$s on line %3$s' . "\nError handler",
-				esc_html( $name ),
-				esc_html( $debug[0]['file'] ?? '' ),
-				absint( $debug[0]['line'] ?? 0 )
-			),
-			E_USER_ERROR
-		);
+		return null;
 	}
 
 	/**
@@ -236,7 +227,7 @@ class LMAT_Model {
 	 *  
 	 *
 	 * @param string[]           $clauses The list of sql clauses in terms query.
-	 * @param LMAT_Language[]|LMAT_Language $languages Language objects.
+	 * @param Linguator_Language[]|Linguator_Language $languages Language objects.
 	 * @return string[]                   Modified list of clauses.
 	 */
 	public function terms_clauses( $clauses, $languages ) {
@@ -257,7 +248,7 @@ class LMAT_Model {
 	 * @param string              $term_name The term name.
 	 * @param string              $taxonomy  Taxonomy name.
 	 * @param int                 $parent    Parent term id.
-	 * @param string|LMAT_Language $language  The language slug or object.
+	 * @param string|Linguator_Language $language  The language slug or object.
 	 * @return int The `term_id` of the found term. 0 otherwise.
 	 *
 	 * @phpstan-return int<0, max>
@@ -309,7 +300,7 @@ class LMAT_Model {
 	 *  
 	 *
 	 * @param string              $slug     The term slug to test.
-	 * @param string|LMAT_Language $language The language slug or object.
+	 * @param string|Linguator_Language $language The language slug or object.
 	 * @param string              $taxonomy Optional taxonomy name.
 	 * @param int                 $parent   Optional parent term id.
 	 * @return int The `term_id` of the found term. 0 otherwise.
@@ -360,7 +351,7 @@ class LMAT_Model {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $lang LMAT_Language instance.
+	 * @param Linguator_Language $lang Linguator_Language instance.
 	 * @param array        $q    {
 	 *   WP_Query arguments:
 	 *
@@ -473,10 +464,10 @@ class LMAT_Model {
 						$q_meta_key=isset($meta_query['key']) && !empty($meta_query['key']) ? sanitize_text_field($meta_query['key']) : '';
 						$q_meta_value=isset($meta_query['value']) && !empty($meta_query['value']) ? sanitize_text_field($meta_query['value']) : '';
 
-					if(!isset($base_args['meta_query'])){
-						// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-						$base_args['meta_query'] = array();
-					}
+						if(!isset($base_args['meta_query'])){
+							// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+							$base_args['meta_query'] = array();
+						}
 
 						$meta_query_array = array(
 							'key' => $q_meta_key,
@@ -532,11 +523,11 @@ class LMAT_Model {
 	 *
 	 *  
 	 *
-	 * @return LMAT_Links_Model
+	 * @return Linguator_Links_Model
 	 */
-	public function get_links_model(): LMAT_Links_Model {
+	public function get_links_model(): Linguator_Links_Model {
 		$c = array( 'Directory', 'Directory', 'Subdomain', 'Domain' );
-		$class = get_option( 'permalink_structure' ) ? 'LMAT_Links_' . $c[ $this->options['force_lang'] ] : 'LMAT_Links_Default';
+		$class = get_option( 'permalink_structure' ) ? 'Linguator_Links_' . $c[ $this->options['force_lang'] ] : 'Linguator_Links_Default';
 
 		/**
 		 * Filters the links model class to use.
@@ -544,23 +535,23 @@ class LMAT_Model {
 		 *
 		 *  
 		 *
-		 * @param string $class A class name: LMAT_Links_Default, LMAT_Links_Directory, LMAT_Links_Subdomain, LMAT_Links_Domain.
+		 * @param string $class A class name: Linguator_Links_Default, Linguator_Links_Directory, Linguator_Links_Subdomain, Linguator_Links_Domain.
 		 */
 		$class = apply_filters( 'lmat_links_model', $class );
 
 		// Handle namespace resolution for dynamic class instantiation
 		switch ( $class ) {
-			case 'LMAT_Links_Default':
-				$class = LMAT_Links_Default::class;
+			case 'Linguator_Links_Default':
+				$class = Linguator_Links_Default::class;
 				break;
-			case 'LMAT_Links_Directory':
-				$class = LMAT_Links_Directory::class;
+			case 'Linguator_Links_Directory':
+				$class = Linguator_Links_Directory::class;
 				break;
-			case 'LMAT_Links_Subdomain':
-				$class = LMAT_Links_Subdomain::class;
+			case 'Linguator_Links_Subdomain':
+				$class = Linguator_Links_Subdomain::class;
 				break;
-			case 'LMAT_Links_Domain':
-				$class = LMAT_Links_Domain::class;
+			case 'Linguator_Links_Domain':
+				$class = Linguator_Links_Domain::class;
 				break;
 		}
 
@@ -575,7 +566,7 @@ class LMAT_Model {
 	 *   Added the `$types` parameter.
 	 *
 	 * @param int      $limit Optional. Max number of IDs to return. Defaults to -1 (no limit).
-	 * @param string[] $types Optional. Types to handle (@see LMAT_Translatable_Object::get_type()). Defaults to
+	 * @param string[] $types Optional. Types to handle (@see Linguator_Translatable_Object::get_type()). Defaults to
 	 *                        an empty array (all types).
 	 * @return int[][]|false {
 	 *     IDs of objects without language.
@@ -596,7 +587,7 @@ class LMAT_Model {
 		 *   Added the `$types` parameter.
 		 *
 		 * @param int      $limit Max number of IDs to retrieve from the database.
-		 * @param string[] $types Types to handle (@see LMAT_Translatable_Object::get_type()). An empty array means all
+		 * @param string[] $types Types to handle (@see Linguator_Translatable_Object::get_type()). An empty array means all
 		 *                        types.
 		 */
 		$limit   = apply_filters( 'lmat_get_objects_with_no_lang_limit', $limit, $types );
@@ -627,7 +618,7 @@ class LMAT_Model {
 		 *
 		 * @param int[][]|false $objects List of lists of object IDs, `false` if no IDs found.
 		 * @param int           $limit   Max number of IDs to retrieve from the database.
-		 * @param string[]      $types   Types to handle (@see LMAT_Translatable_Object::get_type()). An empty array
+		 * @param string[]      $types   Types to handle (@see Linguator_Translatable_Object::get_type()). An empty array
 		 *                               means all types.
 		 */
 		return apply_filters( 'lmat_get_objects_with_no_lang', $objects, $limit, $types );
@@ -670,13 +661,13 @@ class LMAT_Model {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|null $lang  Optional. The language to assign to objects. Defaults to `null` (default language).
-	 * @param string[]          $types Optional. Types to handle (@see LMAT_Translatable_Object::get_type()). Defaults
+	 * @param Linguator_Language|null $lang  Optional. The language to assign to objects. Defaults to `null` (default language).
+	 * @param string[]          $types Optional. Types to handle (@see Linguator_Translatable_Object::get_type()). Defaults
 	 *                                 to an empty array (all types).
 	 * @return void
 	 */
 	public function set_language_in_mass( $lang = null, array $types = array() ): void {
-		if ( ! $lang instanceof LMAT_Language ) {
+		if ( ! $lang instanceof Linguator_Language ) {
 			$lang = $this->languages->get_default();
 
 			if ( empty( $lang ) ) {
@@ -719,7 +710,7 @@ class LMAT_Model {
 		$this->set_language_in_mass( $lang, $types_with_objects );
 	}
 
-	public function is_lmat_translatable_current_page($current_screen) :bool{
+	public function is_linguator_translatable_current_page($current_screen) :bool{
 		global $linguator;
 		if(!$linguator || !property_exists($linguator, 'model')){
 			return false;

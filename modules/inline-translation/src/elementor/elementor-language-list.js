@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
 
 /**
  * Add language list button to Elementor top menu
@@ -23,43 +24,41 @@ const addLanguageListButton = () => {
     const postId = elementor.config?.document?.id || elementor.config?.post?.id;
     if (postId) {
       // Fetch language information from REST API
-      fetch(`/wp-json/lmat/v1/post-language/${postId}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
+      apiFetch( { path: `/lmat/v1/post-language/${postId}` } )
+        .then( data => {
           targetLang = data.language;
           targetFlagUrl = data.flag_url;
-          
-          // Update the button with the flag
-          const button = jQuery('.lmat-language-list-button');
-          if (button.length > 0 && targetFlagUrl) {
-            button.html(`<img src="${targetFlagUrl}" alt="${targetLang}"/>`);
+
+          // Update the button with the flag.
+          // Use DOM construction instead of HTML string concatenation.
+          const $button = jQuery('.lmat-language-list-button');
+          if ( $button.length > 0 && targetFlagUrl ) {
+            $button.empty().append(
+              jQuery('<img/>', { src: targetFlagUrl, alt: targetLang })
+            );
           }
-        })
-        .catch(error => {
+        } )
+        .catch( () => {
           targetLang = 'en';
           targetFlagUrl = `${elementor.config?.urls?.assets || ''}flags/en.svg`;
-        });
+        } );
     }
   }
   
-  // Create button HTML
-  const buttonHtml = targetFlagUrl 
-    ? `<button class="lmat-language-list-button elementor-button" title="Open Language List">
-         <img src="${targetFlagUrl}" alt="${targetLang}"/>
-       </button>`
-    : `<button class="lmat-language-list-button elementor-button" title="Open Language List">
-         Languages
-       </button>`;
+  // Create the button element.
+  // Avoid embedding REST-provided values in raw HTML strings.
+  const buttonElement = jQuery(
+    '<button type="button" class="lmat-language-list-button elementor-button" title="Open Language List"></button>'
+  );
+  if ( targetFlagUrl ) {
+    buttonElement.append(jQuery('<img/>', { src: targetFlagUrl, alt: targetLang }));
+  } else {
+    buttonElement.append(jQuery(document.createTextNode('Languages')));
+  }
 
   // Find Elementor top bar and add button
   const topBar = jQuery('.MuiButtonGroup-root.MuiButtonGroup-contained').parent();
   if (topBar.length > 0) {
-    const buttonElement = jQuery(buttonHtml);
     topBar.prepend(buttonElement);
     
     // Add click handler to open language panel

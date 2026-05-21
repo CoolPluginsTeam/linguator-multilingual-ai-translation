@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 
@@ -19,7 +19,7 @@ use Linguator\Includes\Other\LMAT_Language;
  *
  *  
  */
-class LMAT_Links_Directory extends LMAT_Links_Permalinks {
+class Linguator_Links_Directory extends Linguator_Links_Permalinks {
 	/**
 	 * Relative path to the home url.
 	 *
@@ -32,7 +32,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model LMAT_Model instance.
+	 * @param Linguator_Model $model Linguator_Model instance.
 	 */
 	public function __construct( &$model ) {
 		parent::__construct( $model );
@@ -60,11 +60,11 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url      The url to modify.
-	 * @param LMAT_Language|string|false $language Language object or slug.
+	 * @param Linguator_Language|string|false $language Language object or slug.
 	 * @return string The modified url.
 	 */
 	public function add_language_to_link( $url, $language ) {
-		if ( $language instanceof LMAT_Language ) {
+		if ( $language instanceof Linguator_Language ) {
 			$language = $language->slug;
 		}
 
@@ -116,7 +116,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	 */
 	public function get_language_from_url( $url = '' ) {
 		if ( empty( $url ) ) {
-			$url = lmat_get_requested_url();
+			$url = linguator_get_requested_url();
 		}
 
 		$path = (string) wp_parse_url( $url, PHP_URL_PATH );
@@ -134,11 +134,11 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	 *  
 	 *   Accepts now a language slug.
 	 *
-	 * @param LMAT_Language|string $language Language object or slug.
+	 * @param Linguator_Language|string $language Language object or slug.
 	 * @return string
 	 */
 	public function home_url( $language ) {
-		if ( $language instanceof LMAT_Language ) {
+		if ( $language instanceof Linguator_Language ) {
 			$language = $language->slug;
 		}
 
@@ -265,7 +265,7 @@ class LMAT_Links_Directory extends LMAT_Links_Permalinks {
 	}
 
 	/**
-	 * Removes hooks to filter rewrite rules, called when switching blog @see {LMAT_Base::switch_blog()}.
+	 * Removes hooks to filter rewrite rules, called when switching blog @see {Linguator_Base::switch_blog()}.
 	 * See `self::prepare_rewrite_rules()` for added hooks.
 	 *
 	 *  

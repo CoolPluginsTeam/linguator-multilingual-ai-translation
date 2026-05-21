@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Base\LMAT_Base;
-use Linguator\Includes\Helpers\LMAT_Default_Term;
-use Linguator\Includes\Filters\LMAT_Filters;
-use Linguator\Includes\Filters\LMAT_Filters_Links;
-use Linguator\Includes\Filters\LMAT_Filters_Sanitization;
-use Linguator\Includes\Filters\LMAT_Filters_Widgets_Options;
-use Linguator\Admin\Controllers\LMAT_Admin_Links;
-use Linguator\Frontend\Controllers\LMAT_Frontend_Nav_Menu;
+use Linguator\Includes\Base\Linguator_Base;
+use Linguator\Includes\Helpers\Linguator_Default_Term;
+use Linguator\Includes\Filters\Linguator_Filters;
+use Linguator\Includes\Filters\Linguator_Filters_Links;
+use Linguator\Includes\Filters\Linguator_Filters_Sanitization;
+use Linguator\Includes\Filters\Linguator_Filters_Widgets_Options;
+use Linguator\Admin\Controllers\Linguator_Admin_Links;
+use Linguator\Frontend\Controllers\Linguator_Frontend_Nav_Menu;
 
 
 
@@ -26,50 +26,50 @@ use Linguator\Frontend\Controllers\LMAT_Frontend_Nav_Menu;
  *  
  */
 #[AllowDynamicProperties]
-class LMAT_REST_Request extends LMAT_Base {
+class Linguator_REST_Request extends Linguator_Base {
 	/**
-	 * @var LMAT_Language|false|null A `LMAT_Language` when defined, `false` otherwise. `null` until the language
+	 * @var Linguator_Language|false|null A `Linguator_Language` when defined, `false` otherwise. `null` until the language
 	 *                              definition process runs.
 	 */
 	public $curlang;
 
 	/**
-	 * @var LMAT_Default_Term|null
+	 * @var Linguator_Default_Term|null
 	 */
 	public $default_term;
 
 	/**
-	 * @var LMAT_Filters|null
+	 * @var Linguator_Filters|null
 	 */
 	public $filters;
 
 	/**
-	 * @var LMAT_Filters_Links|null
+	 * @var Linguator_Filters_Links|null
 	 */
 	public $filters_links;
 
 	/**
-	 * @var LMAT_Admin_Links|null
+	 * @var Linguator_Admin_Links|null
 	 */
 	public $links;
 
 	/**
-	 * @var LMAT_Nav_Menu|null
+	 * @var Linguator_Nav_Menu|null
 	 */
 	public $nav_menu;
 
 	/**
-	 * @var LMAT_Static_Pages|null
+	 * @var Linguator_Static_Pages|null
 	 */
 	public $static_pages;
 
 	/**
-	 * @var LMAT_Filters_Widgets_Options|null
+	 * @var Linguator_Filters_Widgets_Options|null
 	 */
 	public $filters_widgets_options;
 
 	/**
-	 * @var LMAT_Filters_Sanitization|null
+	 * @var Linguator_Filters_Sanitization|null
 	 */
 	public $filters_sanitization;
 
@@ -122,7 +122,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Links_Model $links_model Reference to the links model.
+	 * @param Linguator_Links_Model $links_model Reference to the links model.
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
@@ -130,7 +130,7 @@ class LMAT_REST_Request extends LMAT_Base {
 		// Static front page and page for posts.
 		// Early instantiated to be able to correctly initialize language properties.
 		if ( 'page' === get_option( 'show_on_front' ) ) {
-			$this->static_pages = new LMAT_Static_Pages( $this );
+			$this->static_pages = new Linguator_Static_Pages( $this );
 		}
 
 		$this->model->set_languages_ready();
@@ -146,7 +146,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	public function init() {
 		parent::init();
 
-		$this->default_term = new LMAT_Default_Term( $this );
+		$this->default_term = new Linguator_Default_Term( $this );
 		$this->default_term->add_hooks();
 
 		if ( ! $this->model->has_languages() ) {
@@ -154,14 +154,14 @@ class LMAT_REST_Request extends LMAT_Base {
 		}
 
 		add_filter( 'rest_pre_dispatch', array( $this, 'set_language' ), 10, 3 );
-		add_filter( 'rest_request_before_callbacks', array( $this, 'set_filters_sanitization' ) );
+		add_filter( 'rest_request_before_callbacks', array( $this, 'linguator_set_filters_sanitization' ) );
 
-		$this->filters_links           = new LMAT_Filters_Links( $this );
-		$this->filters                 = new LMAT_Filters( $this );
-		$this->filters_widgets_options = new LMAT_Filters_Widgets_Options( $this );
+													$this->filters_links           = new Linguator_Filters_Links( $this );
+		$this->filters                 = new Linguator_Filters( $this );
+		$this->filters_widgets_options = new Linguator_Filters_Widgets_Options( $this );
 
-		$this->links    = new LMAT_Admin_Links( $this );
-		$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this ); // For auto added pages to menu.
+		$this->links    = new Linguator_Admin_Links( $this );
+		$this->nav_menu = new Linguator_Frontend_Nav_Menu( $this ); // For auto added pages to menu.
 	}
 
 	/**
@@ -208,7 +208,7 @@ class LMAT_REST_Request extends LMAT_Base {
 	 * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
 	 * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed
 	 */
-	public function set_filters_sanitization( $response ) {
+	public function linguator_set_filters_sanitization( $response ) {
 		$language = $this->request->get_language();
 		if ( empty( $language ) ) {
 			$type     = $this->request->get_object_type();
@@ -216,7 +216,7 @@ class LMAT_REST_Request extends LMAT_Base {
 		}
 
 		if ( ! empty( $language ) ) {
-			$this->filters_sanitization = new LMAT_Filters_Sanitization( $language->locale );
+			$this->filters_sanitization = new Linguator_Filters_Sanitization( $language->locale );
 		}
 
 		return $response;

@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @template TCacheData
  */
-class LMAT_Cache {
+class Linguator_Cache {
 	/**
 	 * Current site id.
 	 *

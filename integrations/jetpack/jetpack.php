@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Jetpack {
+class Linguator_Jetpack {
 	/**
 	 * Constructor.
 	 *
@@ -27,7 +27,7 @@ class LMAT_Jetpack {
 		add_filter( 'jetpack_relatedposts_filter_filters', array( $this, 'jetpack_relatedposts_filter_filters' ), 10, 2 );
 
 		// Jetpack infinite scroll.
-		if ( isset( $_GET['infinity'], $_POST['action'] ) && 'infinite_scroll' == $_POST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( isset( $_GET['infinity'], $_POST['action'] ) && 'infinite_scroll' === sanitize_key( wp_unslash( $_POST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			add_filter( 'lmat_is_ajax_on_front', '__return_true' );
 		}
 	}
@@ -60,7 +60,7 @@ class LMAT_Jetpack {
 	 */
 	public function jetpack_widget_get_top_posts( $posts ) {
 		foreach ( $posts as $k => $post ) {
-			if ( lmat_current_language() !== lmat_get_post_language( $post['post_id'] ) ) {
+			if ( linguator_current_language() !== linguator_get_post_language( $post['post_id'] ) ) {
 				unset( $posts[ $k ] );
 			}
 		}
@@ -81,7 +81,7 @@ class LMAT_Jetpack {
 	 */
 	public function grunion_contact_form_field_html_filter( $r, $field_label ) {
 		if ( function_exists( 'icl_translate' ) ) {
-			if ( lmat_current_language() !== lmat_default_language() ) {
+			if ( linguator_current_language() !== linguator_default_language() ) {
 				$label_translation = icl_translate( 'jetpack ', $field_label . '_label', $field_label );
 				$r = str_replace( $field_label, $label_translation, $r );
 			}
@@ -122,7 +122,7 @@ class LMAT_Jetpack {
 	 * @return array
 	 */
 	public function jetpack_relatedposts_filter_filters( $filters, $post_id ) {
-		$slug = sanitize_title( lmat_get_post_language( $post_id, 'slug' ) );
+		$slug = sanitize_title( linguator_get_post_language( $post_id, 'slug' ) );
 		$filters[] = array( 'term' => array( 'taxonomy.language.slug' => $slug ) );
 		return $filters;
 	}
@@ -136,7 +136,8 @@ class LMAT_Jetpack {
 	 * @return array
 	 */
 	public function jetpack_infinite_scroll_js_settings( $settings ) {
-		$settings['history']['host'] = wp_parse_url( lmat_home_url(), PHP_URL_HOST ); // Jetpack uses get_option( 'home' ).
+		$settings['history']['host'] = wp_parse_url( linguator_home_url(), PHP_URL_HOST ); // Jetpack uses get_option( 'home' ).
 		return $settings;
 	}
 }
+

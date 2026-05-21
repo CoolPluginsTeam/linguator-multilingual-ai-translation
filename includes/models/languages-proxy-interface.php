@@ -5,7 +5,7 @@
 
 namespace Linguator\Includes\Models;
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 // Prevent direct access to this file for security.
 defined( 'ABSPATH' ) || exit;
@@ -30,12 +30,12 @@ interface Languages_Proxy_Interface {
 
 	/**
 	 * Change or filter the list of available languages as needed.
-	 * Takes an array of LMAT_Language objects and returns a (possibly changed) array.
+	 * Takes an array of Linguator_Language objects and returns a (possibly changed) array.
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param LMAT_Language[] $languages The current list of languages to be filtered or changed.
-	 * @return LMAT_Language[] The new or filtered list of languages.
+	 * @param Linguator_Language[] $languages The current list of languages to be filtered or changed.
+	 * @return Linguator_Language[] The new or filtered list of languages.
 	 */
 	public function filter( array $languages ): array;
 }

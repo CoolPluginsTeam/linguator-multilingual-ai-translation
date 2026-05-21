@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Controllers\LMAT_Switcher;
+use Linguator\Includes\Controllers\Linguator_Switcher;
 use WP_Widget;
 
 
@@ -30,7 +30,7 @@ use WP_Widget;
  *     hide_if_no_translation: 0|1
  * }
  */
-class LMAT_Widget_Languages extends WP_Widget {
+class Linguator_Widget_Languages extends WP_Widget {
 
 	/**
 	 * Constructor
@@ -79,7 +79,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 		$instance['dropdown'] = empty( $instance['dropdown'] ) ? 0 : $this->id;
 		$instance['echo']     = 0;
 		$instance['raw']      = 0;
-		$list                 = lmat_the_languages( $instance );
+		$list                 = linguator_the_languages( $instance );
 
 		if ( $list ) {
 			$title = empty( $instance['title'] ) ? '' : $instance['title'];
@@ -87,10 +87,10 @@ class LMAT_Widget_Languages extends WP_Widget {
 			/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 			$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput
+			echo wp_kses_post( $args['before_widget'] );
 
 			if ( $title ) {
-				echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput
+				echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 			}
 
 			// The title may be filtered: Strip out HTML and make sure the aria-label is never empty.
@@ -101,7 +101,14 @@ class LMAT_Widget_Languages extends WP_Widget {
 
 			if ( $instance['dropdown'] ) {
 				echo '<label class="screen-reader-text" for="' . esc_attr( 'lang_choice_' . $instance['dropdown'] ) . '">' . esc_html( $aria_label ) . '</label>';
-				echo $list; // phpcs:ignore WordPress.Security.EscapeOutput
+				echo wp_kses(
+					$list,
+					array(
+						'label'  => array( 'for' => true, 'class' => true ),
+						'select' => array( 'id' => true, 'name' => true, 'class' => true, 'aria-label' => true ),
+						'option' => array( 'value' => true, 'selected' => true ),
+					)
+				);
 			} else {
 				$format = current_theme_supports( 'html5', 'navigation-widgets' ) ? 'html5' : 'xhtml';
 
@@ -113,14 +120,23 @@ class LMAT_Widget_Languages extends WP_Widget {
 					echo '<nav aria-label="' . esc_attr( $aria_label ) . '">';
 				}
 
-				echo "<ul>\n" . $list . "</ul>\n"; // phpcs:ignore WordPress.Security.EscapeOutput
+				echo "<ul>\n" . wp_kses(
+					$list,
+					array(
+						'ul'   => array( 'class' => true ),
+						'li'   => array( 'class' => true ),
+						'a'    => array( 'href' => true, 'class' => true, 'title' => true, 'hreflang' => true, 'lang' => true ),
+						'span' => array( 'class' => true, 'style' => true ),
+						'img'  => array( 'src' => true, 'alt' => true, 'class' => true, 'width' => true, 'height' => true, 'style' => true ),
+					)
+				) . "</ul>\n";
 
 				if ( 'html5' === $format ) {
 					echo '</nav>';
 				}
 			}
 
-			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput
+			echo wp_kses_post( $args['after_widget'] );
 		}
 	}
 
@@ -138,7 +154,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$instance = array( 'title' => sanitize_text_field( $new_instance['title'] ) );
-		foreach ( array_keys( LMAT_Switcher::get_switcher_options( 'widget' ) ) as $key ) {
+		foreach ( array_keys( Linguator_Switcher::get_switcher_options( 'widget' ) ) as $key ) {
 			$instance[ $key ] = ! empty( $new_instance[ $key ] ) ? 1 : 0;
 		}
 
@@ -157,7 +173,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		// Default values
-		$instance = wp_parse_args( (array) $instance, array_merge( array( 'title' => '' ), LMAT_Switcher::get_switcher_options( 'widget', 'default' ) ) );
+		$instance = wp_parse_args( (array) $instance, array_merge( array( 'title' => '' ), Linguator_Switcher::get_switcher_options( 'widget', 'default' ) ) );
 
 		// Title
 		printf(
@@ -168,7 +184,7 @@ class LMAT_Widget_Languages extends WP_Widget {
 			esc_attr( $instance['title'] )
 		);
 
-		foreach ( LMAT_Switcher::get_switcher_options( 'widget' ) as $key => $str ) {
+		foreach ( Linguator_Switcher::get_switcher_options( 'widget' ) as $key => $str ) {
 			printf(
 				'<div%5$s%6$s><input type="checkbox" class="checkbox %7$s" id="%1$s" name="%2$s"%3$s /><label for="%1$s">%4$s</label></div>',
 				esc_attr( $this->get_field_id( $key ) ),
@@ -184,3 +200,4 @@ class LMAT_Widget_Languages extends WP_Widget {
 		return ''; // Because the parent class returns a string, however not used.
 	}
 }
+

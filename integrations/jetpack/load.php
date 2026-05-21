@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/jetpack.php';
 require_once __DIR__ . '/featured-content.php';
 
-use Linguator\Integrations\jetpack\LMAT_Jetpack;
-use Linguator\Integrations\jetpack\LMAT_Featured_Content;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\jetpack\Linguator_Jetpack;
+use Linguator\Integrations\jetpack\Linguator_Featured_Content;
+use Linguator\Integrations\Linguator_Integrations;
 
-LMAT_Integrations::instance()->jetpack = new LMAT_Jetpack(); // Must be loaded before the plugin is active.
-add_action( 'lmat_init', array( LMAT_Integrations::instance()->featured_content = new LMAT_Featured_Content(), 'init' ) );
+Linguator_Integrations::instance()->jetpack = new Linguator_Jetpack(); // Must be loaded before the plugin is active.
+add_action( 'lmat_init', array( Linguator_Integrations::instance()->featured_content = new Linguator_Featured_Content(), 'init' ) );

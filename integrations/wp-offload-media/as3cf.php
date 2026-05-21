@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_AS3CF {
+class Linguator_AS3CF {
 	/**
 	 * Stores if a media is translated when it is deleted.
 	 *
@@ -29,8 +29,8 @@ class LMAT_AS3CF {
 	 */
 	public function init() {
 		add_filter( 'lmat_copy_post_metas', array( $this, 'copy_post_metas' ) );
-		add_action( 'delete_attachment', array( $this, 'check_translated_media' ), 5 ); // Before Linguator deletes the translations information.
-		add_action( 'delete_attachment', array( $this, 'prevent_file_deletion' ), 15 ); // Between Linguator and WP Offload Media.
+		add_action( 'delete_attachment', array( $this, 'linguator_check_translated_media' ), 5 ); // Before Linguator deletes the translations information.
+		add_action( 'delete_attachment', array( $this, 'linguator_prevent_file_deletion' ), 15 ); // Between Linguator and WP Offload Media.
 	}
 
 	/**
@@ -54,8 +54,8 @@ class LMAT_AS3CF {
 	 *
 	 * @param int $post_id Id of the attachment being deleted.
 	 */
-	public function check_translated_media( $post_id ) {
-		$this->is_media_translated[ $post_id ] = ( count( lmat_get_post_translations( $post_id ) ) > 1 );
+	public function linguator_check_translated_media( $post_id ) {
+		$this->is_media_translated[ $post_id ] = ( count( linguator_get_post_translations( $post_id ) ) > 1 );
 	}
 
 	/**
@@ -68,10 +68,11 @@ class LMAT_AS3CF {
 	 *
 	 * @param int $post_id Id of the attachment being deleted.
 	 */
-	public function prevent_file_deletion( $post_id ) {
+	public function linguator_prevent_file_deletion( $post_id ) {
 		if ( ! empty( $this->is_media_translated[ $post_id ] ) ) {
 			delete_post_meta( $post_id, 'amazonS3_info' );
 			delete_post_meta( $post_id, 'as3cf_filesize_total' );
 		}
 	}
 }
+

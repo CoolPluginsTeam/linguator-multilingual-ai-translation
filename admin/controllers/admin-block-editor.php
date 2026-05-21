@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Filters\LMAT_Filter_REST_Routes;
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Filters\Linguator_Filter_REST_Routes;
+use Linguator\Includes\Other\Linguator_Model;
 use WP_Block_Editor_Context;
 use WP_Post;
 
@@ -20,14 +20,14 @@ use WP_Post;
  *
  *  
  */
-class LMAT_Admin_Block_Editor {
+class Linguator_Admin_Block_Editor {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
 	/**
-	 * @var LMAT_Filter_REST_Routes
+	 * @var Linguator_Filter_REST_Routes
 	 */
 	public $filter_rest_routes;
 
@@ -36,14 +36,14 @@ class LMAT_Admin_Block_Editor {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Admin $linguator The Linguator object.
+	 * @param Linguator_Admin $linguator The Linguator object.
 	 */
 	public function __construct( &$linguator ) {
 		$this->model              = &$linguator->model;
-		$this->filter_rest_routes = new LMAT_Filter_REST_Routes( $linguator->model );
+		$this->filter_rest_routes = new Linguator_Filter_REST_Routes( $linguator->model );
 
 		add_filter( 'block_editor_rest_api_preload_paths', array( $this, 'filter_preload_paths' ), 50, 2 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_block_editor_inline_script' ), 15 ); // After `LMAT_Admin_Base::admin_enqueue_scripts()` to ensure `lmat_block-editor`script is enqueued.
+		add_action( 'admin_enqueue_scripts', array( $this, 'linguator_add_block_editor_inline_script' ), 15 ); // After `Linguator_Admin_Base::admin_enqueue_scripts()` to ensure `linguator_block-editor`script is enqueued.
 	}
 
 	/**
@@ -92,7 +92,7 @@ class LMAT_Admin_Block_Editor {
 	 *
 	 * @return void
 	 */
-	public function add_block_editor_inline_script() {
+	public function linguator_add_block_editor_inline_script() {
 		$handle = 'lmat_block-editor';
 
 		if ( wp_script_is( $handle, 'enqueued' ) ) {

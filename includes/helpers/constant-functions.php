@@ -1,14 +1,15 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * @package Linguator
  *
  * Provides utility functions for safely handling Linguator constants.
  * These functions make it easier to check, get, and define constants.
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Checks whether a given constant is defined.
@@ -18,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @phpstan-param non-falsy-string $constant_name
  */
-function lmat_has_constant( string $constant_name ): bool {
+function linguator_has_constant( string $constant_name ): bool {
 	return defined( $constant_name ); // phpcs:ignore WordPressVIPMinimum.Constants.ConstantString.NotCheckingConstantName
 }
 
@@ -35,8 +36,8 @@ function lmat_has_constant( string $constant_name ): bool {
  * @phpstan-param D $default
  * @phpstan-return D
  */
-function lmat_get_constant( string $constant_name, $default = null ) {
-	if ( ! lmat_has_constant( $constant_name ) ) {
+function linguator_get_constant( string $constant_name, $default = null ) {
+	if ( ! linguator_has_constant( $constant_name ) ) {
 		return $default;
 	}
 
@@ -55,11 +56,11 @@ function lmat_get_constant( string $constant_name, $default = null ) {
  * @phpstan-param non-falsy-string $constant_name
  * @phpstan-param int|float|string|bool|array|null $value
  */
-function lmat_set_constant( string $constant_name, $value ): bool {
-	if ( lmat_has_constant( $constant_name ) ) {
+function linguator_set_constant( string $constant_name, $value ): bool {
+	if ( linguator_has_constant( $constant_name ) ) {
 		return false;
 	}
 
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound,WordPressVIPMinimum.Constants.ConstantString.NotCheckingConstantName
-	return define( $constant_name, $value );
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound, WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound, WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound
+	return define( $constant_name, $value ); 
 }

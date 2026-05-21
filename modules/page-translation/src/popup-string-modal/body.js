@@ -613,7 +613,7 @@ const StringPopUpBody = (props) => {
                 return (
                     <img
                         src={imgFolder + 'plus.png'}
-                        alt={__("Add translation", "automatic-translations-for-polylang-pro")}
+                        alt={__("Add translation", "linguator-multilingual-ai-translation")}
                         className="lmat-page-translation-add-translation-icon"
                     />
                 );
@@ -628,9 +628,9 @@ const StringPopUpBody = (props) => {
                     {StringModalBodyNotice && <div className="lmat-page-translation-body-notice-wrapper"><StringModalBodyNotice /></div>}
                     {props.translatePendingStatus && (
                         <div className="lmat_page_translation_translate_progress" key={props.modalRender}>
-                            {__("Automatic translation is in progress....", 'automatic-translations-for-polylang-pro')}<br />
-                            {__("It will take few minutes, enjoy ☕ coffee in this time!", 'automatic-translations-for-polylang-pro')}<br /><br />
-                            {__("Please do not leave this window or browser tab while translation is in progress...", 'automatic-translations-for-polylang-pro')}
+                            {__("Automatic translation is in progress....", 'linguator-multilingual-ai-translation')}<br />
+                            {__("It will take few minutes, enjoy ☕ coffee in this time!", 'linguator-multilingual-ai-translation')}<br /><br />
+                            {__("Please do not leave this window or browser tab while translation is in progress...", 'linguator-multilingual-ai-translation')}
                         </div>
                     )}
                     <div className={`translator-widget ${service}`} style={{ display: 'flex' }}>

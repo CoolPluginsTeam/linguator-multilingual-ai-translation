@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-abstract class LMAT_Sync_Metas {
+abstract class Linguator_Sync_Metas {
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
@@ -407,3 +407,4 @@ abstract class LMAT_Sync_Metas {
 		}
 	}
 }
+

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Filters\LMAT_Filters;
+use Linguator\Includes\Filters\Linguator_Filters;
 
 
 
@@ -17,7 +17,7 @@ use Linguator\Includes\Filters\LMAT_Filters;
  *
  *  
  */
-class LMAT_Admin_Filters extends LMAT_Filters {
+class Linguator_Admin_Filters extends Linguator_Filters {
 
 	/**
 	 * Constructor: setups filters and actions.
@@ -30,13 +30,13 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 		parent::__construct( $linguator );
 
 		// Language management for users
-		add_action( 'personal_options_update', array( $this, 'personal_options_update' ) );
-		add_action( 'edit_user_profile_update', array( $this, 'personal_options_update' ) );
-		add_action( 'personal_options', array( $this, 'personal_options' ) );
+		add_action( 'personal_options_update', array( $this, 'linguator_personal_options_update' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'linguator_personal_options_update' ) );
+		add_action( 'personal_options', array( $this, 'linguator_personal_options' ) );
 
 		// Upgrades plugins and themes translations files
-		add_filter( 'themes_update_check_locales', array( $this, 'update_check_locales' ) );
-		add_filter( 'plugins_update_check_locales', array( $this, 'update_check_locales' ) );
+		add_filter( 'themes_update_check_locales', array( $this, 'linguator_update_check_locales' ) );
+		add_filter( 'plugins_update_check_locales', array( $this, 'linguator_update_check_locales' ) );
 
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 
@@ -52,16 +52,16 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	 * @param int $user_id User ID.
 	 * @return void
 	 */
-	public function personal_options_update( $user_id ) {
+	public function linguator_personal_options_update( $user_id ) {
 		// Biography translations
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			$meta        = $lang->is_default ? 'description' : 'description_' . $lang->slug;
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- WordPress core handles nonce verification for personal_options_update, sanitized below with sanitize_textarea_field
-			$description = empty( $_POST[ 'description_' . $lang->slug ] ) ? '' : sanitize_textarea_field( trim( wp_unslash( $_POST[ 'description_' . $lang->slug ] ) ) );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- WordPress core handles nonce verification for linguator_personal_options_update, sanitized below with sanitize_textarea_field
+			$description = ! empty( $_POST[ 'description_' . $lang->slug ] ) ? sanitize_textarea_field( trim( wp_unslash( $_POST[ 'description_' . $lang->slug ] ) ) ) : '';
 
-		/** This filter is documented in wp-includes/user.php */
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		$description = apply_filters( 'pre_user_description', $description ); // Applies WP default filter wp_filter_kses
+			/** This filter is documented in wp-includes/user.php */
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+			$description = apply_filters( 'pre_user_description', $description ); // Applies WP default filter wp_filter_kses
 			update_user_meta( $user_id, $meta, $description );
 		}
 	}
@@ -74,7 +74,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	 * @param WP_User $profileuser The current WP_User object.
 	 * @return void
 	 */
-	public function personal_options( $profileuser ) {
+	public function linguator_personal_options( $profileuser ) {
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			$meta        = $lang->is_default ? 'description' : 'description_' . $lang->slug;
 			$description = get_user_meta( $profileuser->ID, $meta, true );
@@ -96,7 +96,7 @@ class LMAT_Admin_Filters extends LMAT_Filters {
 	 * @param string[] $locales List of locales to update for plugins and themes.
 	 * @return string[]
 	 */
-	public function update_check_locales( $locales ) {
+	public function linguator_update_check_locales( $locales ) {
 		return array_merge( $locales, $this->model->get_languages_list( array( 'fields' => 'locale' ) ) );
 	}
 

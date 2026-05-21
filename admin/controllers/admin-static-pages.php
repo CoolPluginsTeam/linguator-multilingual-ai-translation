@@ -8,17 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Controllers\LMAT_Static_Pages;
-use Linguator\Admin\Controllers\LMAT_Admin_Base;
+use Linguator\Includes\Controllers\Linguator_Static_Pages;
+use Linguator\Admin\Controllers\Linguator_Admin_Base;
 
 /**
  * Manages the static front page and the page for posts on admin side
  *
  *  
  */
-class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
+class Linguator_Admin_Static_Pages extends Linguator_Static_Pages {
 	/**
-	 * @var LMAT_Admin_Links|null
+	 * @var Linguator_Admin_Links|null
 	 */
 	protected $links;
 
@@ -38,12 +38,12 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 		add_filter( 'display_post_states', array( $this, 'display_post_states' ), 10, 2 );
 
 		// Refreshes the language cache when a static front page or page for for posts has been translated.
-		add_action( 'lmat_save_post', array( $this, 'lmat_save_post' ), 10, 3 );
+		add_action( 'lmat_save_post', array( $this, 'linguator_save_post' ), 10, 3 );
 
 		// Prevents WP resetting the option
-		add_filter( 'pre_update_option_show_on_front', array( $this, 'update_show_on_front' ), 10, 2 );
+		add_filter( 'pre_update_option_show_on_front', array( $this, 'linguator_update_show_on_front' ), 10, 2 );
 
-		add_action( 'admin_notices', array( $this, 'notice_must_translate' ) );
+		add_action( 'admin_notices', array( $this, 'linguator_notice_must_translate' ) );
 	}
 
 	/**
@@ -77,7 +77,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	 * @param int[]   $translations Translations of the post being saved.
 	 * @return void
 	 */
-	public function lmat_save_post( $post_id, $post, $translations ) {
+	public function linguator_save_post( $post_id, $post, $translations ) {
 		if ( in_array( $this->page_on_front, $translations ) || in_array( $this->page_for_posts, $translations ) ) {
 			$this->model->clean_languages_cache();
 		}
@@ -92,7 +92,7 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	 * @param string $old_value The old option value.
 	 * @return string
 	 */
-	public function update_show_on_front( $value, $old_value ) {
+	public function linguator_update_show_on_front( $value, $old_value ) {
 		if ( ! empty( $GLOBALS['pagenow'] ) && 'options-reading.php' === $GLOBALS['pagenow'] && 'posts' === $value && ! get_pages() && get_pages( array( 'lang' => '' ) ) ) {
 			$value = $old_value;
 		}
@@ -108,16 +108,16 @@ class LMAT_Admin_Static_Pages extends LMAT_Static_Pages {
 	 *
 	 * @return void
 	 */
-	public function notice_must_translate() {
+	public function linguator_notice_must_translate() {
 		$screen = get_current_screen();
 
-		if ( ! empty( $screen ) && ( LMAT_Admin_Base::get_screen_id( 'lang' ) === $screen->id || 'edit-page' === $screen->id ) ) {
+		if ( ! empty( $screen ) && ( Linguator_Admin_Base::get_screen_id( 'lang' ) === $screen->id || 'edit-page' === $screen->id ) ) {
 			$message = $this->get_must_translate_message();
 
 			if ( ! empty( $message ) ) {
 				printf(
 					'<div class="error"><p>%s</p></div>',
-					$message // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					wp_kses_post( $message )
 				);
 			}
 		}

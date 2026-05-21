@@ -9,22 +9,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Base\LMAT_Base;
-use Linguator\Frontend\Controllers\LMAT_Choose_Lang_Content;
-use Linguator\Frontend\Controllers\LMAT_Choose_Lang_Url;
-use Linguator\Frontend\Controllers\LMAT_Choose_Lang_Domain;
-use Linguator\Frontend\Controllers\LMAT_Frontend_Auto_Translate;
-use Linguator\Frontend\Controllers\LMAT_Frontend_Nav_Menu;
-use Linguator\Frontend\Controllers\LMAT_Frontend_Static_Pages;
-use Linguator\Frontend\Filters\LMAT_Frontend_Filters;
-use Linguator\Frontend\Filters\LMAT_Frontend_Filters_Links;
-use Linguator\Frontend\Filters\LMAT_Frontend_Filters_Search;
-use Linguator\Frontend\Filters\LMAT_Frontend_Filters_Widgets;
-use Linguator\Frontend\Services\LMAT_Frontend_Links;
-use Linguator\Includes\Helpers\LMAT_Default_Term;
-use Linguator\Includes\Other\LMAT_Query;
-use Linguator\Frontend\Services\LMAT_Canonical;
-use Linguator\Includes\Other\LMAT_Switch_Language;
+use Linguator\Includes\Base\Linguator_Base;
+use Linguator\Frontend\Controllers\Linguator_Choose_Lang_Content;
+use Linguator\Frontend\Controllers\Linguator_Choose_Lang_Url;
+use Linguator\Frontend\Controllers\Linguator_Choose_Lang_Domain;
+use Linguator\Frontend\Controllers\Linguator_Frontend_Auto_Translate;
+use Linguator\Frontend\Controllers\Linguator_Frontend_Nav_Menu;
+use Linguator\Frontend\Controllers\Linguator_Frontend_Static_Pages;
+use Linguator\Frontend\Filters\Linguator_Frontend_Filters;
+use Linguator\Frontend\Filters\Linguator_Frontend_Filters_Links;
+use Linguator\Frontend\Filters\Linguator_Frontend_Filters_Search;
+use Linguator\Frontend\Filters\Linguator_Frontend_Filters_Widgets;
+use Linguator\Frontend\Services\Linguator_Frontend_Links;
+use Linguator\Includes\Helpers\Linguator_Default_Term;
+use Linguator\Includes\Other\Linguator_Query;
+use Linguator\Frontend\Services\Linguator_Canonical;
+use Linguator\Includes\Other\Linguator_Switch_Language;
 
 
 
@@ -34,68 +34,68 @@ use Linguator\Includes\Other\LMAT_Switch_Language;
  *  
  */
 #[AllowDynamicProperties]
-class LMAT_Frontend extends LMAT_Base {
+class Linguator_Frontend extends Linguator_Base {
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
 	/**
-	 * @var LMAT_Frontend_Auto_Translate|null
+	 * @var Linguator_Frontend_Auto_Translate|null
 	 */
 	public $auto_translate;
 
 	/**
 	 * The class selecting the current language.
 	 *
-	 * @var LMAT_Choose_Lang|null
+	 * @var Linguator_Choose_Lang|null
 	 */
 	public $choose_lang;
 
 	/**
-	 * @var LMAT_Frontend_Filters|null
+	 * @var Linguator_Frontend_Filters|null
 	 */
 	public $filters;
 
 	/**
-	 * @var LMAT_Frontend_Filters_Links|null
+	 * @var Linguator_Frontend_Filters_Links|null
 	 */
 	public $filters_links;
 
 	/**
-	 * @var LMAT_Frontend_Filters_Search|null
+	 * @var Linguator_Frontend_Filters_Search|null
 	 */
 	public $filters_search;
 
 	/**
-	 * @var LMAT_Frontend_Links|null
+	 * @var Linguator_Frontend_Links|null
 	 */
 	public $links;
 
 	/**
-	 * @var LMAT_Default_Term|null
+	 * @var Linguator_Default_Term|null
 	 */
 	public $default_term;
 
 	/**
-	 * @var LMAT_Frontend_Nav_Menu|null
+	 * @var Linguator_Frontend_Nav_Menu|null
 	 */
 	public $nav_menu;
 
 	/**
-	 * @var LMAT_Frontend_Static_Pages|null
+	 * @var Linguator_Frontend_Static_Pages|null
 	 */
 	public $static_pages;
 
 	/**
-	 * @var LMAT_Frontend_Filters_Widgets|null
+	 * @var Linguator_Frontend_Filters_Widgets|null
 	 */
 	public $filters_widgets;
 
 	/**
-	 * @var LMAT_Canonical
+	 * @var Linguator_Canonical
 	 */
 	public $canonical;
 
@@ -142,25 +142,25 @@ class LMAT_Frontend extends LMAT_Base {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Links_Model $links_model Reference to the links model.
+	 * @param Linguator_Links_Model $links_model Reference to the links model.
 	 */
 	public function __construct( &$links_model ) {
 		parent::__construct( $links_model );
 
-		add_action( 'lmat_language_defined', array( $this, 'lmat_language_defined' ), 1 );
+		add_action( 'lmat_language_defined', array( $this, 'linguator_language_defined' ), 1 );
 
 		// Avoids the language being the queried object when querying multiple taxonomies
-		add_action( 'parse_tax_query', array( $this, 'parse_tax_query' ), 1 );
+		add_action( 'parse_tax_query', array( $this, 'linguator_parse_tax_query' ), 1 );
 
 		// Filters posts by language
 		add_action( 'parse_query', array( $this, 'parse_query' ), 6 );
 
 		// Not before 'check_canonical_url'
-		if ( ! defined( 'LMAT_AUTO_TRANSLATE' ) || LMAT_AUTO_TRANSLATE ) {
+		if ( ! defined( 'LINGUATOR_AUTO_TRANSLATE' ) || LINGUATOR_AUTO_TRANSLATE ) {
 			add_action( 'template_redirect', array( $this, 'auto_translate' ), 7 );
 		}
 
-		add_action( 'admin_bar_menu', array( $this, 'remove_customize_admin_bar' ), 41 ); // After WP_Admin_Bar::add_menus
+		add_action( 'admin_bar_menu', array( $this, 'linguator_remove_customize_admin_bar' ), 41 ); // After WP_Admin_Bar::add_menus
 
 		/*
 		 * Static front page and page for posts.
@@ -168,8 +168,8 @@ class LMAT_Frontend extends LMAT_Base {
 		 * Early instantiated to be able to correctly initialize language properties.
 		 * Also loaded in customizer preview, directly reading the request as we act before WP.
 		 */
-		if ( 'page' === get_option( 'show_on_front' ) || ( isset( $_REQUEST['wp_customize'] ) && 'on' === $_REQUEST['wp_customize'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$this->static_pages = new LMAT_Frontend_Static_Pages( $this );
+		if ( 'page' === get_option( 'show_on_front' ) || ( isset( $_REQUEST['wp_customize'] ) && 'on' === sanitize_key( wp_unslash( $_REQUEST['wp_customize'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$this->static_pages = new Linguator_Frontend_Static_Pages( $this );
 		}
 
 		$this->model->set_languages_ready();
@@ -183,25 +183,25 @@ class LMAT_Frontend extends LMAT_Base {
 	public function init() {
 		parent::init();
 
-		$this->links = new LMAT_Frontend_Links( $this );
+		$this->links = new Linguator_Frontend_Links( $this );
 
-		$this->default_term = new LMAT_Default_Term( $this );
+		$this->default_term = new Linguator_Default_Term( $this );
 		$this->default_term->add_hooks();
 
 		// Setup the language chooser
 		$c = array( 'Content', 'Url', 'Url', 'Domain' );
 		$class_map = array(
-			'LMAT_Choose_Lang_Content' => LMAT_Choose_Lang_Content::class,
-			'LMAT_Choose_Lang_Url'     => LMAT_Choose_Lang_Url::class,
-			'LMAT_Choose_Lang_Domain'  => LMAT_Choose_Lang_Domain::class,
+			'Linguator_Choose_Lang_Content' => Linguator_Choose_Lang_Content::class,
+			'Linguator_Choose_Lang_Url'     => Linguator_Choose_Lang_Url::class,
+			'Linguator_Choose_Lang_Domain'  => Linguator_Choose_Lang_Domain::class,
 		);
-		$class_name = 'LMAT_Choose_Lang_' . $c[ $this->options['force_lang'] ];
+		$class_name = 'Linguator_Choose_Lang_' . $c[ $this->options['force_lang'] ];
 		$class = $class_map[ $class_name ];
 		$this->choose_lang = new $class( $this );
 		$this->choose_lang->init();
 
 		// Need to load nav menu class early to correctly define the locations in the customizer when the language is set from the content
-		$this->nav_menu = new LMAT_Frontend_Nav_Menu( $this );
+		$this->nav_menu = new Linguator_Frontend_Nav_Menu( $this );
 	}
 
 	/**
@@ -211,23 +211,23 @@ class LMAT_Frontend extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function lmat_language_defined() {
+	public function linguator_language_defined() {
 		// Filters
-		$this->filters_links = new LMAT_Frontend_Filters_Links( $this );
-		$this->filters = new LMAT_Frontend_Filters( $this );
-		$this->filters_search = new LMAT_Frontend_Filters_Search( $this );
-		$this->filters_widgets = new LMAT_Frontend_Filters_Widgets( $this );
+		$this->filters_links = new Linguator_Frontend_Filters_Links( $this );
+		$this->filters = new Linguator_Frontend_Filters( $this );
+		$this->filters_search = new Linguator_Frontend_Filters_Search( $this );
+		$this->filters_widgets = new Linguator_Frontend_Filters_Widgets( $this );
 
 		/*
 		 * Redirects to canonical url before WordPress redirect_canonical
 		 * but after Nextgen Gallery which hacks $_SERVER['REQUEST_URI'] !!!
 		 * and restores it in 'template_redirect' with priority 1.
 		 */
-		$this->canonical = new LMAT_Canonical( $this );
+		$this->canonical = new Linguator_Canonical( $this );
 		add_action( 'template_redirect', array( $this->canonical, 'check_canonical_url' ), 4 );
 
 		// Auto translate for Ajax
-		if ( ( ! defined( 'LMAT_AUTO_TRANSLATE' ) || LMAT_AUTO_TRANSLATE ) && wp_doing_ajax() ) {
+		if ( ( ! defined( 'LINGUATOR_AUTO_TRANSLATE' ) || LINGUATOR_AUTO_TRANSLATE ) && wp_doing_ajax() ) {
 			$this->auto_translate();
 		}
 	}
@@ -240,9 +240,9 @@ class LMAT_Frontend extends LMAT_Base {
 	 * @param WP_Query $query WP_Query object.
 	 * @return void
 	 */
-	public function parse_tax_query( $query ) {
-		$lmat_query = new LMAT_Query( $query, $this->model );
-		$queried_taxonomies = $lmat_query->get_queried_taxonomies();
+	public function linguator_parse_tax_query( $query ) {
+		$linguator_query = new Linguator_Query( $query, $this->model );
+		$queried_taxonomies = $linguator_query->get_queried_taxonomies();
 
 		if ( ! empty( $queried_taxonomies ) && 'lmat_language' == reset( $queried_taxonomies ) ) {
 			$query->tax_query->queried_terms['lmat_language'] = array_shift( $query->tax_query->queried_terms );
@@ -259,12 +259,12 @@ class LMAT_Frontend extends LMAT_Base {
 	 */
 	public function parse_query( $query ) {
 		$qv = $query->query_vars;
-		$lmat_query = new LMAT_Query( $query, $this->model );
-		$taxonomies = $lmat_query->get_queried_taxonomies();
+		$linguator_query = new Linguator_Query( $query, $this->model );
+		$taxonomies = $linguator_query->get_queried_taxonomies();
 
 		// Allow filtering recent posts and secondary queries by the current language
 		if ( ! empty( $this->curlang ) ) {
-			$lmat_query->filter_query( $this->curlang );
+			$linguator_query->filter_query( $this->curlang );
 		}
 
 		// Modifies query vars when the language is queried
@@ -300,7 +300,7 @@ class LMAT_Frontend extends LMAT_Base {
 	 * @return void
 	 */
 	public function auto_translate() {
-		$this->auto_translate = new LMAT_Frontend_Auto_Translate( $this );
+		$this->auto_translate = new Linguator_Frontend_Auto_Translate( $this );
 	}
 
 	/**
@@ -343,7 +343,7 @@ class LMAT_Frontend extends LMAT_Base {
 		}
 
 		// Send the slug instead of the locale here to avoid conflicts with same locales.
-		LMAT_Switch_Language::load_strings_translations( $this->curlang->slug );
+		Linguator_Switch_Language::load_strings_translations( $this->curlang->slug );
 	}
 
 	/**
@@ -357,8 +357,8 @@ class LMAT_Frontend extends LMAT_Base {
 	 *
 	 * @return void
 	 */
-	public function remove_customize_admin_bar() {
-		if ( ! $this->should_customize_menu_be_removed() ) {
+	public function linguator_remove_customize_admin_bar() {
+		if ( ! $this->linguator_should_customize_menu_be_removed() ) {
 			return;
 		}
 

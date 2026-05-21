@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Models\Translatable\LMAT_Translatable_Object;
-use Linguator\Includes\Other\LMAT_Model;
+use Linguator\Includes\Models\Translatable\Linguator_Translatable_Object;
+use Linguator\Includes\Other\Linguator_Model;
 use WP_Term;
 
 /**
@@ -20,7 +20,7 @@ use WP_Term;
  *
  *  
  */
-abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
+abstract class Linguator_Translated_Object extends Linguator_Translatable_Object {
 
 	/**
 	 * Taxonomy name for the translation groups.
@@ -36,9 +36,9 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model Instance of `LMAT_Model`.
+	 * @param Linguator_Model $model Instance of `Linguator_Model`.
 	 */
-	public function __construct( LMAT_Model $model ) {
+	public function __construct( Linguator_Model $model ) {
 		parent::__construct( $model );
 
 		$this->tax_to_cache[] = $this->tax_translations;
@@ -46,7 +46,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 		/*
 		 * Register our taxonomy as soon as possible.
 		 */
-		$this->register_translations_taxonomy();
+		$this->linguator_register_translations_taxonomy();
 	}
 
 	/**
@@ -56,7 +56,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 *
 	 * @return void
 	 */
-	protected function register_translations_taxonomy(): void {
+	protected function linguator_register_translations_taxonomy(): void {
 		register_taxonomy(
 			$this->tax_translations,
 			(array) $this->object_type,
@@ -90,7 +90,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 *  
 	 *
 	 * @param int                     $id   Object ID.
-	 * @param LMAT_Language|string|int $lang Language to assign to the object.
+	 * @param Linguator_Language|string|int $lang Language to assign to the object.
 	 * @return bool True when successfully assigned. False otherwise (or if the given language is already assigned to
 	 *              the object).
 	 */
@@ -99,7 +99,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			return false;
 		}
 
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		$translations = $this->get_translations( $id );
 
@@ -124,7 +124,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * @phpstan-return array<non-empty-string, positive-int>
 	 */
 	public function get_translations_from_term_id( $term_id ) {
-		$term_id = lmat_sanitize_id( $term_id );
+		$term_id = linguator_sanitize_id( $term_id );
 
 		if ( empty( $term_id ) ) {
 			return array();
@@ -155,7 +155,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * @phpstan-return array<non-empty-string, positive-int>
 	 */
 	public function save_translations( $id, array $translations = array() ) {
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return array();
@@ -232,7 +232,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * @return void
 	 */
 	public function delete_translation( $id ) {
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return;
@@ -272,7 +272,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * @phpstan-return array<non-empty-string, positive-int>
 	 */
 	public function get_translations( $id ) {
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return array();
@@ -293,7 +293,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * @phpstan-return array<non-empty-string, positive-int>
 	 */
 	public function get_raw_translations( $id ) {
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return array();
@@ -308,7 +308,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 *  
 	 *
 	 * @param int                 $id   Object ID.
-	 * @param LMAT_Language|string $lang Language (slug or object).
+	 * @param Linguator_Language|string $lang Language (slug or object).
 	 * @return int Object ID of the translation, `0` if there is none.
 	 *
 	 * @phpstan-return int<0, max>
@@ -332,13 +332,13 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 *   Returns `0` instead of `false`.
 	 *
 	 * @param int                     $id   Object ID.
-	 * @param LMAT_Language|string|int $lang Language (object, slug, or term ID).
+	 * @param Linguator_Language|string|int $lang Language (object, slug, or term ID).
 	 * @return int The translation object ID if exists. `0` if the passed object has no language or if not translated.
 	 *
 	 * @phpstan-return int<0, max>
 	 */
 	public function get( $id, $lang ) {
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return 0;
@@ -368,7 +368,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 	 * @return bool
 	 */
 	public function current_user_can_synchronize( $id ) {
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return false;
@@ -509,7 +509,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 
 		// Make sure values are clean before working with them.
 		/** @phpstan-var array<non-empty-string, positive-int> $translations */
-		$translations = lmat_sanitize_ids( $translations );
+		$translations = linguator_sanitize_ids( $translations );
 
 		if ( 'save' === $context ) {
 			/**
@@ -530,7 +530,7 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			$translations = $valid_translations;
 		}
 
-		$id = lmat_sanitize_id( $id );
+		$id = linguator_sanitize_id( $id );
 
 		if ( empty( $id ) ) {
 			return $translations;
@@ -574,36 +574,60 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 
 		// Insert terms using WordPress functions.
 		if ( ! empty( $terms ) ) {
-			foreach ( $terms as $term_data ) {
-				$slug = $term_data[0];
-				$name = $term_data[1];
-				
-				// Check if term already exists
-				$existing_term = get_term_by( 'slug', $slug, $this->tax_translations );
-				if ( ! $existing_term ) {
-					wp_insert_term( $name, $this->tax_translations, array( 'slug' => $slug ) );
+
+			$terms = array_map(function($term){
+				$updated_term = array();
+				if(isset($term[0])){
+					$updated_term[0] = sanitize_text_field($term[0]);
 				}
+				if(isset($term[1])){
+					$updated_term[1] = sanitize_text_field($term[1]);
+				}
+				return $updated_term;
+			}, $terms);
+
+			// @since 2.0.6
+			// Performance fix: Avoid wp_insert_term() overhead when processing
+			// many terms across multiple languages.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.DirectQuery
+			$insert_terms = $wpdb->query(
+				$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+					sprintf(
+						"INSERT INTO {$wpdb->terms} ( slug, name ) VALUES %s",
+						implode( ',', array_fill( 0, count( $terms ), '( %s, %s )' ) )
+					),
+					array_merge( ...$terms )
+				)
+			);
+
+			// Check for query failure (wpdb->query is a method, not an error object)
+			if ( false === $insert_terms ) {
+				$errors->add( 'lmat_insert_terms', __( 'Could not insert the terms.', 'linguator-multilingual-ai-translation' ) );
+			}
+		}
+		
+		if(!empty($slugs)){
+			$slugs = array_map('sanitize_text_field', $slugs);
+
+			// @since 2.0.6
+			// Performance fix: Avoid get_terms() overhead when processing
+			// many slugs across multiple languages.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.DirectQuery
+			$terms = $wpdb->get_results(
+				$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+					sprintf(
+						"SELECT term_id, slug FROM {$wpdb->terms} WHERE slug IN (%s)",
+						implode( ',', array_fill( 0, count( $slugs ), '%s' ) )
+					),
+					$slugs
+				)
+			);
+
+			if(is_wp_error($terms)){
+				$errors->add( 'lmat_get_terms_by_slugs', __( 'Could not get the terms by slugs.', 'linguator-multilingual-ai-translation' ) );
 			}
 		}
 
-		// Get all terms with their term_id using WordPress function.
-		$terms_by_slug = get_terms( array(
-			'taxonomy'   => $this->tax_translations,
-			'slug'       => $slugs,
-			'hide_empty' => false,
-			'fields'     => 'all',
-		) );
-		
-		// Convert to expected format
-		$terms = array();
-		if ( ! is_wp_error( $terms_by_slug ) ) {
-			foreach ( $terms_by_slug as $term ) {
-				$terms[] = (object) array(
-					'term_id' => $term->term_id,
-					'slug'    => $term->slug,
-				);
-			}
-		}
 
 		$term_ids = array();
 		$tts      = array();
@@ -614,24 +638,45 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			$tts[]      = array( $term->term_id, $this->tax_translations, $description[ $term->slug ], $count[ $term->slug ] );
 		}
 
-		// Update term taxonomy using WordPress functions.
+		// Insert term_taxonomy.
 		if ( ! empty( $tts ) ) {
-			foreach ( $tts as $tt_data ) {
-				$term_id = $tt_data[0];
-				$taxonomy = $tt_data[1];
-				$description = $tt_data[2];
-				$count = $tt_data[3];
-				
-				// Update the term with description and count
-				wp_update_term( $term_id, $taxonomy, array(
-					'description' => $description,
-				) );
-				
-				// Update term count if needed
-				wp_update_term_count_now( array( $term_id ), $taxonomy );
+			$tts = array_map(function($tt){
+				$updated_tt = array();
+				if(isset($tt[0])){
+					$updated_tt[0] = intval($tt[0]);
+				}
+				if(isset($tt[1])){
+					$updated_tt[1] = sanitize_text_field($tt[1]);
+				}
+				if(isset($tt[2])){
+					$updated_tt[2] = sanitize_text_field($tt[2]);
+				}
+				if(isset($tt[3])){
+					$updated_tt[3] = intval($tt[3]);
+				}
+				return $updated_tt;
+			}, $tts);
+
+			// @since 2.0.6
+			// Performance fix: Avoid wp_update_term() && wp_update_term_count_now() overhead when processing
+			// many term taxonomies & term count across multiple languages.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.DirectQuery
+			$insert_tts = $wpdb->query(
+				$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+					sprintf(
+						"INSERT INTO {$wpdb->term_taxonomy} ( term_id, taxonomy, description, count ) VALUES %s",
+						implode( ',', array_fill( 0, count( $tts ), '( %d, %s, %s, %d )' ) )
+					),
+					array_merge( ...$tts )
+				)
+			);
+
+			// Check for query failure (wpdb->query is a method, not an error object)
+			if ( false === $insert_tts ) {
+				$errors->add( 'lmat_insert_term_taxonomies', __( 'Could not insert the term taxonomies.', 'linguator-multilingual-ai-translation' ) );
 			}
 		}
-
+		
 		// Get all terms with term_taxonomy_id.
 		$terms = get_terms( array( 'taxonomy' => $this->tax_translations, 'hide_empty' => false ) );
 		$trs   = array();
@@ -650,35 +695,33 @@ abstract class LMAT_Translated_Object extends LMAT_Translatable_Object {
 			}
 		}
 
-		// Insert term relationships using WordPress functions.
+		// Insert term_relationships.
 		if ( ! empty( $trs ) ) {
-			// Group relationships by object_id for efficient processing
-			$relationships_by_object = array();
-			foreach ( $trs as $tr_data ) {
-				$object_id = $tr_data[0];
-				$term_taxonomy_id = $tr_data[1];
-				
-				if ( ! isset( $relationships_by_object[ $object_id ] ) ) {
-					$relationships_by_object[ $object_id ] = array();
+
+			$trs = array_map(function($tr){
+				$updated_tr = array();
+				if(isset($tr[0])){
+					$updated_tr[0] = intval($tr[0]);
 				}
-				$relationships_by_object[ $object_id ][] = $term_taxonomy_id;
-			}
-			
-			// Set object terms for each object
-			foreach ( $relationships_by_object as $object_id => $term_taxonomy_ids ) {
-				// Convert term_taxonomy_ids to term_ids
-				$term_ids = array();
-				foreach ( $term_taxonomy_ids as $tt_id ) {
-					$term = get_term_by( 'term_taxonomy_id', $tt_id, $this->tax_translations );
-					if ( $term ) {
-						$term_ids[] = $term->term_id;
-					}
+				if(isset($tr[1])){
+					$updated_tr[1] = intval($tr[1]);
 				}
-				
-				if ( ! empty( $term_ids ) ) {
-					wp_set_object_terms( $object_id, $term_ids, $this->tax_translations, true );
-				}
-			}
+				return $updated_tr;
+			}, $trs);
+
+			// @since 2.0.6
+			// Performance fix: Avoid wp_set_object_terms() overhead when processing
+			// many term relationships across multiple languages.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query(
+				$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+					sprintf(
+						"INSERT INTO {$wpdb->term_relationships} ( object_id, term_taxonomy_id ) VALUES %s",
+						implode( ',', array_fill( 0, count( $trs ), '( %d, %d )' ) )
+					),
+					array_merge( ...$trs )
+				)
+			);
 		}
 
 		clean_term_cache( $term_ids, $this->tax_translations );

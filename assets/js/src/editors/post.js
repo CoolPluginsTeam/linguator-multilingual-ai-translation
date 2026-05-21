@@ -19,39 +19,11 @@ import {
     Button
 } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { useMemo, useState, useRef, useCallback, useEffect } from '@wordpress/element';
+import { useMemo, useState, useCallback, useEffect } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { CirclePlus, SquarePen } from 'lucide-react';
 
 const SIDEBAR_NAME = 'lmat-post-sidebar';
-
-/**
- * Simple debounce hook
- */
-const useDebouncedCallback = (callback, delay = 2000) => {
-    const timer = useRef(null);
-    const cbRef = useRef(callback);
-    cbRef.current = callback;
-
-    const debounced = useCallback((...args) => {
-        if (timer.current) {
-            clearTimeout(timer.current);
-        }
-        timer.current = setTimeout(() => {
-            cbRef.current(...args);
-        }, delay);
-    }, [delay]);
-
-    // optional: clear on unmount
-    const cancel = useCallback(() => {
-        if (timer.current) {
-            clearTimeout(timer.current);
-            timer.current = null;
-        }
-    }, []);
-
-    return [debounced, cancel];
-};
 
 const getSettings = () => {
     // Provided by PHP in Abstract_Screen::enqueue via wp_add_inline_script
@@ -253,7 +225,6 @@ const TranslationRow = ( { row } ) => {
     const { lang, translated_post, links } = row;
     const initialTitle = translated_post?.title || '';
     const [title, setTitle] = useState(initialTitle);
-    const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
     const [allPages, setAllPages] = useState([]);
     const [loadingPages, setLoadingPages] = useState(false);
@@ -261,64 +232,39 @@ const TranslationRow = ( { row } ) => {
     const [selectedSuggestion, setSelectedSuggestion] = useState(null);
     const [linking, setLinking] = useState(false);
 
-    const editable = !initialTitle; // editable only if there is no value initially
-
-    // Debounced save
-    const [debouncedSave] = useDebouncedCallback(async (nextTitle) => {
-        // Guard: don’t send empty or whitespace-only titles
-        const clean = (nextTitle || '').trim();
-        if (!clean) return;
-
-        try {
-            setSaving(true);
-            setError('');
-
-            // Example payload — adjust to match your PHP route/handler.
-            // Expect your server to create/update a placeholder translation record’s title.
-            await apiFetch({
-                path: '/lmat/v1/translation-title',
-                method: 'POST',
-                data: {
-                    postId: translated_post?.id || null, // if you have it
-                    lang: lang?.slug,
-                    title: clean,
-                },
-            });
-
-            setSaving(false);
-        } catch (e) {
-            setSaving(false);
-            setError( __( 'Failed to save title. Please try again.', 'linguator-multilingual-ai-translation' ) );
-            // Optional: console.error(e);
-        }
-    }, 2000);
+    const editable = !initialTitle; // editable only if there is no value initiall.
 
     const hasEdit = !! links?.edit_link;
     const hasAdd = !! links?.add_link;
 
     const loadAllPages = useCallback(async () => {
         if (loadingPages || allPages.length > 0) return;
+        // Only load pages if we have a language
+        if (!lang?.slug) return;
         try {
             setLoadingPages(true);
-            const pages = await apiFetch({ path: '/lmat/v1/languages/utils/get_all_pages_data' });
+            // Pass language parameter to get only pages in the same language
+            const pages = await apiFetch({ 
+                path: `/lmat/v1/languages/utils/get_all_pages_data?lang=${lang.slug}` 
+            });
             setAllPages(Array.isArray(pages) ? pages : []);
         } catch (e) {
             // ignore
         } finally {
             setLoadingPages(false);
         }
-    }, [loadingPages, allPages.length]);
+    }, [loadingPages, allPages.length, lang?.slug]);
 
     const computeSuggestions = useCallback((query) => {
         const q = (query || '').trim().toLowerCase();
         if (!q) return [];
+        // No need to check sameLang since server already filters by language
         return allPages.filter((p) => {
-            const sameLang = p?.language?.slug === lang?.slug;
             const unlinked = !p?.is_linked;
             const matches = (p?.title || '').toLowerCase().includes(q) || (p?.slug || '').toLowerCase().includes(q);
-            return sameLang && unlinked && matches;
+            return unlinked && matches;
         }).slice(0, 10);
-    }, [allPages, lang?.slug]);
+    }, [allPages]);
 
     const handleTitleChange = (val) => {
         setTitle(val);
@@ -413,10 +359,7 @@ const TranslationRow = ( { row } ) => {
                         disabled={ !editable }
                         help={
                             editable
-                                ? ( saving
-                                    ? __( 'Saving…', 'linguator-multilingual-ai-translation' )
-                                    : __( 'Type title to save translation.', 'linguator-multilingual-ai-translation' )
-                                  )
+                            ? __( 'Type a title to search pages to link, or use + to create a translation.', 'linguator-multilingual-ai-translation' )
                                 : __( 'Modify title via Edit.', 'linguator-multilingual-ai-translation' )
                         }
                     />
@@ -446,7 +389,7 @@ const TranslationRow = ( { row } ) => {
                             ) : null
                         )
                     ) }
-                    { saving || linking ? <Spinner style={{ marginLeft: 8 }} /> : null }
+                    { loadingPages || linking ? <Spinner style={{ marginLeft: 8 }} /> : null }
                 </FlexItem>
             </Flex>
             { editable && suggestions.length > 0 ? (

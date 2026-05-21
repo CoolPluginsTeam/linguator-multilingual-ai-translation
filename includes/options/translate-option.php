@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Admin\Controllers\LMAT_Admin_Strings;
+use Linguator\Admin\Controllers\Linguator_Admin_Strings;
 use Linguator\Includes\Other\Linguator;
-use Linguator\Includes\Helpers\LMAT_Cache;
-use Linguator\Includes\Helpers\LMAT_MO;
-use Linguator\Includes\Helpers\LMAT_Format_Util;
+use Linguator\Includes\Helpers\Linguator_Cache;
+use Linguator\Includes\Helpers\Linguator_MO;
+use Linguator\Includes\Helpers\Linguator_Format_Util;
 
 
 
@@ -24,7 +24,7 @@ use Linguator\Includes\Helpers\LMAT_Format_Util;
  *
  *  
  */
-class LMAT_Translate_Option {
+class Linguator_Translate_Option {
 
 	/**
 	 * Array of option keys to translate.
@@ -62,14 +62,14 @@ class LMAT_Translate_Option {
 	private $updated_strings = array();
 
 	/**
-	 * @var LMAT_MO[]
+	 * @var Linguator_MO[]
 	 */
 	private $translations;
 
 	/**
 	 * Cache for the translated values.
 	 *
-	 * @var LMAT_Cache<array|string>
+	 * @var Linguator_Cache<array|string>
 	 */
 	private $cache;
 
@@ -98,7 +98,7 @@ class LMAT_Translate_Option {
 	 * }
 	 */
 	public function __construct( $name, $keys = array(), $args = array() ) {
-		$this->cache = new LMAT_Cache();
+		$this->cache = new Linguator_Cache();
 
 		// Registers the strings.
 		$context = $args['context'] ?? 'Linguator';
@@ -132,7 +132,7 @@ class LMAT_Translate_Option {
 			return $value;
 		}
 
-		if ( empty( $GLOBALS['l10n']['lmat_string'] ) || ! $GLOBALS['l10n']['lmat_string'] instanceof LMAT_MO ) {
+		if ( empty( $GLOBALS['l10n']['lmat_string'] ) || ! $GLOBALS['l10n']['lmat_string'] instanceof Linguator_MO ) {
 			return $value;
 		}
 
@@ -166,7 +166,7 @@ class LMAT_Translate_Option {
 		if ( is_array( $values ) || is_object( $values ) ) {
 			/** @var array|Traversable $values */
 			if ( count( $children ) ) {
-				$matcher = new LMAT_Format_Util();
+				$matcher = new Linguator_Format_Util();
 
 				foreach ( $children as $name => $child ) {
 					if ( is_array( $values ) && isset( $values[ $name ] ) ) {
@@ -193,7 +193,7 @@ class LMAT_Translate_Option {
 				}
 			}
 		} else {
-			$values = lmat__( $values );
+			$values = linguator__( $values );
 		}
 
 		return $values;
@@ -220,7 +220,7 @@ class LMAT_Translate_Option {
 			$children = is_array( $key ) ? $key : array();
 
 			if ( count( $children ) ) {
-				$matcher = new LMAT_Format_Util();
+				$matcher = new Linguator_Format_Util();
 
 				foreach ( $children as $name => $child ) {
 					if ( isset( $values[ $name ] ) ) {
@@ -247,7 +247,7 @@ class LMAT_Translate_Option {
 		} elseif ( is_scalar( $values ) ) {
 			$string         = (string) $values;
 			$this->hashes[] = md5( "$string|$option|$context" );
-			LMAT_Admin_Strings::register_string( $option, $string, $context, true );
+			Linguator_Admin_Strings::register_string( $option, $string, $context, true );
 		}
 	}
 
@@ -296,13 +296,13 @@ class LMAT_Translate_Option {
 
 		// Load translations in all languages.
 		foreach ( $languages as $language ) {
-			$this->translations[ $language->slug ] = new LMAT_MO();
+			$this->translations[ $language->slug ] = new Linguator_MO();
 			$this->translations[ $language->slug ]->import_from_db( $language );
 		}
 
-		$lang = lmat_current_language();
+		$lang = linguator_current_language();
 		if ( empty( $lang ) ) {
-			$lang = lmat_default_language();
+			$lang = linguator_default_language();
 		}
 
 		if ( empty( $lang ) ) {
@@ -327,7 +327,7 @@ class LMAT_Translate_Option {
 	 * @return void
 	 */
 	public function update_option() {
-		$curlang = lmat_current_language();
+		$curlang = linguator_current_language();
 
 		if ( ! empty( $this->updated_strings ) ) {
 			foreach ( LMAT()->model->get_languages_list() as $language ) {
@@ -356,9 +356,9 @@ class LMAT_Translate_Option {
 	 *
 	 * This is the heart of the update process. If an updated string is found to be
 	 * the same as the translation of the old string, we restore the old string to
-	 * prevent the update in {@see LMAT_Translate_Option::pre_update_option()}, otherwise
-	 * the updated string is stored in {@see LMAT_Translate_Option::updated_strings} to be able to
-	 * later assign the translations to the new value in {@see LMAT_Translate_Option::update_option()}.
+	 * prevent the update in {@see Linguator_Translate_Option::pre_update_option()}, otherwise
+	 * the updated string is stored in {@see Linguator_Translate_Option::updated_strings} to be able to
+	 * later assign the translations to the new value in {@see Linguator_Translate_Option::update_option()}.
 	 *
 	 *  
 	 *   Added $mo parameter.
@@ -366,7 +366,7 @@ class LMAT_Translate_Option {
 	 * @param mixed      $old_values The old option value.
 	 * @param mixed      $values     The new option value.
 	 * @param array|bool $key        Array of option keys to translate.
-	 * @param LMAT_MO     $mo         Translations used to compare the updated string to the translated old string.
+	 * @param Linguator_MO     $mo         Translations used to compare the updated string to the translated old string.
 	 * @return mixed
 	 */
 	protected function check_value_recursive( $old_values, $values, $key, $mo ) {
@@ -375,7 +375,7 @@ class LMAT_Translate_Option {
 		if ( is_array( $values ) || is_object( $values ) ) {
 			/** @var array|Traversable $values */
 			if ( count( $children ) ) {
-				$matcher = new LMAT_Format_Util();
+				$matcher = new Linguator_Format_Util();
 
 				foreach ( $children as $name => $child ) {
 					if ( is_array( $values ) && is_array( $old_values ) && isset( $old_values[ $name ], $values[ $name ] ) ) {

@@ -283,7 +283,8 @@
   width: 100%;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child {
+/* Row that contains paging (:last-child fails because DataTables adds .dt-autosize as last child) */
+#lmat-custom-datatable_wrapper .dt-layout-row:has(.dt-paging) {
   margin-left: auto;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -299,15 +300,16 @@
   padding: 0;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-layout-start {
+#lmat-custom-datatable_wrapper .dt-layout-row:has(.dt-paging) .dt-layout-start {
   font-size: 15px;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging {
+/* Paging styles – target .dt-paging directly so they apply regardless of row order */
+#lmat-custom-datatable_wrapper .dt-paging {
   margin: 1rem 0;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button {
+#lmat-custom-datatable_wrapper .dt-paging .dt-paging-button {
   padding: 0.5em 1em;
   margin: 0 0.2em;
   border: 1px solid #ddd;
@@ -320,32 +322,32 @@
   cursor: pointer;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.current {
+#lmat-custom-datatable_wrapper .dt-paging .dt-paging-button.current {
   background-color: #0073aa;
   color: #fff;
   border: 1px solid #0073aa;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button:hover:not(.current) {
+#lmat-custom-datatable_wrapper .dt-paging .dt-paging-button:hover:not(.current) {
   background-color: #f0f0f0;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.disabled {
+#lmat-custom-datatable_wrapper .dt-paging .dt-paging-button.disabled {
   color: #aaa;
   cursor: not-allowed;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.dots {
+#lmat-custom-datatable_wrapper .dt-paging .dt-paging-button.dots {
   padding: 0;
   color: #555;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .dt-paging-button.next {
+#lmat-custom-datatable_wrapper .dt-paging .dt-paging-button.next {
   margin-left: auto;
   font-weight: bold;
 }
 
-#lmat-custom-datatable_wrapper .dt-layout-row:last-child .dt-paging .ellipsis {
+#lmat-custom-datatable_wrapper .dt-paging .ellipsis {
   padding: 0 1em;
   color: #555;
 }

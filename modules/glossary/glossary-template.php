@@ -113,19 +113,6 @@ $single_language_mode = count($language_codes_with_entries) === 1;
 $single_language_code = $single_language_mode ? $language_codes_with_entries[0] : '';
 ?>
 
-<style>
-<?php // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $code is already escaped with esc_attr() and used in CSS selectors. ?>
-<?php foreach ($languages as $lang): 
-    $code = esc_attr($lang['code']);
-?>
-.lmat-glossary-table.lmat-hide-lang-<?php echo $code; ?> th[data-lang="<?php echo $code; ?>"],
-.lmat-glossary-table.lmat-hide-lang-<?php echo $code; ?> td[data-lang="<?php echo $code; ?>"] {
-    display: none !important;
-}
-<?php endforeach; ?>
-<?php // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-</style>
-
 <div class="lmat-glossary">
     <div class="lmat-glossary-container">
         <?php wp_nonce_field('lmat_glossary_nonce', 'lmat_glossary_nonce'); ?>
@@ -195,7 +182,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                         <label>
                                             <div class="lmat-translation-label-row">
                                                 <?php if (!empty($lang['img'])): ?>
-                                                    <img src="<?php echo esc_attr($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" class="lmat-lang-flag">
+                                                    <img src="<?php echo esc_url($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" class="lmat-lang-flag">
                                                 <?php endif; ?>
                                                 <span class="lmat-lang-name"><?php echo esc_html($lang['alt']); ?></span>
                                                 <span class="lmat-lang-translation-label"><?php esc_html_e('Translation', 'linguator-multilingual-ai-translation'); ?></span>
@@ -320,11 +307,17 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                     }
                     $lang = $language_map[$code];
                     ?>
-                    <button class="lmat-lang-filter-btn<?php echo $i === 0 ? ' active' : ''; ?>" data-lang="<?php echo esc_attr($code); ?>">
+                    <button class="lmat-lang-filter-btn<?php echo esc_attr( 0 === $i ? ' active' : '' ); ?>" data-lang="<?php echo esc_attr( $code ); ?>">
                         <?php if (!empty($lang['img'])): ?>
                             <img src="<?php echo esc_url($lang['img']); ?>" alt="<?php echo esc_attr($lang['alt']); ?>" />
                         <?php endif; ?>
-                        <?php echo esc_html($lang['alt']) . ' Terms'; ?>
+                         <?php
+                        printf(
+                            '%s %s',
+                            esc_html( $lang['alt'] ),
+                            esc_html__( 'Terms', 'linguator-multilingual-ai-translation' )
+                        );
+                        ?>
                     </button>
                 <?php endforeach; ?>
             </div>
@@ -342,21 +335,19 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                     class="lmat-lang-header lmat-lang-col-<?php echo esc_attr($lang['code']); ?>" 
                                     data-lang="<?php echo esc_attr($lang['code']); ?>">
                                     <?php
-                                    // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $lang['flag'] contains pre-sanitized HTML.
                                     echo !empty($lang['flag'])
-                                        ? $lang['flag']
-                                        : '<img src="' . esc_attr($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
-                                    // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+                                        ? wp_kses_post( $lang['flag'] )
+                                        : '<img src="' . esc_url($lang['img']) . '" alt="' . esc_attr($lang['alt']) . '" />';
                                     ?>
                                 </th>
                             <?php endforeach; ?>
                             <th class="lmat-actions-cell">
                                 <div class="lmat-action-buttons-header">
-                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-left" title="Scroll Left">
+                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-left" title="<?php esc_attr_e( 'Scroll left', 'linguator-multilingual-ai-translation' ); ?>">
                                         <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
                                         <img src="<?php echo esc_url(plugins_url('assets/images/arrow-left.svg', LINGUATOR_ROOT_FILE)); ?>" />
                                     </button>
-                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-right" title="Scroll Right">
+                                    <button class="lmat-actions-header-btn" id="lmat-actions-header-btn-right" title="<?php esc_attr_e( 'Scroll right', 'linguator-multilingual-ai-translation' ); ?>">
                                         <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plugins_url() returns a safe URL. ?>
                                         <img src="<?php echo esc_url(plugins_url('assets/images/arrow-right.svg', LINGUATOR_ROOT_FILE)); ?>" />
                                     </button>
@@ -378,8 +369,8 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                     <tbody>
                         <?php
                         // UTF-8 safe truncate helper
-                        if ( ! function_exists('lmat_glossary_truncate')) {
-                            function lmat_glossary_truncate( $str, $limit = 10 ) {
+                        if ( ! function_exists('linguator_glossary_truncate')) {
+                            function linguator_glossary_truncate( $str, $limit = 10 ) {
                                 $str = (string) $str;
                                 if (mb_strlen($str, 'UTF-8') > $limit) {
                                     return mb_substr($str, 0, $limit, 'UTF-8') . '…';
@@ -424,7 +415,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                 ?>
                                     <td colspan="2" class="lmat-lang-col-<?php echo esc_attr($lang['code']); ?>" 
                                         data-lang="<?php echo esc_attr($lang['code']); ?>"
-                                        data-is-source="<?php echo $is_source ? 'true' : 'false'; ?>">
+                                        data-is-source="<?php echo esc_attr( $is_source ? 'true' : 'false' ); ?>">
                                         <?php if ($is_source): ?>
                                             <span class="lmat-source-term">
                                                 <?php echo esc_html($term); ?>
@@ -435,7 +426,7 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                                             $translation = isset($data['translations'][$lang['code']]) ? $data['translations'][$lang['code']] : '';
                                             ?>
                                             <?php if (!empty($translation) && trim($translation) !== ''): ?>
-                                                <?php $truncated = lmat_glossary_truncate($translation, 7); ?>
+                                                <?php $truncated = linguator_glossary_truncate($translation, 7); ?>
                                                 <span class="lmat-translated-term"
                                                     title="<?php echo esc_attr($translation); ?>"
                                                     data-full-text="<?php echo esc_attr($translation); ?>">
@@ -475,45 +466,9 @@ $single_language_code = $single_language_mode ? $language_codes_with_entries[0] 
                     </tbody>
                 </table>
             <?php else: ?>
-                <div id="lmat-no-results">No glossary entries found.</div>
+                <div id="lmat-no-results"><?php esc_html_e('No glossary entries found.', 'linguator-multilingual-ai-translation'); ?></div>
             <?php endif; ?>
         </div>
-        <!-- Move the template outside the table wrapper so it is always present -->
-        <?php // phpcs:disable Generic.PHP.DisallowAlternativePHPTags -- JavaScript template syntax (Underscore.js), not PHP. ?>
-        <script type="text/template" id="lmat-glossary-edit-row-template">
-            <tr class="lmat-glossary-edit-row">
-                <td>
-                    <textarea class="lmat-edit-term" rows="3" placeholder="<?php esc_attr_e('String Translation', 'linguator-multilingual-ai-translation'); ?>"><%= term %></textarea>
-                    <div class="lmat-translation-error"></div>
-                    <textarea class="lmat-edit-desc" rows="4" placeholder="<?php esc_attr_e('Example: The name of the add-on that allows translating strings', 'linguator-multilingual-ai-translation'); ?>"><%= desc %></textarea>
-                </td>
-                <td>
-                    <select class="lmat-edit-type">
-                        <option value="general" <%= type === 'general' ? 'selected' : '' %>><?php esc_html_e('General', 'linguator-multilingual-ai-translation'); ?></option>
-                        <option value="name" <%= type === 'name' ? 'selected' : '' %>><?php esc_html_e('Name', 'linguator-multilingual-ai-translation'); ?></option>
-                    </select>
-                </td>
-                <% for (var i = 0; i < languages.length; i++) { 
-                    if (languages[i].code === source_lang) continue;
-                %>
-                    <td colspan="2">
-                        <textarea class="lmat-edit-translation" data-lang="<%= languages[i].code %>" placeholder="<?php esc_attr_e('Custom Translation', 'linguator-multilingual-ai-translation'); ?>" rows="9"><%= translations[languages[i].code] || '' %></textarea>
-                        <div class="lmat-translation-error"><?php esc_html_e('Too long, must be less than 220 characters', 'linguator-multilingual-ai-translation'); ?></div>
-                    </td>
-                <% } %>
-                <td colspan="2" class="lmat-actions-cell">
-                    <div class="lmat-action-buttons">
-                        <button type="button" class="lmat-save-edit-btn button button-primary">
-                            <?php esc_html_e('Save', 'linguator-multilingual-ai-translation'); ?>
-                        </button>
-                        <button type="button" class="lmat-cancel-edit-btn">
-                            <?php esc_html_e('Cancel', 'linguator-multilingual-ai-translation'); ?>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </script>
-        <?php // phpcs:enable Generic.PHP.DisallowAlternativePHPTags ?>
     </div>
 </div>
 <?php

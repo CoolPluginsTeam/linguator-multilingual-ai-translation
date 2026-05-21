@@ -11,35 +11,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
+use Linguator\Includes\Walkers\Linguator_Walker_Dropdown;
 
 
 /**
- * Class LMAT_Widgets_Filters
+ * Class Linguator_Widgets_Filters
  *
  *  
  *
  * Add new options to {@see https://developer.wordpress.org/reference/classes/wp_widget/ WP_Widget} and saves them.
  */
-class LMAT_Filters_Widgets_Options {
+class Linguator_Filters_Widgets_Options {
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * LMAT_Widgets_Filters constructor.
+	 * Linguator_Widgets_Filters constructor.
 	 *
 	 *
-	 * @param LMAT_Base $linguator The Linguator object.
+	 * @param Linguator_Base $linguator The Linguator object.
 	 * @return void
 	 */
 	public function __construct( $linguator ) {
 		$this->model = $linguator->model;
 
 		add_action( 'in_widget_form', array( $this, 'in_widget_form' ), 10, 3 );
-		add_filter( 'widget_update_callback', array( $this, 'widget_update_callback' ), 10, 2 );
+		add_filter( 'widget_update_callback', array( $this, 'linguator_widget_update_callback' ), 10, 2 );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class LMAT_Filters_Widgets_Options {
 	 * @phpstan-param WP_Widget<array<string, mixed>> $widget
 	 */
 	public function in_widget_form( $widget, $return, $instance ) {
-		$dropdown = new LMAT_Walker_Dropdown();
+		$dropdown = new Linguator_Walker_Dropdown();
 
 		$dropdown_html = $dropdown->walk(
 			array_merge(
@@ -64,16 +64,16 @@ class LMAT_Filters_Widgets_Options {
 			),
 			-1,
 			array(
-				'id' => $widget->get_field_id( 'lmat_lang' ),
-				'name' => $widget->get_field_name( 'lmat_lang' ),
-				'class' => 'tags-input lmat-lang-choice',
-				'selected' => empty( $instance['lmat_lang'] ) ? '' : $instance['lmat_lang'],
+				'id' => $widget->get_field_id( 'linguator_lang' ),
+				'name' => $widget->get_field_name( 'linguator_lang' ),
+				'class' => 'tags-input linguator_lang-choice',
+				'selected' => empty( $instance['linguator_lang'] ) ? '' : $instance['linguator_lang'],
 			)
 		);
 
 		printf(
 			'<p><label for="%1$s">%2$s %3$s</label></p>',
-			esc_attr( $widget->get_field_id( 'lmat_lang' ) ),
+			esc_attr( $widget->get_field_id( 'linguator_lang' ) ),
 			esc_html__( 'The widget is displayed for:', 'linguator-multilingual-ai-translation' ),
 			wp_kses(
 				$dropdown_html,
@@ -120,11 +120,11 @@ class LMAT_Filters_Widgets_Options {
 	 * @param array $new_instance The new Widget's options.
 	 * @return array Widget options.
 	 */
-	public function widget_update_callback( $instance, $new_instance ) {
-		if ( ! empty( $new_instance['lmat_lang'] ) && $lang = $this->model->get_language( $new_instance['lmat_lang'] ) ) {
-			$instance['lmat_lang'] = $lang->slug;
+	public function linguator_widget_update_callback( $instance, $new_instance ) {
+		if ( ! empty( $new_instance['linguator_lang'] ) && $lang = $this->model->get_language( $new_instance['linguator_lang'] ) ) {
+			$instance['linguator_lang'] = $lang->slug;
 		} else {
-			unset( $instance['lmat_lang'] );
+			unset( $instance['linguator_lang'] );
 		}
 
 		return $instance;

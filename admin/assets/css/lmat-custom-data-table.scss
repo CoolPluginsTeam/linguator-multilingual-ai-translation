@@ -228,7 +228,8 @@
         width: 100%;
     }
 
-    .dt-layout-row:last-child {
+    /* Row that contains paging (use :has() because last-child is the dt-autosize div DataTables adds) */
+    .dt-layout-row:has(.dt-paging) {
         margin-left: auto;
         display: flex;
         align-items: center;
@@ -284,6 +285,53 @@
                 padding: 0 1em;
                 color: #555;
             }
+        }
+    }
+
+    /* Paging styles without relying on row (fallback when :has() not supported or DOM order changes) */
+    .dt-paging {
+        margin: 1rem 0;
+
+        .dt-paging-button {
+            padding: 0.5em 1em;
+            margin: 0 0.2em;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            color: #0073aa;
+            text-decoration: none;
+            background-color: #fff;
+            transition: background-color 0.3s;
+            cursor: pointer;
+
+            &.current {
+                background-color: #0073aa;
+                color: #fff;
+                border: 1px solid #0073aa;
+            }
+
+            &:hover:not(.current) {
+                background-color: #f0f0f0;
+            }
+
+            &.disabled {
+                color: #aaa;
+                cursor: not-allowed;
+            }
+
+            &.dots {
+                padding: 0;
+                color: #555;
+            }
+
+            &.next {
+                margin-left: auto;
+                font-weight: bold;
+            }
+        }
+
+        .ellipsis {
+            padding: 0 1em;
+            color: #555;
         }
     }
 

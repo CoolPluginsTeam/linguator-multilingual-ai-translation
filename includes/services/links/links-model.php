@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 
@@ -19,7 +19,7 @@ use Linguator\Includes\Other\LMAT_Language;
  *
  *  
  */
-abstract class LMAT_Links_Model {
+abstract class Linguator_Links_Model {
 	/**
 	 * True if the child class uses pretty permalinks, false otherwise.
 	 *
@@ -35,7 +35,7 @@ abstract class LMAT_Links_Model {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
@@ -58,7 +58,7 @@ abstract class LMAT_Links_Model {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model LMAT_Model instance.
+	 * @param Linguator_Model $model Linguator_Model instance.
 	 */
 	public function __construct( &$model ) {
 		$this->model   = &$model;
@@ -72,7 +72,7 @@ abstract class LMAT_Links_Model {
 		// Adds our domains or subdomains to allowed hosts for safe redirection.
 		add_filter( 'allowed_redirect_hosts', array( $this, 'allowed_redirect_hosts' ) );
 
-		// Allows secondary domains for home and search URLs in `LMAT_Language`.
+		// Allows secondary domains for home and search URLs in `Linguator_Language`.
 		add_filter( 'lmat_language_home_url', array( $this, 'set_language_home_url' ), 10, 2 );
 		add_filter( 'lmat_language_search_url', array( $this, 'set_language_search_url' ), 10, 2 );
 
@@ -100,7 +100,7 @@ abstract class LMAT_Links_Model {
 	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url  The url to modify.
-	 * @param LMAT_Language|string|false $lang Language object or slug.
+	 * @param Linguator_Language|string|false $lang Language object or slug.
 	 * @return string The modified url.
 	 */
 	abstract public function add_language_to_link( $url, $lang );
@@ -153,7 +153,7 @@ abstract class LMAT_Links_Model {
 	 *  
 	 *   Accepts now an array of language properties.
 	 *
-	 * @param LMAT_Language|array $language Language object or array of language properties.
+	 * @param Linguator_Language|array $language Language object or array of language properties.
 	 * @return string The static front page url.
 	 */
 	abstract public function front_page_url( $language );
@@ -164,7 +164,7 @@ abstract class LMAT_Links_Model {
 	 *  
 	 *
 	 * @param string       $url  The url to modify.
-	 * @param LMAT_Language $lang The language object.
+	 * @param Linguator_Language $lang The language object.
 	 * @return string The modified url.
 	 */
 	public function switch_language_in_link( $url, $lang ) {
@@ -189,11 +189,11 @@ abstract class LMAT_Links_Model {
 	 *  
 	 *   Accepts now a language slug.
 	 *
-	 * @param LMAT_Language|string $language Language object or slug.
+	 * @param Linguator_Language|string $language Language object or slug.
 	 * @return string
 	 */
 	public function home_url( $language ) {
-		if ( $language instanceof LMAT_Language ) {
+		if ( $language instanceof Linguator_Language ) {
 			$language = $language->slug;
 		}
 
@@ -262,7 +262,7 @@ abstract class LMAT_Links_Model {
 	}
 
 	/**
-	 * Used to remove hooks in child classes, called when switching blog @see {LMAT_Base::switch_blog()}.
+	 * Used to remove hooks in child classes, called when switching blog @see {Linguator_Base::switch_blog()}.
 	 * Does nothing by default.
 	 *
 	 *  

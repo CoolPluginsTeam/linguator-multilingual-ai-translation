@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Filters_Links {
+class Linguator_Filters_Links {
 	/**
 	 * Stores the plugin options.
 	 *
@@ -23,26 +23,26 @@ class LMAT_Filters_Links {
 	public $options;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	public $model;
 
 	/**
-	 * Instance of a child class of LMAT_Links_Model.
+	 * Instance of a child class of Linguator_Links_Model.
 	 *
-	 * @var LMAT_Links_Model
+	 * @var Linguator_Links_Model
 	 */
 	public $links_model;
 
 	/**
-	 * @var LMAT_Links|null
+	 * @var Linguator_Links|null
 	 */
 	public $links;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $curlang;
 
@@ -74,43 +74,12 @@ class LMAT_Filters_Links {
 		}
 
 		// Keeps the preview post link on default domain when using multiple domains and SSO is not available.
-		if ( 3 === $this->options['force_lang'] && ! class_exists( 'LMAT_Xdata_Domain' ) ) {
-			add_filter( 'preview_post_link', array( $this, 'preview_post_link' ), 20 );
+		if ( 3 === $this->options['force_lang'] && ! class_exists( 'Linguator_Xdata_Domain' ) ) {
+			add_filter( 'preview_post_link', array( $this, 'linguator_preview_post_link' ), 20 );
 		}
 
 		// Rewrites post types archives links to filter them by language.
 		add_filter( 'post_type_archive_link', array( $this, 'post_type_archive_link' ), 20, 2 );
-
-		add_filter('clean_url', array($this, 'clean_encode_url'), 10, 2);
-	}
-
-	/**
-	 * Clean Encode Url
-	 *
-	 * @param string $url The url to clean.
-	 * @return string The cleaned url.
-	 */
-	public function clean_encode_url($url, $orig_scheme) {
-
-		$pattern = '/%[0-9A-Fa-f]{2}/';
-
-		// Url Contains special characters or symbol
-		if(preg_match($pattern, $url) && function_exists('LMAT') && property_exists(LMAT(), 'curlang')) {
-			$current_lang = $this->curlang;
-
-			if($current_lang && is_object($current_lang) && property_exists($current_lang, 'slug')) {
-				$current_lang = $current_lang->slug;
-				
-				$current_lang_pattern="#/{$current_lang}/#";
-
-				if(preg_match($current_lang_pattern, $url)) {
-					return urldecode($url);
-				}
-			}
-
-		}
-
-		return $url;
 	}
 
 	/**
@@ -161,7 +130,7 @@ class LMAT_Filters_Links {
 			 *  
 			 *
 			 * @param string       $link The post link.
-			 * @param LMAT_Language $lang The current language.
+			 * @param Linguator_Language $lang The current language.
 			 * @param WP_Post      $post The post object.
 			 */
 			$link = apply_filters( 'lmat_post_type_link', $link, $lang, $post );
@@ -191,13 +160,13 @@ class LMAT_Filters_Links {
 			 *  
 			 *
 			 * @param string       $link The term link.
-			 * @param LMAT_Language $lang The current language.
+			 * @param Linguator_Language $lang The current language.
 			 * @param WP_Term      $term The term object.
 			 */
 			return apply_filters( 'lmat_term_link', $link, $lang, $term );
 		}
 
-		// In case someone calls get_term_link for the 'lmat_language' taxonomy.
+		// In case someone calls get_term_link for the 'linguator_language' taxonomy.
 		if ( 'lmat_language' === $tax ) {
 			$lang = $this->model->get_language( $term->term_id );
 			if ( $lang ) {
@@ -216,7 +185,7 @@ class LMAT_Filters_Links {
 	 * @param string $url URL used for the post preview.
 	 * @return string The modified url.
 	 */
-	public function preview_post_link( $url ) {
+	public function linguator_preview_post_link( $url ) {
 		return $this->links_model->remove_language_from_link( $url );
 	}
 

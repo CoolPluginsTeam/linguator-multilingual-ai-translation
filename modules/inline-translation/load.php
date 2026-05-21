@@ -11,5 +11,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( $linguator->model->has_languages() ) {
-    class_exists(LMAT_Inline_Translation::class) && new LMAT_Inline_Translation();
+    class_exists(Linguator_Inline_Translation::class) && new Linguator_Inline_Translation();
 }

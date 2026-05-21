@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/wordpress-importer.php';
 
-use Linguator\Integrations\wp_importer\LMAT_WordPress_Importer;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\wp_importer\Linguator_WordPress_Importer;
+use Linguator\Integrations\Linguator_Integrations;
 
 
-LMAT_Integrations::instance()->wp_importer = new LMAT_WordPress_Importer();
+Linguator_Integrations::instance()->wp_importer = new Linguator_WordPress_Importer();

@@ -2,8 +2,8 @@
 /**
  * Plugin Name:      Multilingual AI Translator
  * Plugin URI:        https://linguator.com/
- * Description:       Create a multilingual WordPress website in minutes withMultilingual AI Translator.
- * Version:           1.0.4
+ * Description:       Create a multilingual WordPress website in minutes with Multilingual AI Translator.
+ * Version:           1.1.1
  * Requires at least: 6.2
  * Requires PHP:      7.2
  * Author:            Cool Plugins
@@ -14,7 +14,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Don't access directly.
+	exit;
 }
 
 /**
@@ -29,14 +29,15 @@ if ( in_array( 'translate-words/translate-wp-words.php', $active_plugins, true )
 }
 
 use Linguator\Includes\Core\Linguator;
-use Linguator\Install\LMAT_Activate;
-use Linguator\Install\LMAT_Deactivate;
-use Linguator\Install\LMAT_Usable;
+use Linguator\Install\Linguator_Activate;
+use Linguator\Install\Linguator_Deactivate;
+use Linguator\Install\Linguator_Usable;
+
 
 
 // Linguator constants - wrapped in checks to prevent redeclaration
 if ( ! defined( 'LINGUATOR_VERSION' ) ) {
-	define( 'LINGUATOR_VERSION', '1.0.4' );
+	define( 'LINGUATOR_VERSION', '1.1.1' );
 }
 if ( ! defined( 'LMAT_MIN_WP_VERSION' ) ) {
 	define( 'LMAT_MIN_WP_VERSION', '6.2' );
@@ -56,7 +57,6 @@ if ( ! defined( 'LINGUATOR_URL' ) ) {
 if ( ! defined( 'LINGUATOR_FEEDBACK_API' ) ) {
 	define( 'LINGUATOR_FEEDBACK_API', 'https://feedback.coolplugins.net/' );
 }
-
 // Whether we are using Linguator, get the filename of the plugin in use.
 if ( ! defined( 'LINGUATOR_ROOT_FILE' ) ) {
 	define( 'LINGUATOR_ROOT_FILE', __FILE__ );
@@ -71,10 +71,21 @@ if ( ! defined( 'LINGUATOR' ) ) {
 	define( 'LINGUATOR', ucwords( str_replace( '-', ' ', dirname( LINGUATOR_BASENAME ) ) ) );
 }
 
-// Initialize the plugin
-if ( ! empty( $_GET['deactivate-linguator'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-	return;
-}
+// Load legacy Translate Words functionality only for legacy users
+add_action( 'init', function() {
+
+	if(!get_option('linguator_install_date')){
+		add_option('linguator_install_date', gmdate('Y-m-d h:i:s'));
+	}
+
+	if(!get_option('linguator_initial_version')){
+		add_option('linguator_initial_version', LINGUATOR_VERSION);
+	}
+
+	if(get_option('linguator_initial_version')>'1.2.6'){
+		update_option('linguator_initial_version', '1.2.6');
+	}
+}, 1 );
 
 // Handle redirect after activation and language switcher visibility
 add_action('admin_init', function() {
@@ -82,25 +93,29 @@ add_action('admin_init', function() {
 	if ( defined( 'POLYLANG_VERSION' ) ) {
 		return;
 	}
-	
+	// Only run for users who can manage options
+	if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+	}
 	// Only check setup flag on plugins page to avoid unnecessary database queries
 	$is_plugins_page = false;
-	if ( isset( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'plugins.php' ) !== false ) {
-		$is_plugins_page = true;
-	}
+	if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+        $request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        $is_plugins_page = strpos( $request_uri, 'plugins.php' ) !== false;
+    }
 	// Only run on plugins page
 	if ( $is_plugins_page ) {
-		// Only proceed if we need setup and are in admin
-		if (get_option('lmat_needs_setup') === 'yes' && is_admin()) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if (!is_network_admin() && !isset($_GET['activate-multi'])) {
-				// Remove the setup flag
-				delete_option('lmat_needs_setup');
-				// Redirect to the setup wizard
-				wp_safe_redirect(admin_url('admin.php?page=lmat_wizard'));
-				exit;
-			}
-		}
+		if ( get_option( 'lmat_needs_setup' ) === 'yes' ) {
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if ( ! is_network_admin() && ! isset( $_GET['activate-multi'] ) ) {
+
+                delete_option( 'lmat_needs_setup' );
+
+                wp_safe_redirect( admin_url( 'admin.php?page=lmat_wizard' ) );
+                exit;
+            }
+        }
 	}
 	
 	// Ensure language switcher is visible on nav-menus page for new installations
@@ -141,7 +156,7 @@ add_action('admin_init', function() {
 if ( ! function_exists( 'lmat_has_constant' ) ) {
 	require __DIR__ . '/includes/helpers/constant-functions.php';
 }
-if ( ! LMAT_Usable::can_activate() ) {
+if ( ! Linguator_Usable::can_activate() ) {
 	// WP version or php version is too old.
 	return;
 }
@@ -150,13 +165,13 @@ if ( ! defined( 'LMAT_ACTIVE' ) ) {
 	define( 'LMAT_ACTIVE', true );
 }
 
-if ( LMAT_Deactivate::is_deactivation() ) {
+if ( Linguator_Deactivate::is_deactivation() ) {
 	// Stopping here if we are going to deactivate the plugin (avoids breaking rewrite rules).
-	LMAT_Deactivate::add_hooks();
+	Linguator_Deactivate::add_hooks();
 	return;
 }
 
-LMAT_Activate::add_hooks();
+Linguator_Activate::add_hooks();
 
 new Linguator();
 

@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 
-use Linguator\Includes\Controllers\LMAT_Nav_Menu;
-use Linguator\Includes\Controllers\LMAT_Switcher;
+use Linguator\Includes\Controllers\Linguator_Nav_Menu;
+use Linguator\Includes\Controllers\Linguator_Switcher;
 
 
 
@@ -21,12 +21,12 @@ use Linguator\Includes\Controllers\LMAT_Switcher;
  *
  *  
  */
-class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
+class Linguator_Admin_Nav_Menu extends Linguator_Nav_Menu {
 
 	/**
 	 * Current language (used to filter the content).
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	public $filter_lang;
 
@@ -48,7 +48,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		add_filter( 'theme_mod_nav_menu_locations', array( $this, 'theme_mod_nav_menu_locations' ), 20 );
 
 		// Integration in the WP menu interface
-		add_action( 'admin_init', array( $this, 'admin_init' ) ); // after Linguator upgrade
+		add_action( 'admin_init', array( $this, 'admin_init' ) ); // after Linguator upgrade.
+		add_action( 'load-nav-menus.php', array( $this, 'linguator_add_meta_box_to_nav_menus' ) );
 	}
 
 	/**
@@ -64,25 +65,30 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		add_action( 'wp_update_nav_menu_item', array( $this, 'wp_update_nav_menu_item' ), 10, 2 );
 
 		// Translation of menus based on chosen locations
-		add_filter( 'pre_update_option_theme_mods_' . $this->theme, array( $this, 'pre_update_option_theme_mods' ) );
+		add_filter( 'pre_update_option_theme_mods_' . $this->theme, array( $this, 'linguator_pre_update_option_theme_mods' ) );
 		add_action( 'delete_nav_menu', array( $this, 'delete_nav_menu' ) );
-		add_action( 'admin_footer', array( $this, 'lmat_nav_menu_language_controls' ), 10 );
+		add_action( 'admin_footer', array( $this, 'linguator_nav_menu_language_controls' ), 10 );
 		
 		// Filter menu dropdown list by language
-		add_filter( 'wp_get_nav_menus', array( $this, 'filter_nav_menus_by_language' ), 10, 1 );
-		add_action( 'load-nav-menus.php', array( $this, 'maybe_update_selected_menu' ), 10 );
-		add_action( 'admin_init', array( $this, 'maybe_update_selected_menu_on_init' ), 10 );
-		add_filter( 'wp_redirect', array( $this, 'preserve_lang_param_on_redirect' ), 10, 2 );
+		add_filter( 'wp_get_nav_menus', array( $this, 'linguator_filter_nav_menus_by_language' ), 10, 1 );
+		add_action( 'load-nav-menus.php', array( $this, 'linguator_maybe_update_selected_menu' ), 10 );
+		add_action( 'admin_init', array( $this, 'linguator_maybe_update_selected_menu_on_init' ), 10 );
+		add_filter( 'wp_redirect', array( $this, 'linguator_preserve_lang_param_on_redirect' ), 10, 2 );
 		
-		// FIXME is it possible to choose the order ( after theme locations in WP3.5 and older ) ?
-		// FIXME not displayed if Linguator is activated before the first time the user goes to nav menus http://core.trac.wordpress.org/ticket/16828
-		// New Code (with load-nav-menus.php)
-		// Original: "Hey WordPress, add this box to the Menus screen!" (Shouted on every page load).
-		// New Code: "Wait... are we on the Menus screen? Yes? Okay, now add this box." (Polite and efficient).
-		add_action( 'load-nav-menus.php', function () {
-			add_meta_box( 'lmat_lang_switch_box', __( 'Language switcher', 'linguator-multilingual-ai-translation' ), array( $this, 'lang_switch' ), 'nav-menus', 'side', 'high' );
-		} );
+	
+		
 		$this->create_nav_menu_locations();
+	}
+
+	/**
+	 * Add the language switcher metabox to the nav menus screen.
+	 *
+	 *  
+	 *
+	 * @return void
+	 */
+	public function linguator_add_meta_box_to_nav_menus() {
+		add_meta_box( 'lmat_lang_switch_box', __( 'Language switcher', 'linguator-multilingual-ai-translation' ), array( $this, 'lang_switch' ), 'nav-menus', 'side', 'high' );
 	}
 
 	/**
@@ -133,7 +139,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			return;
 		}
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix = '.min';
 		wp_enqueue_script( 'lmat_nav_menu', plugins_url( "admin/assets/js/build/nav-menu{$suffix}.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
 		wp_enqueue_style( 'lmat_nav_menu_filter', plugins_url( "admin/assets/css/admin-nav-menu-filter.css", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION );
 		wp_enqueue_script( 'lmat_nav_menu_filter_js', plugins_url( "admin/assets/js/admin-nav-menu-filter.js", LINGUATOR_ROOT_FILE ), array(), LINGUATOR_VERSION, false );
@@ -144,8 +150,8 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			'current_lang' => $current_filter_lang
 		) );
 		$data = array(
-			'strings' => LMAT_Switcher::get_switcher_options( 'menu', 'string' ), // The strings for the options
 			'title'   => __( 'Languages', 'linguator-multilingual-ai-translation' ), // The title
+			'strings' => Linguator_Switcher::get_switcher_options( 'menu', 'string' ), // The strings for the options
 			'val'     => array(),
 		);
 
@@ -172,7 +178,11 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @return void
 	 */
 	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0 ) {
-		if ( empty( $_POST['menu-item-url'][ $menu_item_db_id ] ) || '#lmat_switcher' !== $_POST['menu-item-url'][ $menu_item_db_id ] ) { // phpcs:ignore WordPress.Security.NonceVerification
+		// Only handle our language switcher custom-link placeholder.
+		// Note: sanitize_key() would strip the leading "#", so we must not use it here.
+		// phpcs:ignore WordPress.Security.NonceVerification
+		$item_url = ! empty( $_POST['menu-item-url'][ $menu_item_db_id ] ) ? sanitize_text_field( wp_unslash( $_POST['menu-item-url'][ $menu_item_db_id ] ) ) : '';
+		if ( '#lmat_switcher' !== $item_url ) {
 			return;
 		}
 
@@ -180,7 +190,12 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		if ( current_user_can( 'edit_theme_options' ) ) {
 			check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
 
-		if ( empty( $_POST['menu-item-url'] ) || ! is_array( $_POST['menu-item-url'] ) || empty( $_POST['menu-item-url'][ $menu_item_db_id ] ) || '#lmat_switcher' !== $_POST['menu-item-url'][ $menu_item_db_id ] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification
+		$menu_item_urls = ! empty( $_POST['menu-item-url'] )
+			? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['menu-item-url'] ) )
+			: array();
+		$item_url = $menu_item_urls[ $menu_item_db_id ] ?? '';
+		if ( empty( $menu_item_urls ) || '#lmat_switcher' !== $item_url ) {
 					return;
 			}
 			$options = array( 'hide_if_no_translation' => 0, 'hide_current' => 0, 'force_home' => 0, 'show_flags' => 0, 'show_names' => 1, 'dropdown' => 0 ); // Default values
@@ -193,7 +208,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			}
 			else {
 				foreach ( array_keys( $options ) as $opt ) {
-					$options[ $opt ] = empty( $_POST[ 'menu-item-' . $opt ][ $menu_item_db_id ] ) ? 0 : 1;
+					$options[ $opt ] = ! empty( $_POST[ 'menu-item-' . $opt ][ $menu_item_db_id ] ) ? 1 : 0;
 				}
 				update_post_meta( $menu_item_db_id, '_lmat_menu_item', $options ); // Allow us to easily identify our nav menu item
 			}
@@ -208,7 +223,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array $locations Nav menu locations.
 	 * @return array
 	 */
-	public function update_nav_menu_locations( $locations ) {
+	public function linguator_update_nav_menu_locations( $locations ) {
 		// Extract language and menu from locations.
 		$nav_menus = $this->options->get( 'nav_menus' );
 
@@ -234,7 +249,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param mixed $mods Theme mods.
 	 * @return mixed
 	 */
-	public function pre_update_option_theme_mods( $mods ) {
+	public function linguator_pre_update_option_theme_mods( $mods ) {
 
 		global $wp_customize;
 			if ( ! current_user_can( 'edit_theme_options' ) || ! is_array( $mods ) || ! isset( $mods['nav_menu_locations'] ) || ! is_array( $mods['nav_menu_locations'] ) ) {
@@ -243,7 +258,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 
 
 			// Manage Locations tab in Appearance -> Menus
-			if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['action'] ) && 'locations' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				check_admin_referer( 'save-menu-locations' );
 
 
@@ -251,20 +266,24 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			$nav_menus[ $this->theme ] = array();
 			$this->options->set( 'nav_menus', $nav_menus );
 
-			$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			$mods['nav_menu_locations'] = $this->linguator_update_nav_menu_locations( $mods['nav_menu_locations'] );
 			return $mods;
 		}
 
 		/*
 		 * Edit Menus tab in Appearance -> Menus.
 		 */
-		if ( isset( $_POST['action'], $_REQUEST['update-nav-menu-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['update-nav-menu-nonce'] ) ), 'update-nav_menu' ) && 'update' === $_POST['action'] ) {
+		if (
+			isset( $_POST['action'], $_REQUEST['update-nav-menu-nonce'] )
+			&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['update-nav-menu-nonce'] ) ), 'update-nav_menu' )
+			&& 'update' === sanitize_key( wp_unslash( $_POST['action'] ) )
+		) {
 			$nav_menus = $this->options->get( 'nav_menus' );
 
 			$nav_menus[ $this->theme ] = array();
 			$this->options->set( 'nav_menus', $nav_menus );
 
-			$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			$mods['nav_menu_locations'] = $this->linguator_update_nav_menu_locations( $mods['nav_menu_locations'] );
 			return $mods;
 		}
 
@@ -278,14 +297,18 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		if(isset($wp_customize) && method_exists($wp_customize, 'get_stylesheet')){
 			$action = 'save-customize_' . $wp_customize->get_stylesheet();
 
-			if ( isset( $_POST['action'], $_REQUEST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), $action ) && 'customize_save' == $_POST['action'] ) {
-				$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			if (
+				isset( $_POST['action'], $_REQUEST['nonce'] )
+				&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), $action )
+				&& 'customize_save' == sanitize_key( wp_unslash( $_POST['action'] ) )
+			) {
+				$mods['nav_menu_locations'] = $this->linguator_update_nav_menu_locations( $mods['nav_menu_locations'] );
 
 			}
 
 			// Edit Menus tab in Appearance -> Menus
 			// Add the test of $_POST['update-nav-menu-nonce'] to avoid conflict with Vantage theme
-			elseif ( isset( $_POST['action'], $_POST['update-nav-menu-nonce'] ) && 'update' === $_POST['action'] ) {
+			elseif ( isset( $_POST['action'], $_POST['update-nav-menu-nonce'] ) && 'update' === sanitize_key( wp_unslash( $_POST['action'] ) ) ) {
 				check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
 
 				$nav_menus = $this->options->get( 'nav_menus' );
@@ -296,7 +319,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 			// Customizer
 			// Don't reset locations in this case.
 			// see http://wordpress.org/support/topic/menus-doesnt-show-and-not-saved-in-theme-settings-multilingual-site
-			elseif ( isset( $_POST['action'] ) && 'customize_save' == $_POST['action'] ) {
+			elseif ( isset( $_POST['action'] ) && 'customize_save' === sanitize_key( wp_unslash( $_POST['action'] ) ) ) {
 				check_ajax_referer( 'save-customize_' . $GLOBALS['wp_customize']->get_stylesheet(), 'nonce' );
 			}
 
@@ -304,7 +327,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				return $mods; // No modification for nav menu locations
 			}
 
-			$mods['nav_menu_locations'] = $this->update_nav_menu_locations( $mods['nav_menu_locations'] );
+			$mods['nav_menu_locations'] = $this->linguator_update_nav_menu_locations( $mods['nav_menu_locations'] );
 		}
 		return $mods;
 	}
@@ -373,16 +396,16 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 *
 	 * @return void
 	 */
-	public function lmat_nav_menu_language_controls() {
+	public function linguator_nav_menu_language_controls() {
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
 			return;
 		}
 
 		// Get all available languages
-		$lmat_languages = $this->model->get_languages_list();
+		$linguator_languages = $this->model->get_languages_list();
 		
-		if ( count( $lmat_languages ) <= 1 ) {
+		if ( count( $linguator_languages ) <= 1 ) {
 			return; // No need for language filters if there's only one language
 		}
 
@@ -405,6 +428,10 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 					$all_url_args['action'] = $current_action;
 				}
 				$all_url = 'all' !== $current_lang ? add_query_arg( $all_url_args, $base_url ) : '';
+				// Language links must include nonce so admin language filter can update user meta safely.
+				if ( ! empty( $all_url ) ) {
+					$all_url = wp_nonce_url( $all_url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
+				}
 				// Get total count directly from database - count nav menu terms
 				$total_menus = wp_count_terms( array( 'taxonomy' => 'nav_menu' ) );
 				?>
@@ -414,7 +441,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 					</a>
 				</li>
 				
-				<?php foreach ( $lmat_languages as $lang ) : ?>
+				<?php foreach ( $linguator_languages as $lang ) : ?>
 					<?php
 					$lang_class = $lang->slug === $current_lang ? 'current' : '';
 					$lang_url_args = array(
@@ -424,6 +451,10 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 						$lang_url_args['action'] = $current_action;
 					}
 					$lang_url = $lang->slug !== $current_lang ? add_query_arg( $lang_url_args, $base_url ) : '';
+					// Language links must include nonce so admin language filter can update user meta safely.
+					if ( ! empty( $lang_url ) ) {
+						$lang_url = wp_nonce_url( $lang_url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
+					}
 					$flag_url = isset( $lang->flag_url ) ? $lang->flag_url : '';
 					
 					$menu_count = 0;
@@ -460,7 +491,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array $menus Array of nav menu objects.
 	 * @return array Filtered array of nav menus.
 	 */
-	public function filter_nav_menus_by_language( $menus ) {
+	public function linguator_filter_nav_menus_by_language( $menus ) {
 		// Only filter on nav-menus page.
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
@@ -504,7 +535,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 				continue;
 			}
 
-			$show_menu = $this->should_show_menu_for_language( $menu, $current_lang, $selected_lang, $nav_menus[ $theme ] );
+			$show_menu = $this->linguator_should_show_menu_for_language( $menu, $current_lang, $selected_lang, $nav_menus[ $theme ] );
 
 			if ( $show_menu ) {
 				$filtered_menus[] = $menu;
@@ -525,7 +556,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array  $nav_menus      Nav menu assignments by location.
 	 * @return bool True if menu should be shown, false otherwise.
 	 */
-	private function should_show_menu_for_language( $menu, $current_lang, $selected_lang, $nav_menus ) {
+	private function linguator_should_show_menu_for_language( $menu, $current_lang, $selected_lang, $nav_menus ) {
 		// Check if this menu is assigned to any location for the selected language.
 		foreach ( $nav_menus as $location => $languages ) {
 			if ( isset( $languages[ $current_lang ] ) && $languages[ $current_lang ] === $menu->term_id ) {
@@ -535,7 +566,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 
 		// For default language, also show menus that don't have specific language assignments.
 		if ( $selected_lang->is_default ) {
-			return ! $this->is_menu_assigned_to_other_language( $menu, $current_lang, $nav_menus );
+			return ! $this->linguator_is_menu_assigned_to_other_language( $menu, $current_lang, $nav_menus );
 		}
 
 		return false;
@@ -551,7 +582,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param array  $nav_menus    Nav menu assignments by location.
 	 * @return bool True if assigned to other language, false otherwise.
 	 */
-	private function is_menu_assigned_to_other_language( $menu, $current_lang, $nav_menus ) {
+	private function linguator_is_menu_assigned_to_other_language( $menu, $current_lang, $nav_menus ) {
 		foreach ( $nav_menus as $location => $languages ) {
 			foreach ( $languages as $lang_slug => $menu_id ) {
 				if ( $menu_id === $menu->term_id && $lang_slug !== $current_lang ) {
@@ -572,7 +603,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 * @param int    $status   The redirect status code.
 	 * @return string Modified redirect location.
 	 */
-	public function preserve_lang_param_on_redirect( $location, $status ) {
+	public function linguator_preserve_lang_param_on_redirect( $location, $status ) {
 		// Only handle redirects on nav-menus admin page.
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
@@ -606,10 +637,10 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 *
 	 * @return void
 	 */
-	public function maybe_update_selected_menu() {
+	public function linguator_maybe_update_selected_menu() {
 		// Only run on Edit Menus tab, not Manage Locations.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
+		if ( isset( $_GET['action'] ) && 'locations' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) {
 			return;
 		}
 
@@ -626,7 +657,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		}
 
 		// Get filtered menus for the current language.
-		$filtered_menus = $this->filter_nav_menus_by_language( wp_get_nav_menus() );
+		$filtered_menus = $this->linguator_filter_nav_menus_by_language( wp_get_nav_menus() );
 		
 		if ( empty( $filtered_menus ) ) {
 			return;
@@ -656,7 +687,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 	 *
 	 * @return void
 	 */
-	public function maybe_update_selected_menu_on_init() {
+	public function linguator_maybe_update_selected_menu_on_init() {
 		// Only run on nav-menus page.
 		$screen = get_current_screen();
 		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
@@ -665,7 +696,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 
 		// Only run on Edit Menus tab, not Manage Locations.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-		if ( isset( $_GET['action'] ) && 'locations' === $_GET['action'] ) {
+		if ( isset( $_GET['action'] ) && 'locations' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) {
 			return;
 		}
 
@@ -682,7 +713,7 @@ class LMAT_Admin_Nav_Menu extends LMAT_Nav_Menu {
 		}
 
 		// Get filtered menus for the current language.
-		$filtered_menus = $this->filter_nav_menus_by_language( wp_get_nav_menus() );
+		$filtered_menus = $this->linguator_filter_nav_menus_by_language( wp_get_nav_menus() );
 		
 		if ( empty( $filtered_menus ) ) {
 			return;

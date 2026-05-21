@@ -5,14 +5,14 @@
  * @package Linguator
  *
  * @var \Linguator\Settings\Header\Header $header An object representing the header.
- * @var LMAT_Table_String $string_table An object representing the translations list table.
+ * @var Linguator_Table_String $string_table An object representing the translations list table.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Admin\Controllers\LMAT_Admin_Base;
+use Linguator\Admin\Controllers\Linguator_Admin_Base;
 ?>
 <div class="form-wrap">
 	<?php $header && $header instanceof \Linguator\Settings\Header\Header && $header->header(); ?>
@@ -32,7 +32,7 @@ use Linguator\Admin\Controllers\LMAT_Admin_Base;
 	<div class="metabox-holder">
 		<?php
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		do_meta_boxes( LMAT_Admin_Base::get_screen_id( 'strings' ), 'normal', array() );
+		do_meta_boxes( Linguator_Admin_Base::get_screen_id( 'strings' ), 'normal', array() );
 		?>
 	</div>
 

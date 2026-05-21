@@ -6,7 +6,7 @@
 namespace Linguator\Includes\Capabilities;
 
 use WP_User;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 use Linguator\Includes\Models\Languages;
 
 defined( 'ABSPATH' ) || exit;
@@ -67,10 +67,10 @@ class User {
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param LMAT_Language $language The language you want to check.
+	 * @param Linguator_Language $language The language you want to check.
 	 * @return bool True if the user can translate to this language.
 	 */
-	public function can_translate( LMAT_Language $language ): bool {
+	public function can_translate( Linguator_Language $language ): bool {
 		// If the user has no translator roles, allow by default.
 		if ( ! $this->is_translator() ) {
 			return true;
@@ -144,10 +144,10 @@ class User {
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param LMAT_Language $language The language to check permissions for.
+	 * @param Linguator_Language $language The language to check permissions for.
 	 * @return void|never Stops execution with error if user can't translate, does nothing if they can.
 	 */
-	public function can_translate_or_die( LMAT_Language $language ): void {
+	public function can_translate_or_die( Linguator_Language $language ): void {
 		if ( ! $this->can_translate( $language ) ) {
 			// User is not allowed, so stop and show error message
 			wp_die( esc_html( sprintf( 

@@ -13,6 +13,10 @@ import { sprintf, __ } from "@wordpress/i18n";
 import ElementorPostFetch from "./fetch-post/elementor/index.js";
 import ElementorUpdatePage from "./create-translated-post/elementor/index.js";
 
+// WPBakery post fetch and update page
+import WPBakeryPostFetch from "./fetch-post/wpbakery/index.js";
+import updateWPBakeryPage from "./create-translated-post/wpbakery/index.js";
+
 import ReactDOM from "react-dom/client";
 import MetaFieldsFetch from "./fetch-post/meta-fields/index.js";
 
@@ -109,6 +113,21 @@ const StringModalBodyNotice = () => {
     }
   }
 
+  if (editorType === "wpbakery") {
+    notices.push({
+      className:
+        "lmat-page-translation-notice lmat-page-translation-notice-info",
+      message: (
+        <p>
+          {__(
+            "WPBakery Page Builder content will be translated. Please save the page after translation to apply changes.",
+            "linguator-multilingual-ai-translation"
+          )}
+        </p>
+      ),
+    });
+  }
+
   const noticeLength = notices.length;
 
   if (notices.length > 0) {
@@ -134,7 +153,6 @@ const App = () => {
   const postType = window.lmatPageTranslationGlobal.post_type;
   let translatePost, fetchPost, translateWrpSelector;
   const sourceLang = window.lmatPageTranslationGlobal.source_lang;
-
   // Elementor post fetch and update page
   if (editorType === "elementor") {
     translateWrpSelector =
@@ -151,6 +169,11 @@ const App = () => {
       'button#lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]';
     translatePost = UpdateClassicPage;
     fetchPost = ClassicPostFetch;
+  } else if (editorType === "wpbakery") {
+    translateWrpSelector =
+      'button#lmat-page-translation-button[name="lmat_page_translation_meta_box_translate"]';
+    translatePost = updateWPBakeryPage;
+    fetchPost = WPBakeryPostFetch;
   }
 
   const [postDataFetchStatus, setPostDataFetchStatus] = useState(false);
@@ -417,5 +440,26 @@ if (editorType === "classic") {
 if (editorType === "elementor") {
   jQuery(window).on("elementor:init", function () {
     elementor.on("document:loaded", appendElementorTranslateBtn);
+  });
+}
+
+// WPBakery translate button append
+if (editorType === "wpbakery") {
+  // Render App
+  window.addEventListener("load", () => {
+    // Append app root wrapper in body
+    init();
+
+    const sourceLang = window.lmatPageTranslationGlobal.source_lang;
+    const providers = window.lmatPageTranslationGlobal.providers;
+
+    if (sourceLang && "" !== sourceLang && providers.length > 0) {
+      insertMessagePopup();
+    }
+
+    const root = ReactDOM.createRoot(
+      document.getElementById("lmat-page-translation-setting-modal")
+    );
+    root.render(<App />);
   });
 }

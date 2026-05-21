@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Other\Linguator_Language;
 use WP_Term;
 
 
@@ -20,10 +20,10 @@ use WP_Term;
  *
  *  
  */
-class LMAT_Term_Slug {
+class Linguator_Term_Slug {
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	private $model;
 
@@ -48,7 +48,7 @@ class LMAT_Term_Slug {
 	private $term_id;
 
 	/**
-	 * @var LMAT_Language
+	 * @var Linguator_Language
 	 */
 	private $lang;
 
@@ -62,13 +62,13 @@ class LMAT_Term_Slug {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model    Instance of LMAT_Model.
+	 * @param Linguator_Model $model    Instance of Linguator_Model.
 	 * @param string    $slug     The term slug.
 	 * @param string    $taxonomy The term taxonomy.
 	 * @param string    $name     The term name.
 	 * @param int       $term_id  The term ID if exists, or 0 if there's no need to know that we are editing an existing term.
 	 */
-	public function __construct( LMAT_Model $model, string $slug, string $taxonomy, string $name, int $term_id = 0 ) {
+	public function __construct( Linguator_Model $model, string $slug, string $taxonomy, string $name, int $term_id = 0 ) {
 		$this->model    = $model;
 		$this->slug     = $slug;
 		$this->taxonomy = $taxonomy;
@@ -83,18 +83,18 @@ class LMAT_Term_Slug {
 	 *
 	 * @return bool True if the suffix can be added, false otherwise.
 	 */
-	private function can_add_suffix() {
+	private function linguator_can_add_suffix() {
 		/**
 		 * Filters the subsequently inserted term language.
 		 *
 		 *  
 		 *
-		 * @param LMAT_Language|null $lang     Found language object, null otherwise.
+		 * @param Linguator_Language|null $lang     Found language object, null otherwise.
 		 * @param string            $taxonomy Term taxonomy.
 		 * @param string            $slug     Term slug
 		 */
 		$lang = apply_filters( 'lmat_inserted_term_language', null, $this->taxonomy, $this->slug );
-		if ( ! $lang instanceof LMAT_Language ) {
+		if ( ! $lang instanceof Linguator_Language ) {
 			return false;
 		}
 		$this->lang = $lang;
@@ -112,7 +112,7 @@ class LMAT_Term_Slug {
 			 */
 			$this->parent = apply_filters( 'lmat_inserted_term_parent', 0, $this->taxonomy, $this->slug );
 
-			$this->slug .= $this->maybe_get_parent_suffix();
+			$this->slug .= $this->linguator_maybe_get_parent_suffix();
 		}
 
 		if ( ! $this->slug ) {
@@ -140,7 +140,7 @@ class LMAT_Term_Slug {
 	 *
 	 * @return string Parents slugs if they are the same as the child slug, empty string otherwise.
 	 */
-	private function maybe_get_parent_suffix() {
+	private function linguator_maybe_get_parent_suffix() {
 		$parent_suffix = '';
 		$the_parent    = get_term( $this->parent, $this->taxonomy );
 
@@ -175,7 +175,7 @@ class LMAT_Term_Slug {
 	 * @return string The suffixed slug, or not if the lang isn't defined.
 	 */
 	public function get_suffixed_slug( string $separator ): string {
-		if ( ! $this->can_add_suffix() ) {
+		if ( ! $this->linguator_can_add_suffix() ) {
 			return $this->slug;
 		}
 

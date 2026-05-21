@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Admin\Controllers\LMAT_Admin_Notices;
-use Linguator\Includes\Other\LMAT_Language;
-use Linguator\Admin\Controllers\LMAT_Admin_Model;
+use Linguator\Admin\Controllers\Linguator_Admin_Notices;
+use Linguator\Includes\Other\Linguator_Language;
+use Linguator\Admin\Controllers\Linguator_Admin_Model;
 use Linguator\Includes\Core\Linguator;
 use WP_Error;
 
@@ -25,12 +25,12 @@ use Linguator\Includes\Options\Options;
  *
  *  
  */
-class LMAT_Wizard
+class Linguator_Wizard
 {
 	/**
 	 * Reference to the model object
 	 *
-	 * @var LMAT_Admin_Model
+	 * @var Linguator_Admin_Model
 	 */
 	protected $model;
 
@@ -78,7 +78,7 @@ class LMAT_Wizard
 		add_action('admin_menu', array($this, 'add_admin_menu'));
 		
 		// Setup wizard page handling 
-		add_action('admin_init', array($this, 'setup_wizard_page'), 40);
+		add_action('admin_init', array($this, 'linguator_setup_wizard_page'), 40);
 
 		// Add Wizard submenu.
 		add_filter('lmat_settings_tabs', array($this, 'settings_tabs'), 10, 1);
@@ -134,7 +134,7 @@ class LMAT_Wizard
 	 *
 	 * @return void
 	 */
-	public function redirect_to_wizard()
+	public function linguator_redirect_to_wizard()
 	{
 		// Only check for redirect transient on plugins page to avoid unnecessary database queries
 		global $pagenow;
@@ -144,7 +144,7 @@ class LMAT_Wizard
 		
 		if (get_transient('lmat_activation_redirect')) {
 			$do_redirect = true;
-			if ((isset($_GET['page']) && 'lmat_wizard' === sanitize_key($_GET['page'])) || isset($_GET['activate-multi'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( isset( $_GET['page'] ) && 'lmat_wizard' === sanitize_key( wp_unslash( $_GET['page'] ) ) ) || isset( $_GET['activate-multi'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				delete_transient('lmat_activation_redirect');
 				$do_redirect = false;
 			}
@@ -189,7 +189,7 @@ class LMAT_Wizard
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language[] $languages List of language objects.
+	 * @param Linguator_Language[] $languages List of language objects.
 	 * @return bool
 	 */
 	public function is_media_step_displayable($languages)
@@ -219,14 +219,14 @@ class LMAT_Wizard
 	 *
 	 * @return void
 	 */
-	public function setup_wizard_page()
+	public function linguator_setup_wizard_page()
 	{
 
 		if (!get_option('lmat_setup_complete')) {
-			LMAT_Admin_Notices::add_notice('wizard', $this->wizard_notice());
+			Linguator_Admin_Notices::add_notice('wizard', $this->wizard_notice());
 		}
 
-		$this->redirect_to_wizard();
+		$this->linguator_redirect_to_wizard();
 		if (! Linguator::is_wizard()) {
 			return;
 		}
@@ -295,7 +295,7 @@ class LMAT_Wizard
 				'subheading' => 'Gutenberg block widget for the block editor, compatible with modern WordPress themes.'
             )
         );
-        if(lmat_is_plugin_active('elementor/elementor.php')){
+        if(linguator_is_plugin_active('elementor/elementor.php')){
             $language_switcher_options[] = array(
                 'label' => __( 'Elementor Widget Based', 'linguator-multilingual-ai-translation' ),
                 'value' => 'elementor',
@@ -335,6 +335,10 @@ class LMAT_Wizard
 	public function enqueue_scripts()
 	{
 		if (Linguator::is_wizard()) {
+			// Ensure rewrite rules are flushed if REST API might not be working
+			// This fixes "invalid JSON response" errors on fresh installations
+			$this->maybe_flush_rewrite_rules();
+			
 			// Enqueue React-based settings for settings tabs
 			$asset_file = plugin_dir_path(LINGUATOR_ROOT_FILE) . 'admin/assets/frontend/setup/setup.asset.php';
 			$asset = require $asset_file;
@@ -417,7 +421,7 @@ class LMAT_Wizard
 					'api_url'        => rest_url('lmat/v1/'),
 					'nonce'          => wp_create_nonce('wp_rest'),
 					'languages'      => $this->model->get_languages_list(),
-					'all_languages'  => \Linguator\Settings\Controllers\LMAT_Settings::get_predefined_languages(),
+					'all_languages'  => \Linguator\Settings\Controllers\Linguator_Settings::get_predefined_languages(),
 					'media'          => $is_media_step_displayable,
 					'untranslated_contents' => $is_untranslated_contents_displayable,
 					'home_page' => $is_home_page_displayable,
@@ -456,16 +460,46 @@ class LMAT_Wizard
 	}
 
 	/**
-	 * Get the suffix to enqueue non minified files in a Debug context
+	 * Get the suffix used for built assets.
 	 *
 	 *  
 	 *
-	 * @return string Empty when SCRIPT_DEBUG equal to true
-	 *                otherwise .min
+	 * @return string Always '.min' (minified assets).
 	 */
 	public function get_suffix()
 	{
-		return defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+		return '.min';
+	}
+
+	/**
+	 * Check if rewrite rules need to be flushed and flush them if needed
+	 * 
+	 * This prevents "invalid JSON response" errors when REST API endpoints aren't registered yet.
+	 * ONE-TIME FIX: For existing installations, this will flush rules once and set a permanent flag.
+	 *
+	 * @return void
+	 */
+	private function maybe_flush_rewrite_rules()
+	{
+		// Check if rewrite rules have ever been flushed by our code
+		$rules_flushed = get_option('lmat_rewrite_rules_flushed');
+		
+		// If rules have never been flushed, do it now (ONE TIME ONLY)
+		// This catches both new installations and existing installations that were activated before the fix
+		if (!$rules_flushed) {
+			// Flush rewrite rules to ensure REST API endpoints are accessible
+			flush_rewrite_rules();
+			// Mark that we've flushed the rules (prevents flushing on every page load)
+			update_option('lmat_rewrite_rules_flushed', 'yes');
+		}
+		
+		// Also check for the activation flag (for new installs)
+		$needs_flush = get_option('lmat_needs_rewrite_flush');
+		if ($needs_flush) {
+			flush_rewrite_rules();
+			delete_option('lmat_needs_rewrite_flush');
+			update_option('lmat_rewrite_rules_flushed', 'yes');
+		}
 	}
 
 
@@ -506,8 +540,9 @@ class LMAT_Wizard
 				)
 			);
 			$translations[$language] = $id;
-			lmat_set_post_language($id, $language);
+			linguator_set_post_language($id, $language);
 		}
-		lmat_save_post_translations($translations);
+		linguator_save_post_translations($translations);
 	}
 }
+

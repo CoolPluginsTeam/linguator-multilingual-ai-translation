@@ -23,11 +23,11 @@ use WP_Locale;
  *
  *  
  */
-class LMAT_OLT_Manager {
+class Linguator_OLT_Manager {
 	/**
 	 * Singleton instance
 	 *
-	 * @var LMAT_OLT_Manager|null
+	 * @var Linguator_OLT_Manager|null
 	 */
 	protected static $instance;
 
@@ -50,7 +50,7 @@ class LMAT_OLT_Manager {
 		add_filter( 'load_textdomain_mofile', '__return_empty_string' );
 
 		// Loads text domains.
-		add_action( 'lmat_language_defined', array( $this, 'load_textdomains' ), 2 ); // After LMAT_Frontend::lmat_language_defined.
+		add_action( 'lmat_language_defined', array( $this, 'load_textdomains' ), 2 ); // After Linguator_Frontend::lmat_language_defined.
 		add_action( 'lmat_no_language_defined', array( $this, 'load_textdomains' ) );
 	}
 
@@ -59,7 +59,7 @@ class LMAT_OLT_Manager {
 	 *
 	 *  
 	 *
-	 * @return LMAT_OLT_Manager
+	 * @return Linguator_OLT_Manager
 	 */
 	public static function instance() {
 		if ( empty( self::$instance ) ) {

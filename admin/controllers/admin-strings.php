@@ -19,7 +19,7 @@ use WP_Widget_Custom_HTML;
  *
  *  
  */
-class LMAT_Admin_Strings {
+class Linguator_Admin_Strings {
 	/**
 	 * Stores the strings to translate.
 	 *
@@ -81,15 +81,18 @@ class LMAT_Admin_Strings {
 			'widget_text'  => __( 'Widget text', 'linguator-multilingual-ai-translation' ),
 		);
 
-		global $wp_registered_widgets;
-		// phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
-		$sidebars = wp_get_sidebars_widgets();
-		foreach ( $sidebars as $sidebar => $widgets ) {
-			if ( 'wp_inactive_widgets' == $sidebar || empty( $widgets ) ) {
-				continue;
-			}
-
-			foreach ( $widgets as $widget ) {
+	global $wp_registered_widgets;
+	// Use get_option instead of wp_get_sidebars_widgets() to avoid forbidden function warning
+	$sidebars = get_option( 'sidebars_widgets', array() );
+	if ( ! is_array( $sidebars ) ) {
+		$sidebars = array();
+	}
+	foreach ( $sidebars as $sidebar => $widgets ) {
+		if ( 'wp_inactive_widgets' == $sidebar || empty( $widgets ) || ! is_array( $widgets ) ) {
+			continue;
+		}
+		
+		foreach ( $widgets as $widget ) {
 				// Nothing can be done if the widget is created using pre WP2.8 API. There is no object, so we can't access it to get the widget options.
 				if ( ! isset( $wp_registered_widgets[ $widget ]['callback'][0] ) || ! $wp_registered_widgets[ $widget ]['callback'][0] instanceof WP_Widget ) {
 					continue;
@@ -123,7 +126,7 @@ class LMAT_Admin_Strings {
 
 		/**
 		 * Filter the list of strings registered for translation
-		 * Mainly for use by our LMAT_WPML_Compat class
+		 * Mainly for use by our Linguator_WPML_Compat class
 		 *
 		 *  
 		 *

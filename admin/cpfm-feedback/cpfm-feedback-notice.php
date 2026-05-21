@@ -50,8 +50,7 @@ class CPFM_Feedback_Notice {
 
         }
        
-
-       // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for page identification
        $current_page   = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
         
@@ -82,7 +81,7 @@ class CPFM_Feedback_Notice {
             true
 
         );
-        wp_localize_script('cpfm-common-review-script', 'adminNotice', [
+        wp_localize_script('cpfm-common-review-script', 'cpfmAdminNotice', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('dismiss_admin_notice'),
             'autoShowPages' => array_unique(
@@ -135,7 +134,7 @@ class CPFM_Feedback_Notice {
             foreach ($registered_notices[$category] as $notice) {
                    $plugin_name = isset($notice['plugin_name'])?sanitize_key($notice['plugin_name']):'';
                    if($plugin_name){
-                       // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                        do_action('cpfm_after_opt_in_' . $plugin_name, $category);
                    }
              
@@ -154,7 +153,7 @@ class CPFM_Feedback_Notice {
         }
 
         $screen         = get_current_screen();
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for page identification
         $current_page   = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
        
@@ -204,8 +203,7 @@ class CPFM_Feedback_Notice {
             $output .= '<p>' . esc_html__('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'linguator-multilingual-ai-translation') . '</p>';
             $output .= '<ul>';
             $output .= '<li>' . esc_html__('Your website home URL and WordPress admin email.', 'linguator-multilingual-ai-translation') . '</li>';
-            $output .= '<li>' . esc_html__('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'linguator-multilingual-ai-translation') . '</li>';
-            $output .= '<a href="' . esc_url('https://my.coolplugins.net/terms/usage-tracking/') . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Click Here', 'linguator-multilingual-ai-translation') . '</a>';
+            $output .= '<li>' . esc_html__('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'linguator-multilingual-ai-translation') . ' <a href="' . esc_url('https://my.coolplugins.net/terms/usage-tracking/') . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Click Here', 'linguator-multilingual-ai-translation') . '</a></li>';
             $output .= '</ul>';
             
             $output .= '</div>';

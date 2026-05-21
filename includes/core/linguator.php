@@ -10,43 +10,82 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Don't access directly
 }
 
-use Linguator\Includes\Base\LMAT_Base;
+use Linguator\Includes\Base\Linguator_Base;
 use Linguator\Includes\Options\Options;
 use Linguator\Includes\Options\Registry as Options_Registry;
-use Linguator\Includes\Other\LMAT_OLT_Manager;
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Admin\Controllers\LMAT_Admin_Model;
-use Linguator\Admin\Controllers\LMAT_Admin;
-use Linguator\Frontend\Controllers\LMAT_Frontend;
-use Linguator\Includes\Controllers\LMAT_REST_Request;
-use Linguator\Integrations\LMAT_Integrations;
-use Linguator\Settings\Controllers\LMAT_Settings;
+use Linguator\Includes\Other\Linguator_OLT_Manager;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Admin\Controllers\Linguator_Admin_Model;
+use Linguator\Admin\Controllers\Linguator_Admin;
+use Linguator\Frontend\Controllers\Linguator_Frontend;
+use Linguator\Includes\Controllers\Linguator_REST_Request;
+use Linguator\Integrations\Linguator_Integrations;
+use Linguator\Settings\Controllers\Linguator_Settings;
 use Linguator\Supported_Blocks\Supported_Blocks;
 use Linguator\Supported_Blocks\Custom_Block_Post;
 use Linguator\Custom_Fields\Custom_Fields;
-use Linguator\Includes\Other\LMAT_Translation_Dashboard;
+use Linguator\Includes\Other\Linguator_Translation_Dashboard;
 
-// Default directory to store user data such as custom flags
+// Define directory safely
 if ( ! defined( 'LMAT_LOCAL_DIR' ) ) {
-	define( 'LMAT_LOCAL_DIR', WP_CONTENT_DIR . '/linguator' );
+	$lmat_upload_dir = wp_upload_dir();
+
+	if ( empty( $lmat_upload_dir['basedir'] ) || ! empty( $lmat_upload_dir['error'] ) ) {
+		// Fallback (may vary if custom uploads path is used)
+		$lmat_base_dir = path_join( wp_content_dir(), 'uploads' );
+	} else {
+		$lmat_base_dir = $lmat_upload_dir['basedir'];
+	}
+
+	define( 'LMAT_LOCAL_DIR', path_join( $lmat_base_dir, 'linguator' ) );
 }
 
-// Includes local config file if exists
-if ( is_readable( LMAT_LOCAL_DIR . '/lmat-config.php' ) ) {
-	include_once LMAT_LOCAL_DIR . '/lmat-config.php';
+// Ensure directory exists
+if ( ! file_exists( LMAT_LOCAL_DIR ) ) {
+	wp_mkdir_p( LMAT_LOCAL_DIR );
 }
+
+// Load config safely
+$lmat_config = array();
+
+$lmat_config_file = path_join( LMAT_LOCAL_DIR, 'lmat-config.json' );
+
+if ( is_readable( $lmat_config_file ) ) {
+
+	if ( function_exists( 'wp_json_file_decode' ) ) {
+		$lmat_decoded = wp_json_file_decode( $lmat_config_file, array( 'associative' => true ) );
+	} else {
+		$lmat_content = file_get_contents( $lmat_config_file );
+		$lmat_decoded = ( is_string( $lmat_content ) && $lmat_content !== '' )
+			? json_decode( $lmat_content, true )
+			: null;
+	}
+
+	if ( is_array( $lmat_decoded ) ) {
+		$lmat_config = $lmat_decoded;
+	}
+}
+
+/**
+ * Raw JSON config loaded from `LMAT_LOCAL_DIR/lmat-config.json`.
+ *
+ * Allow third parties to adjust/augment the local config.
+ *
+ * @param array<string,mixed> $lmat_config Local config array.
+ */
+$GLOBALS['lmat_local_config'] = apply_filters( 'lmat_local_config', $lmat_config );
 
 /**
  * Controls the plugin, as well as activation, and deactivation
  *
  *  
  *
- * @template TLMATClass of LMAT_Base
+ * @template TLMATClass of Linguator_Base
  */
 class Linguator {
 
 	/**
-	 * @var LMAT_Admin_Feedback|null
+	 * @var Linguator_Admin_Feedback|null
 	 */
 	public $feedback;
 	/**
@@ -55,9 +94,9 @@ class Linguator {
 	public $cpfm_feedback_notice;
 
 	/**
-	 * @var LMAT_cronjob|null
+	 * @var Linguator_cronjob|null
 	 */
-	public $lmat_cronjob;
+	public $linguator_cronjob;
 
 	/**
 	 * @var Options|null
@@ -79,7 +118,7 @@ class Linguator {
 		// Override load text domain waiting for the language to be defined
 		// Here for plugins which load text domain as soon as loaded :(
 		if ( ! defined( 'LMAT_OLT' ) || LMAT_OLT ) {
-			LMAT_OLT_Manager::instance();
+			Linguator_OLT_Manager::instance();
 		}
 
 		// Register the custom post type for the supported blocks
@@ -97,14 +136,14 @@ class Linguator {
 		}
 
 		// Register the translation dashboard
-		if(class_exists(LMAT_Translation_Dashboard::class)){
-			LMAT_Translation_Dashboard::get_instance();
+		if(class_exists(Linguator_Translation_Dashboard::class)){
+			Linguator_Translation_Dashboard::get_instance();
 		}
 
 		// Initialize feedback functionality
-		$this->feedback = new \Linguator\Admin\Feedback\LMAT_Admin_Feedback( $this );
+		$this->feedback = new \Linguator\Admin\Feedback\Linguator_Admin_Feedback( $this );
 		$this->cpfm_feedback_notice = new \Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice();
-		$this->lmat_cronjob = new \Linguator\Admin\cpfm_feedback\cron\LMAT_cronjob();
+		$this->linguator_cronjob = new \Linguator\Admin\cpfm_feedback\cron\Linguator_cronjob();
 		add_action('cpfm_register_notice', function () {
 
 			if (!class_exists('Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice') || !current_user_can('manage_options')) {
@@ -119,7 +158,6 @@ class Linguator {
 				
 			];
 			\Linguator\Admin\cpfm_feedback\CPFM_Feedback_Notice::cpfm_register_notice('lmat', $notice);
-				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 				if (!isset($GLOBALS['cool_plugins_feedback'])) {
 					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 					$GLOBALS['cool_plugins_feedback'] = [];
@@ -129,8 +167,10 @@ class Linguator {
 	   
 		});
 		add_action('cpfm_after_opt_in_lmat', function($category) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			if ($category === 'lmat') {
-				\Linguator\Admin\cpfm_feedback\cron\LMAT_cronjob::lmat_send_data();
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+				\Linguator\Admin\cpfm_feedback\cron\Linguator_cronjob::linguator_send_data();
 			}
 		});
 
@@ -140,7 +180,7 @@ class Linguator {
 		 * Loaded as soon as possible as we may need to act before other plugins are loaded.
 		 */
 		if ( ! defined( 'LMAT_PLUGINS_COMPAT' ) || LMAT_PLUGINS_COMPAT ) {
-			LMAT_Integrations::instance();
+			Linguator_Integrations::instance();
 		}
 	}
 
@@ -161,7 +201,7 @@ class Linguator {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 		if ( isset( $_REQUEST['action'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
-			$action = sanitize_key( $_REQUEST['action'] );
+			$action = sanitize_key( wp_unslash( $_REQUEST['action'] ) );
 			// Check for Elementor actions - these should be treated as admin operations
 			if ( strpos( $action, 'elementor' ) !== false || 
 				 in_array( $action, array( 'heartbeat' ) ) ) {
@@ -169,8 +209,12 @@ class Linguator {
 			}
 		}
 		
-		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( $_REQUEST['action'] ), $excluded_actions ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_ajax_on_front = wp_doing_ajax() && empty( $_REQUEST['lmat_ajax_backend'] ) && ! $in; // phpcs:ignore WordPress.Security.NonceVerification
+		$in = isset( $_REQUEST['action'] ) && in_array( sanitize_key( wp_unslash( $_REQUEST['action'] ) ), $excluded_actions ); // phpcs:ignore WordPress.Security.NonceVerification
+		// Treat presence of lmat_ajax_backend as "backend" ajax.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag.
+		$lmat_ajax_backend = isset( $_REQUEST['lmat_ajax_backend'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['lmat_ajax_backend'] ) ) : '';
+
+		$is_ajax_on_front = wp_doing_ajax() && '' === $lmat_ajax_backend && ! $in;
 
 		/**
 		 * Filters whether the current request is an ajax request on front.
@@ -196,7 +240,7 @@ class Linguator {
 		$home_path       = trim( (string) wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
 		$home_path_regex = sprintf( '|^%s|i', preg_quote( $home_path, '|' ) );
 
-		$req_uri = trim( (string) wp_parse_url( lmat_get_requested_url(), PHP_URL_PATH ), '/' );
+		$req_uri = trim( (string) wp_parse_url( linguator_get_requested_url(), PHP_URL_PATH ), '/' );
 		$req_uri = (string) preg_replace( $home_path_regex, '', $req_uri );
 		$req_uri = trim( $req_uri, '/' );
 		$req_uri = str_replace( 'index.php', '', $req_uri );
@@ -204,7 +248,7 @@ class Linguator {
 
 		// And also test rest_route query string parameter is not empty for plain permalinks.
 		$query_string = array();
-		wp_parse_str( (string) wp_parse_url( lmat_get_requested_url(), PHP_URL_QUERY ), $query_string );
+		wp_parse_str( (string) wp_parse_url( linguator_get_requested_url(), PHP_URL_QUERY ), $query_string );
 		$rest_route = isset( $query_string['rest_route'] ) && is_string( $query_string['rest_route'] ) ? trim( $query_string['rest_route'], '/' ) : false;
 
 		return 0 === strpos( $req_uri, rest_get_url_prefix() . '/' ) || ! empty( $rest_route );
@@ -218,7 +262,7 @@ class Linguator {
 	 * @return bool
 	 */
 	public static function is_wizard() {
-		return isset( $_GET['page'] ) && ! empty( $_GET['page'] ) && 'lmat_wizard' === sanitize_key( $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		return isset( $_GET['page'] ) && ! empty( $_GET['page'] ) && 'lmat_wizard' === sanitize_key( wp_unslash( $_GET['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
 	/**
@@ -244,7 +288,7 @@ class Linguator {
 
 		// Settings page whatever the tab except for the wizard which needs to be an admin process.
 		if ( ! defined( 'LMAT_SETTINGS' ) ) {
-			define( 'LMAT_SETTINGS', is_admin() && ( ( isset( $_GET['page'] ) && 0 === strpos( sanitize_key( $_GET['page'] ), 'lmat' ) && ! self::is_wizard() ) || ! empty( $_REQUEST['lmat_ajax_settings'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			define( 'LMAT_SETTINGS', is_admin() && ( ( isset( $_GET['page'] ) && 0 === strpos( sanitize_key( wp_unslash( $_GET['page'] ) ), 'lmat' ) && ! self::is_wizard() ) || ! empty( $_REQUEST['lmat_ajax_settings'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 	}
 
@@ -271,18 +315,18 @@ class Linguator {
 		 *
 		 *  
 		 *
-		 * @param string $class either LMAT_Model or LMAT_Admin_Model
+		 * @param string $class either Linguator_Model or Linguator_Admin_Model
 		 */
-		$class = apply_filters( 'lmat_model', LMAT_SETTINGS || self::is_wizard() ? 'LMAT_Admin_Model' : 'LMAT_Model' );
+		$class = apply_filters( 'lmat_model', LMAT_SETTINGS || self::is_wizard() ? 'Linguator_Admin_Model' : 'Linguator_Model' );
 		
 		// Handle namespaced classes for dynamic instantiation
-		if ( 'LMAT_Admin_Model' === $class ) {
-			$class = LMAT_Admin_Model::class;
-		} elseif ( 'LMAT_Model' === $class ) {
-			$class = LMAT_Model::class;
+		if ( 'Linguator_Admin_Model' === $class ) {
+			$class = Linguator_Admin_Model::class;
+		} elseif ( 'Linguator_Model' === $class ) {
+			$class = Linguator_Model::class;
 		}
 		
-		/** @var LMAT_Model $model */
+		/** @var Linguator_Model $model */
 		$model = new $class( $options );
 
 		if ( ! $model->has_languages() ) {
@@ -298,13 +342,13 @@ class Linguator {
 		$class = '';
 
 		if ( LMAT_SETTINGS ) {
-			$class = 'LMAT_Settings';
+			$class = 'Linguator_Settings';
 		} elseif ( LMAT_ADMIN ) {
-			$class = 'LMAT_Admin';
+			$class = 'Linguator_Admin';
 		} elseif ( self::is_rest_request() ) {
-			$class = 'LMAT_REST_Request';
+			$class = 'Linguator_REST_Request';
 		} elseif ( $model->has_languages() ) {
-			$class = 'LMAT_Frontend';
+			$class = 'Linguator_Frontend';
 		}
 
 		/**
@@ -318,14 +362,14 @@ class Linguator {
 
 		if ( ! empty( $class ) ) {
 			// Handle namespaced classes for dynamic instantiation
-			if ( 'LMAT_Admin' === $class ) {
-				$class = LMAT_Admin::class;
-			} elseif ( 'LMAT_Frontend' === $class ) {
-				$class = LMAT_Frontend::class;
-			} elseif ( 'LMAT_Settings' === $class ) {
-				$class = LMAT_Settings::class;
-			} elseif ( 'LMAT_REST_Request' === $class ) {
-				$class = LMAT_REST_Request::class;
+			if ( 'Linguator_Admin' === $class ) {
+				$class = Linguator_Admin::class;
+			} elseif ( 'Linguator_Frontend' === $class ) {
+				$class = Linguator_Frontend::class;
+			} elseif ( 'Linguator_Settings' === $class ) {
+				$class = Linguator_Settings::class;
+			} elseif ( 'Linguator_REST_Request' === $class ) {
+				$class = Linguator_REST_Request::class;
 			}
 			
 			/** @phpstan-var class-string<TLMATClass> $class */
@@ -340,13 +384,13 @@ class Linguator {
 	 *  
 	 *
 	 * @param string    $class The class name.
-	 * @param LMAT_Model $model Instance of LMAT_Model.
-	 * @return LMAT_Base
+	 * @param Linguator_Model $model Instance of Linguator_Model.
+	 * @return Linguator_Base
 	 *
 	 * @phpstan-param class-string<TLMATClass> $class
 	 * @phpstan-return TLMATClass
 	 */
-	public function init_context( string $class, LMAT_Model $model ): LMAT_Base {
+	public function init_context( string $class, Linguator_Model $model ): Linguator_Base {
 		global $linguator;
 
 		$links_model = $model->get_links_model();
@@ -357,13 +401,13 @@ class Linguator {
 
 		/**
 		 * Fires after Linguator's model init.
-		 * This is the best place to register a custom table (see `LMAT_Model`'s constructor).
+		 * This is the best place to register a custom table (see `Linguator_Model`'s constructor).
 		 * /!\ This hook is fired *before* the $linguator object is available.
 		 * /!\ The languages are also not available yet.
 		 *
 		 *  
 		 *
-		 * @param LMAT_Model $model Linguator model.
+		 * @param Linguator_Model $model Linguator model.
 		 */
 		do_action( 'lmat_model_init', $model );
 

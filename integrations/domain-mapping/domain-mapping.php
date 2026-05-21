@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Domain_Mapping {
+class Linguator_Domain_Mapping {
 
 	/**
 	 * Setups actions.
@@ -25,7 +25,7 @@ class LMAT_Domain_Mapping {
 			$options = get_option( 'linguator' );
 
 			if ( is_array( $options ) && $options['force_lang'] < 2 ) {
-				lmat_set_constant( 'LMAT_CACHE_HOME_URL', false );
+				linguator_set_constant( 'LMAT_CACHE_HOME_URL', false );
 			}
 
 			if ( ! get_site_option( 'dm_no_primary_domain' ) ) {
@@ -42,7 +42,7 @@ class LMAT_Domain_Mapping {
 	 *  
 	 */
 	public function dm_redirect_to_mapped_domain() {
-		// Don't go further if we stopped loading the plugin early (for example when deactivate-linguator=1).
+		// Don't go further if the plugin bootstrap is unavailable.
 		if ( ! function_exists( 'LMAT' ) ) {
 			// Rely on MU Domain Mapping.
 			redirect_to_mapped_domain();
@@ -56,17 +56,17 @@ class LMAT_Domain_Mapping {
 			}
 
 			// Don't redirect post previews
-			if ( isset( $_GET['preview'] ) && 'true' === $_GET['preview'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['preview'] ) && 'true' === sanitize_text_field( wp_unslash( $_GET['preview'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				return;
 			}
 
 			// Don't redirect theme customizer
-			if ( isset( $_POST['customize'] ) && isset( $_POST['theme'] ) && 'on' === $_POST['customize'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_POST['customize'] ) && isset( $_POST['theme'] ) && 'on' === sanitize_key( wp_unslash( $_POST['customize'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				return;
 			}
 
 			// If we can't associate the requested domain to a language, redirect to the default domain
-			$requested_url  = lmat_get_requested_url();
+			$requested_url  = linguator_get_requested_url();
 			$requested_host = wp_parse_url( $requested_url, PHP_URL_HOST );
 
 			$hosts = LMAT()->links_model->get_hosts();
@@ -84,3 +84,4 @@ class LMAT_Domain_Mapping {
 		}
 	}
 }
+

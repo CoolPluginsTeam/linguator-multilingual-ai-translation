@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Walkers\LMAT_Walker_Dropdown;
+use Linguator\Includes\Walkers\Linguator_Walker_Dropdown;
 use Linguator\Includes\Capabilities\User;
 
 /**
@@ -17,9 +17,9 @@ use Linguator\Includes\Capabilities\User;
  *
  *  
  */
-class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
+class Linguator_Admin_Filters_Media extends Linguator_Admin_Filters_Post_Base {
 	/**
-	 * @var LMAT_CRUD_Posts|null
+	 * @var Linguator_CRUD_Posts|null
 	 */
 	public $posts;
 
@@ -36,10 +36,10 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 		$this->posts = &$linguator->posts;
 
 		// Adds the language field and translations tables in the 'Edit Media' panel.
-		add_filter( 'attachment_fields_to_edit', array( $this, 'attachment_fields_to_edit' ), 10, 2 );
+		add_filter( 'attachment_fields_to_edit', array( $this, 'linguator_attachment_fields_to_edit' ), 10, 2 );
 
 		// Adds actions related to languages when creating, saving or deleting media.
-		add_filter( 'attachment_fields_to_save', array( $this, 'save_media' ), 10, 2 );
+		add_filter( 'attachment_fields_to_save', array( $this, 'linguator_save_media' ), 10, 2 );
 
 		// Maybe creates a media translation.
 		add_action( 'admin_init', array( $this, 'translate_media' ) );
@@ -55,7 +55,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	 * @param WP_Post $post   The attachment being edited.
 	 * @return array Modified list of form fields.
 	 */
-	public function attachment_fields_to_edit( $fields, $post ) {
+	public function linguator_attachment_fields_to_edit( $fields, $post ) {
 		if ( 'post.php' === $GLOBALS['pagenow'] ) {
 			return $fields; // Don't add anything on edit media panel for WP 3.5+ since we have the metabox.
 		}
@@ -79,7 +79,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 		// - or the media has a language but the user is not allowed to translate it.
 		$disabled = empty( $lang ) ? $user->is_translator() : ! $user->can_translate( $lang );
 
-		$dropdown = new LMAT_Walker_Dropdown();
+		$dropdown = new Linguator_Walker_Dropdown();
 		$fields['language'] = array(
 			'label' => __( 'Language', 'linguator-multilingual-ai-translation' ),
 			'input' => 'html',
@@ -134,7 +134,7 @@ class LMAT_Admin_Filters_Media extends LMAT_Admin_Filters_Post_Base {
 	 * @param array $attachment An array of attachment metadata.
 	 * @return array Unmodified $post
 	 */
-	public function save_media( $post, $attachment ) {
+	public function linguator_save_media( $post, $attachment ) {
 		// Language is filled in attachment by the function applying the filter 'attachment_fields_to_save'
 		// All security checks have been done by functions applying this filter
 		if ( empty( $attachment['language'] ) || ! current_user_can( 'edit_post', $post['ID'] ) ) {

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use NOOP_Translations;
-use Linguator\Modules\sync\LMAT_Settings_Sync;
+use Linguator\Modules\sync\Linguator_Settings_Sync;
 use Linguator\Includes\Options\Primitive\Abstract_List;
 use Linguator\Includes\Options\Options;
 
@@ -65,7 +65,7 @@ class Sync extends Abstract_List {
 	 */
 	protected function get_data_structure(): array {
 		$GLOBALS['l10n']['linguator-multilingual-ai-translation'] = new NOOP_Translations(); // Prevents loading the translations too early.
-		$enum = array_keys( LMAT_Settings_Sync::list_metas_to_sync() );
+		$enum = array_keys( Linguator_Settings_Sync::list_metas_to_sync() );
 		unset( $GLOBALS['l10n']['linguator-multilingual-ai-translation'] );
 
 		return array(

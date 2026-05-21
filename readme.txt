@@ -3,13 +3,13 @@
 Contributors: narinder-singh,satindersingh,coolplugins
 Tags: translation, multilingual, language, ai translation 
 Requires at least: 6.2
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 1.0.4
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Translate your WordPress website into multiple languages with AI. Multilingual AI Translator makes creating multilingual sites simple, fast, and SEO-friendly.
+Translate your WordPress site into multiple languages with AI. Fast, simple, SEO-friendly multilingual setup.
 
 == Description ==
 
@@ -83,7 +83,17 @@ This plugin offers AI translation services via Chrome's built-in AI APIs. Learn 
 * [Chrome Summarizer API Documentation](https://developer.chrome.com/docs/ai/summarizer-api)
 * [Chrome Prompt API Documentation for Extensions](https://developer.chrome.com/docs/extensions/ai/prompt-api)
 
-[Multilingual AI Translator on GitHub.](https://github.com/CoolPluginsTeam/Multilingual AI Translator-multilingual-ai-translation) 
+[Multilingual AI Translator on GitHub.](https://github.com/CoolPluginsTeam/linguator-multilingual-ai-translation) 
+
+== Credits ==
+
+This plugin is a derivative work and a fork of the free version of  [Polylang](https://wordpress.org/plugins/polylang/) by WP SYNTEX.
+
+While the core of this plugin is a fork of the free version, it incorporates the Abstract_Screen class structure originally found in the WP_Syntex\Polylang_Pro\Editors\Screens namespace of Polylang Pro. This architecture has been refactored into the Linguator\Modules\Editors\Screens namespace to ensure a unique environment, maintain compatibility, and prevent naming collisions with the original plugin.
+
+This plugin is distributed under the terms of the GNU General Public License, version 3 (GPLv3). We are grateful to the original authors, Frédéric Demarle and the WP SYNTEX team, for their foundational work in the WordPress multilingual space.
+
+**Use of 3rd Party Services:** This plugin connects to the Cool Plugins API to display information about related plugins inside the dashboard. It offers optional usage tracking and feedback submission on deactivation only after explicit user consent. Additionally, it connects to Google Translate (Google LLC) via [translate.googleapis.com](translate.googleapis.com) and [translate.google.com](translate.google.com) to translate post, page, and taxonomy content. This plugin also uses the [DataTables](https://datatables.net/) library in the admin interface to display/manage tabular data. DataTables is licensed under the [MIT License](https://datatables.net/license/mit). Please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/), [Google Terms](https://policies.google.com/terms) of Service and [Google Privacy Policy](https://policies.google.com/privacy).
 
 == Screenshots ==
 1. Multilingual AI Translator Language Switcher Preview.
@@ -141,7 +151,7 @@ Yes. Multilingual AI Translator includes an option to automatically detect the v
 There is no limit. You can add as many languages as you want to your website using Multilingual AI Translator.
 
 = How can I report security bugs? =
-You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage, and handle any security vulnerabilities. [Report a security vulnerability](https://patchstack.com/database/wordpress/plugin/Multilingual AI Translator-multilingual-ai-translation/vdp).
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage, and handle any security vulnerabilities. [Report a security vulnerability](https://patchstack.com/database/wordpress/plugin/linguator-multilingual-ai-translation/vdp).
 
 = Why Use Multilingual AI Translator? =
 * **Simple and Familiar Interface** – Built with WordPress standards in mind, Multilingual AI Translator feels natural and easy to use, even for beginners.
@@ -158,6 +168,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 No, Multilingual AI Translator is not in beta stage. The core features are ready to use, and we’re still improving stability, performance, and adding more integrations based on user feedback.
 
 == Changelog ==
+= Version 1.1.1 | 03/04/2026 =
+* **Improved:** General code improvements and optimizations.
+* **Improved:** Minor text improvements.
+
+= Version 1.1.0 | 21/03/2026 =
+* **Added:** Compatibility with WPBakery Page Builder.
+* **Fixed:** PHP error when updating Gutenberg page translation meta fields.
+* **Improved:** Minor text improvements.
 
 = Version 1.0.4 | 09/01/2026 =
 * **Improved:** Minor Text improvements.

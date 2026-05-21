@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Format_Util {
+class Linguator_Format_Util {
 	/**
 	 * Cache for regex patterns.
 	 * Useful when using `filter_list()` for example.

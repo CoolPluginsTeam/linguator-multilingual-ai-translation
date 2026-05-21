@@ -11,13 +11,13 @@ if(!defined('ABSPATH')){
  * example:
  * 
  * Dashbord initialize
- * if(!class_exists('LMAT_Translation_Dashboard')){
- * $dashboard=LMAT_Translation_Dashboard::get_instance();
+ * if(!class_exists('Linguator_Translation_Dashboard')){
+ * $dashboard=Linguator_Translation_Dashboard::get_instance();
  * }
  * 
  * Store options
- * if(class_exists('LMAT_Translation_Dashboard')){
- *  LMAT_Translation_Dashboard::store_options(
+ * if(class_exists('Linguator_Translation_Dashboard')){
+ *  Linguator_Translation_Dashboard::store_options(
  *      'prefix', // Required plugin prefix
  *      'unique_key',// Optional unique key is used to update the data based on post/page id or plugin/themes name
  *      'update', // Optional preview string count or character count update or replace
@@ -36,7 +36,7 @@ if(!defined('ABSPATH')){
  * }
  * 
  * Add Tabs
- * add_filter('LMAT_Translation_Dashboard_tabs', function($tabs){
+ * add_filter('Linguator_Translation_Dashboard_tabs', function($tabs){
  *  $tabs[]=array(
  *      'prefix'=>'tab_name', // Required
  *      'tab_name'=>'Tab Name', // Required
@@ -54,8 +54,8 @@ if(!defined('ABSPATH')){
  * });
  * 
  * Display review notice
- * if(class_exists('LMAT_Translation_Dashboard')){
- *  LMAT_Translation_Dashboard::review_notice(
+ * if(class_exists('Linguator_Translation_Dashboard')){
+ *  Linguator_Translation_Dashboard::review_notice(
  *      'prefix', // Required
  *      'plugin_name', // Required
  *      'url', // Required
@@ -64,8 +64,8 @@ if(!defined('ABSPATH')){
  * }
  * 
  * Get translation data
- * if(class_exists('LMAT_Translation_Dashboard')){
- *  LMAT_Translation_Dashboard::get_translation_data(
+ * if(class_exists('Linguator_Translation_Dashboard')){
+ *  Linguator_Translation_Dashboard::get_translation_data(
  *      'prefix', // Required
  *      array(
  *          'editor_type' => 'gutenberg', // optional return data based on editor type
@@ -75,8 +75,8 @@ if(!defined('ABSPATH')){
  * }
  */
 
-if(!class_exists('LMAT_Translation_Dashboard')){
-    class LMAT_Translation_Dashboard{
+if(!class_exists('Linguator_Translation_Dashboard')){
+    class Linguator_Translation_Dashboard{
 
         /**
          * Init
@@ -102,7 +102,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public function __construct(){
-            add_action('wp_ajax_lmat_hide_review_notice', array($this, 'lmat_hide_review_notice'));
+            add_action('wp_ajax_lmat_hide_review_notice', array($this, 'linguator_hide_review_notice'));
         }
 
         /**
@@ -242,7 +242,7 @@ if(!class_exists('LMAT_Translation_Dashboard')){
         }
 
         public static function review_notice($prefix, $plugin_name, $url){
-            if(self::lmat_hide_review_notice_status($prefix)){
+            if(self::linguator_hide_review_notice_status($prefix)){
                 return;
             }
             
@@ -287,27 +287,32 @@ if(!class_exists('LMAT_Translation_Dashboard')){
             echo wp_kses($html, $allowed);
         }
 
-        public static function lmat_hide_review_notice_status($prefix){
+        public static function linguator_hide_review_notice_status($prefix){
             $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
             return isset($review_notice_dismissed[$prefix]) ? $review_notice_dismissed[$prefix] : false;
         }
 
-        public function lmat_hide_review_notice(){
+        public function linguator_hide_review_notice(){
             if(!current_user_can('manage_options')){
                 wp_send_json_error( __( 'Unauthorized', 'linguator-multilingual-ai-translation' ), 403 );
                 wp_die( '0', 403 );
             }
 
-            if(isset($_POST['nonce'], $_POST['prefix']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'lmat_hide_review_notice')){
-                $prefix = sanitize_key(wp_unslash($_POST['prefix']));
-                $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
-                $review_notice_dismissed[$prefix] = true;
-                update_option('cpt_review_notice_dismissed', $review_notice_dismissed);
-                wp_send_json_success();
-            }else{
+            if ( ! check_ajax_referer( 'lmat_hide_review_notice', 'nonce', false ) ) {
                 wp_send_json_error( __( 'Invalid nonce', 'linguator-multilingual-ai-translation' ), 400 );
                 wp_die( '0', 400 );
             }
+
+            if ( ! isset( $_POST['prefix'] ) ) {
+                wp_send_json_error( __( 'Missing prefix', 'linguator-multilingual-ai-translation' ), 400 );
+                wp_die( '0', 400 );
+            }
+
+            $prefix = sanitize_key( wp_unslash( $_POST['prefix'] ) );
+            $review_notice_dismissed = get_option('cpt_review_notice_dismissed', array());
+            $review_notice_dismissed[$prefix] = true;
+            update_option('cpt_review_notice_dismissed', $review_notice_dismissed);
+            wp_send_json_success();
         }
     }
 }

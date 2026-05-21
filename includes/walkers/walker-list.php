@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Displays a language list
  *
  *  
- *   Extends `LMAT_Walker` now.
+ *   Extends `Linguator_Walker` now.
  */
-class LMAT_Walker_List extends LMAT_Walker {
+class Linguator_Walker_List extends Linguator_Walker {
 	/**
 	 * Database fields to use.
 	 *
@@ -69,7 +69,24 @@ class LMAT_Walker_List extends LMAT_Walker {
 			'%5$s<li class="%1$s"><a %2$s>%3$s%4$s</a></li>%6$s',
 			esc_attr( implode( ' ', $element->classes ) ),
 			$link_atts,
-			$element->flag,
+			wp_kses(
+				(string) $element->flag,
+				array(
+					'img'  => array(
+						'src'      => true,
+						'alt'      => true,
+						'class'    => true,
+						'width'    => true,
+						'height'   => true,
+						'style'    => true,
+						'decoding' => true,
+						'loading'  => true,
+						'title'    => true,
+					),
+					'span' => array( 'class' => true, 'style' => true ),
+				),
+				array_merge( wp_allowed_protocols(), array( 'data' ) )
+			),
 			$label,
 			'discard' === $args['item_spacing'] ? '' : "\t",
 			'discard' === $args['item_spacing'] ? '' : "\n"
@@ -93,3 +110,4 @@ class LMAT_Walker_List extends LMAT_Walker {
 		return parent::walk( $elements, $max_depth, $args );
 	}
 }
+

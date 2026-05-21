@@ -9,9 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 use Closure;
-use Linguator\Includes\Other\LMAT_Model;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Model;
+use Linguator\Includes\Other\Linguator_Language;
 use WP_REST_Request;
 use WP_REST_Posts_Controller;
 use WP_REST_Terms_Controller;
@@ -34,7 +35,7 @@ class Request {
 	private $handler;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	private $model;
 
@@ -42,9 +43,9 @@ class Request {
 	 * Constructor.
 	 *
 	 *
-	 * @param LMAT_Model $model Instance of LMAT_Model.
+	 * @param Linguator_Model $model Instance of Linguator_Model.
 	 */
-	public function __construct( LMAT_Model $model ) {
+	public function __construct( Linguator_Model $model ) {
 		$this->model = $model;
 
 		/*
@@ -109,9 +110,9 @@ class Request {
 	 * Returns the language of the current request.
 	 *
 	 *
-	 * @return LMAT_Language|null Language of the current request, or null if no request is set or the language is not found.
+	 * @return Linguator_Language|null Language of the current request, or null if no request is set or the language is not found.
 	 */
-	public function get_language(): ?LMAT_Language {
+	public function get_language(): ?Linguator_Language {
 		if ( ! $this->request ) {
 			return null;
 		}

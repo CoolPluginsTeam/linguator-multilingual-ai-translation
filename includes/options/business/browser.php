@@ -44,7 +44,7 @@ class Browser extends Abstract_Boolean {
 	 * @return bool|WP_Error The sanitized value. An instance of `WP_Error` in case of blocking error.
 	 */
 	protected function sanitize( $value, Options $options ) {
-		if ( 3 === $options->get( 'force_lang' ) && ! class_exists( 'LMAT_Xdata_Domain', true ) ) {
+		if ( 3 === $options->get( 'force_lang' ) && ! class_exists( 'Linguator_Xdata_Domain', true ) ) {
 			// Cannot share cookies between domains.
 			return false;
 		}

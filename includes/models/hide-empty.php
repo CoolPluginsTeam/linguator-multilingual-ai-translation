@@ -6,7 +6,7 @@
 namespace Linguator\Includes\Models;
 
 use Linguator\Includes\Models\Languages_Proxy_Interface;
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 /**
  * This class helps to only show languages that are not empty.
@@ -29,8 +29,8 @@ class Hide_Empty implements Languages_Proxy_Interface {
 	 *
 	 * @since 0.0.8
 	 *
-	 * @param \LMAT_Language[] $languages List of language objects to filter.
-	 * @return \LMAT_Language[] Languages that are not empty.
+	 * @param \Linguator_Language[] $languages List of language objects to filter.
+	 * @return \Linguator_Language[] Languages that are not empty.
 	 */
 	public function filter( array $languages ): array {
 		return array_filter(

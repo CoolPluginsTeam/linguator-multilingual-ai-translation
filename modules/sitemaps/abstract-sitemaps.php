@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-abstract class LMAT_Abstract_Sitemaps {
+abstract class Linguator_Abstract_Sitemaps {
 	/**
 	 * Setups actions and filters.
 	 *
@@ -39,3 +39,4 @@ abstract class LMAT_Abstract_Sitemaps {
 		return $whitelist;
 	}
 }
+

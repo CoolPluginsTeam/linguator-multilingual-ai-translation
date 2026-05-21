@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
+class Linguator_Sitemaps_Domain extends Linguator_Abstract_Sitemaps {
 	/**
-	 * @var LMAT_Links_Abstract_Domain
+	 * @var Linguator_Links_Abstract_Domain
 	 */
 	protected $links_model;
 
@@ -73,3 +73,4 @@ class LMAT_Sitemaps_Domain extends LMAT_Abstract_Sitemaps {
 		return $url;
 	}
 }
+

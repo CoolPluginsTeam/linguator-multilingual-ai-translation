@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Filters\LMAT_Filters_Links;
-use Linguator\Includes\Helpers\LMAT_Cache;
+use Linguator\Includes\Filters\Linguator_Filters_Links;
+use Linguator\Includes\Helpers\Linguator_Cache;
 
 
 
@@ -18,17 +18,17 @@ use Linguator\Includes\Helpers\LMAT_Cache;
  *
  *  
  */
-class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
+class Linguator_Frontend_Filters_Links extends Linguator_Filters_Links {
 
 	/**
-	 * @var LMAT_Frontend_Links|null
+	 * @var Linguator_Frontend_Links|null
 	 */
 	public $links;
 
 	/**
 	 * Our internal non persistent cache object
 	 *
-	 * @var LMAT_Cache<string>
+	 * @var Linguator_Cache<string>
 	 */
 	public $cache;
 
@@ -59,7 +59,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 		parent::__construct( $linguator );
 
 		$this->curlang = &$linguator->curlang;
-		$this->cache = new LMAT_Cache();
+		$this->cache = new Linguator_Cache();
 
 		// Rewrites author and date links to filter them by language
 		foreach ( array( 'feed_link', 'author_link', 'search_link', 'year_link', 'month_link', 'day_link' ) as $filter ) {
@@ -70,7 +70,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 		add_action( 'wp_head', array( $this, 'wp_head' ), 1 );
 
 		// Modifies the home url
-		if ( lmat_get_constant( 'LMAT_FILTER_HOME_URL', true ) ) {
+		if ( linguator_get_constant( 'LINGUATOR_FILTER_HOME_URL', true ) ) {
 			add_filter( 'home_url', array( $this, 'home_url' ), 10, 2 );
 		}
 
@@ -208,7 +208,21 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 	 * @return void
 	 */
 	public function wp_head() {
-		// Don't output anything on paged archives: see https://wordpress.org/support/topic/hreflang-on-page2
+		// Only relevant on real frontend HTML views.
+		if ( is_admin() || wp_doing_ajax() || is_feed() || is_trackback() || is_robots() ) {
+			return;
+		}
+
+		// Nothing to output if the plugin has no languages configured.
+		if ( method_exists( $this->model, 'has_languages' ) && ! $this->model->has_languages() ) {
+			return;
+		}
+
+		$languages_list = $this->model->get_languages_list();
+		if ( empty( $languages_list ) || count( $languages_list ) < 2 ) {
+			return;
+		}
+
 		// Don't output anything on paged pages and paged posts
 		if ( is_paged() || ( is_singular() && ( $page = get_query_var( 'page' ) ) && $page > 1 ) ) {
 			return;
@@ -217,7 +231,7 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 		$urls = array();
 
 		// Google recommends to include self link https://support.google.com/webmasters/answer/189077?hl=en
-		foreach ( $this->model->get_languages_list() as $language ) {
+		foreach ( $languages_list as $language ) {
 			if ( $url = $this->links->get_translation_url( $language ) ) {
 				$urls[ $language->get_locale( 'display' ) ] = $url;
 			}
@@ -242,7 +256,6 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 			}
 
 			// Adds the site root url when the default language code is not hidden
-			// See https://wordpress.org/support/topic/implementation-of-hreflangx-default
 			if ( is_front_page() && ! $this->options['hide_default'] && $this->options['force_lang'] < 3 ) {
 				$hreflangs['x-default'] = home_url( '/' );
 			}
@@ -279,7 +292,6 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 		// We *want* to filter the home url in these cases
 		if ( empty( $this->white_list ) ) {
 			// On Windows get_theme_root() mixes / and \
-			// We want only \ for the comparison with debug_backtrace
 			$theme_root = get_theme_root();
 			$theme_root = ( false === strpos( $theme_root, '\\' ) ) ? $theme_root : str_replace( '/', '\\', $theme_root );
 
@@ -326,27 +338,19 @@ class LMAT_Frontend_Filters_Links extends LMAT_Filters_Links {
 			 */
 			$this->black_list = apply_filters( 'lmat_home_url_black_list', $black_list );
 		}
-
-		$traces = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
-		unset( $traces[0], $traces[1] ); // We don't need the last 2 calls: this function + call_user_func_array (or apply_filters on PHP7+)
-
-		foreach ( $traces as $trace ) {
-			// Black list first
-			foreach ( $this->black_list as $v ) {
-				if ( ( isset( $trace['file'], $v['file'] ) && false !== strpos( $trace['file'], $v['file'] ) ) || ( ! empty( $v['function'] ) && $trace['function'] === $v['function'] ) ) {
-					return $url;
-				}
-			}
-
-			foreach ( $this->white_list as $v ) {
-				if ( ( ! empty( $v['function'] ) && $trace['function'] === $v['function'] ) ||
-					( isset( $trace['file'], $v['file'] ) && false !== strpos( $trace['file'], $v['file'] ) && in_array( $trace['function'], array( 'home_url', 'get_home_url', 'bloginfo', 'get_bloginfo' ) ) ) ) {
-					$ok = true;
-				}
-			}
+		/**
+		 * Allows opting out of home_url language rewriting without stack inspection.
+		 *
+		 * @param bool   $should_rewrite Whether to rewrite the URL.
+		 * @param string $url            The current home URL.
+		 * @param string $path           Path relative to home URL.
+		 */
+		$should_rewrite = (bool) apply_filters( 'lmat_should_rewrite_home_url', true, $url, $path );
+		if ( ! $should_rewrite ) {
+			return $url;
 		}
 
-		return empty( $ok ) ? $url : ( empty( $path ) ? rtrim( $this->links->get_home_url( $this->curlang ), '/' ) : $this->links->get_home_url( $this->curlang ) );
+		return empty( $path ) ? rtrim( $this->links->get_home_url( $this->curlang ), '/' ) : $this->links->get_home_url( $this->curlang );
 	}
 
 	/**

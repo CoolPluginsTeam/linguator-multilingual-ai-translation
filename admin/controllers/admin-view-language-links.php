@@ -6,15 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
-	class LMAT_Admin_View_Language_Links {
+if ( ! class_exists( 'Linguator_Admin_View_Language_Links' ) ) :
+	class Linguator_Admin_View_Language_Links {
 
 		public function __construct() {
-			add_action( 'current_screen', array( $this, 'lmat_admin_view_language_links' ) );
-            add_action( 'admin_enqueue_scripts', array( $this, 'lmat_admin_view_language_links_assets' ) );
+			add_action( 'current_screen', array( $this, 'linguator_admin_view_language_links' ) );
+            add_action( 'admin_enqueue_scripts', array( $this, 'linguator_admin_view_language_links_assets' ) );
 		}
 
-        public function lmat_admin_view_language_links_assets() {
+        public function linguator_admin_view_language_links_assets() {
 			global $linguator;
 			if(function_exists('get_current_screen') && property_exists(get_current_screen(), 'post_type') && $linguator && property_exists($linguator, 'model')){
 				$current_screen=get_current_screen();
@@ -47,7 +47,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			}
         }
 
-		public function lmat_admin_view_language_links($current_screen) {
+		public function linguator_admin_view_language_links($current_screen) {
             if(is_admin()) {
 
 				global $linguator;
@@ -77,21 +77,21 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 					return;
 				}
 
-				add_filter( "views_{$current_screen->id}", array($this, 'lmat_list_table_views_filter') );
+				add_filter( "views_{$current_screen->id}", array($this, 'linguator_list_table_views_filter') );
 			}
         }
 
-        public function lmat_list_table_views_filter($views) {
-            if(!function_exists('LMAT') || !function_exists('lmat_count_posts') || !function_exists('get_current_screen') || !property_exists(LMAT(), 'model') || !function_exists('lmat_current_language')){
+        public function linguator_list_table_views_filter($views) {
+            if(!function_exists('LMAT') || !function_exists('linguator_count_posts') || !function_exists('get_current_screen') || !property_exists(LMAT(), 'model') || !function_exists('linguator_current_language')){
                 return $views;
 			}
 			
-			$lmat_languages =  LMAT()->model->get_languages_list();
+			$linguator_languages =  LMAT()->model->get_languages_list();
 			$current_screen=get_current_screen();
 			$index=0;
-			$total_languages=count($lmat_languages);
-			$lmat_active_languages=lmat_current_language();
-			$lmat_active_languages = !$lmat_active_languages ? 'all' : $lmat_active_languages;
+			$total_languages=count($linguator_languages);
+			$linguator_active_languages=linguator_current_language();
+			$linguator_active_languages = !$linguator_active_languages ? 'all' : $linguator_active_languages;
 			$taxonomy=isset($current_screen->taxonomy) ? $current_screen->taxonomy : '';
 			
 			$post_type=isset($current_screen->post_type) ? $current_screen->post_type : '';
@@ -105,7 +105,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 			$pending_post_args = array('post_type'=>$post_type, 'post_status'=>'pending');
 
 		if($post_type === 'elementor_library'){
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only parameter for filtering
 			$library_type=isset($_GET['elementor_library_type']) ? sanitize_text_field(wp_unslash($_GET['elementor_library_type'])) : '';
 
 				if($library_type && !empty($library_type)){
@@ -116,7 +116,6 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 							'compare' => '=',
 						)
 					);
-					
 					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					$publish_post_args['meta_query'] = $post_meta_query;
 					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
@@ -126,7 +125,7 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 				};
 			};
 
-			if(count($lmat_languages) > 1 && !$taxonomy && empty($taxonomy)){
+			if(count($linguator_languages) > 1 && !$taxonomy && empty($taxonomy)){
 
                 echo wp_kses("<div class='lmat_subsubsub' style='display:none; clear:both;'>
 					<ul class='lmat_subsubsub_list'>", array(
@@ -136,18 +135,19 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 						),
 						'ul' => array('class' => array()),
 					));
-                    foreach($lmat_languages as $lang){
+                    foreach($linguator_languages as $lang){
 						$flag=isset($lang->flag) ? $lang->flag : '';
 						$language_slug=isset($lang->slug) ? $lang->slug : '';
-						$current_class=$lmat_active_languages && $lmat_active_languages == $language_slug ? 'current' : '';
-						$translated_post_count=lmat_count_posts($language_slug, $publish_post_args);
+						$current_class=$linguator_active_languages && $linguator_active_languages == $language_slug ? 'current' : '';
+						$translated_post_count=linguator_count_posts($language_slug, $publish_post_args);
 						$url=function_exists('add_query_arg') ? add_query_arg('lang', $language_slug) : 'edit.php?post_type='.esc_attr($post_type).'&lang='.esc_attr($language_slug);
-
+						// Language links must include nonce so admin language filter can update user meta safely.	
+						$url = wp_nonce_url( $url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
 						if('publish' === $post_status){
-							$draft_post_count=lmat_count_posts($language_slug, $draft_post_args);
+							$draft_post_count=linguator_count_posts($language_slug, $draft_post_args);
 							$translated_post_count+=$draft_post_count;
 
-							$pending_post_count=lmat_count_posts($language_slug, $pending_post_args);
+							$pending_post_count=linguator_count_posts($language_slug, $pending_post_args);
 							$translated_post_count+=$pending_post_count;
 						}
 
@@ -161,9 +161,11 @@ if ( ! class_exists( 'LMAT_Admin_View_Language_Links' ) ) :
 					}
 
 					$all_url=function_exists('add_query_arg') ? add_query_arg('lang', 'all') : 'edit.php?post_type='.esc_attr($post_type).'&lang=all';
-					$current_lang_link='all' !== $lmat_active_languages ? esc_url($all_url) : '';
+					// Language links must include nonce so admin language filter can update user meta safely.
+					$all_url = wp_nonce_url( $all_url, 'lmat_set_admin_filter_lang', '_lmat_lang_nonce' );
+					$current_lang_link='all' !== $linguator_active_languages ? esc_url($all_url) : '';
 
-					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($lmat_active_languages == 'all' ? 'current' : '')."	'>All <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";
+					echo "<li class='lmat_lang_all'><a href='".esc_url($current_lang_link)."' class='".esc_attr($linguator_active_languages == 'all' ? 'current' : '')."	'>All <span class='count'>(".esc_html($all_translated_post_count).")</span></a></li>";
 					
 					$allowed = [
 						'ul'   => [ 'class' => true ],

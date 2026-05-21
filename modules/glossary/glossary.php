@@ -35,8 +35,8 @@ if (!class_exists('Glossary')) {
          */
         public function __construct() {
             add_filter('lmat_frontend_settings_assets', array($this, 'stop_frontend_setting_assets'), 10, 3);
-			add_filter('lmat_admin_settings_assets', array($this, 'lmat_supported_blocks_assets'), 10, 3);
-			add_filter('lmat_render_languages_page', array($this, 'lmat_render_supported_blocks_page'), 10, 3);
+			add_filter('lmat_admin_settings_assets', array($this, 'linguator_supported_blocks_assets'), 10, 3);
+			add_filter('lmat_render_languages_page', array($this, 'linguator_render_supported_blocks_page'), 10, 3);
 
             // Add AJAX hooks here
             add_action('wp_ajax_lmat_import_glossary', array($this, 'import_glossary_ajax'));
@@ -47,14 +47,14 @@ if (!class_exists('Glossary')) {
             add_action('wp_ajax_lmat_get_glossary', array($this, 'get_glossary_ajax'));
         }
 
-        /*
+		/*
 		Filter to enqueue the admin supported blocks assets
 		@param bool $status
 		@param string $tab
 		@param bool $is_settings_tab
 		@return bool
 		*/
-		public function lmat_supported_blocks_assets($status, $tab, $is_settings_tab){
+		public function linguator_supported_blocks_assets($status, $tab, $is_settings_tab){
 			if($is_settings_tab && $tab === 'glossary' && function_exists('LMAT')){
 
 				$header = Header::get_instance('glossary', LMAT()->model);
@@ -73,6 +73,7 @@ if (!class_exists('Glossary')) {
                     'delete_glossary_validate' => wp_create_nonce('lmat_delete_glossary_nonce'),
                     'add_glossary_validate' => wp_create_nonce('lmat_add_glossary_nonce'),
                     'export_glossary_validate' => wp_create_nonce('lmat_export_glossary_nonce'),
+                    'edit_row_template' => self::get_edit_row_template(),
                 ));
 				
 				return false;
@@ -103,7 +104,7 @@ if (!class_exists('Glossary')) {
 		@param string $active_tab
 		@return bool
 		*/
-		public function lmat_render_supported_blocks_page($status, $selected_tab, $active_tab) {
+		public function linguator_render_supported_blocks_page($status, $selected_tab, $active_tab) {
 			if($selected_tab === 'glossary' && $active_tab === 'settings'){
 
 				$header = Header::get_instance('glossary', LMAT()->model);
@@ -119,13 +120,55 @@ if (!class_exists('Glossary')) {
 		}
 
         /**
+         * Returns the Underscore template markup for the glossary edit row (inlined for JS, no script tag in markup).
+         *
+         * @return string
+         */
+        public static function get_edit_row_template() {
+            $placeholder_term = __( 'String Translation', 'linguator-multilingual-ai-translation' );
+            $placeholder_desc = __( 'Example: The name of the add-on that allows translating strings', 'linguator-multilingual-ai-translation' );
+            $placeholder_translation = __( 'Custom Translation', 'linguator-multilingual-ai-translation' );
+            $label_general = __( 'General', 'linguator-multilingual-ai-translation' );
+            $label_name = __( 'Name', 'linguator-multilingual-ai-translation' );
+            $error_length = __( 'Too long, must be less than 220 characters', 'linguator-multilingual-ai-translation' );
+            $label_save = __( 'Save', 'linguator-multilingual-ai-translation' );
+            $label_cancel = __( 'Cancel', 'linguator-multilingual-ai-translation' );
+
+            return '<tr class="lmat-glossary-edit-row">'
+                . '<td>'
+                . '<textarea class="lmat-edit-term" rows="3" placeholder="' . esc_attr( $placeholder_term ) . '"><%= term %></textarea>'
+                . '<div class="lmat-translation-error"></div>'
+                . '<textarea class="lmat-edit-desc" rows="4" placeholder="' . esc_attr( $placeholder_desc ) . '"><%= desc %></textarea>'
+                . '</td>'
+                . '<td>'
+                . '<select class="lmat-edit-type">'
+                . '<option value="general" <%= type === \'general\' ? \'selected\' : \'\' %>>' . esc_html( $label_general ) . '</option>'
+                . '<option value="name" <%= type === \'name\' ? \'selected\' : \'\' %>>' . esc_html( $label_name ) . '</option>'
+                . '</select>'
+                . '</td>'
+                . '<% for (var i = 0; i < languages.length; i++) { if (languages[i].code === source_lang) continue; %>'
+                . '<td colspan="2">'
+                . '<textarea class="lmat-edit-translation" data-lang="<%= languages[i].code %>" placeholder="' . esc_attr( $placeholder_translation ) . '" rows="9"><%= translations[languages[i].code] || \'\' %></textarea>'
+                . '<div class="lmat-translation-error">' . esc_html( $error_length ) . '</div>'
+                . '</td>'
+                . '<% } %>'
+                . '<td colspan="2" class="lmat-actions-cell">'
+                . '<div class="lmat-action-buttons">'
+                . '<button type="button" class="lmat-save-edit-btn button button-primary">' . esc_html( $label_save ) . '</button>'
+                . '<button type="button" class="lmat-cancel-edit-btn">' . esc_html( $label_cancel ) . '</button>'
+                . '</div>'
+                . '</td>'
+                . '</tr>';
+        }
+
+        /**
          * Store glossary entry 
          */
         public static function store_glossary_data($glossary_data = array()) {
             $glossary_type = sanitize_text_field($glossary_data['type'] ?? '');
             $glossary_term = sanitize_text_field($glossary_data['term'] ?? '');
             $glossary_desc = sanitize_textarea_field($glossary_data['description'] ?? '');
-            $source_language_code = sanitize_text_field($glossary_data['source_lang'] ?? '');
+            $source_language_code = sanitize_key($glossary_data['source_lang'] ?? '');
 
             // Support single or multiple translations
             $target_langs = (array) ($glossary_data['target_lang'] ?? []);
@@ -145,7 +188,7 @@ if (!class_exists('Glossary')) {
                     }
                     $existing_langs = array_column($entry['translations'], 'target_language_code');
                     foreach ($target_langs as $idx => $lang) {
-                        $lang = sanitize_text_field($lang);
+                        $lang = sanitize_key($lang);
                         // SKIP if $lang is the same as $source_language_code
                         if ($lang === $source_language_code) continue;
                         $term = sanitize_text_field($translated_terms[$idx] ?? '');
@@ -172,7 +215,7 @@ if (!class_exists('Glossary')) {
                 // New entry
                 $translations = [];
                 foreach ($target_langs as $idx => $lang) {
-                    $lang = sanitize_text_field($lang);
+                    $lang = sanitize_key($lang);
                     if ($lang === $source_language_code) continue;
                     
                     $translated_term = sanitize_text_field($translated_terms[$idx] ?? '');
@@ -249,20 +292,28 @@ if (!class_exists('Glossary')) {
             if (!current_user_can('manage_options')) {
                 wp_send_json_error('Permission denied');
             }
-            if (empty($_FILES['csv_file']['tmp_name'])) {
+            if ( empty( $_FILES['csv_file']['tmp_name'] ) ) {
                 wp_send_json_error('No file uploaded');
             }
-            if (!isset($_FILES['csv_file']['type']) || !isset($_FILES['csv_file']['name'])) {
+            if ( ! isset( $_FILES['csv_file']['name'] ) || ! isset( $_FILES['csv_file']['tmp_name'] ) ) {
                 wp_send_json_error('Invalid file data');
             }
-            $file_name = sanitize_file_name( $_FILES['csv_file']['name'] );
-            if ($_FILES['csv_file']['type'] !== 'text/csv' && pathinfo($file_name, PATHINFO_EXTENSION) !== 'csv') {
+            $file_name = sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) );
+            $csv_path  = sanitize_text_field( wp_unslash( $_FILES['csv_file']['tmp_name'] ) );
+            $file_type = wp_check_filetype_and_ext( $csv_path, $file_name );
+
+            if (
+                empty( $file_type['ext'] ) ||
+                empty( $file_type['type'] ) ||
+                'csv' !== strtolower( (string) $file_type['ext'] ) ||
+                'text/csv' !== strtolower( (string) $file_type['type'] )
+            ) {
                 wp_send_json_error('Invalid file type');
             }
-            if (!isset($_FILES['csv_file']['size']) || $_FILES['csv_file']['size'] > 2 * 1024 * 1024) { // 2MB limit
+            $file_size = isset( $_FILES['csv_file']['size'] ) ? absint( wp_unslash( $_FILES['csv_file']['size'] ) ) : 0;
+            if ( ! $file_size || $file_size > 2 * 1024 * 1024 ) { // 2MB limit
                 wp_send_json_error('File too large');
             }
-            $csv_path = isset($_FILES['csv_file']['tmp_name']) ? sanitize_text_field( $_FILES['csv_file']['tmp_name'] ) : '';
             if (empty($csv_path)) {
                 wp_send_json_error('Invalid file path');
             }
@@ -282,7 +333,7 @@ if (!class_exists('Glossary')) {
             $glossary_type = sanitize_text_field($glossary_data['type'] ?? '');
             $glossary_term = sanitize_text_field($glossary_data['term'] ?? '');
             $glossary_desc = sanitize_textarea_field($glossary_data['description'] ?? '');
-            $source_language_code = sanitize_text_field($glossary_data['source_lang'] ?? '');
+            $source_language_code = sanitize_key($glossary_data['source_lang'] ?? '');
             $translations = $glossary_data['translations'] ?? [];
 
             $all_glossaries = get_option('lmat_glossary_data', array());
@@ -307,6 +358,7 @@ if (!class_exists('Glossary')) {
                         // ✅ Add the updated entry now
                         $translations_arr = [];
                         foreach ($translations as $lang => $translated_term) {
+                            $lang = sanitize_key($lang);
                             if ($lang === $source_language_code) continue;
                             $sanitized_term = sanitize_text_field($translated_term);
                             // Only save non-empty translations
@@ -337,6 +389,7 @@ if (!class_exists('Glossary')) {
                         $entry['translations'] = [];
 
                         foreach ($translations as $lang => $translated_term) {
+                            $lang = sanitize_key($lang);
                             if ($lang === $source_language_code) continue;
                             $sanitized_term = sanitize_text_field($translated_term);
                             // Only save non-empty translations
@@ -373,14 +426,33 @@ if (!class_exists('Glossary')) {
             }
 
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            $data = $_POST['data'] ?? [];
-            $source_lang = isset($data['source_lang']) ? sanitize_text_field($data['source_lang']) : '';
-            $translations = isset($data['translations']) && is_array($data['translations']) ? array_map('sanitize_text_field', $data['translations']) : [];
-            // Remove translation for original language if present
-            if (isset($translations[$source_lang])) {
-                unset($translations[$source_lang]);
+            $raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_unslash() applied; payload is sanitized field-by-field below.
+            $data     = is_array( $raw_data ) ? $raw_data : array();
+
+            // Sanitize expected fields at the boundary.
+            $data['type']        = isset( $data['type'] ) ? sanitize_text_field( (string) $data['type'] ) : '';
+            $data['term']        = isset( $data['term'] ) ? sanitize_text_field( (string) $data['term'] ) : '';
+            $data['description'] = isset( $data['description'] ) ? sanitize_textarea_field( (string) $data['description'] ) : '';
+
+            $source_lang         = ! empty( $data['source_lang'] ) ? sanitize_key( (string) $data['source_lang'] ) : '';
+            $data['source_lang'] = $source_lang;
+
+            // These are used as lookup keys in update_glossary_data().
+            $data['original_term']        = isset( $data['original_term'] ) ? sanitize_text_field( (string) $data['original_term'] ) : '';
+            $data['original_source_lang'] = isset( $data['original_source_lang'] ) ? sanitize_key( (string) $data['original_source_lang'] ) : '';
+            $translations = array();
+            if ( ! empty( $data['translations'] ) && is_array( $data['translations'] ) ) {
+                foreach ( $data['translations'] as $lang_code => $translated_term ) {
+                    $translations[ sanitize_key( (string) $lang_code ) ] = sanitize_text_field( (string) $translated_term );
+                }
             }
-            $result = self::update_glossary_data($data);
+            // Remove translation for original language if present
+            if ( '' !== $source_lang && isset( $translations[ $source_lang ] ) ) {
+                unset( $translations[ $source_lang ] );
+            }
+            $data['translations'] = $translations;
+
+            $result = self::update_glossary_data( $data );
 
             if ($result) {
                 // Get the updated entry from database
@@ -445,8 +517,8 @@ if (!class_exists('Glossary')) {
             if (!current_user_can('manage_options')) {
                 wp_send_json_error('Permission denied');
             }
-            $term = isset($_POST['term']) ? sanitize_text_field(wp_unslash($_POST['term'])) : '';
-            $source_lang = isset($_POST['source_lang']) ? sanitize_text_field(wp_unslash($_POST['source_lang'])) : '';
+            $term = ! empty( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+            $source_lang = ! empty( $_POST['source_lang'] ) ? sanitize_text_field( wp_unslash( $_POST['source_lang'] ) ) : '';
             if (empty($term) || empty($source_lang)) {
                 wp_send_json_error('Missing data');
             }
@@ -503,9 +575,18 @@ if (!class_exists('Glossary')) {
             }
             $type = isset($_POST['type']) ? sanitize_text_field(wp_unslash($_POST['type'])) : '';
             $term = isset($_POST['term']) ? sanitize_text_field(wp_unslash($_POST['term'])) : '';
-            $description = isset($_POST['description']) ? sanitize_textarea_field(wp_unslash($_POST['description'])) : '';
-            $source_lang = isset($_POST['source_lang']) ? sanitize_text_field(wp_unslash($_POST['source_lang'])) : '';
-            $translations = isset($_POST['translations']) && is_array($_POST['translations']) ? array_map('sanitize_text_field', wp_unslash($_POST['translations'])) : [];
+            $description = ! empty( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
+            $source_lang = ! empty( $_POST['source_lang'] ) ? sanitize_key( wp_unslash( $_POST['source_lang'] ) ) : '';
+            $translations = array();
+
+            // Normalize to an array before iterating.
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We sanitize individual translation values below after wp_unslash().
+            $raw_translations = isset( $_POST['translations'] ) ? wp_unslash( $_POST['translations'] ) : array();
+            $raw_translations = is_array( $raw_translations ) ? $raw_translations : array();
+
+            foreach ( $raw_translations as $lang_code => $translated_term ) {
+                $translations[ sanitize_key( $lang_code ) ] = sanitize_text_field( $translated_term );
+            }
             // Remove translation for original language if present
             if (isset($translations[$source_lang])) {
                 unset($translations[$source_lang]);
@@ -632,10 +713,10 @@ if (!class_exists('Glossary')) {
                 wp_send_json_error('Permission denied');
             }
 
-            $source_lang = isset($_POST['source_lang']) ? sanitize_text_field(wp_unslash($_POST['source_lang'])) : '';
+            $source_lang = isset($_POST['source_lang']) ? sanitize_key(wp_unslash($_POST['source_lang'])) : '';
             $target_langs = isset($_POST['target_lang']) ? sanitize_text_field(wp_unslash($_POST['target_lang'])) : '';
 
-            $target_langs = explode(',', $target_langs);
+            $target_langs = array_filter( array_map( 'sanitize_key', array_map( 'trim', explode(',', $target_langs) ) ) );
 
             $glossary_data = self::get_all_glossaries();
             $filtered = [];
@@ -682,7 +763,10 @@ if (!class_exists('Glossary')) {
             }
 
             usort($filtered, function($a, $b) {
-                return strlen($a['original_term']) < strlen($b['original_term']);
+                $lenA = isset( $a['original_term'] ) ? strlen( $a['original_term'] ) : 0;
+                $lenB = isset( $b['original_term'] ) ? strlen( $b['original_term'] ) : 0;
+
+                return $lenA <=> $lenB;
             });
 
             wp_send_json_success(['terms' => $filtered]);

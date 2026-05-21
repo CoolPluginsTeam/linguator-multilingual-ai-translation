@@ -5,8 +5,8 @@ namespace Linguator\Admin\Views;
  *
  * @package Linguator
  *
- * @var LMAT_Admin_Classic_Editor $this    LMAT_Admin_Classic_Editor object.
- * @var LMAT_Language             $lang    The post language. Default language if no language assigned yet.
+ * @var Linguator_Admin_Classic_Editor $this    Linguator_Admin_Classic_Editor object.
+ * @var Linguator_Language             $lang    The post language. Default language if no language assigned yet.
  * @var int                      $post_ID The post id.
  */
 
@@ -27,6 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$translation_id = $this->model->post->get_translation( $post_ID, $language );
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		if ( ! $translation_id || $translation_id === $post_ID ) { // $translation_id == $post_ID happens if the post has been (auto)saved before changing the language.
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation_id = 0;
@@ -39,12 +40,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$add_link    = $this->links->new_post_translation_link( $post_ID, $language );
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$link        = $add_link;
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 		$translation = null;
 		if ( $translation_id ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$translation = get_post( $translation_id );
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 			$link = $this->links->edit_post_translation_link( $translation_id );
 		}
 		?>

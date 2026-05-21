@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Static_Pages {
+class Linguator_Static_Pages {
 	/**
 	 * Id of the page on front.
 	 *
@@ -30,14 +30,14 @@ class LMAT_Static_Pages {
 	public $page_for_posts = 0;
 
 	/**
-	 * @var LMAT_Model
+	 * @var Linguator_Model
 	 */
 	protected $model;
 
 	/**
 	 * Current language.
 	 *
-	 * @var LMAT_Language|null
+	 * @var Linguator_Language|null
 	 */
 	protected $curlang;
 
@@ -54,7 +54,7 @@ class LMAT_Static_Pages {
 
 		$this->init();
 
-		add_filter( 'lmat_additional_language_data', array( $this, 'set_static_pages' ), 5, 2 ); // Before LMAT_Links_Model.
+		add_filter( 'lmat_additional_language_data', array( $this, 'linguator_set_static_pages' ), 5, 2 ); // Before Linguator_Links_Model.
 
 		// Clean the languages cache when editing page of front, page for posts.
 		add_action( 'update_option_show_on_front', array( $this, 'clean_cache' ) );
@@ -65,13 +65,13 @@ class LMAT_Static_Pages {
 		add_action( 'update_option_page_on_front', 'flush_rewrite_rules' );
 
 		// Add option filters when the current language is defined
-		add_action( 'lmat_language_defined', array( $this, 'lmat_language_defined' ) );
+		add_action( 'lmat_language_defined', array( $this, 'linguator_language_defined' ) );
 
 		// Modifies the page link in case the front page is not in the default language.
 		add_filter( 'page_link', array( $this, 'page_link' ), 20, 2 );
 
 		// OEmbed.
-		add_filter( 'oembed_request_post_id', array( $this, 'oembed_request_post_id' ), 10, 2 );
+		add_filter( 'oembed_request_post_id', array( $this, 'linguator_oembed_request_post_id' ), 10, 2 );
 	}
 
 	/**
@@ -137,7 +137,7 @@ class LMAT_Static_Pages {
 	 * @param array $language        Language data.
 	 * @return array Language data with additional `page_on_front` and `page_for_posts` options added.
 	 */
-	public function set_static_pages( $additional_data, $language ) {
+	public function linguator_set_static_pages( $additional_data, $language ) {
 		$additional_data['page_on_front']  = $this->get_translation( 'page_on_front', $language );
 		$additional_data['page_for_posts'] = $this->get_translation( 'page_for_posts', $language );
 
@@ -163,10 +163,10 @@ class LMAT_Static_Pages {
 	 *
 	 * @return void
 	 */
-	public function lmat_language_defined() {
+	public function linguator_language_defined() {
 		// Translates page for posts and page on front.
-		add_filter( 'option_page_on_front', array( $this, 'translate_page_id' ), 10, 2 );
-		add_filter( 'option_page_for_posts', array( $this, 'translate_page_id' ), 10, 2 );
+		add_filter( 'option_page_on_front', array( $this, 'linguator_translate_page_id' ), 10, 2 );
+		add_filter( 'option_page_for_posts', array( $this, 'linguator_translate_page_id' ), 10, 2 );
 	}
 
 	/**
@@ -178,7 +178,7 @@ class LMAT_Static_Pages {
 	 * @param  string $option Option name: `page_on_front` or `page_for_posts`.
 	 * @return int
 	 */
-	public function translate_page_id( $page_id, $option ) {
+	public function linguator_translate_page_id( $page_id, $option ) {
 
 		if ( empty( $this->curlang->{$option} ) ) {
 			return $page_id;
@@ -224,7 +224,7 @@ class LMAT_Static_Pages {
 	 * @param string $url     The requested URL.
 	 * @return int
 	 */
-	public function oembed_request_post_id( $post_id, $url ) {
+	public function linguator_oembed_request_post_id( $post_id, $url ) {
 		foreach ( $this->model->get_languages_list() as $lang ) {
 			if ( is_string( $lang->get_home_url() ) && trailingslashit( $url ) === trailingslashit( $lang->get_home_url() ) ) {
 				return (int) $lang->page_on_front;

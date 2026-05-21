@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Services\Links\LMAT_Links;
-use Linguator\Includes\Helpers\LMAT_Cache;
+use Linguator\Includes\Services\Links\Linguator_Links;
+use Linguator\Includes\Helpers\Linguator_Cache;
 use WP_Term;
 
 
@@ -20,12 +20,12 @@ use WP_Term;
  *
  *  
  */
-class LMAT_Frontend_Links extends LMAT_Links {
+class Linguator_Frontend_Links extends Linguator_Links {
 
 	/**
 	 * Internal non persistent cache object.
 	 *
-	 * @var LMAT_Cache<string>
+	 * @var Linguator_Cache<string>
 	 */
 	public $cache;
 
@@ -40,7 +40,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 		parent::__construct( $linguator );
 
 		$this->curlang = &$linguator->curlang;
-		$this->cache = new LMAT_Cache();
+		$this->cache = new Linguator_Cache();
 	}
 
 	/**
@@ -48,7 +48,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $language Language object.
+	 * @param Linguator_Language $language Language object.
 	 * @return string
 	 */
 	public function get_translation_url( $language ) {
@@ -74,7 +74,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 		 *  
 		 *
 		 * @param string       $url               Empty string or the url of the translation of the current page.
-		 * @param LMAT_Language $language          Language of the translation.
+		 * @param Linguator_Language $language          Language of the translation.
 		 * @param int          $queried_object_id Queried object ID.
 		 */
 		if ( ! $url = apply_filters( 'lmat_pre_translation_url', '', $language, $queried_object_id ) ) {
@@ -91,7 +91,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 			}
 
 			elseif ( is_search() ) {
-				$url = $this->get_archive_url( $language );
+				$url = $this->linguator_get_archive_url( $language );
 
 				// Special case for search filtered by translated taxonomies: taxonomy terms are translated in the translation url
 				if ( ! empty( $wp_query->tax_query->queries ) ) {
@@ -158,7 +158,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 
 					/** This filter is documented in frontend/frontend-links.php */
 					if ( ! apply_filters( 'lmat_hide_archive_translation_url', ! $count, $language->slug, $args ) ) {
-						$url = $this->get_archive_url( $language );
+						$url = $this->linguator_get_archive_url( $language );
 					}
 				}
 			}
@@ -172,7 +172,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 
 				/** This filter is documented in frontend/frontend-links.php */
 				if ( ! apply_filters( 'lmat_hide_archive_translation_url', ! $count, $language->slug, $args ) ) {
-					$url = $this->get_archive_url( $language );
+					$url = $this->linguator_get_archive_url( $language );
 				}
 			}
 
@@ -208,11 +208,11 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language $language An object representing a language.
+	 * @param Linguator_Language $language An object representing a language.
 	 * @return string
 	 */
-	public function get_archive_url( $language ) {
-		$url = lmat_get_requested_url();
+	public function linguator_get_archive_url( $language ) {
+		$url = linguator_get_requested_url();
 		$url = $this->links_model->switch_language_in_link( $url, $language );
 		$url = $this->links_model->remove_paged_from_link( $url );
 
@@ -232,7 +232,7 @@ class LMAT_Frontend_Links extends LMAT_Links {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Language|string $language  Optional, defaults to current language.
+	 * @param Linguator_Language|string $language  Optional, defaults to current language.
 	 * @param bool                $is_search Optional, whether we need the home url for a search form, defaults to false.
 	 */
 	public function get_home_url( $language = '', $is_search = false ) {

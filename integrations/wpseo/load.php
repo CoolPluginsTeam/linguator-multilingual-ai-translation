@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/wpseo.php';
 
-use Linguator\Integrations\wpseo\LMAT_WPSEO;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\wpseo\Linguator_WPSEO;
+use Linguator\Integrations\Linguator_Integrations;
 
 add_action(
 	'plugins_loaded',
 	function () {
 		if ( defined( 'WPSEO_VERSION' ) ) {
-			add_action( 'lmat_init', array( LMAT_Integrations::instance()->wpseo = new LMAT_WPSEO(), 'init' ) );
+			add_action( 'lmat_init', array( Linguator_Integrations::instance()->wpseo = new Linguator_WPSEO(), 'init' ) );
 		}
 	},
 	0

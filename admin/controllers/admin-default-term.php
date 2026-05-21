@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Helpers\LMAT_Default_Term;
+use Linguator\Includes\Helpers\Linguator_Default_Term;
 
 
 
@@ -16,9 +16,9 @@ use Linguator\Includes\Helpers\LMAT_Default_Term;
  * Manages filters and actions related to default terms.
  *
  *  
- *   Extends `LMAT_Default_Term`, most of the code is moved to it.
+ *   Extends `Linguator_Default_Term`, most of the code is moved to it.
  */
-class LMAT_Admin_Default_Term extends LMAT_Default_Term {
+class Linguator_Admin_Default_Term extends Linguator_Default_Term {
 
 	/**
 	 * Setups filters and actions needed.

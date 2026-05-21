@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Admin_Feedback {
+class Linguator_Admin_Feedback {
 
     private $plugin_url     = LINGUATOR_URL;
 	private $plugin_version = LINGUATOR_VERSION;
@@ -41,8 +41,8 @@ class LMAT_Admin_Feedback {
 	function enqueue_feedback_scripts() {
 		$screen = get_current_screen();
 		if ( isset( $screen ) && $screen->id == 'plugins' ) {
-			wp_enqueue_script( __NAMESPACE__ . 'feedback-script', $this->plugin_url . 'admin/feedback/js/admin-feedback.js', array( 'jquery' ), $this->plugin_version, true );
-			wp_enqueue_style( 'cool-plugins-feedback-css', $this->plugin_url . 'admin/feedback/css/admin-feedback.css', null, $this->plugin_version );
+			wp_enqueue_script( 'lmat-feedback-script', $this->plugin_url . 'admin/feedback/js/admin-feedback.js', array( 'jquery' ), $this->plugin_version, true );
+			wp_enqueue_style( 'lmat-feedback-css', $this->plugin_url . 'admin/feedback/css/admin-feedback.css', null, $this->plugin_version );
 		}
 	}
 
@@ -115,7 +115,7 @@ class LMAT_Admin_Feedback {
 					<?php endforeach; ?>
 					
 					<div class="cp-feedback-terms">
-					<input class="cp-feedback-terms-input" id="cp-feedback-terms-input" type="checkbox"><label for="cp-feedback-terms-input"><?php echo esc_html__( 'I agree to share anonymous usage data and basic site details (such as server, PHP, and WordPress versions) to support Linguator – Multilingual AI Translation improvement efforts. Additionally, I allow Cool Plugins to store all information provided through this form and to respond to my inquiry.', 'linguator-multilingual-ai-translation' ); ?></label>
+					<input class="cp-feedback-terms-input" id="cp-feedback-terms-input" type="checkbox"><label for="cp-feedback-terms-input"><?php echo esc_html__( 'I agree to share anonymous usage data and basic site details (such as server, PHP, and WordPress versions) to support Multilingual AI Translator improvement efforts. Additionally, I allow Cool Plugins to store all information provided through this form and to respond to my inquiry.', 'linguator-multilingual-ai-translation' ); ?></label>
 					</div>
 
 					<div class="cp-feedback-button-wrapper">
@@ -224,10 +224,11 @@ class LMAT_Admin_Feedback {
 			$sanitized_message = empty( $_POST['message'] ) || sanitize_text_field( wp_unslash( $_POST['message'] ) ) == '' ? 'N/A' : sanitize_text_field( wp_unslash( $_POST['message'] ) );
 			$admin_email       = sanitize_email( get_option( 'admin_email' ) );
 			$site_url          = esc_url( site_url() );
-			$install_date 		= get_option('lmat_install_date');
 			$unique_key     	= '53';  // Ensure this key is unique per plugin to prevent collisions when site URL and install date are the same across plugins
+			$install_date 		= get_option('linguator_install_date');
             $site_id        	= $site_url . '-' . $install_date . '-' . $unique_key;
 			$feedback_url      = LINGUATOR_FEEDBACK_API .'wp-json/coolplugins-feedback/v1/feedback';
+			$user_info         = $this->cpfm_get_user_info();
 			$response          = wp_remote_post(
 				$feedback_url,
 				array(
@@ -235,7 +236,7 @@ class LMAT_Admin_Feedback {
 					'body'    => array(
 						'server_info' => serialize($this->cpfm_get_user_info()['server_info']), 
 						'extra_details' => serialize($this->cpfm_get_user_info()['extra_details']),
-						'plugin_initial'  => sanitize_text_field($this->plugin_version),
+						'plugin_initial'  => sanitize_text_field(get_option('linguator_initial_version')),
 						'plugin_version' => sanitize_text_field($this->plugin_version),
 						'plugin_name'    => sanitize_text_field($this->plugin_name),
 						'reason'         => sanitize_text_field($deativation_reason),

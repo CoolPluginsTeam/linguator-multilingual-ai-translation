@@ -135,11 +135,24 @@ export const updateContent=async ({source, postId, sourceLang, lang, editorType,
             'Accept': 'application/json',
         }
     }).then(async response=>{
-        const data=await response.json();
+       // Some server/proxy errors return HTML (e.g. 502/504). Don't blindly JSON.parse.
+        const raw = await response.text();
+        let data;
+        try {
+            data = raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            data = { success: false, code: response.status, message: raw };
+        }
         
         let updateData={};
         
-        if(data.success && data.data.post_id){
+        // wp_send_json_* (taxonomy / legacy) vs REST response (create-translate-post).
+        const successPayload =
+            (data.success && data.data && data.data.post_id)
+                ? data.data
+                : (response.ok && data.post_id && !data.code ? data : null);
+
+        if (successPayload){
 
             const extraData={};
 
@@ -147,10 +160,10 @@ export const updateContent=async ({source, postId, sourceLang, lang, editorType,
                 extraData.taxonomy=lmatBulkTranslationGlobal.taxonomy_page;
             }
 
-            updateTranslateData({provider: service, sourceLang, targetLang: lang, currentPostId: data.data.post_id, parentPostId: postId, editorType, updateTranslateDataNonce: data?.data?.update_translate_data_nonce, extraData});
+            updateTranslateData({provider: service, sourceLang, targetLang: lang, currentPostId: successPayload.post_id, parentPostId: postId, editorType, updateTranslateDataNonce: successPayload.update_translate_data_nonce, extraData});
 
-            data.data.post_title = '' === data.data.post_title ? __('N/A', 'linguator-multilingual-ai-translation') : data.data.post_title;
-            updateData={targetPostId: data.data.post_id, targetPostTitle: data.data.post_title, targetLanguage: lang, postLink: data.data.post_link, postEditLink: data.data.post_edit_link, status: 'completed', messageClass: 'success'};
+            successPayload.post_title = '' === successPayload.post_title ? __('N/A', 'linguator-multilingual-ai-translation') : successPayload.post_title;
+            updateData={targetPostId: successPayload.post_id, targetPostTitle: successPayload.post_title, targetLanguage: lang, postLink: successPayload.post_link, postEditLink: successPayload.post_edit_link, status: 'completed', messageClass: 'success'};
             storeDispatch(updateCountInfo({postsTranslated: store.getState().countInfo.postsTranslated+1}));
         }else{
             if(data.data && data.data.error){
@@ -341,7 +354,13 @@ const bulkTranslateEntries = async ({ids, langs, storeDispatch}) => {
     
                     });
     
-                    const responseData = await response.json();
+                    const rawGlossary = await response.text();
+                    let responseData;
+                    try {
+                        responseData = rawGlossary ? JSON.parse( rawGlossary ) : {};
+                    } catch (e) {
+                        responseData = { success: false, code: response.status, message: rawGlossary };
+                    }
 
                     if(responseData.success && responseData.data.terms){
                         storeDispatch(updateGlossaryTerms({sourceLanguage: sourceLanauges, translations: Object.values(responseData.data.terms)}));

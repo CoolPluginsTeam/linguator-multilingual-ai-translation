@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 /**
@@ -18,7 +18,7 @@ use Linguator\Includes\Other\LMAT_Language;
  *
  *  
  */
-class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
+class Linguator_Links_Subdomain extends Linguator_Links_Abstract_Domain {
 	/**
 	 * Stores whether the home url includes www. or not.
 	 * Either '://' or '://www.'.
@@ -32,7 +32,7 @@ class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model Instance of LMAT_Model.
+	 * @param Linguator_Model $model Instance of Linguator_Model.
 	 */
 	public function __construct( &$model ) {
 		parent::__construct( $model );
@@ -46,11 +46,11 @@ class LMAT_Links_Subdomain extends LMAT_Links_Abstract_Domain {
 	 *   Accepts now a language slug.
 	 *
 	 * @param string                    $url      The url to modify.
-	 * @param LMAT_Language|string|false $language Language object or slug.
+	 * @param Linguator_Language|string|false $language Language object or slug.
 	 * @return string The modified url.
 	 */
 	public function add_language_to_link( $url, $language ) {
-		if ( $language instanceof LMAT_Language ) {
+		if ( $language instanceof Linguator_Language ) {
 			$language = $language->slug;
 		}
 

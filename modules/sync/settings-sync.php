@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Linguator\Settings\Controllers\LMAT_Settings_Module;
+use Linguator\Settings\Controllers\Linguator_Settings_Module;
 
 
 
@@ -18,7 +18,7 @@ use Linguator\Settings\Controllers\LMAT_Settings_Module;
  *
  *  
  */
-class LMAT_Settings_Sync extends LMAT_Settings_Module {
+class Linguator_Settings_Sync extends Linguator_Settings_Module {
 	/**
 	 * Stores the display order priority.
 	 *
@@ -103,3 +103,4 @@ class LMAT_Settings_Sync extends LMAT_Settings_Module {
 		);
 	}
 }
+

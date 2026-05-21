@@ -27,7 +27,7 @@ if ( ! class_exists( 'WP_Widget_Calendar' ) ) {
  *
  *  
  */
-class LMAT_Widget_Calendar extends WP_Widget_Calendar {
+class Linguator_Widget_Calendar extends WP_Widget_Calendar {
 	protected static $lmat_instance = 0; // Can't use $instance of WP_Widget_Calendar as it's private :/.
 
 	/**
@@ -45,24 +45,20 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 
 		/** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is trusted as per widget API usage.
-		echo $args['before_widget'];
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is trusted as per widget API usage.
+		echo wp_kses_post( $args['before_widget'] );
 		if ( $title ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is trusted as per widget API usage.
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 		}
-		if ( 0 === self::$lmat_instance ) { #modified#
+		if ( 0 === self::$lmat_instance ) {
 			echo '<div id="calendar_wrap" class="calendar_wrap">';
 		} else {
 			echo '<div class="calendar_wrap">';
 		}
-		empty( LMAT()->curlang ) ? get_calendar() : self::get_calendar(); #modified#
+		empty( LMAT()->curlang ) ? get_calendar() : self::get_calendar();
 		echo '</div>';
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is trusted as per widget API usage.
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
-		++self::$lmat_instance; #modified#
+		++self::$lmat_instance;
 	}
 
 	/**
@@ -139,7 +135,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		/** This filter is documented in wp-includes/general-template.php */
 		$args = apply_filters( 'lmat_get_calendar_args', wp_parse_args( $args, $defaults ) );
 
-		$args['lang'] = LMAT()->curlang->slug; #added#
+		$args['lang'] = LMAT()->curlang->slug;
 
 		if ( ! post_type_exists( $args['post_type'] ) ) {
 			$args['post_type'] = 'post';
@@ -148,7 +144,7 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		$w = 0;
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['w'] ) ) {
-			$w = (int) $_GET['w'];
+			$w = absint( wp_unslash( $_GET['w'] ) );
 		}
 
 		/*
@@ -250,8 +246,8 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		$unixmonth = mktime( 0, 0, 0, $thismonth, 1, $thisyear );
 		$last_day  = gmdate( 't', $unixmonth );
 
-		$join_clause  = LMAT()->model->post->join_clause(); #added#
-		$where_clause = LMAT()->model->post->where_clause( LMAT()->curlang ); #added#
+		$join_clause  = LMAT()->model->post->join_clause();
+		$where_clause = LMAT()->model->post->where_clause( LMAT()->curlang );
 
 		// Get the next and previous month and year with at least one post.
 
@@ -268,13 +264,13 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		$next_prepared_query = $wpdb->prepare("SELECT MONTH(post_date) AS month, YEAR(post_date) AS year FROM {$wpdb->posts} {$join_clause} WHERE post_date > %s AND post_type = %s AND post_status = 'publish' {$where_clause} ORDER BY post_date ASC LIMIT 1",
 			"{$thisyear}-{$thismonth}-{$last_day} 23:59:59",
 			$post_type
-		);  #modified#
+		);
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,PluginCheck.Security.DirectDB.UnescapedDBParameter -- This is safe query and already prepared in $next_prepared_query.
 		$next                = $wpdb->get_row( $next_prepared_query );
 
 		// translators: Calendar caption: 1: Month name, 2: 4-digit year.
-		$calendar_caption = _x( '%1$s %2$s', 'calendar caption' ); // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- This is a default WordPress text domain.
+		$calendar_caption = _x( '%1$s %2$s', 'calendar caption', 'linguator-multilingual-ai-translation' );
 		$calendar_output  = '<table id="wp-calendar" class="wp-calendar-table">
 		<caption>' . sprintf(
 			$calendar_caption,
@@ -347,9 +343,9 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 			if ( in_array( $day, $daywithpost, true ) ) {
 				// Any posts today?
 				// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- This is a default WordPress text domain.
-				$date_format = gmdate( _x( 'F j, Y', 'daily archives date format' ), strtotime( "{$thisyear}-{$thismonth}-{$day}" ) );
+				$date_format = gmdate( _x( 'F j, Y', 'daily archives date format', 'linguator-multilingual-ai-translation' ), strtotime( "{$thisyear}-{$thismonth}-{$day}" ) );
 				/* translators: Post calendar label. %s: Date. */
-				$label            = sprintf( __( 'Posts published on %s','linguator-multilingual-ai-translation' ), $date_format ); // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- This is a default WordPress text domain.
+				$label            = sprintf( __( 'Posts published on %s','linguator-multilingual-ai-translation' ), $date_format );
 				$calendar_output .= sprintf(
 					'<a href="%s" aria-label="%s">%s</a>',
 					get_day_link( $thisyear, $thismonth, $day ),
@@ -415,3 +411,4 @@ class LMAT_Widget_Calendar extends WP_Widget_Calendar {
 		return $calendar_output;
 	}
 }
+

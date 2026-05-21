@@ -33,21 +33,30 @@ jQuery(
 					if ( post_id > 0 ) {
 						// Get the language dropdown.
 						const select = form.querySelector( 'select[name="inline_lang_choice"]' );
-						const lang = document.querySelector( '#lang_' + String( post_id ) ).innerHTML;
-						select.value = lang; // Populates the dropdown with the post language.
+						const langEl = document.querySelector( '#lang_' + String( post_id ) );
+						const lang =
+							langEl && langEl.innerHTML
+								? langEl.innerHTML
+								: ( langEl ? langEl.textContent : '' );
 
-						filter_terms( lang ); // Initial filter for category checklist.
-						filter_pages( lang ); // Initial filter for parent dropdown.
+						// Posts without assigned source language may not have #lang_<id>.
+						// In that case, keep WP defaults and just avoid filtering.
+						if ( lang ) {
+							select.value = lang; // Populates the dropdown with the post language.
 
-						// Modify category checklist and parent dropdown on language change.
-						select.addEventListener(
-							'change',
-							function ( event ) {
-								const newLang = event.target.value;
-								filter_terms( newLang );
-								filter_pages( newLang );
-							}
-							);
+							filter_terms( lang ); // Initial filter for category checklist.
+							filter_pages( lang ); // Initial filter for parent dropdown.
+
+							// Modify category checklist and parent dropdown on language change.
+							select.addEventListener(
+								'change',
+								function ( event ) {
+									const newLang = event.target.value;
+									filter_terms( newLang );
+									filter_pages( newLang );
+								}
+								);
+						}
 						}
 					}
 					/**
@@ -64,8 +73,13 @@ jQuery(
 											$.each(
 												terms,
 												function ( i ) {
-									const id = '#' + tax + '-' + lmat_term_languages[ lg ][ tax ][ i ];
-													lang == lg ? $( id ).show() : $( id ).hide();
+													// Backward compatibility with WordPress < 6.7.
+													// Support both old (WP < 6.7) and new (WP >= 6.7) ID formats.
+													// Old format: category-123 (WordPress < 6.7).
+													// New format: in-category-123-1 (WordPress >= 6.7).
+													const termId = lmat_term_languages[ lg ][ tax ][ i ];
+													const selector = `#${tax}-${termId}, [id^="in-${tax}-${termId}-"]`;
+													$( selector ).toggle( lang === lg );
 												}
 											);
 										}

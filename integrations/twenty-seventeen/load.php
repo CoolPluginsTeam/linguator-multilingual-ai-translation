@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/twenty-seven-teen.php';
 
-use Linguator\Integrations\twenty_seventeen\LMAT_Twenty_Seventeen;
-use Linguator\Integrations\LMAT_Integrations;
+use Linguator\Integrations\twenty_seventeen\Linguator_Twenty_Seventeen;
+use Linguator\Integrations\Linguator_Integrations;
 
-add_action( 'init', array( LMAT_Integrations::instance()->twenty_seventeen = new LMAT_Twenty_Seventeen(), 'init' ) );
+add_action( 'init', array( Linguator_Integrations::instance()->twenty_seventeen = new Linguator_Twenty_Seventeen(), 'init' ) );

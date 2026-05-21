@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
+class Linguator_Choose_Lang_Url extends Linguator_Choose_Lang {
 	/**
 	 * The name of the index file which is the entry point to all requests.
 	 * We need this before the global $wp_rewrite is created.
@@ -36,7 +36,7 @@ class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 		parent::init();
 
 		if ( ! did_action( 'lmat_language_defined' ) ) {
-			$this->set_language_from_url();
+			$this->linguator_set_language_from_url();
 		}
 
 		add_filter( 'request', array( $this, 'request' ) );
@@ -49,11 +49,11 @@ class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 	 *
 	 * @return void
 	 */
-	public function set_language_from_url() {
+	public function linguator_set_language_from_url() {
 		$host      = str_replace( 'www.', '', (string) wp_parse_url( $this->links_model->home, PHP_URL_HOST ) ); // Remove www. for the comparison
 		$home_path = (string) wp_parse_url( $this->links_model->home, PHP_URL_PATH );
 
-		$requested_url   = lmat_get_requested_url();
+		$requested_url   = linguator_get_requested_url();
 		$requested_host  = str_replace( 'www.', '', (string) wp_parse_url( $requested_url, PHP_URL_HOST ) ); // Remove www. for the comparison
 		$requested_path  = rtrim( str_replace( $this->index, '', (string) wp_parse_url( $requested_url, PHP_URL_PATH ) ), '/' ); // Some PHP setups turn requests for / into /index.php in REQUEST_URI
 		$requested_query = wp_parse_url( $requested_url, PHP_URL_QUERY );
@@ -65,12 +65,12 @@ class LMAT_Choose_Lang_Url extends LMAT_Choose_Lang {
 		}
 
 		// Take care to post & page preview http://wordpress.org/support/topic/static-frontpage-url-parameter-url-language-information
-		elseif ( isset( $_GET['preview'] ) && ( ( isset( $_GET['p'] ) && $id = (int) $_GET['p'] ) || ( isset( $_GET['page_id'] ) && $id = (int) $_GET['page_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		elseif ( isset( $_GET['preview'] ) && ( ( isset( $_GET['p'] ) && $id = absint( wp_unslash( $_GET['p'] ) ) ) || ( isset( $_GET['page_id'] ) && $id = absint( wp_unslash( $_GET['page_id'] ) ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$curlang = ( $lg = $this->model->post->get_language( $id ) ) ? $lg : $this->model->get_default_language();
 		}
 
 		// Take care to ( unattached ) attachments
-		elseif ( isset( $_GET['attachment_id'] ) && $id = (int) $_GET['attachment_id'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+		elseif ( isset( $_GET['attachment_id'] ) && $id = absint( wp_unslash( $_GET['attachment_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$curlang = ( $lg = $this->model->post->get_language( $id ) ) ? $lg : $this->get_preferred_language();
 		}
 

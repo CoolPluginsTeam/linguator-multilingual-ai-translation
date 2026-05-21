@@ -2,6 +2,9 @@
 
 namespace Linguator\Settings\Header;
 
+use Linguator\Includes\Migration\Polylang_Migration;
+use Linguator\Includes\Migration\WPML_Migration;
+
 /**
  * Header file for settings page
  *
@@ -70,38 +73,28 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 		}
 
 		/**
-		 * Check if Polylang data exists
+		 * True when Polylang or WPML left migratable data in the database (same rules as migration detect endpoints).
 		 *
-		 * @return bool True if Polylang data exists, false otherwise.
+		 * @return bool
 		 */
-		private function has_polylang_data() {
-			global $wpdb;
-
-			// Check if Polylang data exists in database (works even if plugin is deactivated)
-			// Check for 'language' taxonomy terms directly in database
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct DB query is required here because WordPress core does not provide an efficient or native way to fetch all objects (posts/terms/etc) that do NOT have a language assigned (i.e., not related to any language term_taxonomy_id) in bulk. This negative relationship cannot be expressed using get_terms()/wp_get_object_terms(), especially when type filtering is needed. Using a raw query here ensures both performance and compatibility.
-			$polylang_languages_count = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s",
-					'language'
-				)
-			);
-
-			// Get Polylang settings first to check if Polylang was ever used
-			$polylang_options = get_option( 'polylang', array() );
-			
-			// If no languages found, check if Polylang was ever installed by checking for settings
-			if ( empty( $polylang_languages_count ) || 0 === (int) $polylang_languages_count ) {
-				// If no languages and no settings, Polylang was never used
-				if ( empty( $polylang_options ) ) {
-					return false;
+		private function has_migration_source_data() {
+			try {
+				$polylang = new Polylang_Migration( $this->model, $this->model->options );
+				if ( false !== $polylang->detect_polylang() ) {
+					return true;
 				}
-				// Settings exist but no languages - still show migration option for settings
-				return true;
+			} catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			}
 
-			// If languages exist, Polylang data is present
-			return true;
+			try {
+				$wpml = new WPML_Migration( $this->model, $this->model->options );
+				if ( false !== $wpml->detect_wpml() ) {
+					return true;
+				}
+			} catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			}
+
+			return false;
 		}
 
 		/**
@@ -124,22 +117,17 @@ if ( ! class_exists( 'Linguator\Settings\Header\Header' ) ) {
 			'custom-fields' => array( 'title' => __( 'Custom Fields', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=custom-fields' ),
 		);
 
-		// Only show Advanced Settings tab if migration hasn't been completed AND Polylang data exists
+		// Advanced Settings (migration UI) only when migration is not completed and Polylang or WPML data exists.
 		$migration_completed = get_option( 'lmat_migration_completed', false );
-		if ( ! $migration_completed ) {
+		if ( ! $migration_completed && $this->has_migration_source_data() ) {
 			$tabs['advanced-settings'] = array( 'title' => __( 'Advanced Settings', 'linguator-multilingual-ai-translation' ) );
 		}
 
         $languages = $this->model->get_languages_list();
         
-        // Only show Glossary tab if languages exist
-        if(!empty($languages)){
-            $tabs['glossary'] = array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' );
-        }
-        
-        $static_strings_visibility = $this->model->options->get( 'static_strings_visibility' );
-        if(!empty($languages) && $static_strings_visibility){
-            $tabs['strings']     = array(
+        if ( ! empty( $languages ) ) {
+			$tabs['glossary'] = array( 'title' => __( 'Glossary', 'linguator-multilingual-ai-translation' ), 'redirect' => true, 'redirect_url' => 'lmat_settings&tab=glossary' );
+			$tabs['strings']  = array(
 				'title'        => __( 'Static Strings', 'linguator-multilingual-ai-translation' ),
 				'redirect'     => true,
 				'redirect_url' => 'lmat_settings&tab=strings',

@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-use Linguator\Includes\Other\LMAT_Language;
+use Linguator\Includes\Other\Linguator_Language;
 
 
 
@@ -20,9 +20,9 @@ use Linguator\Includes\Other\LMAT_Language;
  *
  *  
  */
-abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
+abstract class Linguator_Links_Permalinks extends Linguator_Links_Model {
 	/**
-	 * Tells this child class of LMAT_Links_Model is for pretty permalinks.
+	 * Tells this child class of Linguator_Links_Model is for pretty permalinks.
 	 *
 	 * @var bool
 	 */
@@ -63,7 +63,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	 *
 	 *  
 	 *
-	 * @param LMAT_Model $model LMAT_Model instance.
+	 * @param Linguator_Model $model Linguator_Model instance.
 	 */
 	public function __construct( &$model ) {
 		parent::__construct( $model );
@@ -108,7 +108,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 		 *
 		 *  
 		 *
-		 * @param LMAT_Links_Permalinks $links Current links object.
+		 * @param Linguator_Links_Permalinks $links Current links object.
 		 */
 		do_action( 'lmat_prepare_rewrite_rules', $this );
 	}
@@ -161,11 +161,11 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	 *  
 	 *   Accepts now a language slug.
 	 *
-	 * @param LMAT_Language|string $language Language object or slug.
+	 * @param Linguator_Language|string $language Language object or slug.
 	 * @return string
 	 */
 	public function home_url( $language ) {
-		if ( $language instanceof LMAT_Language ) {
+		if ( $language instanceof Linguator_Language ) {
 			$language = $language->slug;
 		}
 
@@ -178,11 +178,11 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	 *  
 	 *   Accepts now an array of language properties.
 	 *
-	 * @param LMAT_Language|array $language Language object or array of language properties.
+	 * @param Linguator_Language|array $language Language object or array of language properties.
 	 * @return string The static front page url.
 	 */
 	public function front_page_url( $language ) {
-		if ( $language instanceof LMAT_Language ) {
+		if ( $language instanceof Linguator_Language ) {
 			$language = $language->to_array();
 		}
 
@@ -217,7 +217,7 @@ abstract class LMAT_Links_Permalinks extends LMAT_Links_Model {
 	}
 
 	/**
-	 * Removes hooks to filter rewrite rules, called when switching blog @see {LMAT_Base::switch_blog()}.
+	 * Removes hooks to filter rewrite rules, called when switching blog @see {Linguator_Base::switch_blog()}.
 	 *
 	 *  
 	 *

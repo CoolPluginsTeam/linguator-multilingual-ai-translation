@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  *  
  */
-class LMAT_WP_Import extends WP_Import {
+class Linguator_WP_Import extends WP_Import {
 	/**
 	 * Stores post_translations terms.
 	 *
@@ -78,7 +78,7 @@ class LMAT_WP_Import extends WP_Import {
 		}
 
 		if ( ! empty( $mo_posts ) ) {
-			new LMAT_MO(); // Just to register the linguator_mo post type before processing posts
+			new Linguator_MO(); // Just to register the linguator_mo post type before processing posts
 		}
 
 		parent::process_posts();
@@ -103,7 +103,7 @@ class LMAT_WP_Import extends WP_Import {
 
 			if ( ! empty( $this->processed_terms[ $lang_id ] ) ) {
 				if ( $strings = maybe_unserialize( $post['post_content'] ) ) {
-					$mo = new LMAT_MO();
+					$mo = new Linguator_MO();
 					$mo->import_from_db( $this->processed_terms[ $lang_id ] );
 					foreach ( $strings as $msg ) {
 						$mo->add_entry_or_merge( $mo->make_entry( $msg[0], $msg[1] ) );
@@ -128,6 +128,9 @@ class LMAT_WP_Import extends WP_Import {
 
 		foreach ( $terms as $term ) {
 			$translations = maybe_unserialize( $term['term_description'] );
+			if ( ! is_array( $translations ) ) {
+				continue;
+			}
 			foreach ( $translations as $slug => $old_id ) {
 				if ( $old_id && ! empty( $this->processed_terms[ $old_id ] ) && $lang = LMAT()->model->get_language( $slug ) ) {
 					$object_id = $this->processed_terms[ $old_id ];
@@ -180,10 +183,14 @@ class LMAT_WP_Import extends WP_Import {
 		$u = array();
 
 		foreach ( $terms as $term ) {
+			if ( ! is_array( $translations ) ) {
+				continue;
+			}
 			$translations = maybe_unserialize( $term['term_description'] );
 			$new_translations = array();
 
 			foreach ( $translations as $slug => $old_id ) {
+				$slug = sanitize_key( (string) $slug );
 				if ( $old_id && ! empty( $processed_objects[ $old_id ] ) ) {
 					$new_translations[ $slug ] = $processed_objects[ $old_id ];
 				}
@@ -212,3 +219,4 @@ class LMAT_WP_Import extends WP_Import {
 		}
 	}
 }
+
